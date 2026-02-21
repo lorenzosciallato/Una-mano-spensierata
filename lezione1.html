@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sociologia dell'Educazione | Lezione 1</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- VARIABILI & RESET --- */
+        :root {
+            --bg-color: #f0f0f2;
+            --paper-color: #fdfbf7;
+            --ink-color: #1a1a1a;
+            --accent-color: #375a7f;
+            --pop-cyan: #00f2ff;
+            --pop-magenta: #ff00ff;
+            --pop-ocean: #0044cc;
+            --pop-yellow: #ffee00;
+            --font-title: 'Abril Fatface', cursive;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        /* FIX MOBILE SCROLL CRITICO */
+        /* SOSTITUISCI IL TUO BLOCCO HTML/BODY CON QUESTO */
+
+html {
+    /* Rimuovi overflow e height forzati su html */
+    scroll-behavior: smooth; /* Opzionale, per scroll fluido */
+}
+
+body {
+    background-color: var(--bg-color);
+    font-family: var(--font-body);
+    color: var(--ink-color);
+    line-height: 1.6;
+    
+    /* Assicura che il body occupi almeno tutto lo schermo */
+    min-height: 100vh;
+    position: relative;
+    padding-bottom: 80px;
+    width: 100%;
+
+    /* FIX REALE: */
+    /* 1. Rimuoviamo overscroll-behavior, touch-action e overflow-y: auto */
+    /* 2. Manteniamo solo overflow-x: hidden per evitare lo scroll laterale */
+    overflow-x: hidden; 
+    
+    /* Migliora la resa del testo su mobile */
+    -webkit-font-smoothing: antialiased;
+}
+
+        /* --- BARRA DI PROGRESSO --- */
+        #scroll-progress-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 6px;
+            background: rgba(0,0,0,0.05); z-index: 9999999;
+        }
+        #scroll-progress-bar {
+            height: 100%; 
+            background: rgba(55, 90, 127, 0.7);
+            width: 0%;
+            transition: width 0.1s; 
+            box-shadow: 0 0 10px rgba(55, 90, 127, 0.3);
+        }
+
+        /* --- BACKGROUND --- */
+        .giants-background {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; pointer-events: none; overflow: hidden;
+            display: flex; justify-content: center; align-items: center;
+            background: #e0e0e5; 
+        }
+        .main-background-image {
+            width: 100%; height: 100%; object-fit: cover; opacity: 0.1; 
+            filter: grayscale(100%) sepia(1) hue-rotate(210deg) contrast(1.2);
+            mix-blend-mode: multiply;
+        }
+
+        /* --- HEADER --- */
+        header { text-align: center; margin-top: 3rem; margin-bottom: 1rem; padding: 0 1rem; }
+        h1 { font-family: var(--font-title); font-size: clamp(2.5rem, 5vw, 4rem); margin: 0; color: var(--ink-color); line-height: 1.1; }
+        .subtitle {
+            font-family: var(--font-body); font-size: 1.5rem; color: var(--accent-color); font-weight: 700; 
+            text-transform: uppercase; letter-spacing: 4px; margin-top: 10px;
+        }
+
+        /* --- CONTENITORE PRINCIPALE --- */
+        .content-card {
+            background: var(--paper-color); padding: 3rem; margin: 0 auto;
+            width: 90%; max-width: 1200px; position: relative;
+            border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.05); z-index: 1;
+            margin-bottom: 2rem; margin-top: 2rem;
+        }
+        @media (max-width: 600px) { .content-card { padding: 1.5rem; width: 95%; margin-top: 1rem; } }
+
+        h3 { font-family: var(--font-title); font-size: 1.5rem; margin-top: 1.5rem; margin-bottom: 0.5rem; }
+
+        /* --- LAYOUT GRIGLIA --- */
+        .media-notes-grid { display: grid; grid-template-columns: 2.5fr 1fr; gap: 2rem; align-items: stretch; }
+        @media (max-width: 900px) { .media-notes-grid { grid-template-columns: 1fr; gap: 1.5rem; } }
+
+        /* --- SCROLL RIASSUNTO (Mobile Fix) --- */
+        @media (max-width: 900px) {
+            #contenitore-riassunto {
+                max-height: none !important;
+                overflow-y: visible !important;
+                border-bottom: none !important;
+            }
+        }
+        @media (min-width: 901px) {
+            #contenitore-riassunto {
+                max-height: 550px; 
+                overflow-y: auto;
+                padding-right: 15px; 
+                border-bottom: 1px solid #eee; 
+            }
+            #contenitore-riassunto::-webkit-scrollbar { width: 8px; }
+            #contenitore-riassunto::-webkit-scrollbar-thumb { background-color: #ccc; border-radius: 4px; }
+            #contenitore-riassunto::-webkit-scrollbar-track { background-color: #f9f9f9; }
+        }
+
+        /* --- BANNER --- */
+        .section-banner { width: 100%; height: auto; max-height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 1.5rem; border: 1px solid #ddd; }
+
+        /* --- WIDGET APPUNTI (ZEN MODE MODIFIED) --- */
+        .notes-widget {
+            background: #fff; 
+            border: 2px dashed #ccc; 
+            border-radius: 8px;
+            /* ZEN MODE STYLE */
+            height: 60vh; /* Fixed height container */
+            display: flex; 
+            flex-direction: column; 
+            position: relative; 
+            overflow: hidden; /* Hide textarea overflow */
+            width: 100%; 
+            min-width: 0;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            /* Reset old styles */
+            align-self: start; 
+            top: 0;
+            z-index: 5;
+        }
+        @media (max-width: 900px) {
+            .notes-widget { height: 50vh; align-self: stretch; }
+        }
+
+        .notes-toolbar {
+            background: #f4f4f4; padding: 10px; border-bottom: 1px solid #ddd;
+            border-radius: 6px 6px 0 0; display: flex; justify-content: flex-end;
+            flex-shrink: 0; /* Keep toolbar fixed size */
+            z-index: 10;
+        }
+        .tool-btn {
+            padding: 8px 15px; font-size: 0.85rem; cursor: pointer; border: 1px solid #bbb; 
+            background: white; border-radius: 4px; font-weight: 600; font-family: var(--font-body); transition: all 0.2s;
+        }
+        
+        /* NEW TEXTAREA STYLE FOR ZEN MODE */
+        textarea.notes-area {
+            flex-grow: 1;
+            width: 100%;
+            height: 100%;
+            border: none;
+            resize: none;
+            padding: 20px;
+            padding-top: 20px;
+            padding-bottom: 80vh; /* IL TRUCCO ZEN: Spazio infinito per lo scroll */
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            background: transparent;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            outline: none;
+            line-height: 1.6;
+            color: #333;
+        }
+        textarea.notes-area::placeholder { color: #aaa; }
+
+        /* --- ACCORDION --- */
+        .accordion-item { margin-bottom: 1rem; border-bottom: 1px solid #eee; }
+        .accordion-header {
+            background: transparent; border: none; width: 100%; text-align: left;
+            padding: 1.2rem 0; font-family: var(--font-title); font-size: clamp(1.2rem, 4vw, 1.8rem);
+            cursor: pointer; transition: color 0.3s; display: flex;
+            justify-content: space-between; align-items: center; color: var(--ink-color); font-weight: 400;
+        }
+        .accordion-header strong {
+            font-family: var(--font-body); font-weight: 700; font-size: 1.3rem;
+            color: var(--accent-color); text-transform: uppercase; letter-spacing: 2px; margin-right: 15px;
+        }
+        .accordion-content {
+            max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out;
+            padding: 0; opacity: 0; display: flex; flex-direction: column; 
+        }
+        .accordion-content.active { max-height: 50000px; opacity: 1; padding-top: 1rem; padding-bottom: 2rem; overflow: visible; } 
+        .icon-plus { font-size: 1.5rem; font-weight: 300; font-family: var(--font-body); color: var(--accent-color); margin-left: auto; }
+
+        /* --- MASTER HEADER --- */
+        .master-header {
+            background: transparent; border: 2px solid var(--accent-color); border-radius: 8px;
+            padding: 10px 20px; justify-content: center; font-size: 1.5rem; 
+            color: var(--accent-color); width: 100%; margin-bottom: 1rem;
+        }
+        .master-header .icon-plus { margin-left: 15px; flex-grow: 0; }
+        @media (max-width: 600px) { .master-header { font-size: 1.1rem; padding: 10px; } }
+
+        .btn-close-section {
+            width: 100%; text-align: center; margin-top: 30px; padding: 15px; background: #eee; 
+            border: 1px solid #ddd; border-radius: 8px; font-family: var(--font-body); font-weight: 700; 
+            color: #666; cursor: pointer; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px;
+        }
+
+        /* --- TEXT BOX --- */
+        .text-content-box {
+            background: #fff; border: 1px solid #eee; border-radius: 8px; padding: 2rem;
+            color: #333; line-height: 1.8; font-size: 1.05rem;
+        }
+        @media(max-width:600px) { .text-content-box { padding: 1rem; font-size: 1rem; } }
+        
+        .text-content-box h3 { color: var(--accent-color); border-bottom: 2px solid #eee; padding-bottom: 10px; margin-top: 2.5rem; margin-bottom: 1.5rem; }
+        .text-content-box h3:first-child { margin-top: 0; }
+        .text-content-box h4 { color: #555; margin-top: 1.5rem; margin-bottom: 0.5rem; font-size: 1.2rem; }
+        .text-content-box p { margin-bottom: 1rem; }
+        
+        /* --- VIDEO CONTAINER --- */
+        .video-container { 
+            position: relative; width: 100%; padding-bottom: 56.25%; height: 0; 
+            background: #000; border-radius: 8px; overflow: hidden; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); z-index: 1; margin-bottom: 1rem;
+        }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+
+        /* --- FLASHCARDS --- */
+        .flashcard-wrapper {
+            position: relative; perspective: 1000px; width: 100%; height: 500px; margin-bottom: 1rem;
+            cursor: pointer; 
+        }
+        .flashcard-inner {
+            position: relative; width: 100%; height: 100%; text-align: center;
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15); border-radius: 12px;
+        }
+        .flashcard-wrapper.flipped .flashcard-inner { transform: rotateY(180deg); }
+        
+        .flashcard-front, .flashcard-back {
+            position: absolute; width: 100%; height: 100%;
+            backface-visibility: hidden; display: flex; flex-direction: column; 
+            align-items: center; justify-content: center;
+            border-radius: 12px; padding: 1.5rem;
+            background-image: url('https://i.postimg.cc/tJSTPJPW/indiani-d-america-e-uova-sode-stile-bruno-munari-molto-movimentato-e-colorato.jpg'); 
+            background-size: contain; background-repeat: no-repeat; background-position: center; background-color: #222;
+        }
+        .flashcard-back { transform: rotateY(180deg); }
+        .flashcard-back::before {
+            content: ""; position: absolute; top:0; left:0; width:100%; height:100%;
+            background-image: url('https://i.postimg.cc/tJSTPJPW/indiani-d-america-e-uova-sode-stile-bruno-munari-molto-movimentato-e-colorato.jpg');
+            background-size: contain; background-repeat: no-repeat; background-position: center;
+            transform: scaleX(-1); z-index: -1;
+        }
+
+        .flashcard-back p, .flashcard-front h2 {
+            position: relative; z-index: 2; 
+            background: rgba(255,255,255,0.95); 
+            padding: 20px 25px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); 
+            width: 100%; color: #111;
+        }
+        .flashcard-front h2 { font-family: var(--font-title); font-size: 1.6rem; line-height: 1.3; }
+        .flashcard-back p { 
+            font-size: 1rem; text-align: left; line-height: 1.5; white-space: pre-line;
+            overflow-y: auto; max-height: 85%; -webkit-overflow-scrolling: touch; pointer-events: auto; 
+        }
+
+        /* --- BOTTONE GIRA CARTA (SOLO MOBILE) --- */
+        .btn-flip-mobile {
+            display: none; 
+            margin-top: 15px;
+            background: var(--pop-yellow);
+            color: #000;
+            border: 3px solid #000;
+            padding: 10px 30px;
+            font-weight: 900;
+            border-radius: 30px;
+            z-index: 20;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            text-transform: uppercase;
+            font-family: var(--font-body);
+            white-space: nowrap;
+            pointer-events: auto;
+        }
+        .btn-flip-mobile:active { transform: translateY(2px); }
+
+        @media (max-width: 900px) {
+            .flashcard-wrapper { height: 500px; cursor: default; }
+            .flashcard-front, .flashcard-back { justify-content: flex-start; padding: 1rem; padding-top: 1.5rem; }
+            .flashcard-front h2 { font-size: 1.2rem; padding: 15px; margin-top: 20px; }
+            .flashcard-back p { font-size: 0.95rem; padding: 15px; max-height: 75%; }
+            .btn-flip-mobile { display: inline-block; position: absolute; bottom: 20px; }
+            .fc-controls { margin-top: 10px; grid-template-columns: 45px 1fr 45px; gap: 5px; }
+            .btn-pop { padding: 12px 5px; font-size: 0.8rem; }
+            .btn-start { width: 100%; }
+        }
+
+        .fc-counter { text-align: center; margin-bottom: 10px; font-weight: bold; color: var(--accent-color); }
+        .fc-controls { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; margin-top: 20px; }
+        .fc-actions { display: flex; gap: 5px; justify-content: center; width: 100%; }
+
+        .btn-pop {
+            padding: 10px 20px; border: none; border-radius: 8px;
+            font-weight: 700; font-family: var(--font-body); text-transform: uppercase; cursor: pointer;
+            transition: transform 0.1s, box-shadow 0.2s; border: 2px solid #000; box-shadow: 3px 3px 0px #000;
+        }
+        .btn-pop:active { transform: translateY(2px); box-shadow: 1px 1px 0px #000; }
+        .btn-nav { background: #fff; color: #000; font-size: 1.2rem; min-width: 40px; }
+        .btn-no { background: var(--pop-magenta); color: #fff; flex-grow: 1; }
+        .btn-yes { background: var(--pop-cyan); color: #000; flex-grow: 1; }
+        .btn-start { background: var(--pop-yellow); color: #000; font-size: 1.2rem; padding: 15px 40px; margin-top: 20px; }
+
+        #win-screen {
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            height: 400px; text-align: center; background: #fff; border-radius: 12px; border: 2px dashed #000; padding: 2rem;
+        }
+        #win-screen h2 { border: none; margin: 0; padding: 0; color: var(--pop-ocean); }
+
+        #toast-container { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 9999999; pointer-events: none; }
+        .toast {
+            background: rgba(0,0,0,0.9); color: white; padding: 15px 30px; border-radius: 50px;
+            margin-top: 10px; font-weight: bold; font-family: var(--font-body); text-align: center;
+            opacity: 0; transition: opacity 0.3s, transform 0.3s; transform: translateY(20px); border: 2px solid; pointer-events: auto;
+        }
+        .toast.show { opacity: 1; transform: translateY(0); }
+        .toast-success { border-color: var(--pop-cyan); box-shadow: 0 0 15px var(--pop-cyan); color: var(--pop-cyan); }
+        .toast-retry { border-color: var(--pop-magenta); box-shadow: 0 0 15px var(--pop-magenta); color: var(--pop-magenta); }
+
+        /* --- FREUD BOT --- */
+        .freud-bot-container { background: #fff; padding: 2rem; border-radius: 8px; text-align: center; border: 1px solid #ddd; }
+        .bot-image {
+            display: block; margin: 0 auto 1.5rem auto; max-width: 100%; width: 100%; height: auto; 
+            object-fit: contain; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .bot-content { position: relative; background: transparent; padding: 0; border: none; display: block; max-width: 100%; }
+
+        /* --- TESTO OBIETTIVI --- */
+        .obj-list { margin-top:10px; padding-left:20px; line-height: 1.8; }
+        .obj-box { background: #f9f9f9; border-left: 4px solid var(--accent-color); padding: 1.5rem; margin-bottom: 2rem; }
+
+        /* --- FATTORI --- */
+        .factors-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 2rem 0; }
+        .factor-card {
+            background: #fff; border: 1px solid #ddd; padding: 1.5rem; border-radius: 8px;
+            cursor: pointer; text-align: center; transition: 0.2s; position: relative;
+        }
+        .factor-card:hover { border-color: var(--accent-color); transform: translateY(-3px); }
+        .factor-card::after { content: '+'; position: absolute; top: 5px; right: 10px; color: #ccc; }
+
+        /* --- MODAL --- */
+        #factor-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85);
+            z-index: 99999; display: none; justify-content: center; align-items: center; padding: 20px;
+        }
+        #factor-modal.open { display: flex; }
+        .modal-paper { 
+            background: #fff; width: 100%; max-width: 600px; padding: 2.5rem; border-radius: 12px; position: relative; 
+            max-height: 90vh; overflow-y: auto; line-height: 1.8; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); -webkit-overflow-scrolling: touch;
+        }
+        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 2rem; cursor: pointer; color: var(--accent-color); z-index: 10; }
+        .btn-choice {
+            padding: 10px 25px; margin: 5px; font-size: 0.9rem; cursor: pointer;
+            background: #fff; color: var(--accent-color); border: 2px solid #ccc; border-radius: 50px; font-weight: bold;
+        }
+
+        /* --- ASMR --- */
+        .visual-toggle-container { background: #eef2f5; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; text-align: center; border: 1px solid #d1d9e0; }
+        .visual-toggle-title { font-family: var(--font-title); font-size: 1.2rem; margin-bottom: 1rem; color: var(--accent-color); }
+        .toggle-btn {
+            padding: 8px 24px; margin: 0 10px; border: 2px solid var(--accent-color); background: transparent;
+            color: var(--accent-color); font-weight: bold; border-radius: 30px; cursor: pointer; transition: all 0.3s;
+        }
+        .toggle-btn:hover { background: rgba(55, 90, 127, 0.1); }
+        .toggle-btn.active { background: var(--accent-color); color: white; }
+        #visual-wrapper { display: none; margin-bottom: 25px; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- POP-UP RISPOSTA FLASHCARD (MOBILE) --- */
+        #fc-mobile-modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); z-index: 999999;
+            justify-content: center; align-items: center; padding: 20px;
+            backdrop-filter: blur(4px);
+        }
+        .fc-mobile-content {
+            background: #fff; width: 95%; max-width: 500px;
+            max-height: 80vh; overflow-y: auto; padding: 30px 25px; 
+            border-radius: 16px; position: relative;
+            font-size: 1.1rem; line-height: 1.6; color: #222;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            -webkit-overflow-scrolling: touch;
+        }
+        .fc-mobile-close {
+            margin-top: 20px; width: 100%; padding: 15px; 
+            background: var(--pop-cyan); border: 2px solid #000; 
+            font-weight: bold; font-size: 1rem; cursor: pointer; border-radius: 50px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="source-riassunto" style="display: none;">
+        <h3>1.1 L'oggetto della Sociologia: Definizioni e Fondamenti</h3>
+        <p>La sociologia si configura come una disciplina specifica il cui obiettivo fondamentale è lo studio della società nel suo complesso, distinguendosi nettamente dall'analisi del singolo individuo o della sua mente. Essa viene definita come lo studio scientifico delle diverse forme di vita umana associata, delle istituzioni e dei rapporti sociali.</p>
+        <p>Per comprendere la genesi di questa scienza, è necessario guardare ai contributi dei classici:</p>
+        <p><strong>Émile Durkheim</strong> identifica l'oggetto della sociologia nei fatti sociali. Questi sono modi di agire, pensare e sentire che presentano caratteri specifici: sono esterni all'individuo e dotati di un potere di coercizione in virtù del quale si impongono ad esso. Durkheim si interroga sul perché le persone obbediscano alle regole, notando che gran parte dei nostri comportamenti quotidiani avviene in automatico come forma di obbligo sociale interiorizzato.</p>
+        <p><strong>Max Weber</strong> propone una sociologia che deve "intendere in virtù di un procedimento interpretativo l'agire sociale". Per Weber, la sociologia è una scienza che cerca di spiegare causalmente il corso e gli effetti dell'agire degli individui quando interagiscono.</p>
+        <p><strong>N.J. Smelser</strong> sottolinea che la sociologia si propone di scoprire perché gli esseri umani si comportano in un certo modo, si uniscono in gruppi, si combattono o si sposano; in breve, tutto ciò che avviene durante l'interazione.</p>
+        <p><strong>Esempi Pratici:</strong> Si pensi all'ingresso in un'aula universitaria: gli studenti si siedono ordinatamente nei banchi senza che nessuno lo ordini esplicitamente. Questo comportamento è un "fatto sociale". Un altro esempio è l'obbligo sociale implicito di rispondere rapidamente ai messaggi in chat; sebbene non esista una legge scritta, la pressione del gruppo (le "spunte blu") agisce come forma di coercizione.</p>
+
+        <h3>1.2 La Sociologia come "Compito Irritante": Struttura e Agire</h3>
+        <p>Margaret Archer definisce la sociologia come un "compito irritante". Questa irritazione deriva dalla necessità di comprendere il legame dialettico tra la struttura (i condizionamenti sociali) e l'agire (la libertà individuale). Il sociologo si muove continuamente tra due livelli di analisi:</p>
+        <ul>
+            <li><strong>Macro:</strong> Lo studio delle grandi istituzioni e delle strutture sociali generali.</li>
+            <li><strong>Micro:</strong> L'analisi delle interazioni faccia a faccia nella vita quotidiana.</li>
+        </ul>
+        <p>Esistono due posizioni estreme che la sociologia cerca di superare:</p>
+        <ul>
+            <li><strong>Olismo:</strong> l'idea che gli individui siano materiale indeterminato modellato unilateralmente dalla società.</li>
+            <li><strong>Individualismo:</strong> l'idea che la società sia la semplice conseguenza dell'aggregazione delle attività individuali.</li>
+        </ul>
+        <p>Il dilemma sociologico risiede nel capire quanto siamo liberi di agire e quanto siamo condizionati. Spesso ci giustifichiamo dicendo "è la società che me lo impone", ma la sociologia ci spinge a riflettere su questi automatismi.</p>
+        <p><strong>Esempi Pratici:</strong> Il fenomeno del cyberbullismo. Da una parte si può analizzare come condizionamento sociale ("lo facevano tutti, l'ho fatto anch'io"), dall'altra come scelta individuale e responsabile del singolo ragazzo. Un altro esempio è la scelta dello smartphone: siamo liberi di cambiarlo ogni anno o siamo vittime di una struttura di mercato che ci impone modelli di consumo insostenibili?</p>
+
+        <h3>1.3 Sociologia vs Senso Comune</h3>
+        <p>È fondamentale distinguere la sociologia scientifica dal senso comune. Il senso comune è il "pensiero dell'ovvio", un automatismo quotidiano che ci preserva dal dover risolvere continuamente problemi già affrontati. Funziona come un sistema condiviso di credenze che tiene "i dubbi fuori dalla porta".</p>
+        <p>La sociologia, invece:</p>
+        <ul>
+            <li>Vede le relazioni sociali, laddove altre discipline vedono solo individui o cose.</li>
+            <li>Richiede l'immaginazione sociologica (C. Wright Mills), ovvero la capacità di riflettere su se stessi liberi dalle abitudini familiari per guardare la realtà con occhi diversi.</li>
+            <li>Colloca i fenomeni in un contesto più vasto, rivelando il senso contro-intuitivo dei fenomeni collettivi.</li>
+        </ul>
+        <p><strong>Esempi Pratici:</strong> Il primo giorno di scuola: un bambino può piangere perché non conosce le coordinate del nuovo sistema (crisi del senso comune). Un adulto all'università ha invece già interiorizzato le tipizzazioni (sedersi, prendere appunti) e agisce per automatismo. Solo una situazione di crisi ci obbliga a cambiare il nostro "pensare come al solito".</p>
+
+        <h3>1.4 Il Concetto di Società e le sue Implicazioni</h3>
+        <p>La parola società deriva dal latino <em>societas</em> (socius: compagno, amico, alleato). Questo implica l'idea di un patto o un'alleanza tra individui che interagiscono per perseguire obiettivi comuni. La società moderna è caratterizzata da:</p>
+        <ul>
+            <li><strong>Polivalenza:</strong> ogni epoca storica l'ha intesa in modo diverso, stratificando significati.</li>
+            <li><strong>Complessità:</strong> gli scambi diventano più intricati nel passaggio dalla tradizione alla contemporaneità.</li>
+            <li><strong>Istituzionalizzazione:</strong> la vita sociale è regolata da istituzioni (Stato, Scuola, Famiglia) che definiscono diritti e doveri.</li>
+        </ul>
+        <p>La sociologia studia come le decisioni istituzionali impattino sulla vita quotidiana. Ad esempio, il numero di alunni per classe o la natura pubblica/privata della scuola non sono fatti naturali, ma decisioni politiche che determinano la struttura educativa.</p>
+        <p><strong>Esempi Pratici:</strong> Il diritto di cittadinanza. Non è un concetto universale, ma dipende dalle leggi dello Stato (Ius Sanguinis, Ius Soli, Ius Scholae). Un insegnante che parla di cittadinanza in classe deve essere consapevole che per alcuni bambini stranieri quel concetto ha un significato legale diverso rispetto ai compagni.</p>
+
+        <h3>1.5 La Professione del Sociologo e l'Utilità della Disciplina</h3>
+        <p>Il sociologo è colui che riesce a liberarsi dai condizionamenti personali. La sociologia ha numerose implicazioni pratiche:</p>
+        <ul>
+            <li>Consapevolezza delle differenze culturali (es. il significato dei colori o delle emozioni in diverse culture).</li>
+            <li>Programmazione e valutazione delle politiche pubbliche e del welfare state.</li>
+            <li>Sviluppo dell'autocomprensione di sé e della propria collettività.</li>
+        </ul>
+        <p>In ambito educativo, la sociologia dell'educazione serve a analizzare i vantaggi e gli svantaggi di determinate riforme o pratiche (es. l'uso dello smartphone in classe o l'uso delle divise) prima che la politica prenda una decisione valoriale.</p>
+        <p><strong>Esempi Pratici:</strong> Il significato dei colori: in alcune culture asiatiche il bianco è il colore del funerale e il nero quello del matrimonio. Un insegnante che nota un bambino disegnare sposi in nero potrebbe erroneamente pensare a un disagio, se non possiede la sensibilità sociologica per riconoscere la differenza culturale.</p>
+    </div>
+
+    <div id="scroll-progress-container"><div id="scroll-progress-bar"></div></div>
+
+    <div class="giants-background">
+        <img class="main-background-image" src="https://i.postimg.cc/8P6rfPrw/fai-un-collage-materico-argomento-sociologia-societa-folle-ordine-sociale-educazione-scuola.jpg" alt="Sfondo Collage Materico">
+    </div>
+
+    <div id="toast-container"></div>
+
+    <header>
+        <h1>Sociologia dell'Educazione</h1>
+        <div class="subtitle">Lezione 1</div>
+    </header>
+
+    <div id="factor-modal" onclick="closeModal(event)">
+        <div class="modal-paper" onclick="event.stopPropagation()">
+            <span class="close-modal" onclick="closeModalDirect()">&times;</span>
+            <h2 id="m-title" style="margin-top:0;"></h2>
+            <div id="m-body"></div>
+        </div>
+    </div>
+
+    <div id="fc-mobile-modal" onclick="closeMobileAnswerPopup()">
+        <div class="fc-mobile-content" onclick="event.stopPropagation()">
+            <h3 style="margin-top:0; color:var(--accent-color);">Risposta:</h3>
+            <div id="fc-mobile-body"></div>
+            <button class="fc-mobile-close" onclick="closeMobileAnswerPopup()">Ho capito, chiudi</button>
+        </div>
+    </div>
+
+    <div class="content-card">
+        <div class="accordion-item" style="border-bottom: none;">
+            <button class="accordion-header master-header">
+                <span>Inizia</span> 
+                <span class="icon-plus">→</span>
+            </button>
+            <div class="accordion-content">
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span><strong>01.</strong> Obiettivi & Punti Chiave</span> 
+                        <span class="icon-plus">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="obj-box">
+                            <p><strong>Obiettivi della lezione:</strong></p>
+                            <ul class="obj-list">
+                                <li>Comprendere la definizione scientifica di sociologia come studio della società e dei fatti sociali.</li>
+                                <li>Distinguere la sociologia dal senso comune e comprendere il concetto di "immaginazione sociologica".</li>
+                                <li>Analizzare il dilemma tra struttura (condizionamenti) e agire (libertà) individuale.</li>
+                                <li>Definire il concetto di società moderna e le sue caratteristiche (complessità, istituzionalizzazione).</li>
+                            </ul>
+                        </div>
+                        <p><strong>Punti chiave:</strong></p>
+                        <div class="factors-grid">
+                            <div class="factor-card" onclick="openFactor('oggetto')">
+                                <strong>1. Oggetto della Sociologia</strong><br><small>Fatti Sociali e Agire</small>
+                            </div>
+                            <div class="factor-card" onclick="openFactor('struttura')">
+                                <strong>2. Struttura vs Agire</strong><br><small>Il Compito Irritante</small>
+                            </div>
+                            <div class="factor-card" onclick="openFactor('senso')">
+                                <strong>3. Sociologia vs Senso Comune</strong><br><small>Oltre l'ovvio</small>
+                            </div>
+                            <div class="factor-card" onclick="openFactor('societa')">
+                                <strong>4. Concetto di Società</strong><br><small>Complessa e Polivalente</small>
+                            </div>
+                        </div>
+                        <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione ▲</button>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span><strong>02.</strong> Il Podcast</span> 
+                        <span class="icon-plus">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="media-notes-grid">
+                            <div>
+                                <div class="visual-toggle-container">
+                                    <div class="visual-toggle-title">Vuoi la compagnia visiva?</div>
+                                    <button class="toggle-btn" onclick="toggleVisual(true)">SÌ</button>
+                                    <button class="toggle-btn" onclick="toggleVisual(false)">NO</button>
+                                </div>
+                                <div id="visual-wrapper">
+                                    <div class="video-container">
+                                        <iframe id="visual-iframe" src="" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                    </div>
+                                    <p style="font-size: 0.8rem; text-align: center; margin-top: 5px; color: #888;">
+                                        <em>Clicca Play per iniziare. Il video andrà in loop.</em>
+                                    </p>
+                                </div>
+
+                                <p style="margin-bottom:10px; margin-top: 20px;">Ascolta la lezione introduttiva.</p>
+                                <iframe id="podcast-iframe" width="100%" height="166" style="border:none;"
+                                src="https://files.catbox.moe/5tmb9s.mp3"></iframe>
+                            </div>
+                            <div class="notes-widget">
+                                <div class="notes-toolbar">
+                                    <button class="tool-btn copy" onclick="copyNotes(this)">Copia Appunti</button>
+                                </div>
+                                <textarea class="notes-area" placeholder="Scrivi qui i tuoi appunti..."></textarea>
+                            </div>
+                        </div>
+                        <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione ▲</button>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span><strong>03.</strong> Video Sintesi</span> 
+                        <span class="icon-plus">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="media-notes-grid">
+                            <div>
+                                <p style="margin-bottom:10px;">Guarda il video.</p>
+                                <div class="video-container">
+                                    <iframe src="https://www.youtube.com/embed/X7bZtj-fbS4" allow="autoplay"></iframe>
+                                </div>
+                            </div>
+                            <div class="notes-widget">
+                                <div class="notes-toolbar">
+                                    <button class="tool-btn copy" onclick="copyNotes(this)">Copia Appunti</button>
+                                </div>
+                                <textarea class="notes-area" placeholder="Scrivi qui i tuoi appunti..."></textarea>
+                            </div>
+                        </div>
+                        <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione ▲</button>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span><strong>04.</strong> Dritti al Sodo</span> 
+                        <span class="icon-plus">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="media-notes-grid">
+                            <div>
+                                <div id="fc-start-screen" style="text-align: center; padding: 2rem;">
+                                    <div class="flashcard-wrapper">
+                                        <div class="flashcard-inner">
+                                            <div class="flashcard-front">
+                                                <h2>Pronto a ripassare?</h2>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="btn-pop btn-start" onclick="startFlashcards()">INIZIA</button>
+                                </div>
+
+                                <div id="fc-game-screen" style="display: none;">
+                                    <div class="fc-counter" id="fc-counter"></div>
+
+                                    <div id="flashcard-deck" class="flashcard-wrapper" onclick="handleWrapperClick(event)">
+                                        <div class="flashcard-inner">
+                                            <div class="flashcard-front">
+                                                <h2 id="fc-front-text">Caricamento...</h2>
+                                                <button class="btn-flip-mobile" onclick="forceFlip(event)">GIRA ↻</button>
+                                            </div>
+                                            <div class="flashcard-back">
+                                                <p id="fc-back-text" onclick="event.stopPropagation()">Caricamento...</p>
+                                                <button class="btn-flip-mobile" onclick="forceFlip(event)">GIRA ↻</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="fc-controls" id="fc-controls-bar">
+                                        <button class="btn-pop btn-nav" onclick="navCard(-1)">◄</button>
+                                        <div class="fc-actions">
+                                            <button class="btn-pop btn-no" onclick="markUnknown()">Ripasso dopo :(</button>
+                                            <button class="btn-pop btn-yes" onclick="markKnown()">La so! :)</button>
+                                        </div>
+                                        <button class="btn-pop btn-nav" onclick="navCard(1)">►</button>
+                                    </div>
+                                </div>
+
+                                <div id="win-screen">
+                                    <h2>Ma allora se le sai tutte io vado via!!</h2>
+                                    <p style="margin: 20px 0;">🎉🎉🎉</p>
+                                    <button class="btn-pop btn-yes" onclick="resetDeck()">Ricomincia da capo</button>
+                                </div>
+                            </div>
+
+                            <div class="notes-widget">
+                                <div class="notes-toolbar">
+                                    <button class="tool-btn copy" onclick="copyNotes(this)">Copia Appunti</button>
+                                </div>
+                                <textarea class="notes-area" placeholder="Scrivi qui i tuoi appunti..."></textarea>
+                            </div>
+                        </div>
+                        <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione ▲</button>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span><strong>05.</strong> Il Riassuntone</span> 
+                        <span class="icon-plus">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="media-notes-grid">
+                            <div>
+                                <img src="https://i.postimg.cc/BbgFzJFJ/disegna-dei-pinguini-tutti-in-mucchio-come-fanno-in-natura-stile-del-disegno-corporate.jpg" class="section-banner" alt="Banner Riassuntone">
+                                
+                                <p style="margin-bottom:15px; color:#555;">Leggi il riassunto completo qui sotto.</p>
+                                
+                                <div id="contenitore-riassunto" class="text-content-box">
+                                    </div>
+
+                            </div>
+                            <div class="notes-widget">
+                                <div class="notes-toolbar">
+                                    <button class="tool-btn copy" onclick="copyNotes(this)">Copia Appunti</button>
+                                </div>
+                                <textarea class="notes-area" placeholder="Scrivi qui i tuoi appunti..."></textarea>
+                            </div>
+                        </div>
+                        <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione ▲</button>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span><strong>06.</strong> Fai una Pausa</span> 
+                        <span class="icon-plus">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        
+                        <div style="text-align:center; padding: 2rem; background: #fafafa; border-radius: 8px;">
+                            <h3>Tempo di respirare.</h3>
+                            <p>Prenditi 5 minuti lontano dallo schermo.</p>
+                            <div style="font-size:3rem; margin-top:1rem;">☕</div>
+                        </div>
+
+                        <p style="text-align: center; margin-top: 2rem; font-weight: bold; color: var(--accent-color);">
+                            oppure, gioca ai nostri giochi:
+                        </p>
+
+                        <div style="text-align: center; margin-top: 1.5rem;">
+                            <a href="https://sites.google.com/view/una-mano-spensierata/psicologia-dello-sviluppo/i-giochi" target="_blank" class="btn-pop btn-start" style="text-decoration:none; display:inline-block;">Vai ai giochi</a>
+                        </div>
+
+                        <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione ▲</button>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span><strong>07.</strong> Chiedi all'Assistente AI</span> 
+                        <span class="icon-plus">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="freud-bot-container">
+                            <img src="https://i.postimg.cc/FzXvL1zw/collage-materico-robot-e-sociologia.jpg" alt="Assistente IA" class="bot-image">
+                            <div class="bot-content">
+                                <h3>Prof Durkheim 4.0</h3>
+                                <p>Fai ordine (sociale)</p>
+                                <a href="https://notebooklm.google.com/notebook/0146de21-6dc3-4792-a40e-33c146dc3c12" target="_blank" class="btn-choice" style="display:inline-block; text-decoration:none; background:var(--ink-color); color:white; border:none; margin-top:10px;">Avvia Chat</a>
+                            </div>
+                        </div>
+                        <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione ▲</button>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span><strong>08.</strong> ASMR & Chill</span> 
+                        <span class="icon-plus">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div style="max-width: 800px; margin: 0 auto;">
+                            <p style="font-size:0.9rem; color:#666; margin-bottom:15px; text-align:center;">Nota: Clicca Play per avviare.</p>
+                            
+                            <h4 style="margin-bottom: 10px; color: var(--accent-color);">ASMR</h4>
+                            <div class="video-container" style="margin-bottom: 2rem;">
+                                <iframe id="asmr-brown" src="" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                            
+                            <h4 style="margin-bottom: 10px; color: var(--accent-color);">Musica Relax / Lofi</h4>
+                            <div class="video-container">
+                                <iframe id="asmr-music" src="" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                        <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione ▲</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        // --- TRANSFER RIASSUNTO LOGIC ---
+        window.addEventListener('DOMContentLoaded', () => {
+            const source = document.getElementById('source-riassunto');
+            const target = document.getElementById('contenitore-riassunto');
+            if (source && target) {
+                target.innerHTML = source.innerHTML;
+            }
+            setRandomYTStart('asmrBrown');
+            setRandomYTStart('asmrMusic');
+        });
+
+        // --- SCROLL PROGRESS BAR LOGIC ---
+        window.onscroll = function() { updateProgressBar() };
+
+        function updateProgressBar() {
+            var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            var scrolled = (winScroll / height) * 100;
+            document.getElementById("scroll-progress-bar").style.width = scrolled + "%";
+        }
+
+        // --- DATA FATTORI (USO BACKTICK) ---
+        const factorsData = {
+            oggetto: {
+                title: "L'Oggetto della Sociologia",
+                body: `<p>Durkheim identifica l'oggetto della sociologia nei <strong>fatti sociali</strong>. Questi sono modi di agire, pensare e sentire che presentano caratteri specifici: sono esterni all'individuo e dotati di un potere di coercizione in virtù del quale si impongono ad esso.</p>`
+            },
+            struttura: {
+                title: "Struttura vs Agire",
+                body: `<p>Margaret Archer definisce la sociologia come un "compito irritante" perché ci costringe a comprendere il legame tra la struttura (i condizionamenti sociali che subiamo) e l'agire (la nostra libertà individuale).</p>`
+            },
+            senso: {
+                title: "Sociologia vs Senso Comune",
+                body: `<p>Il senso comune è il "pensiero dell'ovvio", un automatismo che sospende il dubbio. La sociologia usa il metodo scientifico per svelare il senso contro-intuitivo dei fenomeni, andando oltre l'apparenza.</p>`
+            },
+            societa: {
+                title: "Il Concetto di Società",
+                body: `<p>La società moderna è caratterizzata da <strong>Polivalenza</strong> (stratificazione di significati), <strong>Complessità</strong> (aumento degli scambi e delle interazioni) e <strong>Istituzionalizzazione</strong> (regolazione tramite norme e diritti).</p>`
+            }
+        };
+
+        // --- FLASHCARDS LOGIC (USO BACKTICK PER TUTTI I TESTI) ---
+        const initialCards = [
+            { 
+                front: `Qual è la definizione di "sociologia" proposta dai padri fondatori Durkheim e Weber e come si conciliano queste visioni?`, 
+                back: `La sociologia analizza la società con metodo scientifico, ma attraverso prospettive diverse. Émile Durkheim (1895) definisce l'oggetto della disciplina nei "fatti sociali": modi di agire e pensare esterni all'individuo, dotati di potere coercitivo. Per lui, la società precede l'individuo imponendosi tramite norme apprese con l'educazione. Max Weber (1920), invece, si concentra sull' "agire sociale", azione dotata di senso soggettivo e orientata verso gli altri. La sua sociologia è interpretativa: mira a comprendere il significato che gli attori danno alle loro azioni. Queste visioni non si escludono ma si completano: la sociologia contemporanea supera la dicotomia tra olismo (l'uomo plasmato dalla società) e individualismo (la società come somma di individui). Il compito della disciplina è proprio legare struttura e agire, riconoscendo che siamo condizionati dalle istituzioni ma capaci di autonomia.` 
+            },
+            { 
+                front: `In che modo il "senso comune" differisce dalla sociologia scientifica e perché quest'ultima è necessaria?`, 
+                back: `Il senso comune rappresenta il bagaglio di conoscenze e credenze che utilizziamo per muoverci nel quotidiano senza dover ripensare ogni istante alle nostre azioni; è un "pensiero dell'ovvio" che agisce come un automatismo. Esso è necessario per vivere, ma non è sufficiente per comprendere i meccanismi profondi della società. La sociologia scientifica si distacca dal senso comune perché utilizza metodi teorici, razionali e sistematici per costruire il sapere. Mentre il senso comune si ferma alla superficie e vede spesso solo "individui e cose", la sociologia vede le "relazioni sociali" e i nessi di causa-effetto che sottostanno ai fenomeni. Un esempio chiaro è l'istruzione: il senso comune ci fa entrare in aula e sedere ai banchi per abitudine, mentre la sociologia si chiede perché quella disposizione sia considerata naturale e quali dinamiche di potere o di disciplina essa sottenda. La scienza sociologica è necessaria perché rivela il senso "contro-intuitivo" della realtà, mostrandoci che ciò che consideriamo naturale o buono è spesso il risultato di complessi fattori storici e sociali, permettendoci cosi di agire con maggiore consapevolezza critica.` 
+            },
+            { 
+                front: `Che cosa si intende per "immaginazione sociologica" e quale ruolo gioca nella professione del sociologo?`, 
+                back: `L'immaginazione sociologica, concetto introdotto da Charles Wright Mills nel 1959, è la capacità fondamentale del sociologo di riflettere su se stessi e sulla propria realtà quotidiana liberandosi dai condizionamenti delle abitudini personali. Essa permette di guardare il mondo con "occhi diversi", collocando le vicende biografiche individuali all'interno di un contesto sociale e storico più vasto. Il sociologo, grazie a questa facoltà, non vede solo la propria situazione personale, ma comprende come essa sia intrecciata ai processi globali. Ad esempio, non analizza solo il proprio smartphone come oggetto d'uso, ma ne vede l'impatto ecologico globale e le dinamiche di pressione sociale che ne spingono l'acquisto continuo. Utilizzare l'immaginazione sociologica significa dunque rivelare il senso contro-intuitivo dei fenomeni collettivi, smascherando gli stereotipi e i pregiudizi che spesso offuscano la nostra visione. Questa competenza è cruciale per chiunque operi nel sociale, inclusi gli insegnanti, perché permette di non fermarsi alla prima impressione e di comprendere che il comportamento di un individuo (come un bambino in classe) è spesso il riflesso di un background culturale e sociale complesso che merita di essere indagato e compreso.` 
+            },
+            { 
+                front: `Qual è l'etimologia del termine "società" e quali sono le caratteristiche della società moderna secondo le fonti?`, 
+                back: `Il termine "società" affonda le sue radici nel latino societas, derivante da socius, che significa compagno, alleato o amico. Questa origine etimologica suggerisce che alla base della società vi sia un patto, un'alleanza tra individui che decidono di interagire per perseguire obiettivi comuni. Oggi, la società è descritta come un concetto polivalente e complesso. È polivalente perché ogni epoca storica ha stratificato significati diversi su questo termine; è complessa perché, nel passaggio dalla tradizione alla contemporaneità, gli scambi sociali, culturali ed economici sono diventati infinitamente più intricati. La società moderna è un insieme di individui dotati di diversi livelli di autonomia e organizzazione, regolati da istituzioni che stabiliscono diritti e doveri. Un esempio di questa complessità è la pluralità di lingue, religioni e visioni politiche che convivono oggi in Italia rispetto a cento anni fa. In sintesi, la società non è un'entità statica, ma un sistema dinamico di relazioni sociali che richiede strumenti di analisi sofisticati (come il telescopio per le galassie) per essere compreso correttamente, andando oltre l'osservazione superficiale a occhio nudo.` 
+            },
+            { 
+                front: `In che modo le istituzioni e le decisioni politiche influenzano la struttura dei sistemi educativi?`, 
+                back: `La sociologia mette in luce come l'educazione non sia un fatto puramente pedagogico, ma sia strettamente legata alle decisioni delle istituzioni politiche. Le fonti evidenziano che elementi come il numero minimo o massimo di alunni in una classe non sono determinati dalla natura, ma da linee guida ministeriali approvate dal Parlamento. Queste scelte politiche hanno effetti diretti e tangibili: se il Parlamento decide per classi di 50 bambini, l'insegnante si troverà a gestire quella realtà, indipendentemente dalle teorie pedagogiche sull'apprendimento ideale. Allo stesso modo, la scelta tra un sistema scolastico prevalentemente pubblico (come quello italiano) o privato (come in altri paesi) determina le modalità di selezione degli insegnanti e l'accesso all'istruzione dei cittadini. Il voto del cittadino, dunque, non è irrilevante, perché determina la composizione del potere politico che scriverà le leggi sulla scuola. La sociologia analizza queste interdipendenze, mostrando che ogni riforma istituzionale ha ricadute a catena sulle relazioni in classe, sul valore dei titoli di studio e sull'uguaglianza delle opportunità, rendendo il sistema educativo una variabile dipendente dalle scelte valoriali e politiche della società nel suo complesso.` 
+            },
+            { 
+                front: `Qual è l'importanza della consapevolezza delle differenze culturali per un futuro insegnante secondo la prospettiva sociologica?`, 
+                back: `La consapevolezza delle differenze culturali è uno dei principali obiettivi pratici della sociologia. Per un insegnante, questa competenza è vitale perché permette di decodificare correttamente i comportamenti degli alunni che provengono da background familiari e culturali diversi. Le fonti riportano esempi concreti: il significato dei colori (come il viola che porta fortuna in certe culture o il nero usato per i matrimoni) o la gestione delle emozioni. Un bambino che non interviene in classe potrebbe non essere disinteressato o problematico, ma potrebbe aver ricevuto un'educazione familiare che impone il silenzio come forma di rispetto verso l'autorità del maestro. Senza sensibilità sociologica, un docente rischia di giudicare questi comportamenti come "disagi" o "mancanze", mentre sono semplicemente espressioni di culture diverse. La sociologia insegna che l'attenzione alla diversità non è solo un ideale etico, ma una necessità professionale per evitare pregiudizi e stereotipi che potrebbero compromettere il patto educativo. Comprendere il punto di vista dell'altro significa riconoscere che non esiste un unico modo "naturale" di comportarsi, ma che ogni azione è situata in un sistema di significati culturali che l'insegnante deve saper interpretare per promuovere una vera inclusione.` 
+            },
+            { 
+                front: `Come viene affrontato il dilemma tra "uguaglianza" e "diversità" nella riflessione sociologica sull'educazione?`, 
+                back: `La sociologia dell'educazione pone domande cruciali sul ruolo della scuola: essa deve selezionare i migliori o promuovere l'uguaglianza per tutti?. Le fonti introducono un dilemma fondamentale: se la scuola promuove tutti indistintamente per evitare l'esclusione, rischia di non preparare professionisti competenti (come medici o avvocati). Tuttavia, l'uguaglianza è un diritto fondamentale e non significa che siamo tutti "uguali" (identici), ma che abbiamo diritto a pari opportunità di trattamento. La sociologia preferisce spesso il termine "simile" a "uguale", poiché ogni individuo ha condizioni socio-economiche, valori e talenti diversi che lo rendono unico. Il compito del sistema educativo è gestire questa diversità senza trasformarla in disuguaglianza. Un paradosso attuale evidenziato è che, a fronte di voti di diploma sempre più alti, le competenze reali degli studenti sembrano diminuire; questo solleva dubbi sull'efficacia dei criteri di valutazione e sulla reale capacità del sistema di garantire un'istruzione di qualità. In sintesi, la sociologia invita a riflettere sul fatto che ogni scelta formativa ha ripercussioni sociali a lungo termine: l'insegnante di oggi forma i cittadini (e i professionisti) che domani gestiranno la società.` 
+            },
+            { 
+                front: `Qual è l'impatto della tecnologia digitale e dei social media sulle relazioni sociali e sulla percezione del corpo?`, 
+                back: `La sociologia analizza come la digitalizzazione stia trasformando radicalmente il rapporto tra individuo e società. Oggi viviamo nella "società degli influencer", dove la percezione del proprio corpo è mediata da filtri e immagini studiate per i social media. Questo crea un problema di "presenza": mentre in passato le relazioni erano prevalentemente faccia a faccia e il corpo non poteva essere mascherato, oggi i giovani gestiscono la propria identità online attraverso una versione modificata di sé. La sociologia osserva che, sebbene la modifica del corpo (trucco, tatuaggi) esista dalla preistoria, oggi essa è inserita in un sistema economico e tecnologico che condiziona pesantemente l'autonomia individuale. Inoltre, la tecnologia sfuma il confine tra privato e pubblico: ciò che viene postato online (video, commenti, foto) tende a rimanere "eterno", con il rischio che materiale privato possa essere scaricato e riutilizzato da terzi anche dopo anni. Per gli insegnanti, comprendere questi meccanismi è fondamentale, sia per gestire le dinamiche di socializzazione digitale dei bambini (sempre più "nativi digitali") sia per proteggere la propria professionalità, evitando che comunicazioni apparentemente private (come le chat) diventino oggetto di pubblico scrutinio.` 
+            },
+            { 
+                front: `Cosa si intende per "conoscenza scientifica" in sociologia e come si applica alla ricerca sociale?`, 
+                back: `La sociologia si definisce come scienza perché non si basa su opinioni personali o discussioni da bar, ma su ricerche condotte con metodo rigoroso. Una ricerca sociologica scientifica utilizza strumenti come questionari, interviste e analisi di dati statistici (come i dati Istat o Oxe) per spiegare i fenomeni. Per essere definita tale, deve tenere conto di tre aspetti: la concezione antropologica (quale idea di essere umano sottende), l'approccio analitico (multi o monodimensionale, micro o macro) e il rapporto tra individuo e società. Il ricercatore deve saper distinguere tra analisi dei vantaggi/svantaggi di un fenomeno e giudizio morale; ad esempio, un sociologo può studiare gli effetti dell'uso delle divise scolastiche senza dover dire se sia "bene" o "male", lasciando la decisione finale alla politica. Un esempio di dato scientifico è la discrepanza tra gli alti voti scolastici e le scarse competenze reali rilevate dai test internazionali: la sociologia indaga le cause di questo paradosso, cercando risposte nelle riforme educative o nei contesti sociali di apprendimento. In sintesi, la sociologia fornisce "mappe" razionali e sistematiche della realtà sociale, permettendo di prendere decisioni basate su evidenze empiriche piuttosto che su credenze infondate.` 
+            },
+            { 
+                front: `In che modo l'educazione è considerata un "processo di modellamento" dell'essere sociale?`, 
+                back: `Secondo la prospettiva classica, in particolare quella di Durkheim, l'educazione è il processo attraverso il quale la società costruisce l' "essere sociale" all'interno dell'individuo. Durkheim sostiene che in ognuno di noi coesistano due esseri: uno individuale, fatto di stati mentali egoistici, e uno sociale, composto da idee e sentimenti che esprimono i gruppi di cui facciamo parte (tradizioni, morale, religione). L'educazione ha il compito di sovrapporre l'essere sociale a quello individuale, trasformando un bambino potenzialmente asociale in un membro funzionale della collettività. Questo modellamento avviene attraverso l'interiorizzazione di norme e regole che spesso seguiamo in automatico (fatti sociali). L'educazione ha dunque un potere di coercizione, ma è un potere necessario per garantire la sopravvivenza della società e la convivenza civile. Tuttavia, la sociologia moderna avverte anche del rischio di un' "ultrasocializzazione", in cui l'individuo viene visto come materiale passivo. Il fine ultimo di un'educazione consapevole dovrebbe essere quello di bilanciare questo condizionamento sociale con lo sviluppo dell'autonomia personale, permettendo al soggetto di capire le regole per poterle vivere (o criticare) con consapevolezza.` 
+            }
+        ];
+
+        let activeCards = [...initialCards];
+        let currentCardIndex = 0;
+
+        function startFlashcards() {
+            document.getElementById('fc-start-screen').style.display = 'none';
+            document.getElementById('fc-game-screen').style.display = 'block';
+            updateCardDisplay();
+        }
+
+        function updateCardDisplay() {
+            const deck = document.getElementById('flashcard-deck');
+            const controls = document.getElementById('fc-controls-bar');
+            const winScreen = document.getElementById('win-screen');
+            const counter = document.getElementById('fc-counter');
+
+            if (activeCards.length === 0) {
+                deck.style.display = 'none';
+                controls.style.display = 'none';
+                counter.style.display = 'none';
+                winScreen.style.display = 'flex';
+                return;
+            } else {
+                deck.style.display = 'block';
+                controls.style.display = 'grid';
+                counter.style.display = 'block';
+                winScreen.style.display = 'none';
+            }
+
+            if (currentCardIndex >= activeCards.length) currentCardIndex = 0;
+            if (currentCardIndex < 0) currentCardIndex = activeCards.length - 1;
+
+            const card = activeCards[currentCardIndex];
+            counter.innerText = `Carte da studiare: ${activeCards.length}`;
+
+            deck.style.opacity = '0.5';
+            setTimeout(() => {
+                document.getElementById('fc-front-text').innerText = card.front;
+                document.getElementById('fc-back-text').innerText = card.back;
+                
+                // Reset scroll del testo posteriore
+                document.getElementById('fc-back-text').scrollTop = 0;
+                
+                // Reset flip
+                deck.classList.remove('flipped'); 
+                deck.style.opacity = '1';
+            }, 200);
+        }
+
+        function handleWrapperClick(e) {
+            // Se siamo su mobile (schermo < 900px), IGNORA il click sul wrapper
+            // per permettere lo scroll del testo senza girare la carta.
+            if (window.innerWidth <= 900) return;
+            
+            toggleFlip();
+        }
+
+        function forceFlip(e) {
+            if(e) e.stopPropagation();
+
+            // LOGICA MOBILE: SE SIAMO SU SCHERMO PICCOLO (< 900px) APRI MODALE INVECE DI GIRARE
+            if (window.innerWidth <= 900) {
+                const card = activeCards[currentCardIndex];
+                const answerText = card.back; 
+                
+                document.getElementById('fc-mobile-body').innerHTML = answerText;
+                document.getElementById('fc-mobile-modal').style.display = 'flex';
+            } else {
+                toggleFlip();
+            }
+        }
+
+        function closeMobileAnswerPopup() {
+            document.getElementById('fc-mobile-modal').style.display = 'none';
+        }
+
+        function toggleFlip() {
+            document.getElementById('flashcard-deck').classList.toggle('flipped');
+        }
+
+        function navCard(direction) {
+            currentCardIndex += direction;
+            if (currentCardIndex < 0) currentCardIndex = activeCards.length - 1;
+            if (currentCardIndex >= activeCards.length) currentCardIndex = 0;
+            updateCardDisplay();
+        }
+
+        function markKnown() {
+            showToast("Grande! Continua così.", "success");
+            activeCards.splice(currentCardIndex, 1);
+            if (currentCardIndex >= activeCards.length) currentCardIndex = 0;
+            
+            setTimeout(() => {
+                document.getElementById('flashcard-deck').classList.remove('flipped');
+                updateCardDisplay();
+            }, 500);
+        }
+
+        function markUnknown() {
+            showToast("Nessun problema, la rivedremo dopo.", "retry");
+            const currentCard = activeCards.splice(currentCardIndex, 1)[0];
+            activeCards.push(currentCard);
+            
+            if (currentCardIndex >= activeCards.length) currentCardIndex = 0;
+            
+            setTimeout(() => {
+                document.getElementById('flashcard-deck').classList.remove('flipped');
+                updateCardDisplay();
+            }, 500);
+        }
+
+        function resetDeck() {
+            activeCards = [...initialCards];
+            currentCardIndex = 0;
+            document.getElementById('win-screen').style.display = 'none';
+            document.getElementById('fc-game-screen').style.display = 'block';
+            document.getElementById('fc-start-screen').style.display = 'block';
+            document.getElementById('fc-game-screen').style.display = 'none';
+        }
+
+        function showToast(message, type) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.innerText = message;
+            container.appendChild(toast);
+            
+            void toast.offsetWidth; 
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 2000);
+        }
+
+        // --- UTILS ---
+        
+        function openFactor(key) {
+            document.getElementById('m-title').innerText = factorsData[key].title;
+            document.getElementById('m-body').innerHTML = factorsData[key].body;
+            document.getElementById('factor-modal').classList.add('open');
+            document.body.classList.add('modal-open');
+        }
+        function closeModalDirect() { 
+            document.getElementById('factor-modal').classList.remove('open');
+            document.body.classList.remove('modal-open');
+        }
+        function closeModal(e) { if(e.target.id === 'factor-modal') closeModalDirect(); }
+
+        function showCopySuccess(btn) {
+            const originalText = btn.innerText;
+            btn.innerText = "Copiato!";
+            btn.style.background = "#d4edda";
+            setTimeout(() => {
+                btn.innerText = originalText;
+                btn.style.background = "white";
+            }, 1500);
+        }
+
+        function copyNotes(btn) {
+            const widget = btn.closest('.notes-widget');
+            const noteArea = widget.querySelector('.notes-area');
+            const text = noteArea.value; // CHANGED to .value for textarea
+
+            if (!text.trim()) {
+                alert("Non c'è nulla da copiare! Scrivi prima qualcosa.");
+                return;
+            }
+
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showCopySuccess(btn);
+                }).catch(err => {
+                    fallbackCopyTextToClipboard(text, btn);
+                });
+            } else {
+                fallbackCopyTextToClipboard(text, btn);
+            }
+        }
+
+        function fallbackCopyTextToClipboard(text, btn) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed"; 
+            textArea.style.left = "-9999px";
+            textArea.style.top = "0";
+            document.body.appendChild(textArea);
+            textArea.focus({preventScroll: true});
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showCopySuccess(btn);
+            } catch (err) {
+                alert('Errore nel copiare gli appunti.');
+            }
+            document.body.removeChild(textArea);
+        }
+        
+        // --- AUTO-SCROLL LOGIC FOR TEXTAREA (ZEN MODE) ---
+        const allTextareas = document.querySelectorAll('textarea.notes-area');
+        allTextareas.forEach((area, index) => {
+            // Load persistent data per instance
+            const saved = localStorage.getItem('NOTES_V1_IDX_' + index);
+            if(saved) area.value = saved;
+
+            area.addEventListener('input', function() {
+                // Save data
+                localStorage.setItem('NOTES_V1_IDX_' + index, this.value);
+                
+                // Auto-scroll to bottom if cursor is at the end (Zen Mode logic)
+                if(this.selectionStart === this.value.length) {
+                   this.scrollTo(0, this.scrollHeight);
+                }
+            });
+        });
+
+        // --- ACCORDION LOGIC (Corretta: addEventListener) ---
+        const accs = document.getElementsByClassName("accordion-header");
+        for (let i = 0; i < accs.length; i++) {
+            accs[i].addEventListener("click", function(e) {
+                e.stopPropagation();
+                
+                this.classList.toggle("active");
+                const panel = this.nextElementSibling;
+                const icon = this.querySelector('.icon-plus');
+                
+                if (panel.style.maxHeight || panel.classList.contains('active')) {
+                    panel.style.maxHeight = null;
+                    panel.classList.remove("active");
+                    if(icon) icon.textContent = "+";
+                } else {
+                    panel.classList.add("active");
+                    panel.style.maxHeight = panel.scrollHeight + 15000 + "px"; 
+                    if(icon) icon.textContent = "-";
+                }
+            });
+        }
+
+        function closeThisSection(btn) {
+            const content = btn.parentElement;
+            const header = content.previousElementSibling;
+            header.click();
+            header.scrollIntoView({behavior: "smooth", block: "center"});
+        }
+
+        // --- YOUTUBE LOGIC ---
+        const VIDEO_CONFIG = {
+            visualCompanion: { 
+                id: 'visual-iframe', 
+                videoId: 'pb-j3svRQLI', 
+                duration: 3600, 
+                muted: true 
+            },
+            asmrBrown: {
+                id: 'asmr-brown',
+                videoId: 'P48QELwruQs', 
+                duration: 36000, 
+                muted: false
+            },
+            asmrMusic: {
+                id: 'asmr-music',
+                videoId: 'oGCu47JESi0', 
+                duration: 3600, 
+                muted: false
+            }
+        };
+
+        function setRandomYTStart(configKey) {
+            const config = VIDEO_CONFIG[configKey];
+            const iframe = document.getElementById(config.id);
+            if(!iframe) return;
+
+            const randomSec = Math.floor(Math.random() * (config.duration - 30));
+            
+            let url = `https://www.youtube.com/embed/${config.videoId}?playlist=${config.videoId}&loop=1&autoplay=0&start=${randomSec}&controls=1&fs=1`;
+            
+            if(config.muted) {
+                url += "&mute=1";
+            }
+            
+            iframe.src = url;
+        }
+
+        function toggleVisual(show) {
+            const wrapper = document.getElementById('visual-wrapper');
+            const btns = document.querySelectorAll('.toggle-btn');
+            
+            btns[0].classList.toggle('active', show);
+            btns[1].classList.toggle('active', !show);
+
+            if (show) {
+                wrapper.style.display = 'block';
+                setRandomYTStart('visualCompanion');
+            } else {
+                wrapper.style.display = 'none';
+                document.getElementById('visual-iframe').src = "";
+            }
+        }
+
+    </script>
+</body>
+</html>
