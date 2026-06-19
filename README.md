@@ -1,1 +1,0 @@
-# Una-mano-spensierata
