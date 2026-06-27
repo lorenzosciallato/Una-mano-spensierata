@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Una Mano Spensierata | Lezione Dinamica</title>
+    <title>Storia Contemporanea | Lezione 12</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,15 +16,19 @@
             --paper-color: #fdfbf7;
             --ink-color: #1a1a1a;
             --accent-color: #375a7f;
+            
+            /* COLORI POP */
             --pop-cyan: #00f2ff;
             --pop-magenta: #ff00ff;
             --pop-ocean: #0044cc;
             --pop-yellow: #ffee00;
+
             --font-title: 'Abril Fatface', cursive;
             --font-body: 'Inter', sans-serif;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
+
         html { height: 100%; overflow-x: hidden; }
 
         body {
@@ -40,20 +44,46 @@
         }
 
         /* --- BARRA DI PROGRESSO (SCROLL) --- */
-        #scroll-progress-container { position: fixed; top: 0; left: 0; width: 100%; height: 6px; background: rgba(0,0,0,0.05); z-index: 9999999; }
-        #scroll-progress-bar { height: 100%; background: rgba(55, 90, 127, 0.7); width: 0%; transition: width 0.1s; box-shadow: 0 0 10px rgba(55, 90, 127, 0.3); }
+        #scroll-progress-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 6px;
+            background: rgba(0,0,0,0.05); z-index: 9999999;
+        }
+        #scroll-progress-bar {
+            height: 100%; 
+            background: rgba(55, 90, 127, 0.7); /* Blu semi-trasparente */
+            width: 0%;
+            transition: width 0.1s; 
+            box-shadow: 0 0 10px rgba(55, 90, 127, 0.3);
+        }
 
         /* --- BACKGROUND --- */
-        .giants-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; overflow: hidden; display: flex; justify-content: center; align-items: center; background: #e0e0e5; }
-        .main-background-image { width: 100%; height: 100%; object-fit: cover; opacity: 0.1; filter: grayscale(100%) sepia(1) hue-rotate(210deg) contrast(1.2); mix-blend-mode: multiply; }
+        .giants-background {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; pointer-events: none; overflow: hidden;
+            display: flex; justify-content: center; align-items: center;
+            background: #e0e0e5; 
+        }
+        .main-background-image {
+            width: 100%; height: 100%; object-fit: cover; opacity: 0.1; 
+            filter: grayscale(100%) sepia(1) hue-rotate(210deg) contrast(1.2);
+            mix-blend-mode: multiply;
+        }
 
         /* --- HEADER --- */
         header { text-align: center; margin-top: 3rem; margin-bottom: 1rem; padding: 0 1rem; }
         h1 { font-family: var(--font-title); font-size: clamp(2.5rem, 5vw, 4rem); margin: 0; color: var(--ink-color); line-height: 1.1; }
-        .subtitle { font-family: var(--font-body); font-size: 1.5rem; color: var(--accent-color); font-weight: 700; text-transform: uppercase; letter-spacing: 4px; margin-top: 10px; }
+        .subtitle {
+            font-family: var(--font-body); font-size: 1.5rem; color: var(--accent-color); font-weight: 700; 
+            text-transform: uppercase; letter-spacing: 4px; margin-top: 10px;
+        }
 
         /* --- CONTENITORE PRINCIPALE --- */
-        .content-card { background: var(--paper-color); padding: 3rem; margin: 0 auto; width: 90%; max-width: 1200px; position: relative; border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.05); z-index: 1; margin-bottom: 2rem; margin-top: 2rem; }
+        .content-card {
+            background: var(--paper-color); padding: 3rem; margin: 0 auto;
+            width: 90%; max-width: 1200px; position: relative;
+            border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.05); z-index: 1;
+            margin-bottom: 2rem; margin-top: 2rem;
+        }
         @media (max-width: 600px) { .content-card { padding: 1.5rem; width: 95%; margin-top: 1rem; } }
 
         h3 { font-family: var(--font-title); font-size: 1.5rem; margin-top: 1.5rem; margin-bottom: 0.5rem; }
@@ -64,67 +94,200 @@
 
         /* --- MODIFICA SCROLL RIASSUNTO (Desktop) --- */
         @media (min-width: 900px) {
-            #dyn-riassuntone-container { max-height: 550px; overflow-y: auto; padding-right: 15px; border-bottom: 1px solid #eee; }
-            #dyn-riassuntone-container::-webkit-scrollbar { width: 8px; }
-            #dyn-riassuntone-container::-webkit-scrollbar-thumb { background-color: #ccc; border-radius: 4px; }
-            #dyn-riassuntone-container::-webkit-scrollbar-track { background-color: #f9f9f9; }
+            #contenitore-riassunto {
+                max-height: 550px; 
+                overflow-y: auto;
+                padding-right: 15px; 
+                border-bottom: 1px solid #eee; 
+            }
+            #contenitore-riassunto::-webkit-scrollbar { width: 8px; }
+            #contenitore-riassunto::-webkit-scrollbar-thumb { background-color: #ccc; border-radius: 4px; }
+            #contenitore-riassunto::-webkit-scrollbar-track { background-color: #f9f9f9; }
         }
 
+        /* --- BANNER IMMAGINI --- */
         .section-banner { width: 100%; height: auto; max-height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 1.5rem; border: 1px solid #ddd; }
 
         /* --- WIDGET APPUNTI ZEN --- */
-        .notes-widget { background: #fff; border: 2px dashed #ccc; border-radius: 8px; display: flex; flex-direction: column; align-self: start; height: 60vh; position: sticky; top: 20px; z-index: 5; width: 100%; min-width: 0; box-shadow: 0 10px 25px rgba(0,0,0,0.05); overflow: hidden; }
-        @media (max-width: 900px) { .notes-widget { position: relative; top: 0; height: 500px; align-self: stretch; } }
-        .notes-toolbar { background: #f4f4f4; padding: 10px; border-bottom: 1px solid #ddd; border-radius: 6px 6px 0 0; display: flex; justify-content: flex-end; gap: 5px; flex-shrink: 0; }
-        .tool-btn { padding: 8px 15px; font-size: 0.85rem; cursor: pointer; border: 1px solid #bbb; background: white; border-radius: 4px; font-weight: 600; font-family: var(--font-body); transition: all 0.2s; }
-        .notes-area { width: 100%; height: 100%; border: none; resize: none; padding: 20px; padding-top: 50px; padding-bottom: 80vh; overflow-y: auto; -webkit-overflow-scrolling: touch; background: transparent; font-family: 'Courier New', monospace; font-size: 0.95rem; line-height: 1.6; outline: none; }
+        .notes-widget {
+            background: #fff; 
+            border: 2px dashed #ccc; 
+            border-radius: 8px;
+            display: flex; 
+            flex-direction: column; 
+            align-self: start; 
+            height: 60vh; /* Altezza fissa per contenere scroll */
+            position: sticky; 
+            top: 20px; 
+            z-index: 5;
+            width: 100%; 
+            min-width: 0;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+        
+        @media (max-width: 900px) {
+            .notes-widget { position: relative; top: 0; height: 500px; align-self: stretch; }
+        }
+
+        .notes-toolbar {
+            background: #f4f4f4; padding: 10px; border-bottom: 1px solid #ddd;
+            border-radius: 6px 6px 0 0; display: flex; justify-content: flex-end; gap: 5px;
+            flex-shrink: 0;
+        }
+        .tool-btn {
+            padding: 8px 15px; font-size: 0.85rem; cursor: pointer; border: 1px solid #bbb; 
+            background: white; border-radius: 4px; font-weight: 600; font-family: var(--font-body); transition: all 0.2s;
+        }
+        
+        .notes-area {
+            width: 100%;
+            height: 100%;
+            border: none;
+            resize: none;
+            padding: 20px;
+            padding-top: 50px; /* Spazio per toolbar */
+            padding-bottom: 80vh; /* IL TRUCCO ZEN: Spazio infinito */
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            background: transparent;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem; 
+            line-height: 1.6; 
+            outline: none;
+        }
         .notes-area::placeholder { color: #aaa; }
 
         /* --- ACCORDION --- */
         .accordion-item { margin-bottom: 1rem; border-bottom: 1px solid #eee; }
-        .accordion-header { background: transparent; border: none; width: 100%; text-align: left; padding: 1.2rem 0; font-family: var(--font-title); font-size: clamp(1.2rem, 4vw, 1.8rem); cursor: pointer; transition: color 0.3s; display: flex; justify-content: space-between; align-items: center; color: var(--ink-color); font-weight: 400; }
-        .accordion-header strong { font-family: var(--font-body); font-weight: 700; font-size: 1.3rem; color: var(--accent-color); text-transform: uppercase; letter-spacing: 2px; margin-right: 15px; }
-        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; padding: 0; opacity: 0; display: flex; flex-direction: column; }
+        .accordion-header {
+            background: transparent; border: none; width: 100%; text-align: left;
+            padding: 1.2rem 0; font-family: var(--font-title); font-size: clamp(1.2rem, 4vw, 1.8rem);
+            cursor: pointer; transition: color 0.3s; display: flex;
+            justify-content: space-between; align-items: center; color: var(--ink-color); font-weight: 400;
+        }
+        .accordion-header strong {
+            font-family: var(--font-body); font-weight: 700; font-size: 1.3rem;
+            color: var(--accent-color); text-transform: uppercase; letter-spacing: 2px; margin-right: 15px;
+        }
+        .accordion-content {
+            max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out;
+            padding: 0; opacity: 0; display: flex; flex-direction: column; 
+        }
         .accordion-content.active { max-height: 20000px; opacity: 1; padding-top: 1rem; padding-bottom: 2rem; overflow: visible; } 
         .icon-plus { font-size: 1.5rem; font-weight: 300; font-family: var(--font-body); color: var(--accent-color); margin-left: auto; }
 
         /* --- MASTER HEADER --- */
-        .master-header { background: transparent; border: 2px solid var(--accent-color); border-radius: 8px; padding: 10px 20px; justify-content: center; font-size: 1.5rem; color: var(--accent-color); width: 100%; margin-bottom: 1rem; }
+        .master-header {
+            background: transparent; border: 2px solid var(--accent-color); border-radius: 8px;
+            padding: 10px 20px; justify-content: center; font-size: 1.5rem; 
+            color: var(--accent-color); width: 100%; margin-bottom: 1rem;
+        }
         .master-header .icon-plus { margin-left: 15px; flex-grow: 0; }
         @media (max-width: 600px) { .master-header { font-size: 1.1rem; padding: 10px; } }
-        .btn-close-section { width: 100%; text-align: center; margin-top: 30px; padding: 15px; background: #eee; border: 1px solid #ddd; border-radius: 8px; font-family: var(--font-body); font-weight: 700; color: #666; cursor: pointer; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px; }
+
+        .btn-close-section {
+            width: 100%; text-align: center; margin-top: 30px; padding: 15px; background: #eee; 
+            border: 1px solid #ddd; border-radius: 8px; font-family: var(--font-body); font-weight: 700; 
+            color: #666; cursor: pointer; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px;
+        }
 
         /* --- STILI DEL RIASSUNTO TESTUALE --- */
-        .text-content-box { background: #fff; border: 1px solid #eee; border-radius: 8px; padding: 2rem; color: #333; line-height: 1.8; font-size: 1.05rem; }
+        .text-content-box {
+            background: #fff; border: 1px solid #eee; border-radius: 8px; padding: 2rem;
+            color: #333; line-height: 1.8; font-size: 1.05rem;
+        }
         @media(max-width:600px) { .text-content-box { padding: 1rem; font-size: 1rem; } }
+        
         .text-content-box h3 { color: var(--accent-color); border-bottom: 2px solid #eee; padding-bottom: 10px; margin-top: 2.5rem; margin-bottom: 1.5rem; }
         .text-content-box h3:first-child { margin-top: 0; }
+        .text-content-box h4 { color: #555; margin-top: 1.5rem; margin-bottom: 0.5rem; font-size: 1.2rem; }
         .text-content-box p { margin-bottom: 1rem; }
-        .cornell-box { background: #f4f8fb; border-left: 5px solid var(--accent-color); padding: 1.5rem; margin: 2rem 0; border-radius: 0 8px 8px 0; }
+        
+        .cornell-box {
+            background: #f4f8fb; border-left: 5px solid var(--accent-color); padding: 1.5rem;
+            margin: 2rem 0; border-radius: 0 8px 8px 0;
+        }
         .cornell-question { font-weight: bold; color: var(--accent-color); margin-bottom: 0.2rem; }
         .cornell-answer { margin-bottom: 1.5rem; margin-left: 10px; }
         .cornell-answer:last-child { margin-bottom: 0; }
 
+        .metafora-box {
+            background: #fff8e1; border: 2px dashed var(--pop-yellow); padding: 1.5rem;
+            border-radius: 12px; margin-top: 3rem; font-style: italic;
+        }
+
         /* --- VIDEO E AUDIO CONTAINER --- */
-        .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; background: #000; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); z-index: 1; margin-bottom: 1rem; }
+        .video-container { 
+            position: relative; width: 100%; padding-bottom: 56.25%; height: 0; 
+            background: #000; border-radius: 8px; overflow: hidden; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); z-index: 1; margin-bottom: 1rem;
+        }
         .video-container iframe, .video-container video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
 
         /* --- FLASHCARDS --- */
-        .flashcard-wrapper { position: relative; perspective: 1000px; width: 100%; height: 500px; margin-bottom: 1rem; cursor: pointer; }
-        .flashcard-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); transform-style: preserve-3d; box-shadow: 0 10px 30px rgba(0,0,0,0.15); border-radius: 12px; }
+        .flashcard-wrapper {
+            position: relative; perspective: 1000px; width: 100%; height: 500px; margin-bottom: 1rem;
+            cursor: pointer; /* Cursore mano su desktop */
+        }
+        .flashcard-inner {
+            position: relative; width: 100%; height: 100%; text-align: center;
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15); border-radius: 12px;
+        }
         .flashcard-wrapper.flipped .flashcard-inner { transform: rotateY(180deg); }
-        .flashcard-front, .flashcard-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 12px; padding: 1.5rem; background-image: url('https://i.postimg.cc/tJSTPJPW/indiani-d-america-e-uova-sode-stile-bruno-munari-molto-movimentato-e-colorato.jpg'); background-size: contain; background-repeat: no-repeat; background-position: center; background-color: #222; }
+        
+        .flashcard-front, .flashcard-back {
+            position: absolute; width: 100%; height: 100%;
+            backface-visibility: hidden; display: flex; flex-direction: column; 
+            align-items: center; justify-content: center;
+            border-radius: 12px; padding: 1.5rem;
+            background-image: url('https://i.postimg.cc/tJSTPJPW/indiani-d-america-e-uova-sode-stile-bruno-munari-molto-movimentato-e-colorato.jpg'); 
+            background-size: contain; background-repeat: no-repeat; background-position: center; background-color: #222;
+        }
         .flashcard-back { transform: rotateY(180deg); }
-        .flashcard-back::before { content: ""; position: absolute; top:0; left:0; width:100%; height:100%; background-image: url('https://i.postimg.cc/tJSTPJPW/indiani-d-america-e-uova-sode-stile-bruno-munari-molto-movimentato-e-colorato.jpg'); background-size: contain; background-repeat: no-repeat; background-position: center; transform: scaleX(-1); z-index: -1; }
-        .flashcard-back p, .flashcard-front h2 { position: relative; z-index: 2; background: rgba(255,255,255,0.95); padding: 20px 25px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); width: 100%; color: #111; }
-        .flashcard-front h2 { font-family: var(--font-title); font-size: 1.6rem; line-height: 1.3; }
-        .flashcard-back p { font-size: 1rem; text-align: left; line-height: 1.5; white-space: pre-line; overflow-y: auto; max-height: 85%; -webkit-overflow-scrolling: touch; pointer-events: auto; }
+        .flashcard-back::before {
+            content: ""; position: absolute; top:0; left:0; width:100%; height:100%;
+            background-image: url('https://i.postimg.cc/tJSTPJPW/indiani-d-america-e-uova-sode-stile-bruno-munari-molto-movimentato-e-colorato.jpg');
+            background-size: contain; background-repeat: no-repeat; background-position: center;
+            transform: scaleX(-1); z-index: -1;
+        }
 
-        .btn-flip-mobile { display: none; margin-top: 15px; background: var(--pop-yellow); color: #000; border: 3px solid #000; padding: 10px 30px; font-weight: 900; border-radius: 30px; z-index: 20; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); text-transform: uppercase; font-family: var(--font-body); white-space: nowrap; pointer-events: auto; }
+        .flashcard-back p, .flashcard-front h2 {
+            position: relative; z-index: 2; 
+            background: rgba(255,255,255,0.95); 
+            padding: 20px 25px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); 
+            width: 100%; color: #111;
+        }
+        .flashcard-front h2 { font-family: var(--font-title); font-size: 1.6rem; line-height: 1.3; }
+        .flashcard-back p { 
+            font-size: 1rem; text-align: left; line-height: 1.5; white-space: pre-line;
+            overflow-y: auto; max-height: 85%; -webkit-overflow-scrolling: touch; pointer-events: auto; 
+        }
+
+        /* --- BOTTONE GIRA CARTA (SOLO MOBILE) --- */
+        .btn-flip-mobile {
+            display: none; 
+            margin-top: 15px;
+            background: var(--pop-yellow);
+            color: #000;
+            border: 3px solid #000;
+            padding: 10px 30px;
+            font-weight: 900;
+            border-radius: 30px;
+            z-index: 20;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            text-transform: uppercase;
+            font-family: var(--font-body);
+            white-space: nowrap;
+            pointer-events: auto;
+        }
         .btn-flip-mobile:active { transform: translateY(2px); }
 
         @media (max-width: 900px) {
-            .flashcard-wrapper { height: 500px; cursor: default; }
+            .flashcard-wrapper { height: 500px; cursor: default; /* Niente manina su mobile */ }
             .flashcard-front, .flashcard-back { justify-content: flex-start; padding: 1rem; padding-top: 1.5rem; }
             .flashcard-front h2 { font-size: 1.2rem; padding: 15px; margin-top: 20px; }
             .flashcard-back p { font-size: 0.95rem; padding: 15px; max-height: 75%; }
@@ -137,69 +300,245 @@
         .fc-counter { text-align: center; margin-bottom: 10px; font-weight: bold; color: var(--accent-color); }
         .fc-controls { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; margin-top: 20px; }
         .fc-actions { display: flex; gap: 5px; justify-content: center; width: 100%; }
-        .btn-pop { padding: 10px 20px; border: none; border-radius: 8px; font-weight: 700; font-family: var(--font-body); text-transform: uppercase; cursor: pointer; transition: transform 0.1s, box-shadow 0.2s; border: 2px solid #000; box-shadow: 3px 3px 0px #000; }
+
+        .btn-pop {
+            padding: 10px 20px; border: none; border-radius: 8px;
+            font-weight: 700; font-family: var(--font-body); text-transform: uppercase; cursor: pointer;
+            transition: transform 0.1s, box-shadow 0.2s; border: 2px solid #000; box-shadow: 3px 3px 0px #000;
+        }
         .btn-pop:active { transform: translateY(2px); box-shadow: 1px 1px 0px #000; }
         .btn-nav { background: #fff; color: #000; font-size: 1.2rem; min-width: 40px; }
         .btn-no { background: var(--pop-magenta); color: #fff; flex-grow: 1; }
         .btn-yes { background: var(--pop-cyan); color: #000; flex-grow: 1; }
         .btn-start { background: var(--pop-yellow); color: #000; font-size: 1.2rem; padding: 15px 40px; margin-top: 20px; }
 
-        #win-screen { display: none; flex-direction: column; align-items: center; justify-content: center; height: 400px; text-align: center; background: #fff; border-radius: 12px; border: 2px dashed #000; padding: 2rem; }
+        #win-screen {
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            height: 400px; text-align: center; background: #fff; border-radius: 12px; border: 2px dashed #000; padding: 2rem;
+        }
         #win-screen h2 { border: none; margin: 0; padding: 0; color: var(--pop-ocean); }
 
         #toast-container { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 9999999; pointer-events: none; }
-        .toast { background: rgba(0,0,0,0.9); color: white; padding: 15px 30px; border-radius: 50px; margin-top: 10px; font-weight: bold; font-family: var(--font-body); text-align: center; opacity: 0; transition: opacity 0.3s, transform 0.3s; transform: translateY(20px); border: 2px solid; pointer-events: auto; }
+        .toast {
+            background: rgba(0,0,0,0.9); color: white; padding: 15px 30px; border-radius: 50px;
+            margin-top: 10px; font-weight: bold; font-family: var(--font-body); text-align: center;
+            opacity: 0; transition: opacity 0.3s, transform 0.3s; transform: translateY(20px); border: 2px solid; pointer-events: auto;
+        }
         .toast.show { opacity: 1; transform: translateY(0); }
         .toast-success { border-color: var(--pop-cyan); box-shadow: 0 0 15px var(--pop-cyan); color: var(--pop-cyan); }
         .toast-retry { border-color: var(--pop-magenta); box-shadow: 0 0 15px var(--pop-magenta); color: var(--pop-magenta); }
 
-        /* --- FREUD BOT (ASSISTENTE IA) --- */
+        /* --- FREUD BOT --- */
         .freud-bot-container { background: #fff; padding: 2rem; border-radius: 8px; text-align: center; border: 1px solid #ddd; }
-        .bot-image { display: block; margin: 0 auto 1.5rem auto; max-width: 100%; width: 100%; height: auto; object-fit: contain; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .bot-image {
+            display: block; margin: 0 auto 1.5rem auto; max-width: 100%; width: 100%; height: auto; 
+            object-fit: contain; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
         .bot-content { position: relative; background: transparent; padding: 0; border: none; display: block; max-width: 100%; }
 
         /* --- TESTO OBIETTIVI --- */
         .obj-list { margin-top:10px; padding-left:20px; line-height: 1.8; }
         .obj-box { background: #f9f9f9; border-left: 4px solid var(--accent-color); padding: 1.5rem; margin-bottom: 2rem; }
-        
+        .definition-box { background: #375a7f; color: white; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; line-height: 1.6; }
+
         /* --- FATTORI --- */
         .factors-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 2rem 0; }
-        .factor-card { background: #fff; border: 1px solid #ddd; padding: 1.5rem; border-radius: 8px; cursor: pointer; text-align: center; transition: 0.2s; position: relative; }
+        .factor-card {
+            background: #fff; border: 1px solid #ddd; padding: 1.5rem; border-radius: 8px;
+            cursor: pointer; text-align: center; transition: 0.2s; position: relative;
+        }
         .factor-card:hover { border-color: var(--accent-color); transform: translateY(-3px); }
         .factor-card::after { content: '+'; position: absolute; top: 5px; right: 10px; color: #ccc; }
 
         /* --- MODAL --- */
-        #factor-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 99999; display: none; justify-content: center; align-items: center; padding: 20px; }
+        #factor-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85);
+            z-index: 99999; display: none; justify-content: center; align-items: center; padding: 20px;
+        }
         #factor-modal.open { display: flex; }
-        .modal-paper { background: #fff; width: 100%; max-width: 600px; padding: 2.5rem; border-radius: 12px; position: relative; max-height: 90vh; overflow-y: auto; line-height: 1.8; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); -webkit-overflow-scrolling: touch; }
+        .modal-paper { 
+            background: #fff; width: 100%; max-width: 600px; padding: 2.5rem; border-radius: 12px; position: relative; 
+            max-height: 90vh; overflow-y: auto; line-height: 1.8; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); -webkit-overflow-scrolling: touch;
+        }
         .close-modal { position: absolute; top: 15px; right: 20px; font-size: 2rem; cursor: pointer; color: var(--accent-color); z-index: 10; }
-        .btn-choice { padding: 10px 25px; margin: 5px; font-size: 0.9rem; cursor: pointer; background: #fff; color: var(--accent-color); border: 2px solid #ccc; border-radius: 50px; font-weight: bold; }
+        .btn-choice {
+            padding: 10px 25px; margin: 5px; font-size: 0.9rem; cursor: pointer;
+            background: #fff; color: var(--accent-color); border: 2px solid #ccc; border-radius: 50px; font-weight: bold;
+        }
+
+        /* --- ASMR --- */
+        .visual-toggle-container { background: #eef2f5; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; text-align: center; border: 1px solid #d1d9e0; }
+        .visual-toggle-title { font-family: var(--font-title); font-size: 1.2rem; margin-bottom: 1rem; color: var(--accent-color); }
+        .toggle-btn {
+            padding: 8px 24px; margin: 0 10px; border: 2px solid var(--accent-color); background: transparent;
+            color: var(--accent-color); font-weight: bold; border-radius: 30px; cursor: pointer; transition: all 0.3s;
+        }
+        .toggle-btn:hover { background: rgba(55, 90, 127, 0.1); }
+        .toggle-btn.active { background: var(--accent-color); color: white; }
+        #visual-wrapper { display: none; margin-bottom: 25px; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* --- NUOVO POP-UP RISPOSTA FLASHCARD (MOBILE) --- */
-        #fc-mobile-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 999999; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(4px); }
-        .fc-mobile-content { background: #fff; width: 95%; max-width: 500px; max-height: 80vh; overflow-y: auto; padding: 30px 25px; border-radius: 16px; position: relative; font-size: 1.1rem; line-height: 1.6; color: #222; box-shadow: 0 10px 30px rgba(0,0,0,0.5); -webkit-overflow-scrolling: touch; }
-        .fc-mobile-close { margin-top: 20px; width: 100%; padding: 15px; background: var(--pop-cyan); border: 2px solid #000; font-weight: bold; font-size: 1rem; cursor: pointer; border-radius: 50px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        #fc-mobile-modal {
+            display: none; /* nascosto di base */
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); z-index: 999999;
+            justify-content: center; align-items: center; padding: 20px;
+            backdrop-filter: blur(4px);
+        }
+        .fc-mobile-content {
+            background: #fff; 
+            width: 95%; max-width: 500px;
+            max-height: 80vh; /* Limite altezza */
+            overflow-y: auto; /* Abilita SCROLL interno */
+            padding: 30px 25px; 
+            border-radius: 16px;
+            position: relative;
+            font-size: 1.1rem; line-height: 1.6; color: #222;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            -webkit-overflow-scrolling: touch; /* Scroll fluido su iOS */
+        }
+        .fc-mobile-close {
+            margin-top: 20px; width: 100%; padding: 15px; 
+            background: var(--pop-cyan); border: 2px solid #000; 
+            font-weight: bold; font-size: 1rem; cursor: pointer; border-radius: 50px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
     </style>
 </head>
 <body>
 
+    <div id="source-riassunto" style="display: none;">
+        
+        <h3>Macro-argomento 1: La crisi del Welfare State, l'ascesa del Neoliberismo e l'adattamento della Socialdemocrazia</h3>
+        <p>La storia procede attraverso la costruzione di contesti in cui fenomeni di natura diversa coesistono, permettendo di comprendere le trasformazioni delle strutture e della mentalità. Negli ultimi decenni del Novecento, il modello dello Stato sociale (Welfare State) europeo entra in una crisi profonda, innescando un dibattito tuttora in corso sulla sua sopravvivenza. In risposta a questa crisi, si afferma l'ideologia del neoliberismo, una dottrina rigida che esalta l'autoregolazione del mercato e la dimensione economica privata, sebbene oggi se ne percepiscano i limiti a seguito della crisi finanziaria del 2007-2008. L'esperimento politico neoliberista per eccellenza si realizza nel Regno Unito con Margaret Thatcher e negli Stati Uniti con Ronald Reagan. Questa ondata rivoluziona la politica mondiale, scardinando l'approccio tradizionale dello Stato sociale e imponendo un drastico ridimensionamento del ruolo pubblico nell'economia. Di fronte all'egemonia del neoliberismo e all'avanzata della globalizzazione, anche le culture politiche tradizionalmente opposte subiscono una metamorfosi. La socialdemocrazia, che fin dall'Ottocento si poneva come alternativa anticapitalista, avvia un profondo processo di revisione. Leader come François Mitterrand in Francia ed Helmut Schmidt in Germania Ovest prendono atto della difficoltà di sostituire o demolire il sistema di mercato capitalista. Il pensiero anticapitalista entra in declino, complice anche l'evidente inefficienza del modello sovietico, portando all'accettazione del dogma per cui "non c'è alternativa" all'attuale funzionamento dell'economia. Di conseguenza, la classe dirigente socialdemocratica invita persino la classe operaia a moderare le pretese salariali e adotta politiche di austerità, rinunciando alla prospettiva di un superamento strutturale del capitalismo.</p>
+
+        <div class="cornell-box">
+            <p class="cornell-question">Check Point</p>
+            
+            <p class="cornell-question">Domanda: Quali leader politici applicarono per primi in modo radicale i principi del neoliberismo?</p>
+            <p class="cornell-answer">Risposta: Margaret Thatcher nel Regno Unito e Ronald Reagan negli Stati Uniti, tra la fine degli anni '70 e l'inizio degli anni '80.</p>
+            
+            <p class="cornell-question">Domanda: Qual è il principio economico fondamentale esaltato dalla dottrina neoliberista?</p>
+            <p class="cornell-answer">Risposta: L'assoluta fiducia nell'autoregolazione del libero mercato e la drastica riduzione dell'intervento e del ruolo dello Stato nell'economia.</p>
+            
+            <p class="cornell-question">Domanda: Come muta l'orizzonte politico della socialdemocrazia in questo periodo?</p>
+            <p class="cornell-answer">Risposta: Abbandona l'obiettivo storico di abbattere e sostituire il capitalismo, accettando l'economia di mercato e le esigenze del sistema produttivo, arrivando a promuovere politiche di austerità.</p>
+        </div>
+
+        <h3>Macro-argomento 2: Le origini tecnologiche e culturali della Rivoluzione Digitale</h3>
+        <p>La rivoluzione digitale rappresenta un fenomeno periodizzante epocale, capace di chiudere un'era e inaugurarne un'altra, i cui esiti finali potranno essere valutati appieno solo dagli storici del futuro grazie alla "distanza legittimante". Le radici di questa trasformazione affondano negli anni '70, grazie a due innovazioni cardine: la microelettronica (il microchip), che ha permesso di compattare migliaia di transistor consentendo la creazione dei Personal Computer (PC), e l'invenzione del modem, che ha reso possibile la trasmissione di dati attraverso le normali linee telefoniche. A differenza della prima rivoluzione industriale, nata in Inghilterra, l'epicentro di questo sisma tecnologico è la California, in particolare l'area della Silicon Valley. L'ambiente in cui operano questi pionieri dell'informatica è intriso della cultura giovanile degli anni '60 (la cultura "beat", il movimento hippy, le filosofie orientali, le proteste contro la guerra del Vietnam). Dietro i primi computer si cela un forte impulso progressista e utopico: l'idea che la tecnologia potesse emancipare l'umanità, superare i vincoli istituzionali e costruire un mondo più democratico, libero e ugualitario. La nascita di Internet, tuttavia, ha origini militari: fu progettata dal governo degli Stati Uniti per garantire una rete di comunicazione indistruttibile tra comandi militari e università in caso di attacco nucleare. Da questa prima infrastruttura pubblica, si è passati a un sistema globale grazie all'invenzione del codice World Wide Web (www) presso il CERN di Ginevra, che ha permesso di connettere reti con linguaggi diversi. La diffusione di queste tecnologie è avvenuta a una velocità senza precedenti: se la rivoluzione industriale ha impiegato oltre un secolo per mutare la vita quotidiana, la digitalizzazione ha stravolto la società in appena vent'anni, culminando nell'introduzione dello smartphone (es. il primo iPhone nel 2005), che ha reso la connessione istantanea e indispensabile a livello globale. Per gli storici, questa dematerializzazione pone un enorme problema metodologico legato all'assenza, alla deperibilità e all'inaccessibilità dei nuovi archivi digitali ed email.</p>
+
+        <div class="cornell-box">
+            <p class="cornell-question">Check Point</p>
+            
+            <p class="cornell-question">Domanda: Quali invenzioni tecniche degli anni '70 hanno innescato la diffusione dei computer personali?</p>
+            <p class="cornell-answer">Risposta: L'evoluzione della microelettronica (chip con migliaia di transistor) e l'invenzione del modem per la trasmissione dei dati via cavo telefonico.</p>
+            
+            <p class="cornell-question">Domanda: Quale retroterra culturale ha animato i pionieri della Silicon Valley?</p>
+            <p class="cornell-answer">Risposta: La cultura giovanile della contestazione degli anni '60, portatrice di utopie di emancipazione, uguaglianza e liberazione dai rigidi vincoli istituzionali tramite la tecnologia.</p>
+            
+            <p class="cornell-question">Domanda: Qual era lo scopo originario della prima rudimentale rete Internet?</p>
+            <p class="cornell-answer">Risposta: Era un'infrastruttura finanziata dal mondo militare americano per mantenere le comunicazioni attive tra i centri nevralgici dello Stato in caso di un devastante attacco nucleare.</p>
+        </div>
+
+        <h3>Macro-argomento 3: L'egemonia informatica USA, l'intreccio finanziario e la crisi delle sovranità</h3>
+        <p>Nella rivoluzione digitale, l'Europa è rimasta fortemente marginalizzata, incapace di competere con il distretto tecnologico californiano. L'ecosistema americano ha integrato perfettamente atenei d'eccellenza (Stanford, Berkeley) con le aziende informatiche, generating monopoli assoluti come Apple, Microsoft e Google. Questo vantaggio competitivo solleva gravissime questioni politiche: il funzionamento delle moderne infrastrutture statali (inclusi i sistemi di pagamento elettronici) dipende interamente da colossi privati stranieri. L'emergere dell'Internet satellitare, monopolizzato da imprenditori privati come Elon Musk, impone ai governi il dilemma se sia sicuro affidare le comunicazioni militari e la sicurezza nazionale ad aziende commerciali, o se la politica debba intervenire con norme antitrust per smembrare questi oligopoli. Le nuove tecnologie hanno inoltre rivoluzionato il sistema capitalistico internazionale, velocizzando in modo esponenziale la circolazione dei capitali finanziari. Questa dinamica indebolisce enormemente la sovranità degli Stati Nazionali: se un governo decide di imporre riforme fiscali sgradite (es. tasse sui dividendi), la grande finanza può spostare miliardi di investimenti in poche ore, minacciando il crollo economico del Paese. L'economia globale sembra così dettare l'agenda alla politica, privandola del primato decisionale. All'interno delle aziende, il capitalismo ha subito una mutazione con la pratica delle *stock options*, in cui i grandi manager divengono azionisti delle stesse imprese che dirigono. Questo intreccio porta a privilegiare spregiudicate strategie a brevissimo termine, finalizzate a gonfiare artificialmente il valore dei titoli per incassare dividendi immediati, trascurando la stabilità industriale a lungo termine. L'erogazione irresponsabile di mutui non esigibili, attuata per abbellire temporaneamente i bilanci bancari e far felici gli azionisti, è alla radice dell'esplosione della bolla immobiliare e della drammatica crisi finanziaria del 2007-2008.</p>
+
+        <div class="cornell-box">
+            <p class="cornell-question">Check Point</p>
+            
+            <p class="cornell-question">Domanda: Perché l'Europa è rimasta indietro nella corsa tecnologica?</p>
+            <p class="cornell-answer">Risposta: Non è riuscita a replicare l'efficace ecosistema della Silicon Valley, in cui atenei di altissimo livello formano ingegneri che vengono immediatamente assorbiti da aziende concentrate in un unico distretto territoriale.</p>
+            
+            <p class="cornell-question">Domanda: Che rischio comporta il monopolio delle aziende tech USA per gli altri Stati?</p>
+            <p class="cornell-answer">Risposta: Costituisce un pericolo per la sicurezza nazionale e l'autonomia economica, poiché l'interruzione dei servizi da parte di questi colossi privati paralizzerebbe lo Stato e i sistemi bancari.</p>
+            
+            <p class="cornell-question">Domanda: Qual è l'effetto delle *stock options* sulle decisioni aziendali?</p>
+            <p class="cornell-answer">Risposta: Spingono i manager a compiere scelte spregiudicate a brevissimo termine per gonfiare il valore delle azioni di cui sono proprietari, causando spesso bolle speculative o crolli finanziari disastrosi nel medio-lungo periodo.</p>
+        </div>
+
+        <h3>Macro-argomento 4: Nuova Globalizzazione, disuguaglianze e lo spostamento geopolitico</h3>
+        <p>Il dibattito sulla globalizzazione divide studiosi e storici. Gli "iperglobalisti" ritengono che l'intensificazione estrema degli scambi iniziata negli anni '70 abbia creato un mondo inedito che ha dissolto la sovranità degli Stati. Gli scettici, al contrario, considerano la globalizzazione un concetto vuoto, facendola risalire alle prime migrazioni dell'Homo Sapiens. Gli storici mediano tra le due posizioni, individuando cicli alterni di apertura e chiusura: alcuni fissano l'inizio con lo Scambio Colombiano di fine Quattrocento, altri con la Seconda Rivoluzione Industriale dell'Ottocento (imperi coloniali, treni, telegrafo, navi a vapore). È accertato che la storia non procede in modo lineare: dopo il boom di inizio Novecento, le Guerre Mondiali e la crisi del '29 causarono una brutale "deglobalizzazione", seguita dalla frammentazione della Guerra Fredda e dall'attuale ripresa, sebbene oggi guerre, dazi e i sistemi Internet isolati di Cina e Russia minaccino una nuova contrazione. Gli effetti sociali di questa globalizzazione accelerata sono asimmetrici. Nel mondo occidentale, ha provocato un forte impoverimento dei ceti medi, un aumento dell'insicurezza per le nuove generazioni (difficoltà abitative e lavorative) e una drastica polarizzazione della ricchezza, che si è concentrata nelle mani di piccolissime élite. Tuttavia, osservando il fenomeno su scala globale, i dati mostrano che la divisione internazionale del lavoro (lo spostamento delle fabbriche in Asia) ha permesso una massiccia riduzione della povertà assoluta (persone che vivono con 1 o 2 dollari al giorno). Paesi immensi come Cina e India hanno visto centinaia di milioni di cittadini uscire dalla fame e formare nuove classi medie. Questo ha comportato un gigantesco trasferimento di ricchezza ed egemonia economica verso est. Comprendere questa relatività di prospettiva è l'essenza dell'indagine storica: permette di decifrare le ragioni e gli interessi degli altri attori globali (come Cina, Russia o USA), costruendo l'empatia intellettuale necessaria per l'educazione civile e la negoziazione diplomatica, senza per questo giustificarne gli autoritarismi.</p>
+
+        <div class="cornell-box">
+            <p class="cornell-question">Check Point</p>
+            
+            <p class="cornell-question">Domanda: Perché gli storici affermano che la globalizzazione ha un andamento altalenante?</p>
+            <p class="cornell-answer">Risposta: Perché non è un processo lineare infinito; a fasi di grande interconnessione (come fine Ottocento) sono succeduti crolli brutali degli scambi, chiamati "deglobalizzazione" (es. dopo la Crisi del '29 o le Guerre Mondiali).</p>
+            
+            <p class="cornell-question">Domanda: Quali nazioni stanno costruendo reti Internet isolate e nazionalizzate?</p>
+            <p class="cornell-answer">Risposta: La Russia e in particolar modo la Cina, che limitano l'accesso dei propri cittadini ai siti occidentali, frammentando lo spazio globale del World Wide Web.</p>
+            
+            <p class="cornell-question">Domanda: Come valutare il paradosso tra impoverimento in Occidente e ricchezza in Asia?</p>
+            <p class="cornell-answer">Risposta: Mentre la deindustrializzazione europea ha precarizzato i ceti medi occidentali, il trasferimento delle fabbriche nel sud-est asiatico ha strappato centinaia di milioni di persone dalla povertà assoluta in Cina e in India.</p>
+        </div>
+
+        <h3>Macro-argomento 5: L'allargamento della CEE e l'identità transnazionale Europea</h3>
+        <p>Nel corso degli anni '70 e '80, l'integrazione europea compie passi decisivi, uscendo dalla ristretta cerchia dei fondatori per accogliere nuovi membri: entrano Regno Unito, Irlanda e Danimarca, seguiti da Grecia, Spagna e Portogallo, questi ultimi subito dopo essersi liberati dai rispettivi regimi dittatoriali. Questo allargamento certifica il successo economico della Comunità Economica Europea (CEE) nata nel 1957, dimostrando che i Paesi membri godono di immensi vantaggi di sviluppo; tuttavia, l'aumento dei partner rende le dinamiche decisionali molto più complesse. Di fronte al successo dell'integrazione economica "funzionalista", riprende vigore il progetto politico per un'Europa federale. Le tappe fondamentali di questo consolidamento includono l'elezione diretta del Parlamento Europeo da parte dei cittadini alla fine degli anni '70, che stimola la nascita di aggregazioni politiche transnazionali, sebbene l'organo detenga ancora poteri limitati rispetto ai governi nazionali. Dalla metà degli anni '80 entra in vigore il Trattato di Schengen, che abolisce i controlli sistematici ai confini per i viaggiatori (con eccezioni come l'Irlanda e il Regno Unito), e viene ratificato l'Atto Unico Europeo, il quale estende drasticamente le competenze di Bruxelles a settori come ambiente, ricerca e istruzione, completando il mercato unico. Queste riforme incidono direttamente sulla quotidianità, favorendo il nascere di un'inedita "identità europea" e di un concetto di cittadinanza sovranazionale che si sovrappone a quella statale. Di contro, affiora un grave problema di legittimità democratica percepita: l'idea diffusa (e politicamente strumentalizzata) che le decisioni vengano prese da una "tecnocrazia di Bruxelles" autonoma e non eletta, generando continue frizioni tra il potere sovrano locale e i vincoli europei. Al termine del decennio, i risultati elettorali europei mostrano un continente in cui le forze democristiane e conservatrici prevalgono in nazioni chiave come Italia e Germania Ovest, mentre le formazioni di sinistra si affermano in Francia.</p>
+
+        <div class="cornell-box">
+            <p class="cornell-question">Check Point</p>
+            
+            <p class="cornell-question">Domanda: Quali nazioni mediterranee aderiscono all'Europa negli anni '80 e per quale motivo?</p>
+            <p class="cornell-answer">Risposta: Grecia, Spagna e Portogallo, che richiedono l'ingresso nella Comunità Economica Europea immediatamente dopo aver abbattuto le proprie dittature interne, per consolidare la democrazia e l'economia.</p>
+            
+            <p class="cornell-question">Domanda: Cosa stabilisce l'Atto Unico Europeo?</p>
+            <p class="cornell-answer">Risposta: Completa l'istituzione del mercato unico europeo e allarga enormemente i poteri dell'istituzione verso materie sociali e civili, come la ricerca, l'istruzione e le normative ambientali.</p>
+            
+            <p class="cornell-question">Domanda: Quale percezione problematica nasce in merito alle istituzioni di Bruxelles?</p>
+            <p class="cornell-answer">Risposta: Nasce il sentimento che le direttive siano imposte da burocrati e tecnocrati lontani, privi di legittimazione elettorale diretta, sollevando polemiche sullo svuotamento delle sovranità nazionali.</p>
+        </div>
+
+        <h3>Macro-argomento 6: Il Blocco Sovietico: paratotalitarismo, stagnazione e declino sociale</h3>
+        <p>Il crollo dell'Unione Sovietica è uno degli enigmi storiografici più affascinanti, avvenuto in tempi rapidissimi e con scarso spargimento di sangue, smentendo ogni previsione globale. Le premesse di questa implosione maturano negli anni '70, nell'era di Leonid Brežnev. Dopo l'illusione riformista della "Primavera di Praga" (repressa nel sangue) e superata la spinta propulsiva di Krusciov, Mosca rinuncia alla promessa di sconfiggere il capitalismo per concentrarsi sulla rigida stabilizzazione e difesa del "socialismo sviluppato" e del bipolarismo sancito a Helsinki. In questo decennio, il sistema sovietico si configura come un "paratotalitarismo": lo Stato non ricorre più al terrore sanguinario e alle purghe di massa tipiche dello stalinismo per forgiare "l'uomo nuovo", ma esige un formale e assoluto conformismo pubblico, tollerando una blanda libertà solo nella sfera privata. L'apparato statale garantisce a tutti lavoro, alloggi condivisi, istruzione universitaria d'eccellenza e servizi gratuiti, rendendo l'individuo totalmente dipendente dal potere politico. Ogni forma pubblica di dissenso intellettuale e artistico viene però stroncata con l'esilio o la deportazione in aree remote come la Siberia. Il fallimento dell'URSS è primariamente economico e tecnologico. Pur restando una superpotenza assoluta in campo aerospaziale e negli armamenti nucleari, l'industria sovietica resta prigioniera del vecchio fordismo pesante e non riesce ad assimilare la rivoluzione digitale, accumulando enormi ritardi sui beni di consumo tecnologici occidentali. I colossali investimenti nel settore militare prosciugano il bilancio statale, condannando l'economia civile a una cronica carenza di beni di consumo. Questo innesca un vertiginoso crollo della qualità della vita, certificato da indicatori allarmanti: riprende a crescere il tasso di mortalità infantile (spia del degrado igienico-sanitario) ed esplode la piaga sociale dell'alcolismo, associata all'aumento dei crimini. Questa disillusione materiale spegne la fede ideologica marxista, spingendo le nuove generazioni a rifugiarsi in mode, culture giovanili e musiche rock clandestine di provenienza occidentale, distaccandosi completamente dalle istituzioni statali.</p>
+
+        <div class="cornell-box">
+            <p class="cornell-question">Check Point</p>
+            
+            <p class="cornell-question">Domanda: Qual è la differenza tra il totalitarismo stalinista e il paratotalitarismo di Brežnev?</p>
+            <p class="cornell-answer">Risposta: Mentre Stalin usava il terrore di massa, gli stermini e le deportazioni per plasmare psicologicamente l'intera società, l'URSS degli anni '70 abbandona le stragi, accontentandosi di un finto conformismo pubblico ma lasciando in pace la sfera privata dei cittadini.</p>
+            
+            <p class="cornell-question">Domanda: In quale ambito tecnologico l'Unione Sovietica fallisce clamorosamente?</p>
+            <p class="cornell-answer">Risposta: Non riesce ad agganciarsi alla rivoluzione informatica e microelettronica, restando ancorata alla vecchia industria pesante e accumulando decenni di ritardo tecnologico nella produzione dei beni civili e di consumo rispetto all'Occidente.</p>
+            
+            <p class="cornell-question">Domanda: Quali statistiche sociali dimostrano il peggioramento delle condizioni di vita nell'URSS degli anni '70?</p>
+            <p class="cornell-answer">Risposta: Il drammatico aumento dell'alcolismo tra la popolazione e l'innalzamento del tasso di mortalità infantile, indice inequivocabile del collasso della qualità igienica, sanitaria e alimentare del Paese.</p>
+        </div>
+
+        <h3>Macro-argomento 7: Le prime crepe dell'Impero Sovietico: Il caso della Polonia, Giovanni Paolo II e Solidarność</h3>
+        <p>Sotto la coltre del conformismo comunista, cominciano a riaffiorare i sopiti sentimenti nazionalisti, pesantemente repressi dalla retorica internazionalista di Mosca. I primissimi focolai si accendono nei Paesi Baltici (Lituania, Lettonia ed Estonia), che le autorità russe avevano invano tentato di russificare demograficamente. Tuttavia, l'epicentro della crisi letale per il sistema sovietico prende forma in Polonia, storicamente l'anello debole del Patto di Varsavia. La Polonia possedeva peculiarità corrosive per il marxismo: un viscerale sentimento antirusso, una classe operaia estremamente bellicosa e, soprattutto, una fede cattolica radicata e guidata da una Chiesa nazionale potentissima e anticomunista. Messo alle strette dal rincaro dei prezzi agricoli e dalla penuria di merci, il regime polacco affronta continue rivolte operaie contro le sedi del Partito. Il punto di rottura assoluto avviene nel 1978 con l'elezione al soglio pontificio del cardinale polacco Karol Wojtyła (Giovanni Paolo II). L'arrivo di un Papa energico e vigorosamente avverso sia all'ateismo collettivista marxista sia alla secolarizzazione consumistica capitalista scombussola i piani di Mosca. La visita di Wojtyła in Polonia nel 1979 smuove folle oceaniche, fungendo da clamorosa manifestazione politica anticomunista e dimostrando come l'egemonia culturale spirituale potesse incrinare lo strapotere militare dei blindati. Forti di questa copertura morale internazionale, gli operai dei cantieri navali di Danzica, guidati da Lech Wałęsa, fondano "Solidarność", il primo monumentale sindacato autonomo (e illegale) all'interno della Cortina di Ferro, che arriva a contare 9 milioni di iscritti. Di fronte al concreto rischio di un'invasione corazzata da parte dell'Armata Rossa per reprimere la rivoluzione (come avvenuto a Praga), le autorità polacche optano per una soluzione interna. Nel 1981, il generale comunista Wojciech Jaruzelski attua un colpo di stato militare: instaura la legge marziale, arresta Wałęsa, sopprime violentemente il sindacato e costringe Solidarność alla clandestinità totale. Jaruzelski giustificherà in seguito l'atto come il "male minore" per scongiurare i bagni di sangue di un'invasione russa, preservando una fittizia autonomia nazionale. L'Occidente, seppur indignato, non interviene per rispettare i confini di Yalta, ma ormai il colpo è assestato: la repressione militare polacca sancisce l'innesco di una reazione a catena inarrestabile che, entro pochi anni, provocherà l'esplosione definitiva di tutto l'Impero Sovietico.</p>
+
+        <div class="cornell-box">
+            <p class="cornell-question">Check Point</p>
+            
+            <p class="cornell-question">Domanda: Perché la Polonia era considerata un'anomalia esplosiva all'interno del blocco comunista?</p>
+            <p class="cornell-answer">Risposta: Perché la popolazione univa a una spiccata tradizione operaia sindacale un radicato sentimento patriottico antirusso, tenuto vivo dall'egemonia spirituale della fortissima Chiesa Cattolica.</p>
+            
+            <p class="cornell-question">Domanda: Quale ruolo ha ricoperto l'elezione di Giovanni Paolo II nel crollo del blocco sovietico?</p>
+            <p class="cornell-answer">Risposta: L'elezione di un Papa proveniente proprio dalla Polonia comunista ha fornito una formidabile leadership morale e ideologica all'opposizione politica del Paese, legittimando gli scioperi e innescando mobilitazioni di massa contro la dittatura atea.</p>
+            
+            <p class="cornell-question">Domanda: Perché il generale Jaruzelski impose la legge marziale in Polonia nel 1981?</p>
+            <p class="cornell-answer">Risposta: Per stroncare con l'esercito nazionale i 9 milioni di iscritti al sindacato Solidarność di Wałęsa, evitando così che il caos fornisse all'Armata Rossa il pretesto per un'invasione militare esterna distruttiva come in Ungheria o in Cecoslovacchia.</p>
+        </div>
+
+    </div>
     <div id="scroll-progress-container">
         <div id="scroll-progress-bar"></div>
     </div>
 
     <div class="giants-background">
-        <!-- L'immagine di sfondo può essere resa dinamica o mantenuta fissa come stile del sito -->
-        <img class="main-background-image" src="https://res.cloudinary.com/dlppkpjqs/image/upload/v1774702730/collage_materico_storia_contemporanea_muro_di_berlino_anni_70_in_italia_torri_gemelle_leif0u.jpg" alt="Sfondo">
+        <img class="main-background-image" src="https://res.cloudinary.com/dlppkpjqs/image/upload/v1774702730/collage_materico_storia_contemporanea_muro_di_berlino_anni_70_in_italia_torri_gemelle_leif0u.jpg" alt="Sfondo Ombre">
     </div>
 
     <div id="toast-container"></div>
 
     <header>
-        <h1 id="dyn-title">Caricamento...</h1>
-        <div class="subtitle" id="dyn-subtitle">Attendere</div>
+        <h1>Storia Contemporanea</h1>
+        <div class="subtitle">Lezione 12 - Neoliberismo, Rivoluzione Digitale e Crisi del Blocco Sovietico</div>
     </header>
 
-    <!-- Modale per i Punti Chiave -->
     <div id="factor-modal" onclick="closeModal(event)">
         <div class="modal-paper" onclick="event.stopPropagation()">
             <span class="close-modal" onclick="closeModalDirect()">&times;</span>
@@ -208,11 +547,11 @@
         </div>
     </div>
 
-    <!-- Modale Flashcard Mobile -->
     <div id="fc-mobile-modal" onclick="closeMobileAnswerPopup()">
         <div class="fc-mobile-content" onclick="event.stopPropagation()">
             <h3 style="margin-top:0; color:var(--accent-color);">Risposta:</h3>
-            <div id="fc-mobile-body"></div>
+            <div id="fc-mobile-body">
+                </div>
             <button class="fc-mobile-close" onclick="closeMobileAnswerPopup()">Ho capito, chiudi</button>
         </div>
     </div>
@@ -226,7 +565,6 @@
             </button>
             <div class="accordion-content">
 
-                <!-- 01. OBIETTIVI & PUNTI CHIAVE -->
                 <div class="accordion-item">
                     <button class="accordion-header">
                         <span><strong>01.</strong> Obiettivi & Punti Chiave</span> 
@@ -236,21 +574,57 @@
                         
                         <div class="obj-box">
                             <p><strong>Obiettivi della lezione:</strong></p>
-                            <ul class="obj-list" id="dyn-obiettivi">
-                                <!-- Iniettato via JS -->
+                            <ul class="obj-list">
+                                <li>Analizzare la crisi del Welfare State, l'affermazione del neoliberismo e l'adattamento della socialdemocrazia.</li>
+                                <li>Comprendere le origini tecnologiche e culturali della Rivoluzione Digitale e l'impatto della nuova globalizzazione.</li>
+                                <li>Esaminare l'allargamento della Comunità Economica Europea e le sfide alla sovranità nazionale nell'era finanziaria.</li>
+                                <li>Indagare le cause del declino sovietico (paratotalitarismo) e le crepe aperte dalla Polonia di Solidarność.</li>
                             </ul>
                         </div>
 
-                        <p><strong>Punti chiave della lezione:</strong> (Clicca per approfondire)</p>
-                        <div class="factors-grid" id="dyn-punti-chiave">
-                            <!-- Iniettato via JS -->
+                        <h3>Concetto Fondamentale</h3>
+                        
+                        <div class="definition-box">
+                            <strong>Neoliberismo:</strong><br><br>
+                            Dottrina economica affermatasi tra gli anni '70 e '80 (con Thatcher e Reagan) in risposta alla crisi del Welfare State. Promuove l'assoluta autoregolazione del mercato, un drastico ridimensionamento dell'intervento statale nell'economia e la privatizzazione, portando a una profonda revisione anche del pensiero socialdemocratico.
                         </div>
+
+                        <p><strong>Punti chiave della lezione:</strong> (Clicca per approfondire)</p>
+                        <div class="factors-grid">
+                            <div class="factor-card" onclick="openFactor('neo_welfare')">
+                                <strong>1. Neoliberismo e Welfare</strong><br><small>Thatcher, Reagan e la crisi dello Stato sociale</small>
+                            </div>
+                            <div class="factor-card" onclick="openFactor('riv_digitale')">
+                                <strong>2. Rivoluzione Digitale</strong><br><small>Microchip, modem, Silicon Valley e la dematerializzazione</small>
+                            </div>
+                            <div class="factor-card" onclick="openFactor('globalizzazione')">
+                                <strong>3. Nuova Globalizzazione</strong><br><small>Iperglobalisti, delocalizzazione in Asia e disuguaglianze</small>
+                            </div>
+                            <div class="factor-card" onclick="openFactor('declino_sovietico')">
+                                <strong>4. Declino Sovietico</strong><br><small>Paratotalitarismo di Brežnev, stagnazione e crisi polacca</small>
+                            </div>
+                        </div>
+
+                        <div style="background: #fdf6e3; border: 1px solid #eee8d5; padding: 1.5rem; margin-top: 1.5rem; border-radius: 4px;">
+                             <strong>L'impatto della finanza:</strong> Con la Rivoluzione Digitale la velocità di movimento dei capitali è decuplicata. Questo pone sfide senza precedenti alle sovranità nazionali, in quanto colossi tech o fondi internazionali possono minacciare la stabilità economica spostando capitali ingenti in modo praticamente istantaneo.
+                        </div>
+
+                        <h3>Domande per l'autovalutazione</h3>
+                        <p>Dopo aver studiato, prova a rispondere a queste domande con parole semplici:</p>
+                        <ul class="obj-list">
+                            <li>Quali sono i fondamenti dell'ideologia neoliberista e come ha reagito la socialdemocrazia?</li>
+                            <li>In che modo le origini militari e la cultura "beat" californiana si sono intrecciate nella nascita di Internet?</li>
+                            <li>Quali conseguenze comporta la dipendenza dalle infrastrutture digitali monopolizzate dalle grandi aziende tech?</li>
+                            <li>Come si è modificata l'Unione Sovietica passando dal totalitarismo stalinista al "paratotalitarismo"?</li>
+                            <li>Quale ruolo ha giocato il sindacato Solidarność e il Papa polacco nell'incrinare il blocco comunista?</li>
+                        </ul>
 
                         <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione ▲</button>
                     </div>
                 </div>
 
-                <!-- 02. PODCAST -->
+                <br>
+
                 <div class="accordion-item">
                     <button class="accordion-header">
                         <span><strong>02.</strong> Il Podcast</span>
@@ -260,10 +634,10 @@
                         <div class="media-notes-grid">
                             <div>
                                 <p style="margin-bottom:10px; margin-top: 20px;">Ascolta la lezione audio.</p>
-                                <audio id="dyn-podcast-player" src="" controls style="width:100%;"></audio>
+                                <audio id="podcast-player" src="https://res.cloudinary.com/dlppkpjqs/video/upload/v1774695552/12_vero_zulqs0.mp4" controls style="width:100%;"></audio>
                                 <div style="display:flex;gap:10px;margin-top:10px;">
-                                    <button onclick="document.getElementById('dyn-podcast-player').currentTime-=10" style="flex:1;padding:8px;background:#375a7f;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:0.9rem;">⏪ -10s</button>
-                                    <button onclick="document.getElementById('dyn-podcast-player').currentTime+=10" style="flex:1;padding:8px;background:#375a7f;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:0.9rem;">+10s ⏩</button>
+                                    <button onclick="document.getElementById('podcast-player').currentTime-=10" style="flex:1;padding:8px;background:#375a7f;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:0.9rem;">⏪ -10s</button>
+                                    <button onclick="document.getElementById('podcast-player').currentTime+=10" style="flex:1;padding:8px;background:#375a7f;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:0.9rem;">+10s ⏩</button>
                                 </div>
                             </div>
                             <div class="notes-widget">
@@ -278,7 +652,6 @@
                     </div>
                 </div>
 
-                <!-- 03. VIDEO SINTESI -->
                 <div class="accordion-item">
                     <button class="accordion-header">
                         <span><strong>03.</strong> Video Sintesi</span>
@@ -289,8 +662,11 @@
                             <div>
                                 <p style="margin-bottom:10px;">Guarda il video.</p>
                                 <div class="video-container">
-                                    <!-- A seconda se è iframe o video, aggiorneremo la sorgente da JS -->
-                                    <iframe id="dyn-video-player" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                    <video id="video-player" src="https://res.cloudinary.com/dlppkpjqs/video/upload/v1774698292/12_ag6j32.mp4" controls playsinline webkit-playsinline style="width:100%; height:100%; position:absolute; top:0; left:0;"></video>
+                                </div>
+                                <div style="display:flex;gap:10px;margin-top:10px;">
+                                    <button onclick="document.getElementById('video-player').currentTime-=10" style="flex:1;padding:8px;background:#375a7f;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:0.9rem;">⏪ -10s</button>
+                                    <button onclick="document.getElementById('video-player').currentTime+=10" style="flex:1;padding:8px;background:#375a7f;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:0.9rem;">+10s ⏩</button>
                                 </div>
                             </div>
                             <div class="notes-widget">
@@ -305,13 +681,13 @@
                     </div>
                 </div>
 
-                <!-- 04. FLASHCARDS -->
                 <div class="accordion-item">
                     <button class="accordion-header">
                         <span><strong>04.</strong> Dritti al Sodo</span>
                         <span class="icon-plus">+</span>
                     </button>
                     <div class="accordion-content">
+                        
                         <div class="media-notes-grid">
                             <div>
                                 <div id="fc-start-screen" style="text-align: center; padding: 2rem;">
@@ -371,7 +747,6 @@
                     </div>
                 </div>
 
-                <!-- 05. IL RIASSUNTONE -->
                 <div class="accordion-item">
                     <button class="accordion-header">
                         <span><strong>05.</strong> Il Riassuntone</span>
@@ -381,11 +756,11 @@
                         <div class="media-notes-grid">
                             <div>
                                 <img src="https://i.postimg.cc/BbgFzJFJ/disegna-dei-pinguini-tutti-in-mucchio-come-fanno-in-natura-stile-del-disegno-corporate.jpg" class="section-banner" alt="Banner Riassuntone">
+                                
                                 <p style="margin-bottom:15px; color:#555;">Leggi il riassunto completo qui sotto.</p>
                                 
-                                <div id="dyn-riassuntone-container" class="text-content-box">
-                                    <!-- Iniettato via JS -->
-                                </div>
+                                <div id="contenitore-riassunto" class="text-content-box">
+                                    </div>
 
                             </div>
                             <div class="notes-widget">
@@ -400,41 +775,43 @@
                     </div>
                 </div>
 
-                <!-- 06. FAI UNA PAUSA -->
                 <div class="accordion-item">
                     <button class="accordion-header">
                         <span><strong>06.</strong> Fai una Pausa</span>
                         <span class="icon-plus">+</span>
                     </button>
                     <div class="accordion-content">
+                        
                         <div style="text-align:center; padding: 2rem; background: #fafafa; border-radius: 8px;">
                             <h3>Tempo di respirare.</h3>
                             <p>Prenditi 5 minuti lontano dallo schermo. Hai elaborato molti concetti.</p>
                             <div style="font-size:3rem; margin-top:1rem;">☕</div>
                         </div>
+
                         <p style="text-align: center; margin-top: 2rem; font-weight: bold; color: var(--accent-color);">
                             oppure, gioca ai nostri giochi: il Cerca Parole e il Super Solitario
                         </p>
+
                         <div style="text-align: center; margin-top: 1.5rem;">
                             <a href="https://sites.google.com/view/una-mano-spensierata/psicologia-dello-sviluppo/i-giochi" target="_blank" class="btn-pop btn-start" style="text-decoration:none; display:inline-block;">Vai ai giochi</a>
                         </div>
+
                         <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione ▲</button>
                     </div>
                 </div>
 
-                <!-- 07. ASSISTENTE IA -->
                 <div class="accordion-item">
                     <button class="accordion-header">
-                        <span><strong>07.</strong> <span id="dyn-ia-tab-title">Assistente IA</span></span>
+                        <span><strong>07.</strong> Chiedi all'Assistente AI</span>
                         <span class="icon-plus">+</span>
                     </button>
                     <div class="accordion-content">
                         <div class="freud-bot-container">
                             <img src="https://i.ibb.co/LXQ0RwkT/elimina-il-robot-cattivo.jpg" alt="Assistente IA" class="bot-image">
                             <div class="bot-content">
-                                <h3 id="dyn-ia-nome">Caricamento...</h3>
-                                <p id="dyn-ia-sottotesto"></p>
-                                <a id="dyn-ia-url" href="#" target="_blank" class="btn-choice" style="display:inline-block; text-decoration:none; background:var(--ink-color); color:white; border:none; margin-top:10px;">Avvia Chat</a>
+                                <h3>Dr. Freud-Bot 3000</h3>
+                                <p>Hai dubbi sull'inconscio della lezione?</p>
+                                <a href="https://notebooklm.google.com/notebook/7335d25d-1b72-49e8-ba72-d55605d6f7b7/preview" target="_blank" class="btn-choice" style="display:inline-block; text-decoration:none; background:var(--ink-color); color:white; border:none; margin-top:10px;">Avvia Chat</a>
                             </div>
                         </div>
                         <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione ▲</button>
@@ -447,175 +824,22 @@
     </div>
 
 <script>
-    // =========================================================================
-    // MOTORE DINAMICO (DATA BINDING)
-    // =========================================================================
 
-    // Dati globali per Flashcards e Modale
-    let factorsData = {}; 
-    let activeCards = [];
-    let initialCards = [];
-    let currentCardIndex = 0;
-    const STORAGE_KEY = 'una_mano_spensierata_notes';
-
-    document.addEventListener("DOMContentLoaded", async () => {
-        try {
-            // Sostituisci 'lezione.json' con il percorso del tuo file o variabile dinamica
-            const response = await fetch('lezione.json'); 
-            const data = await response.json();
-            
-            popolaInterfaccia(data);
-            
-            // CRUCIALE: Inizializza eventi e logica SOLO dopo aver iniettato il DOM
-            setupAccordions();
-            initFlashcards(data.flashcards);
-            setupNotesAutoScroll();
-            setupCopyButtons();
-            setupDownloadButtons();
-
-        } catch (error) {
-            console.error("Errore fatale nel caricamento del JSON:", error);
-            document.getElementById('dyn-title').innerText = "Errore di caricamento";
+    // --- TRANSFER RIASSUNTO LOGIC ---
+    window.addEventListener('DOMContentLoaded', () => {
+        const source = document.getElementById('source-riassunto');
+        const target = document.getElementById('contenitore-riassunto');
+        if (source && target) {
+            target.innerHTML = source.innerHTML;
         }
+        setupCopyButtons();
+        setupDownloadButtons();
+        setupNotesAutoScroll();
     });
-
-    function popolaInterfaccia(data) {
-        // 1. Titolo e Sottotitolo
-        document.getElementById('dyn-title').innerText = data.titolo_lezione || "";
-        document.getElementById('dyn-subtitle').innerText = data.sottotitolo || "";
-
-        // 2. Obiettivi
-        const objContainer = document.getElementById('dyn-obiettivi');
-        data.obiettivi.forEach(ob => {
-            const li = document.createElement('li');
-            li.innerText = ob;
-            objContainer.appendChild(li);
-        });
-
-        // 3. Punti Chiave (Factor Cards)
-        const factorsContainer = document.getElementById('dyn-punti-chiave');
-        data.punti_chiave.forEach((punto, index) => {
-            // Popoliamo l'oggetto globale per il modale
-            factorsData[index] = { title: punto.titolo, body: `<p>${punto.descrizione}</p>` };
-            
-            const card = document.createElement('div');
-            card.className = 'factor-card';
-            card.setAttribute('onclick', `openFactor(${index})`);
-            card.innerHTML = `<strong>${punto.titolo}</strong><br><small>${punto.descrizione}</small>`;
-            factorsContainer.appendChild(card);
-        });
-
-        // 4. Media (Podcast e Video)
-        if(data.podcast_url) {
-            document.getElementById('dyn-podcast-player').src = data.podcast_url;
-        }
-        if(data.video_sintesi_url) {
-            document.getElementById('dyn-video-player').src = data.video_sintesi_url;
-        }
-
-        // 5. Riassuntone (Con recupero salvataggio evidenziature)
-        const riassuntoContainer = document.getElementById('dyn-riassuntone-container');
-        
-        // Costruiamo una chiave unica per la lezione corrente
-        const titoloPulito = data.titolo_lezione ? data.titolo_lezione.replace(/\s+/g, '_') : 'default';
-        const riassuntoKey = 'riassunto_hl_' + titoloPulito;
-        const savedRiassunto = localStorage.getItem(riassuntoKey);
-
-        if (savedRiassunto) {
-            // Se esiste un salvataggio con evidenziature, usiamo quello!
-            riassuntoContainer.innerHTML = savedRiassunto;
-        } else {
-            // Altrimenti, lo generiamo dal JSON
-            data.riassuntone.forEach(macro => {
-                const htmlBuffer = [];
-                htmlBuffer.push(`<h3>${macro.titolo}</h3>`);
-                if(macro.testo) htmlBuffer.push(`<p>${macro.testo}</p>`);
-                
-                if (macro.check_points && macro.check_points.length > 0) {
-                    htmlBuffer.push(`<div class="cornell-box"><p class="cornell-question">Check Point</p>`);
-                    macro.check_points.forEach(cp => {
-                        htmlBuffer.push(`<p class="cornell-question">${cp.domanda}</p>`);
-                        htmlBuffer.push(`<p class="cornell-answer">${cp.risposta}</p>`);
-                    });
-                    htmlBuffer.push(`</div>`);
-                }
-                riassuntoContainer.insertAdjacentHTML('beforeend', htmlBuffer.join(''));
-            });
-        }
-
-        // Riapplichiamo gli event listener per permettere nuove evidenziature
-        riassuntoContainer.addEventListener('mouseup', () => toggleEvidenziatore(riassuntoContainer, riassuntoKey));
-        riassuntoContainer.addEventListener('touchend', () => toggleEvidenziatore(riassuntoContainer, riassuntoKey));
-
-        // 6. Assistente IA
-        if (data.assistente_ia) {
-            document.getElementById('dyn-ia-tab-title').innerText = data.assistente_ia.nome || "Assistente IA";
-            document.getElementById('dyn-ia-nome').innerText = data.assistente_ia.nome || "Assistente IA";
-            document.getElementById('dyn-ia-sottotesto').innerText = data.assistente_ia.sottotesto || "";
-            if (data.assistente_ia.url) {
-                document.getElementById('dyn-ia-url').href = data.assistente_ia.url;
-            }
-        }
-    }
-
-    // =========================================================================
-    // EVENT LISTENERS & UI LOGIC
-    // =========================================================================
-
-    // --- LOGICA EVIDENZIATORE ---
-    function toggleEvidenziatore(boxRiassunto, storageKey) {
-        const selezione = window.getSelection();
-        if (!selezione.rangeCount || selezione.toString().trim() === "") return;
-        if (!boxRiassunto.contains(selezione.anchorNode)) return;
-
-        boxRiassunto.contentEditable = "true";
-        let nodoPadre = selezione.anchorNode.nodeType === 3 ? selezione.anchorNode.parentNode : selezione.anchorNode;
-        
-        if (nodoPadre.style.backgroundColor === 'rgb(255, 255, 0)' || nodoPadre.style.backgroundColor === 'yellow') {
-            document.execCommand('backColor', false, 'transparent');
-        } else {
-            document.execCommand('backColor', false, 'yellow');
-        }
-        
-        boxRiassunto.contentEditable = "false";
-        selezione.removeAllRanges();
-
-        // Salva l'intero blocco HTML (con le evidenziature appena fatte) nel browser
-        localStorage.setItem(storageKey, boxRiassunto.innerHTML);
-    }
-
-    // --- ACCORDION LOGIC ---
-    function setupAccordions() {
-        const accs = document.getElementsByClassName("accordion-header");
-        for (let i = 0; i < accs.length; i++) {
-            accs[i].addEventListener("click", function(e) {
-                e.stopPropagation();
-                this.classList.toggle("active");
-                const panel = this.nextElementSibling;
-                const icon = this.querySelector('.icon-plus');
-                
-                if (panel.style.maxHeight || panel.classList.contains('active')) {
-                    panel.style.maxHeight = null;
-                    panel.classList.remove("active");
-                    if(icon) icon.textContent = "+";
-                } else {
-                    panel.classList.add("active");
-                    panel.style.maxHeight = panel.scrollHeight + 15000 + "px"; 
-                    if(icon) icon.textContent = "-";
-                }
-            });
-        }
-    }
-
-    function closeThisSection(btn) {
-        const content = btn.parentElement;
-        const header = content.previousElementSibling;
-        header.click();
-        header.scrollIntoView({behavior: "smooth", block: "center"});
-    }
 
     // --- SCROLL PROGRESS BAR LOGIC ---
     window.onscroll = function() { updateProgressBar() };
+
     function updateProgressBar() {
         var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
         var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -623,26 +847,76 @@
         document.getElementById("scroll-progress-bar").style.width = scrolled + "%";
     }
 
-    // --- LOGICA MODALE PUNTI CHIAVE ---
-    function openFactor(key) {
-        document.getElementById('m-title').innerText = factorsData[key].title;
-        document.getElementById('m-body').innerHTML = factorsData[key].body;
-        document.getElementById('factor-modal').classList.add('open');
-        document.body.classList.add('modal-open');
-    }
-    function closeModalDirect() { 
-        document.getElementById('factor-modal').classList.remove('open');
-        document.body.classList.remove('modal-open');
-    }
-    function closeModal(e) { if(e.target.id === 'factor-modal') closeModalDirect(); }
+    // --- DATA FATTORI AGGIORNATI PER LEZIONE 12 ---
+    const factorsData = {
+        neo_welfare: {
+            title: "1. Neoliberismo e Welfare",
+            body: `<p>L'ascesa del neoliberismo con Thatcher e Reagan segna la crisi dello Stato Sociale, imponendo il libero mercato e portando la socialdemocrazia ad accettare il nuovo sistema capitalista.</p>`
+        },
+        riv_digitale: {
+            title: "2. Rivoluzione Digitale",
+            body: `<p>Sviluppata in California grazie al microchip e al modem, nasce da un intreccio tra investimenti militari per Internet e la cultura libertaria giovanile degli anni '60.</p>`
+        },
+        globalizzazione: {
+            title: "3. Nuova Globalizzazione",
+            body: `<p>Ha generato una delocalizzazione asimmetrica: deindustrializzazione e impoverimento in Occidente, ma massiccia riduzione della povertà assoluta e nascita del ceto medio in Asia.</p>`
+        },
+        declino_sovietico: {
+            title: "4. Declino Sovietico",
+            body: `<p>L'URSS di Brežnev adotta un controllo paratotalitario ma sprofonda nella stagnazione tecnologica e sociale, subendo crepe mortali ad opera del sindacato polacco Solidarność.</p>`
+        }
+    };
 
-    // --- LOGICA FLASHCARDS ---
-    function initFlashcards(cardsData) {
-        if (!cardsData || cardsData.length === 0) return;
-        initialCards = cardsData;
-        activeCards = [...initialCards];
-        currentCardIndex = 0;
-    }
+    /* ==========================================================
+        LOGICA FLASHCARDS 
+        ========================================================== */
+    
+    // Utilizzo i backtick (`) per racchiudere le stringhe per evitare errori con gli apostrofi nel testo.
+    const initialCards = [
+        {
+            front: `Qual è il destino del Welfare State e della Socialdemocrazia nell'era neoliberista?`,
+            back: `Sopraffatti dalle mutazioni del sistema globale e dalla globalizzazione finanziaria, lo Stato sociale e le ideologie della sinistra moderata soccombono alla dottrina neoliberista anglo-americana (guidata da Thatcher e Reagan). Dinanzi al trionfo dell'autoregolazione del mercato, partiti storicamente anticapitalisti si rassegnano a considerare il libero mercato come l'unico orizzonte efficiente possibile (il dogma del "non c'è alternativa"). Di conseguenza, leader socialdemocratici come Mitterrand in Francia rinunciano allo scontro di classe, moderano le richieste salariali della classe operaia e adottano l'austerità statale, pur riconoscendo i danni sociali emersi con evidenza nella crisi del 2008.`
+        },
+        {
+            front: `Su quali presupposti tecnologici e culturali poggia la nascita di Internet?`,
+            back: `Paradossalmente, il web nasce dalla fusione tra paranoie militari e utopie hippy californiane. Da un lato, il Pentagono necessitava di un'infrastruttura di comunicazione decentralizzata in grado di resistere a un olocausto nucleare. Dall'altro lato, questa tecnologia cadde nelle mani degli scienziati e degli studenti dei campus della Silicon Valley intrisi della cultura contestatrice degli anni Sessanta. Animati dal rifiuto dell'autoritarismo istituzionale statale, sognavano di utilizzare il computer personale e il modem per emancipare l'umanità dai confini, garantendo libertà d'espressione, democrazia radicale e lo sviluppo dei potenziali personali.`
+        },
+        {
+            front: `Quali rischi politici solleva la dipendenza tecnologica dall'oligopolio di aziende degli Stati Uniti?`,
+            back: `La cronica marginalità del continente europeo rispetto alle invenzioni della Silicon Valley ha condannato gli Stati nazionali a una servitù digitale. Giganti privati monopolistici come Google, Microsoft e Apple, o magnati come Elon Musk (che con SpaceX controlla fittissime reti satellitari planetarie), possiedono e gestiscono le arterie del mondo. Ne consegue un gravissimo dilemma geopolitico per la sicurezza: apparati militari statali, amministrazioni pubbliche, circuiti bancari e transazioni di denaro mondiali sono alla mercé di fornitori esteri inavvicinabili, che in caso di sanzioni, ricatti politici o collassi server paralizzerebbero le economie nazionali in pochi istanti.`
+        },
+        {
+            front: `Come mutano le logiche gestionali del capitalismo e che danni ha provocato la pratica delle stock options?`,
+            back: `La dematerializzazione ha stravolto la logica d'impresa, sfumando i confini netti tra dirigenti e proprietari. Per incentivare le dirigenze, i colossi multinazionali pagano i loro manager riversando loro quote azionarie vertiginose (le stock options). Questo cortocircuito produce l'abbandono di solide politiche industriali a lungo termine: l'unico obiettivo del manager diviene gonfiare forsennatamente l'azione borsistica immediata per monetizzare. Spinti da questa avidità contabile fittizia, i gruppi bancari dispensarono valanghe di mutui inesigibili ai cittadini insolventi pur di truccare bilanci e incassare dividendi astronomici, un castello di carte che è franato rovinosamente trascinando l'umanità nell'apocalisse finanziaria del 2008.`
+        },
+        {
+            front: `Cosa intendono gli storici evidenziando gli "andamenti altalenanti" del fenomeno della Globalizzazione?`,
+            back: `Decostruendo il mito di un progresso lineare, gli storici rifiutano di datare il mercato mondiale solo all'esplosione dei chip anni '70. Identificano flussi intensissimi e rivoluzionari già alla fine del Quattrocento (connessioni biologico-commerciali dello Scambio Colombiano) e specialmente alla fine dell'Ottocento, propulsi dall'imperialismo e dalle ragnatele logistiche di cavi telegrafici e flotte a vapore. Proprio la caducità umana insegna che una catena logistica può spezzarsi: all'alba gloriosa del '900 seguirono le tragedie delle guerre mondiali, della Cortina di Ferro e della Grande Depressione, imponendo all'umanità una fase durissima e lunghissima di dolorosa "deglobalizzazione" dei mercati.`
+        },
+        {
+            front: `Perché la globalizzazione genera simultaneamente l'impoverimento dell'Occidente e la drastica diminuzione della povertà estrema asiatica?`,
+            back: `Analizzando i flussi, le disuguaglianze mutano in base alla lente d'ingrandimento. Nei confini delle metropoli occidentali, la globalizzazione ha sventrato le sicurezze: ha distrutto la stabilità della classe operaia e proletarizzato inesorabilmente i ceti medi, azzerando le garanzie abitative ed economiche per le giovani generazioni europee. Ma in prospettiva macro-storica, le fabbriche fuggite dall'Europa si sono accampate in Asia. Questa mastodontica ridistribuzione logistica ha miracolosamente emancipato e sollevato dalla povertà assoluta (soglia di sopravvivenza da 2 dollari al giorno) immense legioni di diseredati in Cina e in India, edificando ex novo il baricentro del XXI secolo.`
+        },
+        {
+            front: `In che misura il successo economico della Comunità Economica Europea apre crisi di legittimità sovranazionale?`,
+            back: `Aggirando le fallite ambizioni federaliste immediate degli Stati Uniti d'Europa, l'approccio pragmatico-commerciale ha regalato ricchezza, inducendo le nazioni iberiche post-dittatoriali, il Regno Unito e l'Irlanda a richiedere un'ansiosa annessione tra gli anni '70 e '80. Attraverso l'Atto Unico e l'elezione diretta dell'Europarlamento, la CEE estende le proprie braccia sulle riforme di istruzione, ambiente e movimento dei cittadini. Più i trattati incrociano intimamente le esistenze, più i popolazioni nazionali smarriscono il filo della democrazia: sorge l'assillante sindrome di accusa (fomentata dalla politica locale) di aver ceduto i propri destini intimi ai freddi tecnocrati ed anonimi burocrati di Bruxelles.`
+        },
+        {
+            front: `Che significato storico ha la stagnazione del "paratotalitarismo" sotto la direzione di Brežnev?`,
+            back: `Archiviato il terrore purulento e le persecuzioni sanguinarie paranoiche innescate da Stalin, il regime moscovita degli anni Settanta abdica alla folle presunzione filosofica di voler estirpare la coscienza per forgiare antropologicamente l'Uomo Nuovo comunista. La spietata gerarchia si accontenta ora di barattare case di Stato in coabitazione e occupazione fittizia in cambio della silente obbedienza. In uno strano clima di paratotalitarismo svuotato d'anima, si diffonde la tolleranza ufficiosa verso il disincanto privato. L'unico precetto intoccabile rimane la criminalizzazione assoluta della dissidenza o delle manifestazioni pubbliche ostili, che incappano fatalmente nella reclusione siberiana, sigillando un blocco immobile ed apatica.`
+        },
+        {
+            front: `Da quali indicatori oggettivi si evidenzia il catastrofico naufragio del primato socio-economico dell'URSS?`,
+            back: `Accecato dall'ambizione planetaria di eguagliare il titanico potenziale bellico nucleare americano in piena Guerra Fredda, il comitato centrale del PCUS dirotta le esangui finanze sovietiche nel buco nero della produzione di cannoni, sommergibili ed armamenti. Nel mentre, la vetusta manifattura fordista civile collassa, bucando clamorosamente l'aggancio epocale ai microchip e all'informatica digitale, in cui accumula un decennio di distacco ridicolo. Tale depauperamento annienta l'assistenza, decima il mercato al dettaglio con code infinite per i viveri e incide pesantemente sulla biologia dei sudditi, deflagrando l'ecatombe sommersa della mortalità neonatale negli ospedali sguarniti e gettando il popolo nell'autodistruzione etilica dell'alcolismo.`
+        },
+        {
+            front: `Perché il colpo di stato interno del generale polacco Jaruzelski fu interpretato come l'esito minore?`,
+            back: `Alla fine degli anni Settanta, incoraggiata spiritualmente e platealmente dalle vibranti condanne del neonato e ingombrante Papa slavo Karol Wojtyła, la reazionaria e cattolicissima Polonia insorge legalmente. Gli scioperanti dei cantieri, spronati da Lech Wałęsa, formalizzano in clandestinità Solidarność, ammassando un inaccettabile esercito illegale di nove milioni di lavoratori sfidanti il regime. Terrorizzata dallo spettro di un'invasione corazzata russa ordinata per estirpare la peste sindacale dal corpo orientale, Varsavia preferisce decapitarsi da sé. Il leader militare, generale Jaruzelski, decreta di imperio la legge marziale, sciolse l'opposizione per congelare lo status quo ed eludere i bagni di sangue per le strade, posticipando lo schianto sovietico all'orizzonte.`
+        }
+    ];
+
+    let activeCards = [...initialCards];
+    let currentCardIndex = 0;
 
     function startFlashcards() {
         document.getElementById('fc-start-screen').style.display = 'none';
@@ -652,6 +926,7 @@
 
     function updateCardDisplay() {
         const deck = document.getElementById('flashcard-deck');
+        const controls = document.getElementById('fc-controls-bar');
         const winScreen = document.getElementById('win-screen');
         const counter = document.getElementById('fc-counter');
 
@@ -669,40 +944,64 @@
         const card = activeCards[currentCardIndex];
         counter.innerText = `Carte da studiare: ${activeCards.length}`;
 
+        // Animazione di cambio carta
         deck.style.opacity = '0.5';
         setTimeout(() => {
             document.getElementById('fc-front-text').innerText = card.front;
             document.getElementById('fc-back-text').innerText = card.back;
+            
+            // Reset scroll del testo posteriore
             document.getElementById('fc-back-text').scrollTop = 0;
+            
+            // Reset flip
             deck.classList.remove('flipped'); 
             deck.style.opacity = '1';
         }, 200);
     }
 
+    // --- GESTIONE FLIP ---
+    
+    // Funzione per il click sul wrapper (PC)
     function handleWrapperClick(e) {
+        // Se siamo su mobile (schermo < 900px), IGNORA il click sul wrapper
+        // per permettere lo scroll del testo senza girare la carta.
         if (window.innerWidth <= 900) return;
+        
         toggleFlip();
     }
 
+    // Funzione per il bottone Mobile (GIRA)
     function forceFlip(e) {
         if(e) e.stopPropagation();
+
+        // LOGICA MOBILE: SE SIAMO SU SCHERMO PICCOLO (< 900px) APRI MODALE INVECE DI GIRARE
         if (window.innerWidth <= 900) {
+            // Recupera il testo della risposta della carta corrente
             const card = activeCards[currentCardIndex];
-            document.getElementById('fc-mobile-body').innerHTML = card.back;
+            const answerText = card.back; 
+            
+            // Inserisci nel modale
+            document.getElementById('fc-mobile-body').innerHTML = answerText;
+            
+            // Mostra modale
             document.getElementById('fc-mobile-modal').style.display = 'flex';
         } else {
+            // LOGICA DESKTOP: GIRA NORMALE
             toggleFlip();
         }
     }
 
+    // Funzione per chiudere il popup mobile della risposta
     function closeMobileAnswerPopup() {
         document.getElementById('fc-mobile-modal').style.display = 'none';
     }
 
+    // La logica effettiva del flip (usata solo su desktop ora)
     function toggleFlip() {
         document.getElementById('flashcard-deck').classList.toggle('flipped');
     }
 
+    // --- NAVIGAZIONE ---
     function navCard(direction) {
         currentCardIndex += direction;
         if (currentCardIndex < 0) currentCardIndex = activeCards.length - 1;
@@ -710,10 +1009,13 @@
         updateCardDisplay();
     }
 
+    // --- GESTIONE RISPOSTE ---
     function markKnown() {
         showToast("Grande! Continua così.", "success");
         activeCards.splice(currentCardIndex, 1);
         if (currentCardIndex >= activeCards.length) currentCardIndex = 0;
+        
+        // Ritardo per permettere l'animazione del toast prima di cambiare carta visivamente
         setTimeout(() => {
             document.getElementById('flashcard-deck').classList.remove('flipped');
             updateCardDisplay();
@@ -722,9 +1024,12 @@
 
     function markUnknown() {
         showToast("Nessun problema, la rivedremo dopo.", "retry");
+        // Sposta la carta in fondo al mazzo
         const currentCard = activeCards.splice(currentCardIndex, 1)[0];
         activeCards.push(currentCard);
+        
         if (currentCardIndex >= activeCards.length) currentCardIndex = 0;
+        
         setTimeout(() => {
             document.getElementById('flashcard-deck').classList.remove('flipped');
             updateCardDisplay();
@@ -735,7 +1040,9 @@
         activeCards = [...initialCards];
         currentCardIndex = 0;
         document.getElementById('win-screen').style.display = 'none';
+        document.getElementById('fc-game-screen').style.display = 'block';
         document.getElementById('fc-start-screen').style.display = 'block';
+        // Nasconde il gioco, mostra start screen
         document.getElementById('fc-game-screen').style.display = 'none';
     }
 
@@ -745,67 +1052,199 @@
         toast.className = `toast toast-${type}`;
         toast.innerText = message;
         container.appendChild(toast);
+        
+        // Trigger reflow
         void toast.offsetWidth; 
         toast.classList.add('show');
+        
         setTimeout(() => {
             toast.classList.remove('show');
             setTimeout(() => toast.remove(), 300);
         }, 2000);
     }
 
-    // --- APPUNTI ZEN LOGIC ---
+    // --- UTILS ---
+    
+    function openFactor(key) {
+        document.getElementById('m-title').innerText = factorsData[key].title;
+        document.getElementById('m-body').innerHTML = factorsData[key].body;
+        document.getElementById('factor-modal').classList.add('open');
+        document.body.classList.add('modal-open');
+    }
+    function closeModalDirect() { 
+        document.getElementById('factor-modal').classList.remove('open');
+        document.body.classList.remove('modal-open');
+    }
+    function closeModal(e) { if(e.target.id === 'factor-modal') closeModalDirect(); }
+
+    
+    // --- ACCORDION LOGIC ---
+    const accs = document.getElementsByClassName("accordion-header");
+    for (let i = 0; i < accs.length; i++) {
+        accs[i].addEventListener("click", function(e) {
+            e.stopPropagation();
+            
+            this.classList.toggle("active");
+            const panel = this.nextElementSibling;
+            const icon = this.querySelector('.icon-plus');
+            
+            if (panel.style.maxHeight || panel.classList.contains('active')) {
+                panel.style.maxHeight = null;
+                panel.classList.remove("active");
+                if(icon) icon.textContent = "+";
+            } else {
+                panel.classList.add("active");
+                panel.style.maxHeight = panel.scrollHeight + 15000 + "px"; 
+                if(icon) icon.textContent = "-";
+            }
+        });
+    }
+
+    function closeThisSection(btn) {
+        const content = btn.parentElement;
+        const header = content.previousElementSibling;
+        header.click();
+        header.scrollIntoView({behavior: "smooth", block: "center"});
+    }
+
+    /* ================================================================
+       >>> LOGICA APPUNTI ZEN (SALVATAGGIO E AUTO-SCROLL) E BOTTONI TOOLBAR <<<
+       ================================================================
+    */
+    const STORAGE_KEY = 'storia_contemp_lez12';
+    
+    // Funzione per impostare i bottoni copia
     function setupCopyButtons() {
         document.querySelectorAll('.copy-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 const area = this.closest('.notes-widget').querySelector('.notes-area');
                 const text = area.value;
-                if(!text.trim()) { showToast('Scrivi prima qualcosa!', 'retry'); return; }
+                if(!text.trim()) { 
+                    showToast('Scrivi prima qualcosa!', 'retry'); 
+                    return; 
+                }
                 
                 const copyFallback = () => {
                     const ta = document.createElement('textarea');
                     ta.value = text;
-                    ta.style.position = 'fixed'; ta.style.left = '-9999px';
-                    document.body.appendChild(ta); ta.select();
-                    try { document.execCommand('copy'); showToast('Appunti copiati!', 'success'); } 
-                    catch (err) { showToast('Errore nella copia.', 'retry'); }
+                    ta.style.position = 'fixed'; 
+                    ta.style.left = '-9999px';
+                    document.body.appendChild(ta); 
+                    ta.select();
+                    try {
+                        document.execCommand('copy');
+                        showToast('Appunti copiati!', 'success');
+                    } catch (err) {
+                        showToast('Errore nella copia.', 'retry');
+                    }
                     document.body.removeChild(ta);
                 };
 
                 if (navigator.clipboard && window.isSecureContext) {
-                    navigator.clipboard.writeText(text).then(() => showToast('Appunti copiati!', 'success')).catch(() => copyFallback());
-                } else { copyFallback(); }
+                    navigator.clipboard.writeText(text)
+                        .then(() => showToast('Appunti copiati!', 'success'))
+                        .catch(() => copyFallback());
+                } else {
+                    copyFallback();
+                }
             });
         });
     }
 
+    // Funzione per impostare i bottoni download txt
     function setupDownloadButtons() {
         document.querySelectorAll('.download-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 const area = this.closest('.notes-widget').querySelector('.notes-area');
-                if (!area.value.trim()) { showToast('Scrivi prima qualcosa!', 'retry'); return; }
+                if (!area.value.trim()) { 
+                    showToast('Scrivi prima qualcosa!', 'retry'); 
+                    return; 
+                }
                 const blob = new Blob([area.value], { type: 'text/plain;charset=utf-8' });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
-                a.href = url; a.download = 'appunti_lezione.txt'; a.style.display = 'none';
-                document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+                a.href = url;
+                a.download = 'appunti_Storia_Contemporanea_lezione_12.txt';
+                a.style.display = 'none';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
                 showToast('Appunti scaricati!', 'success');
             });
         });
     }
 
+    // Funzione per impostare l'auto-scroll e il salvataggio
     function setupNotesAutoScroll() {
         const noteAreas = document.querySelectorAll('.notes-area');
+
         noteAreas.forEach(area => {
+            // Carica dati salvati
             let savedText = localStorage.getItem(STORAGE_KEY);
-            if (savedText) area.value = savedText;
+            if (savedText) area.value = savedText; // Usa .value per textarea
+
+            // Evento Input Semplice e Diretto (salvataggio locale)
             area.addEventListener('input', function() {
-                try { localStorage.setItem(STORAGE_KEY, this.value); } catch(e) {}
+                const val = this.value;
+                try { localStorage.setItem(STORAGE_KEY, val); } catch(e) {}
             });
+
+            // Evento keydown per scrollare giù quando si preme invio
             area.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') requestAnimationFrame(() => { this.scrollTop = this.scrollHeight; });
+                if (e.key === 'Enter') {
+                    requestAnimationFrame(() => {
+                        this.scrollTop = this.scrollHeight;
+                    });
+                }
             });
         });
     }
+    /* ================================================================ */
+/* ================================================================
+       LOGICA EVIDENZIATORE RIASSUNTONE (CON SALVATAGGIO)
+       ================================================================ */
+    const boxRiassunto = document.getElementById('contenitore-riassunto');
+    const STORAGE_KEY_RIASSUNTO = 'storia_contemp_lez12_riassunto_hl';
+
+    // 1. Carica le evidenziature salvate quando si ricarica la pagina
+    window.addEventListener('DOMContentLoaded', () => {
+        // Usiamo un piccolissimo ritardo per assicurarci che il testo originale 
+        // sia già stato caricato dal tuo script principale
+        setTimeout(() => {
+            const riassuntoSalvato = localStorage.getItem(STORAGE_KEY_RIASSUNTO);
+            if (riassuntoSalvato) {
+                boxRiassunto.innerHTML = riassuntoSalvato;
+            }
+        }, 50);
+    });
+
+    function toggleEvidenziatore() {
+        const selezione = window.getSelection();
+        if (!selezione.rangeCount || selezione.toString().trim() === "") return;
+        if (!boxRiassunto.contains(selezione.anchorNode)) return;
+
+        document.designMode = "on";
+        let nodoPadre = selezione.anchorNode.nodeType === 3 ? selezione.anchorNode.parentNode : selezione.anchorNode;
+        
+        if (nodoPadre.style.backgroundColor === 'rgb(255, 255, 0)' || nodoPadre.style.backgroundColor === 'yellow') {
+            document.execCommand('backColor', false, 'transparent');
+        } else {
+            if (!document.execCommand('hiliteColor', false, 'yellow')) {
+                document.execCommand('backColor', false, 'yellow');
+            }
+        }
+        
+        document.designMode = "off";
+        selezione.removeAllRanges();
+
+        // 2. Salva l'intero blocco HTML (con le evidenziature appena fatte) nel browser
+        localStorage.setItem(STORAGE_KEY_RIASSUNTO, boxRiassunto.innerHTML);
+    }
+
+    boxRiassunto.addEventListener('mouseup', toggleEvidenziatore);
+    boxRiassunto.addEventListener('touchend', toggleEvidenziatore);
 </script>
 </body>
 </html>
