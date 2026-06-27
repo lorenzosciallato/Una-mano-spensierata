@@ -513,23 +513,39 @@
             document.getElementById('dyn-video-player').src = data.video_sintesi_url;
         }
 
-        // 5. Riassuntone
+        // 5. Riassuntone (Con recupero salvataggio evidenziature)
         const riassuntoContainer = document.getElementById('dyn-riassuntone-container');
-        data.riassuntone.forEach(macro => {
-            const htmlBuffer = [];
-            htmlBuffer.push(`<h3>${macro.titolo}</h3>`);
-            if(macro.testo) htmlBuffer.push(`<p>${macro.testo}</p>`);
-            
-            if (macro.check_points && macro.check_points.length > 0) {
-                htmlBuffer.push(`<div class="cornell-box"><p class="cornell-question">Check Point</p>`);
-                macro.check_points.forEach(cp => {
-                    htmlBuffer.push(`<p class="cornell-question">${cp.domanda}</p>`);
-                    htmlBuffer.push(`<p class="cornell-answer">${cp.risposta}</p>`);
-                });
-                htmlBuffer.push(`</div>`);
-            }
-            riassuntoContainer.insertAdjacentHTML('beforeend', htmlBuffer.join(''));
-        });
+        
+        // Costruiamo una chiave unica per la lezione corrente
+        const titoloPulito = data.titolo_lezione ? data.titolo_lezione.replace(/\s+/g, '_') : 'default';
+        const riassuntoKey = 'riassunto_hl_' + titoloPulito;
+        const savedRiassunto = localStorage.getItem(riassuntoKey);
+
+        if (savedRiassunto) {
+            // Se esiste un salvataggio con evidenziature, usiamo quello!
+            riassuntoContainer.innerHTML = savedRiassunto;
+        } else {
+            // Altrimenti, lo generiamo dal JSON
+            data.riassuntone.forEach(macro => {
+                const htmlBuffer = [];
+                htmlBuffer.push(`<h3>${macro.titolo}</h3>`);
+                if(macro.testo) htmlBuffer.push(`<p>${macro.testo}</p>`);
+                
+                if (macro.check_points && macro.check_points.length > 0) {
+                    htmlBuffer.push(`<div class="cornell-box"><p class="cornell-question">Check Point</p>`);
+                    macro.check_points.forEach(cp => {
+                        htmlBuffer.push(`<p class="cornell-question">${cp.domanda}</p>`);
+                        htmlBuffer.push(`<p class="cornell-answer">${cp.risposta}</p>`);
+                    });
+                    htmlBuffer.push(`</div>`);
+                }
+                riassuntoContainer.insertAdjacentHTML('beforeend', htmlBuffer.join(''));
+            });
+        }
+
+        // Riapplichiamo gli event listener per permettere nuove evidenziature
+        riassuntoContainer.addEventListener('mouseup', () => toggleEvidenziatore(riassuntoContainer, riassuntoKey));
+        riassuntoContainer.addEventListener('touchend', () => toggleEvidenziatore(riassuntoContainer, riassuntoKey));
 
         // 6. Assistente IA
         if (data.assistente_ia) {
@@ -545,6 +561,28 @@
     // =========================================================================
     // EVENT LISTENERS & UI LOGIC
     // =========================================================================
+
+    // --- LOGICA EVIDENZIATORE ---
+    function toggleEvidenziatore(boxRiassunto, storageKey) {
+        const selezione = window.getSelection();
+        if (!selezione.rangeCount || selezione.toString().trim() === "") return;
+        if (!boxRiassunto.contains(selezione.anchorNode)) return;
+
+        boxRiassunto.contentEditable = "true";
+        let nodoPadre = selezione.anchorNode.nodeType === 3 ? selezione.anchorNode.parentNode : selezione.anchorNode;
+        
+        if (nodoPadre.style.backgroundColor === 'rgb(255, 255, 0)' || nodoPadre.style.backgroundColor === 'yellow') {
+            document.execCommand('backColor', false, 'transparent');
+        } else {
+            document.execCommand('backColor', false, 'yellow');
+        }
+        
+        boxRiassunto.contentEditable = "false";
+        selezione.removeAllRanges();
+
+        // Salva l'intero blocco HTML (con le evidenziature appena fatte) nel browser
+        localStorage.setItem(storageKey, boxRiassunto.innerHTML);
+    }
 
     // --- ACCORDION LOGIC ---
     function setupAccordions() {
