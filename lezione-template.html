@@ -92,7 +92,7 @@
         #custom-lang-selector.loaded { 
             display: inline-flex; flex-direction: column; align-items: center;
             background: var(--paper-color, #fdfbf7); border: 1px solid var(--accent-color, #375a7f); 
-            border-radius: 8px; padding: 5px 12px; margin-left: 15px; 
+            border-radius: 8px; padding: 5px 12px; margin-top: 2.5rem; /* Più respiro rispetto ai bottoni sopra */
             vertical-align: middle; position: relative; 
             box-shadow: 2px 2px 0px var(--accent-color); z-index: 999999;
         }
@@ -106,7 +106,7 @@
         .lang-options { 
             display: none; position: absolute; top: 110%; right: 0;
             background: var(--paper-color, #fdfbf7); border: 2px solid var(--accent-color);
-            border-radius: 12px; grid-template-columns: repeat(5, 1fr); 
+            border-radius: 12px; grid-template-columns: repeat(4, 1fr); /* Adattato per 16 lingue (4x4) */
             gap: 8px; padding: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             min-width: 260px;
         }
@@ -119,7 +119,7 @@
         .lang-options button:hover { transform: scale(1.2); }
 
         @media (max-width: 600px) {
-            #custom-lang-selector.loaded { display: flex; margin: 15px auto 5px auto; width: max-content; }
+            #custom-lang-selector.loaded { display: flex; margin: 2.5rem auto 5px auto; width: max-content; }
             .lang-options { right: 50%; transform: translateX(50%); }
         }
 
@@ -127,6 +127,16 @@
         body { top: 0 !important; }
         #goog-gt-tt, .goog-te-balloon-frame { display: none !important; }
         .goog-text-highlight { background: transparent !important; box-shadow: none !important; border: none !important; }
+
+        /* --- SOTTOLINEATURA (HIGHLIGHT) --- */
+        .highlighted-text { background-color: #ffeb3b; color: #000; padding: 0 2px; border-radius: 3px; }
+        #floating-highlighter {
+            position: absolute; display: none; background: #375a7f; color: white;
+            padding: 8px 12px; border-radius: 6px; cursor: pointer; z-index: 999999;
+            font-size: 14px; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            border: 2px solid #1a1a1a; font-family: var(--font-body); text-transform: uppercase;
+        }
+        #floating-highlighter:hover { transform: translateY(-2px); }
 
         /* --- CONTENITORE PRINCIPALE --- */
         .content-card { background: var(--paper-color); padding: 3rem; margin: 0 auto; width: 90%; max-width: 1200px; position: relative; border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.05); z-index: 1; margin-bottom: 2rem; margin-top: 2rem; }
@@ -570,6 +580,7 @@
         <button onclick="triggerTranslation('ar', this)" title="العربية">🇸🇦</button>
         <button onclick="triggerTranslation('hi', this)" title="हिन्दी">🇮🇳</button>
         <button onclick="triggerTranslation('ru', this)" title="Русский">🇷🇺</button>
+        <button onclick="triggerTranslation('ja', this)" title="日本語">🇯🇵</button>
       </div>
     </div>
 
@@ -897,6 +908,49 @@
             });
         });
     }
+
+    // --- FUNZIONE SOTTOLINEATURA (HIGHLIGHTER) ---
+    document.addEventListener('DOMContentLoaded', () => {
+        const highlighterBtn = document.createElement('div');
+        highlighterBtn.id = 'floating-highlighter';
+        highlighterBtn.innerHTML = '🖍️ Sottolinea';
+        document.body.appendChild(highlighterBtn);
+
+        document.addEventListener('mouseup', (e) => {
+            const selection = window.getSelection();
+            if (selection.toString().trim().length > 0 && !highlighterBtn.contains(e.target)) {
+                const range = selection.getRangeAt(0);
+                const rect = range.getBoundingClientRect();
+                highlighterBtn.style.top = `${rect.top + window.scrollY - 50}px`;
+                highlighterBtn.style.left = `${rect.left + window.scrollX + (rect.width / 2) - 50}px`;
+                highlighterBtn.style.display = 'block';
+            } else if (!highlighterBtn.contains(e.target)) {
+                highlighterBtn.style.display = 'none';
+            }
+        });
+
+        highlighterBtn.addEventListener('mousedown', (e) => {
+            e.preventDefault(); 
+        });
+
+        highlighterBtn.addEventListener('click', () => {
+            const selection = window.getSelection();
+            if (!selection.rangeCount) return;
+            const range = selection.getRangeAt(0);
+            
+            const mark = document.createElement('mark');
+            mark.className = 'highlighted-text';
+            
+            try {
+                range.surroundContents(mark);
+            } catch(e) {
+                showToast("Seleziona testo all'interno dello stesso blocco per sottolineare.", "retry");
+            }
+            
+            selection.removeAllRanges();
+            highlighterBtn.style.display = 'none';
+        });
+    });
 </script>
 
 <script>
@@ -904,13 +958,14 @@
     const langLabels = {
         'it': 'Lingua', 'en': 'Language', 'fr': 'Langue', 'de': 'Sprache', 'es': 'Idioma',
         'bg': 'Език', 'pl': 'Język', 'el': 'Γλώσσα', 'lt': 'Kalba', 'da': 'Sprog',
-        'pt': 'Língua', 'zh-CN': '语言', 'ar': 'اللغة', 'hi': 'भाषा', 'ru': 'Язык'
+        'pt': 'Língua', 'zh-CN': '语言', 'ar': 'اللغة', 'hi': 'भाषा', 'ru': 'Язык',
+        'ja': '日本語'
     };
 
     function googleTranslateElementInit() {
         new google.translate.TranslateElement({ 
             pageLanguage: 'it', 
-            includedLanguages: 'en,it,fr,de,es,bg,pl,el,lt,da,pt,zh-CN,ar,hi,ru', 
+            includedLanguages: 'en,it,fr,de,es,bg,pl,el,lt,da,pt,zh-CN,ar,hi,ru,ja', 
             autoDisplay: false 
         }, 'google_translate_element');
     }
