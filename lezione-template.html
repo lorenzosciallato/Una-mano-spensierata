@@ -761,26 +761,122 @@
         }
 
         /* ============================================================
-           PAUSA
+           PAUSA — MINI WORD SEARCH (SOSTITUISCE IL VECCHIO PAUSA-BOX)
         ============================================================ */
-        .pausa-box {
-            text-align: center; padding: 3rem 2rem;
+        .pausa-wordsearch {
             background: linear-gradient(135deg, var(--ivory), var(--dust));
             border-radius: var(--r-lg); border: 1px solid var(--dust);
+            padding: 2rem;
         }
-        .pausa-box h3 {
-            font-family: var(--font-display); font-size: 1.5rem; color: var(--ink);
-            margin-bottom: 0.5rem;
+        .pausa-ws-header {
+            text-align: center; margin-bottom: 1.5rem;
         }
-        .pausa-box p { color: var(--sub); font-size: 0.95rem; }
-        .pausa-emoji { font-size: 3.5rem; margin: 1.5rem 0; }
-        .pausa-divider {
-            margin: 2rem auto; width: 40px; height: 1px; background: var(--mist);
+        .pausa-ws-header h3 {
+            font-family: var(--font-display); font-size: 1.5rem;
+            font-weight: 700; color: var(--ink); margin-bottom: 0.4rem;
         }
-        .pausa-cta {
-            font-size: 0.78rem; font-weight: 700; letter-spacing: 0.18em;
-            text-transform: uppercase; color: var(--navy); margin-bottom: 1.2rem;
+        .pausa-ws-header p { color: var(--sub); font-size: 0.88rem; }
+
+        .ws-lang-row {
+            display: flex; justify-content: center; gap: 10px; margin-bottom: 1.5rem;
         }
+        .ws-lang-btn {
+            padding: 8px 22px; border-radius: 50px;
+            border: 2px solid var(--dust); background: #fff;
+            font-family: var(--font-body); font-weight: 700; font-size: 0.8rem;
+            letter-spacing: 0.08em; text-transform: uppercase;
+            color: var(--sub); cursor: pointer; transition: all 0.2s;
+        }
+        .ws-lang-btn.active {
+            background: var(--navy); border-color: var(--navy); color: #fff;
+        }
+
+        .ws-layout {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 1.5rem;
+            align-items: start;
+        }
+        @media (max-width: 700px) {
+            .ws-layout { grid-template-columns: 1fr; }
+        }
+
+        .ws-grid-wrap {
+            display: inline-block;
+            background: var(--night);
+            padding: 4px;
+            border-radius: var(--r-md);
+            box-shadow: 5px 5px 0 var(--gold);
+            touch-action: none;
+            user-select: none;
+        }
+        .ws-grid {
+            display: grid;
+            gap: 2px;
+            background: var(--night);
+        }
+        .ws-cell {
+            width: 32px; height: 32px;
+            background: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-family: var(--font-body); font-weight: 800;
+            font-size: 0.85rem; cursor: pointer;
+            border-radius: 3px;
+            transition: background 0.15s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .ws-cell.ws-sel { background: var(--gold-lt); }
+        .ws-cell.ws-found { background: var(--cyan); color: var(--night); }
+
+        @media (max-width: 480px) {
+            .ws-cell { width: 26px; height: 26px; font-size: 0.72rem; }
+        }
+
+        .ws-word-list {
+            display: flex; flex-direction: column; gap: 8px;
+            min-width: 140px;
+        }
+        @media (max-width: 700px) {
+            .ws-word-list { flex-direction: row; flex-wrap: wrap; }
+        }
+        .ws-word-tag {
+            background: #fff; border: 1px solid var(--dust);
+            padding: 6px 14px; border-radius: 50px;
+            font-family: var(--font-body); font-size: 0.8rem; font-weight: 700;
+            color: var(--ink); letter-spacing: 0.04em;
+            transition: all 0.2s;
+        }
+        .ws-word-tag.ws-done {
+            background: var(--dust); color: var(--mist);
+            text-decoration: line-through; border-color: transparent;
+        }
+
+        .ws-status {
+            text-align: center; margin-top: 1.2rem;
+            font-size: 0.78rem; font-weight: 700; letter-spacing: 0.14em;
+            text-transform: uppercase; color: var(--gold-dk);
+            min-height: 20px;
+        }
+
+        .ws-win-msg {
+            text-align: center; margin-top: 1rem;
+            padding: 1rem; background: linear-gradient(135deg,#F0F6FF,#E8F0FA);
+            border-radius: var(--r-md); border: 1px solid rgba(26,47,79,0.1);
+            display: none;
+        }
+        .ws-win-msg p {
+            font-family: var(--font-display); font-size: 1.2rem;
+            color: var(--navy); font-weight: 700; margin-bottom: 0.8rem;
+        }
+        .ws-new-btn {
+            background: var(--navy); color: #fff;
+            border: none; border-radius: 50px;
+            padding: 10px 28px; font-family: var(--font-body);
+            font-weight: 700; font-size: 0.8rem; letter-spacing: 0.1em;
+            text-transform: uppercase; cursor: pointer;
+            transition: background 0.2s;
+        }
+        .ws-new-btn:hover { background: var(--navy-lt); }
 
         /* ============================================================
            ASSISTENTE IA
@@ -832,8 +928,17 @@
             z-index: 999999; font-size: 0.78rem; font-weight: 700;
             box-shadow: var(--shadow-lift); font-family: var(--font-body);
             text-transform: uppercase; letter-spacing: 0.1em;
+            gap: 8px;
         }
         #floating-highlighter:hover { background: var(--navy-lt); }
+        #floating-highlighter .hl-add { cursor: pointer; }
+        #floating-highlighter .hl-remove {
+            cursor: pointer; opacity: 0.7;
+            border-left: 1px solid rgba(255,255,255,0.3);
+            padding-left: 8px; margin-left: 2px;
+            display: none;
+        }
+        #floating-highlighter .hl-remove.visible { display: inline; }
 
         /* ============================================================
            MOBILE FLASHCARD MODAL
@@ -1182,7 +1287,7 @@
                         </div>
                     </div>
 
-                    <!-- 06. PAUSA -->
+                    <!-- 06. PAUSA — MINI WORD SEARCH -->
                     <div class="accordion-item">
                         <button class="accordion-header">
                             <span class="ch-number">06</span>
@@ -1193,14 +1298,33 @@
                             <span class="ch-icon">+</span>
                         </button>
                         <div class="accordion-content">
-                            <div class="pausa-box">
-                                <h3>Tempo di respirare.</h3>
-                                <p>Prenditi 5 minuti lontano dallo schermo.<br>Hai elaborato molti concetti.</p>
-                                <div class="pausa-emoji">☕</div>
-                                <div class="pausa-divider"></div>
-                                <p class="pausa-cta">oppure gioca ai nostri giochi</p>
-                                <a href="https://sites.google.com/view/una-mano-spensierata/psicologia-dello-sviluppo/i-giochi" target="_blank" class="btn-pop btn-start" style="text-decoration:none; display:inline-block;">Vai ai giochi ↗</a>
+
+                            <div class="pausa-wordsearch">
+                                <div class="pausa-ws-header">
+                                    <h3>Cerca le parole 🔍</h3>
+                                    <p>Trova le 5 parole nascoste nella griglia. Una piccola pausa per il cervello!</p>
+                                </div>
+
+                                <div class="ws-lang-row">
+                                    <button class="ws-lang-btn active" id="ws-btn-it" onclick="wsSetLang('it')">🇮🇹 Italiano</button>
+                                    <button class="ws-lang-btn" id="ws-btn-en" onclick="wsSetLang('en')">🇬🇧 English</button>
+                                </div>
+
+                                <div class="ws-layout">
+                                    <div>
+                                        <div class="ws-grid-wrap">
+                                            <div class="ws-grid" id="ws-grid"></div>
+                                        </div>
+                                        <div class="ws-status" id="ws-status">Trascina o tocca per selezionare le lettere.</div>
+                                        <div class="ws-win-msg" id="ws-win-msg">
+                                            <p>🎉 Trovate tutte! Bravissimo/a!</p>
+                                            <button class="ws-new-btn" onclick="wsNewGame()">Nuova partita</button>
+                                        </div>
+                                    </div>
+                                    <div class="ws-word-list" id="ws-word-list"></div>
+                                </div>
                             </div>
+
                             <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione ▲</button>
                         </div>
                     </div>
@@ -1280,26 +1404,50 @@
                 document.getElementById('dyn-title').innerText = "Errore di caricamento";
             }
 
-            // Highlighter
+            // Highlighter — con funzione elimina sottolineatura
             const highlighterBtn = document.createElement('div');
             highlighterBtn.id = 'floating-highlighter';
-            highlighterBtn.innerHTML = '🖍️ Sottolinea';
+            highlighterBtn.innerHTML = '<span class="hl-add">🖍️ Sottolinea</span><span class="hl-remove" id="hl-remove-btn">✕ Rimuovi</span>';
             document.body.appendChild(highlighterBtn);
+
+            let currentSelectionRange = null;
+            let selectionInsideHighlight = false;
 
             document.addEventListener('mouseup', (e) => {
                 const selection = window.getSelection();
-                if (selection.toString().trim().length > 0 && !highlighterBtn.contains(e.target)) {
+                if (highlighterBtn.contains(e.target)) return;
+
+                if (selection.toString().trim().length > 0) {
                     const range = selection.getRangeAt(0);
+                    currentSelectionRange = range.cloneRange();
                     const rect = range.getBoundingClientRect();
-                    highlighterBtn.style.top = `${rect.top + window.scrollY - 50}px`;
-                    highlighterBtn.style.left = `${rect.left + window.scrollX + (rect.width / 2) - 50}px`;
-                    highlighterBtn.style.display = 'block';
-                } else if (!highlighterBtn.contains(e.target)) {
+
+                    // Controlla se la selezione è dentro un highlight
+                    const ancestor = range.commonAncestorContainer;
+                    const parentEl = ancestor.nodeType === 3 ? ancestor.parentElement : ancestor;
+                    const insideHL = parentEl.closest('.highlighted-text') !== null;
+                    selectionInsideHighlight = insideHL;
+
+                    highlighterBtn.style.top = `${rect.top + window.scrollY - 56}px`;
+                    highlighterBtn.style.left = `${rect.left + window.scrollX + (rect.width / 2) - 70}px`;
+                    highlighterBtn.style.display = 'flex';
+
+                    const removeBtn = document.getElementById('hl-remove-btn');
+                    if (insideHL) {
+                        removeBtn.classList.add('visible');
+                    } else {
+                        removeBtn.classList.remove('visible');
+                    }
+                } else {
                     highlighterBtn.style.display = 'none';
+                    currentSelectionRange = null;
                 }
             });
+
             highlighterBtn.addEventListener('mousedown', e => e.preventDefault());
-            highlighterBtn.addEventListener('click', () => {
+
+            // Aggiungi sottolineatura
+            highlighterBtn.querySelector('.hl-add').addEventListener('click', () => {
                 const selection = window.getSelection();
                 if (!selection.rangeCount) return;
                 const range = selection.getRangeAt(0);
@@ -1309,6 +1457,26 @@
                     range.surroundContents(mark);
                 } catch(e) {
                     showToast("Seleziona testo all'interno dello stesso blocco per sottolineare.", "retry");
+                }
+                selection.removeAllRanges();
+                highlighterBtn.style.display = 'none';
+            });
+
+            // Rimuovi sottolineatura
+            document.getElementById('hl-remove-btn').addEventListener('click', () => {
+                const selection = window.getSelection();
+                if (!selection.rangeCount) return;
+                const range = selection.getRangeAt(0);
+                const ancestor = range.commonAncestorContainer;
+                const parentEl = ancestor.nodeType === 3 ? ancestor.parentElement : ancestor;
+                const hlEl = parentEl.closest('.highlighted-text');
+                if (hlEl) {
+                    const parent = hlEl.parentNode;
+                    while (hlEl.firstChild) {
+                        parent.insertBefore(hlEl.firstChild, hlEl);
+                    }
+                    parent.removeChild(hlEl);
+                    showToast("Sottolineatura rimossa.", "success");
                 }
                 selection.removeAllRanges();
                 highlighterBtn.style.display = 'none';
@@ -1335,6 +1503,9 @@
                 });
             });
             observer.observe(document.body, { childList: true, subtree: true });
+
+            // Init word search
+            wsInit();
         });
 
         // =========================================================================
@@ -1594,6 +1765,178 @@
                 });
             });
         }
+
+        // =========================================================================
+        // MINI WORD SEARCH — SEZIONE 06 PAUSA
+        // =========================================================================
+        const WS_WORDS = {
+            it: [
+                'CASA','SOLE','MARE','GATTO','PANE','LUPO','MELA','TESTA','TRENO','LIBRO',
+                'FIUME','STELLA','NOTTE','BICI','AMICO','ROSA','ORTICA','ZUZZURELLONE',
+                'QUISQUILIA','BORBOTTIO','SCIVOLONE','COCCOBELLO','SGANGHERATO','FARFUGLIARE',
+                'BRONTOLARE','PACIOCCHETTO','BIRICHINO','SGHEMBO','CIONDOLARE','BISLACCO'
+            ],
+            en: [
+                'HOUSE','SUN','WATER','FIRE','MOON','STAR','LOVE','BOOK','RIVER','WORLD',
+                'SUMMER','GARDEN','OCEAN','BREAD','COFFEE','TABLE','YELLOW','GREEN','WHITE',
+                'FLABBERGAST','GOBBLEDYGOOK','BAMBOOZLE','KERFUFFLE','BROUHAHA',
+                'HULLABALOO','NINCOMPOOP','BUMBLEBEE','SNUGGLEPOT','WHIPPERSNAPPER'
+            ]
+        };
+
+        let wsLang = 'it';
+        let wsSize = 12;
+        let wsGrid = [];
+        let wsActiveWords = [];
+        let wsFoundCount = 0;
+        let wsDragging = false;
+        let wsStartIdx = -1;
+        let wsSelection = [];
+
+        function wsSetLang(lang) {
+            wsLang = lang;
+            document.getElementById('ws-btn-it').classList.toggle('active', lang === 'it');
+            document.getElementById('ws-btn-en').classList.toggle('active', lang === 'en');
+            wsNewGame();
+        }
+
+        function wsInit() {
+            wsNewGame();
+        }
+
+        function wsNewGame() {
+            document.getElementById('ws-win-msg').style.display = 'none';
+            document.getElementById('ws-status').innerText = 'Trascina o tocca per selezionare le lettere.';
+
+            // Pick 5 random words from the pool
+            const pool = [...WS_WORDS[wsLang]].sort(() => 0.5 - Math.random()).slice(0, 5);
+            wsActiveWords = pool;
+            wsFoundCount = 0;
+
+            // Build empty grid
+            wsGrid = Array(wsSize).fill(0).map(() => Array(wsSize).fill(''));
+
+            const dirs = [[0,1],[1,0],[1,1],[0,-1],[-1,0],[-1,-1],[1,-1],[-1,1]];
+            const abc = 'ABCDEFGHILMNOPQRSTUVZ';
+
+            for (const word of wsActiveWords) {
+                let placed = false, attempts = 0;
+                while (!placed && attempts++ < 300) {
+                    const d = dirs[Math.floor(Math.random() * dirs.length)];
+                    const r = Math.floor(Math.random() * wsSize);
+                    const c = Math.floor(Math.random() * wsSize);
+                    let fits = true;
+                    for (let i = 0; i < word.length; i++) {
+                        const nr = r + d[0]*i, nc = c + d[1]*i;
+                        if (nr < 0 || nr >= wsSize || nc < 0 || nc >= wsSize) { fits = false; break; }
+                        if (wsGrid[nr][nc] !== '' && wsGrid[nr][nc] !== word[i]) { fits = false; break; }
+                    }
+                    if (fits) {
+                        for (let i = 0; i < word.length; i++) wsGrid[r + d[0]*i][c + d[1]*i] = word[i];
+                        placed = true;
+                    }
+                }
+            }
+
+            // Fill blanks
+            for (let r = 0; r < wsSize; r++)
+                for (let c = 0; c < wsSize; c++)
+                    if (wsGrid[r][c] === '') wsGrid[r][c] = abc[Math.floor(Math.random() * abc.length)];
+
+            wsRender();
+        }
+
+        function wsRender() {
+            const gridEl = document.getElementById('ws-grid');
+            gridEl.style.gridTemplateColumns = `repeat(${wsSize}, 1fr)`;
+
+            let html = '';
+            for (let i = 0; i < wsSize * wsSize; i++) {
+                const r = Math.floor(i / wsSize), c = i % wsSize;
+                html += `<div class="ws-cell" data-idx="${i}">${wsGrid[r][c]}</div>`;
+            }
+            gridEl.innerHTML = html;
+
+            // Word list
+            const listEl = document.getElementById('ws-word-list');
+            listEl.innerHTML = wsActiveWords.map(w =>
+                `<div class="ws-word-tag" id="wstag-${w}">${w}</div>`
+            ).join('');
+
+            wsSetupEvents();
+        }
+
+        function wsSetupEvents() {
+            const cells = document.querySelectorAll('.ws-cell');
+
+            const getCell = (e) => {
+                const x = e.touches ? e.touches[0].clientX : e.clientX;
+                const y = e.touches ? e.touches[0].clientY : e.clientY;
+                return document.elementFromPoint(x, y)?.closest('.ws-cell');
+            };
+
+            const wsHl = (s, e) => {
+                cells.forEach(c => { if (!c.classList.contains('ws-found')) c.classList.remove('ws-sel'); });
+                wsSelection = [];
+                const r1 = Math.floor(s / wsSize), c1 = s % wsSize;
+                const r2 = Math.floor(e / wsSize), c2 = e % wsSize;
+                const dr = r2 - r1, dc = c2 - c1;
+                const steps = Math.max(Math.abs(dr), Math.abs(dc));
+                if (steps === 0) { cells[s].classList.add('ws-sel'); wsSelection.push(cells[s]); return; }
+                if (dr !== 0 && dc !== 0 && Math.abs(dr) !== Math.abs(dc)) return;
+                const stepR = dr / steps, stepC = dc / steps;
+                for (let i = 0; i <= steps; i++) {
+                    const idx = (r1 + stepR * i) * wsSize + (c1 + stepC * i);
+                    if (cells[idx]) { cells[idx].classList.add('ws-sel'); wsSelection.push(cells[idx]); }
+                }
+            };
+
+            const wsStart = (e) => {
+                const cell = getCell(e); if (!cell) return;
+                wsDragging = true;
+                wsStartIdx = parseInt(cell.dataset.idx);
+                wsHl(wsStartIdx, wsStartIdx);
+            };
+
+            const wsMove = (e) => {
+                if (!wsDragging) return;
+                const cell = getCell(e); if (cell) wsHl(wsStartIdx, parseInt(cell.dataset.idx));
+            };
+
+            const wsEnd = () => {
+                if (!wsDragging) return;
+                wsDragging = false;
+                const str = wsSelection.map(c => c.innerText).join('');
+                const rev = str.split('').reverse().join('');
+                const found = wsActiveWords.find(w => w === str || w === rev);
+                if (found) {
+                    wsSelection.forEach(c => { c.classList.remove('ws-sel'); c.classList.add('ws-found'); });
+                    const tag = document.getElementById('wstag-' + found);
+                    if (tag && !tag.classList.contains('ws-done')) {
+                        tag.classList.add('ws-done');
+                        wsFoundCount++;
+                        document.getElementById('ws-status').innerText = `Trovate: ${wsFoundCount} / ${wsActiveWords.length}`;
+                        if (wsFoundCount === wsActiveWords.length) {
+                            setTimeout(() => {
+                                document.getElementById('ws-win-msg').style.display = 'block';
+                            }, 400);
+                        }
+                    }
+                } else {
+                    cells.forEach(c => { if (!c.classList.contains('ws-found')) c.classList.remove('ws-sel'); });
+                }
+                wsSelection = [];
+            };
+
+            const gridEl = document.getElementById('ws-grid');
+            gridEl.onmousedown = wsStart;
+            window.addEventListener('mousemove', wsMove);
+            window.addEventListener('mouseup', wsEnd);
+            gridEl.ontouchstart = (e) => { if (e.target.closest('.ws-cell')) e.preventDefault(); wsStart(e); };
+            window.addEventListener('touchmove', wsMove, { passive: false });
+            window.addEventListener('touchend', wsEnd);
+        }
+
     </script>
 
     <!-- Language JS -->
