@@ -52,6 +52,82 @@
         h1 { font-family: var(--font-title); font-size: clamp(2.5rem, 5vw, 4rem); margin: 0; color: var(--ink-color); line-height: 1.1; }
         .subtitle { font-family: var(--font-body); font-size: 1.5rem; color: var(--accent-color); font-weight: 700; text-transform: uppercase; letter-spacing: 4px; margin-top: 10px; }
 
+        /* --- BADGE AUTORE --- */
+        .author-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: #fdfbf7;
+            padding: 6px 18px 6px 6px;
+            border-radius: 50px;
+            text-decoration: none;
+            border: 1px solid #ddd;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            transition: all 0.2s ease;
+        }
+        .author-badge:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+            border-color: var(--accent-color);
+        }
+        .author-img { 
+            width: 60px; 
+            height: 60px; 
+            border-radius: 50%; 
+            object-fit: cover; 
+            display: block;
+        }
+        .author-name { 
+            font-size: 0.9rem; 
+            color: var(--ink-color); 
+            font-family: var(--font-body);
+        }
+        @media (max-width: 600px) {
+            .author-img { width: 50px; height: 50px; }
+            .author-name { font-size: 0.8rem; }
+        }
+
+        /* --- CSS LINGUE --- */
+        #custom-lang-selector { display: none; }
+        #custom-lang-selector.loaded { 
+            display: inline-flex; flex-direction: column; align-items: center;
+            background: var(--paper-color, #fdfbf7); border: 1px solid var(--accent-color, #375a7f); 
+            border-radius: 8px; padding: 5px 12px; margin-left: 15px; 
+            vertical-align: middle; position: relative; 
+            box-shadow: 2px 2px 0px var(--accent-color); z-index: 999999;
+        }
+        #lang-toggle-btn {
+            background: transparent; border: none; color: var(--accent-color);
+            font-size: 14px; font-weight: 900; cursor: pointer; text-transform: uppercase;
+            font-family: var(--font-body, 'Inter', sans-serif); outline: none;
+        }
+        #lang-loading { font-size: 18px; animation: spin 1s linear infinite; margin-bottom: 5px; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        .lang-options { 
+            display: none; position: absolute; top: 110%; right: 0;
+            background: var(--paper-color, #fdfbf7); border: 2px solid var(--accent-color);
+            border-radius: 12px; grid-template-columns: repeat(5, 1fr); 
+            gap: 8px; padding: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            min-width: 260px;
+        }
+        .lang-options.show { display: grid; }
+        .lang-options button { 
+            background: transparent; border: 1px solid transparent; padding: 5px; 
+            cursor: pointer; border-radius: 6px; font-size: 24px; transition: 0.2s;
+        }
+        .lang-options button.active-lang { background: rgba(55, 90, 127, 0.1); border-color: var(--accent-color); }
+        .lang-options button:hover { transform: scale(1.2); }
+
+        @media (max-width: 600px) {
+            #custom-lang-selector.loaded { display: flex; margin: 15px auto 5px auto; width: max-content; }
+            .lang-options { right: 50%; transform: translateX(50%); }
+        }
+
+        .skiptranslate { display: none !important; }
+        body { top: 0 !important; }
+        #goog-gt-tt, .goog-te-balloon-frame { display: none !important; }
+        .goog-text-highlight { background: transparent !important; box-shadow: none !important; border: none !important; }
+
         /* --- CONTENITORE PRINCIPALE --- */
         .content-card { background: var(--paper-color); padding: 3rem; margin: 0 auto; width: 90%; max-width: 1200px; position: relative; border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.05); z-index: 1; margin-bottom: 2rem; margin-top: 2rem; }
         @media (max-width: 600px) { .content-card { padding: 1.5rem; width: 95%; margin-top: 1rem; } }
@@ -196,7 +272,21 @@
 
     <header>
         <h1 id="dyn-title">Caricamento...</h1>
+        <div id="translation-disclaimer" style="display: none; background: #fff3cd; color: #856404; padding: 10px; border-radius: 8px; margin-top: 15px; font-size: 0.85rem; border: 1px solid #ffeeba;">🌍 Nota sulle traduzioni: Questa pagina è stata tradotta automaticamente tramite strumenti di Intelligenza Artificiale. Sebbene il livello di accuratezza sia elevato, potrebbero verificarsi piccole imprecisioni o perdita di sfumature contestuali.</div>
         <div class="subtitle" id="dyn-subtitle">Attendere</div>
+        <div style="text-align: center; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; padding: 0 10px; margin-top: 1.5rem;">
+            <a href="#" class="author-badge" style="background-color: var(--accent-color); color: #fff;">
+                <span class="author-name" style="color: #fff; padding: 6px;">🏠 Torna alla Home</span>
+            </a>
+            <a href="https://www.instagram.com/sciallato_lorenzo/" target="_blank" class="author-badge">
+                <img src="https://files.catbox.moe/qvck5j.png" alt="Lorenzo Sciallato" class="author-img">
+                <span class="author-name">Creato da <strong>Lorenzo</strong> &copy; 2025</span>
+            </a>
+            <a href="https://chat.whatsapp.com/EaX5kr14XxHL9o3qxdDVEP?mode=gi_t" target="_blank" class="author-badge">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="Gruppo WhatsApp" class="author-img" style="padding: 12px;">
+                <span class="author-name">Entra nel <strong>Gruppo</strong></span>
+            </a>
+        </div>
     </header>
 
     <!-- Modale per i Punti Chiave -->
@@ -260,11 +350,11 @@
                         <div class="media-notes-grid">
                             <div>
                                 <p style="margin-bottom:10px; margin-top: 20px;">Ascolta la lezione audio.</p>
-                                <audio id="dyn-podcast-player" src="" controls style="width:100%;"></audio>
-                                <div style="display:flex;gap:10px;margin-top:10px;">
-                                    <button onclick="document.getElementById('dyn-podcast-player').currentTime-=10" style="flex:1;padding:8px;background:#375a7f;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:0.9rem;">⏪ -10s</button>
-                                    <button onclick="document.getElementById('dyn-podcast-player').currentTime+=10" style="flex:1;padding:8px;background:#375a7f;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:0.9rem;">+10s ⏩</button>
+                                <div class="video-container">
+                                    <iframe id="dyn-podcast-player" src="https://www.youtube.com/embed/PLACEHOLDER_PODCAST" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                                 </div>
+                                <i>Se vedi uno spazio vuoto, il contenuto: Non è disponibile per questa lezione</i><br>
+                                <a id="dyn-podcast-link" href="LINK_YOUTUBE_QUI" target="_blank" class="tool-btn" style="display: inline-block; margin-top: 10px; text-decoration: none; color: inherit;">Youtube fa i capricci? Clicca qui</a>
                             </div>
                             <div class="notes-widget">
                                 <div class="notes-toolbar">
@@ -290,8 +380,10 @@
                                 <p style="margin-bottom:10px;">Guarda il video.</p>
                                 <div class="video-container">
                                     <!-- A seconda se è iframe o video, aggiorneremo la sorgente da JS -->
-                                    <iframe id="dyn-video-player" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                    <iframe id="dyn-video-player" src="https://www.youtube.com/embed/PLACEHOLDER_VIDEO" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                                 </div>
+                                <i>Se vedi uno spazio vuoto, il contenuto: Non è disponibile per questa lezione</i><br>
+                                <a id="dyn-video-link" href="LINK_YOUTUBE_QUI" target="_blank" class="tool-btn" style="display: inline-block; margin-top: 10px; text-decoration: none; color: inherit;">Youtube fa i capricci? Clicca qui</a>
                             </div>
                             <div class="notes-widget">
                                 <div class="notes-toolbar">
@@ -446,6 +538,41 @@
 
     </div>
 
+    <!-- Modulo Disclaimers (Aggiunto alla fine) -->
+    <div class="content-card" style="margin-top: 2rem; background: #fff; padding: 2rem; border-radius: 16px; font-size: 0.9rem; color: #555;">
+        <h3 style="color: var(--accent-color); margin-top: 0;">TUTELA DEL DIRITTO D'AUTORE E LIMITAZIONE DI RESPONSABILITÀ</h3>
+        <p>Tutti i materiali didattici presenti all'interno del portale Una Mano Spensierata (inclusi, a titolo esemplificativo e non esaustivo: riassunti, schemi, mappe concettuali, flashcard e quiz) costituiscono una rielaborazione personale, critica e originale degli appunti universitari. Tali contenuti sono realizzati e condivisi esclusivamente per finalità didattiche, di studio e di mutuo soccorso accademico, ai sensi e nel pieno rispetto dell'Art. 70 della Legge 22 aprile 1941 n. 633 in materia di protezione del diritto d'autore. I materiali presenti sulla piattaforma hanno natura puramente integrativa e non intendono in alcun modo porsi come sostitutivi dei libri di testo ufficiali, delle dispense fornite dai docenti o della frequenza alle lezioni frontali. Si dichiara espressamente l'assenza di riproduzioni pedisseque, integrali o non autorizzate di opere intellettuali protette da copyright di terzi. L'utente fruitore solleva i gestori della piattaforma da qualsivoglia responsabilità derivante da un uso improprio del materiale fornito.</p>
+
+        <h3 style="color: var(--accent-color); margin-top: 1.5rem;">AIUTAMI A TENERE IN ORDINE LA PIATTAFORMA! 🛠️</h3>
+        <p>Ciao! Come sai, costruisco, aggiorno e mantengo questo sito interamente da solo. Se incappi in un refuso, in un link che non funziona, o se ti accorgi che l'audio del podcast sta dicendo qualcosa di non coerente con il resto della lezione, per favore non ignorarlo. Scrivimi subito sul nostro gruppo WhatsApp specificando l'errore o la lezione incriminata. Così posso correggere il codice o il testo in tempo reale e tenere la piattaforma pulita e affidabile per tutti gli iscritti. Questo progetto cresce anche grazie alle vostre revisioni. Grazie per l'aiuto!</p>
+    </div>
+
+    <div id="google_translate_element" style="display:none;"></div>
+
+    <div id="custom-lang-selector" class="notranslate">
+      <div id="lang-loading" style="display: none;">⏳</div>
+      <button id="lang-toggle-btn" onclick="toggleLangMenu()">
+        <span id="lang-label">🌐 Lingua</span> <small id="lang-arrow">▼</small>
+      </button>
+      <div class="lang-options" id="lang-options-menu">
+        <button onclick="triggerTranslation('it', this)" title="Italiano" class="active-lang">🇮🇹</button>
+        <button onclick="triggerTranslation('en', this)" title="English">🇬🇧</button>
+        <button onclick="triggerTranslation('fr', this)" title="Français">🇫🇷</button>
+        <button onclick="triggerTranslation('de', this)" title="Deutsch">🇩🇪</button>
+        <button onclick="triggerTranslation('es', this)" title="Español">🇪🇸</button>
+        <button onclick="triggerTranslation('bg', this)" title="Български">🇧🇬</button>
+        <button onclick="triggerTranslation('pl', this)" title="Polski">🇵🇱</button>
+        <button onclick="triggerTranslation('el', this)" title="Ελληνικά">🇬🇷</button>
+        <button onclick="triggerTranslation('lt', this)" title="Lietuvių">🇱🇹</button>
+        <button onclick="triggerTranslation('da', this)" title="Dansk">🇩🇰</button>
+        <button onclick="triggerTranslation('pt', this)" title="Português">🇵🇹</button>
+        <button onclick="triggerTranslation('zh-CN', this)" title="中文">🇨🇳</button>
+        <button onclick="triggerTranslation('ar', this)" title="العربية">🇸🇦</button>
+        <button onclick="triggerTranslation('hi', this)" title="हिन्दी">🇮🇳</button>
+        <button onclick="triggerTranslation('ru', this)" title="Русский">🇷🇺</button>
+      </div>
+    </div>
+
 <script>
     // =========================================================================
     // MOTORE DINAMICO (DATA BINDING)
@@ -508,44 +635,30 @@
         // 4. Media (Podcast e Video)
         if(data.podcast_url) {
             document.getElementById('dyn-podcast-player').src = data.podcast_url;
+            document.getElementById('dyn-podcast-link').href = data.podcast_url;
         }
         if(data.video_sintesi_url) {
             document.getElementById('dyn-video-player').src = data.video_sintesi_url;
+            document.getElementById('dyn-video-link').href = data.video_sintesi_url;
         }
 
-        // 5. Riassuntone (Con recupero salvataggio evidenziature)
+        // 5. Riassuntone
         const riassuntoContainer = document.getElementById('dyn-riassuntone-container');
-        
-        // Costruiamo una chiave unica per la lezione corrente
-        const titoloPulito = data.titolo_lezione ? data.titolo_lezione.replace(/\s+/g, '_') : 'default';
-        const riassuntoKey = 'riassunto_hl_' + titoloPulito;
-        const savedRiassunto = localStorage.getItem(riassuntoKey);
-
-        if (savedRiassunto) {
-            // Se esiste un salvataggio con evidenziature, usiamo quello!
-            riassuntoContainer.innerHTML = savedRiassunto;
-        } else {
-            // Altrimenti, lo generiamo dal JSON
-            data.riassuntone.forEach(macro => {
-                const htmlBuffer = [];
-                htmlBuffer.push(`<h3>${macro.titolo}</h3>`);
-                if(macro.testo) htmlBuffer.push(`<p>${macro.testo}</p>`);
-                
-                if (macro.check_points && macro.check_points.length > 0) {
-                    htmlBuffer.push(`<div class="cornell-box"><p class="cornell-question">Check Point</p>`);
-                    macro.check_points.forEach(cp => {
-                        htmlBuffer.push(`<p class="cornell-question">${cp.domanda}</p>`);
-                        htmlBuffer.push(`<p class="cornell-answer">${cp.risposta}</p>`);
-                    });
-                    htmlBuffer.push(`</div>`);
-                }
-                riassuntoContainer.insertAdjacentHTML('beforeend', htmlBuffer.join(''));
-            });
-        }
-
-        // Riapplichiamo gli event listener per permettere nuove evidenziature
-        riassuntoContainer.addEventListener('mouseup', () => toggleEvidenziatore(riassuntoContainer, riassuntoKey));
-        riassuntoContainer.addEventListener('touchend', () => toggleEvidenziatore(riassuntoContainer, riassuntoKey));
+        data.riassuntone.forEach(macro => {
+            const htmlBuffer = [];
+            htmlBuffer.push(`<h3>${macro.titolo}</h3>`);
+            if(macro.testo) htmlBuffer.push(`<p>${macro.testo}</p>`);
+            
+            if (macro.check_points && macro.check_points.length > 0) {
+                htmlBuffer.push(`<div class="cornell-box"><p class="cornell-question">Check Point</p>`);
+                macro.check_points.forEach(cp => {
+                    htmlBuffer.push(`<p class="cornell-question">${cp.domanda}</p>`);
+                    htmlBuffer.push(`<p class="cornell-answer">${cp.risposta}</p>`);
+                });
+                htmlBuffer.push(`</div>`);
+            }
+            riassuntoContainer.insertAdjacentHTML('beforeend', htmlBuffer.join(''));
+        });
 
         // 6. Assistente IA
         if (data.assistente_ia) {
@@ -561,30 +674,6 @@
     // =========================================================================
     // EVENT LISTENERS & UI LOGIC
     // =========================================================================
-
-    // --- LOGICA EVIDENZIATORE ---
-    function toggleEvidenziatore(boxRiassunto, storageKey) {
-        const selezione = window.getSelection();
-        if (!selezione.rangeCount || selezione.toString().trim() === "") return;
-        if (!boxRiassunto.contains(selezione.anchorNode)) return;
-
-        document.designMode = "on";
-        let nodoPadre = selezione.anchorNode.nodeType === 3 ? selezione.anchorNode.parentNode : selezione.anchorNode;
-        
-        if (nodoPadre.style.backgroundColor === 'rgb(255, 255, 0)' || nodoPadre.style.backgroundColor === 'yellow') {
-            document.execCommand('backColor', false, 'transparent');
-        } else {
-            if (!document.execCommand('hiliteColor', false, 'yellow')) {
-                document.execCommand('backColor', false, 'yellow');
-            }
-        }
-        
-        document.designMode = "off";
-        selezione.removeAllRanges();
-
-        // Salva l'intero blocco HTML (con le evidenziature appena fatte) nel browser
-        localStorage.setItem(storageKey, boxRiassunto.innerHTML);
-    }
 
     // --- ACCORDION LOGIC ---
     function setupAccordions() {
@@ -809,5 +898,89 @@
         });
     }
 </script>
+
+<script>
+    // --- LINGUA JS LOGIC ---
+    const langLabels = {
+        'it': 'Lingua', 'en': 'Language', 'fr': 'Langue', 'de': 'Sprache', 'es': 'Idioma',
+        'bg': 'Език', 'pl': 'Język', 'el': 'Γλώσσα', 'lt': 'Kalba', 'da': 'Sprog',
+        'pt': 'Língua', 'zh-CN': '语言', 'ar': 'اللغة', 'hi': 'भाषा', 'ru': 'Язык'
+    };
+
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({ 
+            pageLanguage: 'it', 
+            includedLanguages: 'en,it,fr,de,es,bg,pl,el,lt,da,pt,zh-CN,ar,hi,ru', 
+            autoDisplay: false 
+        }, 'google_translate_element');
+    }
+
+    function toggleLangMenu() {
+        var menu = document.getElementById('lang-options-menu');
+        var arrow = document.getElementById('lang-arrow');
+        menu.classList.toggle('show');
+        arrow.innerHTML = menu.classList.contains('show') ? "▲" : "▼";
+    }
+
+    function triggerTranslation(lang, btnElement) {
+        var loadingDiv = document.getElementById('lang-loading');
+        var menu = document.getElementById('lang-options-menu');
+        var toggleBtn = document.getElementById('lang-toggle-btn');
+        var labelSpan = document.getElementById('lang-label');
+        var disclaimer = document.getElementById('translation-disclaimer');
+
+        labelSpan.innerHTML = "🌐 " + (langLabels[lang] || "Language");
+        loadingDiv.style.display = 'block';
+        menu.classList.remove('show');
+        toggleBtn.style.display = 'none';
+
+        document.querySelectorAll('.lang-options button').forEach(b => b.classList.remove('active-lang'));
+        btnElement.classList.add('active-lang');
+
+        var selectField = document.querySelector('select.goog-te-combo');
+        if (selectField) {
+            selectField.value = lang;
+            selectField.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+
+        if (lang !== 'it') {
+            if (disclaimer) disclaimer.style.display = 'block';
+        } else {
+            if (disclaimer) disclaimer.style.display = 'none';
+        }
+
+        setTimeout(() => {
+            loadingDiv.style.display = 'none';
+            toggleBtn.style.display = 'block';
+            document.getElementById('lang-arrow').innerHTML = "▼";
+        }, 1500);
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        var title = document.querySelector("header h1");
+        var widget = document.getElementById("custom-lang-selector");
+        if (title && widget) {
+            document.querySelector("header").appendChild(widget);
+            widget.classList.add("loaded");
+        }
+
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                mutation.addedNodes.forEach(function(node) {
+                    if (node.nodeType === 1) { 
+                        var className = node.className || "";
+                        if (typeof className === 'string' && className.includes('goog-te-spinner')) {
+                            node.style.display = 'none';
+                            node.remove(); 
+                        }
+                    }
+                });
+            });
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
+    });
+</script>
+<script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
 </body>
 </html>
