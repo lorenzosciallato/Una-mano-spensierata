@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Una Mano Spensierata | Lezione Dinamica</title>
-    
+
+    <!-- Task 4 — html2pdf via CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
@@ -43,6 +46,9 @@
             --shadow-card: 0 4px 24px rgba(15,17,23,0.08), 0 1px 4px rgba(15,17,23,0.04);
             --shadow-lift: 0 12px 40px rgba(15,17,23,0.14), 0 2px 8px rgba(15,17,23,0.06);
             --shadow-gold: 0 8px 32px rgba(200,169,110,0.25);
+
+            /* Task 3 — active highlight color, default giallo */
+            --hl-color: #FFF176;
         }
 
         /* ============================================================
@@ -95,7 +101,6 @@
             filter: grayscale(100%) sepia(0.4);
             mix-blend-mode: multiply;
         }
-        /* Grain texture overlay */
         .giants-background::after {
             content: '';
             position: absolute; inset: 0;
@@ -422,7 +427,10 @@
             width: 100%; height: auto; max-height: 200px; object-fit: cover;
             border-radius: var(--r-md); margin-bottom: 1.5rem;
             border: 1px solid var(--dust);
+            cursor: pointer;
+            transition: opacity 0.2s;
         }
+        .section-banner:hover { opacity: 0.9; }
 
         /* ============================================================
            OBIETTIVI BOX
@@ -558,7 +566,7 @@
             border-bottom: 1px solid var(--dust);
             border-radius: var(--r-lg) var(--r-lg) 0 0;
             display: flex; justify-content: flex-end; gap: 8px; flex-shrink: 0;
-            align-items: center;
+            align-items: center; flex-wrap: wrap;
         }
         .notes-label {
             font-size: 0.68rem; font-weight: 700; letter-spacing: 0.16em;
@@ -584,6 +592,31 @@
             outline: none;
         }
         .notes-area::placeholder { color: var(--mist); font-style: italic; }
+
+        /* ============================================================
+           TASK 3 — PALETTE EVIDENZIATORE (dentro .notes-widget cap05)
+        ============================================================ */
+        .hl-palette-row {
+            padding: 8px 12px 8px;
+            background: #fff;
+            border-bottom: 1px solid var(--dust);
+            display: flex; flex-direction: column; gap: 6px; flex-shrink: 0;
+        }
+        .hl-palette-micro {
+            font-size: 0.65rem; font-weight: 700; letter-spacing: 0.16em;
+            text-transform: uppercase; color: var(--sub);
+        }
+        .hl-palette-swatches {
+            display: flex; gap: 8px; align-items: center;
+        }
+        .hl-swatch {
+            width: 20px; height: 20px; border-radius: 50%;
+            cursor: pointer; border: 2px solid transparent;
+            transition: transform 0.15s, border-color 0.15s;
+            flex-shrink: 0;
+        }
+        .hl-swatch:hover { transform: scale(1.2); }
+        .hl-swatch.hl-swatch-active { border-color: var(--ink); transform: scale(1.15); }
 
         /* ============================================================
            IL RIASSUNTONE — TEXT CONTENT
@@ -684,7 +717,6 @@
             max-height: 85%; -webkit-overflow-scrolling: touch; pointer-events: auto;
         }
 
-        /* Start screen card (decorative) */
         #fc-start-screen .flashcard-wrapper { cursor: default; }
         #fc-start-screen .flashcard-inner { box-shadow: var(--shadow-card); }
 
@@ -721,7 +753,6 @@
         }
         .fc-actions { display: flex; gap: 8px; justify-content: center; width: 100%; }
 
-        /* Pop buttons */
         .btn-pop {
             padding: 11px 20px; border: none; border-radius: 50px;
             font-weight: 700; font-family: var(--font-body); font-size: 0.83rem;
@@ -761,7 +792,7 @@
         }
 
         /* ============================================================
-           PAUSA — MINI WORD SEARCH (SOSTITUISCE IL VECCHIO PAUSA-BOX)
+           PAUSA — MINI WORD SEARCH
         ============================================================ */
         .pausa-wordsearch {
             background: linear-gradient(135deg, var(--ivory), var(--dust));
@@ -775,7 +806,6 @@
             font-family: var(--font-display); font-size: 1.5rem;
             font-weight: 700; color: var(--ink); margin-bottom: 0.4rem;
         }
-        .pausa-ws-header p { color: var(--sub); font-size: 0.88rem; }
 
         .ws-lang-row {
             display: flex; justify-content: center; gap: 10px; margin-bottom: 1.5rem;
@@ -918,9 +948,9 @@
         .btn-ia:hover { background: var(--navy-lt); transform: translateY(-2px); box-shadow: 0 10px 28px rgba(26,47,79,0.32); }
 
         /* ============================================================
-           HIGHLIGHTER
+           HIGHLIGHTER (floating button)
         ============================================================ */
-        .highlighted-text { background-color: #FFF176; color: #000; padding: 0 2px; border-radius: 3px; }
+        .highlighted-text { padding: 0 2px; border-radius: 3px; }
         #floating-highlighter {
             position: absolute; display: none;
             background: var(--navy); color: #fff;
@@ -939,6 +969,117 @@
             display: none;
         }
         #floating-highlighter .hl-remove.visible { display: inline; }
+
+        /* ============================================================
+           TASK 4 — SMART WHITEBOARD
+        ============================================================ */
+        .wb-banner-wrap {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+        /* badge sul banner minimizzato */
+        #wb-badge {
+            display: none;
+            position: absolute; top: 10px; right: 10px;
+            background: var(--navy); color: #fff;
+            font-family: var(--font-body); font-size: 0.72rem; font-weight: 700;
+            letter-spacing: 0.1em; text-transform: uppercase;
+            padding: 6px 14px; border-radius: 50px;
+            cursor: pointer; z-index: 10;
+            box-shadow: var(--shadow-lift);
+            transition: background 0.2s;
+        }
+        #wb-badge:hover { background: var(--navy-lt); }
+
+        /* la lavagna */
+        #smart-whiteboard {
+            display: none;
+            background: #fff;
+            border: 1px solid var(--dust);
+            border-radius: var(--r-md);
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-card);
+            max-height: 200px;
+            flex-direction: column;
+        }
+        #smart-whiteboard.wb-visible { display: flex; }
+
+        .wb-header {
+            background: var(--navy); color: #fff;
+            padding: 8px 14px;
+            display: flex; align-items: center; gap: 10px;
+            flex-shrink: 0;
+        }
+        .wb-title {
+            font-family: var(--font-body); font-size: 0.72rem; font-weight: 700;
+            letter-spacing: 0.16em; text-transform: uppercase; flex: 1;
+        }
+        .wb-btn {
+            background: rgba(255,255,255,0.15); color: #fff;
+            border: 1px solid rgba(255,255,255,0.25);
+            border-radius: 50px; padding: 5px 12px;
+            font-family: var(--font-body); font-size: 0.68rem; font-weight: 700;
+            letter-spacing: 0.08em; text-transform: uppercase;
+            cursor: pointer; transition: background 0.2s;
+            white-space: nowrap;
+        }
+        .wb-btn:hover { background: rgba(255,255,255,0.28); }
+
+        .wb-body-wrap {
+            position: relative; flex: 1; overflow: hidden;
+        }
+        .wb-body {
+            height: 100%; overflow-y: auto;
+            padding: 10px 36px 10px 12px;
+        }
+        .wb-body::-webkit-scrollbar { width: 4px; }
+        .wb-body::-webkit-scrollbar-thumb { background: var(--dust); border-radius: 2px; }
+
+        .wb-scroll-btns {
+            position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+            display: flex; flex-direction: column; gap: 4px;
+        }
+        .wb-scroll-btn {
+            width: 22px; height: 22px; border-radius: 50%;
+            background: var(--dust); border: none; cursor: pointer;
+            font-size: 0.65rem; display: flex; align-items: center; justify-content: center;
+            color: var(--sub); transition: background 0.15s;
+        }
+        .wb-scroll-btn:hover { background: var(--mist); }
+
+        /* Ogni riga nella lavagna */
+        .wb-row {
+            display: flex; align-items: flex-start; gap: 8px;
+            padding: 6px 0;
+            border-bottom: 1px solid var(--dust);
+        }
+        .wb-row:last-child { border-bottom: none; }
+        .wb-hl-swatch {
+            width: 4px; min-width: 4px; border-radius: 2px;
+            align-self: stretch; flex-shrink: 0;
+        }
+        .wb-hl-text {
+            font-family: var(--font-body); font-size: 0.82rem;
+            color: var(--ink); line-height: 1.5;
+            padding: 2px 6px; border-radius: var(--r-sm);
+            flex-shrink: 0; max-width: 38%;
+            word-break: break-word;
+        }
+        .wb-note-input {
+            flex: 1; border: none; outline: none;
+            font-family: var(--font-body); font-size: 0.82rem;
+            color: var(--sub); background: transparent;
+            line-height: 1.5; padding: 2px 4px;
+            min-width: 0;
+        }
+        .wb-note-input:focus { color: var(--body); }
+        .wb-del-btn {
+            background: transparent; border: none; cursor: pointer;
+            color: var(--mist); font-size: 1rem; padding: 0 4px;
+            transition: color 0.15s; flex-shrink: 0;
+        }
+        .wb-del-btn:hover { color: var(--magenta); }
 
         /* ============================================================
            MOBILE FLASHCARD MODAL
@@ -1095,13 +1236,11 @@
     <div class="content-card">
 
         <div class="master-accordion-item">
-            <!-- Master Toggle -->
             <button class="master-header" id="master-toggle-btn" onclick="toggleMaster()">
                 <span>Inizia la Lezione</span>
                 <span class="mh-arrow">→</span>
             </button>
 
-            <!-- Master Content -->
             <div class="master-content" id="master-content">
                 <div class="master-content-inner">
 
@@ -1271,14 +1410,52 @@
                         <div class="accordion-content">
                             <div class="media-notes-grid">
                                 <div>
-                                    <img src="https://i.postimg.cc/BbgFzJFJ/disegna-dei-pinguini-tutti-in-mucchio-come-fanno-in-natura-stile-del-disegno-corporate.jpg" class="section-banner" alt="Pinguini">
+                                    <!-- TASK 4: wrapper per banner + lavagna -->
+                                    <div class="wb-banner-wrap">
+                                        <img id="wb-section-banner"
+                                            src="https://i.postimg.cc/BbgFzJFJ/disegna-dei-pinguini-tutti-in-mucchio-come-fanno-in-natura-stile-del-disegno-corporate.jpg"
+                                            class="section-banner"
+                                            alt="Pinguini"
+                                            onclick="wbMaximize()">
+                                        <div id="wb-badge" onclick="wbMaximize()">📝 <span id="wb-badge-count">0</span> concetti salvati</div>
+
+                                        <!-- Smart Whiteboard -->
+                                        <div id="smart-whiteboard">
+                                            <div class="wb-header">
+                                                <span class="wb-title">📝 Lavagna Concetti</span>
+                                                <button class="wb-btn" onclick="wbMinimize()">Riduci ↑</button>
+                                                <button class="wb-btn" onclick="wbExportPDF()">⬇ PDF</button>
+                                            </div>
+                                            <div class="wb-body-wrap">
+                                                <div class="wb-body" id="wb-body"></div>
+                                                <div class="wb-scroll-btns">
+                                                    <button class="wb-scroll-btn" onclick="wbScroll(-40)">▲</button>
+                                                    <button class="wb-scroll-btn" onclick="wbScroll(40)">▼</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div id="dyn-riassuntone-container" class="text-content-box"></div>
                                 </div>
-                                <div class="notes-widget">
+
+                                <!-- TASK 3: notes-widget con palette sopra la textarea -->
+                                <div class="notes-widget" id="riassuntone-notes-widget">
                                     <div class="notes-toolbar">
                                         <span class="notes-label">Appunti</span>
                                         <button class="tool-btn copy-btn">Copia</button>
                                         <button class="tool-btn download-btn">⬇ .txt</button>
+                                    </div>
+                                    <!-- Palette evidenziatore -->
+                                    <div class="hl-palette-row">
+                                        <span class="hl-palette-micro">🖍️ Seleziona il testo per evidenziarlo e salvarlo nella lavagna</span>
+                                        <div class="hl-palette-swatches" id="hl-palette">
+                                            <div class="hl-swatch hl-swatch-active" data-color="#FFF176" style="background:#FFF176;" title="Giallo" onclick="hlSetColor(this)"></div>
+                                            <div class="hl-swatch" data-color="#A5D6A7" style="background:#A5D6A7;" title="Verde" onclick="hlSetColor(this)"></div>
+                                            <div class="hl-swatch" data-color="#F48FB1" style="background:#F48FB1;" title="Rosa" onclick="hlSetColor(this)"></div>
+                                            <div class="hl-swatch" data-color="#90CAF9" style="background:#90CAF9;" title="Azzurro" onclick="hlSetColor(this)"></div>
+                                            <div class="hl-swatch" data-color="#FFCC80" style="background:#FFCC80;" title="Arancione" onclick="hlSetColor(this)"></div>
+                                        </div>
                                     </div>
                                     <textarea class="notes-area" placeholder="Annota concetti da ricordare…"></textarea>
                                 </div>
@@ -1287,7 +1464,7 @@
                         </div>
                     </div>
 
-                    <!-- 06. PAUSA — MINI WORD SEARCH -->
+                    <!-- 06. PAUSA — MINI WORD SEARCH — TASK 1: notranslate -->
                     <div class="accordion-item">
                         <button class="accordion-header">
                             <span class="ch-number">06</span>
@@ -1299,10 +1476,10 @@
                         </button>
                         <div class="accordion-content">
 
-                            <div class="pausa-wordsearch">
+                            <!-- TASK 1: aggiunta classe notranslate + rimosso il <p> ridondante -->
+                            <div class="pausa-wordsearch notranslate">
                                 <div class="pausa-ws-header">
                                     <h3>Cerca le parole 🔍</h3>
-                                    <p>Trova le 5 parole nascoste nella griglia. Una piccola pausa per il cervello!</p>
                                 </div>
 
                                 <div class="ws-lang-row">
@@ -1374,7 +1551,7 @@
     </footer>
 
     <!-- ================================================================
-         JAVASCRIPT — IDENTICO ALL'ORIGINALE, STRUTTURA INVARIATA
+         JAVASCRIPT
     ================================================================ -->
     <script>
         // =========================================================================
@@ -1385,6 +1562,186 @@
         let initialCards = [];
         let currentCardIndex = 0;
         const STORAGE_KEY = 'una_mano_spensierata_notes';
+
+        // TASK 3 — colore evidenziatore attivo (default giallo)
+        let hlActiveColor = '#FFF176';
+
+        // TASK 4 — contatore concetti lavagna
+        let wbCount = 0;
+
+        // =========================================================================
+        // TASK 3 — Selezione colore palette
+        // =========================================================================
+        function hlSetColor(el) {
+            document.querySelectorAll('.hl-swatch').forEach(s => s.classList.remove('hl-swatch-active'));
+            el.classList.add('hl-swatch-active');
+            hlActiveColor = el.dataset.color;
+        }
+
+        // =========================================================================
+        // TASK 4 — Smart Whiteboard helpers
+        // =========================================================================
+        function wbUpdateBadge() {
+            const badge = document.getElementById('wb-badge');
+            const badgeCount = document.getElementById('wb-badge-count');
+            badgeCount.textContent = wbCount;
+            badge.style.display = wbCount > 0 ? 'block' : 'none';
+        }
+
+        function wbMinimize() {
+            document.getElementById('smart-whiteboard').classList.remove('wb-visible');
+            document.getElementById('wb-section-banner').style.display = 'block';
+            wbUpdateBadge();
+        }
+
+        function wbMaximize() {
+            if (wbCount === 0) return;
+            document.getElementById('wb-section-banner').style.display = 'none';
+            document.getElementById('wb-badge').style.display = 'none';
+            document.getElementById('smart-whiteboard').classList.add('wb-visible');
+        }
+
+        function wbScroll(delta) {
+            const body = document.getElementById('wb-body');
+            body.scrollTop += delta;
+        }
+
+        function wbAddEntry(text, color, hlId) {
+            const body = document.getElementById('wb-body');
+            const row = document.createElement('div');
+            row.className = 'wb-row';
+            row.dataset.hlId = hlId;
+
+            const swatch = document.createElement('div');
+            swatch.className = 'wb-hl-swatch';
+            swatch.style.background = color;
+
+            const hlText = document.createElement('div');
+            hlText.className = 'wb-hl-text';
+            hlText.style.background = color + '55'; // 33% opacity tint
+            hlText.textContent = text;
+
+            const noteInput = document.createElement('input');
+            noteInput.type = 'text';
+            noteInput.className = 'wb-note-input';
+            noteInput.value = '→ ';
+            noteInput.placeholder = 'Aggiungi una nota…';
+
+            const delBtn = document.createElement('button');
+            delBtn.className = 'wb-del-btn';
+            delBtn.innerHTML = '&times;';
+            delBtn.dataset.hlId = hlId;
+            delBtn.addEventListener('click', () => wbDeleteEntry(hlId));
+
+            row.appendChild(swatch);
+            row.appendChild(hlText);
+            row.appendChild(noteInput);
+            row.appendChild(delBtn);
+            body.appendChild(row);
+
+            wbCount++;
+            wbUpdateBadge();
+
+            // Prima sottolineatura: mostra lavagna, nasconde banner
+            if (wbCount === 1) {
+                document.getElementById('wb-section-banner').style.display = 'none';
+                document.getElementById('smart-whiteboard').classList.add('wb-visible');
+            }
+
+            // Scroll al fondo della lavagna
+            setTimeout(() => { body.scrollTop = body.scrollHeight; }, 50);
+        }
+
+        function wbDeleteEntry(hlId) {
+            // 1. Rimuovi la riga dalla lavagna
+            const row = document.querySelector(`.wb-row[data-hl-id="${hlId}"]`);
+            if (row) row.remove();
+
+            // 2. Trova il <mark> nel DOM e fai unwrap
+            const mark = document.querySelector(`mark[data-hl-id="${hlId}"]`);
+            if (mark) {
+                const parent = mark.parentNode;
+                while (mark.firstChild) parent.insertBefore(mark.firstChild, mark);
+                parent.removeChild(mark);
+            }
+
+            wbCount--;
+            wbUpdateBadge();
+
+            // Se concetti = 0, torna al banner
+            if (wbCount === 0) {
+                document.getElementById('smart-whiteboard').classList.remove('wb-visible');
+                document.getElementById('wb-section-banner').style.display = 'block';
+            }
+            showToast('Concetto rimosso dalla lavagna.', 'success');
+        }
+
+        function wbExportPDF() {
+            if (wbCount === 0) { showToast('Nessun concetto da esportare.', 'retry'); return; }
+            const body = document.getElementById('wb-body');
+
+            // Crea un container temporaneo pulito per il PDF
+            const pdfWrap = document.createElement('div');
+            pdfWrap.style.cssText = 'font-family: DM Sans, sans-serif; padding: 20px; color: #1C1C22;';
+            const title = document.createElement('h2');
+            title.textContent = 'Lavagna Concetti — Una Mano Spensierata';
+            title.style.cssText = 'font-size: 18px; margin-bottom: 16px; color: #1A2F4F; border-bottom: 2px solid #C8A96E; padding-bottom: 8px;';
+            pdfWrap.appendChild(title);
+
+            body.querySelectorAll('.wb-row').forEach(row => {
+                const hlText = row.querySelector('.wb-hl-text');
+                const noteInput = row.querySelector('.wb-note-input');
+                const color = row.querySelector('.wb-hl-swatch').style.background;
+
+                const entry = document.createElement('div');
+                entry.style.cssText = `margin-bottom: 12px; border-left: 4px solid ${color}; padding: 8px 12px; background: #F7F4EF;`;
+
+                const concept = document.createElement('p');
+                concept.style.cssText = 'font-weight: 700; font-size: 13px; margin-bottom: 4px;';
+                concept.textContent = hlText.textContent;
+
+                const note = document.createElement('p');
+                note.style.cssText = 'font-size: 12px; color: #7A7770;';
+                note.textContent = noteInput.value || '';
+
+                entry.appendChild(concept);
+                entry.appendChild(note);
+                pdfWrap.appendChild(entry);
+            });
+
+            document.body.appendChild(pdfWrap);
+            html2pdf().set({
+                margin: 12,
+                filename: 'lavagna-concetti.pdf',
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            }).from(pdfWrap).save().then(() => {
+                document.body.removeChild(pdfWrap);
+                showToast('PDF scaricato!', 'success');
+            });
+        }
+
+        // =========================================================================
+        // TASK 2 — Chunking testo riassuntone
+        // =========================================================================
+        function chunkText(rawText) {
+            // Conta i punti fermi seguiti da spazio o fine stringa.
+            // Ogni 2 occorrenze inserisce <br><br>.
+            // Non tocca tag HTML già presenti (li salta con regex lookahead).
+            if (!rawText) return '';
+
+            // Se il testo contiene HTML, non applica il chunking per non rompere i tag
+            if (/<[a-z][\s\S]*>/i.test(rawText)) return rawText;
+
+            let count = 0;
+            return rawText.replace(/\.\s+/g, (match) => {
+                count++;
+                if (count % 2 === 0) {
+                    return '.' + '<br><br>';
+                }
+                return match;
+            });
+        }
 
         // =========================================================================
         // INIT
@@ -1404,14 +1761,15 @@
                 document.getElementById('dyn-title').innerText = "Errore di caricamento";
             }
 
-            // Highlighter — con funzione elimina sottolineatura
+            // ----------------------------------------------------------------
+            // Highlighter — TASK 3 & TASK 4 integrati
+            // ----------------------------------------------------------------
             const highlighterBtn = document.createElement('div');
             highlighterBtn.id = 'floating-highlighter';
             highlighterBtn.innerHTML = '<span class="hl-add">🖍️ Sottolinea</span><span class="hl-remove" id="hl-remove-btn">✕ Rimuovi</span>';
             document.body.appendChild(highlighterBtn);
 
             let currentSelectionRange = null;
-            let selectionInsideHighlight = false;
 
             document.addEventListener('mouseup', (e) => {
                 const selection = window.getSelection();
@@ -1422,22 +1780,16 @@
                     currentSelectionRange = range.cloneRange();
                     const rect = range.getBoundingClientRect();
 
-                    // Controlla se la selezione è dentro un highlight
                     const ancestor = range.commonAncestorContainer;
                     const parentEl = ancestor.nodeType === 3 ? ancestor.parentElement : ancestor;
                     const insideHL = parentEl.closest('.highlighted-text') !== null;
-                    selectionInsideHighlight = insideHL;
 
                     highlighterBtn.style.top = `${rect.top + window.scrollY - 56}px`;
                     highlighterBtn.style.left = `${rect.left + window.scrollX + (rect.width / 2) - 70}px`;
                     highlighterBtn.style.display = 'flex';
 
                     const removeBtn = document.getElementById('hl-remove-btn');
-                    if (insideHL) {
-                        removeBtn.classList.add('visible');
-                    } else {
-                        removeBtn.classList.remove('visible');
-                    }
+                    insideHL ? removeBtn.classList.add('visible') : removeBtn.classList.remove('visible');
                 } else {
                     highlighterBtn.style.display = 'none';
                     currentSelectionRange = null;
@@ -1446,23 +1798,35 @@
 
             highlighterBtn.addEventListener('mousedown', e => e.preventDefault());
 
-            // Aggiungi sottolineatura
+            // TASK 3 & 4 — Aggiungi sottolineatura con colore attivo + ID univoco + aggiungi alla lavagna
             highlighterBtn.querySelector('.hl-add').addEventListener('click', () => {
                 const selection = window.getSelection();
                 if (!selection.rangeCount) return;
                 const range = selection.getRangeAt(0);
+                const selectedText = range.toString().trim();
+
                 const mark = document.createElement('mark');
                 mark.className = 'highlighted-text';
+                mark.style.backgroundColor = hlActiveColor;
+
+                // TASK 4: ID univoco
+                const hlId = 'hl_' + Date.now();
+                mark.setAttribute('data-hl-id', hlId);
+
                 try {
                     range.surroundContents(mark);
                 } catch(e) {
                     showToast("Seleziona testo all'interno dello stesso blocco per sottolineare.", "retry");
+                    return;
                 }
                 selection.removeAllRanges();
                 highlighterBtn.style.display = 'none';
+
+                // TASK 4: aggiungi alla lavagna
+                wbAddEntry(selectedText, hlActiveColor, hlId);
             });
 
-            // Rimuovi sottolineatura
+            // Rimuovi sottolineatura + rimuovi dalla lavagna (bidirezionale)
             document.getElementById('hl-remove-btn').addEventListener('click', () => {
                 const selection = window.getSelection();
                 if (!selection.rangeCount) return;
@@ -1471,11 +1835,24 @@
                 const parentEl = ancestor.nodeType === 3 ? ancestor.parentElement : ancestor;
                 const hlEl = parentEl.closest('.highlighted-text');
                 if (hlEl) {
+                    const hlId = hlEl.getAttribute('data-hl-id');
                     const parent = hlEl.parentNode;
-                    while (hlEl.firstChild) {
-                        parent.insertBefore(hlEl.firstChild, hlEl);
-                    }
+                    while (hlEl.firstChild) parent.insertBefore(hlEl.firstChild, hlEl);
                     parent.removeChild(hlEl);
+
+                    // Rimuovi dalla lavagna se esiste
+                    if (hlId) {
+                        const wbRow = document.querySelector(`.wb-row[data-hl-id="${hlId}"]`);
+                        if (wbRow) {
+                            wbRow.remove();
+                            wbCount--;
+                            wbUpdateBadge();
+                            if (wbCount === 0) {
+                                document.getElementById('smart-whiteboard').classList.remove('wb-visible');
+                                document.getElementById('wb-section-banner').style.display = 'block';
+                            }
+                        }
+                    }
                     showToast("Sottolineatura rimossa.", "success");
                 }
                 selection.removeAllRanges();
@@ -1509,7 +1886,7 @@
         });
 
         // =========================================================================
-        // DATA BINDING
+        // DATA BINDING — TASK 2 integrato nel rendering di macro.testo
         // =========================================================================
         function popolaInterfaccia(data) {
             document.getElementById('dyn-title').innerText = data.titolo_lezione || "";
@@ -1545,7 +1922,11 @@
             (data.riassuntone || []).forEach(macro => {
                 const buf = [];
                 buf.push(`<h3>${macro.titolo}</h3>`);
-                if (macro.testo) buf.push(`<p>${macro.testo}</p>`);
+                if (macro.testo) {
+                    // TASK 2: applica chunking cognitivo al testo
+                    const chunkedText = chunkText(macro.testo);
+                    buf.push(`<p>${chunkedText}</p>`);
+                }
                 if (macro.check_points && macro.check_points.length > 0) {
                     buf.push(`<div class="cornell-box"><span class="cp-label">Check Point</span>`);
                     macro.check_points.forEach(cp => {
@@ -1808,12 +2189,10 @@
             document.getElementById('ws-win-msg').style.display = 'none';
             document.getElementById('ws-status').innerText = 'Trascina o tocca per selezionare le lettere.';
 
-            // Pick 5 random words from the pool
             const pool = [...WS_WORDS[wsLang]].sort(() => 0.5 - Math.random()).slice(0, 5);
             wsActiveWords = pool;
             wsFoundCount = 0;
 
-            // Build empty grid
             wsGrid = Array(wsSize).fill(0).map(() => Array(wsSize).fill(''));
 
             const dirs = [[0,1],[1,0],[1,1],[0,-1],[-1,0],[-1,-1],[1,-1],[-1,1]];
@@ -1838,7 +2217,6 @@
                 }
             }
 
-            // Fill blanks
             for (let r = 0; r < wsSize; r++)
                 for (let c = 0; c < wsSize; c++)
                     if (wsGrid[r][c] === '') wsGrid[r][c] = abc[Math.floor(Math.random() * abc.length)];
@@ -1857,7 +2235,6 @@
             }
             gridEl.innerHTML = html;
 
-            // Word list
             const listEl = document.getElementById('ws-word-list');
             listEl.innerHTML = wsActiveWords.map(w =>
                 `<div class="ws-word-tag" id="wstag-${w}">${w}</div>`
