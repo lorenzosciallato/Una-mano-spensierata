@@ -1804,9 +1804,13 @@
         // INIT
         // =========================================================================
         document.addEventListener("DOMContentLoaded", async () => {
-            try {
-                const response = await fetch('lezione.json');
-                const data = await response.json();
+        // Legge il parametro 'file' dall'URL (es: lezione-template.html?file=lezione-1.json)
+const urlParams = new URLSearchParams(window.location.search);
+const nomeFile = urlParams.get('file') || 'lezione-1.json'; // Default alla lezione 1
+
+try {
+    const response = await fetch(nomeFile); // Ora carica il file dinamico
+    const data = await response.json();
                 popolaInterfaccia(data);
                 setupAccordions();
                 initFlashcards(data.flashcards);
