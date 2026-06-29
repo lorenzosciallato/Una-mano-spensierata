@@ -1008,29 +1008,29 @@
 
         .wb-header {
             background: var(--navy); color: #fff;
-            padding: 8px 14px;
-            display: flex; align-items: center; gap: 10px;
-            flex-shrink: 0;
-            z-index: 2; /* Mantiene l'header in primo piano */
+            padding: 10px 14px;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; z-index: 2;
         }
         .wb-title {
-            font-family: var(--font-body); font-size: 0.72rem; font-weight: 700;
-            letter-spacing: 0.16em; text-transform: uppercase; flex: 1;
+            font-family: var(--font-body); font-size: 0.8rem; font-weight: 700;
+            letter-spacing: 0.16em; text-transform: uppercase; text-align: center;
+        }
+        .wb-footer {
+            background: #fff; border-top: 1px solid var(--dust);
+            padding: 10px; display: flex; gap: 10px; flex-shrink: 0; z-index: 2;
         }
         .wb-btn {
-            background: #fff; color: var(--navy);
-            border: 2px solid transparent;
-            border-radius: 50px; padding: 6px 14px;
-            font-family: var(--font-body); font-size: 0.72rem; font-weight: 700;
+            flex: 1; background: #fff; color: var(--navy);
+            border: 2px solid var(--dust);
+            border-radius: 50px; padding: 12px 14px;
+            font-family: var(--font-body); font-size: 0.75rem; font-weight: 700;
             letter-spacing: 0.08em; text-transform: uppercase;
             cursor: pointer; transition: all 0.2s;
-            white-space: nowrap; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
-        .wb-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); border-color: var(--dust); }
-        
-        .wb-btn-pdf {
-            background: var(--gold); color: var(--night); 
-        }
+        .wb-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.1); border-color: var(--navy); }
+        .wb-btn-pdf { background: var(--gold); color: var(--night); border-color: transparent; }
         .wb-btn-pdf:hover { background: var(--gold-lt); border-color: transparent; }
 
         .wb-body-wrap {
@@ -1429,12 +1429,11 @@
                                         <div id="wb-badge" onclick="wbMaximize()">📝 <span id="wb-badge-count">0</span> concetti salvati</div>
 
                                         <!-- Smart Whiteboard -->
+                                        <!-- Smart Whiteboard -->
                                         <div id="smart-whiteboard">
                                             <div class="wb-header">
-    <span class="wb-title">📝 Lavagna Concetti</span>
-    <button class="wb-btn" onclick="wbMinimize()">Riduci ↑</button>
-    <button class="wb-btn wb-btn-pdf" onclick="wbExportPDF()">⬇ Scarica PDF</button>
-</div>
+                                                <span class="wb-title">📝 Lavagna Concetti</span>
+                                            </div>
                                             <div class="wb-body-wrap">
                                                 <div class="wb-body" id="wb-body"></div>
                                                 <div class="wb-scroll-btns">
@@ -1442,6 +1441,11 @@
                                                     <button class="wb-scroll-btn" onclick="wbScroll(40)">▼</button>
                                                 </div>
                                             </div>
+                                            <div class="wb-footer">
+                                                <button class="wb-btn" onclick="wbMinimize()">Riduci ↑</button>
+                                                <button class="wb-btn wb-btn-pdf" onclick="wbExportPDF()">🖨️ Stampa / PDF</button>
+                                            </div>
+                                        </div>
                                         </div>
                                     </div>
 
@@ -1590,23 +1594,17 @@
         // =========================================================================
         // TASK 4 — Smart Whiteboard helpers
         // =========================================================================
-        function wbUpdateBadge() {
-            const badge = document.getElementById('wb-badge');
-            const badgeCount = document.getElementById('wb-badge-count');
-            badgeCount.textContent = wbCount;
-            badge.style.display = wbCount > 0 ? 'block' : 'none';
-        }
-
         function wbMinimize() {
             document.getElementById('smart-whiteboard').classList.remove('wb-visible');
             document.getElementById('wb-section-banner').style.display = 'block';
-            wbUpdateBadge();
+            document.getElementById('wb-badge').style.display = 'block';
+            document.getElementById('wb-badge-count').textContent = wbCount;
         }
 
         function wbMaximize() {
             if (wbCount === 0) return;
             document.getElementById('wb-section-banner').style.display = 'none';
-            document.getElementById('wb-badge').style.display = 'none';
+            document.getElementById('wb-badge').style.display = 'none'; // Nasconde il badge per evitare overlap
             document.getElementById('smart-whiteboard').classList.add('wb-visible');
         }
 
@@ -1627,7 +1625,7 @@
 
             const hlText = document.createElement('div');
             hlText.className = 'wb-hl-text';
-            hlText.style.background = color + '55'; // 33% opacity tint
+            hlText.style.background = color + '55';
             hlText.textContent = text;
 
             const noteInput = document.createElement('input');
@@ -1649,24 +1647,22 @@
             body.appendChild(row);
 
             wbCount++;
-            wbUpdateBadge();
 
-            // Prima sottolineatura: mostra lavagna, nasconde banner
+            // Gestione infallibile della visibilità del badge
             if (wbCount === 1) {
-                document.getElementById('wb-section-banner').style.display = 'none';
-                document.getElementById('smart-whiteboard').classList.add('wb-visible');
+                wbMaximize();
+            } else if (!document.getElementById('smart-whiteboard').classList.contains('wb-visible')) {
+                document.getElementById('wb-badge-count').textContent = wbCount;
+                document.getElementById('wb-badge').style.display = 'block';
             }
 
-            // Scroll al fondo della lavagna
             setTimeout(() => { body.scrollTop = body.scrollHeight; }, 50);
         }
 
         function wbDeleteEntry(hlId) {
-            // 1. Rimuovi la riga dalla lavagna
             const row = document.querySelector(`.wb-row[data-hl-id="${hlId}"]`);
             if (row) row.remove();
 
-            // 2. Trova il <mark> nel DOM e fai unwrap
             const mark = document.querySelector(`mark[data-hl-id="${hlId}"]`);
             if (mark) {
                 const parent = mark.parentNode;
@@ -1675,75 +1671,71 @@
             }
 
             wbCount--;
-            wbUpdateBadge();
 
-            // Se concetti = 0, torna al banner
             if (wbCount === 0) {
                 document.getElementById('smart-whiteboard').classList.remove('wb-visible');
                 document.getElementById('wb-section-banner').style.display = 'block';
+                document.getElementById('wb-badge').style.display = 'none';
+            } else if (!document.getElementById('smart-whiteboard').classList.contains('wb-visible')) {
+                document.getElementById('wb-badge-count').textContent = wbCount;
             }
-            showToast('Concetto rimosso dalla lavagna.', 'success');
+            
+            showToast('Concetto rimosso.', 'success');
         }
 
         function wbExportPDF() {
             if (wbCount === 0) { showToast('Nessun concetto da esportare.', 'retry'); return; }
             
-            showToast('Preparazione PDF in corso...', 'success');
+            showToast('Apertura finestra di stampa...', 'success');
+            
+            // 1. Costruiamo la stringa HTML stampabile, pulita e minimale
+            let printContents = `
+                <div style="font-family: Arial, sans-serif; padding: 20px; color: #1C1C22; max-width: 800px; margin: 0 auto;">
+                    <h2 style="font-size: 24px; color: #1A2F4F; border-bottom: 2px solid #C8A96E; padding-bottom: 10px; margin-bottom: 30px;">
+                        I miei Appunti — Una Mano Spensierata
+                    </h2>
+            `;
+
             const body = document.getElementById('wb-body');
-
-            // 1. Creiamo un contenitore reale e lo appendiamo al body
-            const pdfWrap = document.createElement('div');
-            // Lo mettiamo dietro a tutto, ma FISICAMENTE presente per il motore di rendering
-            pdfWrap.style.cssText = 'position: fixed; top: 0; left: 0; width: 800px; background-color: #ffffff; padding: 40px; z-index: -9999; color: #1C1C22; font-family: "DM Sans", sans-serif;';
-
-            const title = document.createElement('h2');
-            title.textContent = 'Lavagna Concetti — Una Mano Spensierata';
-            title.style.cssText = 'font-size: 24px; color: #1A2F4F; border-bottom: 2px solid #C8A96E; padding-bottom: 10px; margin-bottom: 24px; font-weight: 700; font-family: "Playfair Display", serif;';
-            pdfWrap.appendChild(title);
-
-            // 2. Clona i nodi e trasforma gli input in testo puro
             body.querySelectorAll('.wb-row').forEach(row => {
                 const hlText = row.querySelector('.wb-hl-text').textContent;
-                // Estraiamo il vero valore digitato dall'utente
                 const noteInputVal = row.querySelector('.wb-note-input').value.trim();
                 const color = row.querySelector('.wb-hl-swatch').style.background;
 
-                const entry = document.createElement('div');
-                entry.style.cssText = `margin-bottom: 16px; border-left: 6px solid ${color}; padding: 14px 18px; background-color: #F7F4EF; border-radius: 4px; page-break-inside: avoid;`;
-
-                const concept = document.createElement('p');
-                concept.style.cssText = 'font-weight: 700; font-size: 15px; margin-bottom: 6px; line-height: 1.5; color: #1C1C22; margin-top: 0;';
-                concept.textContent = hlText;
-                entry.appendChild(concept);
-
-                // Se c'è una nota personalizzata, la stampiamo come paragrafo normale
-                if (noteInputVal && noteInputVal !== '→' && noteInputVal !== '->') {
-                    const note = document.createElement('p');
-                    note.style.cssText = 'font-size: 13px; color: #7A7770; line-height: 1.5; margin: 0; font-style: italic;';
-                    note.textContent = noteInputVal;
-                    entry.appendChild(note);
-                }
-
-                pdfWrap.appendChild(entry);
+                printContents += `
+                    <div style="margin-bottom: 20px; border-left: 6px solid ${color}; padding: 12px 18px; background-color: #fcfcfc;">
+                        <p style="font-weight: bold; font-size: 16px; margin: 0 0 8px 0; line-height: 1.5;">${hlText}</p>
+                        <p style="font-size: 14px; color: #555; margin: 0; font-style: italic;">
+                            ${noteInputVal !== '→' && noteInputVal !== '->' ? noteInputVal : ''}
+                        </p>
+                    </div>
+                `;
             });
 
-            // Deve essere fisicamente nel DOM affinché html2canvas lo legga
-            document.body.appendChild(pdfWrap);
+            printContents += `</div>`;
 
-            // 3. Generazione e pulizia
-            html2pdf().set({
-                margin: 15,
-                filename: 'lavagna-concetti.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true, windowWidth: 800 },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            }).from(pdfWrap).save().then(() => {
-                document.body.removeChild(pdfWrap);
-                showToast('PDF scaricato con successo!', 'success');
-            }).catch(err => {
-                document.body.removeChild(pdfWrap);
-                showToast('Errore durante la creazione del PDF.', 'retry');
-            });
+            // 2. Usiamo un iframe invisibile per non bloccare i popup
+            const iframe = document.createElement('iframe');
+            iframe.style.position = 'fixed';
+            iframe.style.right = '0';
+            iframe.style.bottom = '0';
+            iframe.style.width = '0';
+            iframe.style.height = '0';
+            iframe.style.border = 'none';
+            document.body.appendChild(iframe);
+
+            const doc = iframe.contentWindow.document;
+            doc.open();
+            doc.write(`
+                <html>
+                    <head><title>Appunti - Lezione Dinamica</title></head>
+                    <body onload="window.print();">${printContents}</body>
+                </html>
+            `);
+            doc.close();
+
+            // 3. Rimuoviamo l'iframe pulito dopo la stampa
+            setTimeout(() => { document.body.removeChild(iframe); }, 10000);
         }
         // =========================================================================
         // TASK 2 — Chunking testo riassuntone
