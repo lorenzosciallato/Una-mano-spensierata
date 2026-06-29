@@ -1949,9 +1949,9 @@
             document.getElementById('dyn-title').innerText = data.titolo_lezione || "";
             document.getElementById('dyn-subtitle').innerText = data.sottotitolo || "";
 
-            // --- SEZIONE 01: ORIENTAMENTO (Nuova struttura) ---
+            // --- SEZIONE 01: ORIENTAMENTO (Gestione Annidata) ---
             if (data.orientamento) {
-                // 1. Obiettivi
+                // Obiettivi
                 const objContainer = document.getElementById('dyn-obiettivi');
                 objContainer.innerHTML = '';
                 (data.orientamento.obiettivi || []).forEach(ob => {
@@ -1960,7 +1960,7 @@
                     objContainer.appendChild(li);
                 });
 
-                // 2. Concetto Fondamentale
+                // Concetto Fondamentale
                 if (data.orientamento.concetto_fondamentale && data.orientamento.concetto_fondamentale.testo) {
                     const conc = data.orientamento.concetto_fondamentale;
                     const concDiv = document.getElementById('dyn-concetto-fondamentale');
@@ -1968,7 +1968,7 @@
                     concDiv.innerHTML = `<strong>${conc.titolo}:</strong><br><br>${conc.testo}`;
                 }
 
-                // 3. Nota Extra
+                // Nota Extra
                 if (data.orientamento.nota_extra && data.orientamento.nota_extra.testo) {
                     const nota = data.orientamento.nota_extra;
                     const notaDiv = document.getElementById('dyn-nota-extra');
@@ -1976,7 +1976,7 @@
                     notaDiv.innerHTML = `<strong>${nota.titolo}:</strong> ${nota.testo}`;
                 }
 
-                // 4. Domande per l'autovalutazione
+                // Domande Autovalutazione
                 if (data.orientamento.domande_autovalutazione && data.orientamento.domande_autovalutazione.length > 0) {
                     document.getElementById('dyn-domande-container').style.display = 'block';
                     const domContainer = document.getElementById('dyn-domande');
@@ -1987,37 +1987,24 @@
                         domContainer.appendChild(li);
                     });
                 }
-            } else {
-                // Fallback in caso di JSON vecchio senza l'oggetto 'orientamento'
-                const objContainer = document.getElementById('dyn-obiettivi');
-                objContainer.innerHTML = '';
-                (data.obiettivi || []).forEach(ob => {
-                    const li = document.createElement('li');
-                    li.innerText = ob;
-                    objContainer.appendChild(li);
-                });
             }
 
-            // --- PUNTI CHIAVE (Merge visivo + Modale estesa) ---
+            // --- PUNTI CHIAVE (Merge visivo) ---
             const factorsContainer = document.getElementById('dyn-punti-chiave');
             factorsContainer.innerHTML = '';
-            factorsData = {}; // Reset dell'oggetto globale
+            factorsData = {}; 
             
-            (data.punti_chiave || []).forEach((punto, index) => {
-                const key = punto.id || index; // Usa l'ID del JSON o l'indice come fallback
-                
-                // Popola l'oggetto globale usato dalla modale
-                // Se c'è titolo_esteso usa quello, altrimenti usa il vecchio "titolo"
+            (data.punti_chiave || []).forEach((punto) => {
+                const key = punto.id;
                 factorsData[key] = { 
-                    title: punto.titolo_esteso || punto.titolo || punto.titolo_breve, 
-                    body: punto.testo_modale || `<p>${punto.sottotitolo || punto.descrizione}</p>` 
+                    title: punto.titolo_esteso, 
+                    body: punto.testo_modale 
                 };
                 
-                // Crea la Card visiva gestendo in automatico le chiavi vecchie o nuove
                 const card = document.createElement('div');
                 card.className = 'factor-card';
                 card.setAttribute('onclick', `openFactor('${key}')`);
-                card.innerHTML = `<span class="fc-plus">+</span><strong>${punto.titolo_breve || punto.titolo}</strong><small>${punto.sottotitolo || punto.descrizione}</small>`;
+                card.innerHTML = `<span class="fc-plus">+</span><strong>${punto.titolo_breve}</strong><small>${punto.sottotitolo}</small>`;
                 factorsContainer.appendChild(card);
             });
 
@@ -2026,11 +2013,13 @@
                 document.getElementById('dyn-podcast-player').src = data.podcast_url;
                 document.getElementById('dyn-podcast-link').href = data.podcast_url;
             }
+            // Controllo placeholder video
             if (data.video_sintesi_url && data.video_sintesi_url !== "PLACEHOLDER_VIDEO") {
                 document.getElementById('dyn-video-player').src = data.video_sintesi_url;
                 document.getElementById('dyn-video-link').href = data.video_sintesi_url;
             }
 
+            // Riassunto
             const riassuntoContainer = document.getElementById('dyn-riassuntone-container');
             riassuntoContainer.innerHTML = '';
             (data.riassuntone || []).forEach(macro => {
@@ -2050,15 +2039,7 @@
                 }
                 riassuntoContainer.insertAdjacentHTML('beforeend', buf.join(''));
             });
-
-            if (data.assistente_ia) {
-                document.getElementById('dyn-ia-tab-title').innerText = data.assistente_ia.nome || "Assistente IA";
-                document.getElementById('dyn-ia-nome').innerText = data.assistente_ia.nome || "Assistente IA";
-                document.getElementById('dyn-ia-sottotesto').innerText = data.assistente_ia.sottotesto || "";
-                if (data.assistente_ia.url) document.getElementById('dyn-ia-url').href = data.assistente_ia.url;
-            }
         }
-
         // =========================================================================
         // MASTER ACCORDION
         // =========================================================================
