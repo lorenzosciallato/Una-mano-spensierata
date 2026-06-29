@@ -1807,36 +1807,32 @@
     const urlParams = new URLSearchParams(window.location.search);
     const fileParam = urlParams.get('file');
 
-    // Se non c'è il file, non forzare un percorso, gestisci l'errore o il redirect
     if (!fileParam) {
-        console.error("Nessuna lezione specificata nell'URL.");
-        // Facoltativo: redirect alla home
-        // window.location.href = '/index.html';
+        document.getElementById('dyn-title').innerText = "Errore";
+        document.getElementById('dyn-subtitle').innerText = "Nessun file specificato.";
         return;
     }
 
-    // Costruiamo il percorso partendo dalla root del sito
-    // Aggiungiamo lo slash iniziale per essere sicuri di pescare dalla root
-    const path = fileParam.startsWith('/') ? fileParam : `/${fileParam}`;
+    // Assicurati che il percorso inizi con / per pescare dalla root di GitHub Pages
+    // E rimuovi eventuali doppi slash
+    const path = `/${fileParam.replace(/^\/+/, '')}`;
     
     try {
         const response = await fetch(path);
         
         if (!response.ok) {
-            throw new Error(`Impossibile caricare: ${path}. Verifica che il file esista su GitHub.`);
+            throw new Error(`File non trovato: ${path}`);
         }
         
         const data = await response.json();
         popolaInterfaccia(data);
-        // ... (resto del tuo codice di setup)
+        // ... (resto del tuo codice)
     } catch (error) {
-        console.error("Errore fatale:", error);
-        // Feedback utente
-        document.getElementById('dyn-title').innerText = "Errore di caricamento";
-        document.getElementById('dyn-subtitle').innerText = "Il file richiesto non è stato trovato.";
+        console.error("Errore nel caricamento:", error);
+        document.getElementById('dyn-title').innerText = "Lezione non trovata";
+        document.getElementById('dyn-subtitle').innerText = "Verifica il nome del file o la cartella.";
     }
 });
-
             // ... (il resto del tuo codice init rimane invariato)
             // ----------------------------------------------------------------
             // Highlighter — TASK 3 & TASK 4 integrati
