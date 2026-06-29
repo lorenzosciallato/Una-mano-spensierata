@@ -1961,19 +1961,9 @@
         // =========================================================================
         // DATA BINDING — TASK 2 integrato nel rendering di macro.testo
         // =========================================================================
-       function popolaInterfaccia(data) {
-    // 1. Aggiorna il titolo principale (H1) dal JSON
-    const titleEl = document.getElementById('dyn-title');
-    if (titleEl) titleEl.innerText = data.titolo_lezione || "Lezione";
-
-    // 2. Aggiorna il sottotitolo dinamico
-    const subEl = document.getElementById('dyn-subtitle');
-    if (subEl) subEl.innerText = data.sottotitolo || "";
-
-    // 3. Aggiorna il titolo della scheda nel browser (importante per il SEO/Multimateria)
-    document.title = (data.titolo_lezione || "Lezione") + " | Una Mano Spensierata";
-
-    // ... (continua con il resto della funzione esistente)
+        function popolaInterfaccia(data) {
+            document.getElementById('dyn-title').innerText = data.titolo_lezione || "";
+            document.getElementById('dyn-subtitle').innerText = data.sottotitolo || "";
 
             // --- SEZIONE 01: ORIENTAMENTO (Gestione Annidata) ---
             if (data.orientamento) {
