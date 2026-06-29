@@ -1969,100 +1969,89 @@ if (!fileDaCaricare) {
         // DATA BINDING — TASK 2 integrato nel rendering di macro.testo
         // =========================================================================
         function popolaInterfaccia(data) {
-            document.getElementById('dyn-title').innerText = data.titolo_lezione || "";
-            document.getElementById('dyn-subtitle').innerText = data.sottotitolo || "";
+    document.getElementById('dyn-title').innerText = data.titolo_lezione || "";
+    document.getElementById('dyn-subtitle').innerText = data.sottotitolo || "";
 
-            // --- SEZIONE 01: ORIENTAMENTO (Gestione Annidata) ---
-            if (data.orientamento) {
-                // Obiettivi
-                const objContainer = document.getElementById('dyn-obiettivi');
-                objContainer.innerHTML = '';
-                (data.orientamento.obiettivi || []).forEach(ob => {
-                    const li = document.createElement('li');
-                    li.innerText = ob;
-                    objContainer.appendChild(li);
-                });
+    // Funzione per convertire il link in formato embed
+    const fixUrl = (url) => {
+        if (!url || url.includes('embed/')) return url;
+        const videoId = url.split('v=')[1]?.split('&')[0];
+        return videoId ? `https://www.youtube.com/embed/${videoId}` : url;
+    };
 
-                // Concetto Fondamentale
-                if (data.orientamento.concetto_fondamentale && data.orientamento.concetto_fondamentale.testo) {
-                    const conc = data.orientamento.concetto_fondamentale;
-                    const concDiv = document.getElementById('dyn-concetto-fondamentale');
-                    concDiv.style.display = 'block';
-                    concDiv.innerHTML = `<strong>${conc.titolo}:</strong><br><br>${conc.testo}`;
-                }
+    // --- SEZIONE 01: ORIENTAMENTO ---
+    if (data.orientamento) {
+        const objContainer = document.getElementById('dyn-obiettivi');
+        objContainer.innerHTML = '';
+        (data.orientamento.obiettivi || []).forEach(ob => {
+            const li = document.createElement('li');
+            li.innerText = ob;
+            objContainer.appendChild(li);
+        });
 
-                // Nota Extra
-                if (data.orientamento.nota_extra && data.orientamento.nota_extra.testo) {
-                    const nota = data.orientamento.nota_extra;
-                    const notaDiv = document.getElementById('dyn-nota-extra');
-                    notaDiv.style.display = 'block';
-                    notaDiv.innerHTML = `<strong>${nota.titolo}:</strong> ${nota.testo}`;
-                }
+        if (data.orientamento.concetto_fondamentale?.testo) {
+            const conc = data.orientamento.concetto_fondamentale;
+            const concDiv = document.getElementById('dyn-concetto-fondamentale');
+            concDiv.style.display = 'block';
+            concDiv.innerHTML = `<strong>${conc.titolo}:</strong><br><br>${conc.testo}`;
+        }
 
-                // Domande Autovalutazione
-                if (data.orientamento.domande_autovalutazione && data.orientamento.domande_autovalutazione.length > 0) {
-                    document.getElementById('dyn-domande-container').style.display = 'block';
-                    const domContainer = document.getElementById('dyn-domande');
-                    domContainer.innerHTML = '';
-                    data.orientamento.domande_autovalutazione.forEach(dom => {
-                        const li = document.createElement('li');
-                        li.innerText = dom;
-                        domContainer.appendChild(li);
-                    });
-                }
-            }
+        if (data.orientamento.nota_extra?.testo) {
+            const nota = data.orientamento.nota_extra;
+            const notaDiv = document.getElementById('dyn-nota-extra');
+            notaDiv.style.display = 'block';
+            notaDiv.innerHTML = `<strong>${nota.titolo}:</strong> ${nota.testo}`;
+        }
 
-            // --- PUNTI CHIAVE (Merge visivo) ---
-            const factorsContainer = document.getElementById('dyn-punti-chiave');
-            factorsContainer.innerHTML = '';
-            factorsData = {}; 
-            
-            (data.punti_chiave || []).forEach((punto) => {
-                const key = punto.id;
-                factorsData[key] = { 
-                    title: punto.titolo_esteso, 
-                    body: punto.testo_modale 
-                };
-                
-                const card = document.createElement('div');
-                card.className = 'factor-card';
-                card.setAttribute('onclick', `openFactor('${key}')`);
-                card.innerHTML = `<span class="fc-plus">+</span><strong>${punto.titolo_breve}</strong><small>${punto.sottotitolo}</small>`;
-                factorsContainer.appendChild(card);
-            });
-
-            // --- RESTO DEI CONTENUTI ---
-            if (data.podcast_url) {
-                document.getElementById('dyn-podcast-player').src = data.podcast_url;
-                document.getElementById('dyn-podcast-link').href = data.podcast_url;
-            }
-            // Controllo placeholder video
-            if (data.video_sintesi_url && data.video_sintesi_url !== "PLACEHOLDER_VIDEO") {
-                document.getElementById('dyn-video-player').src = data.video_sintesi_url;
-                document.getElementById('dyn-video-link').href = data.video_sintesi_url;
-            }
-
-            // Riassunto
-            const riassuntoContainer = document.getElementById('dyn-riassuntone-container');
-            riassuntoContainer.innerHTML = '';
-            (data.riassuntone || []).forEach(macro => {
-                const buf = [];
-                buf.push(`<h3>${macro.titolo}</h3>`);
-                if (macro.testo) {
-                    const chunkedText = chunkText(macro.testo);
-                    buf.push(`<p>${chunkedText}</p>`);
-                }
-                if (macro.check_points && macro.check_points.length > 0) {
-                    buf.push(`<div class="cornell-box"><span class="cp-label">Check Point</span>`);
-                    macro.check_points.forEach(cp => {
-                        buf.push(`<p class="cornell-question">${cp.domanda}</p>`);
-                        buf.push(`<p class="cornell-answer">${cp.risposta}</p>`);
-                    });
-                    buf.push(`</div>`);
-                }
-                riassuntoContainer.insertAdjacentHTML('beforeend', buf.join(''));
+        if (data.orientamento.domande_autovalutazione?.length > 0) {
+            document.getElementById('dyn-domande-container').style.display = 'block';
+            const domContainer = document.getElementById('dyn-domande');
+            domContainer.innerHTML = '';
+            data.orientamento.domande_autovalutazione.forEach(dom => {
+                const li = document.createElement('li');
+                li.innerText = dom;
+                domContainer.appendChild(li);
             });
         }
+    }
+
+    // --- PUNTI CHIAVE ---
+    const factorsContainer = document.getElementById('dyn-punti-chiave');
+    factorsContainer.innerHTML = '';
+    factorsData = {};
+    (data.punti_chiave || []).forEach((punto) => {
+        factorsData[punto.id] = { title: punto.titolo_esteso, body: punto.testo_modale };
+        const card = document.createElement('div');
+        card.className = 'factor-card';
+        card.setAttribute('onclick', `openFactor('${punto.id}')`);
+        card.innerHTML = `<span class="fc-plus">+</span><strong>${punto.titolo_breve}</strong><small>${punto.sottotitolo}</small>`;
+        factorsContainer.appendChild(card);
+    });
+
+    // --- PODCAST E VIDEO (Qui avviene la magia del link) ---
+    if (data.podcast_url) {
+        document.getElementById('dyn-podcast-player').src = fixUrl(data.podcast_url);
+        document.getElementById('dyn-podcast-link').href = data.podcast_url;
+    }
+    if (data.video_sintesi_url) {
+        document.getElementById('dyn-video-player').src = fixUrl(data.video_sintesi_url);
+        document.getElementById('dyn-video-link').href = data.video_sintesi_url;
+    }
+
+    // --- RIASSUNTO ---
+    const riassuntoContainer = document.getElementById('dyn-riassuntone-container');
+    riassuntoContainer.innerHTML = '';
+    (data.riassuntone || []).forEach(macro => {
+        riassuntoContainer.insertAdjacentHTML('beforeend', `<h3>${macro.titolo}</h3><p>${chunkText(macro.testo)}</p>`);
+        if (macro.check_points?.length > 0) {
+            let cpHtml = `<div class="cornell-box"><span class="cp-label">Check Point</span>`;
+            macro.check_points.forEach(cp => {
+                cpHtml += `<p class="cornell-question">${cp.domanda}</p><p class="cornell-answer">${cp.risposta}</p>`;
+            });
+            riassuntoContainer.insertAdjacentHTML('beforeend', cpHtml + `</div>`);
+        }
+    });
+}
         // =========================================================================
         // MASTER ACCORDION
         // =========================================================================
