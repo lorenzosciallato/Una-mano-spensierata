@@ -1804,23 +1804,27 @@
         // INIT
         // =========================================================================
         document.addEventListener("DOMContentLoaded", async () => {
-        // Legge il parametro 'file' dall'URL (es: lezione-template.html?file=lezione-1.json)
+// Legge il parametro dall'URL: lezione.html?materia=didattica&lezione=1
 const urlParams = new URLSearchParams(window.location.search);
-const nomeFile = urlParams.get('file') || 'lezione-1.json'; // Default alla lezione 1
+const materia = urlParams.get('materia') || 'didattica';
+const numero = urlParams.get('lezione') || '1';
+const nomeFile = `${materia}-lezione-${numero}.json`;
 
+// Caricamento dinamico
 try {
-    const response = await fetch(nomeFile); // Ora carica il file dinamico
+    const response = await fetch(nomeFile);
+    if (!response.ok) throw new Error("File lezione non trovato");
     const data = await response.json();
-                popolaInterfaccia(data);
+    popolaInterfaccia(data);
                 setupAccordions();
                 initFlashcards(data.flashcards);
                 setupNotesAutoScroll();
                 setupCopyButtons();
                 setupDownloadButtons();
-            } catch (error) {
-                console.error("Errore fatale nel caricamento del JSON:", error);
-                document.getElementById('dyn-title').innerText = "Errore di caricamento";
-            }
+           } catch (error) {
+    console.error("Errore nel caricamento:", error);
+    document.getElementById('dyn-title').innerText = "Lezione non disponibile";
+}
 
             // ----------------------------------------------------------------
             // Highlighter — TASK 3 & TASK 4 integrati
