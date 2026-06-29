@@ -1803,28 +1803,33 @@
         // =========================================================================
         // INIT
         // =========================================================================
-        document.addEventListener("DOMContentLoaded", async () => {
-// Legge il parametro dall'URL: lezione.html?materia=didattica&lezione=1
-const urlParams = new URLSearchParams(window.location.search);
-const materia = urlParams.get('materia') || 'didattica';
-const numero = urlParams.get('lezione') || '1';
-const nomeFile = `${materia}-lezione-${numero}.json`;
+ document.addEventListener("DOMContentLoaded", async () => {
+            // Legge il parametro 'file' dall'URL (es: ?file=didattica-lezione-7.json)
+            const urlParams = new URLSearchParams(window.location.search);
+            const nomeFile = urlParams.get('file');
 
-// Caricamento dinamico
-try {
-    const response = await fetch(nomeFile);
-    if (!response.ok) throw new Error("File lezione non trovato");
-    const data = await response.json();
-    popolaInterfaccia(data);
+            // Se non c'è il parametro 'file', prova a ricostruirlo da materia/lezione (opzionale)
+            // altrimenti usa un fallback di sicurezza
+            const fileDaCaricare = nomeFile ? nomeFile : 'didattica-lezione-1.json';
+
+            try {
+                const response = await fetch(fileDaCaricare);
+                if (!response.ok) throw new Error("File lezione non trovato");
+                const data = await response.json();
+                
+                popolaInterfaccia(data);
                 setupAccordions();
                 initFlashcards(data.flashcards);
                 setupNotesAutoScroll();
                 setupCopyButtons();
                 setupDownloadButtons();
-           } catch (error) {
-    console.error("Errore nel caricamento:", error);
-    document.getElementById('dyn-title').innerText = "Lezione non disponibile";
-}
+                
+                // Aggiorna il titolo della scheda del browser
+                document.title = data.titolo_lezione || "Una Mano Spensierata";
+            } catch (error) {
+                console.error("Errore nel caricamento:", error);
+                document.getElementById('dyn-title').innerText = "Lezione non disponibile";
+            }
 
             // ----------------------------------------------------------------
             // Highlighter — TASK 3 & TASK 4 integrati
