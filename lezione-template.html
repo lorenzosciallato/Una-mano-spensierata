@@ -1809,7 +1809,14 @@
             const nomeFile = urlParams.get('file');
 
             // Se l'utente non specifica nulla, diamo un default di sicurezza
-            const fileDaCaricare = nomeFile ? nomeFile : 'didattica/didattica-lezione-1.json';
+            const fileDaCaricare = nomeFile
+    ? nomeFile
+    : null;
+
+if (!fileDaCaricare) {
+    document.getElementById('dyn-title').innerText = "Nessuna lezione specificata";
+    return;
+}
 
             try {
                 // decodeURIComponent gestisce correttamente gli slash e gli spazi nel percorso
