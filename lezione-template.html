@@ -1804,34 +1804,41 @@
         // INIT
         // =========================================================================
  document.addEventListener("DOMContentLoaded", async () => {
-            // Legge il parametro 'file' dall'URL (es: ?file=didattica/didattica-lezione-7.json)
-            const urlParams = new URLSearchParams(window.location.search);
-            const nomeFile = urlParams.get('file');
+    // 1. Legge il parametro 'file' dall'URL (es: ?file=storiaeducazione/storiaeducazione-lezione-7.json)
+    const urlParams = new URLSearchParams(window.location.search);
+    const nomeFile = urlParams.get('file');
 
-            // Se l'utente non specifica nulla, diamo un default di sicurezza
-            const fileDaCaricare = nomeFile ? nomeFile : 'didattica/didattica-lezione-1.json';
+    // 2. Se non c'è il parametro, impostiamo un default che punta alla cartella giusta
+    const fileDaCaricare = nomeFile ? decodeURIComponent(nomeFile) : 'didattica/didattica-lezione-1.json';
 
-            try {
-                // decodeURIComponent gestisce correttamente gli slash e gli spazi nel percorso
-                const response = await fetch(decodeURIComponent(fileDaCaricare));
-                
-                if (!response.ok) throw new Error("File lezione non trovato al percorso: " + fileDaCaricare);
-                
-                const data = await response.json();
-                
-                popolaInterfaccia(data);
-                setupAccordions();
-                initFlashcards(data.flashcards);
-                setupNotesAutoScroll();
-                setupCopyButtons();
-                setupDownloadButtons();
-                
-                // Aggiorna il titolo della scheda del browser
-                document.title = data.titolo_lezione || "Una Mano Spensierata";
-            } catch (error) {
-                console.error("Errore nel caricamento:", error);
-                document.getElementById('dyn-title').innerText = "Lezione non disponibile";
-            }
+    try {
+        // 3. Il fetch userà il percorso completo fornito nell'URL (es: "storiaeducazione/file.json")
+        const response = await fetch(fileDaCaricare);
+        
+        if (!response.ok) {
+            throw new Error(`File non trovato: ${fileDaCaricare}. Assicurati che la cartella esista.`);
+        }
+        
+        const data = await response.json();
+        
+        // 4. Popola l'interfaccia
+        popolaInterfaccia(data);
+        setupAccordions();
+        initFlashcards(data.flashcards);
+        setupNotesAutoScroll();
+        setupCopyButtons();
+        setupDownloadButtons();
+        
+        // Aggiorna il titolo della scheda del browser
+        document.title = (data.titolo_lezione || "Una Mano Spensierata");
+    } catch (error) {
+        console.error("Errore nel caricamento:", error);
+        document.getElementById('dyn-title').innerText = "Lezione non disponibile";
+        document.getElementById('dyn-subtitle').innerText = "Verifica il link o il file JSON";
+    }
+    
+    // ... (restante codice init)
+});
 
             // ... (il resto del tuo codice init rimane invariato)
             // ----------------------------------------------------------------
