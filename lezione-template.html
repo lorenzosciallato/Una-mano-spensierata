@@ -1773,7 +1773,6 @@
                     <head><title>Appunti - Lezione Dinamica</title></head>
                     <body onload="window.print();">${printContents}</body>
                 </html>
-                
             `);
             doc.close();
 
@@ -1805,36 +1804,44 @@
         // INIT
         // =========================================================================
  document.addEventListener("DOMContentLoaded", async () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const fileParam = urlParams.get('file');
+            // Legge il parametro 'file' dall'URL (es: ?file=didattica/didattica-lezione-7.json)
+            const urlParams = new URLSearchParams(window.location.search);
+            const nomeFile = urlParams.get('file');
 
-    if (!fileParam) {
-        document.getElementById('dyn-title').innerText = "Errore";
-        document.getElementById('dyn-subtitle').innerText = "Nessun file specificato nell'URL.";
-        return;
-    }
+            // Se l'utente non specifica nulla, diamo un default di sicurezza
+            const fileDaCaricare = nomeFile
+    ? nomeFile
+    : null;
 
-    // Forza il percorso relativo semplice: funziona se l'HTML e le cartelle sono nella stessa root
-    const path = fileParam;
-    
-    try {
-        const response = await fetch(path);
-        if (!response.ok) throw new Error(`HTTP ${response.status}: File non trovato a ${path}`);
-        
-        const data = await response.json();
-        popolaInterfaccia(data);
-        setupAccordions();
-        initFlashcards(data.flashcards);
-        setupNotesAutoScroll();
-        setupCopyButtons();
-        setupDownloadButtons();
-        document.title = (data.titolo_lezione || "Una Mano Spensierata");
-    } catch (error) {
-        console.error("Errore fatale:", error);
-        document.getElementById('dyn-title').innerText = "Errore di caricamento";
-        document.getElementById('dyn-subtitle').innerText = "Controlla la console per i dettagli: " + error.message;
-    }
-});
+if (!fileDaCaricare) {
+    document.getElementById('dyn-title').innerText = "Nessuna lezione specificata";
+    return;
+}
+
+            try {
+                // decodeURIComponent gestisce correttamente gli slash e gli spazi nel percorso
+                const response = await fetch(decodeURIComponent(fileDaCaricare));
+                
+                if (!response.ok) throw new Error("File lezione non trovato al percorso: " + fileDaCaricare);
+                
+                const data = await response.json();
+                
+                popolaInterfaccia(data);
+                setupAccordions();
+                initFlashcards(data.flashcards);
+                setupNotesAutoScroll();
+                setupCopyButtons();
+                setupDownloadButtons();
+                
+                // Aggiorna il titolo della scheda del browser
+                document.title = data.titolo_lezione || "Una Mano Spensierata";
+            } catch (error) {
+                console.error("Errore nel caricamento:", error);
+                document.getElementById('dyn-title').innerText = "Lezione non disponibile";
+            }
+
+            // ... (il resto del tuo codice init rimane invariato)
+            // ----------------------------------------------------------------
             // Highlighter — TASK 3 & TASK 4 integrati
             // ----------------------------------------------------------------
             const highlighterBtn = document.createElement('div');
