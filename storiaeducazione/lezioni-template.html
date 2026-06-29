@@ -1815,11 +1815,11 @@
     }
 
     // Forza il percorso relativo semplice: funziona se l'HTML e le cartelle sono nella stessa root
-    const path = fileParam;
-    
-    try {
-        const response = await fetch(path);
-        if (!response.ok) throw new Error(`HTTP ${response.status}: File non trovato a ${path}`);
+   const path = fileParam; 
+
+try {
+    const response = await fetch(path);
+    if (!response.ok) throw new Error(`HTTP ${response.status}: File non trovato a ${path}`);
         
         const data = await response.json();
         popolaInterfaccia(data);
