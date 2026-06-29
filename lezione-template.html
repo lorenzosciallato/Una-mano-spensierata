@@ -1272,12 +1272,29 @@
                             <span class="ch-icon">+</span>
                         </button>
                         <div class="accordion-content">
+                            
+                            <!-- Box Obiettivi -->
                             <div class="obj-box">
                                 <p><strong>Obiettivi della lezione</strong></p>
                                 <ul class="obj-list" id="dyn-obiettivi"></ul>
                             </div>
+
+                            <!-- Box Concetto Fondamentale (Dinamico) -->
+                            <div id="dyn-concetto-fondamentale" style="display: none; background: var(--navy); color: #fff; padding: 1.5rem; border-radius: var(--r-md); margin-bottom: 2rem; line-height: 1.6;"></div>
+
+                            <!-- Punti Chiave -->
                             <span class="factors-intro">Punti chiave — clicca per approfondire</span>
                             <div class="factors-grid" id="dyn-punti-chiave"></div>
+
+                            <!-- Box Nota Extra (Dinamico) -->
+                            <div id="dyn-nota-extra" style="display: none; background: #FFFDF7; border: 1px solid var(--gold-lt); padding: 1.5rem; margin-top: 0.5rem; margin-bottom: 2rem; border-radius: var(--r-md); color: var(--body);"></div>
+
+                            <!-- Domande Autovalutazione (Dinamico) -->
+                            <div id="dyn-domande-container" style="display: none; margin-bottom: 2rem;">
+                                <p style="font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; color: var(--ink); margin-bottom: 0.8rem;">Domande per l'autovalutazione</p>
+                                <ul class="obj-list" id="dyn-domande"></ul>
+                            </div>
+
                             <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione ▲</button>
                         </div>
                     </div>
@@ -1932,38 +1949,84 @@
             document.getElementById('dyn-title').innerText = data.titolo_lezione || "";
             document.getElementById('dyn-subtitle').innerText = data.sottotitolo || "";
 
-            const objContainer = document.getElementById('dyn-obiettivi');
-            (data.obiettivi || []).forEach(ob => {
-                const li = document.createElement('li');
-                li.innerText = ob;
-                objContainer.appendChild(li);
-            });
+            // --- SEZIONE 01: ORIENTAMENTO (Nuova struttura) ---
+            if (data.orientamento) {
+                // 1. Obiettivi
+                const objContainer = document.getElementById('dyn-obiettivi');
+                objContainer.innerHTML = '';
+                (data.orientamento.obiettivi || []).forEach(ob => {
+                    const li = document.createElement('li');
+                    li.innerText = ob;
+                    objContainer.appendChild(li);
+                });
 
+                // 2. Concetto Fondamentale
+                if (data.orientamento.concetto_fondamentale && data.orientamento.concetto_fondamentale.testo) {
+                    const conc = data.orientamento.concetto_fondamentale;
+                    const concDiv = document.getElementById('dyn-concetto-fondamentale');
+                    concDiv.style.display = 'block';
+                    concDiv.innerHTML = `<strong>${conc.titolo}:</strong><br><br>${conc.testo}`;
+                }
+
+                // 3. Nota Extra
+                if (data.orientamento.nota_extra && data.orientamento.nota_extra.testo) {
+                    const nota = data.orientamento.nota_extra;
+                    const notaDiv = document.getElementById('dyn-nota-extra');
+                    notaDiv.style.display = 'block';
+                    notaDiv.innerHTML = `<strong>${nota.titolo}:</strong> ${nota.testo}`;
+                }
+
+                // 4. Domande per l'autovalutazione
+                if (data.orientamento.domande_autovalutazione && data.orientamento.domande_autovalutazione.length > 0) {
+                    document.getElementById('dyn-domande-container').style.display = 'block';
+                    const domContainer = document.getElementById('dyn-domande');
+                    domContainer.innerHTML = '';
+                    data.orientamento.domande_autovalutazione.forEach(dom => {
+                        const li = document.createElement('li');
+                        li.innerText = dom;
+                        domContainer.appendChild(li);
+                    });
+                }
+            }
+
+            // --- PUNTI CHIAVE (Merge visivo + Modale estesa) ---
             const factorsContainer = document.getElementById('dyn-punti-chiave');
+            factorsContainer.innerHTML = '';
+            factorsData = {}; // Reset dell'oggetto globale
+            
             (data.punti_chiave || []).forEach((punto, index) => {
-                factorsData[index] = { title: punto.titolo, body: `<p>${punto.descrizione}</p>` };
+                const key = punto.id || index; // Usa l'ID del JSON o l'indice come fallback
+                
+                // Popola l'oggetto globale usato dalla modale
+                factorsData[key] = { 
+                    title: punto.titolo_esteso || punto.titolo_breve, 
+                    body: punto.testo_modale || `<p>${punto.sottotitolo}</p>` 
+                };
+                
+                // Crea la Card visiva
                 const card = document.createElement('div');
                 card.className = 'factor-card';
-                card.setAttribute('onclick', `openFactor(${index})`);
-                card.innerHTML = `<span class="fc-plus">+</span><strong>${punto.titolo}</strong><small>${punto.descrizione}</small>`;
+                card.setAttribute('onclick', `openFactor('${key}')`);
+                card.innerHTML = `<span class="fc-plus">+</span><strong>${punto.titolo_breve}</strong><small>${punto.sottotitolo}</small>`;
                 factorsContainer.appendChild(card);
             });
 
+            // --- RESTO DEI CONTENUTI ---
             if (data.podcast_url) {
                 document.getElementById('dyn-podcast-player').src = data.podcast_url;
                 document.getElementById('dyn-podcast-link').href = data.podcast_url;
             }
-            if (data.video_sintesi_url) {
+            if (data.video_sintesi_url && data.video_sintesi_url !== "PLACEHOLDER_VIDEO") {
                 document.getElementById('dyn-video-player').src = data.video_sintesi_url;
                 document.getElementById('dyn-video-link').href = data.video_sintesi_url;
             }
 
             const riassuntoContainer = document.getElementById('dyn-riassuntone-container');
+            riassuntoContainer.innerHTML = '';
             (data.riassuntone || []).forEach(macro => {
                 const buf = [];
                 buf.push(`<h3>${macro.titolo}</h3>`);
                 if (macro.testo) {
-                    // TASK 2: applica chunking cognitivo al testo
                     const chunkedText = chunkText(macro.testo);
                     buf.push(`<p>${chunkedText}</p>`);
                 }
