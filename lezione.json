@@ -1,32 +1,61 @@
 {
     "titolo_lezione": "Didattica Generale",
     "sottotitolo": "Lezione 1 - La Didattica, l'Apprendimento e la Professional Vision",
-    "obiettivi": [
-        "Distinguere il ruolo specifico della didattica rispetto alla pedagogia e comprendere il concetto di trasposizione didattica.",
-        "Analizzare i tre pilastri della professionalità docente: conoscenze, abilità e competenze.",
-        "Superare il modello comunicativo lineare attraverso i concetti di inattivismo, accoppiamento strutturale e neuroni specchio.",
-        "Applicare il framework della Professional Vision (Noticing, Reasoning, Provisioning) per la gestione dell'ecosistema classe."
-    ],
+    "orientamento": {
+        "obiettivi": [
+            "Distinguere il ruolo specifico della didattica rispetto alla pedagogia e comprendere il concetto di trasposizione didattica.",
+            "Analizzare i tre pilastri della professionalità docente: conoscenze, abilità e competenze.",
+            "Superare il modello comunicativo lineare attraverso i concetti di inattivismo, accoppiamento strutturale e neuroni specchio.",
+            "Applicare il framework della Professional Vision (Noticing, Reasoning, Provisioning) per la gestione dell'ecosistema classe."
+        ],
+        "concetto_fondamentale": {
+            "titolo": "La Didattica e l'Inattivismo",
+            "testo": "La didattica è la scienza che studia le metodologie per favorire l'apprendimento, operando la trasposizione del \"sapere sapiente\" in sapere insegnato. L'apprendimento non è la registrazione passiva di nozioni, ma un'azione autonoma trasformativa basata sull'accoppiamento strutturale tra lo studente e l'ambiente, governata da dinamiche complesse che il docente deve cogliere e orchestrare tramite un'acutaProfessional Vision."
+        },
+        "nota_extra": {
+            "titolo": "Oltre il Modello Lineare",
+            "testo": "Ricorda che non esiste una trasmissione passiva da un \"emittente\" a un \"ricevente\". Ogni studente rielabora il sapere in base alle sue conoscenze pregresse (visione interna)."
+        },
+        "domande_autovalutazione": [
+            "Cosa differenzia l'azione della didattica da quella della pedagogia generale?",
+            "In che modo il \"saper fare\" si relaziona alle competenze professionali di un insegnante?",
+            "Perché la metafora del \"serpentone\" sugli sci è utile per capire la mente dell'alunno?",
+            "Quali sono le tre fasi di acquisizione di un'azione secondo Durand?",
+            "Come si applica il concetto di \"Provisioning\" all'interno dell'aula scolastica?"
+        ]
+    },
     "punti_chiave": [
         {
-            "titolo": "1. Trasposizione Didattica",
-            "descrizione": "Dal sapere sapiente all'insegnamento"
+            "id": "trasposizione",
+            "titolo_breve": "1. Trasposizione Didattica",
+            "sottotitolo": "Dal sapere sapiente all'insegnamento",
+            "titolo_esteso": "1. Trasposizione Didattica",
+            "testo_modale": "<p>È il processo con cui il sapere accademico (\"sapere sapiente\") viene rielaborato, semplificato e tradotto dal docente per diventare un \"sapere insegnato\" e comprensibile in classe.</p>"
         },
         {
-            "titolo": "2. Le Competenze",
-            "descrizione": "Orchestrazione dinamica in aula"
+            "id": "competenze",
+            "titolo_breve": "2. Le Competenze",
+            "sottotitolo": "Orchestrazione dinamica in aula",
+            "titolo_esteso": "2. Le Competenze",
+            "testo_modale": "<p>Costituiscono il livello più alto della professionalità docente: l'orchestrazione dinamica di conoscenze, abilità e attitudini per risolvere problemi complessi in contesti inaspettati.</p>"
         },
         {
-            "titolo": "3. Accoppiamento Strutturale",
-            "descrizione": "Individuo e ambiente che si modificano"
+            "id": "accoppiamento",
+            "titolo_breve": "3. Accoppiamento Strutturale",
+            "sottotitolo": "Individuo e ambiente che si modificano",
+            "titolo_esteso": "3. Accoppiamento Strutturale",
+            "testo_modale": "<p>Secondo l'inattivismo, l'apprendimento non è passivo ma un'azione in cui il soggetto interagisce con l'ambiente, modificandolo e venendo a sua volta trasformato biologicamente e cognitivamente.</p>"
         },
         {
-            "titolo": "4. Professional Vision",
-            "descrizione": "Noticing, Reasoning, Provisioning"
+            "id": "vision",
+            "titolo_breve": "4. Professional Vision",
+            "sottotitolo": "Noticing, Reasoning, Provisioning",
+            "titolo_esteso": "4. Professional Vision",
+            "testo_modale": "<p>L'abilità clinica e analitica del docente, articolata in Noticing (notare i micro-segnali), Reasoning (interpretarne la causa pedagogica) e Provisioning (intervenire per prevenire il caos).</p>"
         }
     ],
     "podcast_url": "https://res.cloudinary.com/dlppkpjqs/video/upload/v1773230409/Didattica_tra_corpo_e_seduzione_kw9okd.mp4",
-    "video_sintesi_url": "",
+    "video_sintesi_url": "PLACEHOLDER_VIDEO",
     "flashcards": [
         {
             "front": "Qual è la differenza strutturale e di scopo tra la Pedagogia generale e la Didattica?",
