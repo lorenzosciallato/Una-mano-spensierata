@@ -1987,6 +1987,15 @@
                         domContainer.appendChild(li);
                     });
                 }
+            } else {
+                // Fallback in caso di JSON vecchio senza l'oggetto 'orientamento'
+                const objContainer = document.getElementById('dyn-obiettivi');
+                objContainer.innerHTML = '';
+                (data.obiettivi || []).forEach(ob => {
+                    const li = document.createElement('li');
+                    li.innerText = ob;
+                    objContainer.appendChild(li);
+                });
             }
 
             // --- PUNTI CHIAVE (Merge visivo + Modale estesa) ---
@@ -1998,16 +2007,17 @@
                 const key = punto.id || index; // Usa l'ID del JSON o l'indice come fallback
                 
                 // Popola l'oggetto globale usato dalla modale
+                // Se c'è titolo_esteso usa quello, altrimenti usa il vecchio "titolo"
                 factorsData[key] = { 
-                    title: punto.titolo_esteso || punto.titolo_breve, 
-                    body: punto.testo_modale || `<p>${punto.sottotitolo}</p>` 
+                    title: punto.titolo_esteso || punto.titolo || punto.titolo_breve, 
+                    body: punto.testo_modale || `<p>${punto.sottotitolo || punto.descrizione}</p>` 
                 };
                 
-                // Crea la Card visiva
+                // Crea la Card visiva gestendo in automatico le chiavi vecchie o nuove
                 const card = document.createElement('div');
                 card.className = 'factor-card';
                 card.setAttribute('onclick', `openFactor('${key}')`);
-                card.innerHTML = `<span class="fc-plus">+</span><strong>${punto.titolo_breve}</strong><small>${punto.sottotitolo}</small>`;
+                card.innerHTML = `<span class="fc-plus">+</span><strong>${punto.titolo_breve || punto.titolo}</strong><small>${punto.sottotitolo || punto.descrizione}</small>`;
                 factorsContainer.appendChild(card);
             });
 
