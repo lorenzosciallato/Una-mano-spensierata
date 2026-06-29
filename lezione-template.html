@@ -1804,40 +1804,37 @@
         // INIT
         // =========================================================================
  document.addEventListener("DOMContentLoaded", async () => {
-    // 1. Legge il parametro 'file' dall'URL (es: ?file=storiaeducazione/storiaeducazione-lezione-7.json)
     const urlParams = new URLSearchParams(window.location.search);
-    const nomeFile = urlParams.get('file');
+    const fileParam = urlParams.get('file');
 
-    // 2. Se non c'è il parametro, impostiamo un default che punta alla cartella giusta
-    const fileDaCaricare = nomeFile ? decodeURIComponent(nomeFile) : 'didattica/didattica-lezione-1.json';
+    // Se non c'è il file, non forzare un percorso, gestisci l'errore o il redirect
+    if (!fileParam) {
+        console.error("Nessuna lezione specificata nell'URL.");
+        // Facoltativo: redirect alla home
+        // window.location.href = '/index.html';
+        return;
+    }
 
+    // Costruiamo il percorso partendo dalla root del sito
+    // Aggiungiamo lo slash iniziale per essere sicuri di pescare dalla root
+    const path = fileParam.startsWith('/') ? fileParam : `/${fileParam}`;
+    
     try {
-        // 3. Il fetch userà il percorso completo fornito nell'URL (es: "storiaeducazione/file.json")
-        const response = await fetch(fileDaCaricare);
+        const response = await fetch(path);
         
         if (!response.ok) {
-            throw new Error(`File non trovato: ${fileDaCaricare}. Assicurati che la cartella esista.`);
+            throw new Error(`Impossibile caricare: ${path}. Verifica che il file esista su GitHub.`);
         }
         
         const data = await response.json();
-        
-        // 4. Popola l'interfaccia
         popolaInterfaccia(data);
-        setupAccordions();
-        initFlashcards(data.flashcards);
-        setupNotesAutoScroll();
-        setupCopyButtons();
-        setupDownloadButtons();
-        
-        // Aggiorna il titolo della scheda del browser
-        document.title = (data.titolo_lezione || "Una Mano Spensierata");
+        // ... (resto del tuo codice di setup)
     } catch (error) {
-        console.error("Errore nel caricamento:", error);
-        document.getElementById('dyn-title').innerText = "Lezione non disponibile";
-        document.getElementById('dyn-subtitle').innerText = "Verifica il link o il file JSON";
+        console.error("Errore fatale:", error);
+        // Feedback utente
+        document.getElementById('dyn-title').innerText = "Errore di caricamento";
+        document.getElementById('dyn-subtitle').innerText = "Il file richiesto non è stato trovato.";
     }
-    
-    // ... (restante codice init)
 });
 
             // ... (il resto del tuo codice init rimane invariato)
