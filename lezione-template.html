@@ -991,7 +991,7 @@
         }
         #wb-badge:hover { background: var(--navy-lt); }
 
-        /* la lavagna */
+      /* la lavagna */
         #smart-whiteboard {
             display: none;
             background: #fff;
@@ -1000,7 +1000,8 @@
             overflow: hidden;
             margin-bottom: 1.5rem;
             box-shadow: var(--shadow-card);
-            max-height: 200px;
+            height: 220px; /* ALTEZZA FISSA: Risolve il bug del flexbox */
+            position: relative;
             flex-direction: column;
         }
         #smart-whiteboard.wb-visible { display: flex; }
@@ -1010,6 +1011,7 @@
             padding: 8px 14px;
             display: flex; align-items: center; gap: 10px;
             flex-shrink: 0;
+            z-index: 2; /* Mantiene l'header in primo piano */
         }
         .wb-title {
             font-family: var(--font-body); font-size: 0.72rem; font-weight: 700;
@@ -1027,12 +1029,13 @@
         .wb-btn:hover { background: rgba(255,255,255,0.28); }
 
         .wb-body-wrap {
-            position: relative; flex: 1; overflow: hidden; 
-            min-height: 0; /* FIX: Forza il ricalcolo dell'altezza per permettere l'overflow in flexbox */
+            position: relative; flex: 1; overflow: hidden;
         }
         .wb-body {
-            height: 100%; overflow-y: auto;
-            padding: 10px 36px 20px 12px;
+            position: absolute; /* IL FIX: Sgancia il corpo dal flexbox */
+            top: 0; bottom: 0; left: 0; right: 0;
+            overflow-y: auto;
+            padding: 10px 36px 10px 12px;
         }
         .wb-body::-webkit-scrollbar { width: 4px; }
         .wb-body::-webkit-scrollbar-thumb { background: var(--dust); border-radius: 2px; }
@@ -1681,52 +1684,39 @@
             if (wbCount === 0) { showToast('Nessun concetto da esportare.', 'retry'); return; }
             const body = document.getElementById('wb-body');
 
-            // Crea un container temporaneo pulito per il PDF
-            const pdfWrap = document.createElement('div');
-            
-            // FIX PDF BIANCO: Renderizzato nel viewport ma invisibile, sfondo esplicito
-            pdfWrap.style.cssText = 'position: fixed; top: 0; left: 0; width: 800px; background-color: #ffffff; font-family: "DM Sans", sans-serif; padding: 40px; color: #1C1C22; opacity: 0; pointer-events: none; z-index: -9999;';
-
-            const title = document.createElement('h2');
-            title.textContent = 'Lavagna Concetti — Una Mano Spensierata';
-            title.style.cssText = 'font-size: 24px; margin-bottom: 20px; color: #1A2F4F; border-bottom: 2px solid #C8A96E; padding-bottom: 10px;';
-            pdfWrap.appendChild(title);
+            // METODO STRINGA HTML: bypassa il rendering DOM e cattura i value esatti degli input
+            let htmlString = `
+                <div style="font-family: 'DM Sans', sans-serif; padding: 30px; color: #1C1C22; background-color: #ffffff;">
+                    <h2 style="font-size: 22px; color: #1A2F4F; border-bottom: 2px solid #C8A96E; padding-bottom: 10px; margin-bottom: 24px; font-weight: 700;">
+                        Lavagna Concetti — Una Mano Spensierata
+                    </h2>
+            `;
 
             body.querySelectorAll('.wb-row').forEach(row => {
-                const hlText = row.querySelector('.wb-hl-text');
-                const noteInput = row.querySelector('.wb-note-input');
+                const hlText = row.querySelector('.wb-hl-text').textContent;
+                const noteInputVal = row.querySelector('.wb-note-input').value || '';
                 const color = row.querySelector('.wb-hl-swatch').style.background;
 
-                const entry = document.createElement('div');
-                // Aggiunto page-break-inside: avoid per non spezzare i concetti tra le pagine
-                entry.style.cssText = `margin-bottom: 16px; border-left: 6px solid ${color}; padding: 12px 16px; background-color: #F7F4EF; border-radius: 4px; page-break-inside: avoid;`;
-
-                const concept = document.createElement('p');
-                concept.style.cssText = 'font-weight: 700; font-size: 15px; margin-bottom: 6px; line-height: 1.5; color: #1C1C22;';
-                concept.textContent = hlText.textContent;
-
-                const note = document.createElement('p');
-                note.style.cssText = 'font-size: 14px; color: #7A7770; line-height: 1.5;';
-                note.textContent = noteInput.value || '';
-
-                entry.appendChild(concept);
-                entry.appendChild(note);
-                pdfWrap.appendChild(entry);
+                htmlString += `
+                    <div style="margin-bottom: 16px; border-left: 6px solid ${color}; padding: 14px 18px; background-color: #F7F4EF; border-radius: 4px; page-break-inside: avoid;">
+                        <p style="font-weight: 700; font-size: 15px; margin-bottom: 6px; line-height: 1.5; color: #1C1C22; margin-top: 0;">${hlText}</p>
+                        <p style="font-size: 13px; color: #7A7770; line-height: 1.5; margin: 0;">${noteInputVal}</p>
+                    </div>
+                `;
             });
 
-            document.body.appendChild(pdfWrap);
+            htmlString += `</div>`;
 
+            // Generazione PDF passando direttamente la stringa virtuale
             html2pdf().set({
                 margin: [15, 15, 15, 15],
                 filename: 'lavagna-concetti.pdf',
                 image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true, logging: false },
+                html2canvas: { scale: 2, useCORS: true },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            }).from(pdfWrap).save().then(() => {
-                document.body.removeChild(pdfWrap);
+            }).from(htmlString).save().then(() => {
                 showToast('PDF scaricato!', 'success');
             }).catch(err => {
-                document.body.removeChild(pdfWrap);
                 showToast('Errore durante la creazione del PDF.', 'retry');
             });
         }
