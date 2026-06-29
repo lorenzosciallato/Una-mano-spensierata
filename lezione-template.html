@@ -1418,17 +1418,19 @@
                         </button>
                         <div class="accordion-content">
                             <div class="media-notes-grid">
+                                
+                                <!-- ================== COLONNA SINISTRA ================== -->
                                 <div>
-                                    <!-- TASK 4: wrapper per banner + lavagna -->
+                                    <!-- Wrapper per banner + lavagna -->
                                     <div class="wb-banner-wrap">
                                         <img id="wb-section-banner"
                                             src="https://i.postimg.cc/BbgFzJFJ/disegna-dei-pinguini-tutti-in-mucchio-come-fanno-in-natura-stile-del-disegno-corporate.jpg"
                                             class="section-banner"
                                             alt="Pinguini"
                                             onclick="wbMaximize()">
-                                        <div id="wb-badge" onclick="wbMaximize()">📝 <span id="wb-badge-count">0</span> concetti salvati</div>
+                                        
+                                        <div id="wb-badge" onclick="wbMaximize()">📝 <span id="wb-badge-count">0</span> concetti</div>
 
-                                        <!-- Smart Whiteboard -->
                                         <!-- Smart Whiteboard -->
                                         <div id="smart-whiteboard">
                                             <div class="wb-header">
@@ -1441,18 +1443,19 @@
                                                     <button class="wb-scroll-btn" onclick="wbScroll(40)">▼</button>
                                                 </div>
                                             </div>
+                                            <!-- Footer con bottoni sempre visibili in basso -->
                                             <div class="wb-footer">
-                                                <button class="wb-btn" onclick="wbMinimize()">Riduci ↑</button>
+                                                <button class="wb-btn" onclick="wbMinimize()">Riduci</button>
                                                 <button class="wb-btn wb-btn-pdf" onclick="wbExportPDF()">🖨️ Stampa / PDF</button>
                                             </div>
                                         </div>
-                                        </div>
                                     </div>
 
+                                    <!-- Il contenitore testuale DEVE rimanere dentro la colonna di sinistra -->
                                     <div id="dyn-riassuntone-container" class="text-content-box"></div>
                                 </div>
 
-                                <!-- TASK 3: notes-widget con palette sopra la textarea -->
+                                <!-- ================== COLONNA DESTRA ================== -->
                                 <div class="notes-widget" id="riassuntone-notes-widget">
                                     <div class="notes-toolbar">
                                         <span class="notes-label">Appunti</span>
@@ -1472,6 +1475,7 @@
                                     </div>
                                     <textarea class="notes-area" placeholder="Annota concetti da ricordare…"></textarea>
                                 </div>
+
                             </div>
                             <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione ▲</button>
                         </div>
