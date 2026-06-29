@@ -1804,17 +1804,19 @@
         // INIT
         // =========================================================================
  document.addEventListener("DOMContentLoaded", async () => {
-            // Legge il parametro 'file' dall'URL (es: ?file=didattica-lezione-7.json)
+            // Legge il parametro 'file' dall'URL (es: ?file=didattica/didattica-lezione-7.json)
             const urlParams = new URLSearchParams(window.location.search);
             const nomeFile = urlParams.get('file');
 
-            // Se non c'è il parametro 'file', prova a ricostruirlo da materia/lezione (opzionale)
-            // altrimenti usa un fallback di sicurezza
-            const fileDaCaricare = nomeFile ? nomeFile : 'didattica-lezione-1.json';
+            // Se l'utente non specifica nulla, diamo un default di sicurezza
+            const fileDaCaricare = nomeFile ? nomeFile : 'didattica/didattica-lezione-1.json';
 
             try {
-                const response = await fetch(fileDaCaricare);
-                if (!response.ok) throw new Error("File lezione non trovato");
+                // decodeURIComponent gestisce correttamente gli slash e gli spazi nel percorso
+                const response = await fetch(decodeURIComponent(fileDaCaricare));
+                
+                if (!response.ok) throw new Error("File lezione non trovato al percorso: " + fileDaCaricare);
+                
                 const data = await response.json();
                 
                 popolaInterfaccia(data);
@@ -1831,6 +1833,7 @@
                 document.getElementById('dyn-title').innerText = "Lezione non disponibile";
             }
 
+            // ... (il resto del tuo codice init rimane invariato)
             // ----------------------------------------------------------------
             // Highlighter — TASK 3 & TASK 4 integrati
             // ----------------------------------------------------------------
