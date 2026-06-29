@@ -1018,15 +1018,20 @@
             letter-spacing: 0.16em; text-transform: uppercase; flex: 1;
         }
         .wb-btn {
-            background: rgba(255,255,255,0.15); color: #fff;
-            border: 1px solid rgba(255,255,255,0.25);
-            border-radius: 50px; padding: 5px 12px;
-            font-family: var(--font-body); font-size: 0.68rem; font-weight: 700;
+            background: #fff; color: var(--navy);
+            border: 2px solid transparent;
+            border-radius: 50px; padding: 6px 14px;
+            font-family: var(--font-body); font-size: 0.72rem; font-weight: 700;
             letter-spacing: 0.08em; text-transform: uppercase;
-            cursor: pointer; transition: background 0.2s;
-            white-space: nowrap;
+            cursor: pointer; transition: all 0.2s;
+            white-space: nowrap; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
-        .wb-btn:hover { background: rgba(255,255,255,0.28); }
+        .wb-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); border-color: var(--dust); }
+        
+        .wb-btn-pdf {
+            background: var(--gold); color: var(--night); 
+        }
+        .wb-btn-pdf:hover { background: var(--gold-lt); border-color: transparent; }
 
         .wb-body-wrap {
             position: relative; flex: 1; overflow: hidden;
@@ -1426,10 +1431,10 @@
                                         <!-- Smart Whiteboard -->
                                         <div id="smart-whiteboard">
                                             <div class="wb-header">
-                                                <span class="wb-title">📝 Lavagna Concetti</span>
-                                                <button class="wb-btn" onclick="wbMinimize()">Riduci ↑</button>
-                                                <button class="wb-btn" onclick="wbExportPDF()">⬇ PDF</button>
-                                            </div>
+    <span class="wb-title">📝 Lavagna Concetti</span>
+    <button class="wb-btn" onclick="wbMinimize()">Riduci ↑</button>
+    <button class="wb-btn wb-btn-pdf" onclick="wbExportPDF()">⬇ Scarica PDF</button>
+</div>
                                             <div class="wb-body-wrap">
                                                 <div class="wb-body" id="wb-body"></div>
                                                 <div class="wb-scroll-btns">
@@ -1682,41 +1687,61 @@
 
         function wbExportPDF() {
             if (wbCount === 0) { showToast('Nessun concetto da esportare.', 'retry'); return; }
+            
+            showToast('Preparazione PDF in corso...', 'success');
             const body = document.getElementById('wb-body');
 
-            // METODO STRINGA HTML: bypassa il rendering DOM e cattura i value esatti degli input
-            let htmlString = `
-                <div style="font-family: 'DM Sans', sans-serif; padding: 30px; color: #1C1C22; background-color: #ffffff;">
-                    <h2 style="font-size: 22px; color: #1A2F4F; border-bottom: 2px solid #C8A96E; padding-bottom: 10px; margin-bottom: 24px; font-weight: 700;">
-                        Lavagna Concetti — Una Mano Spensierata
-                    </h2>
-            `;
+            // 1. Creiamo un contenitore reale e lo appendiamo al body
+            const pdfWrap = document.createElement('div');
+            // Lo mettiamo dietro a tutto, ma FISICAMENTE presente per il motore di rendering
+            pdfWrap.style.cssText = 'position: fixed; top: 0; left: 0; width: 800px; background-color: #ffffff; padding: 40px; z-index: -9999; color: #1C1C22; font-family: "DM Sans", sans-serif;';
 
+            const title = document.createElement('h2');
+            title.textContent = 'Lavagna Concetti — Una Mano Spensierata';
+            title.style.cssText = 'font-size: 24px; color: #1A2F4F; border-bottom: 2px solid #C8A96E; padding-bottom: 10px; margin-bottom: 24px; font-weight: 700; font-family: "Playfair Display", serif;';
+            pdfWrap.appendChild(title);
+
+            // 2. Clona i nodi e trasforma gli input in testo puro
             body.querySelectorAll('.wb-row').forEach(row => {
                 const hlText = row.querySelector('.wb-hl-text').textContent;
-                const noteInputVal = row.querySelector('.wb-note-input').value || '';
+                // Estraiamo il vero valore digitato dall'utente
+                const noteInputVal = row.querySelector('.wb-note-input').value.trim();
                 const color = row.querySelector('.wb-hl-swatch').style.background;
 
-                htmlString += `
-                    <div style="margin-bottom: 16px; border-left: 6px solid ${color}; padding: 14px 18px; background-color: #F7F4EF; border-radius: 4px; page-break-inside: avoid;">
-                        <p style="font-weight: 700; font-size: 15px; margin-bottom: 6px; line-height: 1.5; color: #1C1C22; margin-top: 0;">${hlText}</p>
-                        <p style="font-size: 13px; color: #7A7770; line-height: 1.5; margin: 0;">${noteInputVal}</p>
-                    </div>
-                `;
+                const entry = document.createElement('div');
+                entry.style.cssText = `margin-bottom: 16px; border-left: 6px solid ${color}; padding: 14px 18px; background-color: #F7F4EF; border-radius: 4px; page-break-inside: avoid;`;
+
+                const concept = document.createElement('p');
+                concept.style.cssText = 'font-weight: 700; font-size: 15px; margin-bottom: 6px; line-height: 1.5; color: #1C1C22; margin-top: 0;';
+                concept.textContent = hlText;
+                entry.appendChild(concept);
+
+                // Se c'è una nota personalizzata, la stampiamo come paragrafo normale
+                if (noteInputVal && noteInputVal !== '→' && noteInputVal !== '->') {
+                    const note = document.createElement('p');
+                    note.style.cssText = 'font-size: 13px; color: #7A7770; line-height: 1.5; margin: 0; font-style: italic;';
+                    note.textContent = noteInputVal;
+                    entry.appendChild(note);
+                }
+
+                pdfWrap.appendChild(entry);
             });
 
-            htmlString += `</div>`;
+            // Deve essere fisicamente nel DOM affinché html2canvas lo legga
+            document.body.appendChild(pdfWrap);
 
-            // Generazione PDF passando direttamente la stringa virtuale
+            // 3. Generazione e pulizia
             html2pdf().set({
-                margin: [15, 15, 15, 15],
+                margin: 15,
                 filename: 'lavagna-concetti.pdf',
                 image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true },
+                html2canvas: { scale: 2, useCORS: true, windowWidth: 800 },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            }).from(htmlString).save().then(() => {
-                showToast('PDF scaricato!', 'success');
+            }).from(pdfWrap).save().then(() => {
+                document.body.removeChild(pdfWrap);
+                showToast('PDF scaricato con successo!', 'success');
             }).catch(err => {
+                document.body.removeChild(pdfWrap);
                 showToast('Errore durante la creazione del PDF.', 'retry');
             });
         }
