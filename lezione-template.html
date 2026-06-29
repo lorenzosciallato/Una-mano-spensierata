@@ -1075,14 +1075,22 @@
             flex-shrink: 0; max-width: 38%;
             word-break: break-word;
         }
-        .wb-note-input {
-            flex: 1; border: none; outline: none;
-            font-family: var(--font-body); font-size: 0.82rem;
-            color: var(--sub); background: transparent;
-            line-height: 1.5; padding: 2px 4px;
-            min-width: 0;
+        /* Container per freccia + input testuale */
+        .wb-note-container {
+            flex: 1; display: flex; align-items: flex-start; gap: 6px;
         }
-        .wb-note-input:focus { color: var(--body); }
+        .wb-note-arrow {
+            color: var(--mist); font-weight: 700; font-size: 0.9rem; margin-top: 2px;
+        }
+        .wb-note-input {
+            flex: 1; border: none; outline: none; resize: none;
+            font-family: var(--font-body); font-size: 0.82rem;
+            color: var(--body); background: transparent;
+            line-height: 1.5; padding: 2px 0; min-height: 24px;
+            overflow: hidden; /* L'altezza si adatterà automaticamente */
+        }
+        .wb-note-input::placeholder { color: rgba(197, 193, 184, 0.7); font-style: italic; }
+        
         .wb-del-btn {
             background: transparent; border: none; cursor: pointer;
             color: var(--mist); font-size: 1rem; padding: 0 4px;
@@ -1632,11 +1640,27 @@
             hlText.style.background = color + '55';
             hlText.textContent = text;
 
-            const noteInput = document.createElement('input');
-            noteInput.type = 'text';
+            // Nuovo contenitore per mantenere la freccia graficamente separata dal testo
+            const noteContainer = document.createElement('div');
+            noteContainer.className = 'wb-note-container';
+
+            const arrow = document.createElement('span');
+            arrow.className = 'wb-note-arrow';
+            arrow.innerHTML = '&#8627;'; // Freccia a gomito
+
+            const noteInput = document.createElement('textarea');
             noteInput.className = 'wb-note-input';
-            noteInput.value = '→ ';
-            noteInput.placeholder = 'Aggiungi una nota…';
+            noteInput.rows = 1;
+            noteInput.placeholder = 'Scrivi i tuoi appunti qui...';
+            
+            // Magia: auto-espansione della textarea quando si va a capo
+            noteInput.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = this.scrollHeight + 'px';
+            });
+
+            noteContainer.appendChild(arrow);
+            noteContainer.appendChild(noteInput);
 
             const delBtn = document.createElement('button');
             delBtn.className = 'wb-del-btn';
@@ -1646,13 +1670,12 @@
 
             row.appendChild(swatch);
             row.appendChild(hlText);
-            row.appendChild(noteInput);
+            row.appendChild(noteContainer); // Aggiungiamo il contenitore, non più solo l'input
             row.appendChild(delBtn);
             body.appendChild(row);
 
             wbCount++;
 
-            // Gestione infallibile della visibilità del badge
             if (wbCount === 1) {
                 wbMaximize();
             } else if (!document.getElementById('smart-whiteboard').classList.contains('wb-visible')) {
@@ -1692,7 +1715,6 @@
             
             showToast('Apertura finestra di stampa...', 'success');
             
-            // 1. Costruiamo la stringa HTML stampabile, pulita e minimale
             let printContents = `
                 <div style="font-family: Arial, sans-serif; padding: 20px; color: #1C1C22; max-width: 800px; margin: 0 auto;">
                     <h2 style="font-size: 24px; color: #1A2F4F; border-bottom: 2px solid #C8A96E; padding-bottom: 10px; margin-bottom: 30px;">
@@ -1706,19 +1728,18 @@
                 const noteInputVal = row.querySelector('.wb-note-input').value.trim();
                 const color = row.querySelector('.wb-hl-swatch').style.background;
 
+                // page-break-inside: avoid; impedisce al blocco di spaccarsi a metà pagina!
+                // white-space: pre-wrap; permette di stampare fedelmente gli "a capo" inseriti nella textarea.
                 printContents += `
-                    <div style="margin-bottom: 20px; border-left: 6px solid ${color}; padding: 12px 18px; background-color: #fcfcfc;">
+                    <div style="margin-bottom: 20px; border-left: 6px solid ${color}; padding: 12px 18px; background-color: #fcfcfc; page-break-inside: avoid; break-inside: avoid;">
                         <p style="font-weight: bold; font-size: 16px; margin: 0 0 8px 0; line-height: 1.5;">${hlText}</p>
-                        <p style="font-size: 14px; color: #555; margin: 0; font-style: italic;">
-                            ${noteInputVal !== '→' && noteInputVal !== '->' ? noteInputVal : ''}
-                        </p>
+                        ${noteInputVal ? `<p style="font-size: 14px; color: #555; margin: 0; line-height: 1.6; white-space: pre-wrap;">&#8627; ${noteInputVal}</p>` : ''}
                     </div>
                 `;
             });
 
             printContents += `</div>`;
 
-            // 2. Usiamo un iframe invisibile per non bloccare i popup
             const iframe = document.createElement('iframe');
             iframe.style.position = 'fixed';
             iframe.style.right = '0';
@@ -1738,7 +1759,6 @@
             `);
             doc.close();
 
-            // 3. Rimuoviamo l'iframe pulito dopo la stampa
             setTimeout(() => { document.body.removeChild(iframe); }, 10000);
         }
         // =========================================================================
