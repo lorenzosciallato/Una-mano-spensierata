@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Una Mano Spensierata | Home</title>
+<meta name="description" content="Flashcard, riassunti e videolezioni gratuite per gli esami di Scienze della Formazione Primaria.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600;1,700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   TOKENS — invariati rispetto alla versione precedente
+============================================================ */
+:root{
+  --night:#0F1117; --ivory:#F7F4EF; --ivory-dk:#EDE9E0;
+  --gold:#C8A96E; --gold-lt:#E8D5AA; --gold-dk:#9A7A3F;
+  --navy:#1A2F4F; --navy-lt:#2A4A72;
+  --dust:#E8E4DC; --mist:#C5C1B8;
+  --ink:#1C1C22; --body:#3D3C3A; --sub:#7A7770;
+
+  --font-display:'Playfair Display', Georgia, serif;
+  --font-body:'DM Sans', system-ui, sans-serif;
+
+  --r-sm:6px; --r-md:12px; --r-lg:20px; --r-xl:32px;
+
+  --shadow-card:0 4px 24px rgba(15,17,23,0.08), 0 1px 4px rgba(15,17,23,0.04);
+  --shadow-lift:0 16px 44px rgba(15,17,23,0.16), 0 2px 8px rgba(15,17,23,0.06);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--ivory); font-family:var(--font-body); color:var(--body);
+  line-height:1.7; position:relative; overflow-x:hidden; font-size:16px;
+}
+img{display:block;max-width:100%;}
+a{color:inherit;}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation:none !important; transition:none !important;}
+}
+a:focus-visible, button:focus-visible{
+  outline:2px solid var(--gold); outline-offset:3px; border-radius:4px;
+}
+
+/* ============================================================
+   PROGRESS BAR
+============================================================ */
+#scroll-progress-container{position:fixed;top:0;left:0;width:100%;height:3px;z-index:9999;}
+#scroll-progress-bar{
+  height:100%; width:0%;
+  background:linear-gradient(90deg,var(--gold),var(--gold-lt),var(--gold));
+  background-size:200% 100%; animation:shimmer 3s linear infinite;
+  transition:width .1s linear;
+}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:0% 0}}
+
+/* ============================================================
+   BACKGROUND TEXTURE
+============================================================ */
+.grain-bg{position:fixed;inset:0;z-index:-1;background:var(--ivory);overflow:hidden;}
+.grain-bg img{width:100%;height:100%;object-fit:cover;opacity:.04;filter:grayscale(100%) sepia(.4);mix-blend-mode:multiply;}
+.grain-bg::after{
+  content:'';position:absolute;inset:0;opacity:.5;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+}
+
+/* ============================================================
+   REVEAL ON SCROLL
+============================================================ */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .8s cubic-bezier(.16,.84,.44,1),transform .8s cubic-bezier(.16,.84,.44,1);}
+.reveal.in-view{opacity:1;transform:translateY(0);}
+
+/* ============================================================
+   INK STROKE — elemento firma
+============================================================ */
+.ink-divider{display:block;width:150px;height:18px;margin:1.1rem auto;}
+.ink-divider path{
+  fill:none;stroke:url(#inkGrad);stroke-width:3;stroke-linecap:round;
+  stroke-dasharray:300;stroke-dashoffset:300;
+  animation:draw-ink 1.3s 0.5s cubic-bezier(.4,0,.2,1) forwards;
+}
+@keyframes draw-ink{to{stroke-dashoffset:0;}}
+
+.ink-underline{position:relative;text-decoration:none;}
+.ink-underline::after{
+  content:'';position:absolute;left:0;bottom:-3px;width:100%;height:2px;
+  background:var(--gold);transform:scaleX(0);transform-origin:left;
+  transition:transform .35s cubic-bezier(.2,.8,.2,1);
+}
+.ink-underline:hover::after{transform:scaleX(1);}
+
+/* ============================================================
+   HERO
+============================================================ */
+.hero{
+  min-height:94vh; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center; padding:6rem 1.5rem 5rem; position:relative;
+}
+.eyebrow{
+  font-size:.72rem; font-weight:700; letter-spacing:.28em; text-transform:uppercase;
+  color:var(--gold-dk); display:block; margin-bottom:1.4rem;
+}
+.hero-title{
+  font-family:var(--font-display); font-weight:900; color:var(--ink);
+  font-size:clamp(3rem,8.5vw,6.4rem); line-height:.98; letter-spacing:-.02em;
+}
+.hero-tagline{
+  font-family:var(--font-display); font-style:italic; font-weight:600;
+  font-size:clamp(1.3rem,2.6vw,1.75rem); color:var(--gold-dk); margin-bottom:1.4rem;
+}
+.hero-explainer{
+  max-width:520px; margin:0 auto 2.6rem; color:var(--sub); font-size:1.02rem; line-height:1.75;
+}
+.hero-actions{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:3rem;}
+.btn-primary,.btn-ghost{
+  font-family:var(--font-body); font-weight:700; font-size:.85rem; letter-spacing:.04em;
+  padding:1rem 2rem; border-radius:50px; text-decoration:none; display:inline-block;
+  transition:all .25s cubic-bezier(.2,.8,.2,1);
+}
+.btn-primary{background:var(--navy);color:#fff;box-shadow:0 10px 28px rgba(26,47,79,.25);}
+.btn-primary:hover{background:var(--navy-lt);transform:translateY(-2px);box-shadow:0 14px 36px rgba(26,47,79,.32);}
+.btn-ghost{color:var(--navy);border:1px solid var(--dust);}
+.btn-ghost:hover{border-color:var(--gold);background:rgba(200,169,110,.06);}
+
+.badges-row{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;}
+.author-badge{
+  display:inline-flex;align-items:center;gap:10px;background:#fff;padding:7px 16px 7px 7px;
+  border-radius:50px;text-decoration:none;border:1px solid var(--dust);box-shadow:var(--shadow-card);
+  transition:all .25s cubic-bezier(.2,.8,.2,1);
+}
+.author-badge:hover{transform:translateY(-3px);box-shadow:var(--shadow-lift);border-color:var(--gold);}
+.author-img{width:32px;height:32px;border-radius:50%;object-fit:cover;}
+.author-name{font-size:.8rem;font-weight:500;color:var(--ink);}
+.author-name strong{font-weight:700;}
+
+.scroll-cue{
+  position:absolute;bottom:2.2rem;left:50%;transform:translateX(-50%);
+  width:34px;height:34px;border:1.5px solid var(--mist);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;color:var(--sub);
+  text-decoration:none;font-size:1rem;animation:bounce-down 2.4s ease-in-out infinite;
+  transition:border-color .25s,color .25s;
+}
+.scroll-cue:hover{border-color:var(--gold);color:var(--gold-dk);}
+@keyframes bounce-down{0%,100%{transform:translate(-50%,0);}50%{transform:translate(-50%,8px);}}
+
+/* ============================================================
+   SECTION SHELL
+============================================================ */
+section{padding:6rem 1.5rem;}
+.section-inner{max-width:1140px;margin:0 auto;}
+.section-head{text-align:center;max-width:620px;margin:0 auto 3rem;}
+.section-head h2{
+  font-family:var(--font-display);font-weight:700;color:var(--ink);
+  font-size:clamp(1.9rem,4vw,2.7rem);line-height:1.15;margin-top:.6rem;
+}
+.section-head p{color:var(--sub);margin-top:1rem;font-size:1.02rem;line-height:1.7;}
+
+/* ============================================================
+   STUDIA — course grid
+============================================================ */
+.course-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1.1rem;}
+.course-card{
+  display:flex;align-items:flex-start;gap:1rem;background:#fff;border:1px solid var(--dust);
+  border-radius:var(--r-lg);padding:1.5rem;text-decoration:none;position:relative;overflow:hidden;
+  transition:transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s,border-color .3s;
+}
+.course-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--gold),transparent);
+  transform:scaleX(0);transform-origin:left;transition:transform .3s;
+}
+.course-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-lift);border-color:var(--gold-lt);}
+.course-card:hover::before{transform:scaleX(1);}
+.course-monogram{
+  flex-shrink:0;width:42px;height:42px;border-radius:50%;border:1.5px solid var(--gold);
+  display:flex;align-items:center;justify-content:center;font-family:var(--font-display);
+  font-weight:700;color:var(--navy);font-size:1.05rem;
+}
+.course-card-body{flex:1;}
+.course-card-body strong{display:block;font-size:.96rem;font-weight:700;color:var(--ink);line-height:1.35;}
+.cc-arrow{display:inline-block;margin-top:.4rem;font-size:.85rem;color:var(--gold-dk);transition:transform .25s;}
+.course-card:hover .cc-arrow{transform:translateX(4px);}
+
+/* ============================================================
+   METODO — dark band, layout ad articolo
+============================================================ */
+.metodo{background:var(--night);}
+.metodo .eyebrow{color:var(--gold-lt);}
+.metodo .section-head h2{color:var(--ivory);}
+.metodo .section-head p{color:var(--mist);}
+.article-pillars{max-width:740px;margin:0 auto;}
+.article-pillar{padding:2.3rem 0;border-bottom:1px solid rgba(232,213,170,.14);}
+.article-pillar:last-child{border-bottom:none;padding-bottom:0;}
+.pillar-head{display:flex;align-items:center;gap:.9rem;margin-bottom:1rem;}
+.pillar-head .pillar-icon{font-size:1.5rem;line-height:1;}
+.pillar-head-text strong{display:block;font-family:var(--font-display);font-weight:700;font-size:1.3rem;color:var(--ivory);line-height:1.3;}
+.pillar-head-text .cite{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-lt);}
+.article-pillar p{font-size:.98rem;color:var(--mist);line-height:1.85;}
+
+/* ============================================================
+   DISCLAIMER CARD — stesso stile della lezione dinamica
+============================================================ */
+.disclaimer-card{
+  background:#fff;border:1px solid var(--dust);border-radius:var(--r-xl);
+  padding:3rem;margin:0 auto 2rem;width:90%;max-width:1200px;
+  box-shadow:var(--shadow-card);
+}
+@media (max-width:700px){.disclaimer-card{padding:1.5rem;width:94%;border-radius:var(--r-lg);}}
+.disclaimer-card h3{
+  font-family:var(--font-body);font-size:.65rem;font-weight:700;
+  letter-spacing:.22em;text-transform:uppercase;color:var(--gold-dk);
+  margin-bottom:.8rem;
+}
+.disclaimer-card h3:not(:first-child){margin-top:2rem;}
+.disclaimer-card p{font-size:.82rem;color:var(--sub);line-height:1.75;}
+
+/* ============================================================
+   FOOTER
+============================================================ */
+.site-footer{text-align:center;padding:3rem 1.5rem;border-top:1px solid var(--dust);}
+.site-footer p{font-size:.72rem;color:var(--mist);letter-spacing:.1em;text-transform:uppercase;font-weight:600;}
+.site-footer strong{color:var(--sub);}
+
+@media (max-width:600px){
+  section{padding:4.5rem 1.2rem;}
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <linearGradient id="inkGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#9A7A3F"/>
+      <stop offset="50%" stop-color="#C8A96E"/>
+      <stop offset="100%" stop-color="#E8D5AA"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<div id="scroll-progress-container"><div id="scroll-progress-bar"></div></div>
+<div class="grain-bg"><img src="https://files.catbox.moe/46qh1i.jpg" alt=""></div>
+
+<!-- HERO -->
+<header class="hero">
+  <h1 class="hero-title reveal">Una Mano<br>Spensierata</h1>
+  <svg class="ink-divider reveal" viewBox="0 0 150 18" xmlns="http://www.w3.org/2000/svg">
+    <path d="M3 12 C 30 4, 55 16, 75 9 S 120 2, 147 10"/>
+  </svg>
+  <p class="hero-tagline reveal">Quello che servirebbe per studiare bene, in un posto solo.</p>
+  <p class="hero-explainer reveal">Flashcard, riassunti e videolezioni gratuite, pensate per chi deve conciliare lo studio con tutto il resto.</p>
+  <div class="hero-actions reveal">
+    <a href="#studia" class="btn-primary">Sfoglia le materie</a>
+    <a href="#metodo" class="btn-ghost">Come impara il nostro cervello?</a>
+  </div>
+  <div class="badges-row reveal">
+    <a href="https://www.instagram.com/sciallato_lorenzo/" target="_blank" class="author-badge">
+      <img src="https://files.catbox.moe/qvck5j.png" alt="Lorenzo Sciallato" class="author-img">
+      <span class="author-name">Creato da <strong>Lorenzo</strong> &copy; 2025</span>
+    </a>
+    <a href="https://chat.whatsapp.com/EaX5kr14XxHL9o3qxdDVEP?mode=gi_t" target="_blank" class="author-badge">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="" class="author-img" style="padding:8px;">
+      <span class="author-name">Entra nel <strong>Gruppo</strong></span>
+    </a>
+  </div>
+  <a href="#studia" class="scroll-cue" aria-label="Scorri verso le materie">↓</a>
+</header>
+
+<!-- STUDIA -->
+<section class="studia" id="studia">
+  <div class="section-inner">
+    <div class="section-head">
+      <span class="eyebrow reveal" id="course-count">10 materie disponibili</span>
+      <h2 class="reveal">Da dove vuoi iniziare?</h2>
+    </div>
+    <div class="course-grid" id="course-grid"></div>
+  </div>
+</section>
+
+<!-- METODO -->
+<section class="metodo" id="metodo">
+  <div class="section-inner">
+    <div class="section-head">
+      <span class="eyebrow reveal">La scienza dietro al metodo</span>
+      <h2 class="reveal">Come impara il nostro cervello?</h2>
+      <p class="reveal">Non è un caso che questa piattaforma sia fatta com'è fatta. Il modo in cui i contenuti sono divisi, perché ci sono le flashcard, perché c'è sempre un video accanto al testo: ogni scelta nasce da cinque principi di psicologia cognitiva e pedagogia, studiati da decenni. Eccoli spiegati senza tecnicismi inutili.</p>
+    </div>
+    <div class="article-pillars" id="pillars-grid"></div>
+  </div>
+</section>
+
+<!-- DISCLAIMER -->
+<div class="disclaimer-card reveal">
+  <h3>Tutela del diritto d'autore e limitazione di responsabilità</h3>
+  <p>Tutti i materiali didattici presenti all'interno del portale Una Mano Spensierata (inclusi, a titolo esemplificativo e non esaustivo: riassunti, schemi, mappe concettuali, flashcard e quiz) costituiscono una rielaborazione personale, critica e originale degli appunti universitari. Tali contenuti sono realizzati e condivisi esclusivamente per finalità didattiche, di studio e di mutuo soccorso accademico, ai sensi e nel pieno rispetto dell'Art. 70 della Legge 22 aprile 1941 n. 633 in materia di protezione del diritto d'autore. I materiali presenti sulla piattaforma hanno natura puramente integrativa e non intendono in alcun modo porsi come sostitutivi dei libri di testo ufficiali, delle dispense fornite dai docenti o della frequenza alle lezioni frontali. Si dichiara espressamente l'assenza di riproduzioni pedisseque, integrali o non autorizzate di opere intellettuali protette da copyright di terzi. L'utente fruitore solleva i gestori della piattaforma da qualsivoglia responsabilità derivante da un uso improprio del materiale fornito.</p>
+  <h3>Aiutami a tenere in ordine la piattaforma! 🛠️</h3>
+  <p>Ciao! Come sai, costruisco, aggiorno e mantengo questo sito interamente da solo. Se incappi in un refuso, in un link che non funziona, o se ti accorgi che l'audio del podcast sta dicendo qualcosa di non coerente con il resto della lezione, per favore non ignorarlo. Scrivimi subito sul nostro gruppo WhatsApp specificando l'errore o la lezione incriminata. Così posso correggere il codice o il testo in tempo reale e tenere la piattaforma pulita e affidabile per tutti gli iscritti. Questo progetto cresce anche grazie alle vostre revisioni. Grazie per l'aiuto!</p>
+</div>
+
+<footer class="site-footer">
+  <p><strong>Una Mano Spensierata</strong> &nbsp;·&nbsp; Tutti i diritti riservati &nbsp;·&nbsp; Lorenzo Sciallato &copy; 2025</p>
+</footer>
+
+<script>
+// =========================================================================
+// DATI — Materie. Oggi statico: domani questo array potrà essere generato
+// leggendo automaticamente le cartelle tematiche su GitHub (vedi prossimo step).
+// =========================================================================
+const courses = [
+  { name: "Sociologia dell'Educazione", url: "https://sites.google.com/view/una-mano-spensierata/sociologia-delleducazione?authuser=0" },
+  { name: "Psicologia dello Sviluppo", url: "https://sites.google.com/view/una-mano-spensierata/psicologia-dello-sviluppo?authuser=0" },
+  { name: "Neuropsichiatria Infantile", url: "https://sites.google.com/view/una-mano-spensierata/neuropsichiatria-infantile?authuser=0" },
+  { name: "Pedagogia Generale (Beta)", url: "https://sites.google.com/view/una-mano-spensierata/pedagogia-generale?authuser=0" },
+  { name: "Ed. Motoria (Solo Flashcard)", url: "https://sites.google.com/view/una-mano-spensierata/educazione-motoria?authuser=0" },
+  { name: "Ed. Musicale", url: "https://sites.google.com/view/una-mano-spensierata/ed-musicale?authuser=0" },
+  { name: "Appunti dei colleghi", url: "https://sites.google.com/view/una-mano-spensierata/appunti?authuser=0" },
+  { name: "Didattica Generale", url: "https://sites.google.com/view/una-mano-spensierata/didattica-generale?authuser=0" },
+  { name: "Storia dell'Educazione", url: "https://sites.google.com/view/una-mano-spensierata/storia-delleducazione?authuser=0" },
+  { name: "Storia Contemporanea", url: "https://sites.google.com/view/una-mano-spensierata/storia-contemporanea?authuser=0" }
+];
+
+const pillars = [
+  { icon:"🧠", title:"Il carico cognitivo", cite:"Sweller, 1988", body:"La memoria di lavoro — quella che usiamo per pensare attivamente, non per conservare ricordi — ha una capacità minima: pochi elementi alla volta. Sweller (1988) ha distinto tre tipi di carico mentale: quello intrinseco, cioè la difficoltà oggettiva dell'argomento; quello estraneo, generato da come il materiale è presentato (disordine, formattazione caotica, informazioni inutili); e quello pertinente, lo sforzo che serve davvero a costruire schemi di conoscenza stabili. Una buona lezione non riduce la materia, riduce il carico estraneo: elimina i fronzoli per lasciare tutta la capacità mentale disponibile al concetto vero e proprio. Per questo i contenuti sono divisi in blocchi piccoli e autonomi, invece che in un unico muro di testo." },
+  { icon:"🏋️", title:"Il recupero attivo", cite:"Roediger & Karpicke, 2006", body:"Rileggere un capitolo dà la sensazione di sapere, ma è spesso un'illusione: il cervello riconosce le parole, il che è diverso dal saperle richiamare da solo. Roediger e Karpicke (2006) hanno confrontato studenti che rileggevano più volte un testo con studenti che, dopo una sola lettura, si sforzavano di scrivere a memoria quanto ricordavano. A una settimana di distanza, chi si era esercitato a recuperare l'informazione ricordava molto di più — anche se nell'immediato la rilettura sembrava funzionare meglio. È il principio dietro ogni flashcard di questa piattaforma: non sono verifiche punitive, sono allenamento del recupero, l'unico meccanismo che rafforza davvero la traccia di memoria." },
+  { icon:"🧱", title:"Costruire, non ricevere", cite:"Piaget, 1950; Papert, 1980", body:"Piaget sosteneva che la conoscenza non si trasferisce: si costruisce, riorganizzando ciò che impariamo dentro schemi mentali che già possediamo. Il suo allievo Seymour Papert ha portato l'idea oltre, nel costruzionismo: si impara meglio quando si produce qualcosa di concreto e condivisibile — un appunto nelle proprie parole, una mappa, una sintesi — non quando ci si limita a osservare. Per questo gli strumenti di questa piattaforma (gli appunti interattivi, il confronto con l'IA sui contenuti) non si fermano a spiegare: spingono a riformulare, a fare domande, a costruire la conoscenza in prima persona invece di riceverla già pronta." },
+  { icon:"❤️", title:"La componente emotiva", cite:"Yerkes & Dodson, 1908; Goleman, 1995", body:"Lo stress non è sempre nemico dell'apprendimento: una quantità moderata di attivazione migliora la concentrazione — è la legge di Yerkes-Dodson (1908), valida da oltre un secolo. Ma oltre una certa soglia, come accade spesso nell'ansia da esame, il cortisolo in eccesso interferisce proprio con l'ippocampo, l'area cerebrale che consolida i ricordi: si studia, ma si fatica a fissare quello che si studia. Goleman (1995) ha reso popolare l'idea che la componente emotiva non sia un di più rispetto a quella cognitiva, ma parte integrante di come impariamo. Per questo ogni dettaglio della piattaforma — le illustrazioni, il ritmo delle lezioni, la cura nella scrittura — è pensato per abbassare la tensione invece di alimentarla: studiare bene non dovrebbe voler dire soffrire." },
+  { icon:"✌️", title:"Due canali, due tracce", cite:"Paivio, 1971", body:"Secondo la teoria della doppia codifica di Paivio (1971), il cervello elabora le informazioni verbali — parole, testo — e quelle visive — immagini, schemi — attraverso due canali distinti ma collegati. Quando un concetto viene codificato sia a parole sia per immagini, si creano due tracce di memoria indipendenti invece di una sola: se una si indebolisce, l'altra può comunque permettere di recuperare l'informazione. Per questo ogni lezione affianca sempre un video al testo scritto: non per ridondanza, ma perché ogni canale aggiunto è, letteralmente, un'altra strada per arrivare allo stesso ricordo." }
+];
+
+function renderCourses(){
+  const grid = document.getElementById('course-grid');
+  document.getElementById('course-count').textContent = courses.length + ' materie disponibili';
+  courses.forEach((c, i) => {
+    const a = document.createElement('a');
+    a.href = c.url; a.target = '_blank'; a.className = 'course-card reveal';
+    a.style.transitionDelay = (Math.min(i,8) * 0.05) + 's';
+    a.innerHTML = `
+      <span class="course-monogram">${c.name.trim()[0].toUpperCase()}</span>
+      <span class="course-card-body">
+        <strong>${c.name}</strong>
+        <span class="cc-arrow">Vai al corso ↗</span>
+      </span>`;
+    grid.appendChild(a);
+  });
+}
+
+function renderPillars(){
+  const grid = document.getElementById('pillars-grid');
+  pillars.forEach((p, i) => {
+    const div = document.createElement('div');
+    div.className = 'article-pillar reveal';
+    div.style.transitionDelay = (i * 0.07) + 's';
+    div.innerHTML = `
+      <div class="pillar-head">
+        <span class="pillar-icon">${p.icon}</span>
+        <span class="pillar-head-text">
+          <strong>${p.title}</strong>
+          <span class="cite">${p.cite}</span>
+        </span>
+      </div>
+      <p>${p.body}</p>`;
+    grid.appendChild(div);
+  });
+}
+
+renderCourses();
+renderPillars();
+
+// SCROLL PROGRESS
+window.addEventListener('scroll', () => {
+  const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  const scrolled = document.documentElement.scrollTop;
+  document.getElementById('scroll-progress-bar').style.width = (h > 0 ? (scrolled / h * 100) : 0) + '%';
+});
+
+// REVEAL ON SCROLL
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const revealEls = document.querySelectorAll('.reveal');
+if (reduceMotion) {
+  revealEls.forEach(el => el.classList.add('in-view'));
+} else {
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  revealEls.forEach(el => io.observe(el));
+}
+</script>
+
+</body>
+</html>
