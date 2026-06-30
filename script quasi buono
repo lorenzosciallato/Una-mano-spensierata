@@ -1,0 +1,306 @@
+import os
+import json
+import re
+import zipfile
+from bs4 import BeautifulSoup
+from groq import Groq
+from google.colab import files
+import getpass
+
+# =============================================================================
+# 1. CONFIGURAZIONE API GROQ
+# =============================================================================
+print("🔑 Inserisci la tua API Key di GROQ (inizia con gsk_...):")
+api_key = getpass.getpass()
+client = Groq(api_key=api_key)
+
+# =============================================================================
+# 2. CARICAMENTO MULTI-FILE HTML
+# =============================================================================
+print("\n📂 Carica TUTTI i file HTML delle lezioni (puoi selezionarli in massa):")
+uploaded = files.upload()
+
+html_files = {k: v for k, v in uploaded.items() if k.lower().endswith('.html')}
+
+if not html_files:
+    print("❌ ERRORE: Nessun file HTML rilevato. Riavvia la cella.")
+else:
+    print(f"\n✅ Rilevati {len(html_files)} file HTML da processare.")
+
+    # =========================================================================
+    # FUNZIONE ESTRAZIONE DATI MASTER (senza media)
+    # =========================================================================
+    def estrai_dati_master(html_content):
+        soup = BeautifulSoup(html_content, 'html.parser')
+
+        # Struttura pulita: niente podcast, video, csv, media
+        dati = {
+            "titolo_lezione": "",
+            "sottotitolo": "",
+            "materia_estratta": "",
+            "orientamento": {
+                "obiettivi": [],
+                "concetto_fondamentale": {"titolo": "", "testo": ""},
+                "nota_extra": {"titolo": "", "testo": ""},
+                "domande_autovalutazione": []
+            },
+            "punti_chiave": [],
+            "flashcards": [],
+            "riassuntone": [],
+            "assistente_ia": {
+                "nome": "Assistente IA",
+                "sottotesto": "Cosa non ti è perfettamente chiaro? Chiedimelo...",
+                "url": ""
+            },
+            "il_super_quiz": []
+        }
+
+        # --- TITOLO & SOTTOTITOLO ---
+        h1 = soup.find('h1')
+        if h1:
+            dati["titolo_lezione"] = h1.get_text(strip=True)
+
+        sub = soup.find('div', class_='subtitle')
+        if sub:
+            dati["sottotitolo"] = sub.get_text(strip=True)
+
+        title_tag = soup.find('title')
+        if title_tag:
+            dati["materia_estratta"] = title_tag.get_text(strip=True)
+
+        # --- OBIETTIVI ---
+        obj_lists = soup.select('.obj-list')
+        if len(obj_lists) > 0:
+            dati["orientamento"]["obiettivi"] = [
+                li.get_text(strip=True) for li in obj_lists[0].find_all('li') if li.get_text(strip=True)
+            ]
+
+        # --- CONCETTO FONDAMENTALE ---
+        def_box = soup.find('div', class_='definition-box')
+        if def_box:
+            strong = def_box.find('strong')
+            titolo = strong.get_text(strip=True).rstrip(':') if strong else ""
+            for br in def_box.find_all('br'):
+                br.replace_with(' ')
+            if strong:
+                strong.extract()
+            testo = def_box.get_text(strip=True)
+            dati["orientamento"]["concetto_fondamentale"] = {"titolo": titolo, "testo": testo}
+
+        # --- NOTA EXTRA ---
+        nota_extra = soup.find(
+            lambda tag: tag.name == "div" and tag.has_attr("style") and "#fdf6e3" in tag["style"].lower()
+        )
+        if nota_extra:
+            strong = nota_extra.find('strong')
+            titolo = strong.get_text(strip=True).rstrip(':') if strong else ""
+            for br in nota_extra.find_all('br'):
+                br.replace_with(' ')
+            if strong:
+                strong.extract()
+            testo = nota_extra.get_text(strip=True)
+            dati["orientamento"]["nota_extra"] = {"titolo": titolo, "testo": testo}
+
+        # --- DOMANDE AUTOVALUTAZIONE ---
+        if len(obj_lists) > 1:
+            dati["orientamento"]["domande_autovalutazione"] = [
+                li.get_text(strip=True) for li in obj_lists[1].find_all('li') if li.get_text(strip=True)
+            ]
+
+        # --- PUNTI CHIAVE ---
+        factors_js = {}
+        factors_match = re.search(r'const factorsData\s*=\s*\{(.*?)\};', html_content, re.DOTALL)
+        if factors_match:
+            pattern = r'(\w+):\s*\{\s*title:\s*["\']([^"\']+)["\'],\s*body:\s*`([^`]+)`\s*\}'
+            for key, title, body in re.findall(pattern, factors_match.group(1)):
+                factors_js[key] = {"titolo_esteso": title.strip(), "testo_modale": body.strip()}
+
+        for card in soup.select('.factor-card'):
+            onclick = card.get('onclick', '')
+            m = re.search(r"openFactor\('([^']+)'\)", onclick)
+            card_id = m.group(1) if m else ""
+            t_breve = card.find('strong')
+            sotto = card.find('small')
+            js_data = factors_js.get(card_id, {})
+            dati["punti_chiave"].append({
+                "id": card_id,
+                "titolo_breve": t_breve.get_text(strip=True) if t_breve else "",
+                "sottotitolo": sotto.get_text(strip=True) if sotto else "",
+                "titolo_esteso": js_data.get("titolo_esteso", t_breve.get_text(strip=True) if t_breve else ""),
+                "testo_modale": js_data.get("testo_modale", "")
+            })
+
+        # --- FLASHCARDS ---
+        cards_match = re.search(r'const initialCards\s*=\s*\[(.*?)\];', html_content, re.DOTALL)
+        if cards_match:
+            pairs = re.findall(r'front:\s*`([^`]+)`,\s*back:\s*`([^`]+)`', cards_match.group(1))
+            for front, back in pairs:
+                dati["flashcards"].append({"front": front.strip(), "back": back.strip()})
+
+        # --- RIASSUNTONE ---
+        riassunto = soup.find(id='source-riassunto')
+        if riassunto:
+            for h3 in riassunto.find_all('h3'):
+                testo_p = h3.find_next_sibling('p')
+                testo = testo_p.get_text(strip=True) if testo_p else ""
+                cornell = h3.find_next_sibling('div', class_='cornell-box')
+                cps = []
+                if cornell:
+                    domande = [
+                        p for p in cornell.find_all('p', class_='cornell-question')
+                        if p.get_text(strip=True) not in ("", "Check Point", "Check point:", "Check point")
+                    ]
+                    risposte = cornell.find_all('p', class_='cornell-answer')
+                    for q, a in zip(domande, risposte):
+                        cps.append({
+                            "domanda": q.get_text(strip=True),
+                            "risposta": a.get_text(strip=True).replace('Risposta: ', '').strip()
+                        })
+                dati["riassuntone"].append({
+                    "titolo": h3.get_text(strip=True),
+                    "testo": testo,
+                    "check_points": cps
+                })
+
+        # --- ASSISTENTE IA (ricerca robusta su NotebookLM) ---
+        ia_url = ""
+        ia_name = "Assistente IA"
+        ia_sub = "Cosa non ti è perfettamente chiaro? Chiedimelo..."
+
+        # 1. Cerca qualsiasi <a> con href verso notebooklm.google.com
+        for a in soup.find_all('a', href=True):
+            if 'notebooklm.google.com' in a['href']:
+                ia_url = a['href']
+                break
+
+        # 2. Fallback selettori classici
+        if not ia_url:
+            bot_link = soup.select_one('.freud-bot-container a, .ia-container a, a.btn-choice')
+            if bot_link and bot_link.has_attr('href'):
+                ia_url = bot_link['href']
+
+        if ia_url:
+            dati["assistente_ia"]["url"] = ia_url
+            # Cerca un nome vicino (h3/h2/h4 nelle vicinanze)
+            for heading in ['h3', 'h2', 'h4']:
+                tag = soup.find(heading)
+                if tag:
+                    txt = tag.get_text(strip=True)
+                    if len(txt) > 2 and len(txt) < 60:
+                        ia_name = txt
+                        break
+            # Cerca un sottotesto (primo <p> significativo)
+            for p in soup.find_all('p'):
+                ptxt = p.get_text(strip=True)
+                if 10 < len(ptxt) < 200:
+                    ia_sub = ptxt
+                    break
+
+        dati["assistente_ia"]["nome"] = ia_name
+        dati["assistente_ia"]["sottotesto"] = ia_sub
+
+        # --- TESTO PER IL QUIZ (preferisce il riassunto, fallback su tutto) ---
+        testo_quiz = ""
+        for r in dati["riassuntone"]:
+            testo_quiz += r["titolo"] + "\n\n" + r["testo"] + "\n\n"
+        if not testo_quiz.strip():
+            testo_quiz = soup.get_text(separator=' ', strip=True)
+
+        return dati, testo_quiz
+
+    # =========================================================================
+    # FUNZIONE GENERAZIONE SUPER QUIZ (30 domande, max_tokens alto)
+    # =========================================================================
+    def genera_quiz(testo_lezione, api_client):
+        prompt = f"""Sei un esperto di Instructional Design e valutazione formativa.
+Devi generare ESATTAMENTE 30 domande a risposta multipla (A-B-C-D) basate ESCLUSIVAMENTE sul testo fornito.
+Regole rigide:
+- Ogni domanda deve testare un dettaglio, data, nome, concetto o evento specifico presente nel testo.
+- Non ripetere mai domande o argomenti. Non inventare domande generiche (es. "Qual è l'importanza della storia...").
+- Le 3 opzioni errate devono essere plausibili, verosimili e mettere in difficoltà, ma devono essere chiaramente smentite dal testo.
+- La risposta corretta deve essere indicata con "corretta": true.
+
+Restituisci ESCLUSIVAMENTE un oggetto JSON valido, senza testo extra né markdown:
+{{
+    "il_super_quiz": [
+        {{
+            "domanda": "...?",
+            "opzioni": [
+                {{"testo": "...", "corretta": false, "spiegazione": "Sbagliata perché..."}},
+                {{"testo": "...", "corretta": true, "spiegazione": "Corretta perché..."}},
+                {{"testo": "...", "corretta": false, "spiegazione": "Sbagliata perché..."}},
+                {{"testo": "...", "corretta": false, "spiegazione": "Sbagliata perché..."}}
+            ]
+        }}
+    ]
+}}
+
+Testo della lezione (leggilo attentamente):
+{testo_lezione[:20000]}
+"""
+
+        chat_completion = api_client.chat.completions.create(
+            messages=[{"role": "user", "content": prompt}],
+            model="llama-3.3-70b-versatile",
+            response_format={"type": "json_object"},
+            temperature=0.3,
+            max_tokens=8192
+        )
+
+        risposta_json = json.loads(chat_completion.choices[0].message.content)
+        return risposta_json.get("il_super_quiz", [])
+
+    # =============================================================================
+    # 3. LOOP DI ELABORAZIONE BATCH
+    # =============================================================================
+    json_generati = []
+
+    for filename, contenuto in html_files.items():
+        print(f"\n{'='*50}")
+        print(f"📄 Processo: {filename}")
+        print(f"{'='*50}")
+
+        try:
+            html_content = contenuto.decode('utf-8')
+            dati, testo_quiz = estrai_dati_master(html_content)
+
+            # Generazione Super Quiz
+            print("   🧠 Generazione Super Quiz via Groq...")
+            quiz = genera_quiz(testo_quiz, client)
+            dati["il_super_quiz"] = quiz
+            print(f"   ✅ {len(quiz)} domande generate.")
+
+            # Controllo qualità
+            if len(quiz) < 30:
+                print(f"   ⚠️ ATTENZIONE: generate solo {len(quiz)}/30 domande! Il testo potrebbe essere troppo corto o il modello ha troncato.")
+            else:
+                print(f"   ✅ Verifica: tutte e 30 le domande sono presenti.")
+
+            # Salvataggio singolo JSON
+            nome_base = os.path.splitext(filename)[0]
+            output_name = nome_base + '.json'
+            with open(output_name, 'w', encoding='utf-8') as f:
+                json.dump(dati, f, ensure_ascii=False, indent=4)
+
+            json_generati.append(output_name)
+            print(f"   💾 Salvato: {output_name}")
+
+        except Exception as e:
+            print(f"   ❌ Errore durante l'elaborazione di {filename}: {e}")
+
+    # =============================================================================
+    # 4. DOWNLOAD BATCH (ZIP UNICO)
+    # =============================================================================
+    if json_generati:
+        zip_name = "lezioni_master_quiz.zip"
+        with zipfile.ZipFile(zip_name, 'w', zipfile.ZIP_DEFLATED) as zf:
+            for nome in json_generati:
+                zf.write(nome)
+
+        print(f"\n{'='*50}")
+        print(f"🎉 ELABORAZIONE COMPLETATA: {len(json_generati)} lezioni processate.")
+        print(f"🚀 Download batch in corso: {zip_name}")
+        print(f"{'='*50}")
+        files.download(zip_name)
+    else:
+        print("\n⚠️ Nessun JSON è stato generato. Controlla gli errori sopra.")
