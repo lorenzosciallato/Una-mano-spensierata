@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Una Mano Spensierata | Home</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        /* ============================================================
+           TOKEN SYSTEM — identico a lezione-template.html
+        ============================================================ */
+        :root {
+            --night:    #0F1117;
+            --ivory:    #F7F4EF;
+            --ivory-dk: #EDE9E0;
+            --gold:     #C8A96E;
+            --gold-lt:  #E8D5AA;
+            --gold-dk:  #9A7A3F;
+            --navy:     #1A2F4F;
+            --navy-lt:  #2A4A72;
+            --dust:     #E8E4DC;
+            --mist:     #C5C1B8;
+            --ink:      #1C1C22;
+            --body:     #3D3C3A;
+            --sub:      #7A7770;
+
+            --cyan:     #00D4D8;
+            --magenta:  #E8006A;
+            --yellow:   #F5D000;
+
+            --font-display: 'Playfair Display', Georgia, serif;
+            --font-body:    'DM Sans', system-ui, sans-serif;
+
+            --r-sm: 6px;
+            --r-md: 12px;
+            --r-lg: 20px;
+            --r-xl: 32px;
+
+            --shadow-card: 0 4px 24px rgba(15,17,23,0.08), 0 1px 4px rgba(15,17,23,0.04);
+            --shadow-lift: 0 12px 40px rgba(15,17,23,0.14), 0 2px 8px rgba(15,17,23,0.06);
+            --shadow-gold: 0 8px 32px rgba(200,169,110,0.25);
+        }
+
+        /* ============================================================
+           RESET & BASE
+        ============================================================ */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { height: 100%; overflow-x: hidden; scroll-behavior: smooth; }
+
+        body {
+            background-color: var(--ivory);
+            font-family: var(--font-body);
+            color: var(--body);
+            line-height: 1.7;
+            min-height: 100%;
+            position: relative;
+            padding-bottom: 100px;
+            -webkit-overflow-scrolling: touch;
+            width: 100%;
+            font-size: 16px;
+        }
+
+        /* ============================================================
+           BARRA DI PROGRESSO
+        ============================================================ */
+        #scroll-progress-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 3px;
+            background: transparent; z-index: 9999999;
+        }
+        #scroll-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold), var(--gold-lt), var(--gold));
+            background-size: 200% 100%;
+            width: 0%;
+            transition: width 0.1s linear;
+            animation: shimmer 3s infinite linear;
+        }
+        @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:0% 0} }
+
+        /* ============================================================
+           BACKGROUND
+        ============================================================ */
+        .giants-background {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; pointer-events: none; overflow: hidden;
+            background: var(--ivory);
+        }
+        .main-background-image {
+            width: 100%; height: 100%; object-fit: cover;
+            opacity: 0.04;
+            filter: grayscale(100%) sepia(0.4);
+            mix-blend-mode: multiply;
+        }
+        .giants-background::after {
+            content: '';
+            position: absolute; inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        /* ============================================================
+           HEADER
+        ============================================================ */
+        header {
+            text-align: center;
+            padding: 5rem 2rem 3rem;
+            position: relative;
+        }
+
+        h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2.8rem, 6vw, 5.2rem);
+            font-weight: 900;
+            color: var(--ink);
+            line-height: 1.07;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            font-family: var(--font-body);
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--sub);
+            margin-bottom: 2.5rem;
+        }
+
+        /* ============================================================
+           AUTHOR BADGES
+        ============================================================ */
+        .badges-row {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            padding: 0 10px;
+        }
+
+        .author-badge {
+            display: inline-flex; align-items: center; gap: 10px;
+            background: #fff;
+            padding: 8px 18px 8px 8px;
+            border-radius: 50px;
+            text-decoration: none;
+            border: 1px solid var(--dust);
+            box-shadow: var(--shadow-card);
+            transition: all 0.25s cubic-bezier(.2,.8,.2,1);
+        }
+        .author-badge:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lift);
+            border-color: var(--gold);
+        }
+        .author-img {
+            width: 36px; height: 36px; border-radius: 50%; object-fit: cover; display: block;
+        }
+        .author-name {
+            font-size: 0.82rem; font-weight: 500; color: var(--ink);
+            font-family: var(--font-body);
+        }
+        .author-name strong { font-weight: 700; }
+
+        @media (max-width: 600px) {
+            .author-img { width: 32px; height: 32px; }
+            .author-name { font-size: 0.78rem; }
+        }
+
+        /* ============================================================
+           MAIN CARD WRAPPER
+        ============================================================ */
+        .content-card {
+            background: #fff;
+            border: 1px solid var(--dust);
+            border-radius: var(--r-xl);
+            padding: 3.5rem;
+            margin: 0 auto 2rem;
+            width: 90%; max-width: 1200px;
+            position: relative;
+            box-shadow: var(--shadow-card);
+            z-index: 1;
+        }
+        @media (max-width: 700px) {
+            .content-card { padding: 1.5rem; width: 94%; border-radius: var(--r-lg); }
+        }
+
+        /* ============================================================
+           ACCORDION — MASTER
+        ============================================================ */
+        .master-accordion-item { border-bottom: none; }
+
+        .master-header {
+            display: flex; align-items: center; justify-content: space-between;
+            width: 100%;
+            background: var(--navy);
+            border: none; border-radius: var(--r-lg);
+            padding: 1.4rem 2rem;
+            cursor: pointer;
+            color: #fff;
+            font-family: var(--font-display);
+            font-size: 1.5rem; font-weight: 600;
+            transition: background 0.25s, box-shadow 0.25s;
+            box-shadow: 0 6px 24px rgba(26,47,79,0.25);
+            margin-bottom: 0;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        .master-header:hover { background: var(--navy-lt); box-shadow: 0 10px 32px rgba(26,47,79,0.32); }
+        .master-header .mh-arrow {
+            font-size: 1.2rem; opacity: 0.7; transition: transform 0.35s;
+            font-family: var(--font-body); font-weight: 300;
+        }
+        .master-header.active .mh-arrow { transform: rotate(90deg); opacity: 1; }
+
+        .master-content {
+            max-height: 0; overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0.4,0,0.2,1);
+        }
+        .master-content.open { max-height: 999999px; }
+        .master-content-inner { padding-top: 2.5rem; }
+
+        /* ============================================================
+           ACCORDION — CHAPTERS
+        ============================================================ */
+        .accordion-item { margin-bottom: 0; }
+
+        .accordion-header {
+            display: flex; align-items: center;
+            width: 100%; background: transparent; border: none;
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--dust);
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s;
+            gap: 1.5rem;
+            position: relative;
+        }
+        .accordion-header:hover .ch-title { color: var(--navy); }
+
+        .ch-number {
+            font-family: var(--font-display);
+            font-size: 4rem; font-weight: 900; line-height: 1;
+            color: var(--dust);
+            width: 70px; min-width: 70px;
+            text-align: center;
+            transition: color 0.25s;
+            user-select: none;
+            letter-spacing: -0.04em;
+        }
+        .accordion-header:hover .ch-number,
+        .accordion-header.active .ch-number { color: var(--gold); }
+
+        .ch-text { flex: 1; }
+        .ch-eyebrow {
+            font-size: 0.68rem; font-weight: 700; letter-spacing: 0.22em;
+            text-transform: uppercase; color: var(--gold-dk);
+            margin-bottom: 3px; display: block;
+        }
+        .ch-title {
+            font-family: var(--font-display);
+            font-size: clamp(1.15rem, 3vw, 1.55rem);
+            font-weight: 700; color: var(--ink);
+            line-height: 1.2;
+            transition: color 0.2s;
+        }
+
+        .ch-icon {
+            font-size: 1.2rem; color: var(--mist);
+            transition: all 0.3s; font-family: var(--font-body); font-weight: 300;
+            min-width: 24px; text-align: right;
+        }
+        .accordion-header.active .ch-icon { color: var(--navy); transform: rotate(45deg); }
+
+        .accordion-content {
+            max-height: 0; overflow: hidden;
+            transition: max-height 0.45s cubic-bezier(0.4,0,0.2,1), opacity 0.3s;
+            padding: 0; opacity: 0;
+        }
+        .accordion-content.active {
+            max-height: 20000px; opacity: 1;
+            padding-top: 2rem; padding-bottom: 2.5rem;
+            overflow: visible;
+        }
+
+        @media (max-width: 600px) {
+            .ch-number { font-size: 2.8rem; width: 50px; min-width: 50px; }
+            .ch-title { font-size: 1.1rem; }
+        }
+
+        .btn-close-section {
+            width: 100%; margin-top: 2rem; padding: 14px;
+            background: transparent; border: 1px solid var(--dust);
+            border-radius: var(--r-md); font-family: var(--font-body);
+            font-weight: 600; font-size: 0.78rem; letter-spacing: 0.12em;
+            text-transform: uppercase; color: var(--sub);
+            cursor: pointer; transition: all 0.2s;
+        }
+        .btn-close-section:hover { border-color: var(--navy); color: var(--navy); background: rgba(26,47,79,0.03); }
+
+        /* ============================================================
+           OBJ BOX (intro testuale di sezione)
+        ============================================================ */
+        .obj-box {
+            background: linear-gradient(135deg, #F0F6FF 0%, #E8F0FA 100%);
+            border: 1px solid rgba(26,47,79,0.12);
+            border-left: 4px solid var(--navy);
+            padding: 1.8rem;
+            border-radius: 0 var(--r-md) var(--r-md) 0;
+            margin-bottom: 2rem;
+        }
+        .obj-box strong {
+            font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
+            color: var(--navy); display: block; margin-bottom: 0.8rem;
+        }
+        .obj-box p { color: var(--body); line-height: 1.8; }
+
+        /* ============================================================
+           CORSI — COURSE GRID (stile factor-card)
+        ============================================================ */
+        .factors-intro {
+            font-size: 0.72rem; font-weight: 700; letter-spacing: 0.18em;
+            text-transform: uppercase; color: var(--sub);
+            margin-bottom: 1rem; display: block;
+        }
+        .factors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 1rem; margin: 0 0 1rem;
+        }
+        .factor-card, .course-card {
+            background: var(--ivory);
+            border: 1px solid var(--dust);
+            padding: 1.4rem;
+            border-radius: var(--r-md);
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(.2,.8,.2,1);
+            position: relative;
+            overflow: hidden;
+        }
+        .factor-card::before, .course-card::before {
+            content: '';
+            position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, var(--gold), transparent);
+            transform: scaleX(0); transform-origin: left;
+            transition: transform 0.3s;
+        }
+        .factor-card:hover, .course-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); border-color: var(--gold-lt); }
+        .factor-card:hover::before, .course-card:hover::before { transform: scaleX(1); }
+        .factor-card strong, .course-card strong { display: block; font-size: 0.92rem; font-weight: 700; color: var(--ink); margin-bottom: 0.4rem; }
+        .factor-card small, .course-card small { font-size: 0.8rem; color: var(--sub); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .factor-card .fc-plus { position: absolute; top: 12px; right: 14px; font-size: 1.1rem; color: var(--gold); opacity: 0.6; font-family: var(--font-body); font-weight: 300; }
+
+        .course-card { text-decoration: none; display: block; }
+        .course-card .cc-arrow {
+            position: absolute; top: 12px; right: 14px;
+            font-size: 1rem; color: var(--gold); opacity: 0.6;
+            transition: transform 0.25s;
+        }
+        .course-card:hover .cc-arrow { transform: translateX(3px); }
+
+        /* ============================================================
+           MODAL — APPROFONDIMENTI (stile lezione)
+        ============================================================ */
+        #factor-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15,17,23,0.75); backdrop-filter: blur(6px);
+            z-index: 99999; display: none; justify-content: center; align-items: center; padding: 20px;
+        }
+        #factor-modal.open { display: flex; }
+        .modal-paper {
+            background: #fff; width: 100%; max-width: 580px;
+            padding: 2.5rem; border-radius: var(--r-xl);
+            position: relative; max-height: 88vh; overflow-y: auto;
+            line-height: 1.8; box-shadow: 0 40px 80px rgba(0,0,0,0.3);
+            -webkit-overflow-scrolling: touch;
+            border-top: 4px solid var(--gold);
+        }
+        #m-title {
+            font-family: var(--font-display); font-size: 1.6rem; font-weight: 700;
+            color: var(--ink); margin-bottom: 1rem;
+        }
+        #m-body { color: var(--body); font-size: 0.95rem; }
+        .close-modal {
+            position: absolute; top: 16px; right: 20px;
+            font-size: 1.6rem; cursor: pointer; color: var(--mist);
+            transition: color 0.2s; font-family: var(--font-body); font-weight: 300;
+            line-height: 1;
+        }
+        .close-modal:hover { color: var(--navy); }
+
+        /* ============================================================
+           TEXT CONTENT BOX
+        ============================================================ */
+        .text-content-box {
+            background: transparent;
+            color: var(--body); line-height: 1.85; font-size: 1.02rem;
+        }
+        .text-content-box p { margin-bottom: 1rem; }
+
+        .cornell-box {
+            background: linear-gradient(135deg, #FFFDF7, #FFF8E8);
+            border-left: 3px solid var(--gold);
+            padding: 1.5rem;
+            margin: 1.8rem 0 0.5rem;
+            border-radius: 0 var(--r-md) var(--r-md) 0;
+        }
+        .cornell-box .cp-label {
+            font-size: 0.65rem; font-weight: 700; letter-spacing: 0.2em;
+            text-transform: uppercase; color: var(--gold-dk); margin-bottom: 0.8rem;
+            display: block;
+        }
+        .cornell-box p { margin: 0; font-size: 0.92rem; line-height: 1.75; color: var(--body); }
+
+        /* ============================================================
+           FOOTER SITEMARK
+        ============================================================ */
+        .site-footer {
+            text-align: center; padding: 2rem 1rem;
+            font-size: 0.72rem; color: var(--mist);
+            letter-spacing: 0.12em; text-transform: uppercase;
+            font-weight: 600;
+        }
+        .site-footer strong { color: var(--sub); }
+    </style>
+</head>
+<body>
+
+    <!-- Progress Bar -->
+    <div id="scroll-progress-container">
+        <div id="scroll-progress-bar"></div>
+    </div>
+
+    <!-- Background -->
+    <div class="giants-background">
+        <img class="main-background-image" src="https://files.catbox.moe/46qh1i.jpg" alt="">
+    </div>
+
+    <!-- Modal — Teorie dell'apprendimento -->
+    <div id="factor-modal" onclick="closeModal(event)">
+        <div class="modal-paper" onclick="event.stopPropagation()">
+            <span class="close-modal" onclick="closeModalDirect()">&times;</span>
+            <div id="m-title"></div>
+            <div id="m-body"></div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <h1>Una Mano Spensierata</h1>
+        <div class="subtitle">La conoscenza è di tutti</div>
+
+        <div class="badges-row">
+            <a href="https://www.instagram.com/sciallato_lorenzo/" target="_blank" class="author-badge">
+                <img src="https://files.catbox.moe/qvck5j.png" alt="Lorenzo Sciallato" class="author-img">
+                <span class="author-name">Creato da <strong>Lorenzo</strong> &copy; 2025</span>
+            </a>
+            <a href="https://chat.whatsapp.com/EaX5kr14XxHL9o3qxdDVEP?mode=gi_t" target="_blank" class="author-badge">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="Gruppo WhatsApp" class="author-img" style="padding:10px;">
+                <span class="author-name">Entra nel <strong>Gruppo</strong></span>
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Content Card -->
+    <div class="content-card">
+
+        <div class="master-accordion-item">
+            <button class="master-header" id="master-toggle-btn" onclick="toggleMaster()">
+                <span>Inizia</span>
+                <span class="mh-arrow">→</span>
+            </button>
+
+            <div class="master-content" id="master-content">
+                <div class="master-content-inner">
+
+                    <!-- 01. STUDIA -->
+                    <div class="accordion-item">
+                        <button class="accordion-header">
+                            <span class="ch-number">01</span>
+                            <span class="ch-text">
+                                <span class="ch-eyebrow">Risorse</span>
+                                <span class="ch-title">Studia</span>
+                            </span>
+                            <span class="ch-icon">+</span>
+                        </button>
+                        <div class="accordion-content">
+
+                            <div class="factors-grid">
+                                <a href="https://sites.google.com/view/una-mano-spensierata/sociologia-delleducazione?authuser=0" class="course-card"><span class="cc-arrow">↗</span><strong>Sociologia dell'Educazione</strong></a>
+                                <a href="https://sites.google.com/view/una-mano-spensierata/psicologia-dello-sviluppo?authuser=0" class="course-card"><span class="cc-arrow">↗</span><strong>Psicologia dello Sviluppo</strong></a>
+                                <a href="https://sites.google.com/view/una-mano-spensierata/neuropsichiatria-infantile?authuser=0" class="course-card"><span class="cc-arrow">↗</span><strong>Neuropsichiatria Infantile </strong></a>
+                                <a href="https://sites.google.com/view/una-mano-spensierata/pedagogia-generale?authuser=0" class="course-card"><span class="cc-arrow">↗</span><strong>Pedagogia Generale (Beta)</strong></a>
+                                <a href="https://sites.google.com/view/una-mano-spensierata/educazione-motoria?authuser=0" class="course-card"><span class="cc-arrow">↗</span><strong>Ed. Motoria (Solo Flashcard)</strong></a>
+                                <a href="https://sites.google.com/view/una-mano-spensierata/ed-musicale?authuser=0" class="course-card"><span class="cc-arrow">↗</span><strong>Ed. Musicale </strong></a>
+                                <a href="https://sites.google.com/view/una-mano-spensierata/appunti?authuser=0" class="course-card"><span class="cc-arrow">↗</span><strong>Appunti dei colleghi</strong></a>
+                                <a href="https://sites.google.com/view/una-mano-spensierata/didattica-generale?authuser=0" class="course-card"><span class="cc-arrow">↗</span><strong>Didattica Generale </strong></a>
+                                <a href="https://sites.google.com/view/una-mano-spensierata/storia-delleducazione?authuser=0" class="course-card"><span class="cc-arrow">↗</span><strong>Storia dell'Educazione </strong></a>
+                                <a href="https://sites.google.com/view/una-mano-spensierata/storia-contemporanea?authuser=0" class="course-card"><span class="cc-arrow">↗</span><strong>Storia Contemporanea</strong></a>
+                            </div>
+
+                            <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi ▲</button>
+                        </div>
+                    </div>
+
+                    <!-- 02. CHI SONO E PERCHÉ -->
+                    <div class="accordion-item">
+                        <button class="accordion-header">
+                            <span class="ch-number">02</span>
+                            <span class="ch-text">
+                                <span class="ch-eyebrow">Missione</span>
+                                <span class="ch-title">Chi sono e Perché</span>
+                            </span>
+                            <span class="ch-icon">+</span>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="text-content-box">
+                                <p>Ciao! Sono <strong>Lorenzo</strong>. </p> <p> Ho creato questo sito per rispondere a una sfida comune: <strong>conciliare studio e lavoro</strong>, un ostacolo che troppo spesso allontana le persone dal sapere e dal miglioramento delle proprie condizioni di vita.</p>
+
+                                <p>Credo fermamente che <strong>la conoscenza sia un diritto di tutti</strong>.</p> <p> Per me, rendere i contenuti accessibili non significa "semplificare" o svalutare l'insegnamento universitario, ma offrire una <em>porta d'accesso</em> al sapere.</p> <p> Un punto di partenza <strong> davvero </strong> uguale per tutti. </p>
+
+                                <p>Questo spazio è per te, per i tuoi <strong>obiettivi</strong> e per la tua crescita.</p> <p> Buono studio! Ci vediamo all'esame. </p>
+
+                                <div class="cornell-box">
+                                    <span class="cp-label">Nota importante</span>
+                                    <p><strong>⚠️ Nota importante:</strong> I contenuti presenti su questa piattaforma nascono come strumenti di supporto per facilitare la comprensione e la memorizzazione. Essi sono da intendersi come integrativi e <strong>non sostituiscono</strong> in alcun modo i libri di testo ufficiali, le dispense dei professori o la frequenza alle lezioni universitarie.</p>
+                                </div>
+                            </div>
+                            <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi ▲</button>
+                        </div>
+                    </div>
+
+                    <!-- 03. TEORIE DELL'APPRENDIMENTO -->
+                    <div class="accordion-item">
+                        <button class="accordion-header">
+                            <span class="ch-number">03</span>
+                            <span class="ch-text">
+                                <span class="ch-eyebrow">Metodo</span>
+                                <span class="ch-title">Teorie dell'Apprendimento</span>
+                            </span>
+                            <span class="ch-icon">+</span>
+                        </button>
+                        <div class="accordion-content">
+
+                            <div class="obj-box">
+                                <strong>I Pilastri Scientifici del Metodo</strong>
+                                <p>Ogni elemento di questa piattaforma è progettato per allinearsi con il funzionamento biologico della memoria. Clicca per scoprire come:</p>
+                            </div>
+
+                            <span class="factors-intro">Punti chiave — clicca per approfondire</span>
+                            <div class="factors-grid" id="dyn-teorie"></div>
+
+                            <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi ▲</button>
+                        </div>
+                    </div>
+
+                </div><!-- /master-content-inner -->
+            </div><!-- /master-content -->
+        </div><!-- /master-accordion-item -->
+
+    </div><!-- /content-card -->
+
+    <footer class="site-footer">
+        <strong>Una Mano Spensierata</strong> &nbsp;·&nbsp; Tutti i diritti riservati &nbsp;·&nbsp; Lorenzo Sciallato &copy; 2025
+    </footer>
+
+    <!-- ================================================================
+         JAVASCRIPT
+    ================================================================ -->
+    <script>
+        // =========================================================================
+        // DATI — Teorie dell'Apprendimento (testo verbatim dalla home originale)
+        // =========================================================================
+        const teorieData = {
+            cognitivo: {
+                title: "🧠 Gestione del Carico Cognitivo",
+                sub: "Sweller, 1988",
+                body: `<p><strong>(Sweller, 1988):</strong> L'informazione è segmentata in "chunk" (blocchi) per evitare il sovraccarico della memoria di lavoro e facilitare l'assimilazione immediata (Miller, 1956).</p>`
+            },
+            recall: {
+                title: "🏋️ Testing Effect & Active Recall",
+                sub: "Roediger & Karpicke, 2006",
+                body: `<p><strong>(Roediger & Karpicke, 2006):</strong> Le flashcard non servono solo a "ripassare", ma a costringere il cervello a recuperare attivamente l'informazione, rafforzando le tracce mnestiche molto più della rilettura passiva.</p>`
+            },
+            costruttivismo: {
+                title: "🧱 Costruttivismo Interattivo",
+                sub: "Piaget, 1950; Papert, 1980",
+                body: `<p><strong>(Piaget, 1950; Papert, 1980):</strong> Non sei un contenitore da riempire. Attraverso il widget degli appunti e l'interazione con l'IA, costruisci attivamente la tua conoscenza invece di subirla passivamente.</p>`
+            },
+            emotiva: {
+                title: "❤️ Regolazione Emotiva",
+                sub: "Goleman, 1995",
+                body: `<p><strong>(Goleman, 1995):</strong> L'intelligenza emotiva è la base dello studio. Creiamo un ambiente a bassa tensione (Low-Stakes Testing) per favorire la plasticità neurale e la curiosità.</p>`
+            },
+            dualcoding: {
+                title: "✌️ Dual Coding Theory",
+                sub: "Paivio, 1971",
+                body: `<p><strong>(Paivio, 1971):</strong> Il cervello processa informazioni verbali e visive in canali separati. Usandoli entrambi (Video + Testo), raddoppiamo la probabilità che il concetto venga memorizzato.</p>`
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const teorieContainer = document.getElementById('dyn-teorie');
+            Object.keys(teorieData).forEach(key => {
+                const t = teorieData[key];
+                const card = document.createElement('div');
+                card.className = 'factor-card';
+                card.setAttribute('onclick', `openFactor('${key}')`);
+                card.innerHTML = `<span class="fc-plus">+</span><strong>${t.title}</strong><small>${t.sub}</small>`;
+                teorieContainer.appendChild(card);
+            });
+
+            setupAccordions();
+        });
+
+        // =========================================================================
+        // MASTER ACCORDION
+        // =========================================================================
+        function toggleMaster() {
+            const btn = document.getElementById('master-toggle-btn');
+            const content = document.getElementById('master-content');
+            btn.classList.toggle('active');
+            content.classList.toggle('open');
+        }
+
+        // =========================================================================
+        // CHAPTER ACCORDIONS
+        // =========================================================================
+        function setupAccordions() {
+            const accs = document.querySelectorAll('.accordion-header');
+            accs.forEach(acc => {
+                acc.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    this.classList.toggle('active');
+                    const panel = this.nextElementSibling;
+                    const icon = this.querySelector('.ch-icon');
+                    if (panel.classList.contains('active')) {
+                        panel.style.maxHeight = null;
+                        panel.classList.remove('active');
+                        if (icon) icon.textContent = '+';
+                    } else {
+                        panel.classList.add('active');
+                        panel.style.maxHeight = panel.scrollHeight + 5000 + 'px';
+                        if (icon) icon.textContent = '−';
+                    }
+                });
+            });
+        }
+
+        function closeThisSection(btn) {
+            const content = btn.parentElement;
+            const header = content.previousElementSibling;
+            header.click();
+            header.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // =========================================================================
+        // SCROLL PROGRESS
+        // =========================================================================
+        window.onscroll = () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            document.getElementById('scroll-progress-bar').style.width = (winScroll / height * 100) + '%';
+        };
+
+        // =========================================================================
+        // MODAL — TEORIE DELL'APPRENDIMENTO
+        // =========================================================================
+        function openFactor(key) {
+            const t = teorieData[key];
+            document.getElementById('m-title').innerText = t.title;
+            document.getElementById('m-body').innerHTML = t.body;
+            document.getElementById('factor-modal').classList.add('open');
+        }
+        function closeModalDirect() { document.getElementById('factor-modal').classList.remove('open'); }
+        function closeModal(e) { if (e.target.id === 'factor-modal') closeModalDirect(); }
+    </script>
+
+</body>
+</html>
