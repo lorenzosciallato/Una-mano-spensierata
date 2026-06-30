@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Una Mano Spensierata | Indice Lezioni</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        /* ============================================================
+           TOKEN SYSTEM — identico a lezione-template.html / index.html
+        ============================================================ */
+        :root {
+            --night:    #0F1117;
+            --ivory:    #F7F4EF;
+            --ivory-dk: #EDE9E0;
+            --gold:     #C8A96E;
+            --gold-lt:  #E8D5AA;
+            --gold-dk:  #9A7A3F;
+            --navy:     #1A2F4F;
+            --navy-lt:  #2A4A72;
+            --dust:     #E8E4DC;
+            --mist:     #C5C1B8;
+            --ink:      #1C1C22;
+            --body:     #3D3C3A;
+            --sub:      #7A7770;
+
+            --font-display: 'Playfair Display', Georgia, serif;
+            --font-body:    'DM Sans', system-ui, sans-serif;
+
+            --r-sm: 6px;
+            --r-md: 12px;
+            --r-lg: 20px;
+            --r-xl: 32px;
+
+            --shadow-card: 0 4px 24px rgba(15,17,23,0.08), 0 1px 4px rgba(15,17,23,0.04);
+            --shadow-lift: 0 12px 40px rgba(15,17,23,0.14), 0 2px 8px rgba(15,17,23,0.06);
+        }
+
+        /* ============================================================
+           RESET & BASE
+        ============================================================ */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { height: 100%; overflow-x: hidden; scroll-behavior: smooth; }
+
+        body {
+            background-color: var(--ivory);
+            font-family: var(--font-body);
+            color: var(--body);
+            line-height: 1.7;
+            min-height: 100%;
+            position: relative;
+            padding-bottom: 100px;
+            -webkit-overflow-scrolling: touch;
+            width: 100%;
+            font-size: 16px;
+        }
+
+        /* ============================================================
+           BARRA DI PROGRESSO
+        ============================================================ */
+        #scroll-progress-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 3px;
+            background: transparent; z-index: 9999999;
+        }
+        #scroll-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold), var(--gold-lt), var(--gold));
+            background-size: 200% 100%;
+            width: 0%;
+            transition: width 0.1s linear;
+            animation: shimmer 3s infinite linear;
+        }
+        @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:0% 0} }
+
+        /* ============================================================
+           BACKGROUND (immagine dinamica da JSON, con fallback)
+        ============================================================ */
+        .giants-background {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; pointer-events: none; overflow: hidden;
+            background: var(--ivory);
+        }
+        .main-background-image {
+            width: 100%; height: 100%; object-fit: cover;
+            opacity: 0.04;
+            filter: grayscale(100%) sepia(0.4);
+            mix-blend-mode: multiply;
+            display: none;
+        }
+        .giants-background::after {
+            content: '';
+            position: absolute; inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        /* ============================================================
+           HEADER
+        ============================================================ */
+        header {
+            text-align: center;
+            padding: 5rem 2rem 3rem;
+            position: relative;
+        }
+
+        h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2.8rem, 6vw, 5.2rem);
+            font-weight: 900;
+            color: var(--ink);
+            line-height: 1.07;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            font-family: var(--font-body);
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--sub);
+            margin-bottom: 2.5rem;
+        }
+
+        /* ============================================================
+           AUTHOR / NAV BADGES
+        ============================================================ */
+        .badges-row {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            padding: 0 10px;
+            margin-bottom: 1rem;
+        }
+
+        .author-badge {
+            display: inline-flex; align-items: center; gap: 10px;
+            background: #fff;
+            padding: 8px 18px 8px 8px;
+            border-radius: 50px;
+            text-decoration: none;
+            border: 1px solid var(--dust);
+            box-shadow: var(--shadow-card);
+            transition: all 0.25s cubic-bezier(.2,.8,.2,1);
+        }
+        .author-badge:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lift);
+            border-color: var(--gold);
+        }
+        .author-badge.primary { background: var(--navy); border-color: var(--navy); }
+        .author-badge.primary .author-name { color: #fff; }
+        .author-img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; display: block; }
+        .author-name { font-size: 0.82rem; font-weight: 500; color: var(--ink); font-family: var(--font-body); }
+        .author-name strong { font-weight: 700; }
+
+        /* ============================================================
+           LANGUAGE SELECTOR (identico a lezione-template.html)
+        ============================================================ */
+        #custom-lang-selector { display: none; }
+        #custom-lang-selector.loaded {
+            display: inline-flex; flex-direction: column; align-items: center;
+            background: #fff;
+            border: 1px solid var(--dust);
+            border-radius: var(--r-md);
+            padding: 6px 14px;
+            margin-top: 0.5rem;
+            vertical-align: middle;
+            position: relative;
+            box-shadow: var(--shadow-card);
+            z-index: 999999;
+        }
+        #lang-toggle-btn {
+            background: transparent; border: none; color: var(--navy);
+            font-size: 13px; font-weight: 700; cursor: pointer; text-transform: uppercase;
+            letter-spacing: 0.12em;
+            font-family: var(--font-body); outline: none;
+        }
+        #lang-loading { font-size: 18px; animation: spin 1s linear infinite; margin-bottom: 5px; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        .lang-options {
+            display: none; position: absolute; top: 110%; right: 0;
+            background: #fff; border: 1px solid var(--dust);
+            border-radius: var(--r-lg);
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px; padding: 14px;
+            box-shadow: var(--shadow-lift);
+            min-width: 240px;
+        }
+        .lang-options.show { display: grid; }
+        .lang-options button {
+            background: transparent; border: 1px solid transparent; padding: 6px;
+            cursor: pointer; border-radius: var(--r-sm); font-size: 22px; transition: 0.2s;
+        }
+        .lang-options button.active-lang { background: rgba(200,169,110,0.12); border-color: var(--gold); }
+        .lang-options button:hover { transform: scale(1.15); }
+        .skiptranslate { display: none !important; }
+        body { top: 0 !important; }
+        #goog-gt-tt, .goog-te-balloon-frame { display: none !important; }
+        .goog-text-highlight { background: transparent !important; box-shadow: none !important; border: none !important; }
+        @media (max-width: 600px) {
+            #custom-lang-selector.loaded { display: flex; margin: 1rem auto 5px auto; width: max-content; }
+            .lang-options { right: 50%; transform: translateX(50%); }
+        }
+
+        #translation-disclaimer {
+            display: none;
+            background: #FFFBEA; color: #7A6220; padding: 10px 16px; border-radius: var(--r-md);
+            margin: 12px auto 0; font-size: 0.8rem; border: 1px solid #F0E08A;
+            max-width: 680px;
+        }
+
+        /* ============================================================
+           MAIN CARD WRAPPER
+        ============================================================ */
+        .content-card {
+            background: #fff;
+            border: 1px solid var(--dust);
+            border-radius: var(--r-xl);
+            padding: 3.5rem;
+            margin: 0 auto 2rem;
+            width: 90%; max-width: 900px;
+            position: relative;
+            box-shadow: var(--shadow-card);
+            z-index: 1;
+        }
+        @media (max-width: 700px) {
+            .content-card { padding: 1.5rem; width: 94%; border-radius: var(--r-lg); }
+        }
+
+        /* ============================================================
+           ACCORDION — MASTER ("Esplora Indice")
+        ============================================================ */
+        .master-header {
+            display: flex; align-items: center; justify-content: space-between;
+            width: 100%;
+            background: var(--navy);
+            border: none; border-radius: var(--r-lg);
+            padding: 1.4rem 2rem;
+            cursor: pointer;
+            color: #fff;
+            font-family: var(--font-display);
+            font-size: 1.5rem; font-weight: 600;
+            transition: background 0.25s, box-shadow 0.25s;
+            box-shadow: 0 6px 24px rgba(26,47,79,0.25);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        .master-header:hover { background: var(--navy-lt); box-shadow: 0 10px 32px rgba(26,47,79,0.32); }
+        .master-header .mh-arrow {
+            font-size: 1.2rem; opacity: 0.7; transition: transform 0.35s;
+            font-family: var(--font-body); font-weight: 300;
+        }
+        .master-header.active .mh-arrow { transform: rotate(90deg); opacity: 1; }
+
+        .master-content {
+            max-height: 0; overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0.4,0,0.2,1);
+        }
+        .master-content.open { max-height: 999999px; }
+        .master-content-inner { padding-top: 2.5rem; }
+
+        .btn-close-section {
+            width: 100%; margin-top: 2rem; padding: 14px;
+            background: transparent; border: 1px solid var(--dust);
+            border-radius: var(--r-md); font-family: var(--font-body);
+            font-weight: 600; font-size: 0.78rem; letter-spacing: 0.12em;
+            text-transform: uppercase; color: var(--sub);
+            cursor: pointer; transition: all 0.2s;
+        }
+        .btn-close-section:hover { border-color: var(--navy); color: var(--navy); background: rgba(26,47,79,0.03); }
+
+        /* ============================================================
+           LESSON LIST — generato dinamicamente dal JSON
+        ============================================================ */
+        .lesson-list { display: flex; flex-direction: column; gap: 1rem; }
+
+        .lesson-card {
+            display: grid;
+            grid-template-columns: 90px 1fr auto;
+            align-items: stretch;
+            background: var(--ivory);
+            border: 1px solid var(--dust);
+            border-radius: var(--r-md);
+            overflow: hidden;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.25s cubic-bezier(.2,.8,.2,1);
+        }
+        .lesson-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lift); border-color: var(--gold-lt); }
+
+        .lesson-number {
+            background: var(--navy); color: #fff;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            padding: 1rem;
+        }
+        .lesson-number .ln-label {
+            font-size: 0.62rem; font-family: var(--font-body); font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.14em; opacity: 0.75; margin-bottom: 2px;
+        }
+        .lesson-number .ln-num {
+            font-family: var(--font-display); font-size: 2.1rem; font-weight: 900; line-height: 1;
+        }
+
+        .lesson-content { padding: 1.2rem 1.8rem; display: flex; align-items: center; }
+        .lesson-content h3 {
+            font-family: var(--font-body); font-size: 1.02rem; font-weight: 500;
+            color: var(--ink); margin: 0; line-height: 1.45;
+        }
+
+        .lesson-arrow {
+            padding-right: 1.8rem; display: flex; align-items: center;
+            font-size: 1.5rem; color: var(--gold); opacity: 0.65;
+            transition: transform 0.25s, color 0.25s;
+        }
+        .lesson-card:hover .lesson-arrow { transform: translateX(4px); color: var(--gold-dk); }
+
+        .lesson-empty {
+            text-align: center; padding: 2rem 1rem; color: var(--sub);
+            font-size: 0.9rem; font-style: italic;
+        }
+
+        @media (max-width: 600px) {
+            .lesson-card { grid-template-columns: 68px 1fr; }
+            .lesson-arrow { display: none; }
+            .lesson-number .ln-num { font-size: 1.7rem; }
+        }
+
+        /* ============================================================
+           FOOTER SITEMARK
+        ============================================================ */
+        .site-footer {
+            text-align: center; padding: 2rem 1rem;
+            font-size: 0.72rem; color: var(--mist);
+            letter-spacing: 0.12em; text-transform: uppercase;
+            font-weight: 600;
+        }
+        .site-footer strong { color: var(--sub); }
+    </style>
+</head>
+<body>
+
+    <!-- Progress Bar -->
+    <div id="scroll-progress-container">
+        <div id="scroll-progress-bar"></div>
+    </div>
+
+    <!-- Background -->
+    <div class="giants-background">
+        <img id="bg-image" class="main-background-image" src="" alt="">
+    </div>
+
+    <!-- Header -->
+    <header>
+        <h1 id="dyn-title">Caricamento<em>…</em></h1>
+        <div class="subtitle" id="dyn-subtitle">Attendere</div>
+
+        <div id="translation-disclaimer">🌍 Nota: traduzione automatica via IA. Alta accuratezza, possibili sfumature perse.</div>
+
+        <div class="badges-row">
+            <a href="#" class="author-badge primary">
+                <span class="author-name" style="padding: 4px 6px;">🏠 Torna alla Home</span>
+            </a>
+            <a href="https://www.instagram.com/sciallato_lorenzo/" target="_blank" class="author-badge">
+                <img src="https://files.catbox.moe/qvck5j.png" alt="Lorenzo Sciallato" class="author-img">
+                <span class="author-name">Creato da <strong>Lorenzo</strong> &copy; 2025</span>
+            </a>
+            <a href="https://chat.whatsapp.com/EaX5kr14XxHL9o3qxdDVEP?mode=gi_t" target="_blank" class="author-badge">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="Gruppo WhatsApp" class="author-img" style="padding:10px;">
+                <span class="author-name">Entra nel <strong>Gruppo</strong></span>
+            </a>
+        </div>
+
+        <div id="google_translate_element" style="display:none;"></div>
+        <div id="custom-lang-selector" class="notranslate">
+            <div id="lang-loading" style="display:none;">⏳</div>
+            <button id="lang-toggle-btn" onclick="toggleLangMenu()">
+                <span id="lang-label">🌐 Lingua</span> <small id="lang-arrow">▼</small>
+            </button>
+            <div class="lang-options" id="lang-options-menu">
+                <button onclick="triggerTranslation('it', this)" title="Italiano" class="active-lang">🇮🇹</button>
+                <button onclick="triggerTranslation('en', this)" title="English">🇬🇧</button>
+                <button onclick="triggerTranslation('fr', this)" title="Français">🇫🇷</button>
+                <button onclick="triggerTranslation('de', this)" title="Deutsch">🇩🇪</button>
+                <button onclick="triggerTranslation('es', this)" title="Español">🇪🇸</button>
+                <button onclick="triggerTranslation('bg', this)" title="Български">🇧🇬</button>
+                <button onclick="triggerTranslation('pl', this)" title="Polski">🇵🇱</button>
+                <button onclick="triggerTranslation('el', this)" title="Ελληνικά">🇬🇷</button>
+                <button onclick="triggerTranslation('lt', this)" title="Lietuvių">🇱🇹</button>
+                <button onclick="triggerTranslation('da', this)" title="Dansk">🇩🇰</button>
+                <button onclick="triggerTranslation('pt', this)" title="Português">🇵🇹</button>
+                <button onclick="triggerTranslation('zh-CN', this)" title="中文">🇨🇳</button>
+                <button onclick="triggerTranslation('ar', this)" title="العربية">🇸🇦</button>
+                <button onclick="triggerTranslation('hi', this)" title="हिन्दी">🇮🇳</button>
+                <button onclick="triggerTranslation('ru', this)" title="Русский">🇷🇺</button>
+                <button onclick="triggerTranslation('ja', this)" title="日本語">🇯🇵</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Card -->
+    <div class="content-card">
+        <button class="master-header" id="master-toggle-btn" onclick="toggleMaster()">
+            <span id="master-toggle-label">Esplora Indice</span>
+            <span class="mh-arrow">→</span>
+        </button>
+
+        <div class="master-content" id="master-content">
+            <div class="master-content-inner">
+                <div class="lesson-list" id="dyn-lesson-list">
+                    <!-- Le lesson-card vengono generate qui via JS, una per ogni voce dell'array "lezioni" nel JSON -->
+                </div>
+                <button class="btn-close-section" onclick="toggleMaster()">Chiudi Indice ▲</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <strong>Una Mano Spensierata</strong> &nbsp;·&nbsp; Tutti i diritti riservati &nbsp;·&nbsp; Lorenzo Sciallato &copy; 2025
+    </footer>
+
+    <!-- ================================================================
+         JAVASCRIPT
+    ================================================================ -->
+    <script>
+        // =========================================================================
+        // CARICAMENTO DATI — legge ?file=percorso/al/file.json
+        // Schema atteso:
+        // {
+        //   "materia": {
+        //     "titolo": "Storia Contemporanea",
+        //     "sottotitolo": "Indice delle Lezioni",      // opzionale
+        //     "immagine_sfondo": "https://..."             // opzionale
+        //   },
+        //   "lezioni": [
+        //     { "numero": "01", "titolo": "Testo dell'argomento", "link": "https://..." },
+        //     { "titolo": "Se 'numero' manca viene numerata automaticamente", "link": "https://..." }
+        //   ]
+        // }
+        // =========================================================================
+        document.addEventListener('DOMContentLoaded', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const fileDaCaricare = urlParams.get('file');
+
+            if (!fileDaCaricare) {
+                document.getElementById('dyn-title').innerText = "Nessun indice specificato";
+                document.getElementById('dyn-subtitle').innerText = "Aggiungi ?file=percorso/file.json all'URL";
+                setupLangWidget();
+                return;
+            }
+
+            try {
+                const response = await fetch(decodeURIComponent(fileDaCaricare));
+                if (!response.ok) throw new Error("File indice non trovato al percorso: " + fileDaCaricare);
+                const data = await response.json();
+                popolaInterfaccia(data);
+                document.title = (data.materia && data.materia.titolo)
+                    ? `Una Mano Spensierata | ${data.materia.titolo}`
+                    : "Una Mano Spensierata | Indice Lezioni";
+            } catch (error) {
+                console.error("Errore nel caricamento:", error);
+                document.getElementById('dyn-title').innerText = "Indice non disponibile";
+                document.getElementById('dyn-subtitle').innerText = "";
+            }
+
+            setupAccordion();
+            setupLangWidget();
+        });
+
+        function popolaInterfaccia(data) {
+            const materia = data.materia || {};
+            const lezioni = Array.isArray(data.lezioni) ? data.lezioni : [];
+
+            document.getElementById('dyn-title').innerText = materia.titolo || "Materia senza titolo";
+            document.getElementById('dyn-subtitle').innerText = materia.sottotitolo || "Indice delle Lezioni";
+
+            if (materia.immagine_sfondo) {
+                const bg = document.getElementById('bg-image');
+                bg.src = materia.immagine_sfondo;
+                bg.style.display = 'block';
+            }
+
+            const listContainer = document.getElementById('dyn-lesson-list');
+            listContainer.innerHTML = '';
+
+            if (lezioni.length === 0) {
+                listContainer.innerHTML = '<div class="lesson-empty">Nessuna lezione disponibile al momento.</div>';
+                return;
+            }
+
+            // Genera dinamicamente N card: tante quante sono le voci nell'array "lezioni"
+            lezioni.forEach((lez, index) => {
+                const numero = lez.numero ? lez.numero : String(index + 1).padStart(2, '0');
+                const titolo = lez.titolo || lez.argomento || "Argomento da definire";
+                const link = lez.link || lez.url || "#";
+
+                const card = document.createElement('a');
+                card.className = 'lesson-card';
+                card.href = link;
+                if (/^https?:\/\//.test(link)) card.target = '_blank';
+
+                card.innerHTML = `
+                    <div class="lesson-number">
+                        <span class="ln-label">Lez.</span>
+                        <span class="ln-num">${numero}</span>
+                    </div>
+                    <div class="lesson-content"><h3>${titolo}</h3></div>
+                    <div class="lesson-arrow">→</div>
+                `;
+                listContainer.appendChild(card);
+            });
+        }
+
+        // =========================================================================
+        // ACCORDION MASTER
+        // =========================================================================
+        function toggleMaster() {
+            const btn = document.getElementById('master-toggle-btn');
+            const content = document.getElementById('master-content');
+            const label = document.getElementById('master-toggle-label');
+            btn.classList.toggle('active');
+            content.classList.toggle('open');
+            label.innerText = content.classList.contains('open') ? 'Chiudi Indice' : 'Esplora Indice';
+            if (!content.classList.contains('open')) {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+        function setupAccordion() { /* placeholder per future estensioni */ }
+
+        // =========================================================================
+        // SCROLL PROGRESS
+        // =========================================================================
+        window.onscroll = () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            document.getElementById('scroll-progress-bar').style.width = (winScroll / height * 100) + '%';
+        };
+
+        // =========================================================================
+        // LANGUAGE WIDGET — posizionamento + osservatore spinner Google
+        // =========================================================================
+        function setupLangWidget() {
+            const widget = document.getElementById("custom-lang-selector");
+            if (widget) {
+                document.querySelector("header").appendChild(widget);
+                widget.classList.add("loaded");
+            }
+            const observer = new MutationObserver(mutations => {
+                mutations.forEach(mutation => {
+                    mutation.addedNodes.forEach(node => {
+                        if (node.nodeType === 1) {
+                            const cn = node.className || "";
+                            if (typeof cn === 'string' && cn.includes('goog-te-spinner')) {
+                                node.style.display = 'none'; node.remove();
+                            }
+                        }
+                    });
+                });
+            });
+            observer.observe(document.body, { childList: true, subtree: true });
+        }
+    </script>
+
+    <!-- Language JS — identico a lezione-template.html -->
+    <script>
+        const langLabels = {
+            'it':'Lingua','en':'Language','fr':'Langue','de':'Sprache','es':'Idioma',
+            'bg':'Език','pl':'Język','el':'Γλώσσα','lt':'Kalba','da':'Sprog',
+            'pt':'Língua','zh-CN':'语言','ar':'اللغة','hi':'भाषा','ru':'Язык','ja':'日本語'
+        };
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'it',
+                includedLanguages: 'en,it,fr,de,es,bg,pl,el,lt,da,pt,zh-CN,ar,hi,ru,ja',
+                autoDisplay: false
+            }, 'google_translate_element');
+        }
+        function toggleLangMenu() {
+            const menu = document.getElementById('lang-options-menu');
+            const arrow = document.getElementById('lang-arrow');
+            menu.classList.toggle('show');
+            arrow.innerHTML = menu.classList.contains('show') ? '▲' : '▼';
+        }
+        function triggerTranslation(lang, btnElement) {
+            const loadingDiv = document.getElementById('lang-loading');
+            const menu = document.getElementById('lang-options-menu');
+            const toggleBtn = document.getElementById('lang-toggle-btn');
+            const labelSpan = document.getElementById('lang-label');
+            const disclaimer = document.getElementById('translation-disclaimer');
+            labelSpan.innerHTML = '🌐 ' + (langLabels[lang] || 'Language');
+            loadingDiv.style.display = 'block';
+            menu.classList.remove('show');
+            toggleBtn.style.display = 'none';
+            document.querySelectorAll('.lang-options button').forEach(b => b.classList.remove('active-lang'));
+            btnElement.classList.add('active-lang');
+            const selectField = document.querySelector('select.goog-te-combo');
+            if (selectField) { selectField.value = lang; selectField.dispatchEvent(new Event('change', { bubbles: true })); }
+            if (disclaimer) disclaimer.style.display = lang !== 'it' ? 'block' : 'none';
+            setTimeout(() => {
+                loadingDiv.style.display = 'none';
+                toggleBtn.style.display = 'block';
+                document.getElementById('lang-arrow').innerHTML = '▼';
+            }, 1500);
+        }
+    </script>
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+</body>
+</html>
