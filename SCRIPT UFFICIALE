@@ -1,4 +1,4 @@
-!pip install -q groq openai
+!pip install -q openai
 
 import os
 import json
@@ -8,16 +8,38 @@ import time
 import zipfile
 import requests
 from bs4 import BeautifulSoup
-from groq import Groq
 from openai import OpenAI
 from google.colab import files
 import getpass
 
 # =============================================================================
-# 1. SETUP OLLAMA — motore locale gratuito, senza limiti esterni (terzo livello)
+# COSTANTI
+# =============================================================================
+NUM_DOMANDE_QUIZ = 20
+
+# Quiz "segnaposto": stessa identica struttura (domanda/opzioni/corretta/spiegazione)
+# delle domande vere, così il template HTML lo renderizza senza modifiche.
+# Serve per i casi in cui NESSUN motore (né Gemini né Ollama) riesce a generare
+# il quiz: la lezione viene salvata e inclusa nello zip comunque, con questo
+# "avviso" al posto delle 20 domande, invece di sparire silenziosamente dallo zip.
+QUIZ_SEGNAPOSTO = [
+    {
+        "domanda": "⚠️ Quiz non disponibile per questa lezione",
+        "opzioni": [
+            {"testo": "Il Super Quiz non è stato generato correttamente per questa lezione (errore o sovraccarico dei motori AI). Riprova a rigenerarlo più tardi.", "corretta": True},
+            {"testo": "—", "corretta": False},
+            {"testo": "—", "corretta": False},
+            {"testo": "—", "corretta": False}
+        ],
+        "spiegazione": "Durante l'elaborazione automatica nessuno dei motori disponibili (Gemini / Ollama) è riuscito a generare le domande per questa lezione. Il file JSON è stato comunque salvato e incluso nello zip, per non interrompere il caricamento del corso: puoi rigenerare il quiz in un secondo momento ricaricando solo questo file HTML."
+    }
+]
+
+# =============================================================================
+# 1. SETUP OLLAMA — motore locale gratuito, senza limiti esterni (fallback)
 #    Gira sulla GPU della sessione Colab: nessuna chiave richiesta.
 # =============================================================================
-print("🦙 Preparazione di Ollama (motore locale di riserva)...")
+print("🦙 Preparazione di Ollama (motore locale di fallback)...")
 ollama_client = None
 OLLAMA_MODEL = "llama3.1:8b"
 try:
@@ -53,14 +75,10 @@ except Exception as e_ollama:
     print(f"   ⚠️ Setup Ollama fallito ({e_ollama}). Procedo senza fallback locale.")
 
 # =============================================================================
-# 2. CONFIGURAZIONE API — GROQ (primaria) + GEMINI (fallback opzionale)
+# 2. CONFIGURAZIONE API — GEMINI (primaria, opzionale) + OLLAMA (fallback locale)
 # =============================================================================
-print("\n🔑 Inserisci la tua API Key di GROQ (inizia con gsk_...):")
-groq_api_key = getpass.getpass()
-groq_client = Groq(api_key=groq_api_key)
-
 print("\n🔑 Inserisci la tua API Key di GEMINI (Google AI Studio — opzionale).")
-print("   Premi solo Invio per saltare:")
+print("   Premi solo Invio per saltare e usare solo Ollama:")
 gemini_api_key = getpass.getpass()
 
 gemini_client = None
@@ -71,12 +89,12 @@ if gemini_api_key.strip():
         api_key=gemini_api_key.strip(),
         base_url="https://generativelanguage.googleapis.com/v1beta/openai/"
     )
-    print("   ✅ Fallback Gemini attivo.")
+    print("   ✅ Gemini attivo come motore primario.")
 else:
-    print("   ⚠️ Nessuna chiave Gemini inserita: si passerà direttamente a Ollama se Groq fallisce.")
+    print("   ⚠️ Nessuna chiave Gemini inserita: si userà solo Ollama (se disponibile).")
 
 # =============================================================================
-# 2. CARICAMENTO MULTI-FILE HTML
+# 2bis. CARICAMENTO MULTI-FILE HTML
 # =============================================================================
 print("\n📂 Carica TUTTI i file HTML delle lezioni (puoi selezionarli in massa):")
 uploaded = files.upload()
@@ -89,7 +107,7 @@ else:
     print(f"\n✅ Rilevati {len(html_files)} file HTML da processare.")
 
     # =========================================================================
-    # FUNZIONE ESTRAZIONE DATI MASTER (senza media)
+    # FUNZIONE ESTRAZIONE DATI MASTER (senza media) — INVARIATA
     # =========================================================================
     def estrai_dati_master(html_content):
         soup = BeautifulSoup(html_content, 'html.parser')
@@ -262,12 +280,12 @@ else:
         return dati, testo_quiz
 
     # =========================================================================
-    # FUNZIONE GENERAZIONE SUPER QUIZ — Groq (llama-3.1-8b-instant) con
-    # fallback automatico su Gemini Flash se Groq fallisce (es. rate limit)
+    # FUNZIONE GENERAZIONE SUPER QUIZ — Gemini Flash (primario) con
+    # fallback automatico su Ollama locale se Gemini fallisce/non è configurato
     # =========================================================================
     def costruisci_prompt_quiz(testo_lezione):
         return f"""Sei un esperto di Instructional Design e valutazione formativa.
-Devi generare ESATTAMENTE 30 domande a risposta multipla (A-B-C-D) basate ESCLUSIVAMENTE sul testo fornito.
+Devi generare ESATTAMENTE {NUM_DOMANDE_QUIZ} domande a risposta multipla (A-B-C-D) basate ESCLUSIVAMENTE sul testo fornito.
 Regole rigide:
 - Ogni domanda deve testare un dettaglio, data, nome, concetto o evento specifico presente nel testo.
 - Non ripetere mai domande o argomenti. Non inventare domande generiche (es. "Qual è l'importanza della storia...").
@@ -296,17 +314,6 @@ Testo della lezione (leggilo attentamente):
 {testo_lezione[:20000]}
 """
 
-    def genera_quiz_groq(prompt, groq_client):
-        chat_completion = groq_client.chat.completions.create(
-            messages=[{"role": "user", "content": prompt}],
-            model="llama-3.1-8b-instant",
-            response_format={"type": "json_object"},
-            temperature=0.3,
-            max_tokens=8192
-        )
-        risposta_json = json.loads(chat_completion.choices[0].message.content)
-        return risposta_json.get("il_super_quiz", [])
-
     def genera_quiz_gemini(prompt, gemini_client):
         chat_completion = gemini_client.chat.completions.create(
             messages=[{"role": "user", "content": prompt}],
@@ -329,16 +336,19 @@ Testo della lezione (leggilo attentamente):
         risposta_json = json.loads(chat_completion.choices[0].message.content)
         return risposta_json.get("il_super_quiz", [])
 
-    def genera_quiz(testo_lezione, groq_client, gemini_client=None, ollama_client=None):
+    def genera_quiz(testo_lezione, gemini_client=None, ollama_client=None):
         prompt = costruisci_prompt_quiz(testo_lezione)
 
         # Catena di motori da provare in ordine: si passa al successivo solo se
         # il precedente solleva un'eccezione (rate limit, timeout, JSON non valido...).
-        motori = [("Groq (llama-3.1-8b-instant)", lambda: genera_quiz_groq(prompt, groq_client))]
+        motori = []
         if gemini_client is not None:
             motori.append(("Gemini Flash", lambda: genera_quiz_gemini(prompt, gemini_client)))
         if ollama_client is not None:
             motori.append(("Ollama locale", lambda: genera_quiz_ollama(prompt, ollama_client)))
+
+        if not motori:
+            raise RuntimeError("Nessun motore di generazione disponibile (né Gemini né Ollama).")
 
         ultimo_errore = None
         for nome, funzione in motori:
@@ -366,19 +376,26 @@ Testo della lezione (leggilo attentamente):
             html_content = contenuto.decode('utf-8')
             dati, testo_quiz = estrai_dati_master(html_content)
 
-            # Generazione Super Quiz
+            # Generazione Super Quiz (Gemini -> Ollama). Se ENTRAMBI falliscono,
+            # la lezione NON viene scartata: viene salvata comunque con un quiz
+            # "segnaposto" al posto delle domande, così il file JSON non manca mai
+            # dallo zip finale (che viene caricato in blocco su GitHub).
             print("   🧠 Generazione Super Quiz...")
-            quiz = genera_quiz(testo_quiz, groq_client, gemini_client, ollama_client)
-            dati["il_super_quiz"] = quiz
-            print(f"   ✅ {len(quiz)} domande generate.")
+            try:
+                quiz = genera_quiz(testo_quiz, gemini_client, ollama_client)
+                dati["il_super_quiz"] = quiz
+                print(f"   ✅ {len(quiz)} domande generate.")
 
-            # Controllo qualità
-            if len(quiz) < 30:
-                print(f"   ⚠️ ATTENZIONE: generate solo {len(quiz)}/30 domande! Il testo potrebbe essere troppo corto o il modello ha troncato.")
-            else:
-                print(f"   ✅ Verifica: tutte e 30 le domande sono presenti.")
+                if len(quiz) < NUM_DOMANDE_QUIZ:
+                    print(f"   ⚠️ ATTENZIONE: generate solo {len(quiz)}/{NUM_DOMANDE_QUIZ} domande! Il testo potrebbe essere troppo corto o il modello ha troncato.")
+                else:
+                    print(f"   ✅ Verifica: tutte e {NUM_DOMANDE_QUIZ} le domande sono presenti.")
+            except Exception as e_quiz:
+                print(f"   ❌ Generazione quiz fallita su tutti i motori disponibili ({e_quiz}).")
+                print(f"   📝 Salvo comunque la lezione con un quiz segnaposto (vedi il_super_quiz nel JSON).")
+                dati["il_super_quiz"] = QUIZ_SEGNAPOSTO
 
-            # Salvataggio singolo JSON
+            # Salvataggio singolo JSON — avviene SEMPRE, quiz riuscito o no
             nome_base = os.path.splitext(filename)[0]
             output_name = nome_base + '.json'
             with open(output_name, 'w', encoding='utf-8') as f:
