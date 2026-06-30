@@ -49,6 +49,12 @@
 
             /* Task 3 — active highlight color, default giallo */
             --hl-color: #FFF176;
+
+            /* Task 5 — Il Super Quiz: feedback corretto/errato */
+            --quiz-correct:    #2E7D32;
+            --quiz-correct-bg: #EAF7EE;
+            --quiz-incorrect:    #C62828;
+            --quiz-incorrect-bg: #FDECEA;
         }
 
         /* ============================================================
@@ -948,6 +954,81 @@
         .btn-ia:hover { background: var(--navy-lt); transform: translateY(-2px); box-shadow: 0 10px 28px rgba(26,47,79,0.32); }
 
         /* ============================================================
+           TASK 5 — IL SUPER QUIZ
+        ============================================================ */
+        .quiz-list {
+            display: flex; flex-direction: column; gap: 1.6rem;
+        }
+        .quiz-card {
+            background: var(--ivory);
+            border: 1px solid var(--dust);
+            border-radius: var(--r-md);
+            padding: 1.6rem 1.8rem;
+            transition: border-color 0.25s;
+        }
+        .quiz-question {
+            font-family: var(--font-display);
+            font-size: 1.06rem; font-weight: 700; color: var(--ink);
+            line-height: 1.4; margin-bottom: 1.1rem;
+        }
+        .quiz-options {
+            display: flex; flex-direction: column; gap: 0.6rem;
+        }
+        .quiz-option {
+            display: block; width: 100%; text-align: left;
+            background: #fff;
+            border: 1px solid var(--dust);
+            border-radius: var(--r-sm);
+            padding: 0.85rem 1.1rem;
+            font-family: var(--font-body);
+            font-size: 0.92rem; color: var(--body); line-height: 1.5;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .quiz-option:hover:not(:disabled) { border-color: var(--gold); background: #FFFDF7; }
+        .quiz-option:disabled { cursor: default; }
+        .quiz-option.quiz-option-correct-pick {
+            border-color: var(--quiz-correct);
+            background: var(--quiz-correct-bg);
+            color: var(--quiz-correct);
+            font-weight: 700;
+        }
+        .quiz-option.quiz-option-incorrect-pick {
+            border-color: var(--quiz-incorrect);
+            background: var(--quiz-incorrect-bg);
+            color: var(--quiz-incorrect);
+            font-weight: 700;
+        }
+        .quiz-option.quiz-option-reveal-correct {
+            border-color: var(--quiz-correct);
+            box-shadow: inset 0 0 0 1px var(--quiz-correct);
+        }
+        .quiz-explanation {
+            display: none;
+            margin-top: 1rem;
+            padding: 1rem 1.2rem;
+            border-radius: var(--r-sm);
+            border-left: 4px solid;
+            font-size: 0.88rem; line-height: 1.65;
+        }
+        .quiz-explanation strong {
+            display: block; font-size: 0.66rem; font-weight: 700;
+            letter-spacing: 0.16em; text-transform: uppercase;
+            margin-bottom: 0.4rem;
+        }
+        .quiz-explanation-correct {
+            background: var(--quiz-correct-bg);
+            border-color: var(--quiz-correct);
+            color: #1B5E20;
+        }
+        .quiz-explanation-incorrect {
+            background: var(--quiz-incorrect-bg);
+            border-color: var(--quiz-incorrect);
+            color: #8B1A1A;
+        }
+        .quiz-empty-note { color: var(--sub); font-style: italic; font-size: 0.9rem; }
+
+        /* ============================================================
            HIGHLIGHTER (floating button)
         ============================================================ */
         .highlighted-text { padding: 0 2px; border-radius: 3px; }
@@ -1574,6 +1655,22 @@
                         </div>
                     </div>
 
+                    <!-- 08. IL SUPER QUIZ -->
+                    <div class="accordion-item">
+                        <button class="accordion-header">
+                            <span class="ch-number">08</span>
+                            <span class="ch-text">
+                                <span class="ch-eyebrow">Verifica Finale</span>
+                                <span class="ch-title">Il Super Quiz</span>
+                            </span>
+                            <span class="ch-icon">+</span>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="quiz-list" id="dyn-super-quiz"></div>
+                            <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione ▲</button>
+                        </div>
+                    </div>
+
                 </div><!-- /master-content-inner -->
             </div><!-- /master-content -->
         </div><!-- /master-accordion-item -->
@@ -1610,6 +1707,9 @@
 
         // TASK 4 — contatore concetti lavagna
         let wbCount = 0;
+
+        // TASK 5 — dati Il Super Quiz
+        let superQuizData = [];
 
         // =========================================================================
         // TASK 3 — Selezione colore palette
@@ -2062,7 +2162,95 @@ if (!fileDaCaricare) {
                 }
                 riassuntoContainer.insertAdjacentHTML('beforeend', buf.join(''));
             });
+
+            // --- ASSISTENTE IA ---
+            // TASK 5 — fix: questi campi non venivano mai popolati, restando bloccati su "Caricamento…"
+            if (data.assistente_ia) {
+                const ia = data.assistente_ia;
+                document.getElementById('dyn-ia-nome').innerText = ia.nome || "Assistente IA";
+                document.getElementById('dyn-ia-sottotesto').innerText = ia.sottotesto || "";
+                const iaLink = document.getElementById('dyn-ia-url');
+                if (ia.url) {
+                    iaLink.href = ia.url;
+                } else {
+                    iaLink.href = "#";
+                }
+            }
+
+            // --- IL SUPER QUIZ ---
+            renderSuperQuiz(data.il_super_quiz);
         }
+        // =========================================================================
+        // TASK 5 — IL SUPER QUIZ
+        // =========================================================================
+        function renderSuperQuiz(quizArr) {
+            const container = document.getElementById('dyn-super-quiz');
+            if (!container) return;
+            container.innerHTML = '';
+            superQuizData = quizArr || [];
+
+            if (superQuizData.length === 0) {
+                container.innerHTML = '<p class="quiz-empty-note">Quiz non disponibile per questa lezione.</p>';
+                return;
+            }
+
+            superQuizData.forEach((q, qIdx) => {
+                const card = document.createElement('div');
+                card.className = 'quiz-card';
+                card.id = `quiz-card-${qIdx}`;
+                card.dataset.answered = 'false';
+
+                const question = document.createElement('p');
+                question.className = 'quiz-question';
+                question.innerText = `${qIdx + 1}. ${q.domanda}`;
+                card.appendChild(question);
+
+                const optsWrap = document.createElement('div');
+                optsWrap.className = 'quiz-options';
+
+                (q.opzioni || []).forEach((opt, oIdx) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'quiz-option';
+                    btn.type = 'button';
+                    btn.innerText = opt.testo;
+                    btn.addEventListener('click', () => quizAnswer(qIdx, oIdx));
+                    optsWrap.appendChild(btn);
+                });
+                card.appendChild(optsWrap);
+
+                const expl = document.createElement('div');
+                expl.className = 'quiz-explanation';
+                expl.id = `quiz-expl-${qIdx}`;
+                card.appendChild(expl);
+
+                container.appendChild(card);
+            });
+        }
+
+        function quizAnswer(qIdx, oIdx) {
+            const card = document.getElementById(`quiz-card-${qIdx}`);
+            if (!card || card.dataset.answered === 'true') return; // blocca click successivi sulla stessa domanda
+
+            card.dataset.answered = 'true';
+            const q = superQuizData[qIdx];
+            const chosen = q.opzioni[oIdx];
+            const allBtns = card.querySelectorAll('.quiz-option');
+
+            allBtns.forEach((b, idx) => {
+                b.disabled = true;
+                if (idx === oIdx) {
+                    b.classList.add(chosen.corretta ? 'quiz-option-correct-pick' : 'quiz-option-incorrect-pick');
+                } else if (q.opzioni[idx].corretta) {
+                    b.classList.add('quiz-option-reveal-correct');
+                }
+            });
+
+            const explDiv = document.getElementById(`quiz-expl-${qIdx}`);
+            explDiv.className = 'quiz-explanation ' + (chosen.corretta ? 'quiz-explanation-correct' : 'quiz-explanation-incorrect');
+            explDiv.style.display = 'block';
+            explDiv.innerHTML = `<strong>${chosen.corretta ? '✅ Risposta corretta' : '❌ Risposta errata'}</strong>${chosen.spiegazione || ''}`;
+        }
+
         // =========================================================================
         // MASTER ACCORDION
         // =========================================================================
