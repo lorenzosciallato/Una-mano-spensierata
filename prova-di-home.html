@@ -8,28 +8,21 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600;1,700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600;1,700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
 
 <style>
-/* ============================================================
-   TOKENS — invariati rispetto alla versione precedente
-============================================================ */
 :root{
   --night:#0F1117; --ivory:#F7F4EF; --ivory-dk:#EDE9E0;
   --gold:#C8A96E; --gold-lt:#E8D5AA; --gold-dk:#9A7A3F;
   --navy:#1A2F4F; --navy-lt:#2A4A72;
   --dust:#E8E4DC; --mist:#C5C1B8;
   --ink:#1C1C22; --body:#3D3C3A; --sub:#7A7770;
-
   --font-display:'Playfair Display', Georgia, serif;
   --font-body:'DM Sans', system-ui, sans-serif;
-
   --r-sm:6px; --r-md:12px; --r-lg:20px; --r-xl:32px;
-
   --shadow-card:0 4px 24px rgba(15,17,23,0.08), 0 1px 4px rgba(15,17,23,0.04);
   --shadow-lift:0 16px 44px rgba(15,17,23,0.16), 0 2px 8px rgba(15,17,23,0.06);
 }
-
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
 body{
@@ -38,17 +31,10 @@ body{
 }
 img{display:block;max-width:100%;}
 a{color:inherit;}
+@media (prefers-reduced-motion: reduce){*{animation:none !important; transition:none !important;}}
+a:focus-visible, button:focus-visible{outline:2px solid var(--gold); outline-offset:3px; border-radius:4px;}
 
-@media (prefers-reduced-motion: reduce){
-  *{animation:none !important; transition:none !important;}
-}
-a:focus-visible, button:focus-visible{
-  outline:2px solid var(--gold); outline-offset:3px; border-radius:4px;
-}
-
-/* ============================================================
-   PROGRESS BAR
-============================================================ */
+/* PROGRESS BAR */
 #scroll-progress-container{position:fixed;top:0;left:0;width:100%;height:3px;z-index:9999;}
 #scroll-progress-bar{
   height:100%; width:0%;
@@ -58,9 +44,7 @@ a:focus-visible, button:focus-visible{
 }
 @keyframes shimmer{0%{background-position:200% 0}100%{background-position:0% 0}}
 
-/* ============================================================
-   BACKGROUND TEXTURE
-============================================================ */
+/* BACKGROUND */
 .grain-bg{position:fixed;inset:0;z-index:-1;background:var(--ivory);overflow:hidden;}
 .grain-bg img{width:100%;height:100%;object-fit:cover;opacity:.04;filter:grayscale(100%) sepia(.4);mix-blend-mode:multiply;}
 .grain-bg::after{
@@ -68,15 +52,11 @@ a:focus-visible, button:focus-visible{
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
 }
 
-/* ============================================================
-   REVEAL ON SCROLL
-============================================================ */
+/* REVEAL */
 .reveal{opacity:0;transform:translateY(26px);transition:opacity .8s cubic-bezier(.16,.84,.44,1),transform .8s cubic-bezier(.16,.84,.44,1);}
 .reveal.in-view{opacity:1;transform:translateY(0);}
 
-/* ============================================================
-   INK STROKE — elemento firma
-============================================================ */
+/* INK STROKE */
 .ink-divider{display:block;width:150px;height:18px;margin:1.1rem auto;}
 .ink-divider path{
   fill:none;stroke:url(#inkGrad);stroke-width:3;stroke-linecap:round;
@@ -84,7 +64,6 @@ a:focus-visible, button:focus-visible{
   animation:draw-ink 1.3s 0.5s cubic-bezier(.4,0,.2,1) forwards;
 }
 @keyframes draw-ink{to{stroke-dashoffset:0;}}
-
 .ink-underline{position:relative;text-decoration:none;}
 .ink-underline::after{
   content:'';position:absolute;left:0;bottom:-3px;width:100%;height:2px;
@@ -98,27 +77,43 @@ a:focus-visible, button:focus-visible{
 ============================================================ */
 .hero{
   min-height:94vh; display:flex; flex-direction:column; align-items:center; justify-content:center;
-  text-align:center; padding:6rem 1.5rem 5rem; position:relative;
+  text-align:center; padding:6rem 1.5rem 5rem; position:relative; overflow:hidden;
 }
-.eyebrow{
-  font-size:.72rem; font-weight:700; letter-spacing:.28em; text-transform:uppercase;
-  color:var(--gold-dk); display:block; margin-bottom:1.4rem;
+
+/* Il contenuto del hero vive sopra la mano */
+.hero > *:not(.hero-hand):not(.scroll-cue){position:relative;z-index:2;}
+
+/* LA MANO — entra da destra, le dita puntano verso il titolo */
+.hero-hand{
+  position:absolute;
+  right:-40px;
+  top:50%;
+  transform:translateY(-62%);   /* allinea le dita (cima PNG) con il titolo */
+  width:clamp(240px, 28vw, 420px);
+  pointer-events:none;
+  z-index:1;                    /* sotto al testo, sopra al grano */
+  /* piccola animazione d'ingresso: scivola da destra */
+  opacity:0;
+  animation:hand-enter 1.1s 0.3s cubic-bezier(.2,.8,.2,1) forwards;
 }
+@keyframes hand-enter{
+  from{opacity:0; transform:translateY(-62%) translateX(60px);}
+  to  {opacity:1; transform:translateY(-62%) translateX(0);}
+}
+/* Su schermi stretti la mano sparisce per non sovrapporre il testo */
+@media(max-width:900px){.hero-hand{display:none;}}
+
+.eyebrow{font-size:.72rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:var(--gold-dk);display:block;margin-bottom:1.4rem;}
 .hero-title{
-  font-family:var(--font-display); font-weight:900; color:var(--ink);
-  font-size:clamp(3rem,8.5vw,6.4rem); line-height:.98; letter-spacing:-.02em;
+  font-family:var(--font-display);font-weight:900;color:var(--ink);
+  font-size:clamp(3rem,8.5vw,6.4rem);line-height:.98;letter-spacing:-.02em;
 }
-.hero-tagline{
-  font-family:var(--font-display); font-style:italic; font-weight:600;
-  font-size:clamp(1.3rem,2.6vw,1.75rem); color:var(--gold-dk); margin-bottom:1.4rem;
-}
-.hero-explainer{
-  max-width:520px; margin:0 auto 2.6rem; color:var(--sub); font-size:1.02rem; line-height:1.75;
-}
+.hero-tagline{font-family:var(--font-display);font-style:italic;font-weight:600;font-size:clamp(1.3rem,2.6vw,1.75rem);color:var(--gold-dk);margin-bottom:1.4rem;}
+.hero-explainer{max-width:520px;margin:0 auto 2.6rem;color:var(--sub);font-size:1.02rem;line-height:1.75;}
 .hero-actions{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:3rem;}
 .btn-primary,.btn-ghost{
-  font-family:var(--font-body); font-weight:700; font-size:.85rem; letter-spacing:.04em;
-  padding:1rem 2rem; border-radius:50px; text-decoration:none; display:inline-block;
+  font-family:var(--font-body);font-weight:700;font-size:.85rem;letter-spacing:.04em;
+  padding:1rem 2rem;border-radius:50px;text-decoration:none;display:inline-block;
   transition:all .25s cubic-bezier(.2,.8,.2,1);
 }
 .btn-primary{background:var(--navy);color:#fff;box-shadow:0 10px 28px rgba(26,47,79,.25);}
@@ -142,26 +137,19 @@ a:focus-visible, button:focus-visible{
   width:34px;height:34px;border:1.5px solid var(--mist);border-radius:50%;
   display:flex;align-items:center;justify-content:center;color:var(--sub);
   text-decoration:none;font-size:1rem;animation:bounce-down 2.4s ease-in-out infinite;
-  transition:border-color .25s,color .25s;
+  transition:border-color .25s,color .25s; z-index:3;
 }
 .scroll-cue:hover{border-color:var(--gold);color:var(--gold-dk);}
 @keyframes bounce-down{0%,100%{transform:translate(-50%,0);}50%{transform:translate(-50%,8px);}}
 
-/* ============================================================
-   SECTION SHELL
-============================================================ */
+/* SEZIONI */
 section{padding:6rem 1.5rem;}
 .section-inner{max-width:1140px;margin:0 auto;}
 .section-head{text-align:center;max-width:620px;margin:0 auto 3rem;}
-.section-head h2{
-  font-family:var(--font-display);font-weight:700;color:var(--ink);
-  font-size:clamp(1.9rem,4vw,2.7rem);line-height:1.15;margin-top:.6rem;
-}
+.section-head h2{font-family:var(--font-display);font-weight:700;color:var(--ink);font-size:clamp(1.9rem,4vw,2.7rem);line-height:1.15;margin-top:.6rem;}
 .section-head p{color:var(--sub);margin-top:1rem;font-size:1.02rem;line-height:1.7;}
 
-/* ============================================================
-   STUDIA — course grid
-============================================================ */
+/* COURSE GRID */
 .course-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1.1rem;}
 .course-card{
   display:flex;align-items:flex-start;gap:1rem;background:#fff;border:1px solid var(--dust);
@@ -185,9 +173,7 @@ section{padding:6rem 1.5rem;}
 .cc-arrow{display:inline-block;margin-top:.4rem;font-size:.85rem;color:var(--gold-dk);transition:transform .25s;}
 .course-card:hover .cc-arrow{transform:translateX(4px);}
 
-/* ============================================================
-   METODO — dark band, layout ad articolo
-============================================================ */
+/* METODO */
 .metodo{background:var(--night);}
 .metodo .eyebrow{color:var(--gold-lt);}
 .metodo .section-head h2{color:var(--ivory);}
@@ -201,33 +187,69 @@ section{padding:6rem 1.5rem;}
 .pillar-head-text .cite{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-lt);}
 .article-pillar p{font-size:.98rem;color:var(--mist);line-height:1.85;}
 
-/* ============================================================
-   DISCLAIMER CARD — stesso stile della lezione dinamica
-============================================================ */
+/* DISCLAIMER */
 .disclaimer-card{
   background:#fff;border:1px solid var(--dust);border-radius:var(--r-xl);
-  padding:3rem;margin:0 auto 2rem;width:90%;max-width:1200px;
-  box-shadow:var(--shadow-card);
+  padding:3rem;margin:0 auto 2rem;width:90%;max-width:1200px;box-shadow:var(--shadow-card);
 }
-@media (max-width:700px){.disclaimer-card{padding:1.5rem;width:94%;border-radius:var(--r-lg);}}
-.disclaimer-card h3{
-  font-family:var(--font-body);font-size:.65rem;font-weight:700;
-  letter-spacing:.22em;text-transform:uppercase;color:var(--gold-dk);
-  margin-bottom:.8rem;
-}
+@media(max-width:700px){.disclaimer-card{padding:1.5rem;width:94%;border-radius:var(--r-lg);}}
+.disclaimer-card h3{font-family:var(--font-body);font-size:.65rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-dk);margin-bottom:.8rem;}
 .disclaimer-card h3:not(:first-child){margin-top:2rem;}
 .disclaimer-card p{font-size:.82rem;color:var(--sub);line-height:1.75;}
 
-/* ============================================================
-   FOOTER
-============================================================ */
+/* FOOTER */
 .site-footer{text-align:center;padding:3rem 1.5rem;border-top:1px solid var(--dust);}
 .site-footer p{font-size:.72rem;color:var(--mist);letter-spacing:.1em;text-transform:uppercase;font-weight:600;}
 .site-footer strong{color:var(--sub);}
 
-@media (max-width:600px){
-  section{padding:4.5rem 1.2rem;}
+@media(max-width:600px){section{padding:4.5rem 1.2rem;}}
+/* MANO — cursore interattivo */
+.hero-hand { cursor: pointer; will-change: transform, opacity; pointer-events: auto; }
+
+/* NUVOLETTA OUCH — stile fumetto */
+.ouch-bubble {
+  position: absolute;
+  pointer-events: none;
+  background: #fff;
+  border: 3.5px solid var(--ink);
+  border-radius: 18px;
+  padding: 10px 22px;
+  font-family: 'Bangers', Impact, sans-serif;
+  font-size: clamp(2rem, 3.2vw, 2.8rem);
+  color: #D32F2F;
+  letter-spacing: 0.12em;
+  z-index: 20;
+  white-space: nowrap;
+  opacity: 0;
+  transform: scale(0.3) rotate(-8deg);
+  transform-origin: right center;
+  transition: opacity 0.15s ease, transform 0.25s cubic-bezier(.15,1.8,.3,1);
+  box-shadow: 4px 4px 0 var(--ink);
+  top: 0; right: 0; /* posizionata via JS al click */
 }
+.ouch-bubble.show {
+  opacity: 1;
+  transform: scale(1) rotate(-3deg);
+}
+/* coda della nuvoletta — punta verso destra (dove sono le dita) */
+.ouch-bubble::after {
+  content: '';
+  position: absolute;
+  right: -19px;
+  top: calc(50% - 10px);
+  border: 10px solid transparent;
+  border-left: 11px solid var(--ink);
+}
+.ouch-bubble::before {
+  content: '';
+  position: absolute;
+  right: -13px;
+  top: calc(50% - 7px);
+  border: 7px solid transparent;
+  border-left: 8px solid #fff;
+  z-index: 1;
+}
+
 </style>
 </head>
 <body>
@@ -247,6 +269,16 @@ section{padding:6rem 1.5rem;}
 
 <!-- HERO -->
 <header class="hero">
+
+  <!-- LA MANO — entra da destra, le dita puntano verso il titolo -->
+  <img
+    class="hero-hand"
+    src="https://res.cloudinary.com/dlppkpjqs/image/upload/v1782859731/pngwing.com_yvvwdh.png"
+    alt=""
+    aria-hidden="true"
+    loading="eager"
+  >
+
   <h1 class="hero-title reveal">Una Mano<br>Spensierata</h1>
   <svg class="ink-divider reveal" viewBox="0 0 150 18" xmlns="http://www.w3.org/2000/svg">
     <path d="M3 12 C 30 4, 55 16, 75 9 S 120 2, 147 10"/>
@@ -302,25 +334,21 @@ section{padding:6rem 1.5rem;}
 </div>
 
 <footer class="site-footer">
-  <p><strong>Una Mano Spensierata</strong> &nbsp;·&nbsp; Tutti i diritti riservati &nbsp;·&nbsp; Lorenzo Sciallato &copy; 2025</p>
+  <p><strong>Una Mano Spensierata</strong> &nbsp;&middot;&nbsp; Tutti i diritti riservati &nbsp;&middot;&nbsp; Lorenzo Sciallato &copy; 2025</p>
 </footer>
 
 <script>
-// =========================================================================
-// DATI — Materie. Oggi statico: domani questo array potrà essere generato
-// leggendo automaticamente le cartelle tematiche su GitHub (vedi prossimo step).
-// =========================================================================
 const courses = [
-  { name: "Sociologia dell'Educazione", url: "https://sites.google.com/view/una-mano-spensierata/sociologia-delleducazione?authuser=0" },
-  { name: "Psicologia dello Sviluppo", url: "https://sites.google.com/view/una-mano-spensierata/psicologia-dello-sviluppo?authuser=0" },
-  { name: "Neuropsichiatria Infantile", url: "https://lorenzosciallato.github.io/Una-mano-spensierata/lezione-template.html?file=neuropsichiatria/lezione-1.json" },
-  { name: "Pedagogia Generale (Beta)", url: "https://sites.google.com/view/una-mano-spensierata/pedagogia-generale?authuser=0" },
-  { name: "Ed. Motoria (Solo Flashcard)", url: "https://sites.google.com/view/una-mano-spensierata/educazione-motoria?authuser=0" },
-  { name: "Ed. Musicale", url: "https://sites.google.com/view/una-mano-spensierata/ed-musicale?authuser=0" },
-  { name: "Appunti dei colleghi", url: "https://sites.google.com/view/una-mano-spensierata/appunti?authuser=0" },
-  { name: "Didattica Generale", url: "https://sites.google.com/view/una-mano-spensierata/didattica-generale?authuser=0" },
-  { name: "Storia dell'Educazione", url: "https://sites.google.com/view/una-mano-spensierata/storia-delleducazione?authuser=0" },
-  { name: "Storia Contemporanea", url: "https://sites.google.com/view/una-mano-spensierata/storia-contemporanea?authuser=0" }
+  { name: "Sociologia dell'Educazione",    url: "https://sites.google.com/view/una-mano-spensierata/sociologia-delleducazione?authuser=0" },
+  { name: "Psicologia dello Sviluppo",     url: "https://sites.google.com/view/una-mano-spensierata/psicologia-dello-sviluppo?authuser=0" },
+  { name: "Neuropsichiatria Infantile",    url: "https://lorenzosciallato.github.io/Una-mano-spensierata/lezione-template.html?file=neuropsichiatria/lezione-1.json" },
+  { name: "Pedagogia Generale (Beta)",     url: "https://sites.google.com/view/una-mano-spensierata/pedagogia-generale?authuser=0" },
+  { name: "Ed. Motoria (Solo Flashcard)",  url: "https://sites.google.com/view/una-mano-spensierata/educazione-motoria?authuser=0" },
+  { name: "Ed. Musicale",                  url: "https://sites.google.com/view/una-mano-spensierata/ed-musicale?authuser=0" },
+  { name: "Appunti dei colleghi",          url: "https://sites.google.com/view/una-mano-spensierata/appunti?authuser=0" },
+  { name: "Didattica Generale",            url: "https://sites.google.com/view/una-mano-spensierata/didattica-generale?authuser=0" },
+  { name: "Storia dell'Educazione",        url: "https://sites.google.com/view/una-mano-spensierata/storia-delleducazione?authuser=0" },
+  { name: "Storia Contemporanea",          url: "https://sites.google.com/view/una-mano-spensierata/storia-contemporanea?authuser=0" }
 ];
 
 const pillars = [
@@ -370,14 +398,12 @@ function renderPillars(){
 renderCourses();
 renderPillars();
 
-// SCROLL PROGRESS
 window.addEventListener('scroll', () => {
   const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
   const scrolled = document.documentElement.scrollTop;
   document.getElementById('scroll-progress-bar').style.width = (h > 0 ? (scrolled / h * 100) : 0) + '%';
 });
 
-// REVEAL ON SCROLL
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const revealEls = document.querySelectorAll('.reveal');
 if (reduceMotion) {
@@ -385,15 +411,64 @@ if (reduceMotion) {
 } else {
   const io = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('in-view');
-        io.unobserve(entry.target);
-      }
+      if (entry.isIntersecting) { entry.target.classList.add('in-view'); io.unobserve(entry.target); }
     });
   }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
   revealEls.forEach(el => io.observe(el));
 }
-</script>
 
+// =========================================================================
+// EASTER EGG — La mano dice OUCH! quando ci clicchi sopra
+// =========================================================================
+(function() {
+  const hand = document.querySelector('.hero-hand');
+  if (!hand) return;
+
+  // Crea la nuvoletta e appendila all'hero
+  const bubble = document.createElement('div');
+  bubble.className = 'ouch-bubble';
+  bubble.textContent = 'OUCH!';
+  hand.closest('.hero').appendChild(bubble);
+
+  let busy = false;
+
+  hand.addEventListener('click', function() {
+    if (busy) return;
+    busy = true;
+
+    // Posiziona la nuvoletta vicino alle dita (in cima all'immagine, a sinistra)
+    const heroRect  = hand.closest('.hero').getBoundingClientRect();
+    const handRect  = hand.getBoundingClientRect();
+    bubble.style.top   = (handRect.top - heroRect.top + 18) + 'px';
+    bubble.style.right = (window.innerWidth - handRect.left + 22) + 'px';
+
+    // Mostra la nuvoletta
+    bubble.classList.add('show');
+
+    // Reazione della mano: balzo verso destra (come se scappasse)
+    hand.style.transition = 'transform 0.15s ease';
+    hand.style.transform  = 'translateY(-62%) translateX(30px)';
+    setTimeout(() => {
+      hand.style.transform = 'translateY(-62%) translateX(0)';
+    }, 160);
+
+    // Dopo 1.3s: nascondi la nuvoletta
+    setTimeout(() => bubble.classList.remove('show'), 1300);
+
+    // Dopo 1.7s: fai sparire la mano
+    setTimeout(() => {
+      hand.style.transition = 'opacity 0.35s ease';
+      hand.style.opacity    = '0';
+    }, 1700);
+
+    // Dopo 2.6s: riporta la mano
+    setTimeout(() => {
+      hand.style.opacity = '1';
+      busy = false;
+    }, 2600);
+  });
+})();
+
+</script>
 </body>
 </html>
