@@ -2248,7 +2248,7 @@ if (!fileDaCaricare) {
             const explDiv = document.getElementById(`quiz-expl-${qIdx}`);
             explDiv.className = 'quiz-explanation ' + (chosen.corretta ? 'quiz-explanation-correct' : 'quiz-explanation-incorrect');
             explDiv.style.display = 'block';
-            explDiv.innerHTML = `<strong>${chosen.corretta ? '✅ Risposta corretta' : '❌ Risposta errata'}</strong>${chosen.spiegazione || ''}`;
+            explDiv.innerHTML = `<strong>${chosen.corretta ? '✅ Risposta corretta' : '❌ Risposta errata'}</strong>${q.spiegazione || chosen.spiegazione || ''}`;
         }
 
         // =========================================================================
