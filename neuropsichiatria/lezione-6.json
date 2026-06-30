@@ -1,0 +1,604 @@
+{
+    "titolo_lezione": "Neuropsichiatria Infantile",
+    "sottotitolo": "Lezione 6 - I Disturbi Specifici dell'Apprendimento (DSA)",
+    "materia_estratta": "Neuropsichiatria Infantile | Lezione 6",
+    "orientamento": {
+        "obiettivi": [
+            "Comprendere l'inquadramento nosografico e i criteri diagnostici dei DSA secondo il DSM-5-TR.",
+            "Analizzare le tempistiche di diagnosi, il criterio di discrepanza e le principali comorbidità cliniche.",
+            "Esaminare i modelli neuropsicologici della lettura (Uta Frith e Coltheart) e le caratteristiche di Dislessia, Disortografia, Disgrafia e Discalculia.",
+            "Distinguere tra diagnosi e certificazione, riconoscendo gli strumenti compensativi e le misure dispensative garantiti dalla Legge 170/2010."
+        ],
+        "concetto_fondamentale": {
+            "titolo": "Disturbi Specifici dell'Apprendimento (DSA)",
+            "testo": "I DSA sono alterazioni neurobiologiche di funzioni specifiche (lettura, scrittura, calcolo) che non intaccano minimamente il funzionamento intellettivo globale dell'individuo. Si distinguono nettamente dalle semplici \"difficoltà\" poiché hanno natura innata, sono resistenti all'automatizzazione e richiedono criteri rigorosi (come la discrepanza diagnostica) per essere clinicamente confermati."
+        },
+        "nota_extra": {
+            "titolo": "L'Importanza del Valore Legale",
+            "testo": "In Italia la diagnosi clinica (effettuata da qualsiasi professionista) non basta per attivare gli aiuti a scuola. Serve formalmente la \"Certificazione\", un documento legalmente vincolante redatto solo da ASL o enti accreditati che obbliga i docenti alla stesura del PDP."
+        },
+        "domande_autovalutazione": [
+            "Qual è la differenza sostanziale tra una \"difficoltà\" di apprendimento e un \"disturbo\"?",
+            "In base a quale principio clinico si stabilisce il criterio diagnostico di \"discrepanza\"?",
+            "A che età si possono diagnosticare formalmente la Dislessia e la Discalculia nella scuola primaria?",
+            "Come funziona il Modello a due vie (Lessicale e Fonologica) di Max Coltheart nella lettura?",
+            "Quali sono le cadute tipiche (\"profilo a cascata\") riscontrate nella WISC-IV in un bambino con DSA?",
+            "Qual è la differenza burocratica e legale tra una Diagnosi clinica e una Certificazione?"
+        ]
+    },
+    "punti_chiave": [
+        {
+            "id": "criteri",
+            "titolo_breve": "1. Criteri e Discrepanza",
+            "sottotitolo": "Definizione DSM-5 e QI nella norma",
+            "titolo_esteso": "1. Criteri e Discrepanza",
+            "testo_modale": "<p>I DSA (Dislessia, Disortografia, Disgrafia, Discalculia) richiedono un'intelligenza generale nella norma ma un crollo specifico in una determinata abilità scolastica, sancendo il principio di discrepanza.</p>"
+        },
+        {
+            "id": "lettura",
+            "titolo_breve": "2. Modelli di Lettura",
+            "sottotitolo": "Stadi di Frith e Due Vie di Coltheart",
+            "titolo_esteso": "2. Modelli di Lettura",
+            "testo_modale": "<p>L'apprendimento della lettura segue gli stadi di Uta Frith (logografico, alfabetico, ortografico, lessicale). Il modello di Coltheart spiega l'uso della Via Lessicale (rapida) e della Via Fonologica (lenta, usata dai dislessici).</p>"
+        },
+        {
+            "id": "wisc",
+            "titolo_breve": "3. Profilo Cognitivo",
+            "sottotitolo": "Caduta in IML e IVE alla WISC-IV",
+            "titolo_esteso": "3. Profilo Cognitivo",
+            "testo_modale": "<p>Alla scala WISC-IV, i bambini con DSA mostrano il classico \"profilo a cascata\": punteggi alti nel ragionamento (ICV e IRP) ma cadute vistose nella Memoria di Lavoro (IML) e nella Velocità di Elaborazione (IVE).</p>"
+        },
+        {
+            "id": "legge",
+            "titolo_breve": "4. Legge 170 e Tutele",
+            "sottotitolo": "PDP, Compensativi e Dispensative",
+            "titolo_esteso": "4. Legge 170 e Tutele",
+            "testo_modale": "<p>La Legge 170/2010 tutela gli alunni redigendo il PDP (Piano Didattico Personalizzato) e garantendo Strumenti Compensativi e Misure Dispensative, previa Certificazione medica valida.</p>"
+        }
+    ],
+    "flashcards": [
+        {
+            "front": "Cosa sono i DSA e cosa si intende per \"Specificità\" e \"Discrepanza\" in ambito diagnostico?",
+            "back": "I Disturbi Specifici dell'Apprendimento (DSA), che comprendono Dislessia, Disortografia, Disgrafia e Discalculia, non sono malattie o semplici difficoltà, ma condizioni del neurosviluppo a base neurobiologica. La loro caratteristica clinica principale è la \"Specificità\": il disturbo coinvolge esclusivamente abilità scolastiche circoscritte (la lettura, la scrittura o il calcolo), lasciando del tutto intatto il funzionamento intellettivo globale della persona. Da questo concetto deriva il fondamentale criterio diagnostico della \"Discrepanza\": per diagnosticare un DSA, il neuropsichiatra deve rilevare una netta e misurabile differenza tra l'abilità deficitaria nel dominio specifico analizzato (che risulta quantificabilmente al di sotto delle attese per l'età e la classe frequentata) e l'intelligenza generale del bambino, che deve risultare assolutamente adeguata e nella norma. Non si può fare diagnosi di DSA in presenza di un ritardo mentale."
+        },
+        {
+            "front": "Quali sono i quattro criteri diagnostici fondamentali (A, B, C, D) stabiliti dal DSM-5-TR per i DSA?",
+            "back": "Il DSM-5-TR richiede la presenza di quattro criteri. Il Criterio A impone che le difficoltà di apprendimento (come lettura lenta, problemi di spelling o calcolo) persistano per almeno 6 mesi, nonostante l'applicazione di interventi mirati a scuola. Il Criterio B stabilisce che tali abilità scolastiche devono essere notevolmente al di sotto di quelle attese per l'età cronologica, causando una significativa interferenza con il rendimento accademico o lavorativo. Il Criterio C indica che queste difficoltà iniziano durante gli anni scolastici, ma possono palesarsi appieno solo quando le richieste superano le capacità del soggetto (es. prove a tempo). Infine, il Criterio D richiede l'esclusione di altre cause: le limitazioni non devono essere giustificate da disabilità intellettiva, deficit sensoriali (vista/udito non corretti), patologie neurologiche, avversità psicosociali, o mancata conoscenza della lingua di istruzione."
+        },
+        {
+            "front": "Qual è la differenza clinica sostanziale tra una \"Difficoltà di apprendimento\" e un \"Disturbo Specifico dell'Apprendimento\"?",
+            "back": "Sebbene si manifestino in modo simile a scuola, clinicamente sono molto diversi. La \"Difficoltà\" di apprendimento non è innata, ma dipende fortemente da fattori ambientali, socio-culturali o da una didattica inadeguata. Non è legata a uno specifico dominio e, soprattutto, è reversibile: il bambino è sensibile al trattamento e, se opportunamente aiutato, recupera il divario. Al contrario, il Disturbo (DSA) ha una profonda base neurobiologica e genetica, non dipendendo dall'ambiente. È circoscritto a domini specifici e si caratterizza per un severo \"deficit di automatizzazione\": nonostante la continua esposizione agli stimoli, gli sforzi e il costante allenamento, l'abilità risulta particolarmente resistente al trattamento e non si automatizza mai del tutto, richiedendo perennemente un grande dispendio cognitivo e di energie."
+        },
+        {
+            "front": "Quali sono le tempistiche corrette per formulare la diagnosi e quali sono le comorbidità più frequenti?",
+            "back": "Poiché l'acquisizione della letto-scrittura è un processo evolutivo, la diagnosi non può essere fatta a inizio scolarizzazione. Le tempistiche cliniche prevedono che la valutazione per la Dislessia e la Disortografia avvenga non prima della fine della 2° classe della scuola primaria, mentre per la Disgrafia e la Discalculia occorre attendere la fine della 3° classe primaria. I DSA si presentano raramente isolati, mostrando altissimi tassi di comorbidità con altre condizioni neuropsichiatriche. La co-occorrenza più frequente è con il Disturbo Specifico del Linguaggio (50% dei casi) e con l'ADHD (Disturbo da Deficit di Attenzione/Iperattività, media 45%). Tali associazioni aggravano enormemente il quadro clinico, poiché alla fatica strumentale della lettura e del calcolo si sommano l'irruenza, la frustrazione e l'incapacità di mantenere la concentrazione in classe."
+        },
+        {
+            "front": "Come si articola l'apprendimento della lettura secondo il modello evolutivo a 4 stadi di Uta Frith?",
+            "back": "Uta Frith descrive l'apprendimento della lettura attraverso quattro tappe progressive. 1) Lo Stadio Logografico (3-5 anni): il bambino non ha consapevolezza fonologica ma riconosce visivamente le parole intere come se fossero oggetti, loghi o immagini familiari (es. la scritta Coca-Cola). 2) Lo Stadio Alfabetico (5-6 anni): il bambino impara a segmentare la parola applicando le prime regole di conversione grafema-fonema, decodificando lettera per suono. 3) Lo Stadio Ortografico (5-6 anni): l'unità di lettura diventa la sillaba; il bambino legge in modo più fluido e inizia ad apprendere le eccezioni e le regole ortografiche complesse (es. digrammi \"sc\" o \"gli\"). 4) Lo Stadio Lessicale (6-7 anni in poi): si forma un solido magazzino interno delle parole. Il bambino non scompone più la stringa, ma la riconosce interamente con facilità."
+        },
+        {
+            "front": "Come funziona il modello di lettura \"a due vie\" di Coltheart e quale via risulta deficitaria nel bambino dislessico?",
+            "back": "Il modello di Coltheart teorizza che, per leggere, il cervello utilizzi due strade. La \"Via Lessicale\" (diretta) si usa per le parole conosciute: la parola scritta viene analizzata globalmente e passa attraverso un magazzino lessicale interno, permettendo al lettore di identificarla immediatamente recuperandone il significato e la pronuncia. La \"Via Fonologica\" (indiretta), invece, serve per leggere parole nuove o \"non-parole\" inventate (es. \"sirbolone\"). Questa via, molto più lenta, obbliga a segmentare la parola lettera per lettera, convertire ogni grafema in fonema e fonderli infine nel buffer fonemico per generare il suono. I soggetti dislessici presentano gravi deficit proprio nella conversione fonologica automatica: leggono in modo estremamente lento, faticoso, tirano a indovinare le parole e compiono molteplici inversioni o omissioni che possono compromettere la comprensione."
+        },
+        {
+            "front": "Qual è la differenza clinica, testologica ed eziologica tra la Disortografia e la Disgrafia?",
+            "back": "Pur riguardando entrambe l'atto dello scrivere, coinvolgono processi patologici totalmente differenti. La Disortografia è un deficit della componente linguistica e costruttiva della scrittura: il bambino fatica a scrivere in modo corretto commettendo continui errori ortografici, fonologici e di spelling (sostituzioni di lettere, assenza di doppie o accenti). Si valuta dettando brani, parole e non-parole (es. batterie DDE-2 o BVSCO-3). La Disgrafia, al contrario, è un deficit prettamente motorio ed esecutivo. Non intacca l'ortografia e la grammatica, ma unicamente la forma e l'atto pratico del tratto grafico. Genera un testo disordinato, faticoso, in cui il bambino non rispetta i margini e le distanze tra lettere, producendo una scrittura quasi incomprensibile. Per valutarla si usano test come la scala BHK che analizza ben 13 parametri della traccia (grandezza, margini, collegamenti)."
+        },
+        {
+            "front": "Quale ruolo ha la WISC-IV nella diagnosi di DSA e qual è il profilo cognitivo tipico (\"a cascata\") che emerge dai test?",
+            "back": "Nella diagnosi di DSA è obbligatorio testare l'intelligenza generale. Lo strumento psicometrico d'elezione per l'età scolare è la scala WISC-IV, che restituisce un QI totale (QIT) e quattro indici clinici: Comprensione Verbale (ICV), Ragionamento Percettivo (IRP), Memoria di Lavoro (IML) e Velocità di Elaborazione (IVE). I pazienti con DSA possiedono per definizione un'intelligenza nella norma, tuttavia evidenziano costantemente un peculiare profilo cognitivo disarmonico. Essi risultano brillanti e ottengono punteggi elevati negli indici logici e di ragionamento astratto e verbale (ICV e IRP). Al contrario, subiscono forti cadute prestazionali nei domini strettamente legati all'automatizzazione. Palesano infatti punteggi significativamente deficitari negli indici di Memoria di Lavoro (fatica a manipolare temporaneamente le informazioni) e di Velocità di Elaborazione (lentezza esecutiva focale sotto la pressione del tempo)."
+        },
+        {
+            "front": "Come tutela la scuola italiana gli studenti con DSA attraverso la Legge 170/2010 e l'adozione del PDP?",
+            "back": "La Legge 170/2010 tutela formalmente il diritto allo studio degli alunni con DSA, garantendo l'accesso a un apprendimento personalizzato che valorizzi le loro potenzialità. A tal fine la scuola istituisce il Piano Didattico Personalizzato (PDP), un documento vincolante che norma le strategie adottate in classe. Le tutele operative si dividono in due branchie. Gli \"Strumenti Compensativi\" sono ausili didattici e tecnologici che sostituiscono o facilitano l'abilità mancante (es. programmi di videoscrittura con correttore, sintesi vocale, calcolatrice, registratore e mappe concettuali). Le \"Misure Dispensative\", invece, sollevano legalmente l'alunno da prestazioni sfiancanti che non gli consentono di imparare, esonerandolo ad esempio dal leggere lunghi testi a voce alta in classe, dallo studio mnemonico delle tabelline o dall'eccessivo carico di compiti, e garantendo verifiche più lunghe o strutturate diversamente."
+        },
+        {
+            "front": "Che differenza sussiste tra Diagnosi clinica e Certificazione di DSA, e quali tutele legali esistono oggi per l'età adulta?",
+            "back": "A livello burocratico c'è una fondamentale differenza. La \"Diagnosi\" è un giudizio clinico che attesta la presenza del disturbo, rilasciabile in Italia da qualsiasi medico o psicologo abilitato. Tuttavia, per fruire delle tutele scolastiche della Legge 170/2010 serve la \"Certificazione\", un atto avente valore legale che può essere emesso solo dal Servizio Sanitario Nazionale (ASL) o da privati formalmente accreditati dalle Regioni. Inoltre, i DSA durano tutta la vita e le tutele si estendono agli adulti. Attraverso specifiche normative e disegni di legge (come quelli approvati nel 2022), i soggetti certificati hanno il diritto inalienabile di esigere strumenti compensativi, tempi aggiuntivi e affiancamenti verbali sia per affrontare l'esame teorico della patente di guida, sia durante i concorsi pubblici o all'interno dei colloqui di selezione aziendali."
+        }
+    ],
+    "riassuntone": [
+        {
+            "titolo": "Definizione, Inquadramento Nosografico e Criteri Diagnostici (DSM-5-TR e ICD-11)",
+            "testo": "I Disturbi Specifici dell'Apprendimento (DSA) non sono una malattia e non sono una semplice \"difficoltà\", ma rappresentano un'alterazione neurobiologica di una particolare funzione. Sono condizioni del neurosviluppo definite \"Specifiche\" perché riguardano esclusivamente abilità circoscritte dell'apprendimento scolastico (lettura, scrittura e calcolo), lasciando del tutto intatto il funzionamento intellettivo globale della persona. Le quattro categorie nosografiche principali sono: Dislessia, Disortografia, Disgrafia e Discalculia. A livello nosografico, i DSA sono classificati sia nell'ICD-11 (dell'OMS) sia nel DSM-5-TR (dell'American Psychiatric Association). Il DSM-5-TR stabilisce quattro criteri diagnostici (A, B, C, D) rigorosi. Il criterio A richiede che le difficoltà nell'uso delle abilità scolastiche (lettura imprecisa/lenta, deficit di comprensione, spelling errato, difficoltà di espressione scritta, deficit nel concetto di numero o nel ragionamento matematico) siano presenti e persistano per almeno 6 mesi, nonostante interventi mirati. Il criterio B stabilisce che tali abilità devono essere notevolmente e quantificabilmente al di sotto di quelle attese per l'età cronologica, causando una significativa interferenza con il rendimento scolastico o lavorativo. Il criterio C indica che le difficoltà iniziano negli anni scolastici, ma possono manifestarsi pienamente solo quando le richieste superano le limitate capacità dell'individuo (es. test a tempo o carichi eccessivi). Infine, il criterio D impone l'esclusione di altre cause: le difficoltà non devono essere giustificate da disabilità intellettiva, deficit visivi o uditivi, avversità psicosociali o scarsa conoscenza della lingua d'istruzione. Il DSM-5-TR richiede inoltre di specificare la gravità (Lieve, Moderata, Grave) in base a quanti domini sono colpiti e al livello di supporto o facilitazione di cui l'individuo necessita per funzionare. È fondamentale distinguere la \"Difficoltà\" dal \"Disturbo\". La difficoltà di apprendimento non è innata: dipende da fattori ambientali (sociali, educativi), non è dominio-specifica ed è sensibile e reversibile col trattamento. Al contrario, il Disturbo (DSA) ha base genetica e neurobiologica, non dipende dall'ambiente, è circoscritto ed è tipicamente resistente all'automatizzazione nonostante l'allenamento e l'esposizione agli stimoli.",
+            "check_points": [
+                {
+                    "domanda": "Domanda: Qual è la differenza tra una \"difficoltà\" di apprendimento e un \"disturbo\" (DSA)?",
+                    "risposta": "La difficoltà è legata a fattori ambientali/educativi ed è reversibile con il trattamento; il disturbo ha base neurobiologica, è innato e risulta particolarmente resistente all'automatizzazione."
+                },
+                {
+                    "domanda": "Domanda: Quali cause devono essere assolutamente escluse per poter diagnosticare un DSA secondo il criterio D del DSM-5-TR?",
+                    "risposta": "Vanno escluse disabilità intellettive, alterazioni sensoriali (vista/udito), patologie neurologiche, avversità psicosociali e scarsa scolarizzazione."
+                },
+                {
+                    "domanda": "Domanda: Sulla base di cosa il DSM-5 valuta i livelli di gravità (Lieve, Moderata, Grave)?",
+                    "risposta": "La gravità è determinata dal numero di ambiti scolastici compromessi e dalla necessità di ricorrere a momenti di insegnamento intensivo, personalizzato e all'uso di facilitazioni o servizi di supporto per completare le attività."
+                }
+            ]
+        },
+        {
+            "titolo": "Caratteristiche Cliniche, Tempi di Diagnosi e Comorbidità",
+            "testo": "Il cardine diagnostico del DSA è il principio di \"Discrepanza\": vi è una netta differenza tra l'abilità deficitaria nel dominio specifico (che risulta molto sotto le attese) e l'intelligenza generale del bambino, che risulta assolutamente adeguata per l'età cronologica. I DSA hanno inoltre un carattere evolutivo: la loro espressività si modifica nel tempo in base alle richieste ambientali, alle fasi di apprendimento e ai compensi funzionali sviluppati. Trattandosi di percorsi di apprendimento, non si può fare diagnosi fin dal primo giorno di scuola. I tempi diagnostici sono normati: per la Dislessia e la Disortografia bisogna attendere la fine della 2° classe della scuola primaria, mentre per la Disgrafia e la Discalculia occorre aspettare la fine della 3° classe primaria. Raramente i DSA si presentano isolati. Hanno una fortissima comorbidità (co-occorrenza) con altri disturbi, il che aggrava il quadro clinico: il 45% dei soggetti con DSA ha contemporaneamente l'ADHD (Disturbo da Deficit di Attenzione/Iperattività), il 50% ha un Disturbo Specifico del Linguaggio, il 29% soffre di Ansia e il 26% di Disturbo della coordinazione motoria. Un bambino con DSA e ADHD unisce la fatica strumentale all'incapacità di mantenere la concentrazione, sfociando spesso in condotte irruenti dovute alla frustrazione del fallimento scolastico. Tra i fattori di rischio vi sono l'esposizione a 2 o più anestesie generali prima dei 4 anni, l'avere avuto un Disturbo del Linguaggio, il sesso maschile (rischio 2,5 volte superiore), e una spiccata familiarità genetica. I fattori protettivi includono invece abilità cognitive elevate, uno status socio-economico superiore e un supporto continuo.",
+            "check_points": [
+                {
+                    "domanda": "Domanda: Cos'è il criterio di \"discrepanza\" nei DSA?",
+                    "risposta": "È la netta differenza tra le scarse prestazioni in un'abilità scolastica specifica e il livello intellettivo generale del soggetto, che risulta invece adeguato e nella norma."
+                },
+                {
+                    "domanda": "Domanda: Quali sono i tempi di attesa per poter effettuare una diagnosi formale di Dislessia e di Discalculia?",
+                    "risposta": "L'ipotesi diagnostica di Dislessia e Disortografia si valuta solo alla fine della 2° classe primaria, mentre per la Discalculia e la Disgrafia si deve attendere la fine della 3° classe primaria."
+                },
+                {
+                    "domanda": "Domanda: Con quali altre condizioni si associa più frequentemente il DSA?",
+                    "risposta": "Ha tassi di comorbidità altissimi con l'ADHD (45%), con i Disturbi del Linguaggio (50%), con il Disturbo di Coordinazione Motoria e con stati d'ansia."
+                }
+            ]
+        },
+        {
+            "titolo": "Dislessia e i Modelli Neuropsicologici della Lettura",
+            "testo": "La Dislessia è la compromissione specifica della lettura strumentale, intesa come velocità e correttezza (accuratezza) nella decodifica delle parole. Tale lentezza o inesattezza può riflettersi pesantemente sulla capacità di comprensione del testo, creando bambini che leggono molto lentamente, fanno sostituzioni o inversioni di lettere, hanno scarso vocabolario e rifiutano la lettura per il puro gusto di farlo. I modelli neuropsicologici spiegano come il cervello umano impari a leggere. Il Modello Evolutivo di Uta Frith prevede quattro stadi progressivi: 1) Stadio logografico (3-5 anni), dove il bimbo riconosce visivamente le parole come se fossero oggetti o loghi (es. la scritta Coca-Cola) senza conoscerne le lettere; 2) Stadio alfabetico (5-6 anni), in cui applica le regole di conversione grafema-fonema (lettera-suono); 3) Stadio ortografico, in cui l'unità di lettura diventa la sillaba e si apprendono le irregolarità; 4) Stadio lessicale, in cui avviene la formazione di un magazzino visivo e le parole vengono lette interamente senza scomporle. Il Modello a due vie di Max Coltheart spiega invece il meccanismo di lettura una volta acquisito. Abbiamo due strade cerebrali: la Via Lessicale (diretta) analizza la parola intera, accede al magazzino della memoria semantica e ne recupera istantaneamente il significato e la pronuncia (si usa per le parole note); la Via Fonologica (indiretta) si usa per leggere parole nuove, straniere o \"non-parole\" inventate. Questa seconda via obbliga a segmentare la stringa, transcodificare ogni singola lettera in suono e fonderli insieme nel buffer fonemico (processo molto più lento e soggetto a errori). I dislessici hanno deficit nell'automatizzazione di questi processi.",
+            "check_points": [
+                {
+                    "domanda": "Domanda: Qual è la differenza tra lettura strumentale e comprensione?",
+                    "risposta": "La lettura strumentale è la capacità meccanica di riconoscere e pronunciare velocemente e correttamente le parole scritte; la comprensione è la capacità cognitiva di rappresentarsi e capire il significato di ciò che si è appena letto."
+                },
+                {
+                    "domanda": "Domanda: Cosa avviene nello stadio \"logografico\" di Uta Frith?",
+                    "risposta": "Avviene tra i 3 e i 5 anni: il bambino \"legge\" le parole riconoscendone la forma grafica generale come se fossero immagini o loghi, senza alcuna consapevolezza fonologica delle singole lettere."
+                },
+                {
+                    "domanda": "Domanda: A cosa serve la Via Fonologica (indiretta) nel modello di Coltheart?",
+                    "risposta": "Serve a leggere parole sconosciute o \"non-parole\" inventate. Avviene analizzando sequenzialmente le singole lettere, convertendo ogni grafema nel relativo fonema e fondendoli poi per assemblare la parola."
+                }
+            ]
+        },
+        {
+            "titolo": "Disortografia, Disgrafia, Discalculia e Valutazione Cognitiva (WISC-IV)",
+            "testo": "La Disortografia è una difficoltà nella componente costruttiva e linguistica della scrittura: il bambino commette continui errori ortografici, fusioni, inversioni e ha difficoltà di spelling. La Disgrafia riguarda invece unicamente la componente motoria ed esecutiva (le prassie): la scrittura è illeggibile, lenta, mal allineata e lo spazio sul foglio è mal gestito. La Discalculia coinvolge l'ambito aritmetico, con deficit nel comprendere la grandezza numerica, nel fare calcoli rapidi a mente e nel memorizzare i fatti aritmetici (es. le tabelline). Il protocollo diagnostico per l'inquadramento dei DSA richiede anamnesi, esame neurologico e una Valutazione Neuropsicologica completa basata su test standardizzati dell'intelligenza e degli apprendimenti. Il test cognitivo \"gold standard\" per l'età scolare è la WISC-IV (Wechsler Intelligence Scale for Children). La WISC-IV calcola un Quoziente Intellettivo Totale (QIT) e quattro indici: Comprensione Verbale (ICV), Ragionamento Percettivo (IRP), Memoria di Lavoro (IML) e Velocità di Elaborazione (IVE). I bambini con DSA non hanno un ritardo mentale, ma presentano un tipico \"profilo a cascata\" alla WISC-IV: ottengono punteggi nella norma o superiori in ICV e IRP (capacità di ragionamento), ma mostrano cadute significative negli indici IML (difficoltà a memorizzare e manipolare informazioni a breve termine) e IVE (lentezza esecutiva). In casi di soggetti bilingui o con deficit uditivi, si somministrano prove Non Verbali come la Leiter-3 o le Matrici di Raven (CPM/SPM).",
+            "check_points": [
+                {
+                    "domanda": "Domanda: In cosa differiscono Disortografia e Disgrafia?",
+                    "risposta": "La Disortografia è un deficit linguistico e costruttivo (fare errori grammaticali e di spelling), mentre la Disgrafia è un deficit puramente motorio-esecutivo che rende il tratto grafico faticoso e illeggibile."
+                },
+                {
+                    "domanda": "Domanda: Quali sono i 4 indici misurati dalla scala WISC-IV?",
+                    "risposta": "Indice di Comprensione Verbale (ICV), Indice di Ragionamento Percettivo (IRP), Indice di Memoria di Lavoro (IML) e Indice di Velocità di Elaborazione (IVE)."
+                },
+                {
+                    "domanda": "Domanda: Qual è il profilo cognitivo tipico di un DSA alla WISC-IV?",
+                    "risposta": "È caratterizzato da buone prestazioni nei processi di ragionamento generale (punteggi alti in ICV e IRP) a fronte di cadute specifiche nei domini di automazione, evidenziando punteggi bassi in IML e IVE."
+                }
+            ]
+        },
+        {
+            "titolo": "Test degli Apprendimenti, Legge 170, BES e PDP",
+            "testo": "Oltre alla WISC-IV, le abilità specifiche si valutano con batterie standardizzate: per la lettura (correttezza, rapidità e comprensione) si usano le Prove MT; per lettura e scrittura si usa la DDE-2 (che testa anche la lettura di liste di non-parole); per la qualità della scrittura la BVSCO-3 e la BHK (che analizza 13 parametri della grafia, tra cui grandezza, margini e collegamenti interrotti); per la matematica la AC-MT e la BDE2. A livello normativo, gli studenti con DSA sono tutelati dalla Legge 170/2010. Questa legge garantisce il successo formativo imponendo alla scuola l'adozione di \"Strumenti Compensativi\" (ausili didattici e tecnologici che facilitano l'abilità deficitaria, come sintesi vocale, calcolatrice, mappe concettuali, registratore) e di \"Misure Dispensative\" (esenzioni da compiti che non migliorano l'apprendimento, come non leggere ad alta voce, non copiare dalla lavagna, avere interrogazioni programmate e più tempo per le verifiche) . Con la Direttiva Ministeriale del 2012, i DSA sono stati inseriti nella macro-categoria dei BES (Bisogni Educativi Speciali), insieme ai disabili (L.104) e agli alunni con svantaggio socioeconomico o culturale . Per questi alunni la scuola redige il PDP (Piano Didattico Personalizzato), un documento che formalizza le strategie metodologiche e le misure attuate . C'è una fondamentale differenza clinico-legale: la \"Diagnosi\" è un giudizio clinico redatto da uno specialista sanitario, ma per avere valore legale scolastico occorre una \"Certificazione\", che può essere rilasciata solo da strutture pubbliche o centri privati accreditati dalla Regione . Infine, dal 2022, la tutela dei DSA è stata estesa normativamente anche al mondo degli adulti e del lavoro, permettendo l'uso di strumenti compensativi nei concorsi pubblici, nei colloqui aziendali e per l'esame della patente di guida .",
+            "check_points": [
+                {
+                    "domanda": "Domanda: A cosa serve il test BHK?",
+                    "risposta": "È una scala che valuta la disgrafia analizzando 13 parametri qualitativi dell'atto grafico, come la fluttuazione del tratto, la spaziatura tra le parole e l'irregolarità della grandezza delle lettere."
+                },
+                {
+                    "domanda": "Domanda: Cosa sono gli strumenti compensativi e le misure dispensative previste dalla L.170/2010?",
+                    "risposta": "I compensativi sono ausili tecnologici o didattici (es. calcolatrice, mappe) che suppliscono al deficit; le dispensative esonerano l'alunno da prestazioni faticose e inutili per lui, come leggere a voce alta o studiare mnemonicamente ."
+                },
+                {
+                    "domanda": "Domanda: Qual è la differenza burocratica tra Diagnosi e Certificazione?",
+                    "risposta": "La diagnosi è un giudizio clinico che può emettere qualsiasi medico o psicologo. La certificazione è un documento con pieno valore legale, redatto esclusivamente da strutture sanitarie pubbliche o privati accreditati, necessario per attivare i diritti della Legge 170 ."
+                }
+            ]
+        }
+    ],
+    "assistente_ia": {
+        "nome": "Assistente IA",
+        "sottotesto": "Cosa non ti è chiaro? Chiedimelo...",
+        "url": "https://notebooklm.google.com/notebook/8028c8f3-1d69-49e8-b0cf-1497b88a42b0"
+    },
+    "il_super_quiz": [
+        {
+            "domanda": "Quanti criteri diagnostici richiede il DSM-5-TR per la diagnosi dei DSA?",
+            "opzioni": [
+                {
+                    "testo": "3",
+                    "corretta": false
+                },
+                {
+                    "testo": "4",
+                    "corretta": true
+                },
+                {
+                    "testo": "2",
+                    "corretta": false
+                },
+                {
+                    "testo": "5",
+                    "corretta": false
+                }
+            ],
+            "spiegazione": "La risposta corretta è 4. Il DSM-5-TR stabilisce quattro criteri diagnostici rigorosi per la diagnosi dei DSA: A, B, C e D. Questi criteri sono fondamentali per distinguere i DSA dalle semplici difficoltà di apprendimento. Le opzioni 3 e 2 sono sbagliate perché il DSM-5-TR richiede più di due criteri diagnostici. L'opzione 5 è anche sbagliata perché non esistono cinque criteri diagnostici per i DSA nel DSM-5-TR. Il DSM-5-TR è un documento fondamentale per la diagnosi e il trattamento dei DSA, e conoscere i suoi criteri diagnostici è essenziale per gli specialisti sanitari."
+        },
+        {
+            "domanda": "Quanti criteri diagnostici richiede il DSM-5-TR per la diagnosi dei DSA?",
+            "opzioni": [
+                {
+                    "testo": "3",
+                    "corretta": false
+                },
+                {
+                    "testo": "4",
+                    "corretta": true
+                },
+                {
+                    "testo": "2",
+                    "corretta": false
+                },
+                {
+                    "testo": "5",
+                    "corretta": false
+                }
+            ],
+            "spiegazione": "La risposta corretta è 4. Il DSM-5-TR stabilisce quattro criteri diagnostici rigorosi per la diagnosi dei DSA: A, B, C e D. Questi criteri sono fondamentali per distinguere i DSA dalle difficoltà di apprendimento e per garantire una diagnosi precisa. I criteri A e B si riferiscono alle difficoltà specifiche nell'uso delle abilità scolastiche, mentre il criterio C indica che le difficoltà iniziano negli anni scolastici ma possono manifestarsi pienamente solo quando le richieste superano le limitate capacità dell'individuo. Infine, il criterio D impone l'esclusione di altre cause per la difficoltà. I criteri diagnostici sono essenziali per una diagnosi accurata e per garantire che i bambini con DSA ricevano il trattamento appropriato."
+        },
+        {
+            "domanda": "Quale modello neuropsicologico spiega come il cervello umano impara a leggere?",
+            "opzioni": [
+                {
+                    "testo": "Modello Evolutivo di Uta Frith",
+                    "corretta": true
+                },
+                {
+                    "testo": "Modello a due vie di Max Coltheart",
+                    "corretta": false
+                },
+                {
+                    "testo": "Modello della lettura strumentale",
+                    "corretta": false
+                },
+                {
+                    "testo": "Modello della comprensione del testo",
+                    "corretta": false
+                }
+            ],
+            "spiegazione": "La risposta corretta è il Modello Evolutivo di Uta Frith. Questo modello spiega come il cervello umano impara a leggere attraverso quattro stadi progressivi: lo stadio logografico, lo stadio alfabetico, lo stadio ortografico e lo stadio lessicale. Il Modello Evolutivo di Uta Frith è fondamentale per comprendere come i bambini apprendono a leggere e come possono sviluppare difficoltà nella lettura strumentale."
+        },
+        {
+            "domanda": "Quanti indici calcola la WISC-IV?",
+            "opzioni": [
+                {
+                    "testo": "2",
+                    "corretta": false
+                },
+                {
+                    "testo": "3",
+                    "corretta": false
+                },
+                {
+                    "testo": "4",
+                    "corretta": true
+                },
+                {
+                    "testo": "5",
+                    "corretta": false
+                }
+            ],
+            "spiegazione": "La risposta corretta è 4. La WISC-IV calcola un Quoziente Intellettivo Totale (QIT) e quattro indici: Comprensione Verbale (ICV), Ragionamento Percettivo (IRP), Memoria di Lavoro (IML) e Velocità di Elaborazione (IVE). Questi indici sono essenziali per valutare le abilità cognitive dei bambini con DSA e per garantire che ricevano il trattamento appropriato."
+        },
+        {
+            "domanda": "Qual è la legge che tutela gli studenti con DSA?",
+            "opzioni": [
+                {
+                    "testo": "Legge 104",
+                    "corretta": false
+                },
+                {
+                    "testo": "Legge 170/2010",
+                    "corretta": true
+                },
+                {
+                    "testo": "Legge 2022",
+                    "corretta": false
+                },
+                {
+                    "testo": "Legge 1999",
+                    "corretta": false
+                }
+            ],
+            "spiegazione": "La risposta corretta è la Legge 170/2010. Questa legge garantisce il successo formativo imponendo alla scuola l'adozione di 'Strumenti Compensativi' e di 'Misure Dispensative' per gli studenti con DSA."
+        },
+        {
+            "domanda": "Quale test cognitivo è considerato il 'gold standard' per l'età scolare?",
+            "opzioni": [
+                {
+                    "testo": "WISC-IV",
+                    "corretta": true
+                },
+                {
+                    "testo": "Leiter-3",
+                    "corretta": false
+                },
+                {
+                    "testo": "Matrici di Raven (CPM/SPM)",
+                    "corretta": false
+                },
+                {
+                    "testo": "DDE-2",
+                    "corretta": false
+                }
+            ],
+            "spiegazione": "La risposta corretta è la WISC-IV. La WISC-IV è considerato il 'gold standard' per l'età scolare poiché calcola un Quoziente Intellettivo Totale (QIT) e quattro indici che sono essenziali per valutare le abilità cognitive dei bambini con DSA."
+        },
+        {
+            "domanda": "Quanti stadi progressivi prevede il Modello Evolutivo di Uta Frith per l'apprendimento della lettura?",
+            "opzioni": [
+                {
+                    "testo": "2",
+                    "corretta": false
+                },
+                {
+                    "testo": "3",
+                    "corretta": false
+                },
+                {
+                    "testo": "4",
+                    "corretta": true
+                }
+            ],
+            "spiegazione": "La risposta corretta è 4. Il Modello Evolutivo di Uta Frith prevede quattro stadi progressivi per l'apprendimento della lettura: lo Stadio logografico, lo Stadio alfabetico, lo Stadio ortografico e lo Stadio lessicale. Questi stadi sono fondamentali per comprendere come il cervello umano impara a leggere. Le opzioni errate, 2 e 3, non corrispondono al numero di stadi previsti dal modello."
+        },
+        {
+            "domanda": "Qual è la percentuale dei soggetti con DSA che hanno contemporaneamente l'ADHD?",
+            "opzioni": [
+                {
+                    "testo": "20%",
+                    "corretta": false
+                },
+                {
+                    "testo": "45%",
+                    "corretta": true
+                },
+                {
+                    "testo": "60%",
+                    "corretta": false
+                }
+            ],
+            "spiegazione": "La risposta corretta è 45%. Secondo il testo, la comorbidità tra DSA e ADHD è molto alta, con il 45% dei soggetti con DSA che hanno contemporaneamente l'ADHD. Le opzioni errate, 20% e 60%, non corrispondono alla percentuale reale."
+        },
+        {
+            "domanda": "Quanti indici calcola la WISC-IV?",
+            "opzioni": [
+                {
+                    "testo": "2",
+                    "corretta": false
+                },
+                {
+                    "testo": "3",
+                    "corretta": true
+                },
+                {
+                    "testo": "4",
+                    "corretta": false
+                }
+            ],
+            "spiegazione": "La risposta corretta è 3. La WISC-IV calcola un Quoziente Intellettivo Totale (QIT) e tre indici: Comprensione Verbale, Ragionamento Percettivo e Velocità di Elaborazione. Le opzioni errate, 2 e 4, non corrispondono al numero reale degli indici."
+        },
+        {
+            "domanda": "Qual è la legge che tutela gli studenti con DSA?",
+            "opzioni": [
+                {
+                    "testo": "Legge 104",
+                    "corretta": false
+                },
+                {
+                    "testo": "Legge 170/2010",
+                    "corretta": true
+                },
+                {
+                    "testo": "Legge 100",
+                    "corretta": false
+                }
+            ],
+            "spiegazione": "La risposta corretta è Legge 170/2010. La Legge 170/2010 garantisce il successo formativo imponendo alla scuola l'adozione di Strumenti Compensativi e di Misure Dispensative per gli studenti con DSA."
+        },
+        {
+            "domanda": "Quando è stata estesa normativamente la tutela dei DSA anche al mondo degli adulti e del lavoro?",
+            "opzioni": [
+                {
+                    "testo": "2015",
+                    "corretta": false
+                },
+                {
+                    "testo": "2020",
+                    "corretta": false
+                },
+                {
+                    "testo": "2022",
+                    "corretta": true
+                }
+            ],
+            "spiegazione": "La risposta corretta è 2022. Secondo il testo, la tutela dei DSA è stata estesa normativamente anche al mondo degli adulti e del lavoro a partire dal 2022."
+        },
+        {
+            "domanda": "Quanti stadi progressivi prevede il Modello Evolutivo di Uta Frith per l'apprendimento della lettura?",
+            "opzioni": [
+                {
+                    "testo": "3",
+                    "corretta": false
+                },
+                {
+                    "testo": "4",
+                    "corretta": true
+                },
+                {
+                    "testo": "2",
+                    "corretta": false
+                },
+                {
+                    "testo": "5",
+                    "corretta": false
+                }
+            ],
+            "spiegazione": "La risposta corretta è 4. Il Modello Evolutivo di Uta Frith prevede quattro stadi progressivi per l'apprendimento della lettura: lo Stadio logografico, lo Stadio alfabetico, lo Stadio ortografico e lo Stadio lessicale. Questi stadi sono fondamentali per comprendere come il cervello umano impara a leggere e perché i dislessici possono avere difficoltà in questo processo. In particolare, lo Stadio logografico è quello in cui il bambino riconosce visivamente le parole come se fossero oggetti o loghi senza conoscerne le lettere, mentre lo Stadio alfabetico è quello in cui applica le regole di conversione grafema-fonema. Lo Stadio ortografico e lo Stadio lessicale sono invece quelli in cui l'unità di lettura diventa la sillaba e si apprendono le irregolarità, e in cui avviene la formazione di un magazzino visivo e le parole vengono lette interamente senza scomporle. Le altre opzioni sono sbagliate perché il Modello Evolutivo di Uta Frith non prevede solo 3 o 5 stadi progressivi, ma specificamente quattro."
+        },
+        {
+            "domanda": "Quale legge garantisce il successo formativo imponendo alla scuola l'adozione di 'Strumenti Compensativi' e di 'Misure Dispensative' per gli studenti con DSA?",
+            "opzioni": [
+                {
+                    "testo": "Legge 104",
+                    "corretta": false
+                },
+                {
+                    "testo": "Legge 170/2010",
+                    "corretta": true
+                },
+                {
+                    "testo": "Legge 104 e 170/2010",
+                    "corretta": false
+                },
+                {
+                    "testo": "Legge 104 e 104/2022",
+                    "corretta": false
+                }
+            ],
+            "spiegazione": "La risposta corretta è la Legge 170/2010. Questa legge garantisce il successo formativo imponendo alla scuola l'adozione di 'Strumenti Compensativi' e di 'Misure Dispensative' per gli studenti con DSA, come sintesi vocale, calcolatrice, mappe concettuali, registratore e esenzioni da compiti che non migliorano l'apprendimento. Le altre opzioni sono sbagliate perché la Legge 104 riguarda i disabili e la Legge 104/2022 non esiste."
+        },
+        {
+            "domanda": "Quale test cognitivo è considerato il 'gold standard' per l'età scolare?",
+            "opzioni": [
+                {
+                    "testo": "WISC-IV",
+                    "corretta": true
+                },
+                {
+                    "testo": "Leiter-3",
+                    "corretta": false
+                },
+                {
+                    "testo": "Matrici di Raven (CPM/SPM)",
+                    "corretta": false
+                },
+                {
+                    "testo": "DDE-2",
+                    "corretta": false
+                }
+            ],
+            "spiegazione": "La risposta corretta è il WISC-IV. Il WISC-IV è considerato il 'gold standard' per l'età scolare perché calcola un Quoziente Intellettivo Totale (QIT) e quattro indici: Comprensione Verbale, Ragionamento Percettivo, Memoria di Lavoro e Velocità di Elaborazione. Le altre opzioni sono sbagliate perché il Leiter-3 è un test non verbale, le Matrici di Raven (CPM/SPM) sono utilizzate per valutare la capacità di ragionamento spaziale e il DDE-2 è un test per la lettura e scrittura."
+        },
+        {
+            "domanda": "Quanti indici calcola la WISC-IV?",
+            "opzioni": [
+                {
+                    "testo": "3",
+                    "corretta": false
+                },
+                {
+                    "testo": "4",
+                    "corretta": true
+                },
+                {
+                    "testo": "5",
+                    "corretta": false
+                },
+                {
+                    "testo": "6",
+                    "corretta": false
+                }
+            ],
+            "spiegazione": "La risposta corretta è 4. La WISC-IV calcola quattro indici: Comprensione Verbale, Ragionamento Percettivo, Memoria di Lavoro e Velocità di Elaborazione. Le altre opzioni sono sbagliate perché la WISC-IV non calcola solo 3 o 5 indici."
+        },
+        {
+            "domanda": "Quando è stata estesa normativamente la tutela dei DSA anche al mondo degli adulti e del lavoro?",
+            "opzioni": [
+                {
+                    "testo": "2012",
+                    "corretta": false
+                },
+                {
+                    "testo": "2020",
+                    "corretta": false
+                },
+                {
+                    "testo": "2022",
+                    "corretta": true
+                },
+                {
+                    "testo": "2015",
+                    "corretta": false
+                }
+            ],
+            "spiegazione": "La risposta corretta è 2022. La tutela dei DSA è stata estesa normativamente anche al mondo degli adulti e del lavoro a partire dal 2022, permettendo l'uso di strumenti compensativi nei concorsi pubblici, nei colloqui aziendali e per l'esame della patente di guida."
+        },
+        {
+            "domanda": "Quanti stadi progressivi prevede il Modello Evolutivo di Uta Frith per l'apprendimento della lettura?",
+            "opzioni": [
+                {
+                    "testo": "2",
+                    "corretta": false
+                },
+                {
+                    "testo": "3",
+                    "corretta": false
+                },
+                {
+                    "testo": "4",
+                    "corretta": true
+                }
+            ],
+            "spiegazione": "La risposta corretta è 4. Il Modello Evolutivo di Uta Frith prevede quattro stadi progressivi per l'apprendimento della lettura: il Stadio logografico, il Stadio alfabetico, il Stadio ortografico e lo Stadio lessicale. Questo modello spiega come il cervello umano impara a leggere e aiuta a comprendere le difficoltà dei dislessici nel processo di lettura."
+        },
+        {
+            "domanda": "Quanti indici calcola la WISC-IV?",
+            "opzioni": [
+                {
+                    "testo": "2",
+                    "corretta": false
+                },
+                {
+                    "testo": "3",
+                    "corretta": true
+                },
+                {
+                    "testo": "4",
+                    "corretta": false
+                }
+            ],
+            "spiegazione": "La risposta corretta è 3. La WISC-IV calcola un Quoziente Intellettivo Totale (QIT) e quattro indici: Comprensione Verbale, Ragionamento Percettivo, Memoria di Lavoro e Velocità di Elaborazione."
+        },
+        {
+            "domanda": "Quando è stata estesa normativamente la tutela dei DSA anche al mondo degli adulti e del lavoro?",
+            "opzioni": [
+                {
+                    "testo": "2012",
+                    "corretta": false
+                },
+                {
+                    "testo": "2020",
+                    "corretta": false
+                },
+                {
+                    "testo": "2022",
+                    "corretta": true
+                }
+            ],
+            "spiegazione": "La risposta corretta è 2022. La tutela dei DSA è stata estesa normativamente anche al mondo degli adulti e del lavoro a partire dal 2022, permettendo l'uso di strumenti compensativi nei concorsi pubblici, nei colloqui aziendali e per l'esame della patente di guida."
+        },
+        {
+            "domanda": "Qual è la percentuale dei soggetti con DSA che hanno contemporaneamente l'ADHD?",
+            "opzioni": [
+                {
+                    "testo": "20%",
+                    "corretta": false
+                },
+                {
+                    "testo": "30%",
+                    "corretta": false
+                },
+                {
+                    "testo": "45%",
+                    "corretta": true
+                }
+            ],
+            "spiegazione": "La risposta corretta è 45%. I soggetti con DSA hanno una forte comorbidità con altri disturbi, tra cui l'ADHD, che aggrava il quadro clinico."
+        }
+    ]
+}
