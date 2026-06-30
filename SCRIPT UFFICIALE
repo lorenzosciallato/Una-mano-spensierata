@@ -1,128 +1,16 @@
-!pip install -q openai
+!pip install -q beautifulsoup4
 
 import os
 import json
 import re
-import math
-import subprocess
-import time
 import zipfile
-import requests
 from bs4 import BeautifulSoup
-from openai import OpenAI
 from google.colab import files
-import getpass
 
 # =============================================================================
-# COSTANTI
+# CARICAMENTO MULTI-FILE HTML
 # =============================================================================
-NUM_DOMANDE_QUIZ = 20
-
-# Le domande NON vengono più chiese tutte insieme in un'unica chiamata: con 20
-# domande + spiegazioni lunghe in stile NotebookLM, il budget di token si esauriva
-# e i modelli (specie Ollama) si fermavano ben prima di arrivare a 20. Generandole
-# a blocchi più piccoli, ogni chiamata ha tanto margine per fare spiegazioni curate
-# E si arriva davvero al totale richiesto sommando i blocchi.
-BATCH_SIZE = 5
-
-# Quiz "segnaposto": stessa identica struttura (domanda/opzioni/corretta/spiegazione)
-# delle domande vere, così il template HTML lo renderizza senza modifiche.
-# Serve per i casi in cui NESSUN motore (né Gemini né Ollama) riesce a generare
-# il quiz: la lezione viene salvata e inclusa nello zip comunque, con questo
-# "avviso" al posto delle 20 domande, invece di sparire silenziosamente dallo zip.
-QUIZ_SEGNAPOSTO = [
-    {
-        "domanda": "⚠️ Quiz non disponibile per questa lezione",
-        "opzioni": [
-            {"testo": "Il Super Quiz non è stato generato correttamente per questa lezione (errore o sovraccarico dei motori AI). Riprova a rigenerarlo più tardi.", "corretta": True},
-            {"testo": "—", "corretta": False},
-            {"testo": "—", "corretta": False},
-            {"testo": "—", "corretta": False}
-        ],
-        "spiegazione": "Durante l'elaborazione automatica nessuno dei motori disponibili (Gemini / Ollama) è riuscito a generare le domande per questa lezione. Il file JSON è stato comunque salvato e incluso nello zip, per non interrompere il caricamento del corso: puoi rigenerare il quiz in un secondo momento ricaricando solo questo file HTML."
-    }
-]
-
-# =============================================================================
-# 1. SETUP OLLAMA — motore locale gratuito, senza limiti esterni (fallback)
-#    Gira sulla GPU della sessione Colab: nessuna chiave richiesta.
-# =============================================================================
-print("🦙 Preparazione di Ollama (motore locale di fallback)...")
-ollama_client = None
-OLLAMA_MODEL = "llama3.1:8b"
-try:
-    subprocess.run(['apt-get', 'install', '-y', '-q', 'pciutils', 'zstd'], check=True, capture_output=True)
-    subprocess.run('curl -fsSL https://ollama.com/install.sh | sh', shell=True, check=True, capture_output=True)
-
-    subprocess.Popen(
-        ['ollama', 'serve'],
-        stdout=open('ollama.log', 'w'),
-        stderr=open('ollama_error.log', 'w')
-    )
-
-    server_pronto = False
-    for _ in range(30):
-        try:
-            requests.get('http://localhost:11434')
-            server_pronto = True
-            break
-        except requests.exceptions.ConnectionError:
-            time.sleep(1)
-
-    if server_pronto:
-        print(f"   📥 Scarico il modello {OLLAMA_MODEL} (la prima volta richiede qualche minuto)...")
-        subprocess.run(['ollama', 'pull', OLLAMA_MODEL], check=True)
-
-        # L'endpoint OpenAI-compatibile di Ollama (quello che usiamo qui) NON permette
-        # di alzare la finestra di contesto passando parametri nella richiesta: di default
-        # Ollama usa solo 2048-4096 token e TRONCA IN SILENZIO tutto ciò che eccede,
-        # senza nessun errore. I nostri prompt (testo lezione + istruzioni + domande già
-        # fatte) superano facilmente quel limite, e il modello troncato perde le istruzioni
-        # sullo schema JSON -> risponde con JSON valido ma vuoto.
-        # L'unico modo davvero affidabile per alzare il contesto è creare una variante del
-        # modello con un Modelfile che fissa num_ctx esplicitamente.
-        OLLAMA_CONTEXT_SIZE = 16384
-        modelfile_path = 'Modelfile_quiz'
-        with open(modelfile_path, 'w') as f:
-            f.write(f"FROM {OLLAMA_MODEL}\nPARAMETER num_ctx {OLLAMA_CONTEXT_SIZE}\n")
-        OLLAMA_MODEL_QUIZ = "lezioni-quiz-8b"
-        print(f"   🧩 Creo la variante '{OLLAMA_MODEL_QUIZ}' con contesto esteso a {OLLAMA_CONTEXT_SIZE} token...")
-        subprocess.run(['ollama', 'create', OLLAMA_MODEL_QUIZ, '-f', modelfile_path], check=True)
-        OLLAMA_MODEL = OLLAMA_MODEL_QUIZ
-
-        ollama_client = OpenAI(base_url="http://localhost:11434/v1", api_key="ollama")
-        print("   ✅ Ollama pronto come fallback locale (contesto esteso attivo).")
-    else:
-        print("   ⚠️ Il server Ollama non si è avviato (controlla ollama_error.log). Procedo senza fallback locale.")
-except subprocess.CalledProcessError as e_ollama:
-    dettaglio = e_ollama.stderr.decode('utf-8', errors='ignore').strip() if e_ollama.stderr else str(e_ollama)
-    print(f"   ⚠️ Setup Ollama fallito. Dettaglio:\n{dettaglio}\n   Procedo senza fallback locale.")
-except Exception as e_ollama:
-    print(f"   ⚠️ Setup Ollama fallito ({e_ollama}). Procedo senza fallback locale.")
-
-# =============================================================================
-# 2. CONFIGURAZIONE API — GEMINI (primaria, opzionale) + OLLAMA (fallback locale)
-# =============================================================================
-print("\n🔑 Inserisci la tua API Key di GEMINI (Google AI Studio — opzionale).")
-print("   Premi solo Invio per saltare e usare solo Ollama:")
-gemini_api_key = getpass.getpass()
-
-gemini_client = None
-if gemini_api_key.strip():
-    # Gemini è raggiungibile tramite il suo endpoint compatibile con la libreria OpenAI:
-    # basta puntare base_url lì e usare la chiave Gemini al posto di quella OpenAI.
-    gemini_client = OpenAI(
-        api_key=gemini_api_key.strip(),
-        base_url="https://generativelanguage.googleapis.com/v1beta/openai/"
-    )
-    print("   ✅ Gemini attivo come motore primario.")
-else:
-    print("   ⚠️ Nessuna chiave Gemini inserita: si userà solo Ollama (se disponibile).")
-
-# =============================================================================
-# 2bis. CARICAMENTO MULTI-FILE HTML
-# =============================================================================
-print("\n📂 Carica TUTTI i file HTML delle lezioni (puoi selezionarli in massa):")
+print("📂 Carica TUTTI i file HTML delle lezioni (puoi selezionarli in massa):")
 uploaded = files.upload()
 
 html_files = {k: v for k, v in uploaded.items() if k.lower().endswith('.html')}
@@ -133,12 +21,11 @@ else:
     print(f"\n✅ Rilevati {len(html_files)} file HTML da processare.")
 
     # =========================================================================
-    # FUNZIONE ESTRAZIONE DATI MASTER (senza media) — INVARIATA
+    # FUNZIONE ESTRAZIONE DATI MASTER — INVARIATA
     # =========================================================================
     def estrai_dati_master(html_content):
         soup = BeautifulSoup(html_content, 'html.parser')
 
-        # Struttura pulita: niente podcast, video, csv, media
         dati = {
             "titolo_lezione": "",
             "sottotitolo": "",
@@ -267,25 +154,13 @@ else:
                     "check_points": cps
                 })
 
-        # --- ASSISTENTE IA (ricerca robusta del link NotebookLM) ---
-        # Nome e sottotesto sono FISSI: non vengono più "pescati" da h3/h2/h4 o da un
-        # <p> qualsiasi del documento. Era proprio questa ricerca generica la causa del
-        # bug per cui l'assistente risultava chiamarsi "ASMR" con sottotesto "Check point:"
-        # (veniva preso il primo <h4> e il primo <p> di lunghezza compatibile trovati in
-        # tutta la pagina, indipendentemente dalla sezione in cui si trovavano).
+        # --- ASSISTENTE IA ---
         ia_url = ""
-
-        # 1. Priorità: cerca il link DENTRO il contenitore noto della sezione Assistente IA,
-        #    così non rischiamo di prendere un link notebooklm.google.com che compare altrove
-        #    nella pagina (es. di un'altra lezione/materia lasciato per errore).
         ia_container = soup.select_one('.freud-bot-container, .ia-container, .ia-text-col')
         if ia_container:
             a_tag = ia_container.find('a', href=True)
             if a_tag and 'notebooklm.google.com' in a_tag['href']:
                 ia_url = a_tag['href']
-
-        # 2. Fallback: se il contenitore noto non esiste (template diverso), cerca il primo
-        #    link notebooklm.google.com in tutto il documento.
         if not ia_url:
             for a in soup.find_all('a', href=True):
                 if 'notebooklm.google.com' in a['href']:
@@ -296,157 +171,11 @@ else:
         dati["assistente_ia"]["nome"] = "Assistente IA"
         dati["assistente_ia"]["sottotesto"] = "Cosa non ti è chiaro? Chiedimelo..."
 
-        # --- TESTO PER IL QUIZ (preferisce il riassunto, fallback su tutto) ---
-        testo_quiz = ""
-        for r in dati["riassuntone"]:
-            testo_quiz += r["titolo"] + "\n\n" + r["testo"] + "\n\n"
-        if not testo_quiz.strip():
-            testo_quiz = soup.get_text(separator=' ', strip=True)
-
-        return dati, testo_quiz
+        return dati
 
     # =========================================================================
-    # FUNZIONE GENERAZIONE SUPER QUIZ — Gemini Flash (primario) con
-    # fallback automatico su Ollama locale se Gemini fallisce/non è configurato.
-    # Le domande vengono generate A BLOCCHI (vedi BATCH_SIZE) per garantire sia
-    # il numero totale richiesto sia spiegazioni davvero curate in stile NotebookLM.
+    # LOOP DI ELABORAZIONE BATCH
     # =========================================================================
-    def costruisci_prompt_quiz(testo_lezione, num_domande, domande_gia_fatte=None):
-        domande_gia_fatte = domande_gia_fatte or []
-        blocco_evitare = ""
-        if domande_gia_fatte:
-            elenco = "\n".join(f"- {d}" for d in domande_gia_fatte)
-            blocco_evitare = f"""
-ATTENZIONE: per questa stessa lezione sono GIÀ STATE generate le seguenti domande (in blocchi precedenti). NON ripeterle e NON crearne di troppo simili (stesso dettaglio/concetto testato):
-{elenco}
-
-Concentrati su altri dettagli, date, nomi, concetti o eventi del testo non ancora coperti dalle domande sopra.
-"""
-
-        return f"""Sei un esperto di Instructional Design e valutazione formativa, e stai creando un quiz nello stile discorsivo e curato di NotebookLM (Google).
-Devi generare ESATTAMENTE {num_domande} domande a risposta multipla (A-B-C-D) basate ESCLUSIVAMENTE sul testo fornito.
-{blocco_evitare}
-Regole rigide sulle DOMANDE:
-- Ogni domanda deve testare un dettaglio, data, nome, concetto o evento specifico presente nel testo.
-- Non ripetere mai domande o argomenti tra loro. Non inventare domande generiche (es. "Qual è l'importanza della storia...").
-- Le 3 opzioni errate devono essere plausibili, verosimili e mettere in difficoltà, ma devono essere chiaramente smentite dal testo.
-- La risposta corretta deve essere indicata con "corretta": true.
-- Le singole opzioni in "opzioni" devono contenere SOLO i campi "testo" e "corretta". NON aggiungere un campo "spiegazione" dentro le opzioni.
-
-Regole rigide sulla SPIEGAZIONE (campo "spiegazione", a livello di domanda, stile NotebookLM):
-- È un mini-paragrafo discorsivo di 5-7 frasi, scritto in prosa fluida e naturale come farebbe un tutor che spiega a voce. MAI elenchi puntati, MAI tono telegrafico.
-- Le prime 1-2 frasi dichiarano subito qual è la risposta corretta e la motivano citando un dettaglio CONCRETO e specifico del testo (non una motivazione generica).
-- Le 3 frasi successive spiegano perché OGNUNA delle altre 3 opzioni è sbagliata, una per una, agganciandosi a un dettaglio del testo che la smentisce — non limitarti a dire "è sbagliata", spiega il perché.
-- L'ultima frase collega il concetto al quadro più ampio della lezione, per aiutare a fissarlo in memoria.
-- È UNICA per ogni domanda e identica indipendentemente da quale opzione l'utente clicca.
-
-Restituisci ESCLUSIVAMENTE un oggetto JSON valido, senza testo extra né markdown:
-{{
-    "il_super_quiz": [
-        {{
-            "domanda": "...?",
-            "opzioni": [
-                {{"testo": "...", "corretta": false}},
-                {{"testo": "...", "corretta": true}},
-                {{"testo": "...", "corretta": false}},
-                {{"testo": "...", "corretta": false}}
-            ],
-            "spiegazione": "Paragrafo discorsivo di 5-7 frasi in stile NotebookLM, come descritto sopra."
-        }}
-    ]
-}}
-
-Testo della lezione (leggilo attentamente):
-{testo_lezione[:20000]}
-"""
-
-    def genera_quiz_gemini(prompt, gemini_client):
-        chat_completion = gemini_client.chat.completions.create(
-            messages=[{"role": "user", "content": prompt}],
-            model="gemini-3.5-flash",
-            response_format={"type": "json_object"},
-            temperature=0.3,
-            max_tokens=8192
-        )
-        risposta_json = json.loads(chat_completion.choices[0].message.content)
-        quiz = risposta_json.get("il_super_quiz", [])
-        if not quiz:
-            # JSON tecnicamente valido ma senza domande dentro: va trattato come un
-            # fallimento vero e proprio (altrimenti il chiamante penserebbe erroneamente
-            # che il blocco sia andato a buon fine con 0 domande).
-            raise ValueError("Risposta JSON valida ma senza domande nel campo 'il_super_quiz'.")
-        return quiz
-
-    def genera_quiz_ollama(prompt, ollama_client):
-        chat_completion = ollama_client.chat.completions.create(
-            messages=[{"role": "user", "content": prompt}],
-            model=OLLAMA_MODEL,
-            response_format={"type": "json_object"},
-            temperature=0.3,
-            max_tokens=8192
-        )
-        risposta_json = json.loads(chat_completion.choices[0].message.content)
-        quiz = risposta_json.get("il_super_quiz", [])
-        if not quiz:
-            raise ValueError("Risposta JSON valida ma senza domande nel campo 'il_super_quiz'.")
-        return quiz
-
-    def genera_quiz_batch(testo_lezione, gemini_client=None, ollama_client=None,
-                           num_totale=NUM_DOMANDE_QUIZ, batch_size=BATCH_SIZE):
-        # Catena di motori da provare in ordine per ogni singolo blocco: si passa
-        # al successivo solo se il precedente solleva un'eccezione (rate limit,
-        # timeout, JSON non valido, blocco di sicurezza...).
-        motori = []
-        if gemini_client is not None:
-            motori.append(("Gemini Flash", lambda p: genera_quiz_gemini(p, gemini_client)))
-        if ollama_client is not None:
-            motori.append(("Ollama locale", lambda p: genera_quiz_ollama(p, ollama_client)))
-
-        if not motori:
-            raise RuntimeError("Nessun motore di generazione disponibile (né Gemini né Ollama).")
-
-        def prova_blocco(n_richieste, domande_gia_fatte):
-            prompt = costruisci_prompt_quiz(testo_lezione, n_richieste, domande_gia_fatte)
-            for nome, funzione in motori:
-                try:
-                    quiz_parziale = funzione(prompt)
-                    print(f"      🟢 Blocco da {n_richieste} domande generato con {nome}")
-                    return quiz_parziale
-                except Exception as e:
-                    print(f"      🟠 {nome} non disponibile per questo blocco ({e})")
-            print(f"      ❌ Nessun motore ha completato questo blocco.")
-            return []
-
-        tutte_le_domande = []
-        n_blocchi = math.ceil(num_totale / batch_size)
-
-        # 1. Generazione a blocchi
-        for i in range(n_blocchi):
-            rimanenti = num_totale - len(tutte_le_domande)
-            if rimanenti <= 0:
-                break
-            n_richieste = min(batch_size, rimanenti)
-            print(f"   📦 Blocco {i + 1}/{n_blocchi}: richiedo {n_richieste} domande...")
-            domande_gia_fatte = [d.get("domanda", "") for d in tutte_le_domande]
-            tutte_le_domande.extend(prova_blocco(n_richieste, domande_gia_fatte))
-
-        # 2. Round di completamento se per qualche motivo mancano ancora domande
-        #    (es. un blocco è andato storto su tutti i motori)
-        mancanti = num_totale - len(tutte_le_domande)
-        if 0 < mancanti < num_totale:
-            print(f"   🔁 Mancano {mancanti} domande, provo un round di completamento...")
-            domande_gia_fatte = [d.get("domanda", "") for d in tutte_le_domande]
-            tutte_le_domande.extend(prova_blocco(mancanti, domande_gia_fatte))
-
-        if not tutte_le_domande:
-            raise RuntimeError("Nessuna domanda generata da nessun motore, su nessun blocco.")
-
-        # Non superare mai il totale richiesto, anche se un blocco ne ha generate di più
-        return tutte_le_domande[:num_totale]
-
-    # =============================================================================
-    # 3. LOOP DI ELABORAZIONE BATCH
-    # =============================================================================
     json_generati = []
 
     for filename, contenuto in html_files.items():
@@ -456,52 +185,33 @@ Testo della lezione (leggilo attentamente):
 
         try:
             html_content = contenuto.decode('utf-8')
-            dati, testo_quiz = estrai_dati_master(html_content)
+            dati = estrai_dati_master(html_content)
 
-            # Generazione Super Quiz a blocchi (Gemini -> Ollama). Se NESSUN blocco va
-            # a buon fine su nessun motore, la lezione NON viene scartata: viene salvata
-            # comunque con un quiz "segnaposto" al posto delle domande, così il file
-            # JSON non manca mai dallo zip finale (che viene caricato in blocco su GitHub).
-            print("   🧠 Generazione Super Quiz (a blocchi)...")
-            try:
-                quiz = genera_quiz_batch(testo_quiz, gemini_client, ollama_client)
-                dati["il_super_quiz"] = quiz
-                print(f"   ✅ {len(quiz)} domande generate in totale.")
-
-                if len(quiz) < NUM_DOMANDE_QUIZ:
-                    print(f"   ⚠️ ATTENZIONE: generate solo {len(quiz)}/{NUM_DOMANDE_QUIZ} domande! Il testo potrebbe essere troppo corto o alcuni blocchi sono falliti su tutti i motori.")
-                else:
-                    print(f"   ✅ Verifica: tutte e {NUM_DOMANDE_QUIZ} le domande sono presenti.")
-            except Exception as e_quiz:
-                print(f"   ❌ Generazione quiz fallita su tutti i motori disponibili ({e_quiz}).")
-                print(f"   📝 Salvo comunque la lezione con un quiz segnaposto (vedi il_super_quiz nel JSON).")
-                dati["il_super_quiz"] = QUIZ_SEGNAPOSTO
-
-            # Salvataggio singolo JSON — avviene SEMPRE, quiz riuscito o no
             nome_base = os.path.splitext(filename)[0]
             output_name = nome_base + '.json'
             with open(output_name, 'w', encoding='utf-8') as f:
                 json.dump(dati, f, ensure_ascii=False, indent=4)
 
             json_generati.append(output_name)
+            print(f"   ✅ Estratti: {len(dati['flashcards'])} flashcard, {len(dati['riassuntone'])} sezioni riassunto, {len(dati['punti_chiave'])} punti chiave")
             print(f"   💾 Salvato: {output_name}")
 
         except Exception as e:
             print(f"   ❌ Errore durante l'elaborazione di {filename}: {e}")
 
-    # =============================================================================
-    # 4. DOWNLOAD BATCH (ZIP UNICO)
-    # =============================================================================
+    # =========================================================================
+    # DOWNLOAD BATCH (ZIP UNICO)
+    # =========================================================================
     if json_generati:
-        zip_name = "lezioni_master_quiz.zip"
+        zip_name = "lezioni_json.zip"
         with zipfile.ZipFile(zip_name, 'w', zipfile.ZIP_DEFLATED) as zf:
             for nome in json_generati:
                 zf.write(nome)
 
         print(f"\n{'='*50}")
-        print(f"🎉 ELABORAZIONE COMPLETATA: {len(json_generati)} lezioni processate.")
-        print(f"🚀 Download batch in corso: {zip_name}")
+        print(f"🎉 COMPLETATO: {len(json_generati)} lezioni convertite.")
+        print(f"🚀 Download: {zip_name}")
         print(f"{'='*50}")
         files.download(zip_name)
     else:
-        print("\n⚠️ Nessun JSON è stato generato. Controlla gli errori sopra.")
+        print("\n⚠️ Nessun JSON generato. Controlla gli errori sopra.")
