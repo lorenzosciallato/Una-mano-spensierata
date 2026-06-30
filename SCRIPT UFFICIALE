@@ -1,0 +1,408 @@
+!pip install -q groq openai
+
+import os
+import json
+import re
+import subprocess
+import time
+import zipfile
+import requests
+from bs4 import BeautifulSoup
+from groq import Groq
+from openai import OpenAI
+from google.colab import files
+import getpass
+
+# =============================================================================
+# 1. SETUP OLLAMA — motore locale gratuito, senza limiti esterni (terzo livello)
+#    Gira sulla GPU della sessione Colab: nessuna chiave richiesta.
+# =============================================================================
+print("🦙 Preparazione di Ollama (motore locale di riserva)...")
+ollama_client = None
+OLLAMA_MODEL = "llama3.1:8b"
+try:
+    subprocess.run(['apt-get', 'install', '-y', '-q', 'pciutils', 'zstd'], check=True, capture_output=True)
+    subprocess.run('curl -fsSL https://ollama.com/install.sh | sh', shell=True, check=True, capture_output=True)
+
+    subprocess.Popen(
+        ['ollama', 'serve'],
+        stdout=open('ollama.log', 'w'),
+        stderr=open('ollama_error.log', 'w')
+    )
+
+    server_pronto = False
+    for _ in range(30):
+        try:
+            requests.get('http://localhost:11434')
+            server_pronto = True
+            break
+        except requests.exceptions.ConnectionError:
+            time.sleep(1)
+
+    if server_pronto:
+        print(f"   📥 Scarico il modello {OLLAMA_MODEL} (la prima volta richiede qualche minuto)...")
+        subprocess.run(['ollama', 'pull', OLLAMA_MODEL], check=True)
+        ollama_client = OpenAI(base_url="http://localhost:11434/v1", api_key="ollama")
+        print("   ✅ Ollama pronto come fallback locale.")
+    else:
+        print("   ⚠️ Il server Ollama non si è avviato (controlla ollama_error.log). Procedo senza fallback locale.")
+except subprocess.CalledProcessError as e_ollama:
+    dettaglio = e_ollama.stderr.decode('utf-8', errors='ignore').strip() if e_ollama.stderr else str(e_ollama)
+    print(f"   ⚠️ Setup Ollama fallito. Dettaglio:\n{dettaglio}\n   Procedo senza fallback locale.")
+except Exception as e_ollama:
+    print(f"   ⚠️ Setup Ollama fallito ({e_ollama}). Procedo senza fallback locale.")
+
+# =============================================================================
+# 2. CONFIGURAZIONE API — GROQ (primaria) + GEMINI (fallback opzionale)
+# =============================================================================
+print("\n🔑 Inserisci la tua API Key di GROQ (inizia con gsk_...):")
+groq_api_key = getpass.getpass()
+groq_client = Groq(api_key=groq_api_key)
+
+print("\n🔑 Inserisci la tua API Key di GEMINI (Google AI Studio — opzionale).")
+print("   Premi solo Invio per saltare:")
+gemini_api_key = getpass.getpass()
+
+gemini_client = None
+if gemini_api_key.strip():
+    # Gemini è raggiungibile tramite il suo endpoint compatibile con la libreria OpenAI:
+    # basta puntare base_url lì e usare la chiave Gemini al posto di quella OpenAI.
+    gemini_client = OpenAI(
+        api_key=gemini_api_key.strip(),
+        base_url="https://generativelanguage.googleapis.com/v1beta/openai/"
+    )
+    print("   ✅ Fallback Gemini attivo.")
+else:
+    print("   ⚠️ Nessuna chiave Gemini inserita: si passerà direttamente a Ollama se Groq fallisce.")
+
+# =============================================================================
+# 2. CARICAMENTO MULTI-FILE HTML
+# =============================================================================
+print("\n📂 Carica TUTTI i file HTML delle lezioni (puoi selezionarli in massa):")
+uploaded = files.upload()
+
+html_files = {k: v for k, v in uploaded.items() if k.lower().endswith('.html')}
+
+if not html_files:
+    print("❌ ERRORE: Nessun file HTML rilevato. Riavvia la cella.")
+else:
+    print(f"\n✅ Rilevati {len(html_files)} file HTML da processare.")
+
+    # =========================================================================
+    # FUNZIONE ESTRAZIONE DATI MASTER (senza media)
+    # =========================================================================
+    def estrai_dati_master(html_content):
+        soup = BeautifulSoup(html_content, 'html.parser')
+
+        # Struttura pulita: niente podcast, video, csv, media
+        dati = {
+            "titolo_lezione": "",
+            "sottotitolo": "",
+            "materia_estratta": "",
+            "orientamento": {
+                "obiettivi": [],
+                "concetto_fondamentale": {"titolo": "", "testo": ""},
+                "nota_extra": {"titolo": "", "testo": ""},
+                "domande_autovalutazione": []
+            },
+            "punti_chiave": [],
+            "flashcards": [],
+            "riassuntone": [],
+            "assistente_ia": {
+                "nome": "Assistente IA",
+                "sottotesto": "Cosa non ti è chiaro? Chiedimelo...",
+                "url": ""
+            },
+            "il_super_quiz": []
+        }
+
+        # --- TITOLO & SOTTOTITOLO ---
+        h1 = soup.find('h1')
+        if h1:
+            dati["titolo_lezione"] = h1.get_text(strip=True)
+
+        sub = soup.find('div', class_='subtitle')
+        if sub:
+            dati["sottotitolo"] = sub.get_text(strip=True)
+
+        title_tag = soup.find('title')
+        if title_tag:
+            dati["materia_estratta"] = title_tag.get_text(strip=True)
+
+        # --- OBIETTIVI ---
+        obj_lists = soup.select('.obj-list')
+        if len(obj_lists) > 0:
+            dati["orientamento"]["obiettivi"] = [
+                li.get_text(strip=True) for li in obj_lists[0].find_all('li') if li.get_text(strip=True)
+            ]
+
+        # --- CONCETTO FONDAMENTALE ---
+        def_box = soup.find('div', class_='definition-box')
+        if def_box:
+            strong = def_box.find('strong')
+            titolo = strong.get_text(strip=True).rstrip(':') if strong else ""
+            for br in def_box.find_all('br'):
+                br.replace_with(' ')
+            if strong:
+                strong.extract()
+            testo = def_box.get_text(strip=True)
+            dati["orientamento"]["concetto_fondamentale"] = {"titolo": titolo, "testo": testo}
+
+        # --- NOTA EXTRA ---
+        nota_extra = soup.find(
+            lambda tag: tag.name == "div" and tag.has_attr("style") and "#fdf6e3" in tag["style"].lower()
+        )
+        if nota_extra:
+            strong = nota_extra.find('strong')
+            titolo = strong.get_text(strip=True).rstrip(':') if strong else ""
+            for br in nota_extra.find_all('br'):
+                br.replace_with(' ')
+            if strong:
+                strong.extract()
+            testo = nota_extra.get_text(strip=True)
+            dati["orientamento"]["nota_extra"] = {"titolo": titolo, "testo": testo}
+
+        # --- DOMANDE AUTOVALUTAZIONE ---
+        if len(obj_lists) > 1:
+            dati["orientamento"]["domande_autovalutazione"] = [
+                li.get_text(strip=True) for li in obj_lists[1].find_all('li') if li.get_text(strip=True)
+            ]
+
+        # --- PUNTI CHIAVE ---
+        factors_js = {}
+        factors_match = re.search(r'const factorsData\s*=\s*\{(.*?)\};', html_content, re.DOTALL)
+        if factors_match:
+            pattern = r'(\w+):\s*\{\s*title:\s*["\']([^"\']+)["\'],\s*body:\s*`([^`]+)`\s*\}'
+            for key, title, body in re.findall(pattern, factors_match.group(1)):
+                factors_js[key] = {"titolo_esteso": title.strip(), "testo_modale": body.strip()}
+
+        for card in soup.select('.factor-card'):
+            onclick = card.get('onclick', '')
+            m = re.search(r"openFactor\('([^']+)'\)", onclick)
+            card_id = m.group(1) if m else ""
+            t_breve = card.find('strong')
+            sotto = card.find('small')
+            js_data = factors_js.get(card_id, {})
+            dati["punti_chiave"].append({
+                "id": card_id,
+                "titolo_breve": t_breve.get_text(strip=True) if t_breve else "",
+                "sottotitolo": sotto.get_text(strip=True) if sotto else "",
+                "titolo_esteso": js_data.get("titolo_esteso", t_breve.get_text(strip=True) if t_breve else ""),
+                "testo_modale": js_data.get("testo_modale", "")
+            })
+
+        # --- FLASHCARDS ---
+        cards_match = re.search(r'const initialCards\s*=\s*\[(.*?)\];', html_content, re.DOTALL)
+        if cards_match:
+            pairs = re.findall(r'front:\s*`([^`]+)`,\s*back:\s*`([^`]+)`', cards_match.group(1))
+            for front, back in pairs:
+                dati["flashcards"].append({"front": front.strip(), "back": back.strip()})
+
+        # --- RIASSUNTONE ---
+        riassunto = soup.find(id='source-riassunto')
+        if riassunto:
+            for h3 in riassunto.find_all('h3'):
+                testo_p = h3.find_next_sibling('p')
+                testo = testo_p.get_text(strip=True) if testo_p else ""
+                cornell = h3.find_next_sibling('div', class_='cornell-box')
+                cps = []
+                if cornell:
+                    domande = [
+                        p for p in cornell.find_all('p', class_='cornell-question')
+                        if p.get_text(strip=True) not in ("", "Check Point", "Check point:", "Check point")
+                    ]
+                    risposte = cornell.find_all('p', class_='cornell-answer')
+                    for q, a in zip(domande, risposte):
+                        cps.append({
+                            "domanda": q.get_text(strip=True),
+                            "risposta": a.get_text(strip=True).replace('Risposta: ', '').strip()
+                        })
+                dati["riassuntone"].append({
+                    "titolo": h3.get_text(strip=True),
+                    "testo": testo,
+                    "check_points": cps
+                })
+
+        # --- ASSISTENTE IA (ricerca robusta del link NotebookLM) ---
+        # Nome e sottotesto sono FISSI: non vengono più "pescati" da h3/h2/h4 o da un
+        # <p> qualsiasi del documento. Era proprio questa ricerca generica la causa del
+        # bug per cui l'assistente risultava chiamarsi "ASMR" con sottotesto "Check point:"
+        # (veniva preso il primo <h4> e il primo <p> di lunghezza compatibile trovati in
+        # tutta la pagina, indipendentemente dalla sezione in cui si trovavano).
+        ia_url = ""
+
+        # 1. Priorità: cerca il link DENTRO il contenitore noto della sezione Assistente IA,
+        #    così non rischiamo di prendere un link notebooklm.google.com che compare altrove
+        #    nella pagina (es. di un'altra lezione/materia lasciato per errore).
+        ia_container = soup.select_one('.freud-bot-container, .ia-container, .ia-text-col')
+        if ia_container:
+            a_tag = ia_container.find('a', href=True)
+            if a_tag and 'notebooklm.google.com' in a_tag['href']:
+                ia_url = a_tag['href']
+
+        # 2. Fallback: se il contenitore noto non esiste (template diverso), cerca il primo
+        #    link notebooklm.google.com in tutto il documento.
+        if not ia_url:
+            for a in soup.find_all('a', href=True):
+                if 'notebooklm.google.com' in a['href']:
+                    ia_url = a['href']
+                    break
+
+        dati["assistente_ia"]["url"] = ia_url
+        dati["assistente_ia"]["nome"] = "Assistente IA"
+        dati["assistente_ia"]["sottotesto"] = "Cosa non ti è chiaro? Chiedimelo..."
+
+        # --- TESTO PER IL QUIZ (preferisce il riassunto, fallback su tutto) ---
+        testo_quiz = ""
+        for r in dati["riassuntone"]:
+            testo_quiz += r["titolo"] + "\n\n" + r["testo"] + "\n\n"
+        if not testo_quiz.strip():
+            testo_quiz = soup.get_text(separator=' ', strip=True)
+
+        return dati, testo_quiz
+
+    # =========================================================================
+    # FUNZIONE GENERAZIONE SUPER QUIZ — Groq (llama-3.1-8b-instant) con
+    # fallback automatico su Gemini Flash se Groq fallisce (es. rate limit)
+    # =========================================================================
+    def costruisci_prompt_quiz(testo_lezione):
+        return f"""Sei un esperto di Instructional Design e valutazione formativa.
+Devi generare ESATTAMENTE 30 domande a risposta multipla (A-B-C-D) basate ESCLUSIVAMENTE sul testo fornito.
+Regole rigide:
+- Ogni domanda deve testare un dettaglio, data, nome, concetto o evento specifico presente nel testo.
+- Non ripetere mai domande o argomenti. Non inventare domande generiche (es. "Qual è l'importanza della storia...").
+- Le 3 opzioni errate devono essere plausibili, verosimili e mettere in difficoltà, ma devono essere chiaramente smentite dal testo.
+- La risposta corretta deve essere indicata con "corretta": true.
+- Per ogni domanda scrivi UNA SOLA spiegazione finale, nel campo "spiegazione" a livello di DOMANDA (non dentro le singole opzioni): chiara, completa ed esaustiva (3-5 frasi), in stile NotebookLM. Deve indicare qual è la risposta corretta, motivarla con il contesto del testo, e chiarire perché le altre opzioni sono errate. Questa spiegazione è UNICA e non deve cambiare in base a quale opzione l'utente clicca: è la stessa indipendentemente dalla risposta selezionata.
+- Le singole opzioni in "opzioni" devono contenere SOLO i campi "testo" e "corretta". NON aggiungere un campo "spiegazione" dentro le opzioni.
+
+Restituisci ESCLUSIVAMENTE un oggetto JSON valido, senza testo extra né markdown:
+{{
+    "il_super_quiz": [
+        {{
+            "domanda": "...?",
+            "opzioni": [
+                {{"testo": "...", "corretta": false}},
+                {{"testo": "...", "corretta": true}},
+                {{"testo": "...", "corretta": false}},
+                {{"testo": "...", "corretta": false}}
+            ],
+            "spiegazione": "Spiegazione unica, chiara ed esaustiva, valida indipendentemente dall'opzione cliccata."
+        }}
+    ]
+}}
+
+Testo della lezione (leggilo attentamente):
+{testo_lezione[:20000]}
+"""
+
+    def genera_quiz_groq(prompt, groq_client):
+        chat_completion = groq_client.chat.completions.create(
+            messages=[{"role": "user", "content": prompt}],
+            model="llama-3.1-8b-instant",
+            response_format={"type": "json_object"},
+            temperature=0.3,
+            max_tokens=8192
+        )
+        risposta_json = json.loads(chat_completion.choices[0].message.content)
+        return risposta_json.get("il_super_quiz", [])
+
+    def genera_quiz_gemini(prompt, gemini_client):
+        chat_completion = gemini_client.chat.completions.create(
+            messages=[{"role": "user", "content": prompt}],
+            model="gemini-3.5-flash",
+            response_format={"type": "json_object"},
+            temperature=0.3,
+            max_tokens=8192
+        )
+        risposta_json = json.loads(chat_completion.choices[0].message.content)
+        return risposta_json.get("il_super_quiz", [])
+
+    def genera_quiz_ollama(prompt, ollama_client):
+        chat_completion = ollama_client.chat.completions.create(
+            messages=[{"role": "user", "content": prompt}],
+            model=OLLAMA_MODEL,
+            response_format={"type": "json_object"},
+            temperature=0.3,
+            max_tokens=8192
+        )
+        risposta_json = json.loads(chat_completion.choices[0].message.content)
+        return risposta_json.get("il_super_quiz", [])
+
+    def genera_quiz(testo_lezione, groq_client, gemini_client=None, ollama_client=None):
+        prompt = costruisci_prompt_quiz(testo_lezione)
+
+        # Catena di motori da provare in ordine: si passa al successivo solo se
+        # il precedente solleva un'eccezione (rate limit, timeout, JSON non valido...).
+        motori = [("Groq (llama-3.1-8b-instant)", lambda: genera_quiz_groq(prompt, groq_client))]
+        if gemini_client is not None:
+            motori.append(("Gemini Flash", lambda: genera_quiz_gemini(prompt, gemini_client)))
+        if ollama_client is not None:
+            motori.append(("Ollama locale", lambda: genera_quiz_ollama(prompt, ollama_client)))
+
+        ultimo_errore = None
+        for nome, funzione in motori:
+            try:
+                quiz = funzione()
+                print(f"   🟢 Generato con {nome}")
+                return quiz
+            except Exception as e:
+                print(f"   🟠 {nome} non disponibile ({e})")
+                ultimo_errore = e
+
+        raise ultimo_errore
+
+    # =============================================================================
+    # 3. LOOP DI ELABORAZIONE BATCH
+    # =============================================================================
+    json_generati = []
+
+    for filename, contenuto in html_files.items():
+        print(f"\n{'='*50}")
+        print(f"📄 Processo: {filename}")
+        print(f"{'='*50}")
+
+        try:
+            html_content = contenuto.decode('utf-8')
+            dati, testo_quiz = estrai_dati_master(html_content)
+
+            # Generazione Super Quiz
+            print("   🧠 Generazione Super Quiz...")
+            quiz = genera_quiz(testo_quiz, groq_client, gemini_client, ollama_client)
+            dati["il_super_quiz"] = quiz
+            print(f"   ✅ {len(quiz)} domande generate.")
+
+            # Controllo qualità
+            if len(quiz) < 30:
+                print(f"   ⚠️ ATTENZIONE: generate solo {len(quiz)}/30 domande! Il testo potrebbe essere troppo corto o il modello ha troncato.")
+            else:
+                print(f"   ✅ Verifica: tutte e 30 le domande sono presenti.")
+
+            # Salvataggio singolo JSON
+            nome_base = os.path.splitext(filename)[0]
+            output_name = nome_base + '.json'
+            with open(output_name, 'w', encoding='utf-8') as f:
+                json.dump(dati, f, ensure_ascii=False, indent=4)
+
+            json_generati.append(output_name)
+            print(f"   💾 Salvato: {output_name}")
+
+        except Exception as e:
+            print(f"   ❌ Errore durante l'elaborazione di {filename}: {e}")
+
+    # =============================================================================
+    # 4. DOWNLOAD BATCH (ZIP UNICO)
+    # =============================================================================
+    if json_generati:
+        zip_name = "lezioni_master_quiz.zip"
+        with zipfile.ZipFile(zip_name, 'w', zipfile.ZIP_DEFLATED) as zf:
+            for nome in json_generati:
+                zf.write(nome)
+
+        print(f"\n{'='*50}")
+        print(f"🎉 ELABORAZIONE COMPLETATA: {len(json_generati)} lezioni processate.")
+        print(f"🚀 Download batch in corso: {zip_name}")
+        print(f"{'='*50}")
+        files.download(zip_name)
+    else:
+        print("\n⚠️ Nessun JSON è stato generato. Controlla gli errori sopra.")
