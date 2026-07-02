@@ -1246,8 +1246,150 @@
             .ia-text-col { padding: 1.5rem; }
         }
     </style>
+
+    <!-- ================================================================
+         NIGHT MODE — BLOCCO ADDITIVO (non modifica il CSS originale)
+         Nessun filtro/inversione sulle immagini: cambiano solo i token
+         colore e gli sfondi hardcoded. Le foto restano intatte.
+    ================================================================ -->
+    <style id="night-mode-style">
+        /* Pulsante toggle fisso */
+        #night-toggle {
+            position: fixed; bottom: 24px; right: 24px;
+            z-index: 9999998;
+            width: 52px; height: 52px; border-radius: 50%;
+            border: 1px solid var(--dust);
+            background: #fff; color: var(--ink);
+            font-size: 1.35rem; line-height: 1;
+            cursor: pointer;
+            box-shadow: var(--shadow-lift);
+            display: flex; align-items: center; justify-content: center;
+            transition: transform 0.2s, background 0.3s, border-color 0.3s;
+        }
+        #night-toggle:hover { transform: scale(1.08); border-color: var(--gold); }
+        #night-toggle:active { transform: scale(0.96); }
+
+        /* Transizioni morbide al cambio tema (solo superfici principali) */
+        body, .content-card, .disclaimer-card, .author-badge, .factor-card,
+        .quiz-card, .quiz-option, .notes-widget, .notes-toolbar, .ia-container,
+        .modal-paper, .fc-mobile-content, .ws-word-tag, .ws-lang-btn,
+        #smart-whiteboard, .obj-box, .cornell-box {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        /* ---- Rimappatura token in modalità notte ---- */
+        body.night-mode {
+            color-scheme: dark;
+            --ivory:    #14161C;
+            --ivory-dk: #1B1E26;
+            --dust:     #2B2E38;
+            --mist:     #5C5F6A;
+            --ink:      #F2EFE8;
+            --body:     #C7C4BC;
+            --sub:      #918E86;
+            --gold-dk:  #D9BC85;
+            --quiz-correct:      #7BC67F;
+            --quiz-correct-bg:   #14261A;
+            --quiz-incorrect:    #EF9A9A;
+            --quiz-incorrect-bg: #2A1414;
+            --shadow-card: 0 4px 24px rgba(0,0,0,0.45), 0 1px 4px rgba(0,0,0,0.3);
+            --shadow-lift: 0 12px 40px rgba(0,0,0,0.55), 0 2px 8px rgba(0,0,0,0.35);
+        }
+
+        /* ---- Superfici con #fff hardcoded ---- */
+        .night-mode .content-card,
+        .night-mode .disclaimer-card,
+        .night-mode .modal-paper,
+        .night-mode .fc-mobile-content,
+        .night-mode .lang-options,
+        .night-mode #custom-lang-selector.loaded,
+        .night-mode .notes-toolbar,
+        .night-mode .hl-palette-row,
+        .night-mode #smart-whiteboard,
+        .night-mode .wb-footer,
+        .night-mode #night-toggle { background: #1E212A; }
+
+        .night-mode .author-badge { background: #1E212A; }
+        .night-mode .author-badge.primary { background: var(--navy); }
+
+        .night-mode .quiz-option { background: #1E212A; }
+        .night-mode .quiz-option:hover:not(:disabled) { background: #262B36; }
+
+        .night-mode .tool-btn { background: #262933; }
+        .night-mode .tool-btn:hover { background: #1E212A; color: #8FB4E8; border-color: #8FB4E8; }
+
+        .night-mode .btn-nav { background: #262933; }
+        .night-mode .btn-nav:hover { color: #8FB4E8; border-color: #8FB4E8; }
+
+        .night-mode .wb-btn { background: #262933; color: #8FB4E8; }
+        .night-mode .wb-btn-pdf { background: var(--gold); color: var(--night); }
+
+        .night-mode .ws-lang-btn { background: #1E212A; }
+        .night-mode .ws-lang-btn.active { background: var(--navy); color: #fff; }
+        .night-mode .ws-word-tag { background: #1E212A; }
+        .night-mode .ws-cell { background: #262933; color: var(--ink); }
+        .night-mode .ws-cell.ws-sel { background: var(--gold-lt); color: #1C1C22; }
+        .night-mode .ws-cell.ws-found { background: var(--cyan); color: var(--night); }
+
+        /* ---- Gradienti chiari hardcoded ---- */
+        .night-mode .obj-box {
+            background: linear-gradient(135deg, #182238 0%, #151D2E 100%);
+            border-color: rgba(143,180,232,0.18);
+        }
+        .night-mode .cornell-box { background: linear-gradient(135deg, #221D10, #1C180D); }
+        .night-mode #win-screen,
+        .night-mode .ws-win-msg {
+            background: linear-gradient(135deg, #182238, #151D2E);
+            border-color: rgba(143,180,232,0.15);
+        }
+
+        /* ---- Testi navy (illeggibili su scuro): schiariti solo dove sono testo ---- */
+        .night-mode h1 em,
+        .night-mode .obj-box p strong,
+        .night-mode .cornell-question,
+        .night-mode #win-screen h2,
+        .night-mode .ws-win-msg p,
+        .night-mode #lang-toggle-btn,
+        .night-mode .video-direct-link { color: #8FB4E8; }
+        .night-mode .video-direct-link { border-color: #8FB4E8; }
+        .night-mode .accordion-header:hover .ch-title { color: #8FB4E8; }
+        .night-mode .accordion-header.active .ch-icon { color: #8FB4E8; }
+        .night-mode .close-modal:hover { color: #8FB4E8; }
+        .night-mode .btn-close-section:hover {
+            border-color: #8FB4E8; color: #8FB4E8; background: rgba(143,180,232,0.06);
+        }
+
+        /* ---- Box dinamici con stile inline chiaro ---- */
+        .night-mode #dyn-nota-extra {
+            background: #221D10 !important;
+            border-color: var(--gold-dk) !important;
+        }
+        .night-mode #translation-disclaimer {
+            background: #221D10; color: #D9BC85; border-color: #4A3F1E;
+        }
+
+        /* ---- Evidenziazioni: sfondo chiaro → testo scuro forzato ---- */
+        .night-mode mark.highlighted-text { color: #1C1C22; }
+
+        /* ---- Flashcard: i pannelli restano bianchi sopra l'immagine,
+                quindi il testo deve restare scuro anche in night mode ---- */
+        .night-mode .flashcard-back p,
+        .night-mode .flashcard-front h2 { color: #1C1C22; }
+
+        /* ---- Quiz: testi spiegazione ---- */
+        .night-mode .quiz-explanation-correct { color: #A5D6A7; }
+        .night-mode .quiz-explanation-incorrect { color: #EF9A9A; }
+
+        /* ---- Sfondo decorativo: niente inversione, solo blend adatto al buio ---- */
+        .night-mode .main-background-image {
+            mix-blend-mode: screen;
+            opacity: 0.05;
+        }
+    </style>
 </head>
 <body>
+    <!-- NIGHT MODE — applica subito il tema salvato per evitare il "flash" chiaro -->
+    <script>try{if(localStorage.getItem('ums_night_mode')==='1'){document.body.classList.add('night-mode');}}catch(e){}</script>
 
     <!-- Progress Bar -->
     <div id="scroll-progress-container">
@@ -1263,6 +1405,9 @@
 
     <!-- Toast Container -->
     <div id="toast-container"></div>
+
+    <!-- NIGHT MODE — pulsante on/off -->
+    <button id="night-toggle" type="button" aria-label="Attiva modalità notte" title="Modalità notte on/off">🌙</button>
 
     <!-- Modali -->
     <div id="factor-modal" onclick="closeModal(event)">
@@ -2664,6 +2809,31 @@ if (!fileDaCaricare) {
         }
     </script>
     <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+    <!-- ================================================================
+         NIGHT MODE — SCRIPT ADDITIVO (toggle + persistenza)
+    ================================================================ -->
+    <script>
+        (function () {
+            const NIGHT_KEY = 'ums_night_mode';
+            const toggleBtn = document.getElementById('night-toggle');
+
+            function applyNightMode(on) {
+                document.body.classList.toggle('night-mode', on);
+                toggleBtn.textContent = on ? '☀️' : '🌙';
+                toggleBtn.setAttribute('aria-label', on ? 'Attiva modalità giorno' : 'Attiva modalità notte');
+            }
+
+            // Sincronizza icona con lo stato applicato dallo script iniziale
+            applyNightMode(document.body.classList.contains('night-mode'));
+
+            toggleBtn.addEventListener('click', () => {
+                const on = !document.body.classList.contains('night-mode');
+                applyNightMode(on);
+                try { localStorage.setItem(NIGHT_KEY, on ? '1' : '0'); } catch (e) {}
+            });
+        })();
+    </script>
 
 </body>
 </html>
