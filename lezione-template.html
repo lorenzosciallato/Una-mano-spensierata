@@ -102,8 +102,8 @@
         }
         .main-background-image {
             width: 100%; height: 100%; object-fit: cover;
-            opacity: 0.04;
-            filter: grayscale(100%) sepia(0.4);
+            opacity: 0.07;
+            filter: grayscale(35%) sepia(0.15);
             mix-blend-mode: multiply;
         }
         .giants-background::after {
@@ -1278,6 +1278,111 @@
             transition: background 0.2s, border-color 0.2s;
         }
         .wb-expand-btn:hover { background: rgba(255,255,255,0.18); border-color: #fff; }
+
+        /* ============================================================
+           UPGRADE GRAFICA 1 — ICONE LINE-ART
+           Icone SVG a tratto sottile (stroke 1.7) al posto delle emoji:
+           rendering identico su tutti i sistemi e coerente col brand.
+        ============================================================ */
+        .ums-ic {
+            width: 1em; height: 1em;
+            stroke: currentColor; fill: none;
+            stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round;
+            display: inline-block; vertical-align: -0.125em;
+            flex-shrink: 0;
+        }
+        .wb-title .ums-ic, #wb-badge .ums-ic { width: 1.05em; height: 1.05em; }
+        #night-toggle .ums-ic { width: 1.15em; height: 1.15em; }
+        .quiz-explanation .ums-ic { margin-right: 2px; }
+
+        /* ============================================================
+           UPGRADE GRAFICA 2 — PALETTE DISCIPLINATA (sezioni interattive)
+           Verde/rosso "da semaforo" -> salvia e terracotta editoriali;
+           azzurrini fuori palette -> tinte del navy di brand.
+        ============================================================ */
+        :root {
+            --quiz-correct:      #4A7A5A;   /* salvia */
+            --quiz-correct-bg:   #EFF4EE;
+            --quiz-incorrect:    #B4573E;   /* terracotta */
+            --quiz-incorrect-bg: #F8EFEA;
+        }
+        .obj-box { background: linear-gradient(135deg, #F3F5F9 0%, #EBEFF5 100%); }
+        .ws-win-msg { background: linear-gradient(135deg, #F3F5F9, #EBEFF5); }
+        .toast-success {
+            border-color: var(--gold);
+            box-shadow: 0 0 20px rgba(200,169,110,0.35);
+            color: var(--gold-dk);
+        }
+        .ws-cell.ws-found { background: var(--navy); color: #fff; }
+        .night-mode .ws-cell.ws-found { background: #8FB4E8; color: #14161C; }
+        .night-mode .toast-success { color: var(--gold-lt); }
+
+        /* ============================================================
+           UPGRADE GRAFICA 3 — RIASSUNTONE DA RIVISTA
+           Capolettera Playfair in oro + misura di riga controllata.
+        ============================================================ */
+        #dyn-riassuntone-container { max-width: 68ch; }
+        #dyn-riassuntone-container::first-letter {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 3.3em;
+            line-height: 0.82;
+            color: var(--gold-dk);
+            float: left;
+            padding: 0.06em 0.14em 0 0;
+        }
+        .night-mode #dyn-riassuntone-container::first-letter { color: var(--gold); }
+
+        /* ============================================================
+           UPGRADE GRAFICA 4 — CRUCIPUZZLE "PAGINA ENIGMISTICA"
+           Stile da rubrica di quotidiano: filetti doppi, griglia da
+           cruciverba con bordi sottili, niente ombre pop.
+           + FIX MOBILE: griglia fluida, non taglia più le celle.
+        ============================================================ */
+        .pausa-wordsearch {
+            background: var(--ivory);
+            border: none;
+            border-top: 4px double var(--ink);
+            border-bottom: 4px double var(--ink);
+            border-radius: 0;
+        }
+        .ws-kicker {
+            font-family: var(--font-body);
+            font-size: 0.66rem; font-weight: 700;
+            letter-spacing: 0.28em; text-transform: uppercase;
+            color: var(--gold-dk);
+            margin-bottom: 0.5rem;
+        }
+        .pausa-ws-header h3 { font-style: italic; }
+        .ws-grid-wrap {
+            display: block;
+            width: 100%;
+            max-width: 460px;
+            margin: 0 auto;
+            background: var(--ivory);
+            border: 2px solid var(--ink);
+            border-radius: 0;
+            padding: 0;
+            box-shadow: none;
+        }
+        .ws-grid { gap: 0; background: transparent; }
+        .ws-cell {
+            width: auto; height: auto;
+            aspect-ratio: 1 / 1;
+            border-right: 1px solid rgba(28,28,34,0.28);
+            border-bottom: 1px solid rgba(28,28,34,0.28);
+            border-right: 1px solid color-mix(in srgb, var(--ink) 30%, transparent);
+            border-bottom: 1px solid color-mix(in srgb, var(--ink) 30%, transparent);
+            border-radius: 0;
+            font-size: clamp(0.58rem, 2.4vw, 0.85rem);
+        }
+        .ws-grid .ws-cell:nth-child(12n) { border-right: none; }
+        .ws-grid .ws-cell:nth-last-child(-n+12) { border-bottom: none; }
+        .ws-word-tag { border-radius: 4px; background: transparent; }
+        .night-mode .ws-word-tag { background: transparent; }
+        @media (max-width: 480px) {
+            .pausa-wordsearch { padding: 1.4rem 0.7rem; }
+        }
     </style>
 
     <style id="night-mode-style">
@@ -1434,8 +1539,25 @@
     <!-- Toast Container -->
     <div id="toast-container"></div>
 
+    <!-- UPGRADE GRAFICA — sprite icone line-art (sostituiscono le emoji) -->
+    <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+        <symbol id="ic-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></symbol>
+        <symbol id="ic-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></symbol>
+        <symbol id="ic-pen" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></symbol>
+        <symbol id="ic-highlighter" viewBox="0 0 24 24"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4l8 8Z"/></symbol>
+        <symbol id="ic-printer" viewBox="0 0 24 24"><path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8" rx="1"/></symbol>
+        <symbol id="ic-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></symbol>
+        <symbol id="ic-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10Z"/></symbol>
+        <symbol id="ic-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></symbol>
+        <symbol id="ic-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+        <symbol id="ic-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+        <symbol id="ic-home" viewBox="0 0 24 24"><path d="m3 11 9-8 9 8"/><path d="M5 9.5V21h14V9.5"/><path d="M9 21v-6h6v6"/></symbol>
+        <symbol id="ic-wrench" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76Z"/></symbol>
+        <symbol id="ic-award" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.5 13 17 22l-5-3-5 3 1.5-9"/></symbol>
+    </svg>
+
     <!-- NIGHT MODE — pulsante on/off -->
-    <button id="night-toggle" type="button" aria-label="Attiva modalità notte" title="Modalità notte on/off">🌙</button>
+    <button id="night-toggle" type="button" aria-label="Attiva modalità notte" title="Modalità notte on/off"><svg class="ums-ic" aria-hidden="true"><use href="#ic-moon"/></svg></button>
 
     <!-- Modali -->
     <div id="factor-modal" onclick="closeModal(event)">
@@ -1460,11 +1582,11 @@
         <h1 id="dyn-title">Caricamento<em>…</em></h1>
         <div class="subtitle" id="dyn-subtitle">Attendere</div>
 
-        <div id="translation-disclaimer">🌍 Nota: traduzione automatica via IA. Alta accuratezza, possibili sfumature perse.</div>
+        <div id="translation-disclaimer"><svg class="ums-ic" aria-hidden="true"><use href="#ic-globe"/></svg> Nota: traduzione automatica via IA. Alta accuratezza, possibili sfumature perse.</div>
 
         <div class="badges-row">
             <a href="#" class="author-badge primary">
-                <span class="author-name" style="padding: 4px 6px;">🏠 Torna alla Home</span>
+                <span class="author-name" style="padding: 4px 6px;"><svg class="ums-ic" aria-hidden="true"><use href="#ic-home"/></svg> Torna alla Home</span>
             </a>
             <a href="https://www.instagram.com/sciallato_lorenzo/" target="_blank" class="author-badge">
                 <img src="https://files.catbox.moe/qvck5j.png" alt="Lorenzo Sciallato" class="author-img">
@@ -1478,9 +1600,9 @@
 
         <div id="google_translate_element" style="display:none;"></div>
         <div id="custom-lang-selector" class="notranslate">
-            <div id="lang-loading" style="display:none;">⏳</div>
+            <div id="lang-loading" style="display:none;">&hellip;</div>
             <button id="lang-toggle-btn" onclick="toggleLangMenu()">
-                <span id="lang-label">🌐 Lingua</span> <small id="lang-arrow">▼</small>
+                <span id="lang-label"><svg class="ums-ic" aria-hidden="true"><use href="#ic-globe"/></svg> Lingua</span> <small id="lang-arrow">▼</small>
             </button>
             <div class="lang-options" id="lang-options-menu">
                 <button onclick="triggerTranslation('it', this)" title="Italiano" class="active-lang">🇮🇹</button>
@@ -1576,7 +1698,7 @@
                                     <div class="notes-toolbar">
                                         <span class="notes-label">Appunti</span>
                                         <button class="tool-btn copy-btn">Copia</button>
-                                        <button class="tool-btn download-btn">⬇ .txt</button>
+                                        <button class="tool-btn download-btn"><svg class="ums-ic" aria-hidden="true"><use href="#ic-download"/></svg> .txt</button>
                                     </div>
                                     <textarea class="notes-area" placeholder="Scrivi qui i tuoi appunti mentre ascolti…"></textarea>
                                 </div>
@@ -1608,7 +1730,7 @@
                                     <div class="notes-toolbar">
                                         <span class="notes-label">Appunti</span>
                                         <button class="tool-btn copy-btn">Copia</button>
-                                        <button class="tool-btn download-btn">⬇ .txt</button>
+                                        <button class="tool-btn download-btn"><svg class="ums-ic" aria-hidden="true"><use href="#ic-download"/></svg> .txt</button>
                                     </div>
                                     <textarea class="notes-area" placeholder="Scrivi qui i tuoi appunti mentre guardi…"></textarea>
                                 </div>
@@ -1667,7 +1789,7 @@
 
                                     <div id="win-screen">
                                         <h2>Ma allora se le sai tutte io vado via!!</h2>
-                                        <p style="margin:20px 0; font-size:2.5rem;">🎉</p>
+                                        <p style="margin:20px 0; font-size:2.5rem; color:var(--gold-dk);"><svg class="ums-ic" aria-hidden="true"><use href="#ic-award"/></svg></p>
                                         <button class="btn-pop btn-yes" onclick="resetDeck()">Ricomincia da capo</button>
                                     </div>
                                 </div>
@@ -1676,7 +1798,7 @@
                                     <div class="notes-toolbar">
                                         <span class="notes-label">Appunti</span>
                                         <button class="tool-btn copy-btn">Copia</button>
-                                        <button class="tool-btn download-btn">⬇ .txt</button>
+                                        <button class="tool-btn download-btn"><svg class="ums-ic" aria-hidden="true"><use href="#ic-download"/></svg> .txt</button>
                                     </div>
                                     <textarea class="notes-area" placeholder="Annota quello che non ricordi…"></textarea>
                                 </div>
@@ -1708,12 +1830,12 @@
                                             alt="Pinguini"
                                             onclick="wbMaximize()">
                                         
-                                        <div id="wb-badge" onclick="wbMaximize()">📝 <span id="wb-badge-count">0</span> concetti</div>
+                                        <div id="wb-badge" onclick="wbMaximize()"><svg class="ums-ic" aria-hidden="true"><use href="#ic-pen"/></svg> <span id="wb-badge-count">0</span> concetti</div>
 
                                         <!-- Smart Whiteboard -->
                                         <div id="smart-whiteboard">
                                             <div class="wb-header">
-                                                <span class="wb-title">📝 Lavagna Concetti</span>
+                                                <span class="wb-title"><svg class="ums-ic" aria-hidden="true"><use href="#ic-pen"/></svg> Lavagna Concetti</span>
                                                 <!-- UPGRADE — pulsante ingrandisci/ripristina (stile finestra browser) -->
                                                 <button id="wb-expand-btn" class="wb-expand-btn" onclick="wbToggleExpand()" title="Ingrandisci lavagna" aria-label="Ingrandisci lavagna">▢</button>
                                             </div>
@@ -1727,7 +1849,7 @@
                                             <!-- Footer con bottoni sempre visibili in basso -->
                                             <div class="wb-footer">
                                                 <button class="wb-btn" onclick="wbMinimize()">Riduci</button>
-                                                <button class="wb-btn wb-btn-pdf" onclick="wbExportPDF()">🖨️ Stampa / PDF</button>
+                                                <button class="wb-btn wb-btn-pdf" onclick="wbExportPDF()"><svg class="ums-ic" aria-hidden="true"><use href="#ic-printer"/></svg> Stampa / PDF</button>
                                             </div>
                                         </div>
                                     </div>
@@ -1741,11 +1863,11 @@
                                     <div class="notes-toolbar">
                                         <span class="notes-label">Appunti</span>
                                         <button class="tool-btn copy-btn">Copia</button>
-                                        <button class="tool-btn download-btn">⬇ .txt</button>
+                                        <button class="tool-btn download-btn"><svg class="ums-ic" aria-hidden="true"><use href="#ic-download"/></svg> .txt</button>
                                     </div>
                                     <!-- Palette evidenziatore -->
                                     <div class="hl-palette-row">
-                                        <span class="hl-palette-micro">🖍️ Seleziona il testo per evidenziarlo e salvarlo nella lavagna</span>
+                                        <span class="hl-palette-micro"><svg class="ums-ic" aria-hidden="true"><use href="#ic-highlighter"/></svg> Seleziona il testo per evidenziarlo e salvarlo nella lavagna</span>
                                         <div class="hl-palette-swatches" id="hl-palette">
                                             <div class="hl-swatch hl-swatch-active" data-color="#FFF176" style="background:#FFF176;" title="Giallo" onclick="hlSetColor(this)"></div>
                                             <div class="hl-swatch" data-color="#A5D6A7" style="background:#A5D6A7;" title="Verde" onclick="hlSetColor(this)"></div>
@@ -1777,12 +1899,14 @@
                             <!-- TASK 1: aggiunta classe notranslate + rimosso il <p> ridondante -->
                             <div class="pausa-wordsearch notranslate">
                                 <div class="pausa-ws-header">
-                                    <h3>Cerca le parole 🔍</h3>
+                                    <div class="ws-kicker">La Pagina Enigmistica</div>
+                                    <h3>Cerca le parole <svg class="ums-ic" aria-hidden="true"><use href="#ic-search"/></svg></h3>
                                 </div>
 
                                 <div class="ws-lang-row">
-                                    <button class="ws-lang-btn active" id="ws-btn-it" onclick="wsSetLang('it')">🇮🇹 Italiano</button>
-                                    <button class="ws-lang-btn" id="ws-btn-en" onclick="wsSetLang('en')">🇬🇧 English</button>
+                                    <button class="ws-lang-btn" id="ws-btn-lezione" onclick="wsSetLang('lezione')">Parole della Lezione</button>
+                                    <button class="ws-lang-btn active" id="ws-btn-it" onclick="wsSetLang('it')">Italiano</button>
+                                    <button class="ws-lang-btn" id="ws-btn-en" onclick="wsSetLang('en')">English</button>
                                 </div>
 
                                 <div class="ws-layout">
@@ -1792,7 +1916,7 @@
                                         </div>
                                         <div class="ws-status" id="ws-status">Trascina o tocca per selezionare le lettere.</div>
                                         <div class="ws-win-msg" id="ws-win-msg">
-                                            <p>🎉 Trovate tutte! Bravissimo/a!</p>
+                                            <p><svg class="ums-ic" aria-hidden="true"><use href="#ic-award"/></svg> Trovate tutte! Bravissimo/a!</p>
                                             <button class="ws-new-btn" onclick="wsNewGame()">Nuova partita</button>
                                         </div>
                                     </div>
@@ -1856,7 +1980,7 @@
     <div class="disclaimer-card">
         <h3>Tutela del diritto d'autore e limitazione di responsabilità</h3>
         <p>Tutti i materiali didattici presenti all'interno del portale Una Mano Spensierata (inclusi, a titolo esemplificativo e non esaustivo: riassunti, schemi, mappe concettuali, flashcard e quiz) costituiscono una rielaborazione personale, critica e originale degli appunti universitari. Tali contenuti sono realizzati e condivisi esclusivamente per finalità didattiche, di studio e di mutuo soccorso accademico, ai sensi e nel pieno rispetto dell'Art. 70 della Legge 22 aprile 1941 n. 633 in materia di protezione del diritto d'autore. I materiali presenti sulla piattaforma hanno natura puramente integrativa e non intendono in alcun modo porsi come sostitutivi dei libri di testo ufficiali, delle dispense fornite dai docenti o della frequenza alle lezioni frontali. Si dichiara espressamente l'assenza di riproduzioni pedisseque, integrali o non autorizzate di opere intellettuali protette da copyright di terzi. L'utente fruitore solleva i gestori della piattaforma da qualsivoglia responsabilità derivante da un uso improprio del materiale fornito.</p>
-        <h3>Aiutami a tenere in ordine la piattaforma! 🛠️</h3>
+        <h3>Aiutami a tenere in ordine la piattaforma! <svg class="ums-ic" aria-hidden="true"><use href="#ic-wrench"/></svg></h3>
         <p>Ciao! Come sai, costruisco, aggiorno e mantengo questo sito interamente da solo. Se incappi in un refuso, in un link che non funziona, o se ti accorgi che l'audio del podcast sta dicendo qualcosa di non coerente con il resto della lezione, per favore non ignorarlo. Scrivimi subito sul nostro gruppo WhatsApp specificando l'errore o la lezione incriminata. Così posso correggere il codice o il testo in tempo reale e tenere la piattaforma pulita e affidabile per tutti gli iscritti. Questo progetto cresce anche grazie alle vostre revisioni. Grazie per l'aiuto!</p>
     </div>
 
@@ -2102,12 +2226,25 @@
             if (wbCount === 0) { showToast('Nessun concetto da esportare.', 'retry'); return; }
             
             showToast('Apertura finestra di stampa...', 'success');
-            
+
+            // UPGRADE — la stampa ora ha lo stile editoriale di Una Mano Spensierata
+            // (SEMPRE in versione giorno: la notturna consumerebbe troppo inchiostro)
+            const lessonTitle = (document.getElementById('dyn-title') || {}).textContent || 'Lezione Dinamica';
+            const printDate = new Date().toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
+
             let printContents = `
-                <div style="font-family: Arial, sans-serif; padding: 20px; color: #1C1C22; max-width: 800px; margin: 0 auto;">
-                    <h2 style="font-size: 24px; color: #1A2F4F; border-bottom: 2px solid #C8A96E; padding-bottom: 10px; margin-bottom: 30px;">
-                        I miei Appunti — Una Mano Spensierata
-                    </h2>
+                <div style="font-family: 'DM Sans', Arial, sans-serif; padding: 28px 24px; color: #1C1C22; max-width: 780px; margin: 0 auto; -webkit-print-color-adjust: exact; print-color-adjust: exact;">
+
+                    <div style="font-size: 10px; font-weight: 700; letter-spacing: 0.3em; text-transform: uppercase; color: #9A7A3F; margin-bottom: 10px;">
+                        Una Mano Spensierata
+                    </div>
+                    <h1 style="font-family: 'Playfair Display', Georgia, serif; font-size: 30px; font-weight: 700; color: #1A2F4F; margin: 0 0 6px 0; line-height: 1.15;">
+                        ${lessonTitle}
+                    </h1>
+                    <div style="font-size: 12px; color: #918E86; margin-bottom: 14px;">
+                        Lavagna Concetti &mdash; appunti personali &middot; ${printDate}
+                    </div>
+                    <div style="border-top: 4px double #1C1C22; margin-bottom: 28px;"></div>
             `;
 
             const body = document.getElementById('wb-body');
@@ -2119,14 +2256,19 @@
                 // page-break-inside: avoid; impedisce al blocco di spaccarsi a metà pagina!
                 // white-space: pre-wrap; permette di stampare fedelmente gli "a capo" inseriti nella textarea.
                 printContents += `
-                    <div style="margin-bottom: 20px; border-left: 6px solid ${color}; padding: 12px 18px; background-color: #fcfcfc; page-break-inside: avoid; break-inside: avoid;">
-                        <p style="font-weight: bold; font-size: 16px; margin: 0 0 8px 0; line-height: 1.5;">${hlText}</p>
-                        ${noteInputVal ? `<p style="font-size: 14px; color: #555; margin: 0; line-height: 1.6; white-space: pre-wrap;">&#8627; ${noteInputVal}</p>` : ''}
+                    <div style="margin-bottom: 22px; border-left: 5px solid ${color}; border-bottom: 1px solid #E4E0D6; padding: 4px 0 14px 18px; page-break-inside: avoid; break-inside: avoid;">
+                        <p style="font-family: 'Playfair Display', Georgia, serif; font-weight: 700; font-size: 17px; color: #1A2F4F; margin: 0 0 7px 0; line-height: 1.45;">${hlText}</p>
+                        ${noteInputVal ? `<p style="font-size: 13.5px; color: #555149; margin: 0; line-height: 1.65; white-space: pre-wrap;">&#8627; ${noteInputVal}</p>` : ''}
                     </div>
                 `;
             });
 
-            printContents += `</div>`;
+            printContents += `
+                    <div style="border-top: 1px solid #1C1C22; margin-top: 30px; padding-top: 10px; display: flex; justify-content: space-between; font-size: 10px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: #918E86;">
+                        <span>Una Mano Spensierata</span>
+                        <span style="color: #9A7A3F;">Studia con leggerezza</span>
+                    </div>
+                </div>`;
 
             const iframe = document.createElement('iframe');
             iframe.style.position = 'fixed';
@@ -2141,8 +2283,15 @@
             doc.open();
             doc.write(`
                 <html>
-                    <head><title>Appunti - Lezione Dinamica</title></head>
-                    <body onload="window.print();">${printContents}</body>
+                    <head>
+                        <title>Appunti — Una Mano Spensierata</title>
+                        <link rel="preconnect" href="https://fonts.googleapis.com">
+                        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+                        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+                    </head>
+                    <body style="margin:0; background:#fff;">${printContents}
+                        <scr` + `ipt>window.onload = () => setTimeout(() => window.print(), 450);</scr` + `ipt>
+                    </body>
                 </html>
             `);
             doc.close();
@@ -2227,7 +2376,7 @@ if (!fileDaCaricare) {
             // ----------------------------------------------------------------
             const highlighterBtn = document.createElement('div');
             highlighterBtn.id = 'floating-highlighter';
-            highlighterBtn.innerHTML = '<span class="hl-add">🖍️ Sottolinea</span><span class="hl-remove" id="hl-remove-btn">✕ Rimuovi</span>';
+            highlighterBtn.innerHTML = '<span class="hl-add"><svg class="ums-ic" aria-hidden="true"><use href="#ic-highlighter"/></svg> Sottolinea</span><span class="hl-remove" id="hl-remove-btn"><svg class="ums-ic" aria-hidden="true"><use href="#ic-x"/></svg> Rimuovi</span>';
             document.body.appendChild(highlighterBtn);
 
             let currentSelectionRange = null;
@@ -2344,6 +2493,16 @@ if (!fileDaCaricare) {
             observer.observe(document.body, { childList: true, subtree: true });
 
             // Init word search
+            // UPGRADE — se la lezione è caricata, il crucipuzzle usa le sue parole chiave
+            WS_WORDS.lezione = wsExtractLessonWords();
+            const wsLezBtn = document.getElementById('ws-btn-lezione');
+            if (WS_WORDS.lezione.length >= 5) {
+                wsLang = 'lezione';
+                if (wsLezBtn) wsLezBtn.classList.add('active');
+                document.getElementById('ws-btn-it').classList.remove('active');
+            } else if (wsLezBtn) {
+                wsLezBtn.style.display = 'none';
+            }
             wsInit();
         });
 
@@ -2530,7 +2689,7 @@ if (!fileDaCaricare) {
             const explDiv = document.getElementById(`quiz-expl-${qIdx}`);
             explDiv.className = 'quiz-explanation ' + (chosen.corretta ? 'quiz-explanation-correct' : 'quiz-explanation-incorrect');
             explDiv.style.display = 'block';
-            explDiv.innerHTML = `<strong>${chosen.corretta ? '✅ Risposta corretta' : '❌ Risposta errata'}</strong>${q.spiegazione || chosen.spiegazione || ''}`;
+            explDiv.innerHTML = `<strong>${chosen.corretta ? '<svg class="ums-ic" aria-hidden="true"><use href="#ic-check"/></svg> Risposta corretta' : '<svg class="ums-ic" aria-hidden="true"><use href="#ic-x"/></svg> Risposta errata'}</strong>${q.spiegazione || chosen.spiegazione || ''}`;
         }
 
         // =========================================================================
@@ -2771,9 +2930,34 @@ if (!fileDaCaricare) {
 
         function wsSetLang(lang) {
             wsLang = lang;
+            const lezBtn = document.getElementById('ws-btn-lezione');
+            if (lezBtn) lezBtn.classList.toggle('active', lang === 'lezione');
             document.getElementById('ws-btn-it').classList.toggle('active', lang === 'it');
             document.getElementById('ws-btn-en').classList.toggle('active', lang === 'en');
             wsNewGame();
+        }
+
+        // UPGRADE — estrae le parole più rilevanti dal testo della lezione.
+        // Rilevanza = frequenza x lunghezza (i termini tecnici sono lunghi e ripetuti),
+        // dopo aver filtrato le parole "vuote" della lingua italiana.
+        function wsExtractLessonWords() {
+            const cont = document.getElementById('dyn-riassuntone-container');
+            const title = document.getElementById('dyn-title');
+            const src = (cont ? cont.textContent : '') + ' ' + (title ? title.textContent : '');
+            const stop = new Set(['ANCHE','COME','DELLA','DELLE','DELLO','DEGLI','SONO','ESSERE','QUESTO','QUESTA','QUESTI','QUESTE','QUELLO','QUELLA','QUELLE','QUELLI','NELLA','NELLE','NELLO','SULLA','SULLE','SULLO','DALLA','DALLE','PERCHE','QUANDO','ALLORA','INFATTI','INOLTRE','TUTTAVIA','QUINDI','DUNQUE','OGNI','TUTTI','TUTTE','TUTTO','TUTTA','MOLTO','MOLTI','MOLTE','MENO','VIENE','VENGONO','PUO','POSSONO','POSSIAMO','DEVE','DEVONO','FANNO','STATO','STATA','STATI','STATE','AVERE','HANNO','ABBIAMO','ALTRO','ALTRA','ALTRI','ALTRE','PROPRIO','PROPRIA','ATTRAVERSO','SECONDO','MENTRE','ANCORA','SEMPRE','PRIMA','DOPO','CONTRO','VERSO','SENZA','ALCUNI','ALCUNE','CIOE','OVVERO','ESEMPIO','PARTE','MODO','CASO','FATTO','COSA','COSE','ANNI','ANNO','SOLO','STESSO','STESSA','LORO','NOSTRO','NOSTRA','QUALE','QUALI','ESSERE','INVECE','OSSIA','TRAMITE','PRESSO','DENTRO','FUORI','SOPRA','SOTTO','GRAZIE','PUNTO','LIVELLO']);
+            const freq = {};
+            src.toUpperCase()
+               .normalize('NFD').replace(/[\u0300-\u036f]/g, '')  // À -> A, È -> E ecc.
+               .replace(/[^A-Z]+/g, ' ')
+               .split(' ')
+               .forEach(w => {
+                   if (w.length < 5 || w.length > 11) return; // deve entrare nella griglia 12x12
+                   if (stop.has(w)) return;
+                   freq[w] = (freq[w] || 0) + 1;
+               });
+            return Object.keys(freq)
+                .sort((a, b) => (freq[b] * b.length) - (freq[a] * a.length))
+                .slice(0, 20);
         }
 
         function wsInit() {
@@ -2937,7 +3121,7 @@ if (!fileDaCaricare) {
             const toggleBtn = document.getElementById('lang-toggle-btn');
             const labelSpan = document.getElementById('lang-label');
             const disclaimer = document.getElementById('translation-disclaimer');
-            labelSpan.innerHTML = '🌐 ' + (langLabels[lang] || 'Language');
+            labelSpan.innerHTML = '<svg class="ums-ic" aria-hidden="true"><use href="#ic-globe"/></svg> ' + (langLabels[lang] || 'Language');
             loadingDiv.style.display = 'block';
             menu.classList.remove('show');
             toggleBtn.style.display = 'none';
@@ -2965,7 +3149,7 @@ if (!fileDaCaricare) {
 
             function applyNightMode(on) {
                 document.body.classList.toggle('night-mode', on);
-                toggleBtn.textContent = on ? '☀️' : '🌙';
+                toggleBtn.innerHTML = on ? '<svg class="ums-ic" aria-hidden="true"><use href="#ic-sun"/></svg>' : '<svg class="ums-ic" aria-hidden="true"><use href="#ic-moon"/></svg>';
                 toggleBtn.setAttribute('aria-label', on ? 'Attiva modalità giorno' : 'Attiva modalità notte');
             }
 
