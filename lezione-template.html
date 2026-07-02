@@ -1325,7 +1325,10 @@
            del primo paragrafo (mai a titoli o numeri: prima ::first-letter prendeva
            il "1." dell'intestazione di sezione) */
         #dyn-riassuntone-container { max-width: 68ch; }
-        .ums-dropcap {
+        /* Il capolettera vive in ::first-letter del paragrafo "lead": il testo resta
+           intero nel DOM, quindi Google Translate lo traduce normalmente e il
+           capolettera diventa automaticamente la prima lettera TRADOTTA. */
+        .ums-lead::first-letter {
             font-family: var(--font-display);
             font-weight: 700;
             font-size: 3.4em;
@@ -1334,7 +1337,7 @@
             float: left;
             padding: 0.08em 0.13em 0 0;
         }
-        .night-mode .ums-dropcap { color: var(--gold); }
+        .night-mode .ums-lead::first-letter { color: var(--gold); }
 
         /* UPGRADE TIPOGRAFIA — il riassuntone come articolo di rivista */
         #dyn-riassuntone-container {
@@ -1419,6 +1422,22 @@
         }
 
         /* ============================================================
+           FIX — TOOLTIP GOOGLE TRANSLATE
+           Sul testo tradotto, il widget evidenzia la frase sotto il cursore
+           in azzurro e apre un balloon con l'originale: in night mode diventa
+           illeggibile. Disattiviamo evidenziazione e balloon del tutto.
+        ============================================================ */
+        .goog-text-highlight {
+            background: transparent !important;
+            box-shadow: none !important;
+            border: none !important;
+        }
+        #goog-gt-tt, .goog-te-balloon-frame, .goog-tooltip, .goog-tooltip:hover {
+            display: none !important;
+            visibility: hidden !important;
+        }
+
+        /* ============================================================
            UPGRADE — SUDOKU (stesso linguaggio enigmistica)
         ============================================================ */
         .sd-diff-row { display: flex; justify-content: center; gap: 10px; margin-bottom: 1.2rem; flex-wrap: wrap; }
@@ -1448,6 +1467,13 @@
         .sd-cell.sd-sel { background: var(--gold-lt) !important; color: var(--night); }
         .sd-cell.sd-err { color: var(--quiz-incorrect); font-weight: 800; }
         .night-mode .sd-cell { background: #262933; color: #8FB4E8; }
+        /* FIX — in night mode l'errore era rosa pallido e ambiguo: ora terracotta
+           piena su fondo tinto, impossibile non capire che e' un errore */
+        .night-mode .sd-cell.sd-err {
+            color: #F08A63 !important;
+            background: rgba(180, 87, 62, 0.22);
+        }
+        .sd-cell.sd-err { background: rgba(180, 87, 62, 0.10); }
         .night-mode .sd-cell.sd-fixed { background: #1E212A; color: var(--ink); }
         .night-mode .sd-cell.sd-sel { background: var(--gold-lt) !important; color: #1C1C22; }
 
@@ -1495,6 +1521,21 @@
         }
         .ls-btn:hover { border-color: var(--gold); color: var(--gold-dk); }
         .night-mode .ls-btn { color: #8FB4E8; }
+        .ls-label {
+            font-size: 0.62rem; font-weight: 700;
+            letter-spacing: 0.16em; text-transform: uppercase;
+            color: var(--gold-dk); margin-right: 6px;
+        }
+        .ls-more {
+            background: none; border: none; padding: 0;
+            font-family: var(--font-body); font-size: 0.8rem; font-weight: 700;
+            color: var(--navy); cursor: pointer;
+            border-bottom: 1px solid var(--gold);
+            transition: color 0.2s;
+            white-space: nowrap;
+        }
+        .ls-more:hover { color: var(--gold-dk); }
+        .night-mode .ls-more { color: #8FB4E8; }
     </style>
 
     <style id="night-mode-style">
@@ -1667,6 +1708,10 @@
         <symbol id="ic-wrench" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76Z"/></symbol>
         <symbol id="ic-award" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.5 13 17 22l-5-3-5 3 1.5-9"/></symbol>
     </svg>
+
+    <!-- Banca parole del crucipuzzle: fuori schermo ma NON display:none, cosi'
+         il widget di traduzione la traduce insieme alla pagina -->
+    <div id="ws-translate-bank" aria-hidden="true" style="position:absolute; left:-9999px; top:0; width:1px; height:1px; overflow:hidden;"></div>
 
     <!-- NIGHT MODE — pulsante on/off -->
     <button id="night-toggle" type="button" aria-label="Attiva modalità notte" title="Modalità notte on/off"><svg class="ums-ic" aria-hidden="true"><use href="#ic-moon"/></svg></button>
@@ -2058,11 +2103,11 @@
                                     <p class="sd-howto"><strong>Come si gioca:</strong> riempi la griglia in modo che ogni riga, ogni colonna e ogni riquadro 3&times;3 contengano tutti i numeri da 1 a 9, senza ripetizioni. I numeri in grassetto sono gli indizi fissi di partenza. Tocca una casella vuota, poi scegli un numero dalla tastiera qui sopra (o dalla tastiera fisica). Se un numero diventa rosso, &egrave; in conflitto con un altro uguale nella stessa riga, colonna o riquadro: correggilo e continua. Non serve indovinare: ogni schema ha una sola soluzione, raggiungibile con la logica.</p>
                                 </div>
 
-                                <!-- LO SAPEVI? — rubrica di curiosità, tradotta insieme alla pagina -->
+                                <!-- ACCADDE OGGI — rubrica dinamica (Wikipedia), tradotta insieme alla pagina -->
                                 <div class="losapevi" id="losapevi-box">
-                                    <div class="ws-kicker">Lo sapevi?</div>
+                                    <div class="ws-kicker">Accadde Oggi</div>
                                     <div id="losapevi-list"></div>
-                                    <button class="ls-btn" onclick="lsShuffle()">Altre curiosità</button>
+                                    <button class="ls-btn" onclick="lsShuffle()">Altri fatti</button>
                                 </div>
                             </div>
 
@@ -2391,26 +2436,82 @@
                     <div style="border-top: 4px double #1C1C22; margin-bottom: 28px;"></div>
             `;
 
-            const body = document.getElementById('wb-body');
-            let wbPrintIdx = 0;
-            body.querySelectorAll('.wb-row').forEach(row => {
-                const hlText = row.querySelector('.wb-hl-text').textContent;
-                const noteInputVal = row.querySelector('.wb-note-input').value.trim();
-                const color = row.querySelector('.wb-hl-swatch').style.background;
-                const num = String(++wbPrintIdx).padStart(2, '0');
+            // UPGRADE — mappa ogni evidenziazione al suo MACROARGOMENTO e raccoglie
+            // le domande di Check Point di ogni macro (SENZA risposte: la stampa
+            // diventa uno strumento di autoverifica).
+            const secOfHl = {};
+            const questionsBySec = {};
+            const secOrder = [];
+            (function () {
+                const cont = document.getElementById('dyn-riassuntone-container');
+                if (!cont) return;
+                let current = null;
+                cont.querySelectorAll('h3, mark.highlighted-text, .cornell-question').forEach(el => {
+                    if (el.tagName === 'H3') {
+                        current = el.textContent.trim();
+                        if (!secOrder.includes(current)) secOrder.push(current);
+                        if (!questionsBySec[current]) questionsBySec[current] = [];
+                    } else if (el.classList.contains('highlighted-text')) {
+                        const id = el.getAttribute('data-hl-id');
+                        if (id && current) secOfHl[id] = current;
+                    } else if (current) {
+                        questionsBySec[current].push(el.textContent.trim());
+                    }
+                });
+            })();
 
-                // Numero in stile "ch-number" del sito + barra del colore di evidenziazione.
-                // page-break-inside: avoid; impedisce al blocco di spaccarsi a metà pagina!
-                // white-space: pre-wrap; stampa fedelmente gli "a capo" della textarea.
+            // Raggruppa le righe della lavagna per macroargomento (ordine della lezione)
+            const OTHER = 'Altri concetti';
+            const groups = {};
+            const body = document.getElementById('wb-body');
+            body.querySelectorAll('.wb-row').forEach(row => {
+                const hlId = row.dataset.hlId;
+                const sec = secOfHl[hlId] || OTHER;
+                (groups[sec] = groups[sec] || []).push(row);
+            });
+            const orderedSecs = secOrder.filter(s => groups[s]).concat(groups[OTHER] ? [OTHER] : []);
+
+            let wbPrintIdx = 0;
+            orderedSecs.forEach(sec => {
+                // intestazione del macroargomento, stile testata di rubrica
                 printContents += `
-                    <div style="display: flex; gap: 16px; margin-bottom: 24px; page-break-inside: avoid; break-inside: avoid;">
-                        <div style="font-family: 'Playfair Display', Georgia, serif; font-weight: 700; font-size: 22px; color: #C8A96E; min-width: 34px; line-height: 1.2; text-align: right;">${num}</div>
-                        <div style="flex: 1; border-left: 4px solid ${color}; border-bottom: 1px solid #E4E0D6; padding: 2px 0 14px 16px;">
-                            <p style="font-family: 'Playfair Display', Georgia, serif; font-weight: 700; font-size: 17px; color: #1A2F4F; margin: 0 0 7px 0; line-height: 1.45;">${hlText}</p>
-                            ${noteInputVal ? `<p style="font-size: 13.5px; color: #555149; margin: 0; line-height: 1.65; white-space: pre-wrap;">&#8627; ${noteInputVal}</p>` : ''}
-                        </div>
+                    <div style="margin: 30px 0 18px; page-break-inside: avoid; break-inside: avoid;">
+                        <div style="font-size: 9px; font-weight: 700; letter-spacing: 0.28em; text-transform: uppercase; color: #9A7A3F; margin-bottom: 5px;">Macroargomento</div>
+                        <h2 style="font-family: 'Playfair Display', Georgia, serif; font-size: 20px; font-weight: 700; color: #1A2F4F; margin: 0; line-height: 1.3;">${sec}</h2>
+                        <div style="width: 44px; border-top: 3px solid #C8A96E; margin-top: 8px;"></div>
                     </div>
                 `;
+
+                groups[sec].forEach(row => {
+                    const hlText = row.querySelector('.wb-hl-text').textContent;
+                    const noteInputVal = row.querySelector('.wb-note-input').value.trim();
+                    const color = row.querySelector('.wb-hl-swatch').style.background;
+                    const num = String(++wbPrintIdx).padStart(2, '0');
+
+                    // Numero in stile "ch-number" del sito + barra del colore di evidenziazione.
+                    // page-break-inside: avoid; impedisce al blocco di spaccarsi a metà pagina!
+                    // white-space: pre-wrap; stampa fedelmente gli "a capo" della textarea.
+                    printContents += `
+                        <div style="display: flex; gap: 16px; margin-bottom: 22px; page-break-inside: avoid; break-inside: avoid;">
+                            <div style="font-family: 'Playfair Display', Georgia, serif; font-weight: 700; font-size: 22px; color: #C8A96E; min-width: 34px; line-height: 1.2; text-align: right;">${num}</div>
+                            <div style="flex: 1; border-left: 4px solid ${color}; border-bottom: 1px solid #E4E0D6; padding: 2px 0 14px 16px;">
+                                <p style="font-family: 'Playfair Display', Georgia, serif; font-weight: 700; font-size: 17px; color: #1A2F4F; margin: 0 0 7px 0; line-height: 1.45;">${hlText}</p>
+                                ${noteInputVal ? `<p style="font-size: 13.5px; color: #555149; margin: 0; line-height: 1.65; white-space: pre-wrap;">&#8627; ${noteInputVal}</p>` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+
+                // domande di Check Point del macroargomento, SENZA risposte
+                const qs = questionsBySec[sec] || [];
+                if (qs.length) {
+                    printContents += `
+                        <div style="border: 1px solid #E4E0D6; border-left: 3px solid #C8A96E; padding: 14px 18px; margin: 4px 0 8px 50px; page-break-inside: avoid; break-inside: avoid;">
+                            <div style="font-size: 9px; font-weight: 700; letter-spacing: 0.24em; text-transform: uppercase; color: #9A7A3F; margin-bottom: 9px;">Check Point &mdash; rispondi senza guardare gli appunti</div>
+                            ${qs.map(q => `<p style="font-size: 13px; color: #1C1C22; margin: 0 0 7px 0; line-height: 1.6;">&#9744;&nbsp; ${q}</p>`).join('')}
+                        </div>
+                    `;
+                }
             });
 
             printContents += `
@@ -2455,29 +2556,25 @@
         // =========================================================================
         function applyDropCap() {
             const cont = document.getElementById('dyn-riassuntone-container');
-            if (!cont || cont.querySelector('.ums-dropcap')) return;
+            if (!cont || cont.querySelector('.ums-lead')) return;
             const walker = document.createTreeWalker(cont, NodeFilter.SHOW_TEXT, {
                 acceptNode: (n) => {
                     if (!n.nodeValue || !n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
-                    if (n.parentElement && n.parentElement.closest('h1,h2,h3,h4,h5')) return NodeFilter.FILTER_REJECT;
+                    if (n.parentElement && n.parentElement.closest('h1,h2,h3,h4,h5,.cornell-box')) return NodeFilter.FILTER_REJECT;
                     return NodeFilter.FILTER_ACCEPT;
                 }
             });
             const node = walker.nextNode();
             if (!node) return;
-            const txt = node.nodeValue;
-            const m = txt.match(/[A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF]/);
-            if (!m || m.index > 3) return; // se non inizia quasi subito con una lettera, meglio nessun capolettera
-            const span = document.createElement('span');
-            span.className = 'ums-dropcap';
-            span.textContent = txt[m.index];
-            const parent = node.parentNode;
-            parent.insertBefore(document.createTextNode(txt.slice(0, m.index)), node);
-            parent.insertBefore(span, node);
-            parent.insertBefore(document.createTextNode(txt.slice(m.index + 1)), node);
-            parent.removeChild(node);
+            const m = node.nodeValue.trimStart().match(/^[A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF]/);
+            if (!m) return; // se il testo non inizia con una lettera, nessun capolettera
+            // Sale fino all'elemento figlio diretto del container (il <p> del primo macro)
+            let block = node.parentElement;
+            while (block && block.parentElement && block.parentElement !== cont) block = block.parentElement;
+            if (block && block !== cont && !/^H[1-5]$/.test(block.tagName)) {
+                block.classList.add('ums-lead');
+            }
         }
-
         // =========================================================================
         // TASK 2 — Chunking testo riassuntone
         // =========================================================================
@@ -2684,8 +2781,12 @@ if (!fileDaCaricare) {
                 }
             }
             wsCurrentWords = wsBaseWords.slice();
+            // Banca parole traducibile: il widget di traduzione la converte
+            // insieme alla pagina, e il crucipuzzle la rilegge da li'
+            const wsBank = document.getElementById('ws-translate-bank');
+            if (wsBank) wsBank.innerHTML = wsBaseWords.map(w => '<span>' + w.toLowerCase() + '</span>').join(', ');
             wsInit();
-            lsLoad(); // rubrica "Lo sapevi?"
+            lsLoad(); // rubrica "Accadde Oggi"
         });
 
         // =========================================================================
@@ -3127,37 +3228,52 @@ if (!fileDaCaricare) {
         }
 
         // Cambio lingua della pagina: tradotto anche il gioco.
+        // Le parole passano da una "banca" nascosta e traducibile nel DOM: le
+        // traduce lo STESSO widget che traduce la pagina (niente endpoint extra),
+        // noi le rileggiamo appena pronte e rigeneriamo la griglia.
         // Alfabeti non latini -> il crucipuzzle non ha senso: si passa al Sudoku
         // (che peraltro e' universale: i numeri sono uguali ovunque).
-        async function pausaOnLanguageChange(lang) {
+        let wsBankPoll = null;
+
+        function wsBankWords() {
+            return Array.from(document.querySelectorAll('#ws-translate-bank span')).map(s => s.textContent || '');
+        }
+        function wsSanitizeWords(arr) {
+            const out = arr.map(w =>
+                w.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^A-Z]/g, '')
+            );
+            return [...new Set(out.filter(w => w.length >= 4 && w.length <= 11))];
+        }
+
+        function pausaOnLanguageChange(lang) {
             pausaLang = lang;
+            clearInterval(wsBankPoll);
+            const wordsBtn = document.getElementById('ws-btn-words');
             if (PAUSA_NONLATIN.has(lang)) {
                 if (pausaGame === 'words') pausaSetGame('sudoku');
-                document.getElementById('ws-btn-words').style.display = 'none';
+                if (wordsBtn) wordsBtn.style.display = 'none';
                 return;
             }
-            document.getElementById('ws-btn-words').style.display = '';
+            if (wordsBtn) wordsBtn.style.display = '';
             if (lang === 'it') {
                 wsCurrentWords = wsBaseWords.slice();
                 if (pausaGame === 'words') wsNewGame();
                 return;
             }
-            try {
-                const q = encodeURIComponent(wsBaseWords.join('\n').toLowerCase());
-                const res = await fetch('https://translate.googleapis.com/translate_a/single?client=gtx&sl=it&tl=' + encodeURIComponent(lang) + '&dt=t&q=' + q);
-                if (!res.ok) throw new Error('translate http ' + res.status);
-                const data = await res.json();
-                const joined = (data[0] || []).map(seg => seg[0]).join('');
-                let out = joined.split('\n').map(w =>
-                    w.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^A-Z]/g, '')
-                );
-                out = [...new Set(out.filter(w => w.length >= 4 && w.length <= 11))];
-                if (out.length >= 5) {
-                    wsCurrentWords = out;
+            // aspetta che il widget abbia tradotto la banca, poi rigenera la griglia
+            const before = wsSanitizeWords(wsBankWords()).join('|');
+            let tries = 0;
+            wsBankPoll = setInterval(() => {
+                tries++;
+                const now = wsSanitizeWords(wsBankWords());
+                if (now.length >= 5 && now.join('|') !== before) {
+                    clearInterval(wsBankPoll);
+                    wsCurrentWords = now;
                     if (pausaGame === 'words') wsNewGame();
+                } else if (tries > 30) {
+                    clearInterval(wsBankPoll); // il widget non ha tradotto: si tengono le parole attuali
                 }
-                // se la traduzione non produce abbastanza parole valide, si tengono le attuali
-            } catch (e) { /* rete/API ko: si tengono le parole attuali */ }
+            }, 400);
         }
 
         // Estrae le parole piu' rilevanti dal testo della lezione.
@@ -3510,11 +3626,13 @@ if (!fileDaCaricare) {
         });
 
         // =========================================================================
-        // UPGRADE — "LO SAPEVI?"
-        // Curiosita' dinamiche dall'API "on this day" di Wikipedia (accade oggi
-        // nella storia, CORS aperto, nessuna chiave) + una riserva curata su
-        // culture, giochi e feste del mondo se la rete non risponde.
-        // Il testo NON e' marcato notranslate: viene tradotto insieme alla pagina.
+        // UPGRADE — "ACCADDE OGGI"
+        // Rubrica dinamica dall'API "on this day" di Wikipedia Italia (CORS aperto,
+        // nessuna chiave), con TUTTE le categorie: in evidenza, eventi, nascite,
+        // scomparse e ricorrenze. Ogni fatto ha "Scopri di piu'": apre il riassunto
+        // dell'articolo NEL modale del sito, con link alla voce completa.
+        // Riserva curata su culture/giochi/feste del mondo se la rete non risponde.
+        // Il testo NON e' notranslate: viene tradotto insieme alla pagina.
         // =========================================================================
         const LS_CURATED = [
             "Il Sudoku moderno e' esploso in Giappone negli anni Ottanta, ma le sue radici affondano nei quadrati latini studiati dal matematico Eulero nel Settecento.",
@@ -3528,37 +3646,116 @@ if (!fileDaCaricare) {
             "In Corea del Sud il capodanno lunare, il Seollal, si festeggia indossando l'abito tradizionale hanbok e giocando in famiglia allo yut nori.",
             "Il Carnevale di Venezia nel Settecento durava cosi' tanto che, tra proroghe e feste, occupava diversi mesi dell'anno."
         ];
-        let lsWiki = [];
+        const LS_LABELS = {
+            selected: 'In evidenza',
+            events:   'Evento',
+            births:   'Nato oggi',
+            deaths:   'Scomparso oggi',
+            holidays: 'Ricorrenza'
+        };
+        let lsItems = [];
+        let lsShown = [];
 
         async function lsLoad() {
             try {
                 const d = new Date();
                 const mm = String(d.getMonth() + 1).padStart(2, '0');
                 const dd = String(d.getDate()).padStart(2, '0');
-                const res = await fetch(`https://it.wikipedia.org/api/rest_v1/feed/onthisday/events/${mm}/${dd}`);
+                const res = await fetch(`https://it.wikipedia.org/api/rest_v1/feed/onthisday/all/${mm}/${dd}`);
                 if (res.ok) {
                     const j = await res.json();
-                    lsWiki = (j.events || [])
-                        .filter(e => e.text && e.text.length >= 40 && e.text.length <= 190)
-                        .map(e => `Accadde oggi, nel ${e.year}: ${e.text}`);
+                    Object.keys(LS_LABELS).forEach(cat => {
+                        (j[cat] || []).forEach(e => {
+                            if (!e.text || e.text.length < 25 || e.text.length > 200) return;
+                            const pg = (e.pages && e.pages[0]) || null;
+                            lsItems.push({
+                                label: LS_LABELS[cat],
+                                text: (e.year ? e.year + ' \u2014 ' : '') + e.text,
+                                title: pg ? ((pg.titles && (pg.titles.normalized || pg.titles.display)) || pg.title || '') : '',
+                                extract: pg ? (pg.extract || '') : '',
+                                thumb: (pg && pg.thumbnail) ? pg.thumbnail.source : '',
+                                url: (pg && pg.content_urls && pg.content_urls.desktop) ? pg.content_urls.desktop.page : ''
+                            });
+                        });
+                    });
                 }
-            } catch (e) { /* offline o API ko: si usa solo la riserva curata */ }
+            } catch (e) { /* offline o API ko: si usa la riserva curata */ }
             lsShuffle();
         }
 
         function lsShuffle() {
-            const pick = (arr, n) => [...arr].sort(() => 0.5 - Math.random()).slice(0, n);
-            const items = lsWiki.length >= 2
-                ? pick(lsWiki, 2).concat(pick(LS_CURATED, 1))
-                : pick(LS_CURATED, 3);
             const list = document.getElementById('losapevi-list');
+            if (!list) return;
             list.innerHTML = '';
-            items.forEach(t => {
+            if (lsItems.length >= 3) {
+                // pesca 3 fatti privilegiando categorie DIVERSE
+                const mixed = [...lsItems].sort(() => 0.5 - Math.random());
+                const usedLabels = new Set();
+                lsShown = [];
+                for (const it of mixed) {
+                    if (lsShown.length >= 3) break;
+                    if (usedLabels.has(it.label)) continue;
+                    usedLabels.add(it.label);
+                    lsShown.push(it);
+                }
+                for (const it of mixed) {
+                    if (lsShown.length >= 3) break;
+                    if (!lsShown.includes(it)) lsShown.push(it);
+                }
+            } else {
+                lsShown = [...LS_CURATED].sort(() => 0.5 - Math.random()).slice(0, 3)
+                    .map(t => ({ label: 'Curiosita\u0300 dal mondo', text: t, url: '' }));
+            }
+            lsShown.forEach((it, idx) => {
                 const p = document.createElement('p');
                 p.className = 'ls-item';
-                p.textContent = t; // textContent: il testo esterno non tocca mai il DOM come HTML
+                const lab = document.createElement('span');
+                lab.className = 'ls-label';
+                lab.textContent = it.label;
+                p.appendChild(lab);
+                p.appendChild(document.createTextNode(' ' + it.text + ' '));
+                if (it.url) {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'ls-more';
+                    btn.textContent = 'Scopri di piu\u0300';
+                    btn.addEventListener('click', () => lsOpenArticle(idx));
+                    p.appendChild(btn);
+                }
                 list.appendChild(p);
             });
+        }
+
+        // Apre il riassunto della voce Wikipedia NEL modale del sito (stesso stile),
+        // con link alla voce completa per chi vuole approfondire.
+        function lsOpenArticle(idx) {
+            const it = lsShown[idx];
+            if (!it) return;
+            document.getElementById('m-title').innerText = it.title || 'Accadde Oggi';
+            const body = document.getElementById('m-body');
+            body.innerHTML = '';
+            if (it.thumb) {
+                const img = document.createElement('img');
+                img.src = it.thumb;
+                img.alt = '';
+                img.style.cssText = 'width:100%; max-height:260px; object-fit:cover; border-radius:8px; margin-bottom:1.1rem;';
+                body.appendChild(img);
+            }
+            const p = document.createElement('p');
+            p.textContent = it.extract || it.text;
+            p.style.cssText = 'line-height:1.85; margin-bottom:0.4rem;';
+            body.appendChild(p);
+            if (it.url) {
+                const a = document.createElement('a');
+                a.href = it.url;
+                a.target = '_blank';
+                a.rel = 'noopener';
+                a.className = 'btn-ia';
+                a.style.cssText = 'display:inline-block; margin-top:1.1rem;';
+                a.textContent = 'Leggi la voce completa su Wikipedia \u2197';
+                body.appendChild(a);
+            }
+            document.getElementById('factor-modal').classList.add('open');
         }
 
     </script>
