@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Una Mano Spensierata | Lezione Dinamica</title>
 
-    <!-- Task 4 — html2pdf via CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- FIX 3 — rimosso html2pdf (caricato ma mai usato: wbExportPDF usa window.print) -->
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1252,6 +1251,35 @@
          Nessun filtro/inversione sulle immagini: cambiano solo i token
          colore e gli sfondi hardcoded. Le foto restano intatte.
     ================================================================ -->
+    <style id="ums-upgrades-style">
+        /* ============================================================
+           UPGRADE — LAVAGNA ESPANDIBILE
+           La lavagna passa da 220px a 520px con animazione morbida;
+           il riassuntone sotto scende automaticamente perché la lavagna
+           è nel flusso normale della colonna sinistra.
+        ============================================================ */
+        #smart-whiteboard { transition: height 0.35s ease; }
+        #smart-whiteboard.wb-expanded { height: 520px; }
+        @media (max-height: 720px) {
+            #smart-whiteboard.wb-expanded { height: 68vh; }
+        }
+        .wb-header { position: relative; }
+        .wb-expand-btn {
+            position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.45);
+            color: #fff;
+            width: 26px; height: 26px;
+            border-radius: 6px;
+            font-size: 0.85rem; line-height: 1;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            padding: 0;
+            transition: background 0.2s, border-color 0.2s;
+        }
+        .wb-expand-btn:hover { background: rgba(255,255,255,0.18); border-color: #fff; }
+    </style>
+
     <style id="night-mode-style">
         /* Pulsante toggle fisso */
         #night-toggle {
@@ -1479,7 +1507,7 @@
     <div class="content-card">
 
         <div class="master-accordion-item">
-            <button class="master-header" id="master-toggle-btn" onclick="toggleMaster()">
+            <button class="master-header" id="master-toggle-btn" onclick="toggleMaster()" aria-expanded="false">
                 <span>Inizia la Lezione</span>
                 <span class="mh-arrow">→</span>
             </button>
@@ -1686,6 +1714,8 @@
                                         <div id="smart-whiteboard">
                                             <div class="wb-header">
                                                 <span class="wb-title">📝 Lavagna Concetti</span>
+                                                <!-- UPGRADE — pulsante ingrandisci/ripristina (stile finestra browser) -->
+                                                <button id="wb-expand-btn" class="wb-expand-btn" onclick="wbToggleExpand()" title="Ingrandisci lavagna" aria-label="Ingrandisci lavagna">▢</button>
                                             </div>
                                             <div class="wb-body-wrap">
                                                 <div class="wb-body" id="wb-body"></div>
@@ -1847,6 +1877,12 @@
         let currentCardIndex = 0;
         const STORAGE_KEY = 'una_mano_spensierata_notes';
 
+        // FIX 1+2 — chiave della lezione corrente (dal parametro ?file=), usata per
+        // salvare appunti, evidenziazioni e lavagna SEPARATAMENTE per ogni lezione
+        let umsLessonKey = 'default';
+        let umsPristineHash = '';
+        let umsPersistTimer = null;
+
         // TASK 3 — colore evidenziatore attivo (default giallo)
         let hlActiveColor = '#FFF176';
 
@@ -1869,10 +1905,94 @@
         // TASK 4 — Smart Whiteboard helpers
         // =========================================================================
         function wbMinimize() {
+            // UPGRADE — se la lavagna era ingrandita, torna alle dimensioni normali
+            if (document.getElementById('smart-whiteboard').classList.contains('wb-expanded')) wbToggleExpand();
             document.getElementById('smart-whiteboard').classList.remove('wb-visible');
             document.getElementById('wb-section-banner').style.display = 'block';
             document.getElementById('wb-badge').style.display = 'block';
             document.getElementById('wb-badge-count').textContent = wbCount;
+        }
+
+        // FIX 6 — questa funzione veniva chiamata dal pulsante "✕ Rimuovi" ma non esisteva:
+        // rimuovere un'evidenziazione con la lavagna ridotta mandava il codice in errore
+        function wbUpdateBadge() {
+            const badge = document.getElementById('wb-badge');
+            document.getElementById('wb-badge-count').textContent = wbCount;
+            const wbVisible = document.getElementById('smart-whiteboard').classList.contains('wb-visible');
+            badge.style.display = (wbCount > 0 && !wbVisible) ? 'block' : 'none';
+        }
+
+        // UPGRADE — ingrandisci/ripristina la lavagna (pulsante quadrato nell'header)
+        function wbToggleExpand() {
+            const wb = document.getElementById('smart-whiteboard');
+            const btn = document.getElementById('wb-expand-btn');
+            const expanded = wb.classList.toggle('wb-expanded');
+            if (btn) {
+                btn.textContent = expanded ? '❐' : '▢';
+                const label = expanded ? 'Ripristina dimensioni lavagna' : 'Ingrandisci lavagna';
+                btn.title = label;
+                btn.setAttribute('aria-label', label);
+            }
+        }
+
+        // FIX 2 — PERSISTENZA: evidenziazioni + lavagna sopravvivono al refresh.
+        // Salva (con debounce) l'HTML del riassuntone evidenziato e le righe della
+        // lavagna (testo, colore, nota) in localStorage, con chiave per-lezione.
+        function umsHash(str) {
+            let h = 0;
+            for (let i = 0; i < str.length; i++) { h = ((h << 5) - h + str.charCodeAt(i)) | 0; }
+            return String(h);
+        }
+
+        function umsPersistState() {
+            clearTimeout(umsPersistTimer);
+            umsPersistTimer = setTimeout(() => {
+                try {
+                    const container = document.getElementById('dyn-riassuntone-container');
+                    const rows = [];
+                    document.querySelectorAll('#wb-body .wb-row').forEach(row => {
+                        rows.push({
+                            id: row.dataset.hlId,
+                            text: row.querySelector('.wb-hl-text').textContent,
+                            color: row.dataset.hlColor || '#FFF176',
+                            note: row.querySelector('.wb-note-input').value
+                        });
+                    });
+                    localStorage.setItem('ums_hl::' + umsLessonKey, JSON.stringify({
+                        hash: umsPristineHash,
+                        html: container ? container.innerHTML : '',
+                        wb: rows
+                    }));
+                } catch(e) {}
+            }, 400);
+        }
+
+        function umsRestoreState() {
+            try {
+                const raw = localStorage.getItem('ums_hl::' + umsLessonKey);
+                if (!raw) return;
+                const data = JSON.parse(raw);
+                // Se il contenuto della lezione è cambiato, i vecchi salvataggi non sono
+                // più affidabili: meglio scartarli che ripristinare evidenziazioni sballate.
+                if (data.hash !== umsPristineHash) {
+                    localStorage.removeItem('ums_hl::' + umsLessonKey);
+                    return;
+                }
+                const container = document.getElementById('dyn-riassuntone-container');
+                if (container && data.html) container.innerHTML = data.html;
+                (data.wb || []).forEach(r => {
+                    wbAddEntry(r.text, r.color, r.id);
+                    const row = document.querySelector(`.wb-row[data-hl-id="${r.id}"]`);
+                    if (row && r.note) {
+                        const inp = row.querySelector('.wb-note-input');
+                        inp.value = r.note;
+                        inp.style.height = 'auto';
+                        inp.style.height = inp.scrollHeight + 'px';
+                    }
+                });
+                // Non spalancare la lavagna all'apertura: mostra il banner col badge conteggio
+                if (wbCount > 0) wbMinimize();
+            } catch(e) {}
         }
 
         function wbMaximize() {
@@ -1892,6 +2012,7 @@
             const row = document.createElement('div');
             row.className = 'wb-row';
             row.dataset.hlId = hlId;
+            row.dataset.hlColor = color; // FIX 2 — serve alla persistenza
 
             const swatch = document.createElement('div');
             swatch.className = 'wb-hl-swatch';
@@ -1919,6 +2040,7 @@
             noteInput.addEventListener('input', function() {
                 this.style.height = 'auto';
                 this.style.height = this.scrollHeight + 'px';
+                umsPersistState(); // FIX 2 — salva le note della lavagna
             });
 
             noteContainer.appendChild(arrow);
@@ -1946,6 +2068,8 @@
             }
 
             setTimeout(() => { body.scrollTop = body.scrollHeight; }, 50);
+
+            umsPersistState(); // FIX 2
         }
 
         function wbDeleteEntry(hlId) {
@@ -1970,6 +2094,8 @@
             }
             
             showToast('Concetto rimosso.', 'success');
+
+            umsPersistState(); // FIX 2
         }
 
         function wbExportPDF() {
@@ -2063,6 +2189,9 @@ if (!fileDaCaricare) {
     return;
 }
 
+            // FIX 1+2 — identifica la lezione corrente per la persistenza
+            umsLessonKey = decodeURIComponent(fileDaCaricare);
+
             try {
                 // decodeURIComponent gestisce correttamente gli slash e gli spazi nel percorso
                 const response = await fetch(decodeURIComponent(fileDaCaricare));
@@ -2072,6 +2201,13 @@ if (!fileDaCaricare) {
                 const data = await response.json();
                 
                 popolaInterfaccia(data);
+
+                // FIX 2 — calcola l'"impronta" del riassuntone appena renderizzato e
+                // ripristina evidenziazioni + lavagna salvate per QUESTA lezione
+                const riassCont = document.getElementById('dyn-riassuntone-container');
+                umsPristineHash = umsHash(riassCont ? riassCont.textContent : '');
+                umsRestoreState();
+
                 setupAccordions();
                 initFlashcards(data.flashcards);
                 setupNotesAutoScroll();
@@ -2179,6 +2315,7 @@ if (!fileDaCaricare) {
                         }
                     }
                     showToast("Sottolineatura rimossa.", "success");
+                    umsPersistState(); // FIX 2
                 }
                 selection.removeAllRanges();
                 highlighterBtn.style.display = 'none';
@@ -2404,6 +2541,7 @@ if (!fileDaCaricare) {
             const content = document.getElementById('master-content');
             btn.classList.toggle('active');
             content.classList.toggle('open');
+            btn.setAttribute('aria-expanded', content.classList.contains('open') ? 'true' : 'false'); // FIX 7
         }
 
         // =========================================================================
@@ -2412,6 +2550,7 @@ if (!fileDaCaricare) {
         function setupAccordions() {
             const accs = document.querySelectorAll('.accordion-header');
             accs.forEach(acc => {
+                acc.setAttribute('aria-expanded', 'false'); // FIX 7 — accessibilità screen reader
                 acc.addEventListener('click', function(e) {
                     e.stopPropagation();
                     this.classList.toggle('active');
@@ -2421,10 +2560,12 @@ if (!fileDaCaricare) {
                         panel.style.maxHeight = null;
                         panel.classList.remove('active');
                         if (icon) icon.textContent = '+';
+                        this.setAttribute('aria-expanded', 'false'); // FIX 7
                     } else {
                         panel.classList.add('active');
                         panel.style.maxHeight = panel.scrollHeight + 15000 + 'px';
                         if (icon) icon.textContent = '−';
+                        this.setAttribute('aria-expanded', 'true'); // FIX 7
                     }
                 });
             });
@@ -2585,11 +2726,15 @@ if (!fileDaCaricare) {
             });
         }
         function setupNotesAutoScroll() {
-            document.querySelectorAll('.notes-area').forEach(area => {
-                const saved = localStorage.getItem(STORAGE_KEY);
+            // FIX 1 — prima TUTTE le textarea condividevano la stessa chiave localStorage
+            // (scrivere in una sovrascriveva le altre, e gli appunti "migravano" tra lezioni).
+            // Ora la chiave è unica per lezione E per area.
+            document.querySelectorAll('.notes-area').forEach((area, idx) => {
+                const areaKey = STORAGE_KEY + '::' + umsLessonKey + '::' + idx;
+                const saved = localStorage.getItem(areaKey);
                 if (saved) area.value = saved;
                 area.addEventListener('input', function() {
-                    try { localStorage.setItem(STORAGE_KEY, this.value); } catch(e) {}
+                    try { localStorage.setItem(areaKey, this.value); } catch(e) {}
                 });
                 area.addEventListener('keydown', function(e) {
                     if (e.key === 'Enter') requestAnimationFrame(() => { this.scrollTop = this.scrollHeight; });
