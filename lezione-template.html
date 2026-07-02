@@ -1321,17 +1321,51 @@
            UPGRADE GRAFICA 3 — RIASSUNTONE DA RIVISTA
            Capolettera Playfair in oro + misura di riga controllata.
         ============================================================ */
+        /* FIX — il capolettera ora è applicato via JS solo alla prima vera lettera
+           del primo paragrafo (mai a titoli o numeri: prima ::first-letter prendeva
+           il "1." dell'intestazione di sezione) */
         #dyn-riassuntone-container { max-width: 68ch; }
-        #dyn-riassuntone-container::first-letter {
+        .ums-dropcap {
             font-family: var(--font-display);
             font-weight: 700;
-            font-size: 3.3em;
-            line-height: 0.82;
+            font-size: 3.4em;
+            line-height: 0.8;
             color: var(--gold-dk);
             float: left;
-            padding: 0.06em 0.14em 0 0;
+            padding: 0.08em 0.13em 0 0;
         }
-        .night-mode #dyn-riassuntone-container::first-letter { color: var(--gold); }
+        .night-mode .ums-dropcap { color: var(--gold); }
+
+        /* UPGRADE TIPOGRAFIA — il riassuntone come articolo di rivista */
+        #dyn-riassuntone-container {
+            line-height: 1.85;
+            font-size: 1.02rem;
+        }
+        @media (min-width: 701px) {
+            #dyn-riassuntone-container {
+                text-align: justify;
+                hyphens: auto;
+                -webkit-hyphens: auto;
+            }
+        }
+        #dyn-riassuntone-container h3 {
+            font-family: var(--font-display);
+            font-size: 1.45rem;
+            font-weight: 700;
+            line-height: 1.3;
+            border-bottom: none;
+            padding-bottom: 0;
+            margin-top: 2.6rem;
+            text-align: left;
+        }
+        #dyn-riassuntone-container h3::before {
+            content: '';
+            display: block;
+            width: 44px;
+            border-top: 3px solid var(--gold);
+            margin-bottom: 0.7rem;
+        }
+        #dyn-riassuntone-container ::selection { background: var(--gold-lt); color: var(--night); }
 
         /* ============================================================
            UPGRADE GRAFICA 4 — CRUCIPUZZLE "PAGINA ENIGMISTICA"
@@ -1383,6 +1417,84 @@
         @media (max-width: 480px) {
             .pausa-wordsearch { padding: 1.4rem 0.7rem; }
         }
+
+        /* ============================================================
+           UPGRADE — SUDOKU (stesso linguaggio enigmistica)
+        ============================================================ */
+        .sd-diff-row { display: flex; justify-content: center; gap: 10px; margin-bottom: 1.2rem; flex-wrap: wrap; }
+        .sd-wrap {
+            width: 100%; max-width: 420px; margin: 0 auto;
+            border: 2px solid var(--ink); background: var(--ivory);
+            touch-action: manipulation; user-select: none;
+        }
+        .sd-grid { display: grid; grid-template-columns: repeat(9, 1fr); }
+        .sd-cell {
+            aspect-ratio: 1 / 1;
+            display: flex; align-items: center; justify-content: center;
+            background: #fff; cursor: pointer;
+            font-family: var(--font-body); font-weight: 500;
+            font-size: clamp(0.85rem, 3.6vw, 1.15rem);
+            color: var(--navy);
+            border-right: 1px solid rgba(28,28,34,0.22);
+            border-bottom: 1px solid rgba(28,28,34,0.22);
+            -webkit-tap-highlight-color: transparent;
+        }
+        .sd-grid .sd-cell:nth-child(9n) { border-right: none; }
+        .sd-grid .sd-cell:nth-last-child(-n+9) { border-bottom: none; }
+        .sd-grid .sd-cell:nth-child(3n):not(:nth-child(9n)) { border-right: 2px solid var(--ink); }
+        .sd-grid .sd-cell:nth-child(n+19):nth-child(-n+27),
+        .sd-grid .sd-cell:nth-child(n+46):nth-child(-n+54) { border-bottom: 2px solid var(--ink); }
+        .sd-cell.sd-fixed { font-weight: 800; color: var(--ink); background: #F6F3EA; cursor: default; }
+        .sd-cell.sd-sel { background: var(--gold-lt) !important; color: var(--night); }
+        .sd-cell.sd-err { color: var(--quiz-incorrect); font-weight: 800; }
+        .night-mode .sd-cell { background: #262933; color: #8FB4E8; }
+        .night-mode .sd-cell.sd-fixed { background: #1E212A; color: var(--ink); }
+        .night-mode .sd-cell.sd-sel { background: var(--gold-lt) !important; color: #1C1C22; }
+
+        .sd-pad { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-top: 1.1rem; }
+        .sd-pad button {
+            width: 40px; height: 40px;
+            border: 1px solid var(--dust); background: #fff; border-radius: 8px;
+            font-family: var(--font-body); font-weight: 700; font-size: 1rem;
+            color: var(--navy); cursor: pointer; transition: all 0.15s;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .sd-pad button:hover { border-color: var(--navy); transform: translateY(-1px); }
+        .night-mode .sd-pad button { background: #262933; color: #8FB4E8; }
+
+        .sd-howto {
+            max-width: 62ch; margin: 1.5rem auto 0;
+            font-size: 0.85rem; line-height: 1.75; color: var(--sub);
+            text-align: center;
+        }
+
+        /* ============================================================
+           UPGRADE — "LO SAPEVI?" (rubrica da quotidiano)
+        ============================================================ */
+        .losapevi {
+            margin-top: 2.2rem;
+            border-top: 1px solid var(--ink);
+            padding-top: 1.3rem;
+        }
+        .ls-item {
+            position: relative; padding-left: 1.5rem;
+            margin-bottom: 0.85rem;
+            font-size: 0.92rem; line-height: 1.7; color: var(--body);
+        }
+        .ls-item::before {
+            content: '\2014';
+            position: absolute; left: 0;
+            color: var(--gold-dk); font-weight: 700;
+        }
+        .ls-btn {
+            background: transparent; color: var(--navy);
+            border: 1px solid var(--dust); border-radius: 50px;
+            padding: 7px 20px; font-family: var(--font-body);
+            font-weight: 700; font-size: 0.72rem; letter-spacing: 0.1em;
+            text-transform: uppercase; cursor: pointer; transition: all 0.2s;
+        }
+        .ls-btn:hover { border-color: var(--gold); color: var(--gold-dk); }
+        .night-mode .ls-btn { color: #8FB4E8; }
     </style>
 
     <style id="night-mode-style">
@@ -1897,30 +2009,60 @@
                         <div class="accordion-content">
 
                             <!-- TASK 1: aggiunta classe notranslate + rimosso il <p> ridondante -->
-                            <div class="pausa-wordsearch notranslate">
+                            <div class="pausa-wordsearch">
                                 <div class="pausa-ws-header">
                                     <div class="ws-kicker">La Pagina Enigmistica</div>
-                                    <h3>Cerca le parole <svg class="ums-ic" aria-hidden="true"><use href="#ic-search"/></svg></h3>
+                                    <h3>L'angolo dei Giochi <svg class="ums-ic" aria-hidden="true"><use href="#ic-search"/></svg></h3>
                                 </div>
 
+                                <!-- Selettore gioco -->
                                 <div class="ws-lang-row">
-                                    <button class="ws-lang-btn" id="ws-btn-lezione" onclick="wsSetLang('lezione')">Parole della Lezione</button>
-                                    <button class="ws-lang-btn active" id="ws-btn-it" onclick="wsSetLang('it')">Italiano</button>
-                                    <button class="ws-lang-btn" id="ws-btn-en" onclick="wsSetLang('en')">English</button>
+                                    <button class="ws-lang-btn active" id="ws-btn-words" onclick="pausaSetGame('words')">Cerca le Parole</button>
+                                    <button class="ws-lang-btn" id="ws-btn-sudoku" onclick="pausaSetGame('sudoku')">Sudoku</button>
                                 </div>
 
-                                <div class="ws-layout">
-                                    <div>
-                                        <div class="ws-grid-wrap">
-                                            <div class="ws-grid" id="ws-grid"></div>
+                                <!-- GIOCO 1: Cerca le Parole (parole della lezione, tradotte con la pagina) -->
+                                <div id="ws-game">
+                                    <div class="ws-layout">
+                                        <div>
+                                            <div class="ws-grid-wrap notranslate">
+                                                <div class="ws-grid" id="ws-grid"></div>
+                                            </div>
+                                            <div class="ws-status" id="ws-status">Trascina o tocca per selezionare le lettere.</div>
+                                            <div class="ws-win-msg" id="ws-win-msg">
+                                                <p><svg class="ums-ic" aria-hidden="true"><use href="#ic-award"/></svg> Trovate tutte! Bravissimo/a!</p>
+                                                <button class="ws-new-btn" onclick="wsNewGame()">Nuova partita</button>
+                                            </div>
                                         </div>
-                                        <div class="ws-status" id="ws-status">Trascina o tocca per selezionare le lettere.</div>
-                                        <div class="ws-win-msg" id="ws-win-msg">
-                                            <p><svg class="ums-ic" aria-hidden="true"><use href="#ic-award"/></svg> Trovate tutte! Bravissimo/a!</p>
-                                            <button class="ws-new-btn" onclick="wsNewGame()">Nuova partita</button>
-                                        </div>
+                                        <div class="ws-word-list notranslate" id="ws-word-list"></div>
                                     </div>
-                                    <div class="ws-word-list" id="ws-word-list"></div>
+                                    <p class="sd-howto">Le parole nascoste sono i concetti chiave di questa lezione: trovarle è un piccolo ripasso travestito da pausa.</p>
+                                </div>
+
+                                <!-- GIOCO 2: Sudoku -->
+                                <div id="sd-game" style="display:none;">
+                                    <div class="sd-diff-row">
+                                        <button class="ws-lang-btn active" id="sd-btn-facile" onclick="sdSetDiff('facile')">Facile</button>
+                                        <button class="ws-lang-btn" id="sd-btn-medio" onclick="sdSetDiff('medio')">Medio</button>
+                                        <button class="ws-lang-btn" id="sd-btn-difficile" onclick="sdSetDiff('difficile')">Difficile</button>
+                                    </div>
+                                    <div class="sd-wrap notranslate">
+                                        <div class="sd-grid" id="sd-grid"></div>
+                                    </div>
+                                    <div class="sd-pad notranslate" id="sd-pad"></div>
+                                    <div class="ws-status" id="sd-status">Tocca una casella vuota e scegli un numero.</div>
+                                    <div class="ws-win-msg" id="sd-win-msg">
+                                        <p><svg class="ums-ic" aria-hidden="true"><use href="#ic-award"/></svg> Sudoku completato! Mente riposata e allenata.</p>
+                                        <button class="ws-new-btn" onclick="sdNewGame()">Nuova partita</button>
+                                    </div>
+                                    <p class="sd-howto"><strong>Come si gioca:</strong> riempi la griglia in modo che ogni riga, ogni colonna e ogni riquadro 3&times;3 contengano tutti i numeri da 1 a 9, senza ripetizioni. I numeri in grassetto sono gli indizi fissi di partenza. Tocca una casella vuota, poi scegli un numero dalla tastiera qui sopra (o dalla tastiera fisica). Se un numero diventa rosso, &egrave; in conflitto con un altro uguale nella stessa riga, colonna o riquadro: correggilo e continua. Non serve indovinare: ogni schema ha una sola soluzione, raggiungibile con la logica.</p>
+                                </div>
+
+                                <!-- LO SAPEVI? — rubrica di curiosità, tradotta insieme alla pagina -->
+                                <div class="losapevi" id="losapevi-box">
+                                    <div class="ws-kicker">Lo sapevi?</div>
+                                    <div id="losapevi-list"></div>
+                                    <button class="ls-btn" onclick="lsShuffle()">Altre curiosità</button>
                                 </div>
                             </div>
 
@@ -2233,6 +2375,8 @@
             const printDate = new Date().toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
 
             let printContents = `
+                <img src="https://i.postimg.cc/dQWmbDLp/crea-wallpaper-stile-arte-giapponese-woodblock-rilassato-con-fiori-natura-paesaggio.png"
+                     alt="" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.06; filter: grayscale(35%) sepia(0.15); z-index: -1;">
                 <div style="font-family: 'DM Sans', Arial, sans-serif; padding: 28px 24px; color: #1C1C22; max-width: 780px; margin: 0 auto; -webkit-print-color-adjust: exact; print-color-adjust: exact;">
 
                     <div style="font-size: 10px; font-weight: 700; letter-spacing: 0.3em; text-transform: uppercase; color: #9A7A3F; margin-bottom: 10px;">
@@ -2242,31 +2386,37 @@
                         ${lessonTitle}
                     </h1>
                     <div style="font-size: 12px; color: #918E86; margin-bottom: 14px;">
-                        Lavagna Concetti &mdash; appunti personali &middot; ${printDate}
+                        Lavagna Concetti &middot; ${printDate}
                     </div>
                     <div style="border-top: 4px double #1C1C22; margin-bottom: 28px;"></div>
             `;
 
             const body = document.getElementById('wb-body');
+            let wbPrintIdx = 0;
             body.querySelectorAll('.wb-row').forEach(row => {
                 const hlText = row.querySelector('.wb-hl-text').textContent;
                 const noteInputVal = row.querySelector('.wb-note-input').value.trim();
                 const color = row.querySelector('.wb-hl-swatch').style.background;
+                const num = String(++wbPrintIdx).padStart(2, '0');
 
+                // Numero in stile "ch-number" del sito + barra del colore di evidenziazione.
                 // page-break-inside: avoid; impedisce al blocco di spaccarsi a metà pagina!
-                // white-space: pre-wrap; permette di stampare fedelmente gli "a capo" inseriti nella textarea.
+                // white-space: pre-wrap; stampa fedelmente gli "a capo" della textarea.
                 printContents += `
-                    <div style="margin-bottom: 22px; border-left: 5px solid ${color}; border-bottom: 1px solid #E4E0D6; padding: 4px 0 14px 18px; page-break-inside: avoid; break-inside: avoid;">
-                        <p style="font-family: 'Playfair Display', Georgia, serif; font-weight: 700; font-size: 17px; color: #1A2F4F; margin: 0 0 7px 0; line-height: 1.45;">${hlText}</p>
-                        ${noteInputVal ? `<p style="font-size: 13.5px; color: #555149; margin: 0; line-height: 1.65; white-space: pre-wrap;">&#8627; ${noteInputVal}</p>` : ''}
+                    <div style="display: flex; gap: 16px; margin-bottom: 24px; page-break-inside: avoid; break-inside: avoid;">
+                        <div style="font-family: 'Playfair Display', Georgia, serif; font-weight: 700; font-size: 22px; color: #C8A96E; min-width: 34px; line-height: 1.2; text-align: right;">${num}</div>
+                        <div style="flex: 1; border-left: 4px solid ${color}; border-bottom: 1px solid #E4E0D6; padding: 2px 0 14px 16px;">
+                            <p style="font-family: 'Playfair Display', Georgia, serif; font-weight: 700; font-size: 17px; color: #1A2F4F; margin: 0 0 7px 0; line-height: 1.45;">${hlText}</p>
+                            ${noteInputVal ? `<p style="font-size: 13.5px; color: #555149; margin: 0; line-height: 1.65; white-space: pre-wrap;">&#8627; ${noteInputVal}</p>` : ''}
+                        </div>
                     </div>
                 `;
             });
 
             printContents += `
-                    <div style="border-top: 1px solid #1C1C22; margin-top: 30px; padding-top: 10px; display: flex; justify-content: space-between; font-size: 10px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: #918E86;">
-                        <span>Una Mano Spensierata</span>
-                        <span style="color: #9A7A3F;">Studia con leggerezza</span>
+                    <div style="margin-top: 34px; border-top: 4px double #1C1C22; padding-top: 14px; text-align: center;">
+                        <div style="font-family: 'Playfair Display', Georgia, serif; font-style: italic; font-size: 15px; color: #1A2F4F;">Una Mano Spensierata</div>
+                        <div style="width: 44px; border-top: 2px solid #C8A96E; margin: 10px auto 0;"></div>
                     </div>
                 </div>`;
 
@@ -2298,6 +2448,36 @@
 
             setTimeout(() => { document.body.removeChild(iframe); }, 10000);
         }
+        // =========================================================================
+        // FIX CAPOLETTERA — applicato SOLO alla prima vera lettera del primo
+        // paragrafo: salta titoli (h1-h5) e caratteri non alfabetici, cosi' non
+        // puo' piu' agganciarsi al numero dell'intestazione di sezione.
+        // =========================================================================
+        function applyDropCap() {
+            const cont = document.getElementById('dyn-riassuntone-container');
+            if (!cont || cont.querySelector('.ums-dropcap')) return;
+            const walker = document.createTreeWalker(cont, NodeFilter.SHOW_TEXT, {
+                acceptNode: (n) => {
+                    if (!n.nodeValue || !n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+                    if (n.parentElement && n.parentElement.closest('h1,h2,h3,h4,h5')) return NodeFilter.FILTER_REJECT;
+                    return NodeFilter.FILTER_ACCEPT;
+                }
+            });
+            const node = walker.nextNode();
+            if (!node) return;
+            const txt = node.nodeValue;
+            const m = txt.match(/[A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF]/);
+            if (!m || m.index > 3) return; // se non inizia quasi subito con una lettera, meglio nessun capolettera
+            const span = document.createElement('span');
+            span.className = 'ums-dropcap';
+            span.textContent = txt[m.index];
+            const parent = node.parentNode;
+            parent.insertBefore(document.createTextNode(txt.slice(0, m.index)), node);
+            parent.insertBefore(span, node);
+            parent.insertBefore(document.createTextNode(txt.slice(m.index + 1)), node);
+            parent.removeChild(node);
+        }
+
         // =========================================================================
         // TASK 2 — Chunking testo riassuntone
         // =========================================================================
@@ -2356,6 +2536,7 @@ if (!fileDaCaricare) {
                 const riassCont = document.getElementById('dyn-riassuntone-container');
                 umsPristineHash = umsHash(riassCont ? riassCont.textContent : '');
                 umsRestoreState();
+                applyDropCap(); // FIX capolettera (dopo il restore, cosi' lavora sul DOM definitivo)
 
                 setupAccordions();
                 initFlashcards(data.flashcards);
@@ -2492,18 +2673,19 @@ if (!fileDaCaricare) {
             });
             observer.observe(document.body, { childList: true, subtree: true });
 
-            // Init word search
-            // UPGRADE — se la lezione è caricata, il crucipuzzle usa le sue parole chiave
-            WS_WORDS.lezione = wsExtractLessonWords();
-            const wsLezBtn = document.getElementById('ws-btn-lezione');
-            if (WS_WORDS.lezione.length >= 5) {
-                wsLang = 'lezione';
-                if (wsLezBtn) wsLezBtn.classList.add('active');
-                document.getElementById('ws-btn-it').classList.remove('active');
-            } else if (wsLezBtn) {
-                wsLezBtn.style.display = 'none';
+            // Init sezione Pausa
+            // Il crucipuzzle usa SOLO le parole chiave della lezione; se la lezione
+            // ha poco testo, integra con la lista classica per arrivare a 20 parole.
+            wsBaseWords = wsExtractLessonWords();
+            if (wsBaseWords.length < 20) {
+                for (const w of WS_WORDS.it) {
+                    if (wsBaseWords.length >= 20) break;
+                    if (!wsBaseWords.includes(w) && w.length <= 11) wsBaseWords.push(w);
+                }
             }
+            wsCurrentWords = wsBaseWords.slice();
             wsInit();
+            lsLoad(); // rubrica "Lo sapevi?"
         });
 
         // =========================================================================
@@ -2919,7 +3101,14 @@ if (!fileDaCaricare) {
             ]
         };
 
-        let wsLang = 'it';
+        // UPGRADE PAUSA — stato: un solo set di parole (quelle della lezione),
+        // tradotto via API quando l'utente cambia lingua; Sudoku come gioco alternativo.
+        let wsBaseWords = [];      // parole della lezione in italiano (top 20)
+        let wsCurrentWords = [];   // parole nella lingua corrente della pagina
+        let pausaLang = 'it';
+        let pausaGame = 'words';
+        const PAUSA_NONLATIN = new Set(['bg', 'el', 'zh-CN', 'ar', 'hi', 'ru', 'ja']);
+
         let wsSize = 12;
         let wsGrid = [];
         let wsActiveWords = [];
@@ -2928,23 +3117,57 @@ if (!fileDaCaricare) {
         let wsStartIdx = -1;
         let wsSelection = [];
 
-        function wsSetLang(lang) {
-            wsLang = lang;
-            const lezBtn = document.getElementById('ws-btn-lezione');
-            if (lezBtn) lezBtn.classList.toggle('active', lang === 'lezione');
-            document.getElementById('ws-btn-it').classList.toggle('active', lang === 'it');
-            document.getElementById('ws-btn-en').classList.toggle('active', lang === 'en');
-            wsNewGame();
+        function pausaSetGame(game) {
+            pausaGame = game;
+            document.getElementById('ws-btn-words').classList.toggle('active', game === 'words');
+            document.getElementById('ws-btn-sudoku').classList.toggle('active', game === 'sudoku');
+            document.getElementById('ws-game').style.display = game === 'words' ? 'block' : 'none';
+            document.getElementById('sd-game').style.display = game === 'sudoku' ? 'block' : 'none';
+            if (game === 'sudoku' && !sdReady) sdNewGame();
         }
 
-        // UPGRADE — estrae le parole più rilevanti dal testo della lezione.
+        // Cambio lingua della pagina: tradotto anche il gioco.
+        // Alfabeti non latini -> il crucipuzzle non ha senso: si passa al Sudoku
+        // (che peraltro e' universale: i numeri sono uguali ovunque).
+        async function pausaOnLanguageChange(lang) {
+            pausaLang = lang;
+            if (PAUSA_NONLATIN.has(lang)) {
+                if (pausaGame === 'words') pausaSetGame('sudoku');
+                document.getElementById('ws-btn-words').style.display = 'none';
+                return;
+            }
+            document.getElementById('ws-btn-words').style.display = '';
+            if (lang === 'it') {
+                wsCurrentWords = wsBaseWords.slice();
+                if (pausaGame === 'words') wsNewGame();
+                return;
+            }
+            try {
+                const q = encodeURIComponent(wsBaseWords.join('\n').toLowerCase());
+                const res = await fetch('https://translate.googleapis.com/translate_a/single?client=gtx&sl=it&tl=' + encodeURIComponent(lang) + '&dt=t&q=' + q);
+                if (!res.ok) throw new Error('translate http ' + res.status);
+                const data = await res.json();
+                const joined = (data[0] || []).map(seg => seg[0]).join('');
+                let out = joined.split('\n').map(w =>
+                    w.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^A-Z]/g, '')
+                );
+                out = [...new Set(out.filter(w => w.length >= 4 && w.length <= 11))];
+                if (out.length >= 5) {
+                    wsCurrentWords = out;
+                    if (pausaGame === 'words') wsNewGame();
+                }
+                // se la traduzione non produce abbastanza parole valide, si tengono le attuali
+            } catch (e) { /* rete/API ko: si tengono le parole attuali */ }
+        }
+
+        // Estrae le parole piu' rilevanti dal testo della lezione.
         // Rilevanza = frequenza x lunghezza (i termini tecnici sono lunghi e ripetuti),
         // dopo aver filtrato le parole "vuote" della lingua italiana.
         function wsExtractLessonWords() {
             const cont = document.getElementById('dyn-riassuntone-container');
             const title = document.getElementById('dyn-title');
             const src = (cont ? cont.textContent : '') + ' ' + (title ? title.textContent : '');
-            const stop = new Set(['ANCHE','COME','DELLA','DELLE','DELLO','DEGLI','SONO','ESSERE','QUESTO','QUESTA','QUESTI','QUESTE','QUELLO','QUELLA','QUELLE','QUELLI','NELLA','NELLE','NELLO','SULLA','SULLE','SULLO','DALLA','DALLE','PERCHE','QUANDO','ALLORA','INFATTI','INOLTRE','TUTTAVIA','QUINDI','DUNQUE','OGNI','TUTTI','TUTTE','TUTTO','TUTTA','MOLTO','MOLTI','MOLTE','MENO','VIENE','VENGONO','PUO','POSSONO','POSSIAMO','DEVE','DEVONO','FANNO','STATO','STATA','STATI','STATE','AVERE','HANNO','ABBIAMO','ALTRO','ALTRA','ALTRI','ALTRE','PROPRIO','PROPRIA','ATTRAVERSO','SECONDO','MENTRE','ANCORA','SEMPRE','PRIMA','DOPO','CONTRO','VERSO','SENZA','ALCUNI','ALCUNE','CIOE','OVVERO','ESEMPIO','PARTE','MODO','CASO','FATTO','COSA','COSE','ANNI','ANNO','SOLO','STESSO','STESSA','LORO','NOSTRO','NOSTRA','QUALE','QUALI','ESSERE','INVECE','OSSIA','TRAMITE','PRESSO','DENTRO','FUORI','SOPRA','SOTTO','GRAZIE','PUNTO','LIVELLO']);
+            const stop = new Set(['ANCHE','COME','DELLA','DELLE','DELLO','DEGLI','SONO','ESSERE','QUESTO','QUESTA','QUESTI','QUESTE','QUELLO','QUELLA','QUELLE','QUELLI','NELLA','NELLE','NELLO','SULLA','SULLE','SULLO','DALLA','DALLE','PERCHE','QUANDO','ALLORA','INFATTI','INOLTRE','TUTTAVIA','QUINDI','DUNQUE','OGNI','TUTTI','TUTTE','TUTTO','TUTTA','MOLTO','MOLTI','MOLTE','MENO','VIENE','VENGONO','PUO','POSSONO','POSSIAMO','DEVE','DEVONO','FANNO','STATO','STATA','STATI','STATE','AVERE','HANNO','ABBIAMO','ALTRO','ALTRA','ALTRI','ALTRE','PROPRIO','PROPRIA','ATTRAVERSO','SECONDO','MENTRE','ANCORA','SEMPRE','PRIMA','DOPO','CONTRO','VERSO','SENZA','ALCUNI','ALCUNE','CIOE','OVVERO','ESEMPIO','PARTE','MODO','CASO','FATTO','COSA','COSE','ANNI','ANNO','SOLO','STESSO','STESSA','LORO','NOSTRO','NOSTRA','QUALE','QUALI','INVECE','OSSIA','TRAMITE','PRESSO','DENTRO','FUORI','SOPRA','SOTTO','GRAZIE','PUNTO','LIVELLO']);
             const freq = {};
             src.toUpperCase()
                .normalize('NFD').replace(/[\u0300-\u036f]/g, '')  // À -> A, È -> E ecc.
@@ -2968,14 +3191,15 @@ if (!fileDaCaricare) {
             document.getElementById('ws-win-msg').style.display = 'none';
             document.getElementById('ws-status').innerText = 'Trascina o tocca per selezionare le lettere.';
 
-            const pool = [...WS_WORDS[wsLang]].sort(() => 0.5 - Math.random()).slice(0, 5);
+            const source = wsCurrentWords.length >= 5 ? wsCurrentWords : WS_WORDS.it;
+            const pool = [...source].sort(() => 0.5 - Math.random()).slice(0, 5);
             wsActiveWords = pool;
             wsFoundCount = 0;
 
             wsGrid = Array(wsSize).fill(0).map(() => Array(wsSize).fill(''));
 
             const dirs = [[0,1],[1,0],[1,1],[0,-1],[-1,0],[-1,-1],[1,-1],[-1,1]];
-            const abc = 'ABCDEFGHILMNOPQRSTUVZ';
+            const abc = pausaLang === 'it' ? 'ABCDEFGHILMNOPQRSTUVZ' : 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
             for (const word of wsActiveWords) {
                 let placed = false, attempts = 0;
@@ -3093,6 +3317,250 @@ if (!fileDaCaricare) {
             window.addEventListener('touchend', wsEnd);
         }
 
+        // =========================================================================
+        // UPGRADE — SUDOKU
+        // Generatore con backtracking randomizzato + verifica di UNICITA' della
+        // soluzione: ogni cella viene svuotata solo se lo schema resta risolvibile
+        // in un solo modo. Tre livelli: gli indizi di partenza determinano la
+        // difficolta' (facile 40, medio 32, difficile 26).
+        // =========================================================================
+        let sdSolution = [], sdPuzzle = [], sdUser = [], sdSel = -1;
+        let sdDiff = 'facile', sdReady = false;
+        const SD_CLUES = { facile: 40, medio: 32, difficile: 26 };
+
+        function sdShuffleArr(a) {
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        }
+        function sdFindEmpty(g) {
+            for (let i = 0; i < 81; i++) if (g[i] === 0) return i;
+            return -1;
+        }
+        function sdOk(g, i, v) {
+            const r = Math.floor(i / 9), c = i % 9;
+            for (let k = 0; k < 9; k++) {
+                if (g[r * 9 + k] === v || g[k * 9 + c] === v) return false;
+            }
+            const br = r - r % 3, bc = c - c % 3;
+            for (let rr = br; rr < br + 3; rr++)
+                for (let cc = bc; cc < bc + 3; cc++)
+                    if (g[rr * 9 + cc] === v) return false;
+            return true;
+        }
+        function sdFill(g) {
+            const i = sdFindEmpty(g);
+            if (i < 0) return true;
+            for (const v of sdShuffleArr([1,2,3,4,5,6,7,8,9])) {
+                if (sdOk(g, i, v)) {
+                    g[i] = v;
+                    if (sdFill(g)) return true;
+                    g[i] = 0;
+                }
+            }
+            return false;
+        }
+        function sdCountSolutions(g, limit) {
+            const i = sdFindEmpty(g);
+            if (i < 0) return 1;
+            let n = 0;
+            for (let v = 1; v <= 9 && n < limit; v++) {
+                if (sdOk(g, i, v)) {
+                    g[i] = v;
+                    n += sdCountSolutions(g, limit - n);
+                    g[i] = 0;
+                }
+            }
+            return n;
+        }
+        function sdMakePuzzle(clues) {
+            const solution = Array(81).fill(0);
+            sdFill(solution);
+            const puzzle = solution.slice();
+            const target = 81 - clues;
+            let removed = 0;
+            for (const i of sdShuffleArr([...Array(81).keys()])) {
+                if (removed >= target) break;
+                const bak = puzzle[i];
+                puzzle[i] = 0;
+                if (sdCountSolutions(puzzle.slice(), 2) !== 1) {
+                    puzzle[i] = bak; // toglierla renderebbe la soluzione ambigua
+                } else {
+                    removed++;
+                }
+            }
+            return { puzzle, solution };
+        }
+
+        function sdSetDiff(d) {
+            sdDiff = d;
+            ['facile','medio','difficile'].forEach(k =>
+                document.getElementById('sd-btn-' + k).classList.toggle('active', k === d));
+            sdNewGame();
+        }
+
+        function sdNewGame() {
+            const { puzzle, solution } = sdMakePuzzle(SD_CLUES[sdDiff]);
+            sdPuzzle = puzzle;
+            sdSolution = solution;
+            sdUser = puzzle.slice();
+            sdSel = -1;
+            sdReady = true;
+            document.getElementById('sd-win-msg').style.display = 'none';
+            document.getElementById('sd-status').innerText = 'Tocca una casella vuota e scegli un numero.';
+            sdRenderPad();
+            sdRender();
+        }
+
+        function sdRender() {
+            const gridEl = document.getElementById('sd-grid');
+            let html = '';
+            for (let i = 0; i < 81; i++) {
+                const fixed = sdPuzzle[i] !== 0;
+                const v = sdUser[i];
+                html += `<div class="sd-cell${fixed ? ' sd-fixed' : ''}" data-idx="${i}">${v !== 0 ? v : ''}</div>`;
+            }
+            gridEl.innerHTML = html;
+            gridEl.querySelectorAll('.sd-cell').forEach(cell => {
+                cell.addEventListener('click', () => sdSelect(parseInt(cell.dataset.idx)));
+            });
+            sdRefresh();
+        }
+
+        function sdRenderPad() {
+            const pad = document.getElementById('sd-pad');
+            if (pad.childElementCount) return;
+            let html = '';
+            for (let v = 1; v <= 9; v++) html += `<button type="button" onclick="sdInput(${v})">${v}</button>`;
+            html += '<button type="button" onclick="sdInput(0)" aria-label="Cancella"><svg class="ums-ic" aria-hidden="true"><use href="#ic-x"/></svg></button>';
+            pad.innerHTML = html;
+        }
+
+        function sdSelect(i) {
+            sdSel = i;
+            sdRefresh();
+        }
+
+        function sdInput(v) {
+            if (sdSel < 0 || sdPuzzle[sdSel] !== 0) return;
+            sdUser[sdSel] = v;
+            const cell = document.querySelector(`.sd-cell[data-idx="${sdSel}"]`);
+            if (cell) cell.textContent = v !== 0 ? v : '';
+            sdRefresh();
+        }
+
+        // Trova le celle in conflitto (numero duplicato in riga, colonna o riquadro)
+        function sdConflicts() {
+            const bad = new Set();
+            const groups = [];
+            for (let r = 0; r < 9; r++) groups.push([...Array(9).keys()].map(c => r * 9 + c));
+            for (let c = 0; c < 9; c++) groups.push([...Array(9).keys()].map(r => r * 9 + c));
+            for (let br = 0; br < 9; br += 3)
+                for (let bc = 0; bc < 9; bc += 3) {
+                    const g = [];
+                    for (let r = br; r < br + 3; r++)
+                        for (let c = bc; c < bc + 3; c++) g.push(r * 9 + c);
+                    groups.push(g);
+                }
+            for (const g of groups) {
+                const seen = {};
+                for (const i of g) {
+                    const v = sdUser[i];
+                    if (v === 0) continue;
+                    if (seen[v] !== undefined) { bad.add(i); bad.add(seen[v]); }
+                    else seen[v] = i;
+                }
+            }
+            return bad;
+        }
+
+        function sdRefresh() {
+            const bad = sdConflicts();
+            document.querySelectorAll('.sd-cell').forEach(cell => {
+                const i = parseInt(cell.dataset.idx);
+                cell.classList.toggle('sd-sel', i === sdSel);
+                cell.classList.toggle('sd-err', bad.has(i) && sdPuzzle[i] === 0);
+            });
+            const filled = sdUser.every(v => v !== 0);
+            if (filled && bad.size === 0) {
+                // griglia completa e senza conflitti = soluzione valida (ed e' unica)
+                document.getElementById('sd-status').innerText = '';
+                setTimeout(() => {
+                    document.getElementById('sd-win-msg').style.display = 'block';
+                }, 300);
+            }
+        }
+
+        // Tastiera fisica: numeri, canc, frecce
+        document.addEventListener('keydown', (e) => {
+            const sdGame = document.getElementById('sd-game');
+            if (!sdGame || sdGame.style.display === 'none') return;
+            const ae = document.activeElement;
+            if (ae && (ae.tagName === 'TEXTAREA' || ae.tagName === 'INPUT')) return;
+            if (e.key >= '1' && e.key <= '9') { sdInput(parseInt(e.key)); e.preventDefault(); }
+            else if (e.key === 'Backspace' || e.key === 'Delete' || e.key === '0') { sdInput(0); e.preventDefault(); }
+            else if (e.key.startsWith('Arrow') && sdSel >= 0) {
+                const delta = { ArrowUp: -9, ArrowDown: 9, ArrowLeft: -1, ArrowRight: 1 }[e.key];
+                const next = sdSel + delta;
+                if (next >= 0 && next < 81) { sdSel = next; sdRefresh(); }
+                e.preventDefault();
+            }
+        });
+
+        // =========================================================================
+        // UPGRADE — "LO SAPEVI?"
+        // Curiosita' dinamiche dall'API "on this day" di Wikipedia (accade oggi
+        // nella storia, CORS aperto, nessuna chiave) + una riserva curata su
+        // culture, giochi e feste del mondo se la rete non risponde.
+        // Il testo NON e' marcato notranslate: viene tradotto insieme alla pagina.
+        // =========================================================================
+        const LS_CURATED = [
+            "Il Sudoku moderno e' esploso in Giappone negli anni Ottanta, ma le sue radici affondano nei quadrati latini studiati dal matematico Eulero nel Settecento.",
+            "Durante la festa di Holi, in India, milioni di persone si lanciano polveri colorate per celebrare l'arrivo della primavera e la vittoria del bene sul male.",
+            "Il Go, nato in Cina piu' di 2.500 anni fa, e' considerato il gioco da tavolo piu' antico ancora praticato nella sua forma originale.",
+            "Alla Tomatina di Bunol, in Spagna, ogni agosto migliaia di persone combattono una battaglia a colpi di pomodori maturi: oltre cento tonnellate in un'ora.",
+            "Nell'antica Roma 'abbandonare le noci' significava diventare adulti: le noci erano il giocattolo piu' diffuso tra i bambini.",
+            "Il primo cruciverba della storia apparve nel 1913 sul New York World, inventato dal giornalista Arthur Wynne.",
+            "In Mongolia si gioca ancora con gli shagai, ossicini di pecora usati da secoli come dadi e pedine.",
+            "Gli scacchi nacquero in India con il nome di chaturanga, 'le quattro divisioni dell'esercito': fanteria, cavalleria, elefanti e carri.",
+            "In Corea del Sud il capodanno lunare, il Seollal, si festeggia indossando l'abito tradizionale hanbok e giocando in famiglia allo yut nori.",
+            "Il Carnevale di Venezia nel Settecento durava cosi' tanto che, tra proroghe e feste, occupava diversi mesi dell'anno."
+        ];
+        let lsWiki = [];
+
+        async function lsLoad() {
+            try {
+                const d = new Date();
+                const mm = String(d.getMonth() + 1).padStart(2, '0');
+                const dd = String(d.getDate()).padStart(2, '0');
+                const res = await fetch(`https://it.wikipedia.org/api/rest_v1/feed/onthisday/events/${mm}/${dd}`);
+                if (res.ok) {
+                    const j = await res.json();
+                    lsWiki = (j.events || [])
+                        .filter(e => e.text && e.text.length >= 40 && e.text.length <= 190)
+                        .map(e => `Accadde oggi, nel ${e.year}: ${e.text}`);
+                }
+            } catch (e) { /* offline o API ko: si usa solo la riserva curata */ }
+            lsShuffle();
+        }
+
+        function lsShuffle() {
+            const pick = (arr, n) => [...arr].sort(() => 0.5 - Math.random()).slice(0, n);
+            const items = lsWiki.length >= 2
+                ? pick(lsWiki, 2).concat(pick(LS_CURATED, 1))
+                : pick(LS_CURATED, 3);
+            const list = document.getElementById('losapevi-list');
+            list.innerHTML = '';
+            items.forEach(t => {
+                const p = document.createElement('p');
+                p.className = 'ls-item';
+                p.textContent = t; // textContent: il testo esterno non tocca mai il DOM come HTML
+                list.appendChild(p);
+            });
+        }
+
     </script>
 
     <!-- Language JS -->
@@ -3129,6 +3597,7 @@ if (!fileDaCaricare) {
             btnElement.classList.add('active-lang');
             const selectField = document.querySelector('select.goog-te-combo');
             if (selectField) { selectField.value = lang; selectField.dispatchEvent(new Event('change', { bubbles: true })); }
+            if (window.pausaOnLanguageChange) window.pausaOnLanguageChange(lang); // UPGRADE — traduce anche i giochi
             if (disclaimer) disclaimer.style.display = lang !== 'it' ? 'block' : 'none';
             setTimeout(() => {
                 loadingDiv.style.display = 'none';
