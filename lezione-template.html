@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Una Mano Spensierata | Lezione Dinamica</title>
+    <meta name="ums-build" content="v10">
 
     <!-- FIX 3 — rimosso html2pdf (caricato ma mai usato: wbExportPDF usa window.print) -->
 
@@ -1496,6 +1497,71 @@
         }
 
         /* ============================================================
+           UPGRADE — SOLITARIO (stesso linguaggio enigmistica)
+        ============================================================ */
+        .sol-board {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            max-width: 620px;
+            margin: 0 auto;
+            padding-bottom: clamp(190px, 44vw, 310px);
+            touch-action: none;
+        }
+        .sol-pile {
+            border: 1.5px solid var(--dust);
+            border-radius: 8px;
+            aspect-ratio: 2.5 / 3.5;
+            position: relative;
+            background: rgba(255, 255, 255, 0.35);
+            transition: box-shadow 0.15s, border-color 0.15s;
+        }
+        .night-mode .sol-pile { background: rgba(255, 255, 255, 0.05); }
+        .sol-found {
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.15rem; color: var(--mist);
+        }
+        .sol-pile.sol-valid {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px var(--gold-lt);
+        }
+        #sol-stock { cursor: pointer; }
+        .sol-redeal {
+            position: absolute; inset: 0;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; color: var(--mist);
+        }
+        .sol-card {
+            position: absolute; left: 0;
+            width: 100%; aspect-ratio: 2.5 / 3.5;
+            background: #fff;
+            border: 1.5px solid #C9C4B8;
+            border-radius: 8px;
+            display: flex; flex-direction: column; align-items: center;
+            padding-top: 4%;
+            font-family: var(--font-body); font-weight: 800;
+            font-size: clamp(0.72rem, 2.7vw, 1.05rem);
+            line-height: 1.05;
+            box-shadow: 0 1px 3px rgba(20, 20, 30, 0.18);
+            z-index: 10;
+        }
+        .sol-card .sol-s { font-size: 1.45em; }
+        .sol-card.sol-red { color: #B4573E; }
+        .sol-card.sol-black { color: #1C1C22; }
+        .sol-card.sol-hidden {
+            background: var(--navy);
+            background-image: radial-gradient(rgba(200, 169, 110, 0.5) 22%, transparent 23%);
+            background-size: 9px 9px;
+            border-color: var(--navy);
+            cursor: default;
+        }
+        #sol-clone { position: fixed; z-index: 99999; pointer-events: none; }
+        #sol-clone .sol-card {
+            position: absolute; left: 0;
+            box-shadow: 0 14px 28px rgba(20, 20, 30, 0.35);
+        }
+
+        /* ============================================================
            UPGRADE — "LO SAPEVI?" (rubrica da quotidiano)
         ============================================================ */
         .losapevi {
@@ -1789,7 +1855,7 @@
     </div>
 
     <!-- Toast Container -->
-    <div id="toast-container"></div>
+    <div id="toast-container" class="notranslate"></div>
 
     <!-- UPGRADE GRAFICA — sprite icone line-art (sostituiscono le emoji) -->
     <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
@@ -1808,9 +1874,6 @@
         <symbol id="ic-award" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.5 13 17 22l-5-3-5 3 1.5-9"/></symbol>
     </svg>
 
-    <!-- Banca parole del crucipuzzle: fuori schermo ma NON display:none, cosi'
-         il widget di traduzione la traduce insieme alla pagina -->
-    <div id="ws-translate-bank" aria-hidden="true" style="position:absolute; left:-9999px; top:0; width:1px; height:1px; overflow:hidden;"></div>
 
     <!-- NIGHT MODE — pulsante on/off -->
     <button id="night-toggle" type="button" aria-label="Attiva modalità notte" title="Modalità notte on/off"><svg class="ums-ic" aria-hidden="true"><use href="#ic-moon"/></svg></button>
@@ -2164,6 +2227,7 @@
                                 <div class="ws-lang-row">
                                     <button class="ws-lang-btn active" id="ws-btn-words" onclick="pausaSetGame('words')">Cerca le Parole</button>
                                     <button class="ws-lang-btn" id="ws-btn-sudoku" onclick="pausaSetGame('sudoku')">Sudoku</button>
+                                    <button class="ws-lang-btn" id="ws-btn-sol" onclick="pausaSetGame('sol')">Solitario</button>
                                 </div>
 
                                 <!-- GIOCO 1: Cerca le Parole (parole della lezione, tradotte con la pagina) -->
@@ -2173,7 +2237,7 @@
                                             <div class="ws-grid-wrap notranslate">
                                                 <div class="ws-grid" id="ws-grid"></div>
                                             </div>
-                                            <div class="ws-status" id="ws-status">Trascina o tocca per selezionare le lettere.</div>
+                                            <div class="ws-status notranslate" id="ws-status">Trascina o tocca per selezionare le lettere.</div>
                                             <div class="ws-win-msg" id="ws-win-msg">
                                                 <p><svg class="ums-ic" aria-hidden="true"><use href="#ic-award"/></svg> Trovate tutte! Bravissimo/a!</p>
                                                 <button class="ws-new-btn" onclick="wsNewGame()">Nuova partita</button>
@@ -2195,12 +2259,41 @@
                                         <div class="sd-grid" id="sd-grid"></div>
                                     </div>
                                     <div class="sd-pad notranslate" id="sd-pad"></div>
-                                    <div class="ws-status" id="sd-status">Tocca una casella vuota e scegli un numero.</div>
+                                    <div class="ws-status notranslate" id="sd-status">Tocca una casella vuota e scegli un numero.</div>
                                     <div class="ws-win-msg" id="sd-win-msg">
                                         <p><svg class="ums-ic" aria-hidden="true"><use href="#ic-award"/></svg> Sudoku completato! Mente riposata e allenata.</p>
                                         <button class="ws-new-btn" onclick="sdNewGame()">Nuova partita</button>
                                     </div>
                                     <p class="sd-howto"><strong>Come si gioca:</strong> riempi la griglia in modo che ogni riga, ogni colonna e ogni riquadro 3&times;3 contengano tutti i numeri da 1 a 9, senza ripetizioni. I numeri in grassetto sono gli indizi fissi di partenza: tocca una casella vuota e scegli un numero dalla tastiera qui sopra (o dalla tastiera fisica). Durante la partita nessun aiuto: quando avrai riempito l'ultima casella, il gioco ti dir&agrave; se la soluzione &egrave; corretta oppure evidenzier&agrave; in terracotta le caselle in conflitto da correggere. Non serve indovinare: ogni schema ha una sola soluzione, raggiungibile con la logica.</p>
+                                </div>
+
+                                <!-- GIOCO 3: Solitario (variante a seme unico) -->
+                                <div id="sol-game" style="display:none;">
+                                    <div class="sol-board notranslate" id="sol-board">
+                                        <div class="sol-pile" id="sol-stock"></div>
+                                        <div class="sol-pile" id="sol-waste"></div>
+                                        <div class="sol-spacer"></div>
+                                        <div class="sol-pile sol-found" id="sol-f0" data-suit="\u2665">\u2665</div>
+                                        <div class="sol-pile sol-found" id="sol-f1" data-suit="\u2666">\u2666</div>
+                                        <div class="sol-pile sol-found" id="sol-f2" data-suit="\u2663">\u2663</div>
+                                        <div class="sol-pile sol-found" id="sol-f3" data-suit="\u2660">\u2660</div>
+                                        <div class="sol-pile sol-tab" id="sol-t1"></div>
+                                        <div class="sol-pile sol-tab" id="sol-t2"></div>
+                                        <div class="sol-pile sol-tab" id="sol-t3"></div>
+                                        <div class="sol-pile sol-tab" id="sol-t4"></div>
+                                        <div class="sol-pile sol-tab" id="sol-t5"></div>
+                                        <div class="sol-pile sol-tab" id="sol-t6"></div>
+                                        <div class="sol-pile sol-tab" id="sol-t7"></div>
+                                    </div>
+                                    <div class="ws-status notranslate" id="sol-status">Tocca il mazzo per pescare, trascina le carte per spostarle.</div>
+                                    <div class="ws-win-msg" id="sol-win-msg">
+                                        <p><svg class="ums-ic" aria-hidden="true"><use href="#ic-award"/></svg> Solitario completato!</p>
+                                        <button class="ws-new-btn" onclick="solNewGame()">Nuova partita</button>
+                                    </div>
+                                    <div style="text-align:center; margin-top:1.1rem;">
+                                        <button class="ls-btn" onclick="solNewGame()">Nuova partita</button>
+                                    </div>
+                                    <p class="sd-howto"><strong>Come si gioca:</strong> l'obiettivo &egrave; portare tutte le carte nelle quattro basi in alto, una per seme, in ordine crescente dall'Asso al Re. Sulle sette colonne del tavolo le carte si impilano in ordine decrescente e <strong>dello stesso seme</strong>; una colonna vuota accetta qualsiasi carta. Tocca il mazzo in alto a sinistra per pescare una carta; quando il mazzo finisce, un altro tocco lo rigira. Le carte coperte si scoprono da sole quando restano in cima alla loro colonna. Trascina una carta, o una pila gi&agrave; ordinata, sulla destinazione: se la mossa &egrave; valida, la casella si illumina d'oro.</p>
                                 </div>
 
                                 <!-- ACCADDE OGGI — rubrica dinamica (Wikipedia), tradotta insieme alla pagina -->
@@ -2778,8 +2871,17 @@ if (!fileDaCaricare) {
                     setupDownloadButtons();
                 } catch (e) { console.error('Setup interfaccia:', e); }
             } catch (error) {
+                // DIAGNOSTICA IN PAGINA — niente più errori muti: il messaggio
+                // reale e la build in esecuzione compaiono sotto il titolo.
                 console.error("Errore nel caricamento:", error);
                 document.getElementById('dyn-title').innerText = "Lezione non disponibile";
+                try {
+                    const diag = document.createElement('div');
+                    diag.style.cssText = 'max-width:640px;margin:0.8rem auto 0;padding:10px 16px;border:1px solid #B4573E;border-radius:8px;font-family:monospace;font-size:0.72rem;line-height:1.6;color:#B4573E;background:rgba(180,87,62,0.06);text-align:left;word-break:break-word;';
+                    diag.textContent = '[build v10] ' + (error && error.stack ? error.stack.split('\n').slice(0, 2).join(' \u2014 ') : String(error));
+                    const st = document.getElementById('dyn-subtitle');
+                    if (st && st.parentNode) st.parentNode.insertBefore(diag, st.nextSibling);
+                } catch (e2) {}
             }
 
             // ... (il resto del tuo codice init rimane invariato)
@@ -2921,10 +3023,6 @@ if (!fileDaCaricare) {
                 }
             }
             wsCurrentWords = wsBaseWords.slice();
-            // Banca parole traducibile: il widget di traduzione la converte
-            // insieme alla pagina, e il crucipuzzle la rilegge da li'
-            const wsBank = document.getElementById('ws-translate-bank');
-            if (wsBank) wsBank.innerHTML = wsBaseWords.map(w => '<span>' + w.toLowerCase() + '</span>').join(', ');
             wsInit();
             lsLoad(); // rubrica "Accadde Oggi"
         });
@@ -2937,6 +3035,7 @@ if (!fileDaCaricare) {
             document.getElementById('dyn-subtitle').innerText = data.sottotitolo || "";
 
             // --- SEZIONE 01: ORIENTAMENTO (Gestione Annidata) ---
+            try { // BLINDATURA
             if (data.orientamento) {
                 // Obiettivi
                 const objContainer = document.getElementById('dyn-obiettivi');
@@ -2976,7 +3075,10 @@ if (!fileDaCaricare) {
                 }
             }
 
+            } catch (e) { console.error('Orientamento saltato:', e); }
+
             // --- PUNTI CHIAVE (Merge visivo) ---
+            try { // BLINDATURA
             const factorsContainer = document.getElementById('dyn-punti-chiave');
             factorsContainer.innerHTML = '';
             factorsData = {}; 
@@ -2994,6 +3096,8 @@ if (!fileDaCaricare) {
                 card.innerHTML = `<span class="fc-plus">+</span><strong>${punto.titolo_breve}</strong><small>${punto.sottotitolo}</small>`;
                 factorsContainer.appendChild(card);
             });
+
+            } catch (e) { console.error('Punti chiave saltati:', e); }
 
             // --- RESTO DEI CONTENUTI ---
             if (data.podcast_url) {
@@ -3029,6 +3133,7 @@ if (!fileDaCaricare) {
             });
 
             // --- ASSISTENTE IA ---
+            try { // BLINDATURA
             // TASK 5 — fix: questi campi non venivano mai popolati, restando bloccati su "Caricamento…"
             if (data.assistente_ia) {
                 const ia = data.assistente_ia;
@@ -3041,6 +3146,8 @@ if (!fileDaCaricare) {
                     iaLink.href = "#";
                 }
             }
+
+            } catch (e) { console.error('Assistente IA saltato:', e); }
 
             // --- IL SUPER QUIZ ---
             try { renderSuperQuiz(data.il_super_quiz); } catch (e) { console.error('Quiz:', e); }
@@ -3264,7 +3371,7 @@ if (!fileDaCaricare) {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
             toast.className = `toast toast-${type}`;
-            toast.innerText = message;
+            toast.textContent = umsT(message); // i18n — i toast parlano la lingua della pagina
             container.appendChild(toast);
             void toast.offsetWidth;
             toast.classList.add('show');
@@ -3349,6 +3456,7 @@ if (!fileDaCaricare) {
         let wsCurrentWords = [];   // parole nella lingua corrente della pagina
         let pausaLang = 'it';
         let pausaGame = 'words';
+        let wsRenderedLang = 'it'; // lingua con cui è stata generata l'ultima griglia
         const PAUSA_NONLATIN = new Set(['bg', 'el', 'zh-CN', 'ar', 'hi', 'ru', 'ja']);
 
         let wsSize = 12;
@@ -3361,60 +3469,106 @@ if (!fileDaCaricare) {
 
         function pausaSetGame(game) {
             pausaGame = game;
-            document.getElementById('ws-btn-words').classList.toggle('active', game === 'words');
-            document.getElementById('ws-btn-sudoku').classList.toggle('active', game === 'sudoku');
-            document.getElementById('ws-game').style.display = game === 'words' ? 'block' : 'none';
-            document.getElementById('sd-game').style.display = game === 'sudoku' ? 'block' : 'none';
+            [['words', 'ws-btn-words', 'ws-game'],
+             ['sudoku', 'ws-btn-sudoku', 'sd-game'],
+             ['sol', 'ws-btn-sol', 'sol-game']].forEach(([g, btnId, panelId]) => {
+                const btn = document.getElementById(btnId);
+                const panel = document.getElementById(panelId);
+                if (btn) btn.classList.toggle('active', game === g);
+                if (panel) panel.style.display = game === g ? 'block' : 'none';
+            });
             if (game === 'sudoku' && !sdReady) sdNewGame();
+            if (game === 'sol' && !solReady) solNewGame();
+            // FIX — lingua cambiata mentre si era su un altro gioco: griglia da rifare
+            if (game === 'words' && wsRenderedLang !== pausaLang) wsNewGame();
         }
 
-        // Cambio lingua della pagina: tradotto anche il gioco.
-        // Le parole passano da una "banca" nascosta e traducibile nel DOM: le
-        // traduce lo STESSO widget che traduce la pagina (niente endpoint extra),
-        // noi le rileggiamo appena pronte e rigeneriamo la griglia.
-        // Alfabeti non latini -> il crucipuzzle non ha senso: si passa al Sudoku
-        // (che peraltro e' universale: i numeri sono uguali ovunque).
-        let wsBankPoll = null;
+        // =========================================================================
+        // MOTORE i18n — perche' non il widget: Google Translate traduce SOLO cio'
+        // che entra nel viewport, quindi ignorava sia la vecchia "banca parole"
+        // fuori schermo sia i toast (vivono 3 secondi). Qui, al cambio lingua,
+        // UNA chiamata batch all'endpoint di Google costruisce un dizionario per
+        // TUTTE le stringhe dinamiche: toast, stati dei giochi e parole del
+        // crucipuzzle. Gli elementi coinvolti sono notranslate: li gestiamo noi.
+        // Se la rete fallisce, tutto resta in italiano senza errori.
+        // =========================================================================
+        const UMS_STRINGS = [
+            'Concetto rimosso.',
+            'Nessun concetto da esportare.',
+            'Apertura finestra di stampa...',
+            "Seleziona testo all'interno dello stesso blocco per sottolineare.",
+            'Sottolineatura rimossa.',
+            'Grande! Continua così.',
+            'Nessun problema, la rivedremo dopo.',
+            'Scrivi prima qualcosa!',
+            'Appunti copiati!',
+            'Errore nella copia.',
+            'Appunti scaricati!',
+            'Trascina o tocca per selezionare le lettere.',
+            'Trovate:',
+            'Tocca una casella vuota e scegli un numero.',
+            'Griglia completa, ma ci sono conflitti: correggi le caselle in terracotta.',
+            'Mazzo rigirato.',
+            'Tocca il mazzo per pescare, trascina le carte per spostarle.'
+        ];
+        let umsDict = {};
 
-        function wsBankWords() {
-            return Array.from(document.querySelectorAll('#ws-translate-bank span')).map(s => s.textContent || '');
-        }
+        // Pulisce le parole per la griglia: maiuscole, senza accenti, solo A-Z, 4-11 lettere
         function wsSanitizeWords(arr) {
             const out = arr.map(w =>
-                w.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^A-Z]/g, '')
+                String(w).toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^A-Z]/g, '')
             );
             return [...new Set(out.filter(w => w.length >= 4 && w.length <= 11))];
         }
 
-        function pausaOnLanguageChange(lang) {
+        function umsT(s) {
+            return umsDict[s] || s;
+        }
+
+        async function umsBuildDict(lang) {
+            umsDict = {};
+            if (lang === 'it') return;
+            const strings = UMS_STRINGS.concat(wsBaseWords.map(w => w.toLowerCase()));
+            const q = encodeURIComponent(strings.join('\n'));
+            const res = await fetch('https://translate.googleapis.com/translate_a/single?client=gtx&sl=it&tl=' + encodeURIComponent(lang) + '&dt=t&q=' + q);
+            if (!res.ok) throw new Error('translate http ' + res.status);
+            const data = await res.json();
+            const out = (data[0] || []).map(seg => seg[0]).join('').split('\n');
+            if (out.length !== strings.length) throw new Error('translate: righe disallineate');
+            strings.forEach((s, i) => { umsDict[s] = (out[i] || '').trim() || s; });
+            console.log('[UMS i18n] dizionario pronto per', lang, '(' + strings.length + ' voci)');
+        }
+
+        async function pausaOnLanguageChange(lang) {
             pausaLang = lang;
-            clearInterval(wsBankPoll);
             const wordsBtn = document.getElementById('ws-btn-words');
             if (PAUSA_NONLATIN.has(lang)) {
+                // niente crucipuzzle per alfabeti non latini: Sudoku e Solitario
+                // funzionano ovunque (numeri e carte sono universali)
                 if (pausaGame === 'words') pausaSetGame('sudoku');
                 if (wordsBtn) wordsBtn.style.display = 'none';
-                return;
+            } else if (wordsBtn) {
+                wordsBtn.style.display = '';
             }
-            if (wordsBtn) wordsBtn.style.display = '';
+
+            try { await umsBuildDict(lang); }
+            catch (e) { console.error('[UMS i18n] traduzione non disponibile:', e); umsDict = {}; }
+
+            // parole del crucipuzzle nella nuova lingua
             if (lang === 'it') {
                 wsCurrentWords = wsBaseWords.slice();
-                if (pausaGame === 'words') wsNewGame();
-                return;
+            } else {
+                const clean = wsSanitizeWords(wsBaseWords.map(w => umsDict[w.toLowerCase()] || ''));
+                if (clean.length >= 5) wsCurrentWords = clean;
             }
-            // aspetta che il widget abbia tradotto la banca, poi rigenera la griglia
-            const before = wsSanitizeWords(wsBankWords()).join('|');
-            let tries = 0;
-            wsBankPoll = setInterval(() => {
-                tries++;
-                const now = wsSanitizeWords(wsBankWords());
-                if (now.length >= 5 && now.join('|') !== before) {
-                    clearInterval(wsBankPoll);
-                    wsCurrentWords = now;
-                    if (pausaGame === 'words') wsNewGame();
-                } else if (tries > 30) {
-                    clearInterval(wsBankPoll); // il widget non ha tradotto: si tengono le parole attuali
-                }
-            }, 400);
+            if (pausaGame === 'words' && !PAUSA_NONLATIN.has(lang)) wsNewGame();
+
+            // stati a video riallineati alla nuova lingua
+            const wsSt = document.getElementById('ws-status');
+            if (wsSt) wsSt.innerText = umsT('Trascina o tocca per selezionare le lettere.');
+            if (pausaGame === 'sudoku' && typeof sdRefresh === 'function' && sdReady) sdRefresh();
+            const solSt = document.getElementById('sol-status');
+            if (solSt) solSt.innerText = umsT('Tocca il mazzo per pescare, trascina le carte per spostarle.');
         }
 
         // Estrae le parole piu' rilevanti dal testo della lezione.
@@ -3446,8 +3600,9 @@ if (!fileDaCaricare) {
 
         function wsNewGame() {
             document.getElementById('ws-win-msg').style.display = 'none';
-            document.getElementById('ws-status').innerText = 'Trascina o tocca per selezionare le lettere.';
+            document.getElementById('ws-status').innerText = umsT('Trascina o tocca per selezionare le lettere.');
 
+            wsRenderedLang = pausaLang; // FIX — per rigenerare se si torna qui dopo un cambio lingua
             const source = wsCurrentWords.length >= 5 ? wsCurrentWords : WS_WORDS.it;
             const pool = [...source].sort(() => 0.5 - Math.random()).slice(0, 5);
             wsActiveWords = pool;
@@ -3552,7 +3707,7 @@ if (!fileDaCaricare) {
                     if (tag && !tag.classList.contains('ws-done')) {
                         tag.classList.add('ws-done');
                         wsFoundCount++;
-                        document.getElementById('ws-status').innerText = `Trovate: ${wsFoundCount} / ${wsActiveWords.length}`;
+                        document.getElementById('ws-status').innerText = umsT('Trovate:') + ` ${wsFoundCount} / ${wsActiveWords.length}`;
                         if (wsFoundCount === wsActiveWords.length) {
                             setTimeout(() => {
                                 document.getElementById('ws-win-msg').style.display = 'block';
@@ -3666,7 +3821,7 @@ if (!fileDaCaricare) {
             sdSel = -1;
             sdReady = true;
             document.getElementById('sd-win-msg').style.display = 'none';
-            document.getElementById('sd-status').innerText = 'Tocca una casella vuota e scegli un numero.';
+            document.getElementById('sd-status').innerText = umsT('Tocca una casella vuota e scegli un numero.');
             sdRenderPad();
             sdRender();
         }
@@ -3745,7 +3900,7 @@ if (!fileDaCaricare) {
                 cell.classList.toggle('sd-err', bad.has(i) && sdPuzzle[i] === 0);
             });
             if (!filled) {
-                document.getElementById('sd-status').innerText = 'Tocca una casella vuota e scegli un numero.';
+                document.getElementById('sd-status').innerText = umsT('Tocca una casella vuota e scegli un numero.');
                 return;
             }
             if (bad.size === 0) {
@@ -3755,7 +3910,7 @@ if (!fileDaCaricare) {
                     document.getElementById('sd-win-msg').style.display = 'block';
                 }, 300);
             } else {
-                document.getElementById('sd-status').innerText = 'Griglia completa, ma ci sono conflitti: correggi le caselle in terracotta.';
+                document.getElementById('sd-status').innerText = umsT('Griglia completa, ma ci sono conflitti: correggi le caselle in terracotta.');
             }
         }
 
@@ -3774,6 +3929,231 @@ if (!fileDaCaricare) {
                 e.preventDefault();
             }
         });
+
+        // =========================================================================
+        // UPGRADE — SOLITARIO (variante a seme unico)
+        // Sul tavolo si impilano carte decrescenti dello STESSO seme; basi per
+        // seme dall'Asso al Re; mazzo con rigiro. Drag con clone + elementFromPoint
+        // (mouse e touch), destinazione valida illuminata d'oro.
+        // =========================================================================
+        const SOL_VALS = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
+        const SOL_SUITS = ['\u2665','\u2666','\u2663','\u2660'];
+        let solDeck = [], solReady = false;
+        let solDragEl = null, solClone = null, solStartX = 0, solStartY = 0, solLastHl = null;
+
+        function solOffset() { return window.innerWidth < 560 ? 13 : 22; }
+
+        function solNewGame() {
+            solReady = true;
+            solDeck = [];
+            document.getElementById('sol-win-msg').style.display = 'none';
+            document.getElementById('sol-status').innerText = umsT('Tocca il mazzo per pescare, trascina le carte per spostarle.');
+            document.querySelectorAll('#sol-board .sol-pile').forEach(p => {
+                p.innerHTML = p.classList.contains('sol-found') ? p.dataset.suit : '';
+            });
+            for (const s of SOL_SUITS) {
+                for (const v of SOL_VALS) {
+                    solDeck.push({ s, v, r: SOL_VALS.indexOf(v) + 1, c: (s === '\u2665' || s === '\u2666') ? 'red' : 'black' });
+                }
+            }
+            solDeck.sort(() => Math.random() - 0.5);
+            const off = solOffset();
+            for (let i = 1; i <= 7; i++) {
+                const p = document.getElementById('sol-t' + i);
+                for (let j = 0; j < i; j++) {
+                    const card = solCardEl(solDeck.pop(), j === i - 1);
+                    card.style.top = (j * off) + 'px';
+                    p.appendChild(card);
+                }
+            }
+            solStockFace();
+            const stock = document.getElementById('sol-stock');
+            stock.onclick = solStockClick;
+        }
+
+        function solCardEl(data, up) {
+            const div = document.createElement('div');
+            div.className = 'sol-card ' + (up ? 'sol-' + data.c : 'sol-hidden');
+            div.dataset.r = data.r;
+            div.dataset.s = data.s;
+            div.dataset.c = data.c;
+            div.dataset.v = data.v;
+            if (up) div.innerHTML = '<span class="sol-v">' + data.v + '</span><span class="sol-s">' + data.s + '</span>';
+            if (up) solBindDrag(div);
+            return div;
+        }
+
+        function solBindDrag(el) {
+            el.addEventListener('mousedown', solStartDrag);
+            el.addEventListener('touchstart', solStartDrag, { passive: false });
+        }
+
+        function solStockFace() {
+            const stock = document.getElementById('sol-stock');
+            stock.querySelectorAll('.sol-card, .sol-redeal').forEach(e => e.remove());
+            if (solDeck.length > 0) {
+                const back = document.createElement('div');
+                back.className = 'sol-card sol-hidden';
+                back.style.top = '0';
+                stock.appendChild(back);
+            } else {
+                const re = document.createElement('div');
+                re.className = 'sol-redeal';
+                re.textContent = '\u21BB';
+                stock.appendChild(re);
+            }
+        }
+
+        function solStockClick() {
+            const waste = document.getElementById('sol-waste');
+            if (solDeck.length === 0) {
+                if (waste.querySelectorAll('.sol-card').length > 0) {
+                    Array.from(waste.querySelectorAll('.sol-card')).reverse().forEach(c => {
+                        solDeck.push({ s: c.dataset.s, v: c.dataset.v, r: parseInt(c.dataset.r), c: c.dataset.c });
+                        c.remove();
+                    });
+                    showToast('Mazzo rigirato.', 'success');
+                    solStockFace();
+                }
+                return;
+            }
+            const data = solDeck.pop();
+            const card = solCardEl(data, true);
+            card.style.top = '0';
+            waste.appendChild(card);
+            solStockFace();
+        }
+
+        function solIsValid(cardEl, pile, stackLen) {
+            const cards = pile.querySelectorAll('.sol-card');
+            const top = cards.length ? cards[cards.length - 1] : null;
+            if (pile.classList.contains('sol-tab')) {
+                if (!top) return true; // colonna vuota: qualsiasi carta
+                if (top.classList.contains('sol-hidden')) return false;
+                return cardEl.dataset.s === top.dataset.s &&
+                       parseInt(cardEl.dataset.r) === parseInt(top.dataset.r) - 1;
+            }
+            if (pile.classList.contains('sol-found')) {
+                if (stackLen > 1) return false;
+                if (cardEl.dataset.s !== pile.dataset.suit) return false;
+                if (!top) return parseInt(cardEl.dataset.r) === 1;
+                return parseInt(cardEl.dataset.r) === parseInt(top.dataset.r) + 1;
+            }
+            return false;
+        }
+
+        function solStack(fromEl) {
+            const stack = [fromEl];
+            let next = fromEl.nextElementSibling;
+            while (next) {
+                if (next.classList && next.classList.contains('sol-card')) stack.push(next);
+                next = next.nextElementSibling;
+            }
+            return stack;
+        }
+
+        function solStartDrag(e) {
+            const target = e.target.closest('.sol-card');
+            if (!target || target.classList.contains('sol-hidden')) return;
+            const parent = target.parentElement;
+            if (parent.id === 'sol-stock') return;
+            if (parent.id === 'sol-waste') {
+                const cards = parent.querySelectorAll('.sol-card');
+                if (target !== cards[cards.length - 1]) return;
+            }
+            e.preventDefault();
+            solDragEl = target;
+            solStartX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+            solStartY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+
+            const stack = solStack(target);
+            const rect = target.getBoundingClientRect();
+            const off = solOffset();
+            solClone = document.createElement('div');
+            solClone.id = 'sol-clone';
+            solClone.style.left = rect.left + 'px';
+            solClone.style.top = rect.top + 'px';
+            solClone.style.width = rect.width + 'px';
+            stack.forEach((c, i) => {
+                const copy = c.cloneNode(true);
+                copy.style.top = (i * off) + 'px';
+                copy.style.width = rect.width + 'px';
+                solClone.appendChild(copy);
+                c.style.opacity = '0';
+            });
+            document.body.appendChild(solClone);
+
+            document.addEventListener('mousemove', solMoveDrag);
+            document.addEventListener('touchmove', solMoveDrag, { passive: false });
+            document.addEventListener('mouseup', solEndDrag);
+            document.addEventListener('touchend', solEndDrag);
+        }
+
+        function solMoveDrag(e) {
+            if (!solClone) return;
+            e.preventDefault();
+            const x = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+            const y = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+            solClone.style.transform = 'translate(' + (x - solStartX) + 'px, ' + (y - solStartY) + 'px)';
+
+            const below = document.elementFromPoint(x, y);
+            const pile = below ? below.closest('#sol-board .sol-pile') : null;
+            if (solLastHl && solLastHl !== pile) { solLastHl.classList.remove('sol-valid'); solLastHl = null; }
+            if (pile && solIsValid(solDragEl, pile, solStack(solDragEl).length)) {
+                pile.classList.add('sol-valid');
+                solLastHl = pile;
+            }
+        }
+
+        function solEndDrag(e) {
+            if (!solDragEl) return;
+            document.querySelectorAll('.sol-valid').forEach(el => el.classList.remove('sol-valid'));
+            solLastHl = null;
+            document.removeEventListener('mousemove', solMoveDrag);
+            document.removeEventListener('touchmove', solMoveDrag);
+            document.removeEventListener('mouseup', solEndDrag);
+            document.removeEventListener('touchend', solEndDrag);
+
+            const x = e.type.includes('touch') ? e.changedTouches[0].clientX : e.clientX;
+            const y = e.type.includes('touch') ? e.changedTouches[0].clientY : e.clientY;
+            const below = document.elementFromPoint(x, y);
+            const pile = below ? below.closest('#sol-board .sol-pile') : null;
+            const stack = solStack(solDragEl);
+
+            if (pile && solIsValid(solDragEl, pile, stack.length)) {
+                solMoveStack(stack, pile, solDragEl.parentElement);
+            } else {
+                stack.forEach(c => { c.style.opacity = '1'; });
+            }
+            if (solClone) solClone.remove();
+            solClone = null;
+            solDragEl = null;
+        }
+
+        function solMoveStack(stack, target, source) {
+            const off = solOffset();
+            const base = target.classList.contains('sol-tab') ? target.querySelectorAll('.sol-card').length * off : 0;
+            stack.forEach((c, i) => {
+                c.style.opacity = '1';
+                c.style.top = (base + i * off) + 'px';
+                target.appendChild(c);
+            });
+            // scopri l'ultima carta rimasta nella colonna di partenza
+            if (source.classList.contains('sol-tab')) {
+                const rest = source.querySelectorAll('.sol-card');
+                const last = rest.length ? rest[rest.length - 1] : null;
+                if (last && last.classList.contains('sol-hidden')) {
+                    last.classList.remove('sol-hidden');
+                    last.classList.add('sol-' + last.dataset.c);
+                    last.innerHTML = '<span class="sol-v">' + last.dataset.v + '</span><span class="sol-s">' + last.dataset.s + '</span>';
+                    solBindDrag(last);
+                }
+            }
+            if (document.querySelectorAll('#sol-board .sol-found .sol-card').length === 52) {
+                document.getElementById('sol-status').innerText = '';
+                setTimeout(() => { document.getElementById('sol-win-msg').style.display = 'block'; }, 300);
+            }
+        }
 
         // =========================================================================
         // UPGRADE — "ACCADDE OGGI"
@@ -4283,11 +4663,7 @@ if (!fileDaCaricare) {
                         const dStrong = document.createElement('strong');
                         dStrong.textContent = r.data;
                         main.appendChild(dStrong);
-                        main.appendChild(document.createTextNode(' \u00b7 ore ' + r.ora + ' '));
-                        const doc = document.createElement('span');
-                        doc.className = 'ap-doc';
-                        doc.textContent = '\u2014 ' + r.doc;
-                        main.appendChild(doc);
+                        main.appendChild(document.createTextNode(' \u00b7 ore ' + r.ora));
                         const chip = document.createElement('span');
                         chip.className = 'ap-chip';
                         chip.textContent = c.text;
