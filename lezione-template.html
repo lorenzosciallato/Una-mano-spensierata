@@ -1548,57 +1548,92 @@
         /* ============================================================
            UPGRADE — PROSSIMO APPELLO (banner elegante sotto il titolo)
         ============================================================ */
-        /* RIDISEGNO — pillola discreta, stesso linguaggio dei badge autore:
-           niente corsivo, niente colori fuori palette, una sola riga compatta */
-        #appelli-banner {
-            margin: -1.2rem auto 2.2rem;
-            max-width: 640px;
-            text-align: center;
+        /* ============================================================
+           SEZIONE 09 — DATE APPELLI (bacheca integrata nella lezione)
+        ============================================================ */
+        .ap-disclaimer {
+            display: flex; gap: 14px; align-items: center;
+            justify-content: space-between; flex-wrap: wrap;
+            background: #FFFDF7;
+            border: 1px solid var(--gold-lt);
+            border-left: 3px solid var(--gold);
+            border-radius: 0 var(--r-md) var(--r-md) 0;
+            padding: 0.9rem 1.2rem;
+            font-size: 0.82rem; color: var(--sub);
+            margin-bottom: 1.8rem;
         }
-        .ab-line {
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
-            justify-content: center;
-            background: #fff;
-            border: 1px solid var(--dust);
-            border-radius: 50px;
-            padding: 9px 22px;
-            box-shadow: var(--shadow-card);
+        .night-mode .ap-disclaimer { background: #221D10; border-color: var(--gold-dk); }
+        .ap-official {
+            text-decoration: none; font-weight: 700;
+            font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
+            color: var(--navy);
+            border-bottom: 1px solid var(--gold); padding-bottom: 1px;
+            white-space: nowrap;
         }
-        .night-mode .ab-line { background: #1E212A; }
-        .ab-kicker {
-            font-family: var(--font-body);
-            font-size: 0.6rem; font-weight: 700;
-            letter-spacing: 0.22em; text-transform: uppercase;
-            color: var(--gold-dk);
+        .ap-official:hover { color: var(--gold-dk); }
+        .night-mode .ap-official { color: #8FB4E8; }
+
+        .ap-year { border-bottom: 1px solid var(--dust); }
+        .ap-year:last-child { border-bottom: none; }
+        .ap-year-head {
+            width: 100%; display: flex; justify-content: space-between; align-items: center;
+            background: transparent; border: none; cursor: pointer;
+            padding: 1.1rem 0.2rem;
+            font-family: var(--font-display); font-size: 1.15rem; font-weight: 700;
+            color: var(--ink); transition: color 0.2s;
+            text-align: left;
         }
-        .ab-main {
-            font-family: var(--font-body);
-            font-size: 0.84rem; font-weight: 600;
-            font-style: normal;
-            color: var(--ink);
+        .ap-year-head:hover, .ap-year-head.active { color: var(--navy); }
+        .night-mode .ap-year-head:hover, .night-mode .ap-year-head.active { color: #8FB4E8; }
+        .ap-year-icon { font-family: var(--font-body); font-weight: 300; color: var(--mist); font-size: 1.15rem; }
+        .ap-year-body { display: none; padding: 0.2rem 0 1.3rem; }
+        .ap-year-body.open { display: block; }
+
+        .ap-mat-btn {
+            width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 10px;
+            text-align: left; background: #fff;
+            border: 1px solid var(--dust); border-radius: var(--r-md);
+            padding: 0.85rem 1.1rem; margin-bottom: 8px;
+            cursor: pointer;
+            font-family: var(--font-body); font-weight: 600; font-size: 0.9rem;
+            color: var(--body); transition: all 0.2s;
         }
-        .ab-toggle {
-            background: none; border: none; padding: 0;
-            font-family: var(--font-body);
-            font-size: 0.66rem; font-weight: 700;
-            letter-spacing: 0.1em; text-transform: uppercase;
-            color: var(--sub); cursor: pointer;
-            border-bottom: 1px dotted var(--gold);
-            transition: color 0.2s;
+        .ap-mat-btn:hover, .ap-mat-btn.active { border-color: var(--gold); color: var(--ink); }
+        .night-mode .ap-mat-btn { background: #1E212A; }
+        .ap-mat-count {
+            font-size: 0.64rem; font-weight: 700;
+            letter-spacing: 0.12em; text-transform: uppercase;
+            color: var(--gold-dk); white-space: nowrap;
         }
-        .ab-toggle:hover { color: var(--gold-dk); }
-        .ab-list {
+
+        .ap-dates {
             display: none;
-            margin: 12px auto 0;
-            max-width: 380px;
-            font-size: 0.8rem; color: var(--body);
-            line-height: 2;
+            margin: -2px 0 14px;
+            padding: 4px 0 4px 14px;
+            border-left: 3px solid var(--gold);
         }
-        .ab-list.open { display: block; }
-        .ab-list span.ab-doc { color: var(--sub); font-size: 0.72rem; }
+        .ap-dates.open { display: block; }
+        .ap-row {
+            display: flex; justify-content: space-between; align-items: baseline;
+            gap: 10px; flex-wrap: wrap;
+            padding: 7px 6px;
+            font-size: 0.87rem; color: var(--body);
+            border-bottom: 1px dashed var(--dust);
+        }
+        .ap-row:last-child { border-bottom: none; }
+        .ap-row strong { color: var(--ink); font-weight: 700; }
+        .ap-doc { color: var(--sub); font-size: 0.78rem; }
+        .ap-chip {
+            font-size: 0.66rem; font-weight: 700;
+            letter-spacing: 0.08em; text-transform: uppercase;
+            color: var(--navy);
+            border: 1px solid var(--dust); border-radius: 50px;
+            padding: 2px 10px; white-space: nowrap;
+        }
+        .night-mode .ap-chip { color: #8FB4E8; }
+        .ap-row.ap-past { opacity: 0.45; }
+        .ap-row.ap-past .ap-chip { color: var(--sub); }
+        .ap-empty { font-size: 0.85rem; font-style: italic; color: var(--sub); padding: 6px; }
     </style>
 
     <style id="night-mode-style">
@@ -1802,10 +1837,6 @@
         <h1 id="dyn-title">Caricamento<em>…</em></h1>
         <div class="subtitle" id="dyn-subtitle">Attendere</div>
 
-        <!-- UPGRADE — PROSSIMO APPELLO: appare solo se la materia della lezione
-             corrisponde a una materia in bacheca E ci sono date future.
-             Altrimenti resta invisibile, senza messaggi. -->
-        <div id="appelli-banner" style="display:none;"></div>
 
         <div id="translation-disclaimer"><svg class="ums-ic" aria-hidden="true"><use href="#ic-globe"/></svg> Nota: traduzione automatica via IA. Alta accuratezza, possibili sfumature perse.</div>
 
@@ -2221,6 +2252,26 @@
                         </button>
                         <div class="accordion-content">
                             <div class="quiz-list" id="dyn-super-quiz"></div>
+                            <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione ▲</button>
+                        </div>
+                    </div>
+
+                    <!-- 09. DATE APPELLI -->
+                    <div class="accordion-item">
+                        <button class="accordion-header">
+                            <span class="ch-number">09</span>
+                            <span class="ch-text">
+                                <span class="ch-eyebrow">Organizzazione</span>
+                                <span class="ch-title">Date Appelli</span>
+                            </span>
+                            <span class="ch-icon">+</span>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="ap-disclaimer">
+                                <span>Le date sono estratte con l'ausilio dell'IA: verifica sempre sul portale ufficiale prima di iscriverti a un appello.</span>
+                                <a href="https://studenti.unimc.it/ListaAppelliOfferta.do" target="_blank" rel="noopener" class="ap-official">Portale UniMC &nearr;</a>
+                            </div>
+                            <div id="ap-years"></div>
                             <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione ▲</button>
                         </div>
                     </div>
@@ -2660,6 +2711,7 @@
             // diventa un <p> vero: il widget lo traduce come unità indipendente
             // e il testo resta pulito in qualsiasi lingua.
             if (!rawText) return [];
+            if (typeof rawText !== 'string') rawText = String(rawText); // dati sporchi nel JSON
 
             // Se il testo contiene HTML, nessun chunking (per non rompere i tag)
             if (/<[a-z][\s\S]*>/i.test(rawText)) return [rawText];
@@ -2703,25 +2755,27 @@ if (!fileDaCaricare) {
                 
                 popolaInterfaccia(data);
 
-                // FIX 2 — calcola l'"impronta" del riassuntone appena renderizzato e
-                // ripristina evidenziazioni + lavagna salvate per QUESTA lezione
-                const riassCont = document.getElementById('dyn-riassuntone-container');
-                umsPristineHash = umsHash('p2::' + (riassCont ? riassCont.textContent : ''));
-                umsRestoreState();
-                applyDropCap(); // FIX capolettera (dopo il restore, cosi' lavora sul DOM definitivo)
-                // UPGRADE — banner Prossimo Appello sotto il titolo.
-                // In try/catch SEPARATO: è una decorazione, e qualunque suo
-                // problema non deve MAI impedire il caricamento della lezione.
-                try { initAppelli(data); } catch (e) { console.error('Banner appelli:', e); }
-
-                setupAccordions();
-                initFlashcards(data.flashcards);
-                setupNotesAutoScroll();
-                setupCopyButtons();
-                setupDownloadButtons();
-                
                 // Aggiorna il titolo della scheda del browser
                 document.title = data.titolo_lezione || "Una Mano Spensierata";
+
+                // BLINDATURA GENERALE — da qui in poi sono rifiniture: se una
+                // qualsiasi fallisce, la lezione resta comunque leggibile.
+                // MAI più "Lezione non disponibile" per colpa di un accessorio.
+                try {
+                    // FIX 2 — impronta del riassuntone + ripristino evidenziazioni/lavagna
+                    const riassCont = document.getElementById('dyn-riassuntone-container');
+                    umsPristineHash = umsHash('p2::' + (riassCont ? riassCont.textContent : ''));
+                    umsRestoreState();
+                    applyDropCap(); // FIX capolettera (dopo il restore)
+                } catch (e) { console.error('Persistenza/capolettera:', e); }
+
+                try {
+                    setupAccordions();
+                    initFlashcards(data.flashcards);
+                    setupNotesAutoScroll();
+                    setupCopyButtons();
+                    setupDownloadButtons();
+                } catch (e) { console.error('Setup interfaccia:', e); }
             } catch (error) {
                 console.error("Errore nel caricamento:", error);
                 document.getElementById('dyn-title').innerText = "Lezione non disponibile";
@@ -2955,6 +3009,7 @@ if (!fileDaCaricare) {
             const riassuntoContainer = document.getElementById('dyn-riassuntone-container');
             riassuntoContainer.innerHTML = '';
             (data.riassuntone || []).forEach(macro => {
+                try { // BLINDATURA — un macro malformato viene saltato, non uccide la lezione
                 const buf = [];
                 buf.push(`<h3>${macro.titolo}</h3>`);
                 if (macro.testo) {
@@ -2969,6 +3024,7 @@ if (!fileDaCaricare) {
                     buf.push(`</div>`);
                 }
                 riassuntoContainer.insertAdjacentHTML('beforeend', buf.join(''));
+                } catch (e) { console.error('Macro riassuntone saltato:', e); }
             });
 
             // --- ASSISTENTE IA ---
@@ -2986,7 +3042,7 @@ if (!fileDaCaricare) {
             }
 
             // --- IL SUPER QUIZ ---
-            renderSuperQuiz(data.il_super_quiz);
+            try { renderSuperQuiz(data.il_super_quiz); } catch (e) { console.error('Quiz:', e); }
         }
         // =========================================================================
         // TASK 5 — IL SUPER QUIZ
@@ -2995,7 +3051,7 @@ if (!fileDaCaricare) {
             const container = document.getElementById('dyn-super-quiz');
             if (!container) return;
             container.innerHTML = '';
-            superQuizData = quizArr || [];
+            superQuizData = Array.isArray(quizArr) ? quizArr : []; // dati sporchi -> nota, non crash
 
             if (superQuizData.length === 0) {
                 container.innerHTML = '<p class="quiz-empty-note">Quiz non disponibile per questa lezione.</p>';
@@ -3880,14 +3936,13 @@ if (!fileDaCaricare) {
         }
 
         // =========================================================================
-        // UPGRADE — PROSSIMO APPELLO
-        // La materia viene riconosciuta dal titolo/sottotitolo della lezione (e dal
-        // percorso del file): ogni parola significativa del nome della materia deve
-        // comparire nel testo. Se non c'e' corrispondenza certa, o se tutte le date
-        // sono passate, il banner semplicemente NON compare (niente messaggi vuoti).
-        // NB: il database e' una copia della Bacheca Appelli — quando aggiorni la
-        // bacheca, aggiorna anche questo blocco (o estraetelo in un appelli.json
+        // SEZIONE 09 — DATE APPELLI
+        // Bacheca appelli integrata nella lezione: anni -> materie -> date, con
+        // countdown. Il database e' una copia della Bacheca Appelli: quando la
+        // aggiorni, aggiorna anche questo blocco (o estraete un appelli.json
         // condiviso: basta un fetch al posto della costante).
+        // La sezione si costruisce in un listener SEPARATO e protetto: nessun
+        // suo problema puo' toccare il caricamento della lezione.
         // =========================================================================
         const UMS_APPELLI = [
             { mat: "ARTE E DISEGNO", data: "08/06/2026", ora: "08:30", doc: "CAPRIOTTI GIUSEPPE" },
@@ -4091,99 +4146,175 @@ if (!fileDaCaricare) {
             { mat: "TIROCINIO V", data: "16/09/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" }
         ];
 
-        function abNorm(s) {
-            return (s || '').toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^A-Z0-9]+/g, ' ').trim();
-        }
         function abParseDate(dmy) {
             const p = dmy.split('/');
             return new Date(+p[2], p[1] - 1, +p[0]);
         }
 
-        function initAppelli(data) {
-            const banner = document.getElementById('appelli-banner');
-            if (!banner) return;
+        const AP_YEARS = [
+            { anno: 'Primo Anno', materie: [
+                ['Didattica Generale', 'DIDATTICA GENERALE'],
+                ['Educazione Motoria', 'EDUCAZIONE MOTORIA'],
+                ['Educazione Musicale', 'EDUCAZIONE MUSICALE'],
+                ['Pedagogia Generale', 'PEDAGOGIA GENERALE'],
+                ['Psicologia dello Sviluppo', 'PSICOLOGIA DELLO SVILUPPO'],
+                ["Sociologia dell'Educazione", "SOCIOLOGIA DELL'EDUCAZIONE"],
+                ["Storia dell'Educazione", "STORIA DELL'EDUCAZIONE"],
+                ['Laboratorio di Lingua Inglese I', 'LABORATORIO DI LINGUA INGLESE I']
+            ]},
+            { anno: 'Secondo Anno', materie: [
+                ['Biologia Generale', 'BIOLOGIA GENERALE'],
+                ['Fondamenti della Matematica', 'FONDAMENTI DELLA MATEMATICA'],
+                ['Geografia', 'GEOGRAFIA'],
+                ['Istituzioni di Diritto Pubblico', 'ISTITUZIONI DI DIRITTO PUBBLICO'],
+                ['Linguistica Italiana', 'LINGUISTICA ITALIANA'],
+                ['Neuropsichiatria Infantile', 'NEUROPSICHIATRIA INFANTILE'],
+                ['Elementi di Chimica', 'ELEMENTI DI CHIMICA'],
+                ['Laboratorio di Lingua Inglese II', 'LABORATORIO DI LINGUA INGLESE II'],
+                ['Tirocinio II Anno', 'TIROCINIO II']
+            ]},
+            { anno: 'Terzo Anno', materie: [
+                ['Didattica della Matematica', 'DIDATTICA DELLA MATEMATICA'],
+                ['Grammatica Italiana', 'GRAMMATICA ITALIANA'],
+                ['Laboratorio Tecnologie Didattiche', 'LABORATORIO DI TECNOLOGIE DIDATTICHE'],
+                ['Metodi e Tecnologie Matematica', "METODI E TECNOLOGIE PER L'INSEGNAMENTO DELLA MATEMATICA"],
+                ['Pedagogia Sperimentale', 'PEDAGOGIA SPERIMENTALE'],
+                ['Storia Romana', 'STORIA ROMANA'],
+                ["Tecnologie dell'Istruzione", "TECNOLOGIE DELL'ISTRUZIONE E DELL'APPRENDIMENTO"],
+                ['Laboratorio di Lingua Inglese III', 'LABORATORIO DI LINGUA INGLESE III'],
+                ['Tirocinio III Anno', 'TIROCINIO III']
+            ]},
+            { anno: 'Quarto Anno', materie: [
+                ['Educazione Ambientale', 'EDUCAZIONE AMBIENTALE'],
+                ['Letteratura Italiana', 'LETTERATURA ITALIANA'],
+                ["Letteratura per l'Infanzia", "LETTERATURA PER L'INFANZIA"],
+                ['Pedagogia e Didattica Speciale', 'PEDAGOGIA E DIDATTICA SPECIALE'],
+                ['Pedagogia Sociale', 'PEDAGOGIA SOCIALE'],
+                ["Psicologia dell'Educazione", "PSICOLOGIA DELL'EDUCAZIONE"],
+                ['Tirocinio IV Anno', 'TIROCINIO IV']
+            ]},
+            { anno: 'Quinto Anno', materie: [
+                ['Arte e Disegno', 'ARTE E DISEGNO'],
+                ["Educazione all'Immagine", "EDUCAZIONE ALL'IMMAGINE"],
+                ['Storia Contemporanea', 'STORIA CONTEMPORANEA'],
+                ['Prova Idoneit\u00e0 Lingua Inglese', "PROVA IDONEITA' DI LINGUA INGLESE"],
+                ['Tirocinio V Anno', 'TIROCINIO V']
+            ]}
+        ];
 
-            // 1) riconoscimento materia: servono TUTTE le parole significative del nome.
-            // Prima si prova sul SOLO titolo (nel formato UMS il titolo È la materia),
-            // poi su titolo+sottotitolo+percorso come ripiego. Così un sottotitolo che
-            // cita un'altra disciplina non può creare falsi abbinamenti.
-            const STOP = new Set(['DI', 'DEL', 'DELLA', 'DELLE', 'DELLO', 'DELL', 'E', 'PER', 'LA', 'IL', 'LO', 'L', 'ALL']);
-            const subjects = [...new Set(UMS_APPELLI.map(a => a.mat))];
-            const findSubject = (haystack) => {
-                const hay = ' ' + haystack + ' ';
-                let best = null, bestTokens = 0;
-                for (const s of subjects) {
-                    const tokens = abNorm(s).split(' ').filter(t => t && !STOP.has(t));
-                    if (!tokens.length) continue;
-                    const allIn = tokens.every(t => hay.includes(' ' + t + ' '));
-                    if (allIn && tokens.length > bestTokens) { best = s; bestTokens = tokens.length; }
-                }
-                return best;
-            };
-            const best = findSubject(abNorm(data.titolo_lezione || ''))
-                      || findSubject(abNorm((data.titolo_lezione || '') + ' ' + (data.sottotitolo || '') + ' ' + umsLessonKey.replace(/[-_/.]/g, ' ')));
-            if (!best) return; // nessuna corrispondenza certa: nessun banner
-
-            // 2) solo date da oggi in poi
+        function apCountdown(d) {
             const today = new Date();
             today.setHours(0, 0, 0, 0);
-            const future = UMS_APPELLI
-                .filter(a => a.mat === best)
-                .map(a => ({ mat: a.mat, data: a.data, ora: a.ora, doc: a.doc, d: abParseDate(a.data) }))
-                .filter(a => a.d >= today)
-                .sort((a, b) => a.d - b.d || a.ora.localeCompare(b.ora));
-            if (!future.length) return; // tutte passate: nessun banner
-
-            // 3) render
-            const next = future[0];
-            const days = Math.round((next.d - today) / 86400000);
-            const when = days === 0 ? 'oggi' : (days === 1 ? 'domani' : 'tra ' + days + ' giorni');
-            const dateStr = next.d.toLocaleDateString('it-IT', { day: 'numeric', month: 'long' });
-
-            const line = document.createElement('div');
-            line.className = 'ab-line';
-
-            const kicker = document.createElement('span');
-            kicker.className = 'ab-kicker';
-            kicker.textContent = 'Prossimo appello';
-            line.appendChild(kicker);
-
-            const main = document.createElement('span');
-            main.className = 'ab-main';
-            main.textContent = when + ' \u2014 ' + dateStr + ', ore ' + next.ora;
-            line.appendChild(main);
-
-            const others = future.slice(1);
-            let listEl = null;
-            if (others.length) {
-                const toggle = document.createElement('button');
-                toggle.type = 'button';
-                toggle.className = 'ab-toggle';
-                toggle.textContent = 'altri appelli';
-                line.appendChild(toggle);
-
-                listEl = document.createElement('div');
-                listEl.className = 'ab-list';
-                others.forEach(a => {
-                    const row = document.createElement('div');
-                    row.textContent = a.d.toLocaleDateString('it-IT', { day: 'numeric', month: 'long' }) + ' \u00b7 ore ' + a.ora + ' ';
-                    const doc = document.createElement('span');
-                    doc.className = 'ab-doc';
-                    doc.textContent = '\u2014 ' + a.doc;
-                    row.appendChild(doc);
-                    listEl.appendChild(row);
-                });
-                toggle.addEventListener('click', () => {
-                    const open = listEl.classList.toggle('open');
-                    toggle.textContent = open ? 'nascondi' : 'altri appelli';
-                });
-            }
-
-            banner.innerHTML = '';
-            banner.appendChild(line);
-            if (listEl) banner.appendChild(listEl);
-            banner.style.display = 'block';
+            const days = Math.round((d - today) / 86400000);
+            if (days < 0) return { text: 'passato', past: true };
+            if (days === 0) return { text: 'oggi', past: false };
+            if (days === 1) return { text: 'domani', past: false };
+            return { text: 'tra ' + days + ' giorni', past: false };
         }
+
+        function renderAppelli() {
+            const wrap = document.getElementById('ap-years');
+            if (!wrap) return;
+            wrap.innerHTML = '';
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            AP_YEARS.forEach(y => {
+                const yearEl = document.createElement('div');
+                yearEl.className = 'ap-year';
+
+                const head = document.createElement('button');
+                head.type = 'button';
+                head.className = 'ap-year-head';
+                head.setAttribute('aria-expanded', 'false');
+                const headLabel = document.createElement('span');
+                headLabel.textContent = y.anno;
+                const headIcon = document.createElement('span');
+                headIcon.className = 'ap-year-icon';
+                headIcon.textContent = '+';
+                head.appendChild(headLabel);
+                head.appendChild(headIcon);
+
+                const bodyEl = document.createElement('div');
+                bodyEl.className = 'ap-year-body';
+
+                head.addEventListener('click', () => {
+                    const open = bodyEl.classList.toggle('open');
+                    head.classList.toggle('active', open);
+                    headIcon.textContent = open ? '\u2212' : '+';
+                    head.setAttribute('aria-expanded', open ? 'true' : 'false');
+                });
+
+                y.materie.forEach(pair => {
+                    const label = pair[0], mat = pair[1];
+                    const rows = UMS_APPELLI
+                        .filter(a => a.mat === mat)
+                        .map(a => ({ data: a.data, ora: a.ora, doc: a.doc, d: abParseDate(a.data) }))
+                        .sort((a, b) => a.d - b.d || a.ora.localeCompare(b.ora));
+                    const futuri = rows.filter(r => r.d >= today).length;
+
+                    const mbtn = document.createElement('button');
+                    mbtn.type = 'button';
+                    mbtn.className = 'ap-mat-btn';
+                    mbtn.setAttribute('aria-expanded', 'false');
+                    const mLabel = document.createElement('span');
+                    mLabel.textContent = label;
+                    const mCount = document.createElement('span');
+                    mCount.className = 'ap-mat-count';
+                    mCount.textContent = futuri ? (futuri + (futuri === 1 ? ' appello' : ' appelli')) : '';
+                    mbtn.appendChild(mLabel);
+                    mbtn.appendChild(mCount);
+
+                    const dates = document.createElement('div');
+                    dates.className = 'ap-dates';
+                    if (!rows.length) {
+                        const empty = document.createElement('div');
+                        empty.className = 'ap-empty';
+                        empty.textContent = 'Appelli non ancora caricati.';
+                        dates.appendChild(empty);
+                    }
+                    rows.forEach(r => {
+                        const c = apCountdown(r.d);
+                        const row = document.createElement('div');
+                        row.className = 'ap-row' + (c.past ? ' ap-past' : '');
+                        const main = document.createElement('div');
+                        main.className = 'ap-row-main';
+                        const dStrong = document.createElement('strong');
+                        dStrong.textContent = r.data;
+                        main.appendChild(dStrong);
+                        main.appendChild(document.createTextNode(' \u00b7 ore ' + r.ora + ' '));
+                        const doc = document.createElement('span');
+                        doc.className = 'ap-doc';
+                        doc.textContent = '\u2014 ' + r.doc;
+                        main.appendChild(doc);
+                        const chip = document.createElement('span');
+                        chip.className = 'ap-chip';
+                        chip.textContent = c.text;
+                        row.appendChild(main);
+                        row.appendChild(chip);
+                        dates.appendChild(row);
+                    });
+
+                    mbtn.addEventListener('click', () => {
+                        const open = dates.classList.toggle('open');
+                        mbtn.classList.toggle('active', open);
+                        mbtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+                    });
+
+                    bodyEl.appendChild(mbtn);
+                    bodyEl.appendChild(dates);
+                });
+
+                yearEl.appendChild(head);
+                yearEl.appendChild(bodyEl);
+                wrap.appendChild(yearEl);
+            });
+        }
+
+        // Listener SEPARATO: la sezione appelli vive di vita propria
+        document.addEventListener('DOMContentLoaded', () => {
+            try { renderAppelli(); } catch (e) { console.error('Sezione appelli:', e); }
+        });
 
     </script>
 
