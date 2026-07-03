@@ -2709,7 +2709,10 @@ if (!fileDaCaricare) {
                 umsPristineHash = umsHash('p2::' + (riassCont ? riassCont.textContent : ''));
                 umsRestoreState();
                 applyDropCap(); // FIX capolettera (dopo il restore, cosi' lavora sul DOM definitivo)
-                initAppelli(data); // UPGRADE — banner Prossimo Appello sotto il titolo
+                // UPGRADE — banner Prossimo Appello sotto il titolo.
+                // In try/catch SEPARATO: è una decorazione, e qualunque suo
+                // problema non deve MAI impedire il caricamento della lezione.
+                try { initAppelli(data); } catch (e) { console.error('Banner appelli:', e); }
 
                 setupAccordions();
                 initFlashcards(data.flashcards);
@@ -3874,6 +3877,312 @@ if (!fileDaCaricare) {
                     }
                 } catch (e) { /* rete ko: resta il riassunto breve */ }
             }
+        }
+
+        // =========================================================================
+        // UPGRADE — PROSSIMO APPELLO
+        // La materia viene riconosciuta dal titolo/sottotitolo della lezione (e dal
+        // percorso del file): ogni parola significativa del nome della materia deve
+        // comparire nel testo. Se non c'e' corrispondenza certa, o se tutte le date
+        // sono passate, il banner semplicemente NON compare (niente messaggi vuoti).
+        // NB: il database e' una copia della Bacheca Appelli — quando aggiorni la
+        // bacheca, aggiorna anche questo blocco (o estraetelo in un appelli.json
+        // condiviso: basta un fetch al posto della costante).
+        // =========================================================================
+        const UMS_APPELLI = [
+            { mat: "ARTE E DISEGNO", data: "08/06/2026", ora: "08:30", doc: "CAPRIOTTI GIUSEPPE" },
+            { mat: "ARTE E DISEGNO", data: "22/06/2026", ora: "08:30", doc: "CAPRIOTTI GIUSEPPE" },
+            { mat: "ARTE E DISEGNO", data: "01/07/2026", ora: "08:30", doc: "CAPRIOTTI GIUSEPPE" },
+            { mat: "ARTE E DISEGNO", data: "01/09/2026", ora: "08:30", doc: "CAPRIOTTI GIUSEPPE" },
+            { mat: "ARTE E DISEGNO", data: "25/09/2026", ora: "08:30", doc: "CAPRIOTTI GIUSEPPE" },
+            { mat: "BIBLIORIENTA", data: "04/06/2026", ora: "11:00", doc: "FELICIATI PIERLUIGI" },
+            { mat: "BIBLIORIENTA", data: "15/06/2026", ora: "11:00", doc: "FELICIATI PIERLUIGI" },
+            { mat: "BIBLIORIENTA", data: "06/07/2026", ora: "11:00", doc: "FELICIATI PIERLUIGI" },
+            { mat: "BIBLIORIENTA", data: "07/09/2026", ora: "11:00", doc: "FELICIATI PIERLUIGI" },
+            { mat: "BIBLIORIENTA", data: "25/09/2026", ora: "11:00", doc: "FELICIATI PIERLUIGI" },
+            { mat: "BIOLOGIA GENERALE", data: "28/05/2026", ora: "09:30", doc: "BUONANNO FEDERICO" },
+            { mat: "BIOLOGIA GENERALE", data: "16/06/2026", ora: "09:30", doc: "BUONANNO FEDERICO" },
+            { mat: "BIOLOGIA GENERALE", data: "30/06/2026", ora: "09:30", doc: "BUONANNO FEDERICO" },
+            { mat: "BIOLOGIA GENERALE", data: "03/09/2026", ora: "09:30", doc: "BUONANNO FEDERICO" },
+            { mat: "BIOLOGIA GENERALE", data: "24/09/2026", ora: "09:30", doc: "BUONANNO FEDERICO" },
+            { mat: "BIOLOGIA GENERALE", data: "27/05/2026", ora: "15:00", doc: "ORTENZI CLAUDIO" },
+            { mat: "BIOLOGIA GENERALE", data: "10/06/2026", ora: "15:00", doc: "ORTENZI CLAUDIO" },
+            { mat: "BIOLOGIA GENERALE", data: "24/06/2026", ora: "15:00", doc: "ORTENZI CLAUDIO" },
+            { mat: "BIOLOGIA GENERALE", data: "01/09/2026", ora: "15:00", doc: "ORTENZI CLAUDIO" },
+            { mat: "BIOLOGIA GENERALE", data: "14/09/2026", ora: "15:00", doc: "ORTENZI CLAUDIO" },
+            { mat: "DIDATTICA DELLA MATEMATICA", data: "27/05/2026", ora: "14:45", doc: "TELLONI AGNESE ILARIA" },
+            { mat: "DIDATTICA DELLA MATEMATICA", data: "19/06/2026", ora: "14:45", doc: "TELLONI AGNESE ILARIA" },
+            { mat: "DIDATTICA DELLA MATEMATICA", data: "06/07/2026", ora: "14:45", doc: "TELLONI AGNESE ILARIA" },
+            { mat: "DIDATTICA DELLA MATEMATICA", data: "03/09/2026", ora: "14:45", doc: "TELLONI AGNESE ILARIA" },
+            { mat: "DIDATTICA DELLA MATEMATICA", data: "18/09/2026", ora: "14:45", doc: "TELLONI AGNESE ILARIA" },
+            { mat: "DIDATTICA GENERALE", data: "03/06/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" },
+            { mat: "DIDATTICA GENERALE", data: "17/06/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" },
+            { mat: "DIDATTICA GENERALE", data: "01/07/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" },
+            { mat: "DIDATTICA GENERALE", data: "07/09/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" },
+            { mat: "DIDATTICA GENERALE", data: "21/09/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" },
+            { mat: "EDUCAZIONE ALL'IMMAGINE", data: "08/06/2026", ora: "08:30", doc: "CAPRIOTTI GIUSEPPE" },
+            { mat: "EDUCAZIONE ALL'IMMAGINE", data: "22/06/2026", ora: "08:30", doc: "CAPRIOTTI GIUSEPPE" },
+            { mat: "EDUCAZIONE ALL'IMMAGINE", data: "01/07/2026", ora: "08:30", doc: "CAPRIOTTI GIUSEPPE" },
+            { mat: "EDUCAZIONE ALL'IMMAGINE", data: "01/09/2026", ora: "08:30", doc: "CAPRIOTTI GIUSEPPE" },
+            { mat: "EDUCAZIONE ALL'IMMAGINE", data: "25/09/2026", ora: "08:30", doc: "CAPRIOTTI GIUSEPPE" },
+            { mat: "EDUCAZIONE AMBIENTALE", data: "27/05/2026", ora: "09:00", doc: "ORTENZI CLAUDIO" },
+            { mat: "EDUCAZIONE AMBIENTALE", data: "10/06/2026", ora: "09:00", doc: "ORTENZI CLAUDIO" },
+            { mat: "EDUCAZIONE AMBIENTALE", data: "24/06/2026", ora: "09:00", doc: "ORTENZI CLAUDIO" },
+            { mat: "EDUCAZIONE AMBIENTALE", data: "01/09/2026", ora: "09:00", doc: "ORTENZI CLAUDIO" },
+            { mat: "EDUCAZIONE AMBIENTALE", data: "14/09/2026", ora: "09:00", doc: "ORTENZI CLAUDIO" },
+            { mat: "EDUCAZIONE MOTORIA", data: "09/06/2026", ora: "11:00", doc: "GENTILOZZI CHIARA" },
+            { mat: "EDUCAZIONE MOTORIA", data: "23/06/2026", ora: "11:00", doc: "GENTILOZZI CHIARA" },
+            { mat: "EDUCAZIONE MOTORIA", data: "07/07/2026", ora: "11:00", doc: "GENTILOZZI CHIARA" },
+            { mat: "EDUCAZIONE MOTORIA", data: "08/09/2026", ora: "11:00", doc: "GENTILOZZI CHIARA" },
+            { mat: "EDUCAZIONE MOTORIA", data: "22/09/2026", ora: "11:00", doc: "GENTILOZZI CHIARA" },
+            { mat: "EDUCAZIONE MUSICALE", data: "08/06/2026", ora: "08:30", doc: "STRADA JACOPO" },
+            { mat: "EDUCAZIONE MUSICALE", data: "22/06/2026", ora: "08:30", doc: "STRADA JACOPO" },
+            { mat: "EDUCAZIONE MUSICALE", data: "01/07/2026", ora: "08:30", doc: "STRADA JACOPO" },
+            { mat: "EDUCAZIONE MUSICALE", data: "01/09/2026", ora: "08:30", doc: "STRADA JACOPO" },
+            { mat: "EDUCAZIONE MUSICALE", data: "25/09/2026", ora: "08:30", doc: "STRADA JACOPO" },
+            { mat: "ELEMENTI DI CHIMICA", data: "04/06/2026", ora: "09:00", doc: "TIFI ALFREDO" },
+            { mat: "ELEMENTI DI CHIMICA", data: "19/06/2026", ora: "09:00", doc: "TIFI ALFREDO" },
+            { mat: "ELEMENTI DI CHIMICA", data: "06/07/2026", ora: "09:00", doc: "TIFI ALFREDO" },
+            { mat: "ELEMENTI DI CHIMICA", data: "03/09/2026", ora: "09:00", doc: "TIFI ALFREDO" },
+            { mat: "ELEMENTI DI CHIMICA", data: "18/09/2026", ora: "09:00", doc: "TIFI ALFREDO" },
+            { mat: "FONDAMENTI DELLA MATEMATICA", data: "27/05/2026", ora: "14:45", doc: "TELLONI AGNESE ILARIA" },
+            { mat: "FONDAMENTI DELLA MATEMATICA", data: "19/06/2026", ora: "14:45", doc: "TELLONI AGNESE ILARIA" },
+            { mat: "FONDAMENTI DELLA MATEMATICA", data: "06/07/2026", ora: "14:45", doc: "TELLONI AGNESE ILARIA" },
+            { mat: "FONDAMENTI DELLA MATEMATICA", data: "03/09/2026", ora: "14:45", doc: "TELLONI AGNESE ILARIA" },
+            { mat: "FONDAMENTI DELLA MATEMATICA", data: "18/09/2026", ora: "14:45", doc: "TELLONI AGNESE ILARIA" },
+            { mat: "GEOGRAFIA", data: "27/05/2026", ora: "11:00", doc: "BETTI SIMONE" },
+            { mat: "GEOGRAFIA", data: "15/06/2026", ora: "11:00", doc: "BETTI SIMONE" },
+            { mat: "GEOGRAFIA", data: "29/06/2026", ora: "11:00", doc: "BETTI SIMONE" },
+            { mat: "GEOGRAFIA", data: "07/09/2026", ora: "11:00", doc: "BETTI SIMONE" },
+            { mat: "GEOGRAFIA", data: "21/09/2026", ora: "11:00", doc: "BETTI SIMONE" },
+            { mat: "GRAMMATICA ITALIANA", data: "04/06/2026", ora: "08:00", doc: "PERRONE BEATRICE" },
+            { mat: "GRAMMATICA ITALIANA", data: "18/06/2026", ora: "08:00", doc: "PERRONE BEATRICE" },
+            { mat: "GRAMMATICA ITALIANA", data: "02/07/2026", ora: "08:00", doc: "PERRONE BEATRICE" },
+            { mat: "GRAMMATICA ITALIANA", data: "01/09/2026", ora: "08:00", doc: "PERRONE BEATRICE" },
+            { mat: "GRAMMATICA ITALIANA", data: "17/09/2026", ora: "08:00", doc: "PERRONE BEATRICE" },
+            { mat: "ISTITUZIONI DI DIRITTO PUBBLICO", data: "25/05/2026", ora: "17:00", doc: "LANEVE GIUSEPPE" },
+            { mat: "ISTITUZIONI DI DIRITTO PUBBLICO", data: "09/06/2026", ora: "17:00", doc: "LANEVE GIUSEPPE" },
+            { mat: "ISTITUZIONI DI DIRITTO PUBBLICO", data: "23/06/2026", ora: "17:00", doc: "LANEVE GIUSEPPE" },
+            { mat: "ISTITUZIONI DI DIRITTO PUBBLICO", data: "10/09/2026", ora: "17:00", doc: "LANEVE GIUSEPPE" },
+            { mat: "ISTITUZIONI DI DIRITTO PUBBLICO", data: "24/09/2026", ora: "17:00", doc: "LANEVE GIUSEPPE" },
+            { mat: "LABORATORIO DI LINGUA INGLESE I", data: "29/05/2026", ora: "09:00", doc: "RAMADORI HENRY" },
+            { mat: "LABORATORIO DI LINGUA INGLESE I", data: "12/06/2026", ora: "09:00", doc: "RAMADORI HENRY" },
+            { mat: "LABORATORIO DI LINGUA INGLESE I", data: "26/06/2026", ora: "09:00", doc: "RAMADORI HENRY" },
+            { mat: "LABORATORIO DI LINGUA INGLESE I", data: "02/09/2026", ora: "09:00", doc: "RAMADORI HENRY" },
+            { mat: "LABORATORIO DI LINGUA INGLESE I", data: "16/09/2026", ora: "09:00", doc: "RAMADORI HENRY" },
+            { mat: "LABORATORIO DI LINGUA INGLESE II", data: "29/05/2026", ora: "09:00", doc: "BOLOGNESI ELISA" },
+            { mat: "LABORATORIO DI LINGUA INGLESE II", data: "10/09/2026", ora: "09:00", doc: "BOLOGNESI ELISA" },
+            { mat: "LABORATORIO DI LINGUA INGLESE II", data: "16/06/2026", ora: "11:30", doc: "BOLOGNESI ELISA" },
+            { mat: "LABORATORIO DI LINGUA INGLESE II", data: "30/06/2026", ora: "11:30", doc: "BOLOGNESI ELISA" },
+            { mat: "LABORATORIO DI LINGUA INGLESE II", data: "22/09/2026", ora: "09:00", doc: "BOLOGNESI ELISA" },
+            { mat: "LABORATORIO DI LINGUA INGLESE III", data: "28/05/2026", ora: "09:00", doc: "BOLOGNESI ELISA" },
+            { mat: "LABORATORIO DI LINGUA INGLESE III", data: "16/06/2026", ora: "09:00", doc: "BOLOGNESI ELISA" },
+            { mat: "LABORATORIO DI LINGUA INGLESE III", data: "30/06/2026", ora: "09:00", doc: "BOLOGNESI ELISA" },
+            { mat: "LABORATORIO DI LINGUA INGLESE III", data: "03/09/2026", ora: "09:00", doc: "BOLOGNESI ELISA" },
+            { mat: "LABORATORIO DI LINGUA INGLESE III", data: "17/09/2026", ora: "09:00", doc: "BOLOGNESI ELISA" },
+            { mat: "LABORATORIO DI TECNOLOGIE DIDATTICHE", data: "27/05/2026", ora: "11:30", doc: "LAICI CHIARA" },
+            { mat: "LABORATORIO DI TECNOLOGIE DIDATTICHE", data: "16/06/2026", ora: "11:30", doc: "LAICI CHIARA" },
+            { mat: "LABORATORIO DI TECNOLOGIE DIDATTICHE", data: "30/06/2026", ora: "11:30", doc: "LAICI CHIARA" },
+            { mat: "LABORATORIO DI TECNOLOGIE DIDATTICHE", data: "08/09/2026", ora: "11:30", doc: "LAICI CHIARA" },
+            { mat: "LABORATORIO DI TECNOLOGIE DIDATTICHE", data: "22/09/2026", ora: "11:30", doc: "LAICI CHIARA" },
+            { mat: "LETTERATURA ITALIANA", data: "03/06/2026", ora: "08:00", doc: "LORENZETTI SARA" },
+            { mat: "LETTERATURA ITALIANA", data: "16/06/2026", ora: "08:00", doc: "LORENZETTI SARA" },
+            { mat: "LETTERATURA ITALIANA", data: "30/06/2026", ora: "08:00", doc: "LORENZETTI SARA" },
+            { mat: "LETTERATURA ITALIANA", data: "01/09/2026", ora: "08:00", doc: "LORENZETTI SARA" },
+            { mat: "LETTERATURA ITALIANA", data: "15/09/2026", ora: "08:00", doc: "LORENZETTI SARA" },
+            { mat: "LETTERATURA PER L'INFANZIA", data: "04/06/2026", ora: "09:00", doc: "MEDA JURI" },
+            { mat: "LETTERATURA PER L'INFANZIA", data: "10/06/2026", ora: "09:00", doc: "MEDA JURI" },
+            { mat: "LETTERATURA PER L'INFANZIA", data: "01/07/2026", ora: "09:00", doc: "MEDA JURI" },
+            { mat: "LETTERATURA PER L'INFANZIA", data: "03/09/2026", ora: "09:00", doc: "MEDA JURI" },
+            { mat: "LETTERATURA PER L'INFANZIA", data: "17/09/2026", ora: "09:00", doc: "MEDA JURI" },
+            { mat: "LINGUISTICA ITALIANA", data: "04/06/2026", ora: "08:00", doc: "PERRONE BEATRICE" },
+            { mat: "LINGUISTICA ITALIANA", data: "18/06/2026", ora: "08:00", doc: "PERRONE BEATRICE" },
+            { mat: "LINGUISTICA ITALIANA", data: "02/07/2026", ora: "08:00", doc: "PERRONE BEATRICE" },
+            { mat: "LINGUISTICA ITALIANA", data: "01/09/2026", ora: "08:00", doc: "PERRONE BEATRICE" },
+            { mat: "LINGUISTICA ITALIANA", data: "17/09/2026", ora: "08:00", doc: "PERRONE BEATRICE" },
+            { mat: "METODI E TECNOLOGIE PER L'INSEGNAMENTO DELLA MATEMATICA", data: "27/05/2026", ora: "14:45", doc: "TELLONI AGNESE ILARIA" },
+            { mat: "METODI E TECNOLOGIE PER L'INSEGNAMENTO DELLA MATEMATICA", data: "19/06/2026", ora: "14:45", doc: "TELLONI AGNESE ILARIA" },
+            { mat: "METODI E TECNOLOGIE PER L'INSEGNAMENTO DELLA MATEMATICA", data: "06/07/2026", ora: "14:45", doc: "TELLONI AGNESE ILARIA" },
+            { mat: "METODI E TECNOLOGIE PER L'INSEGNAMENTO DELLA MATEMATICA", data: "03/09/2026", ora: "14:45", doc: "TELLONI AGNESE ILARIA" },
+            { mat: "METODI E TECNOLOGIE PER L'INSEGNAMENTO DELLA MATEMATICA", data: "18/09/2026", ora: "14:45", doc: "TELLONI AGNESE ILARIA" },
+            { mat: "NEUROPSICHIATRIA INFANTILE", data: "05/06/2026", ora: "09:00", doc: "VASTA MICHELANGELO" },
+            { mat: "NEUROPSICHIATRIA INFANTILE", data: "17/06/2026", ora: "15:30", doc: "VASTA MICHELANGELO" },
+            { mat: "NEUROPSICHIATRIA INFANTILE", data: "07/07/2026", ora: "09:00", doc: "VASTA MICHELANGELO" },
+            { mat: "NEUROPSICHIATRIA INFANTILE", data: "04/09/2026", ora: "09:00", doc: "VASTA MICHELANGELO" },
+            { mat: "NEUROPSICHIATRIA INFANTILE", data: "25/09/2026", ora: "09:00", doc: "VASTA MICHELANGELO" },
+            { mat: "PEDAGOGIA E DIDATTICA SPECIALE", data: "09/06/2026", ora: "11:00", doc: "GIACONI CATIA" },
+            { mat: "PEDAGOGIA E DIDATTICA SPECIALE", data: "23/06/2026", ora: "11:00", doc: "GIACONI CATIA" },
+            { mat: "PEDAGOGIA E DIDATTICA SPECIALE", data: "07/07/2026", ora: "11:00", doc: "GIACONI CATIA" },
+            { mat: "PEDAGOGIA E DIDATTICA SPECIALE", data: "08/09/2026", ora: "11:00", doc: "GIACONI CATIA" },
+            { mat: "PEDAGOGIA E DIDATTICA SPECIALE", data: "22/09/2026", ora: "11:00", doc: "GIACONI CATIA" },
+            { mat: "PEDAGOGIA GENERALE", data: "08/06/2026", ora: "14:00", doc: "FARINA / CORSI" },
+            { mat: "PEDAGOGIA GENERALE", data: "22/06/2026", ora: "14:00", doc: "FARINA / CORSI" },
+            { mat: "PEDAGOGIA GENERALE", data: "02/07/2026", ora: "14:00", doc: "FARINA / CORSI" },
+            { mat: "PEDAGOGIA GENERALE", data: "07/09/2026", ora: "14:00", doc: "FARINA / CORSI" },
+            { mat: "PEDAGOGIA GENERALE", data: "21/09/2026", ora: "14:00", doc: "FARINA / CORSI" },
+            { mat: "PEDAGOGIA SOCIALE", data: "27/05/2026", ora: "09:00", doc: "SIRIGNANO CHIARA" },
+            { mat: "PEDAGOGIA SOCIALE", data: "10/06/2026", ora: "09:00", doc: "SIRIGNANO CHIARA" },
+            { mat: "PEDAGOGIA SOCIALE", data: "25/06/2026", ora: "09:00", doc: "SIRIGNANO CHIARA" },
+            { mat: "PEDAGOGIA SOCIALE", data: "09/09/2026", ora: "09:00", doc: "SIRIGNANO CHIARA" },
+            { mat: "PEDAGOGIA SOCIALE", data: "24/09/2026", ora: "09:00", doc: "SIRIGNANO CHIARA" },
+            { mat: "PEDAGOGIA SPERIMENTALE", data: "27/05/2026", ora: "09:00", doc: "GIROTTI LUCA" },
+            { mat: "PEDAGOGIA SPERIMENTALE", data: "10/06/2026", ora: "09:00", doc: "GIROTTI LUCA" },
+            { mat: "PEDAGOGIA SPERIMENTALE", data: "24/06/2026", ora: "09:00", doc: "GIROTTI LUCA" },
+            { mat: "PEDAGOGIA SPERIMENTALE", data: "09/09/2026", ora: "09:00", doc: "GIROTTI LUCA" },
+            { mat: "PEDAGOGIA SPERIMENTALE", data: "23/09/2026", ora: "09:00", doc: "GIROTTI LUCA" },
+            { mat: "PROVA IDONEITA' DI LINGUA INGLESE", data: "27/05/2026", ora: "09:00", doc: "CASTAGNOLI SARA" },
+            { mat: "PROVA IDONEITA' DI LINGUA INGLESE", data: "01/07/2026", ora: "09:00", doc: "CASTAGNOLI SARA" },
+            { mat: "PROVA IDONEITA' DI LINGUA INGLESE", data: "04/09/2026", ora: "09:00", doc: "CASTAGNOLI SARA" },
+            { mat: "PROVA IDONEITA' DI LINGUA INGLESE", data: "23/09/2026", ora: "09:00", doc: "CASTAGNOLI SARA" },
+            { mat: "PSICOLOGIA DELL'EDUCAZIONE", data: "09/06/2026", ora: "11:00", doc: "NICOLINI PAOLA" },
+            { mat: "PSICOLOGIA DELL'EDUCAZIONE", data: "23/06/2026", ora: "15:00", doc: "NICOLINI PAOLA" },
+            { mat: "PSICOLOGIA DELL'EDUCAZIONE", data: "07/07/2026", ora: "10:00", doc: "NICOLINI PAOLA" },
+            { mat: "PSICOLOGIA DELL'EDUCAZIONE", data: "08/09/2026", ora: "12:00", doc: "NICOLINI PAOLA" },
+            { mat: "PSICOLOGIA DELL'EDUCAZIONE", data: "17/09/2026", ora: "15:00", doc: "NICOLINI PAOLA" },
+            { mat: "PSICOLOGIA DELLO SVILUPPO", data: "04/06/2026", ora: "15:00", doc: "FELICI FABIO" },
+            { mat: "PSICOLOGIA DELLO SVILUPPO", data: "18/06/2026", ora: "15:00", doc: "FELICI FABIO" },
+            { mat: "PSICOLOGIA DELLO SVILUPPO", data: "02/07/2026", ora: "15:00", doc: "FELICI FABIO" },
+            { mat: "PSICOLOGIA DELLO SVILUPPO", data: "03/09/2026", ora: "15:00", doc: "FELICI FABIO" },
+            { mat: "PSICOLOGIA DELLO SVILUPPO", data: "17/09/2026", ora: "15:00", doc: "FELICI FABIO" },
+            { mat: "SOCIOLOGIA DELL'EDUCAZIONE", data: "28/05/2026", ora: "09:00", doc: "CRESPI ISABELLA" },
+            { mat: "SOCIOLOGIA DELL'EDUCAZIONE", data: "11/06/2026", ora: "09:00", doc: "CRESPI ISABELLA" },
+            { mat: "SOCIOLOGIA DELL'EDUCAZIONE", data: "25/06/2026", ora: "09:00", doc: "CRESPI ISABELLA" },
+            { mat: "SOCIOLOGIA DELL'EDUCAZIONE", data: "02/09/2026", ora: "11:00", doc: "CRESPI ISABELLA" },
+            { mat: "SOCIOLOGIA DELL'EDUCAZIONE", data: "16/09/2026", ora: "09:00", doc: "CRESPI ISABELLA" },
+            { mat: "STORIA CONTEMPORANEA", data: "27/05/2026", ora: "14:00", doc: "BARTOLINI FRANCESCO" },
+            { mat: "STORIA CONTEMPORANEA", data: "16/06/2026", ora: "14:00", doc: "BARTOLINI FRANCESCO" },
+            { mat: "STORIA CONTEMPORANEA", data: "01/07/2026", ora: "14:00", doc: "BARTOLINI FRANCESCO" },
+            { mat: "STORIA CONTEMPORANEA", data: "08/09/2026", ora: "14:00", doc: "BARTOLINI FRANCESCO" },
+            { mat: "STORIA CONTEMPORANEA", data: "22/09/2026", ora: "14:00", doc: "BARTOLINI FRANCESCO" },
+            { mat: "STORIA DELL'EDUCAZIONE", data: "04/06/2026", ora: "13:00", doc: "MEDA JURI" },
+            { mat: "STORIA DELL'EDUCAZIONE", data: "10/06/2026", ora: "13:00", doc: "MEDA JURI" },
+            { mat: "STORIA DELL'EDUCAZIONE", data: "01/07/2026", ora: "13:00", doc: "MEDA JURI" },
+            { mat: "STORIA DELL'EDUCAZIONE", data: "03/09/2026", ora: "13:00", doc: "MEDA JURI" },
+            { mat: "STORIA DELL'EDUCAZIONE", data: "17/09/2026", ora: "13:00", doc: "MEDA JURI" },
+            { mat: "STORIA ROMANA", data: "08/06/2026", ora: "11:00", doc: "ALMAGNO GIOVANNI" },
+            { mat: "STORIA ROMANA", data: "23/06/2026", ora: "11:00", doc: "ALMAGNO GIOVANNI" },
+            { mat: "STORIA ROMANA", data: "07/07/2026", ora: "11:00", doc: "ALMAGNO GIOVANNI" },
+            { mat: "STORIA ROMANA", data: "09/09/2026", ora: "11:00", doc: "ALMAGNO GIOVANNI" },
+            { mat: "STORIA ROMANA", data: "23/09/2026", ora: "11:00", doc: "ALMAGNO GIOVANNI" },
+            { mat: "TECNOLOGIE DELL'ISTRUZIONE E DELL'APPRENDIMENTO", data: "27/05/2026", ora: "11:30", doc: "LAICI CHIARA" },
+            { mat: "TECNOLOGIE DELL'ISTRUZIONE E DELL'APPRENDIMENTO", data: "16/06/2026", ora: "11:30", doc: "LAICI CHIARA" },
+            { mat: "TECNOLOGIE DELL'ISTRUZIONE E DELL'APPRENDIMENTO", data: "30/06/2026", ora: "11:30", doc: "LAICI CHIARA" },
+            { mat: "TECNOLOGIE DELL'ISTRUZIONE E DELL'APPRENDIMENTO", data: "08/09/2026", ora: "11:30", doc: "LAICI CHIARA" },
+            { mat: "TECNOLOGIE DELL'ISTRUZIONE E DELL'APPRENDIMENTO", data: "22/09/2026", ora: "11:30", doc: "LAICI CHIARA" },
+            { mat: "TIROCINIO II", data: "27/05/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" },
+            { mat: "TIROCINIO II", data: "10/06/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" },
+            { mat: "TIROCINIO II", data: "01/07/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" },
+            { mat: "TIROCINIO II", data: "09/09/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" },
+            { mat: "TIROCINIO II", data: "16/09/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" },
+            { mat: "TIROCINIO III", data: "27/05/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" },
+            { mat: "TIROCINIO III", data: "08/06/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" },
+            { mat: "TIROCINIO III", data: "29/06/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" },
+            { mat: "TIROCINIO III", data: "09/09/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" },
+            { mat: "TIROCINIO III", data: "16/09/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" },
+            { mat: "TIROCINIO IV", data: "28/05/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" },
+            { mat: "TIROCINIO IV", data: "11/06/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" },
+            { mat: "TIROCINIO IV", data: "25/06/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" },
+            { mat: "TIROCINIO IV", data: "09/09/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" },
+            { mat: "TIROCINIO IV", data: "16/09/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" },
+            { mat: "TIROCINIO V", data: "27/05/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" },
+            { mat: "TIROCINIO V", data: "08/06/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" },
+            { mat: "TIROCINIO V", data: "22/06/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" },
+            { mat: "TIROCINIO V", data: "09/09/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" },
+            { mat: "TIROCINIO V", data: "16/09/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" }
+        ];
+
+        function abNorm(s) {
+            return (s || '').toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^A-Z0-9]+/g, ' ').trim();
+        }
+        function abParseDate(dmy) {
+            const p = dmy.split('/');
+            return new Date(+p[2], p[1] - 1, +p[0]);
+        }
+
+        function initAppelli(data) {
+            const banner = document.getElementById('appelli-banner');
+            if (!banner) return;
+
+            // 1) riconoscimento materia: servono TUTTE le parole significative del nome.
+            // Prima si prova sul SOLO titolo (nel formato UMS il titolo È la materia),
+            // poi su titolo+sottotitolo+percorso come ripiego. Così un sottotitolo che
+            // cita un'altra disciplina non può creare falsi abbinamenti.
+            const STOP = new Set(['DI', 'DEL', 'DELLA', 'DELLE', 'DELLO', 'DELL', 'E', 'PER', 'LA', 'IL', 'LO', 'L', 'ALL']);
+            const subjects = [...new Set(UMS_APPELLI.map(a => a.mat))];
+            const findSubject = (haystack) => {
+                const hay = ' ' + haystack + ' ';
+                let best = null, bestTokens = 0;
+                for (const s of subjects) {
+                    const tokens = abNorm(s).split(' ').filter(t => t && !STOP.has(t));
+                    if (!tokens.length) continue;
+                    const allIn = tokens.every(t => hay.includes(' ' + t + ' '));
+                    if (allIn && tokens.length > bestTokens) { best = s; bestTokens = tokens.length; }
+                }
+                return best;
+            };
+            const best = findSubject(abNorm(data.titolo_lezione || ''))
+                      || findSubject(abNorm((data.titolo_lezione || '') + ' ' + (data.sottotitolo || '') + ' ' + umsLessonKey.replace(/[-_/.]/g, ' ')));
+            if (!best) return; // nessuna corrispondenza certa: nessun banner
+
+            // 2) solo date da oggi in poi
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const future = UMS_APPELLI
+                .filter(a => a.mat === best)
+                .map(a => ({ mat: a.mat, data: a.data, ora: a.ora, doc: a.doc, d: abParseDate(a.data) }))
+                .filter(a => a.d >= today)
+                .sort((a, b) => a.d - b.d || a.ora.localeCompare(b.ora));
+            if (!future.length) return; // tutte passate: nessun banner
+
+            // 3) render
+            const next = future[0];
+            const days = Math.round((next.d - today) / 86400000);
+            const when = days === 0 ? 'oggi' : (days === 1 ? 'domani' : 'tra ' + days + ' giorni');
+            const dateStr = next.d.toLocaleDateString('it-IT', { day: 'numeric', month: 'long' });
+
+            const line = document.createElement('div');
+            line.className = 'ab-line';
+
+            const kicker = document.createElement('span');
+            kicker.className = 'ab-kicker';
+            kicker.textContent = 'Prossimo appello';
+            line.appendChild(kicker);
+
+            const main = document.createElement('span');
+            main.className = 'ab-main';
+            main.textContent = when + ' \u2014 ' + dateStr + ', ore ' + next.ora;
+            line.appendChild(main);
+
+            const others = future.slice(1);
+            let listEl = null;
+            if (others.length) {
+                const toggle = document.createElement('button');
+                toggle.type = 'button';
+                toggle.className = 'ab-toggle';
+                toggle.textContent = 'altri appelli';
+                line.appendChild(toggle);
+
+                listEl = document.createElement('div');
+                listEl.className = 'ab-list';
+                others.forEach(a => {
+                    const row = document.createElement('div');
+                    row.textContent = a.d.toLocaleDateString('it-IT', { day: 'numeric', month: 'long' }) + ' \u00b7 ore ' + a.ora + ' ';
+                    const doc = document.createElement('span');
+                    doc.className = 'ab-doc';
+                    doc.textContent = '\u2014 ' + a.doc;
+                    row.appendChild(doc);
+                    listEl.appendChild(row);
+                });
+                toggle.addEventListener('click', () => {
+                    const open = listEl.classList.toggle('open');
+                    toggle.textContent = open ? 'nascondi' : 'altri appelli';
+                });
+            }
+
+            banner.innerHTML = '';
+            banner.appendChild(line);
+            if (listEl) banner.appendChild(listEl);
+            banner.style.display = 'block';
         }
 
     </script>
