@@ -8,6 +8,34 @@ from bs4 import BeautifulSoup
 from google.colab import files
 
 # =============================================================================
+# UTILITY — PULIZIA TESTO
+#   Rimuove artefatti tipo [cite], [cite start], [cite 7], [cite: 12] ecc.
+#   che a volte restano nei testi generati dall'IA. NON tocca gli *asterischi*:
+#   quelli servono da segnale per il grassetto e la conversione avviene lato
+#   HTML/JS (dove si può anche decidere se preservare formattazione HTML
+#   già presente nelle vecchie lezioni), non qui.
+# =============================================================================
+CITE_RE = re.compile(r'\[\s*cite[^\]]*\]', re.IGNORECASE)
+
+def pulisci_testo(s):
+    if not isinstance(s, str):
+        return s
+    s = CITE_RE.sub('', s)
+    s = re.sub(r'[ \t]{2,}', ' ', s)     # spazi doppi lasciati dalla rimozione
+    s = re.sub(r'[ \t]+\n', '\n', s)     # spazi prima di un a-capo
+    return s.strip()
+
+def pulisci_ricorsivo(obj):
+    """Applica pulisci_testo a ogni stringa annidata in dict/list, ricorsivamente."""
+    if isinstance(obj, dict):
+        return {k: pulisci_ricorsivo(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [pulisci_ricorsivo(v) for v in obj]
+    if isinstance(obj, str):
+        return pulisci_testo(obj)
+    return obj
+
+# =============================================================================
 # 1. CARICA IL FILE DEGLI URL
 #    Formato atteso: righe con "Podcast [Materia] N [tab] URL" e
 #    "sezione video sintesi:" seguito da "[Materia] - Lezione N [tab] URL"
@@ -18,7 +46,98 @@ url_filename = list(url_upload.keys())[0]
 url_raw = url_upload[url_filename].decode('utf-8')
 
 # =============================================================================
-# 2. CARICA I FILE HTML DELLE LEZIONI (vecchio formato con source-riassunto)
+# 2. CARICA IL FILE (O I FILE) DEL SUPER QUIZ — formato .txt
+#    Riconosce sia la numerazione continua delle domande (Q1..Q80 su tutto
+#    il file) sia quella che riparte da Q1 ad ogni lezione: il numero dopo
+#    la "Q" NON viene MAI usato per capire a quale lezione appartiene una
+#    domanda. Conta solo sotto quale header "LEZIONE N" ricade il blocco.
+# =============================================================================
+print("\n🧠 Carica il file (o i file) di testo del Super Quiz:")
+quiz_upload = files.upload()
+
+LEZIONE_HEADER_RE = re.compile(r'^\s*LEZIONE\s+(\d+)\b[^\n]*$', re.IGNORECASE | re.MULTILINE)
+
+# Ogni domanda, nei file forniti, sta tutta su una riga nel formato:
+# "Qn: <domanda> A) <opz A> B) <opz B> C) <opz C> CORRETTA: X SPIEGAZIONE: <testo>"
+# La regex però non assume una singola riga: usa DOTALL + lookahead sulla
+# prossima "Qn:" (o fine blocco), quindi funziona anche se in futuro una
+# domanda dovesse andare a capo.
+Q_BLOCK_RE = re.compile(
+    r'Q\s*\d+\s*:\s*(?P<domanda>.*?)\s*'
+    r'A\)\s*(?P<a>.*?)\s*'
+    r'B\)\s*(?P<b>.*?)\s*'
+    r'C\)\s*(?P<c>.*?)\s*'
+    r'CORRETTA\s*:\s*(?P<corretta>[ABC])\s*'
+    r'SPIEGAZIONE\s*:\s*(?P<spiegazione>.*?)'
+    r'(?=(?:Q\s*\d+\s*:)|\Z)',
+    re.IGNORECASE | re.DOTALL
+)
+
+def parse_super_quiz(raw_text):
+    """
+    Ritorna un dizionario {numero_lezione (int): [domande...]}.
+    Ogni "domanda" è un dict pronto per il JSON finale:
+    {"domanda": ..., "opzioni": [{"testo":..., "corretta": bool} x3], "spiegazione": ...}
+    """
+    quiz_map = {}
+    headers = list(LEZIONE_HEADER_RE.finditer(raw_text))
+
+    segmenti = []
+    if headers:
+        primo_inizio = headers[0].start()
+        if raw_text[:primo_inizio].strip():
+            # testo prima del primo header "LEZIONE N": non sappiamo a chi
+            # appartiene, lo segnaliamo e lo scartiamo (num_lez=None)
+            segmenti.append((None, raw_text[:primo_inizio]))
+        for i, h in enumerate(headers):
+            num = int(h.group(1))
+            fine = headers[i + 1].start() if i + 1 < len(headers) else len(raw_text)
+            segmenti.append((num, raw_text[h.end():fine]))
+    else:
+        # nessun header "LEZIONE N" nel file: impossibile assegnare le domande
+        segmenti.append((None, raw_text))
+
+    domande_scartate = 0
+    for num_lez, blocco in segmenti:
+        matches = list(Q_BLOCK_RE.finditer(blocco))
+        if num_lez is None:
+            domande_scartate += len(matches)
+            continue
+        for m in matches:
+            domanda = pulisci_testo(m.group('domanda'))
+            opz_testi = {
+                'A': pulisci_testo(m.group('a')),
+                'B': pulisci_testo(m.group('b')),
+                'C': pulisci_testo(m.group('c')),
+            }
+            corretta = m.group('corretta').upper()
+            spiegazione = pulisci_testo(m.group('spiegazione'))
+            opzioni = [
+                {"testo": opz_testi[k], "corretta": (k == corretta)}
+                for k in ('A', 'B', 'C')
+            ]
+            quiz_map.setdefault(num_lez, []).append({
+                "domanda": domanda,
+                "opzioni": opzioni,
+                "spiegazione": spiegazione
+            })
+
+    if domande_scartate:
+        print(f"   ⚠️ {domande_scartate} domande scartate: comparivano prima di qualsiasi intestazione 'LEZIONE N'.")
+    return quiz_map
+
+super_quiz_map = {}
+for fname, raw in quiz_upload.items():
+    testo = raw.decode('utf-8')
+    parziale = parse_super_quiz(testo)
+    for num, domande in parziale.items():
+        super_quiz_map.setdefault(num, []).extend(domande)
+
+tot_domande = sum(len(v) for v in super_quiz_map.values())
+print(f"📚 Super Quiz caricato — {tot_domande} domande totali su {len(super_quiz_map)} lezioni: {sorted(super_quiz_map.keys())}")
+
+# =============================================================================
+# 3. CARICA I FILE HTML DELLE LEZIONI (vecchio formato con source-riassunto)
 # =============================================================================
 print("\n📂 Carica i file HTML delle lezioni (puoi selezionarli in massa):")
 uploaded = files.upload()
@@ -104,8 +223,9 @@ else:
     # =========================================================================
     # ESTRAZIONE DATI DAL FILE HTML (vecchio formato con source-riassunto)
     # Schema output: identico al JSON letto dal template lezione-dinamica.html
-    # NON include il_super_quiz (gestito da file separato nella cartella quiz/)
     # =========================================================================
+    LABEL_CHECKPOINT_RE = re.compile(r'^\s*check\s*point\s*:?\s*$', re.IGNORECASE)
+
     def estrai_dati_master(html_content):
         soup = BeautifulSoup(html_content, 'html.parser')
 
@@ -123,6 +243,7 @@ else:
             "video_sintesi_url": "PLACEHOLDER_VIDEO",
             "flashcards": [],
             "riassuntone": [],
+            "il_super_quiz": [],
             "assistente_ia": {
                 "nome": "Assistente IA",
                 "sottotesto": "Cosa non ti è chiaro? Chiedimelo...",
@@ -223,16 +344,27 @@ else:
                 cornell = h3.find_next_sibling('div', class_='cornell-box')
                 cps = []
                 if cornell:
-                    domande = [
-                        p for p in cornell.find_all('p', class_='cornell-question')
-                        if p.get_text(strip=True) not in ("", "Check Point", "Check point:", "Check point")
-                    ]
-                    risposte = cornell.find_all('p', class_='cornell-answer')
-                    for q, a in zip(domande, risposte):
-                        cps.append({
-                            "domanda": q.get_text(strip=True),
-                            "risposta": a.get_text(strip=True).replace('Risposta: ', '').strip()
-                        })
+                    # FIX — alcune sorgenti non hanno una vera domanda davanti alla
+                    # PRIMA risposta: c'è solo l'etichetta "Check point:" seguita
+                    # subito dalla risposta (vedi screenshot). Il vecchio codice
+                    # filtrava quell'etichetta PRIMA di fare lo zip domande/risposte:
+                    # questo sfalsava di una posizione tutte le coppie successive,
+                    # perdendo l'ultima risposta del blocco.
+                    # Qui invece si scorre il box in ordine reale
+                    # (domanda -> risposta -> domanda -> risposta...): se una
+                    # "domanda" è solo l'etichetta, diventa stringa vuota MA
+                    # SENZA saltare lo slot, così l'abbinamento resta corretto
+                    # qualunque sia il numero di coppie nel box.
+                    domanda_corrente = ""
+                    for p in cornell.find_all('p'):
+                        classi = p.get('class') or []
+                        testo_p_corrente = p.get_text(strip=True)
+                        if 'cornell-question' in classi:
+                            domanda_corrente = "" if LABEL_CHECKPOINT_RE.match(testo_p_corrente) else testo_p_corrente
+                        elif 'cornell-answer' in classi:
+                            risposta = testo_p_corrente.replace('Risposta: ', '').strip()
+                            cps.append({"domanda": domanda_corrente, "risposta": risposta})
+                            domanda_corrente = ""
                 dati["riassuntone"].append({
                     "titolo": h3.get_text(strip=True),
                     "testo": testo,
@@ -240,7 +372,6 @@ else:
                 })
 
         # --- ASSISTENTE IA ---
-        # Cerca prima dentro il contenitore noto della sezione IA, poi nel resto della pagina.
         ia_url = ""
         ia_container = soup.select_one('.freud-bot-container, .ia-container, .ia-text-col')
         if ia_container:
@@ -271,21 +402,19 @@ else:
             html_content = contenuto.decode('utf-8')
             dati = estrai_dati_master(html_content)
 
-            # --- RILEVA NUMERO DI LEZIONE per iniettare gli URL ---
-            # Priorità 1: dal campo sottotitolo estratto ("Lezione N - ...")
+            # --- RILEVA NUMERO DI LEZIONE per iniettare URL e Super Quiz ---
             num_lez = None
             num_match = re.search(r'\bLezione\s+(\d+)\b', dati.get("sottotitolo", ""), re.IGNORECASE)
             if num_match:
                 num_lez = int(num_match.group(1))
 
-            # Priorità 2: dal nome del file (es. lezione_16.html, lezione-6.html)
             if num_lez is None:
                 num_match = re.search(r'(\d+)', filename)
                 if num_match:
                     num_lez = int(num_match.group(1))
 
             if num_lez is None:
-                print(f"   ⚠️ Impossibile rilevare il numero di lezione. URL non iniettati.")
+                print(f"   ⚠️ Impossibile rilevare il numero di lezione. URL e Super Quiz non iniettati.")
             else:
                 print(f"   🔢 Lezione {num_lez} rilevata.")
 
@@ -303,6 +432,16 @@ else:
                 else:
                     print(f"   ⚠️ Nessun URL video per lezione {num_lez}. Campo lasciato a PLACEHOLDER_VIDEO.")
 
+                # Super Quiz
+                if num_lez in super_quiz_map:
+                    dati["il_super_quiz"] = super_quiz_map[num_lez]
+                    print(f"   🧠 il_super_quiz → {len(super_quiz_map[num_lez])} domande")
+                else:
+                    print(f"   ⚠️ Nessun Super Quiz trovato per lezione {num_lez}. Campo lasciato vuoto.")
+
+            # --- PULIZIA FINALE (rimuove [cite]... da tutti i campi testuali) ---
+            dati = pulisci_ricorsivo(dati)
+
             # --- SALVA JSON ---
             nome_base = os.path.splitext(filename)[0]
             output_name = nome_base + '.json'
@@ -310,7 +449,8 @@ else:
                 json.dump(dati, f, ensure_ascii=False, indent=4)
 
             json_generati.append(output_name)
-            print(f"   ✅ {len(dati['flashcards'])} flashcard | {len(dati['riassuntone'])} macro-argomenti | {len(dati['punti_chiave'])} punti chiave")
+            print(f"   ✅ {len(dati['flashcards'])} flashcard | {len(dati['riassuntone'])} macro-argomenti | "
+                  f"{len(dati['punti_chiave'])} punti chiave | {len(dati['il_super_quiz'])} domande quiz")
             print(f"   💾 Salvato: {output_name}")
 
         except Exception as e:
