@@ -112,6 +112,20 @@
             position: relative;
         }
 
+        /* Eyebrow — stesso trattamento grafico della lezione dinamica */
+        .header-eyebrow {
+            display: inline-flex; align-items: center; gap: 10px;
+            font-family: var(--font-body);
+            font-size: 0.72rem; font-weight: 700; letter-spacing: 0.22em;
+            text-transform: uppercase; color: var(--gold-dk);
+            margin-bottom: 1.5rem;
+        }
+        .header-eyebrow::before,
+        .header-eyebrow::after {
+            content: ''; display: block; width: 32px; height: 1px;
+            background: var(--gold);
+        }
+
         h1 {
             font-family: var(--font-display);
             font-size: clamp(2.8rem, 6vw, 5.2rem);
@@ -208,8 +222,6 @@
             transition: background 0.25s, box-shadow 0.25s;
             box-shadow: 0 6px 24px rgba(26,47,79,0.25);
             margin-bottom: 0;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
         }
         .master-header:hover { background: var(--navy-lt); box-shadow: 0 10px 32px rgba(26,47,79,0.32); }
         .master-header .mh-arrow {
@@ -364,8 +376,20 @@
         }
         .course-card:hover .cc-arrow { transform: translateX(3px); }
 
+        /* Badge "N lezioni" per i corsi con percorso JSON dinamico */
+        .course-card .cc-count {
+            position: absolute; top: 12px; right: 14px;
+            font-size: 0.6rem; font-weight: 700; letter-spacing: 0.07em;
+            text-transform: uppercase; color: var(--gold-dk);
+            background: rgba(200,169,110,0.14);
+            padding: 4px 10px; border-radius: 50px;
+            white-space: nowrap;
+        }
+        .course-card-dynamic { padding-right: 1.4rem; }
+        .course-card-dynamic small { display: block; margin-top: 2px; }
+
         /* ============================================================
-           MODAL — APPROFONDIMENTI (stile lezione)
+           MODAL — APPROFONDIMENTI / LEZIONI (stile lezione)
         ============================================================ */
         #factor-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -394,6 +418,32 @@
         }
         .close-modal:hover { color: var(--navy); }
 
+        /* Griglia lezioni dentro il modale */
+        .lz-intro {
+            margin-bottom: 1.2rem; color: var(--sub); font-size: 0.85rem;
+        }
+        .lz-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(52px, 1fr));
+            gap: 10px;
+        }
+        .lz-item {
+            display: flex; align-items: center; justify-content: center;
+            aspect-ratio: 1 / 1;
+            background: var(--ivory);
+            border: 1px solid var(--dust);
+            border-radius: var(--r-sm);
+            text-decoration: none;
+            font-family: var(--font-display);
+            font-weight: 700; font-size: 1.05rem;
+            color: var(--navy);
+            transition: all 0.2s;
+        }
+        .lz-item:hover {
+            background: var(--navy); color: #fff; border-color: var(--navy);
+            transform: translateY(-2px);
+        }
+
         /* ============================================================
            TEXT CONTENT BOX
         ============================================================ */
@@ -418,6 +468,66 @@
         .cornell-box p { margin: 0; font-size: 0.92rem; line-height: 1.75; color: var(--body); }
 
         /* ============================================================
+           NIGHT MODE — pulsante on/off
+        ============================================================ */
+        #night-toggle {
+            position: fixed; bottom: 24px; right: 24px;
+            z-index: 9999998;
+            width: 52px; height: 52px; border-radius: 50%;
+            border: 1px solid var(--dust);
+            background: #fff; color: var(--ink);
+            font-size: 1.35rem; line-height: 1;
+            cursor: pointer;
+            box-shadow: var(--shadow-lift);
+            display: flex; align-items: center; justify-content: center;
+            transition: transform 0.2s, background 0.3s, border-color 0.3s;
+        }
+        #night-toggle:hover { transform: scale(1.08); border-color: var(--gold); }
+        #night-toggle:active { transform: scale(0.96); }
+
+        /* Transizioni morbide al cambio tema */
+        body, .content-card, .author-badge, .factor-card, .course-card,
+        .modal-paper, .obj-box, .cornell-box, #night-toggle {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        /* ---- Rimappatura token in modalità notte (stessa palette della lezione) ---- */
+        body.night-mode {
+            color-scheme: dark;
+            --ivory:    #14161C;
+            --ivory-dk: #1B1E26;
+            --dust:     #2B2E38;
+            --mist:     #5C5F6A;
+            --ink:      #F2EFE8;
+            --body:     #C7C4BC;
+            --sub:      #918E86;
+            --gold-dk:  #D9BC85;
+            --shadow-card: 0 4px 24px rgba(0,0,0,0.45), 0 1px 4px rgba(0,0,0,0.3);
+            --shadow-lift: 0 12px 40px rgba(0,0,0,0.55), 0 2px 8px rgba(0,0,0,0.35);
+        }
+        .night-mode .content-card,
+        .night-mode .modal-paper,
+        .night-mode #night-toggle,
+        .night-mode .author-badge { background: #1E212A; }
+        .night-mode .factor-card,
+        .night-mode .course-card { background: #1E212A; }
+        .night-mode .lz-item { background: #262933; color: #8FB4E8; border-color: #2B2E38; }
+        .night-mode .lz-item:hover { background: var(--navy); color: #fff; }
+        .night-mode .cc-count { background: rgba(217,188,133,0.15); }
+        .night-mode .obj-box {
+            background: linear-gradient(135deg, #182238 0%, #151D2E 100%);
+            border-color: rgba(143,180,232,0.18);
+        }
+        .night-mode .cornell-box { background: linear-gradient(135deg, #221D10, #1C180D); }
+        .night-mode .close-modal:hover { color: #8FB4E8; }
+        .night-mode .btn-close-section:hover {
+            border-color: #8FB4E8; color: #8FB4E8; background: rgba(143,180,232,0.06);
+        }
+        .night-mode .accordion-header:hover .ch-title { color: #8FB4E8; }
+        .night-mode .accordion-header.active .ch-icon { color: #8FB4E8; }
+        .night-mode .main-background-image { mix-blend-mode: screen; opacity: 0.05; }
+
+        /* ============================================================
            FOOTER SITEMARK
         ============================================================ */
         .site-footer {
@@ -430,6 +540,8 @@
     </style>
 </head>
 <body>
+    <!-- NIGHT MODE — applica subito il tema salvato per evitare il "flash" chiaro -->
+    <script>try{if(localStorage.getItem('ums_night_mode')==='1'){document.body.classList.add('night-mode');}}catch(e){}</script>
 
     <!-- Progress Bar -->
     <div id="scroll-progress-container">
@@ -441,7 +553,10 @@
         <img class="main-background-image" src="https://files.catbox.moe/46qh1i.jpg" alt="">
     </div>
 
-    <!-- Modal — Teorie dell'apprendimento -->
+    <!-- NIGHT MODE — pulsante on/off, coerente con le lezioni -->
+    <button id="night-toggle" type="button" aria-label="Attiva modalità notte" title="Modalità notte on/off">🌙</button>
+
+    <!-- Modal — Teorie dell'apprendimento / Elenco lezioni -->
     <div id="factor-modal" onclick="closeModal(event)">
         <div class="modal-paper" onclick="event.stopPropagation()">
             <span class="close-modal" onclick="closeModalDirect()">&times;</span>
@@ -452,6 +567,7 @@
 
     <!-- Header -->
     <header>
+        <div class="header-eyebrow">Una Mano Spensierata</div>
         <h1>Una Mano Spensierata</h1>
         <div class="subtitle">La conoscenza è di tutti</div>
 
@@ -491,17 +607,38 @@
                         </button>
                         <div class="accordion-content">
 
+                            <span class="factors-intro">Percorsi completi — clicca per scegliere la lezione</span>
+                            <div class="factors-grid">
+                                <div class="course-card course-card-dynamic" onclick="openLezioni('storiaEducazione')">
+                                    <span class="cc-count">17 lezioni</span>
+                                    <strong>Storia dell'Educazione</strong>
+                                    <small>Sfoglia il percorso completo, lezione per lezione</small>
+                                </div>
+                                <div class="course-card course-card-dynamic" onclick="openLezioni('storiaContemporanea')">
+                                    <span class="cc-count">15 lezioni</span>
+                                    <strong>Storia Contemporanea</strong>
+                                    <small>Sfoglia il percorso completo, lezione per lezione</small>
+                                </div>
+                                <div class="course-card course-card-dynamic" onclick="openLezioni('didattica')">
+                                    <span class="cc-count">11 lezioni</span>
+                                    <strong>Didattica Generale</strong>
+                                    <small>Sfoglia il percorso completo, lezione per lezione</small>
+                                </div>
+                                <div class="course-card course-card-dynamic" onclick="openLezioni('neuropsichiatria')">
+                                    <span class="cc-count">11 lezioni</span>
+                                    <strong>Neuropsichiatria Infantile</strong>
+                                    <small>Sfoglia il percorso completo, lezione per lezione</small>
+                                </div>
+                            </div>
+
+                            <span class="factors-intro">Altri corsi</span>
                             <div class="factors-grid">
                                 <a href="https://sites.google.com/view/una-mano-spensierata/sociologia-delleducazione?authuser=0" class="course-card"><span class="cc-arrow">↗</span><strong>Sociologia dell'Educazione</strong></a>
                                 <a href="https://sites.google.com/view/una-mano-spensierata/psicologia-dello-sviluppo?authuser=0" class="course-card"><span class="cc-arrow">↗</span><strong>Psicologia dello Sviluppo</strong></a>
-                                <a href="https://lorenzosciallato.github.io/Una-mano-spensierata/lezione-template.html?file=neuropsichiatria/lezione-1.json">↗</span><strong>Neuropsichiatria Infantile </strong></a>
                                 <a href="https://sites.google.com/view/una-mano-spensierata/pedagogia-generale?authuser=0" class="course-card"><span class="cc-arrow">↗</span><strong>Pedagogia Generale (Beta)</strong></a>
                                 <a href="https://sites.google.com/view/una-mano-spensierata/educazione-motoria?authuser=0" class="course-card"><span class="cc-arrow">↗</span><strong>Ed. Motoria (Solo Flashcard)</strong></a>
-                                <a href="https://sites.google.com/view/una-mano-spensierata/ed-musicale?authuser=0" class="course-card"><span class="cc-arrow">↗</span><strong>Ed. Musicale </strong></a>
+                                <a href="https://sites.google.com/view/una-mano-spensierata/ed-musicale?authuser=0" class="course-card"><span class="cc-arrow">↗</span><strong>Ed. Musicale</strong></a>
                                 <a href="https://sites.google.com/view/una-mano-spensierata/appunti?authuser=0" class="course-card"><span class="cc-arrow">↗</span><strong>Appunti dei colleghi</strong></a>
-                                <a href="https://sites.google.com/view/una-mano-spensierata/didattica-generale?authuser=0" class="course-card"><span class="cc-arrow">↗</span><strong>Didattica Generale </strong></a>
-                                <a href="https://sites.google.com/view/una-mano-spensierata/storia-delleducazione?authuser=0" class="course-card"><span class="cc-arrow">↗</span><strong>Storia dell'Educazione </strong></a>
-                                <a href="https://sites.google.com/view/una-mano-spensierata/storia-contemporanea?authuser=0" class="course-card"><span class="cc-arrow">↗</span><strong>Storia Contemporanea</strong></a>
                             </div>
 
                             <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi ▲</button>
@@ -604,6 +741,52 @@
             }
         };
 
+        // =========================================================================
+        // DATI — Corsi con percorso lezioni JSON dinamico
+        // Aggiungi qui un nuovo corso quando le sue lezioni sono pronte:
+        // basta un nuovo blocco { nome, count, urlTemplate } dove {n} è
+        // il segnaposto del numero di lezione nel percorso del file.
+        // =========================================================================
+        const corsiConLezioni = {
+            storiaEducazione: {
+                nome: "Storia dell'Educazione",
+                count: 17,
+                urlTemplate: "https://lorenzosciallato.github.io/Una-mano-spensierata/lezione-template.html?file=storiadelleducazione/storiaeducazione-lezione-{n}.json"
+            },
+            storiaContemporanea: {
+                nome: "Storia Contemporanea",
+                count: 15,
+                urlTemplate: "https://lorenzosciallato.github.io/Una-mano-spensierata/lezione-template.html?file=storiacontemporanea/lezione-{n}.json"
+            },
+            didattica: {
+                nome: "Didattica Generale",
+                count: 11,
+                urlTemplate: "https://lorenzosciallato.github.io/Una-mano-spensierata/lezione-template.html?file=didattica/lezione-{n}.json"
+            },
+            neuropsichiatria: {
+                nome: "Neuropsichiatria Infantile",
+                count: 11,
+                urlTemplate: "https://lorenzosciallato.github.io/Una-mano-spensierata/lezione-template.html?file=neuropsichiatria/lezione-{n}.json"
+            }
+        };
+
+        function openLezioni(key) {
+            const corso = corsiConLezioni[key];
+            if (!corso) return;
+
+            document.getElementById('m-title').innerText = corso.nome;
+
+            let html = '<p class="lz-intro">Scegli la lezione da aprire.</p><div class="lz-grid">';
+            for (let i = 1; i <= corso.count; i++) {
+                const url = corso.urlTemplate.replace('{n}', i);
+                html += `<a class="lz-item" href="${url}" title="Lezione ${i}">${i}</a>`;
+            }
+            html += '</div>';
+
+            document.getElementById('m-body').innerHTML = html;
+            document.getElementById('factor-modal').classList.add('open');
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             const teorieContainer = document.getElementById('dyn-teorie');
             Object.keys(teorieData).forEach(key => {
@@ -669,7 +852,7 @@
         };
 
         // =========================================================================
-        // MODAL — TEORIE DELL'APPRENDIMENTO
+        // MODAL — TEORIE DELL'APPRENDIMENTO / ELENCO LEZIONI
         // =========================================================================
         function openFactor(key) {
             const t = teorieData[key];
@@ -679,6 +862,35 @@
         }
         function closeModalDirect() { document.getElementById('factor-modal').classList.remove('open'); }
         function closeModal(e) { if (e.target.id === 'factor-modal') closeModalDirect(); }
+    </script>
+
+    <!-- ================================================================
+         NIGHT MODE — SCRIPT ADDITIVO (toggle + persistenza)
+         Usa la stessa chiave localStorage della lezione dinamica, cosi'
+         il tema scelto resta coerente in tutta la navigazione del sito.
+    ================================================================ -->
+    <script>
+        (function () {
+            const NIGHT_KEY = 'ums_night_mode';
+            const toggleBtn = document.getElementById('night-toggle');
+            const ICON_SUN = '<svg viewBox="0 0 24 24" width="1.15em" height="1.15em" stroke="currentColor" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>';
+            const ICON_MOON = '<svg viewBox="0 0 24 24" width="1.15em" height="1.15em" stroke="currentColor" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>';
+
+            function applyNightMode(on) {
+                document.body.classList.toggle('night-mode', on);
+                toggleBtn.innerHTML = on ? ICON_SUN : ICON_MOON;
+                toggleBtn.setAttribute('aria-label', on ? 'Attiva modalità giorno' : 'Attiva modalità notte');
+            }
+
+            // Sincronizza icona con lo stato applicato dallo script iniziale
+            applyNightMode(document.body.classList.contains('night-mode'));
+
+            toggleBtn.addEventListener('click', () => {
+                const on = !document.body.classList.contains('night-mode');
+                applyNightMode(on);
+                try { localStorage.setItem(NIGHT_KEY, on ? '1' : '0'); } catch (e) {}
+            });
+        })();
     </script>
 
 </body>
