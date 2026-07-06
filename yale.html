@@ -67,18 +67,6 @@ body{top:0!important}
 .video-frame{position:relative;width:100%;padding-bottom:56.25%;height:0;background:#0F1117;border-radius:var(--r-md);overflow:hidden;box-shadow:var(--shadow-card)}
 .video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 
-.now-playing{margin-top:0.9rem;background:#fff;border:1px solid var(--dust);border-radius:var(--r-md);padding:0.9rem 1.1rem;box-shadow:var(--shadow-card);min-height:64px;display:flex;align-items:center;gap:12px;transition:border-color .3s}
-.now-playing.live{border-color:var(--gold);box-shadow:var(--shadow-lift)}
-.np-dot{width:9px;height:9px;border-radius:50%;background:var(--mist);flex-shrink:0;transition:background .3s}
-.now-playing.live .np-dot{background:var(--gold);animation:pulse 1.8s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.35}}
-.np-text{flex:1;min-width:0}
-.np-label{font-size:0.6rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold-dk);margin-bottom:2px;display:none}
-.np-kw{font-family:var(--font-display);font-size:1.05rem;font-weight:700;color:var(--ink);line-height:1.25}
-.np-idle{color:var(--sub);font-style:italic;font-size:0.9rem;font-family:var(--font-body);font-weight:400}
-.src-note{margin-top:0.8rem;font-size:0.75rem;color:var(--sub);line-height:1.6}
-.src-note strong{color:var(--body)}
-
 .wb-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:0.5rem;flex-wrap:wrap}
 .wb-title{font-family:var(--font-display);font-size:1.4rem;font-weight:700;color:var(--ink)}
 .wb-title em{font-style:italic;color:var(--navy)}
@@ -106,6 +94,16 @@ body{top:0!important}
 .c-note:focus{border-color:var(--gold);background:#fff}
 .c-note::placeholder{color:var(--mist);font-style:italic}
 
+/* manual highlight inside concept text */
+mark.hl{background:#FFF176;color:inherit;padding:0 2px;border-radius:3px;box-decoration-break:clone;-webkit-box-decoration-break:clone;cursor:pointer}
+.night mark.hl{background:#C8A96E;color:#1C1C22}
+.c-kw,.c-ctx{cursor:text}
+#hl-float{position:absolute;display:none;align-items:center;gap:8px;background:var(--navy);color:#fff;padding:8px 14px;border-radius:50px;cursor:pointer;z-index:99999;font-size:0.74rem;font-weight:700;box-shadow:var(--shadow-lift);text-transform:uppercase;letter-spacing:0.08em;font-family:var(--font-body)}
+#hl-float:hover{background:var(--navy-lt)}
+#hl-float svg{width:1em;height:1em;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;vertical-align:-0.125em}
+#hl-float .hl-remove{display:none;border-left:1px solid rgba(255,255,255,0.3);padding-left:8px}
+#hl-float .hl-remove.show{display:inline-flex;align-items:center;gap:5px}
+
 .wb-foot{background:#fff;border-top:1px solid var(--dust);padding:10px;display:flex;gap:9px}
 .wb-b{flex:1;border:2px solid var(--dust);background:#fff;color:var(--navy);border-radius:50px;padding:11px;font-family:var(--font-body);font-size:0.72rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center;gap:6px}
 .wb-b:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,0.1);border-color:var(--navy)}
@@ -129,9 +127,9 @@ body{top:0!important}
 #night svg{width:1.3em;height:1.3em;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 
 body.night{--ivory:#14161C;--ivory-dk:#1B1E26;--dust:#2B2E38;--mist:#5C5F6A;--ink:#F2EFE8;--body:#C7C4BC;--sub:#918E86;--gold-dk:#D9BC85;--gold-lt:#4A3F24;--shadow-card:0 4px 24px rgba(0,0,0,0.45),0 1px 4px rgba(0,0,0,0.3);--shadow-lift:0 12px 40px rgba(0,0,0,0.55),0 2px 8px rgba(0,0,0,0.35);color-scheme:dark}
-.night .badge,.night #lang-wrap,.night .lang-menu,.night .now-playing,.night .wb,.night .wb-foot,.night .wb-b,.night #night,.night .c-time,.night .c-note{background:#1E212A}
+.night .badge,.night #lang-wrap,.night .lang-menu,.night .wb,.night .wb-foot,.night .wb-b,.night #night,.night .c-time,.night .c-note{background:#1E212A}
 .night .badge.primary{background:var(--navy)}
-.night #lang-btn,.night h1 em,.night .np-kw,.night .wb-title em{color:#8FB4E8}
+.night #lang-btn,.night h1 em,.night .wb-title em{color:#8FB4E8}
 .night .c-kw{background-image:linear-gradient(transparent 62%, rgba(200,169,110,0.35) 62%)}
 .night #tr-disclaimer{background:#221D10;color:#D9BC85;border-color:#4A3F1E}
 .night .bg img{mix-blend-mode:screen;opacity:0.05}
@@ -154,9 +152,13 @@ body.night{--ivory:#14161C;--ivory-dk:#1B1E26;--dust:#2B2E38;--mist:#5C5F6A;--in
 <symbol id="ic-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10Z"/></symbol>
 <symbol id="ic-home" viewBox="0 0 24 24"><path d="m3 11 9-8 9 8"/><path d="M5 9.5V21h14V9.5"/><path d="M9 21v-6h6v6"/></symbol>
 <symbol id="ic-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></symbol>
+<symbol id="ic-hl" viewBox="0 0 24 24"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4l8 8Z"/></symbol>
+<symbol id="ic-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
 </svg>
 
 <button id="night" type="button" aria-label="Toggle night mode"><svg><use href="#ic-moon"/></svg></button>
+
+<div id="hl-float" class="notranslate"><span class="hl-add"><svg><use href="#ic-hl"/></svg> Highlight</span><span class="hl-remove" id="hl-remove"><svg><use href="#ic-x"/></svg> Remove</span></div>
 
 <header>
     <div class="eyebrow">Una Mano Spensierata</div>
@@ -192,19 +194,12 @@ body.night{--ivory:#14161C;--ivory-dk:#1B1E26;--dust:#2B2E38;--mist:#5C5F6A;--in
     <div class="grid">
         <div class="video-col">
             <div class="video-frame"><div id="yt-player"></div></div>
-            <div class="now-playing" id="now-playing">
-                <span class="np-dot"></span>
-                <div class="np-text">
-                    <div class="np-label" id="np-label">Now covering</div>
-                    <div class="np-kw np-idle" id="np-kw">Press play — key concepts appear on your board as the lecture reaches them.</div>
-                </div>
-            </div>
-            <p class="src-note" id="src-note"><strong>Sync:</strong> <span id="sync-status">checking captions…</span></p>
+            <span id="sync-status" style="display:none"></span>
         </div>
 
         <div>
             <div class="wb-head">
-                <span class="wb-title">Your <em>Board</em></span>
+                <span class="wb-title notranslate">Your Board</span>
                 <span class="wb-progress" id="wb-progress"></span>
             </div>
             <p class="wb-hint">Key concepts drop in as the video reaches them. Write your own notes under each one — everything is saved automatically and prints on your own layout.</p>
@@ -283,8 +278,10 @@ body.night{--ivory:#14161C;--ivory-dk:#1B1E26;--dust:#2B2E38;--mist:#5C5F6A;--in
 
 <script>
 let LESSON=null, CONCEPTS=[], player=null, pollTimer=null;
-let lastRevealedIdx=-1, noteVals={};
+let lastRevealedIdx=-1, noteVals={}, hlVals={};
+let activeHlColor='#FFF176';
 const NOTE_KEY=()=>'ums_yale_notes::'+(LESSON?LESSON.videoId:'x');
+const HL_KEY=()=>'ums_yale_hl::'+(LESSON?LESSON.videoId:'x');
 
 const mmssToSec=t=>{const p=String(t).split(':').map(Number);return p.length===3?p[0]*3600+p[1]*60+p[2]:p[0]*60+p[1];};
 const secToMMSS=s=>{s=Math.max(0,Math.floor(s));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0');};
@@ -343,6 +340,16 @@ function conceptId(k){return 'c_'+k.idx;}
 function autoGrow(ta){ta.style.height='auto';ta.style.height=ta.scrollHeight+'px';}
 function onNoteInput(ta){autoGrow(ta);noteVals[ta.dataset.id]=ta.value;try{localStorage.setItem(NOTE_KEY(),JSON.stringify(noteVals));}catch(e){}}
 function loadNotes(){try{const raw=localStorage.getItem(NOTE_KEY());if(raw)noteVals=JSON.parse(raw);}catch(e){noteVals={};}}
+function loadHighlights(){try{const raw=localStorage.getItem(HL_KEY());if(raw)hlVals=JSON.parse(raw);}catch(e){hlVals={};}}
+function saveHighlights(){try{localStorage.setItem(HL_KEY(),JSON.stringify(hlVals));}catch(e){}}
+/* store the current highlighted HTML of a concept's title+context */
+function persistConceptHl(cid){
+    const el=document.getElementById(cid);
+    if(!el)return;
+    const kw=el.querySelector('.c-kw'), ctx=el.querySelector('.c-ctx');
+    hlVals[cid]={kw:kw?kw.innerHTML:'',ctx:ctx?ctx.innerHTML:''};
+    saveHighlights();
+}
 
 function revealConcept(k){
     const body=document.getElementById('wb-body');
@@ -359,6 +366,13 @@ function revealConcept(k){
     body.insertBefore(el,revealBox);
     const saved=noteVals[conceptId(k)];
     if(saved){const ta=el.querySelector('.c-note');ta.value=saved;autoGrow(ta);}
+    // restore any manual highlights on this concept's text
+    const savedHl=hlVals[conceptId(k)];
+    if(savedHl){
+        const kwEl=el.querySelector('.c-kw'), ctxEl=el.querySelector('.c-ctx');
+        if(savedHl.kw&&kwEl)kwEl.innerHTML=savedHl.kw;
+        if(savedHl.ctx&&ctxEl)ctxEl.innerHTML=savedHl.ctx;
+    }
     setTimeout(()=>el.classList.remove('just-landed'),1400);
     updateProgress();
 }
@@ -381,14 +395,77 @@ function syncTick(){
     const t=player.getCurrentTime();
     let idx=-1;
     for(let i=0;i<CONCEPTS.length;i++){if((CONCEPTS[i].seconds||0)<=t+0.4)idx=i;else break;}
-    if(idx>=0){
-        const np=document.getElementById('now-playing');np.classList.add('live');
-        document.getElementById('np-label').style.display='block';
-        const kw=document.getElementById('np-kw');kw.className='np-kw';kw.textContent=CONCEPTS[idx].keyword;
-    }
     if(idx>lastRevealedIdx)revealUpTo(idx);
 }
 function seekTo(sec){if(player&&player.seekTo){player.seekTo(sec,true);player.playVideo();}}
+
+/* ============================================================
+   MANUAL HIGHLIGHTER  — select text inside a concept, highlight it
+============================================================ */
+function setupHighlighter(){
+    const btn=document.getElementById('hl-float');
+    const removeBtn=document.getElementById('hl-remove');
+
+    document.addEventListener('mouseup',e=>{
+        if(btn.contains(e.target))return;
+        const sel=window.getSelection();
+        const txt=sel.toString().trim();
+        if(!txt){btn.style.display='none';return;}
+        const rg=sel.getRangeAt(0);
+        // selection must live entirely inside a single concept's title or context
+        const startEl=(rg.startContainer.nodeType===3?rg.startContainer.parentElement:rg.startContainer);
+        const host=startEl.closest?startEl.closest('.c-kw,.c-ctx'):null;
+        const endEl=(rg.endContainer.nodeType===3?rg.endContainer.parentElement:rg.endContainer);
+        const endHost=endEl.closest?endEl.closest('.c-kw,.c-ctx'):null;
+        if(!host||host!==endHost){btn.style.display='none';return;}
+
+        const r=rg.getBoundingClientRect();
+        btn.style.top=(r.top+scrollY-46)+'px';
+        btn.style.left=(r.left+scrollX+r.width/2-52)+'px';
+        btn.style.display='flex';
+        // show "Remove" only if selection sits inside an existing highlight
+        const inHl=host.closest('mark.hl')||(startEl.closest&&startEl.closest('mark.hl'));
+        removeBtn.classList.toggle('show',!!inHl);
+    });
+
+    btn.addEventListener('mousedown',e=>e.preventDefault());
+
+    btn.querySelector('.hl-add').addEventListener('click',()=>{
+        const sel=window.getSelection();
+        if(!sel.rangeCount)return;
+        const rg=sel.getRangeAt(0);
+        const startEl=(rg.startContainer.nodeType===3?rg.startContainer.parentElement:rg.startContainer);
+        const host=startEl.closest?startEl.closest('.c-kw,.c-ctx'):null;
+        if(!host){btn.style.display='none';return;}
+        const concept=host.closest('.concept');
+        const mark=document.createElement('mark');
+        mark.className='hl';
+        mark.style.background=activeHlColor;
+        try{rg.surroundContents(mark);}
+        catch(err){toast('Select text within a single line to highlight.','no');return;}
+        sel.removeAllRanges();
+        btn.style.display='none';
+        if(concept)persistConceptHl(concept.id);
+    });
+
+    removeBtn.addEventListener('click',()=>{
+        const sel=window.getSelection();
+        if(!sel.rangeCount)return;
+        const node=sel.anchorNode;
+        const el=(node.nodeType===3?node.parentElement:node);
+        const mark=el.closest?el.closest('mark.hl'):null;
+        if(mark){
+            const concept=mark.closest('.concept');
+            const parent=mark.parentNode;
+            while(mark.firstChild)parent.insertBefore(mark.firstChild,mark);
+            parent.removeChild(mark);
+            parent.normalize();
+            if(concept)persistConceptHl(concept.id);
+        }
+        sel.removeAllRanges();
+        btn.style.display='none';
+    });
+}
 
 function printBoard(){
     const rows=[...document.querySelectorAll('.concept')];
@@ -401,10 +478,20 @@ function printBoard(){
     html+='<h1 style="font-family:\'Playfair Display\',Georgia,serif;font-size:28px;font-weight:700;color:#1A2F4F;margin:0 0 6px;line-height:1.15;">'+title+'</h1>';
     html+='<div style="font-size:12px;color:#918E86;margin-bottom:14px;">Concept Board &middot; '+date+'</div>';
     html+='<div style="border-top:4px double #1C1C22;margin-bottom:26px;"></div>';
+    // turn a live concept text node into print HTML, converting highlights to
+    // inline-styled marks so they render in the print iframe (day colours)
+    const printMarks=el=>{
+        const clone=el.cloneNode(true);
+        clone.querySelectorAll('mark.hl').forEach(m=>{
+            const bg=m.style.background||'#FFF176';
+            m.setAttribute('style','background:'+bg+';padding:0 2px;border-radius:2px;-webkit-print-color-adjust:exact;print-color-adjust:exact;');
+        });
+        return clone.innerHTML;
+    };
     rows.forEach(r=>{
         const time=r.querySelector('.c-time').textContent;
-        const kw=r.querySelector('.c-kw').textContent;
-        const ctx=r.querySelector('.c-ctx').textContent;
+        const kw=printMarks(r.querySelector('.c-kw'));
+        const ctx=printMarks(r.querySelector('.c-ctx'));
         const note=r.querySelector('.c-note').value.trim();
         html+='<div style="display:flex;gap:16px;margin-bottom:20px;page-break-inside:avoid;break-inside:avoid;">';
         html+='<div style="font-family:\'Playfair Display\',Georgia,serif;font-weight:700;font-size:18px;color:#C8A96E;min-width:50px;line-height:1.3;text-align:right;">'+time+'</div>';
@@ -449,6 +536,8 @@ async function boot(){
     document.title=(LESSON.lecture||'Lesson')+' · Una Mano Spensierata';
     CONCEPTS=LESSON.keywords.map(k=>({...k,seconds:null,__needsInterp:false}));
     loadNotes();
+    loadHighlights();
+    setupHighlighter();
     await resolveTimestamps();
     updateProgress();
     const tag=document.createElement('script');tag.src='https://www.youtube.com/iframe_api';document.head.appendChild(tag);
