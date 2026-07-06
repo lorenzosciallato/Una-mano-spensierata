@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Una Mano Spensierata · Video Lesson</title>
+<meta name="ums-build" content="video-v2">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+
+<style>
+:root{
+    --ivory:#F7F4EF; --ivory-dk:#EDE9E0;
+    --gold:#C8A96E; --gold-lt:#E8D5AA; --gold-dk:#9A7A3F;
+    --navy:#1A2F4F; --navy-lt:#2A4A72;
+    --dust:#E8E4DC; --mist:#C5C1B8;
+    --ink:#1C1C22; --body:#3D3C3A; --sub:#7A7770;
+    --cyan:#00D4D8; --magenta:#E8006A;
+    --font-display:'Playfair Display',Georgia,serif;
+    --font-body:'DM Sans',system-ui,sans-serif;
+    --r-sm:6px; --r-md:12px; --r-lg:20px; --r-xl:32px;
+    --shadow-card:0 4px 24px rgba(15,17,23,0.08),0 1px 4px rgba(15,17,23,0.04);
+    --shadow-lift:0 12px 40px rgba(15,17,23,0.14),0 2px 8px rgba(15,17,23,0.06);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{background:var(--ivory);font-family:var(--font-body);color:var(--body);line-height:1.7;font-size:16px;padding-bottom:90px;min-height:100vh;position:relative}
+.bg{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;background:var(--ivory)}
+.bg img{width:100%;height:100%;object-fit:cover;opacity:0.06;filter:grayscale(35%) sepia(0.15);mix-blend-mode:multiply}
+
+header{text-align:center;padding:3.5rem 1.5rem 1.5rem}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:0.72rem;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold-dk);margin-bottom:1.2rem}
+.eyebrow::before,.eyebrow::after{content:'';display:block;width:32px;height:1px;background:var(--gold)}
+h1{font-family:var(--font-display);font-size:clamp(2.2rem,5vw,3.6rem);font-weight:900;color:var(--ink);line-height:1.08;letter-spacing:-0.02em;margin-bottom:0.6rem}
+h1 em{font-style:italic;color:var(--navy)}
+.subtitle{font-size:0.74rem;font-weight:700;letter-spacing:0.28em;text-transform:uppercase;color:var(--sub);margin-bottom:1.6rem}
+.badges-row{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:1.2rem}
+.badge{display:inline-flex;align-items:center;gap:8px;background:#fff;padding:8px 16px;border-radius:50px;text-decoration:none;border:1px solid var(--dust);box-shadow:var(--shadow-card);transition:.25s;font-size:0.82rem;color:var(--ink);font-weight:500}
+.badge:hover{transform:translateY(-2px);box-shadow:var(--shadow-lift);border-color:var(--gold)}
+.badge.primary{background:var(--navy);border-color:var(--navy);color:#fff}
+.badge svg{width:1em;height:1em;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;vertical-align:-0.125em}
+
+#lang-wrap{display:inline-flex;flex-direction:column;align-items:center;background:#fff;border:1px solid var(--dust);border-radius:var(--r-md);padding:6px 14px;position:relative;box-shadow:var(--shadow-card);z-index:9999}
+#lang-btn{background:transparent;border:none;color:var(--navy);font-size:13px;font-weight:700;cursor:pointer;text-transform:uppercase;letter-spacing:0.12em;font-family:var(--font-body)}
+#lang-btn svg{width:1em;height:1em;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;vertical-align:-0.125em}
+#lang-spin{font-size:18px;animation:spin 1s linear infinite;display:none}
+@keyframes spin{100%{transform:rotate(360deg)}}
+.lang-menu{display:none;position:absolute;top:112%;right:0;background:#fff;border:1px solid var(--dust);border-radius:var(--r-lg);grid-template-columns:repeat(4,1fr);gap:8px;padding:14px;box-shadow:var(--shadow-lift);min-width:240px}
+.lang-menu.show{display:grid}
+.lang-menu button{background:transparent;border:1px solid transparent;padding:6px;cursor:pointer;border-radius:var(--r-sm);font-size:22px;transition:.2s}
+.lang-menu button.active{background:rgba(200,169,110,0.12);border-color:var(--gold)}
+.lang-menu button:hover{transform:scale(1.15)}
+.skiptranslate{display:none!important}
+body{top:0!important}
+#goog-gt-tt,.goog-te-balloon-frame{display:none!important}
+.goog-text-highlight{background:transparent!important;box-shadow:none!important;border:none!important}
+#tr-disclaimer{display:none;background:#FFFBEA;color:#7A6220;padding:9px 15px;border-radius:var(--r-md);margin:12px auto 0;font-size:0.78rem;border:1px solid #F0E08A;max-width:620px}
+#tr-disclaimer svg{width:1em;height:1em;stroke:currentColor;fill:none;stroke-width:1.7;vertical-align:-0.125em}
+
+.stage{width:92%;max-width:1240px;margin:0 auto}
+.grid{display:grid;grid-template-columns:1.65fr 1fr;gap:1.6rem;align-items:start}
+@media(max-width:920px){.grid{grid-template-columns:1fr}}
+.video-col{position:sticky;top:20px}
+@media(max-width:920px){.video-col{position:relative;top:0}}
+.video-frame{position:relative;width:100%;padding-bottom:56.25%;height:0;background:#0F1117;border-radius:var(--r-md);overflow:hidden;box-shadow:var(--shadow-card)}
+.video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+
+.now-playing{margin-top:0.9rem;background:#fff;border:1px solid var(--dust);border-radius:var(--r-md);padding:0.9rem 1.1rem;box-shadow:var(--shadow-card);min-height:64px;display:flex;align-items:center;gap:12px;transition:border-color .3s}
+.now-playing.live{border-color:var(--gold);box-shadow:var(--shadow-lift)}
+.np-dot{width:9px;height:9px;border-radius:50%;background:var(--mist);flex-shrink:0;transition:background .3s}
+.now-playing.live .np-dot{background:var(--gold);animation:pulse 1.8s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.35}}
+.np-text{flex:1;min-width:0}
+.np-label{font-size:0.6rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold-dk);margin-bottom:2px;display:none}
+.np-kw{font-family:var(--font-display);font-size:1.05rem;font-weight:700;color:var(--ink);line-height:1.25}
+.np-idle{color:var(--sub);font-style:italic;font-size:0.9rem;font-family:var(--font-body);font-weight:400}
+.src-note{margin-top:0.8rem;font-size:0.75rem;color:var(--sub);line-height:1.6}
+.src-note strong{color:var(--body)}
+
+.wb-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:0.5rem;flex-wrap:wrap}
+.wb-title{font-family:var(--font-display);font-size:1.4rem;font-weight:700;color:var(--ink)}
+.wb-title em{font-style:italic;color:var(--navy)}
+.wb-progress{font-size:0.7rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--sub);white-space:nowrap}
+.wb-hint{font-size:0.8rem;color:var(--sub);line-height:1.5;margin-bottom:1rem}
+.wb{background:#fff;border:1px solid var(--dust);border-radius:var(--r-lg);box-shadow:var(--shadow-card);overflow:hidden;display:flex;flex-direction:column}
+.wb-body{max-height:66vh;overflow-y:auto;padding:0.5rem 0}
+.wb-body::-webkit-scrollbar{width:5px}
+.wb-body::-webkit-scrollbar-thumb{background:var(--dust);border-radius:3px}
+.wb-empty{text-align:center;color:var(--mist);padding:3rem 1.5rem;line-height:1.7}
+.wb-empty .em-mark{font-family:var(--font-display);font-size:2.4rem;color:var(--dust);font-style:italic;margin-bottom:0.6rem}
+.wb-empty .em-text{font-size:0.9rem;font-style:italic}
+
+.concept{padding:1.05rem 1.3rem;border-bottom:1px solid var(--dust);animation:drop .5s cubic-bezier(.2,.8,.2,1)}
+.concept:last-child{border-bottom:none}
+@keyframes drop{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.concept.just-landed{background:linear-gradient(90deg,rgba(200,169,110,0.16),transparent 80%)}
+.c-top{display:flex;align-items:baseline;gap:10px;margin-bottom:0.35rem}
+.c-time{font-family:var(--font-body);font-weight:700;font-size:0.7rem;color:var(--navy);background:var(--ivory-dk);border:1px solid var(--dust);border-radius:50px;padding:3px 10px;white-space:nowrap;cursor:pointer;transition:.2s;flex-shrink:0;user-select:none}
+.c-time:hover{border-color:var(--gold);color:var(--gold-dk);background:#fff}
+.c-star{color:var(--gold);font-size:0.6rem;flex-shrink:0}
+.c-kw{font-family:var(--font-display);font-size:1.12rem;font-weight:700;color:var(--ink);line-height:1.35;display:inline;background-image:linear-gradient(transparent 62%, var(--gold-lt) 62%);background-repeat:no-repeat;padding:0 1px}
+.c-ctx{font-size:0.87rem;color:var(--body);line-height:1.55;margin-top:0.4rem}
+.c-note{width:100%;margin-top:0.7rem;border:1px solid var(--dust);border-radius:var(--r-sm);background:var(--ivory);font-family:var(--font-body);font-size:0.87rem;color:var(--body);line-height:1.55;padding:0.6rem 0.75rem;resize:none;outline:none;min-height:40px;overflow:hidden;transition:border-color .2s}
+.c-note:focus{border-color:var(--gold);background:#fff}
+.c-note::placeholder{color:var(--mist);font-style:italic}
+
+.wb-foot{background:#fff;border-top:1px solid var(--dust);padding:10px;display:flex;gap:9px}
+.wb-b{flex:1;border:2px solid var(--dust);background:#fff;color:var(--navy);border-radius:50px;padding:11px;font-family:var(--font-body);font-size:0.72rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center;gap:6px}
+.wb-b:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,0.1);border-color:var(--navy)}
+.wb-b svg{width:1.05em;height:1.05em;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.wb-b.pdf{background:var(--gold);color:var(--ink);border-color:transparent}
+.wb-b.pdf:hover{background:var(--gold-lt)}
+.wb-reveal{text-align:center;padding:0.6rem}
+.reveal-btn{background:none;border:none;color:var(--navy);font-family:var(--font-body);font-size:0.78rem;font-weight:700;cursor:pointer;border-bottom:1px solid var(--gold);padding-bottom:1px}
+.reveal-btn:hover{color:var(--gold-dk)}
+
+#toast-wrap{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);z-index:9999999;pointer-events:none}
+.toast{background:#0F1117;color:#fff;padding:13px 26px;border-radius:50px;margin-top:10px;font-weight:600;font-size:0.86rem;text-align:center;opacity:0;transition:.3s;transform:translateY(16px);border:1.5px solid;pointer-events:auto}
+.toast.show{opacity:1;transform:translateY(0)}
+.toast.ok{border-color:var(--gold);color:var(--gold-lt)}
+.toast.no{border-color:var(--magenta);color:var(--magenta)}
+
+.footer{text-align:center;padding:2.5rem 1rem 1rem;font-size:0.7rem;color:var(--mist);letter-spacing:0.12em;text-transform:uppercase;font-weight:600}
+.footer strong{color:var(--sub)}
+#night{position:fixed;bottom:22px;right:22px;z-index:9999998;width:50px;height:50px;border-radius:50%;border:1px solid var(--dust);background:#fff;color:var(--ink);cursor:pointer;box-shadow:var(--shadow-lift);display:flex;align-items:center;justify-content:center;transition:.2s}
+#night:hover{transform:scale(1.08);border-color:var(--gold)}
+#night svg{width:1.3em;height:1.3em;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+
+body.night{--ivory:#14161C;--ivory-dk:#1B1E26;--dust:#2B2E38;--mist:#5C5F6A;--ink:#F2EFE8;--body:#C7C4BC;--sub:#918E86;--gold-dk:#D9BC85;--gold-lt:#4A3F24;--shadow-card:0 4px 24px rgba(0,0,0,0.45),0 1px 4px rgba(0,0,0,0.3);--shadow-lift:0 12px 40px rgba(0,0,0,0.55),0 2px 8px rgba(0,0,0,0.35);color-scheme:dark}
+.night .badge,.night #lang-wrap,.night .lang-menu,.night .now-playing,.night .wb,.night .wb-foot,.night .wb-b,.night #night,.night .c-time,.night .c-note{background:#1E212A}
+.night .badge.primary{background:var(--navy)}
+.night #lang-btn,.night h1 em,.night .np-kw,.night .wb-title em{color:#8FB4E8}
+.night .c-kw{background-image:linear-gradient(transparent 62%, rgba(200,169,110,0.35) 62%)}
+.night #tr-disclaimer{background:#221D10;color:#D9BC85;border-color:#4A3F1E}
+.night .bg img{mix-blend-mode:screen;opacity:0.05}
+.night .wb-b.pdf{background:var(--gold);color:#14161C}
+.night .c-note:focus{background:#262B36}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<script>try{if(localStorage.getItem('ums_night_mode')==='1')document.body.classList.add('night')}catch(e){}</script>
+
+<div class="bg"><img src="https://i.postimg.cc/dQWmbDLp/crea-wallpaper-stile-arte-giapponese-woodblock-rilassato-con-fiori-natura-paesaggio.png" alt=""></div>
+<div id="toast-wrap"></div>
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+<symbol id="ic-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></symbol>
+<symbol id="ic-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></symbol>
+<symbol id="ic-print" viewBox="0 0 24 24"><path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8" rx="1"/></symbol>
+<symbol id="ic-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10Z"/></symbol>
+<symbol id="ic-home" viewBox="0 0 24 24"><path d="m3 11 9-8 9 8"/><path d="M5 9.5V21h14V9.5"/><path d="M9 21v-6h6v6"/></symbol>
+<symbol id="ic-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></symbol>
+</svg>
+
+<button id="night" type="button" aria-label="Toggle night mode"><svg><use href="#ic-moon"/></svg></button>
+
+<header>
+    <div class="eyebrow">Una Mano Spensierata</div>
+    <h1 id="dyn-title">Loading<em>…</em></h1>
+    <div class="subtitle" id="dyn-subtitle">Yale Open Course · PSYC 110</div>
+    <div id="tr-disclaimer"><svg><use href="#ic-globe"/></svg> Automatic translation: high accuracy, some nuance may be lost.</div>
+    <div class="badges-row">
+        <a href="#" class="badge primary"><svg><use href="#ic-home"/></svg> Back to Home</a>
+        <a href="https://www.instagram.com/sciallato_lorenzo/" target="_blank" class="badge">Made by <strong>Lorenzo</strong></a>
+    </div>
+    <div id="google_translate_element" style="display:none"></div>
+    <div id="lang-wrap" class="notranslate">
+        <div id="lang-spin">…</div>
+        <button id="lang-btn" onclick="toggleLangMenu()"><span id="lang-label"><svg><use href="#ic-globe"/></svg> Language</span> <small id="lang-arrow">▼</small></button>
+        <div class="lang-menu" id="lang-menu">
+            <button onclick="translatePage('en',this)" title="English" class="active">🇬🇧</button>
+            <button onclick="translatePage('it',this)" title="Italiano">🇮🇹</button>
+            <button onclick="translatePage('fr',this)" title="Français">🇫🇷</button>
+            <button onclick="translatePage('de',this)" title="Deutsch">🇩🇪</button>
+            <button onclick="translatePage('es',this)" title="Español">🇪🇸</button>
+            <button onclick="translatePage('pt',this)" title="Português">🇵🇹</button>
+            <button onclick="translatePage('el',this)" title="Ελληνικά">🇬🇷</button>
+            <button onclick="translatePage('ru',this)" title="Русский">🇷🇺</button>
+            <button onclick="translatePage('zh-CN',this)" title="中文">🇨🇳</button>
+            <button onclick="translatePage('ar',this)" title="العربية">🇸🇦</button>
+            <button onclick="translatePage('hi',this)" title="हिन्दी">🇮🇳</button>
+            <button onclick="translatePage('ja',this)" title="日本語">🇯🇵</button>
+        </div>
+    </div>
+</header>
+
+<div class="stage">
+    <div class="grid">
+        <div class="video-col">
+            <div class="video-frame"><div id="yt-player"></div></div>
+            <div class="now-playing" id="now-playing">
+                <span class="np-dot"></span>
+                <div class="np-text">
+                    <div class="np-label" id="np-label">Now covering</div>
+                    <div class="np-kw np-idle" id="np-kw">Press play — key concepts appear on your board as the lecture reaches them.</div>
+                </div>
+            </div>
+            <p class="src-note" id="src-note"><strong>Sync:</strong> <span id="sync-status">checking captions…</span></p>
+        </div>
+
+        <div>
+            <div class="wb-head">
+                <span class="wb-title">Your <em>Board</em></span>
+                <span class="wb-progress" id="wb-progress"></span>
+            </div>
+            <p class="wb-hint">Key concepts drop in as the video reaches them. Write your own notes under each one — everything is saved automatically and prints on your own layout.</p>
+            <div class="wb">
+                <div class="wb-body" id="wb-body">
+                    <div class="wb-empty" id="wb-empty">
+                        <div class="em-mark">“ ”</div>
+                        <div class="em-text">The board is empty. Start the video and the underlined concepts will appear here, one by one.</div>
+                    </div>
+                    <div class="wb-reveal" id="wb-reveal" style="display:none">
+                        <button class="reveal-btn" onclick="revealAll()"><svg style="width:1em;height:1em;stroke:currentColor;fill:none;stroke-width:1.7;vertical-align:-0.125em" viewBox="0 0 24 24"><use href="#ic-eye"/></svg> Reveal all concepts now</button>
+                    </div>
+                </div>
+                <div class="wb-foot">
+                    <button class="wb-b pdf" onclick="printBoard()"><svg><use href="#ic-print"/></svg> Print / PDF</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="footer"><strong>Una Mano Spensierata</strong> &nbsp;·&nbsp; Lorenzo Sciallato &copy; 2025</footer>
+
+<script id="lesson-data" type="application/json">
+{
+  "lecture": "PSYC 110 - Lecture 2 - Foundations: This Is Your Brain",
+  "videoId": "vg01Q1BI4WM",
+  "chapters": [
+    {"n":1,"title":"The Brain, the Mind and Dualism","start":"00:00"},
+    {"n":2,"title":"Scientific Consensus against Dualism","start":"12:06"},
+    {"n":3,"title":"The Neuron: Basic Building Blocks of Thought","start":"19:28"},
+    {"n":4,"title":"The Different Parts of the Brain","start":"32:58"},
+    {"n":5,"title":"Mechanist Conception and the Hard Problem","start":"44:47"}
+  ],
+  "keywords": [
+    {"keyword":"The Astonishing Hypothesis","context":"The professor introduces the lecture with this idea by Francis Crick, setting up the central premise that our mind and identity are entirely products of our physical brain.","importance":"high","chapter":1},
+    {"keyword":"dualism","context":"This is introduced as the intuitive, common-sense belief held by most people and religions that the conscious mind is separate from the physical body.","importance":"high","chapter":1},
+    {"keyword":"Rene Descartes","context":"The professor highlights Descartes as the most articulate defender of dualism, who argued that while animals are machines, humans possess immaterial souls.","importance":"high","chapter":1},
+    {"keyword":"beast machines","context":"Descartes used this term to describe nonhuman animals as mere physical robots, contrasting them with humans who have a dual nature.","importance":"medium","chapter":1},
+    {"keyword":"method of doubt","context":"Descartes used this philosophical approach to question everything he knew, eventually concluding that the only thing he could not doubt was his own thinking.","importance":"medium","chapter":1},
+    {"keyword":"evil demon","context":"Descartes imagined a malevolent entity deceiving his senses, a concept the professor connects to the modern movie 'The Matrix' to explain radical skepticism.","importance":"medium","chapter":1},
+    {"keyword":"personal identity","context":"The professor argues that our dualist intuitions are reflected in how we view identity, believing a person can remain the same even with extreme bodily transformations.","importance":"medium","chapter":1},
+    {"keyword":"multiple personality disorder","context":"This condition is mentioned to illustrate the common-sense intuition that multiple people can conceptually occupy a single physical body.","importance":"medium","chapter":1},
+    {"keyword":"survive the destruction of their bodies","context":"Belief in an afterlife is presented as the ultimate evidence of universal dualism, showing how people view their souls as separate from their physical forms.","importance":"medium","chapter":1},
+    {"keyword":"the mind is what the brain does","context":"This phrase encapsulates the modern scientific rejection of dualism, explaining that mental life is the product of physical brain activity.","importance":"high","chapter":2},
+    {"keyword":"existence proof","context":"Modern computers provide an existence proof that purely physical objects can perform complex operations like playing chess, undermining dualist objections.","importance":"medium","chapter":2},
+    {"keyword":"fMRI","context":"The professor notes how modern brain imaging allows scientists to see physical patterns of brain activity corresponding to specific thoughts or dilemmas.","importance":"high","chapter":2},
+    {"keyword":"neuron","context":"Introduced as the basic building block of thought, the neuron is the primary cell responsible for transmitting information within the brain.","importance":"high","chapter":3},
+    {"keyword":"dendrites","context":"These are the tentacle-like structures of a neuron that receive excitatory or inhibitory signals from other neurons.","importance":"high","chapter":3},
+    {"keyword":"axon","context":"This is the long fiber of the neuron along which the electrical signal fires to communicate with other distant cells.","importance":"high","chapter":3},
+    {"keyword":"myelin sheath","context":"The professor describes this as insulation surrounding the axon that helps the electrical signal fire more quickly.","importance":"medium","chapter":3},
+    {"keyword":"all or nothing","context":"This describes the firing mechanism of neurons, which either fire completely or not at all, similar to how a gun functions.","importance":"high","chapter":3},
+    {"keyword":"frequency of firing","context":"Despite the all-or-nothing nature of neurons, the brain encodes sensory intensity through the number of active neurons and their rate of firing.","importance":"medium","chapter":3},
+    {"keyword":"synapse","context":"This is the tiny gap between the axon of one neuron and the dendrite of another where chemical communication occurs.","importance":"high","chapter":3},
+    {"keyword":"neurotransmitters","context":"These are the chemicals released across the synaptic gap to transmit signals and facilitate communication between neurons.","importance":"high","chapter":3},
+    {"keyword":"agonists","context":"Drugs that increase the effectiveness of neurotransmitters by mimicking them, increasing their production, or blocking their cleanup.","importance":"high","chapter":3},
+    {"keyword":"antagonists","context":"Drugs that decrease the effect of neurotransmitters by blocking receptors, destroying them, or hindering their synthesis.","importance":"high","chapter":3},
+    {"keyword":"Curare","context":"An antagonist drug that blocks motor neurons from affecting muscles, resulting in complete paralysis and death.","importance":"medium","chapter":3},
+    {"keyword":"inhibitory","context":"The professor uses alcohol's inhibitory nature to explain how it relaxes behavior by shutting down the brain's own inhibitory networks.","importance":"medium","chapter":3},
+    {"keyword":"parallel processing","context":"This computational approach explains how the brain processes information extremely quickly despite being made of slow biological tissue.","importance":"high","chapter":3},
+    {"keyword":"neural networks","context":"The professor notes how computer science uses biological brains as a model to build smart, interconnected systems for learning and reasoning.","importance":"high","chapter":3},
+    {"keyword":"subcortical structures","context":"These are low-level brain structures located beneath the cortex that regulate basic survival functions like heart rate and balance.","importance":"medium","chapter":4},
+    {"keyword":"cortex","context":"The wrinkled outer layer of the brain where advanced mental processes, such as language, perception, and moral reasoning, take place.","importance":"high","chapter":4},
+    {"keyword":"lobes","context":"The cortex is divided into four distinct anatomical sections: the frontal, parietal, occipital, and temporal lobes.","importance":"high","chapter":4},
+    {"keyword":"topographical maps","context":"These are cortical representations of the body where adjacent physical areas correspond to adjacent regions in the brain.","importance":"high","chapter":4},
+    {"keyword":"apraxia","context":"A movement disorder resulting from brain damage where patients can make simple movements but cannot coordinate complex actions like waving.","importance":"medium","chapter":4},
+    {"keyword":"agnosia","context":"A neurological condition where a person has intact vision but loses the ability to recognize and identify objects.","importance":"medium","chapter":4},
+    {"keyword":"aphasia","context":"Disorders of language caused by brain damage, famously illustrated by Paul Broca's patient who could only say the word 'tan.'","importance":"medium","chapter":4},
+    {"keyword":"lateralized","context":"This refers to how certain mental capacities, like language or math, are primarily located in one hemisphere of the brain.","importance":"high","chapter":5},
+    {"keyword":"corpus callosum","context":"The thick band of nerve fibers connecting the left and right hemispheres, enabling communication between them.","importance":"high","chapter":5},
+    {"keyword":"hard problem","context":"This refers to the deep mystery of consciousness: how physical brain tissue can give rise to subjective, qualitative experiences.","importance":"high","chapter":5},
+    {"keyword":"mechanistic conception","context":"The professor concludes by presenting a view of mental life as physical and explainable, raising questions about how this fits with human values.","importance":"high","chapter":5}
+  ]
+}
+</script>
+
+<script>
+let LESSON=null, CONCEPTS=[], player=null, pollTimer=null;
+let lastRevealedIdx=-1, noteVals={};
+const NOTE_KEY=()=>'ums_yale_notes::'+(LESSON?LESSON.videoId:'x');
+
+const mmssToSec=t=>{const p=String(t).split(':').map(Number);return p.length===3?p[0]*3600+p[1]*60+p[2]:p[0]*60+p[1];};
+const secToMMSS=s=>{s=Math.max(0,Math.floor(s));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0');};
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+function toast(msg,type){const w=document.getElementById('toast-wrap');const t=document.createElement('div');t.className='toast '+(type||'ok');t.textContent=msg;w.appendChild(t);void t.offsetWidth;t.classList.add('show');setTimeout(()=>{t.classList.remove('show');setTimeout(()=>t.remove(),300)},2200);}
+
+const normalize=t=>String(t).toLowerCase().replace(/[^\w\s]/g,' ').replace(/\s+/g,' ').trim();
+function diceCoeff(a,b){const bg=s=>{const n=normalize(s),o=[];for(let i=0;i<n.length-1;i++)o.push(n.slice(i,i+2));return o;};const A=bg(a),B=bg(b);if(!A.length||!B.length)return 0;const c=[...B];let m=0;for(const g of A){const i=c.indexOf(g);if(i>-1){m++;c.splice(i,1);}}return 2*m/(A.length+B.length);}
+function matchKeywordToCaptions(keyword,captions,win){
+    const kw=normalize(keyword);const kwWords=kw.split(' ');
+    for(let i=0;i<captions.length;i++){if(normalize(captions[i].text).includes(kw))return captions[i].start;}
+    for(let i=0;i<captions.length;i++){
+        const wtxt=normalize(captions.slice(i,i+win).map(c=>c.text).join(' '));
+        if(wtxt.includes(kw)){for(let j=i;j<Math.min(i+win,captions.length);j++){if(normalize(captions[j].text).includes(kwWords[0]))return captions[j].start;}return captions[i].start;}
+    }
+    let best={score:0,start:null};
+    for(let i=0;i<captions.length;i++){const sc=diceCoeff(kw,captions[i].text);if(sc>best.score)best={score:sc,start:captions[i].start};}
+    return best.score>0.62?best.start:null;
+}
+async function fetchCaptions(videoId){
+    const url='https://www.youtube.com/api/timedtext?v='+videoId+'&lang=en&fmt=json3';
+    const res=await fetch(url,{mode:'cors'});
+    if(!res.ok)throw new Error('captions http '+res.status);
+    const data=await res.json();
+    if(!data.events)throw new Error('captions empty');
+    const caps=data.events.filter(e=>e.segs).map(e=>({start:e.tStartMs/1000,text:e.segs.map(s=>s.utf8).join('')}));
+    if(!caps.length)throw new Error('captions empty');
+    return caps;
+}
+function interpolateMissingOnly(){
+    const chapMap={};LESSON.chapters.forEach(c=>chapMap[c.n]=mmssToSec(c.start));
+    const sc=[...LESSON.chapters].sort((a,b)=>a.n-b.n);const nx={};
+    sc.forEach((c,i)=>{nx[c.n]=i<sc.length-1?mmssToSec(sc[i+1].start):mmssToSec(sc[i].start)+800;});
+    const byCh={};CONCEPTS.forEach(k=>{(byCh[k.chapter]=byCh[k.chapter]||[]).push(k);});
+    Object.keys(byCh).forEach(ch=>{const arr=byCh[ch],a=chapMap[ch],b=nx[ch],span=Math.max(30,b-a);
+        arr.forEach((k,i)=>{if(k.__needsInterp)k.seconds=Math.round(a+span*0.05+(span*0.85)*(i/arr.length));});});
+}
+async function resolveTimestamps(){
+    const s=document.getElementById('sync-status');
+    try{
+        const caps=await fetchCaptions(LESSON.videoId);
+        let matched=0;
+        CONCEPTS.forEach(k=>{const ts=matchKeywordToCaptions(k.keyword,caps,3);if(ts!==null){k.seconds=Math.round(ts);matched++;}else{k.__needsInterp=true;}});
+        if(CONCEPTS.some(k=>k.__needsInterp))interpolateMissingOnly();
+        s.innerHTML='real timestamps from captions ('+matched+'/'+CONCEPTS.length+' matched). Concepts appear at the exact moment.';
+    }catch(err){
+        console.warn('[UMS] captions unavailable, using Yale chapters:',err.message);
+        CONCEPTS.forEach(k=>k.__needsInterp=true);interpolateMissingOnly();
+        s.innerHTML='estimated from the 5 official Yale chapters (captions not reachable from the browser). Chapter-level precision.';
+    }
+    CONCEPTS.sort((a,b)=>(a.seconds||0)-(b.seconds||0));
+    CONCEPTS.forEach((k,i)=>k.idx=i);
+}
+
+function conceptId(k){return 'c_'+k.idx;}
+function autoGrow(ta){ta.style.height='auto';ta.style.height=ta.scrollHeight+'px';}
+function onNoteInput(ta){autoGrow(ta);noteVals[ta.dataset.id]=ta.value;try{localStorage.setItem(NOTE_KEY(),JSON.stringify(noteVals));}catch(e){}}
+function loadNotes(){try{const raw=localStorage.getItem(NOTE_KEY());if(raw)noteVals=JSON.parse(raw);}catch(e){noteVals={};}}
+
+function revealConcept(k){
+    const body=document.getElementById('wb-body');
+    const empty=document.getElementById('wb-empty');
+    if(empty)empty.style.display='none';
+    const el=document.createElement('div');
+    el.className='concept just-landed';el.id=conceptId(k);el.dataset.idx=k.idx;
+    const star=k.importance==='high'?'<span class="c-star" title="Key concept">●</span>':'';
+    el.innerHTML='<div class="c-top"><span class="c-time" title="Jump to this moment" onclick="seekTo('+(k.seconds||0)+')">'+secToMMSS(k.seconds||0)+'</span>'+star+'</div>'+
+        '<span class="c-kw">'+esc(k.keyword)+'</span>'+
+        '<div class="c-ctx">'+esc(k.context)+'</div>'+
+        '<textarea class="c-note" data-id="'+conceptId(k)+'" placeholder="Your notes on this concept…" oninput="onNoteInput(this)"></textarea>';
+    const revealBox=document.getElementById('wb-reveal');
+    body.insertBefore(el,revealBox);
+    const saved=noteVals[conceptId(k)];
+    if(saved){const ta=el.querySelector('.c-note');ta.value=saved;autoGrow(ta);}
+    setTimeout(()=>el.classList.remove('just-landed'),1400);
+    updateProgress();
+}
+function revealUpTo(idx){
+    for(let i=lastRevealedIdx+1;i<=idx;i++){if(CONCEPTS[i])revealConcept(CONCEPTS[i]);}
+    if(idx>lastRevealedIdx)lastRevealedIdx=idx;
+    const body=document.getElementById('wb-body');
+    if(idx>=0)body.scrollTop=body.scrollHeight;
+    document.getElementById('wb-reveal').style.display=(lastRevealedIdx>=0&&lastRevealedIdx<CONCEPTS.length-1)?'block':'none';
+}
+function revealAll(){revealUpTo(CONCEPTS.length-1);document.getElementById('wb-reveal').style.display='none';toast('All concepts revealed.','ok');}
+function updateProgress(){const shown=Math.max(0,lastRevealedIdx+1);document.getElementById('wb-progress').textContent=shown+' / '+CONCEPTS.length+' concepts';}
+
+function onYouTubeIframeAPIReady(){
+    player=new YT.Player('yt-player',{videoId:LESSON.videoId,playerVars:{rel:0,modestbranding:1,cc_load_policy:1},events:{onStateChange:onPlayerState}});
+}
+function onPlayerState(e){if(e.data===YT.PlayerState.PLAYING){if(!pollTimer)pollTimer=setInterval(syncTick,500);}else{clearInterval(pollTimer);pollTimer=null;}}
+function syncTick(){
+    if(!player||!player.getCurrentTime)return;
+    const t=player.getCurrentTime();
+    let idx=-1;
+    for(let i=0;i<CONCEPTS.length;i++){if((CONCEPTS[i].seconds||0)<=t+0.4)idx=i;else break;}
+    if(idx>=0){
+        const np=document.getElementById('now-playing');np.classList.add('live');
+        document.getElementById('np-label').style.display='block';
+        const kw=document.getElementById('np-kw');kw.className='np-kw';kw.textContent=CONCEPTS[idx].keyword;
+    }
+    if(idx>lastRevealedIdx)revealUpTo(idx);
+}
+function seekTo(sec){if(player&&player.seekTo){player.seekTo(sec,true);player.playVideo();}}
+
+function printBoard(){
+    const rows=[...document.querySelectorAll('.concept')];
+    if(!rows.length){toast('Nothing to print yet — reveal some concepts first.','no');return;}
+    toast('Opening print window…','ok');
+    const title=(document.getElementById('dyn-title')||{}).textContent||'Lesson';
+    const date=new Date().toLocaleDateString('en-US',{day:'numeric',month:'long',year:'numeric'});
+    let html='<div style="font-family:\'DM Sans\',Arial,sans-serif;padding:28px 24px;color:#1C1C22;max-width:760px;margin:0 auto;-webkit-print-color-adjust:exact;print-color-adjust:exact;">';
+    html+='<div style="font-size:10px;font-weight:700;letter-spacing:0.3em;text-transform:uppercase;color:#9A7A3F;margin-bottom:10px;">Una Mano Spensierata</div>';
+    html+='<h1 style="font-family:\'Playfair Display\',Georgia,serif;font-size:28px;font-weight:700;color:#1A2F4F;margin:0 0 6px;line-height:1.15;">'+title+'</h1>';
+    html+='<div style="font-size:12px;color:#918E86;margin-bottom:14px;">Concept Board &middot; '+date+'</div>';
+    html+='<div style="border-top:4px double #1C1C22;margin-bottom:26px;"></div>';
+    rows.forEach(r=>{
+        const time=r.querySelector('.c-time').textContent;
+        const kw=r.querySelector('.c-kw').textContent;
+        const ctx=r.querySelector('.c-ctx').textContent;
+        const note=r.querySelector('.c-note').value.trim();
+        html+='<div style="display:flex;gap:16px;margin-bottom:20px;page-break-inside:avoid;break-inside:avoid;">';
+        html+='<div style="font-family:\'Playfair Display\',Georgia,serif;font-weight:700;font-size:18px;color:#C8A96E;min-width:50px;line-height:1.3;text-align:right;">'+time+'</div>';
+        html+='<div style="flex:1;border-left:4px solid #C8A96E;border-bottom:1px solid #E4E0D6;padding:0 0 13px 15px;">';
+        html+='<p style="font-family:\'Playfair Display\',Georgia,serif;font-weight:700;font-size:16px;color:#1A2F4F;margin:0 0 5px;line-height:1.4;text-decoration:underline;text-decoration-color:#E8D5AA;text-underline-offset:3px;">'+kw+'</p>';
+        html+='<p style="font-size:12.5px;color:#6B6862;margin:0 0 7px;line-height:1.55;">'+ctx+'</p>';
+        if(note)html+='<p style="font-size:13px;color:#1C1C22;margin:0;line-height:1.6;white-space:pre-wrap;border-left:2px solid #E4E0D6;padding-left:10px;">&#8627; '+note+'</p>';
+        html+='</div></div>';
+    });
+    html+='<div style="margin-top:32px;border-top:4px double #1C1C22;padding-top:14px;text-align:center;">';
+    html+='<div style="font-family:\'Playfair Display\',Georgia,serif;font-style:italic;font-size:15px;color:#1A2F4F;">Una Mano Spensierata</div></div></div>';
+    const iframe=document.createElement('iframe');
+    iframe.style.cssText='position:fixed;right:0;bottom:0;width:0;height:0;border:none;';
+    document.body.appendChild(iframe);
+    const doc=iframe.contentWindow.document;
+    doc.open();
+    doc.write('<html><head><title>Notes — Una Mano Spensierata</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"></head><body style="margin:0;background:#fff;">'+html+'<scr'+'ipt>window.onload=()=>setTimeout(()=>window.print(),450);</scr'+'ipt></body></html>');
+    doc.close();
+    setTimeout(()=>{document.body.removeChild(iframe);},10000);
+}
+
+const langLabels={en:'Language',it:'Lingua',fr:'Langue',de:'Sprache',es:'Idioma',pt:'Língua',el:'Γλώσσα',ru:'Язык','zh-CN':'语言',ar:'اللغة',hi:'भाषा',ja:'日本語'};
+function googleTranslateElementInit(){new google.translate.TranslateElement({pageLanguage:'en',includedLanguages:'en,it,fr,de,es,pt,el,ru,zh-CN,ar,hi,ja',autoDisplay:false},'google_translate_element');}
+function toggleLangMenu(){const m=document.getElementById('lang-menu'),a=document.getElementById('lang-arrow');m.classList.toggle('show');a.textContent=m.classList.contains('show')?'▲':'▼';}
+function translatePage(lang,btn){
+    const spin=document.getElementById('lang-spin'),menu=document.getElementById('lang-menu'),toggle=document.getElementById('lang-btn'),label=document.getElementById('lang-label'),disc=document.getElementById('tr-disclaimer');
+    label.innerHTML='<svg><use href="#ic-globe"/></svg> '+(langLabels[lang]||'Language');
+    spin.style.display='block';menu.classList.remove('show');toggle.style.display='none';
+    document.querySelectorAll('.lang-menu button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
+    const sel=document.querySelector('select.goog-te-combo');
+    if(sel){sel.value=lang;sel.dispatchEvent(new Event('change',{bubbles:true}));}
+    if(disc)disc.style.display=lang!=='en'?'block':'none';
+    setTimeout(()=>{spin.style.display='none';toggle.style.display='block';document.getElementById('lang-arrow').textContent='▼';},1500);
+}
+
+(function(){const btn=document.getElementById('night');function apply(on){btn.innerHTML=on?'<svg><use href="#ic-sun"/></svg>':'<svg><use href="#ic-moon"/></svg>';btn.setAttribute('aria-label',on?'Day mode':'Night mode');}apply(document.body.classList.contains('night'));btn.addEventListener('click',()=>{const on=!document.body.classList.contains('night');document.body.classList.toggle('night',on);apply(on);try{localStorage.setItem('ums_night_mode',on?'1':'0');}catch(e){}});})();
+
+async function boot(){
+    try{LESSON=JSON.parse(document.getElementById('lesson-data').textContent);}
+    catch(e){document.getElementById('dyn-title').textContent='Invalid lesson data';return;}
+    document.getElementById('dyn-title').textContent=LESSON.lecture||'Lesson';
+    document.title=(LESSON.lecture||'Lesson')+' · Una Mano Spensierata';
+    CONCEPTS=LESSON.keywords.map(k=>({...k,seconds:null,__needsInterp:false}));
+    loadNotes();
+    await resolveTimestamps();
+    updateProgress();
+    const tag=document.createElement('script');tag.src='https://www.youtube.com/iframe_api';document.head.appendChild(tag);
+}
+document.addEventListener('DOMContentLoaded',boot);
+</script>
+
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
+</html>
