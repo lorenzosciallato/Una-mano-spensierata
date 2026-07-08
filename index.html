@@ -1,897 +1,768 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Una Mano Spensierata | Home</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Una Mano Spensierata | Home</title>
+<meta name="description" content="Flashcard, riassunti e videolezioni gratuite per preparare i tuoi esami universitari.">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600;1,700;1,900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
 
-    <style>
-        /* ============================================================
-           TOKEN SYSTEM — identico a lezione-template.html
-        ============================================================ */
-        :root {
-            --night:    #0F1117;
-            --ivory:    #F7F4EF;
-            --ivory-dk: #EDE9E0;
-            --gold:     #C8A96E;
-            --gold-lt:  #E8D5AA;
-            --gold-dk:  #9A7A3F;
-            --navy:     #1A2F4F;
-            --navy-lt:  #2A4A72;
-            --dust:     #E8E4DC;
-            --mist:     #C5C1B8;
-            --ink:      #1C1C22;
-            --body:     #3D3C3A;
-            --sub:      #7A7770;
+<style>
+:root{
+  --night:#0F1117; --ivory:#F7F4EF; --ivory-dk:#EDE9E0;
+  --gold:#C8A96E; --gold-lt:#E8D5AA; --gold-dk:#9A7A3F;
+  --navy:#1A2F4F; --navy-lt:#2A4A72;
+  --dust:#E8E4DC; --mist:#C5C1B8;
+  --ink:#1C1C22; --body:#3D3C3A; --sub:#7A7770;
+  --rule:#1C1C22;
+  --font-display:'Playfair Display', Georgia, serif;
+  --font-body:'DM Sans', system-ui, sans-serif;
+  --r-sm:6px; --r-md:12px; --r-lg:20px; --r-xl:32px;
+  --shadow-card:0 4px 24px rgba(15,17,23,0.08), 0 1px 4px rgba(15,17,23,0.04);
+  --shadow-lift:0 16px 44px rgba(15,17,23,0.16), 0 2px 8px rgba(15,17,23,0.06);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--ivory); font-family:var(--font-body); color:var(--body);
+  line-height:1.7; position:relative; overflow-x:hidden; font-size:16px;
+}
+img{display:block;max-width:100%;}
+a{color:inherit;}
+@media (prefers-reduced-motion: reduce){*{animation:none !important; transition:none !important;}}
+a:focus-visible, button:focus-visible, input:focus-visible{outline:2px solid var(--gold); outline-offset:3px; border-radius:4px;}
 
-            --cyan:     #00D4D8;
-            --magenta:  #E8006A;
-            --yellow:   #F5D000;
+/* PROGRESS BAR */
+#scroll-progress-container{position:fixed;top:0;left:0;width:100%;height:3px;z-index:9999;}
+#scroll-progress-bar{
+  height:100%; width:0%;
+  background:linear-gradient(90deg,var(--gold),var(--gold-lt),var(--gold));
+  background-size:200% 100%; animation:shimmer 3s linear infinite;
+  transition:width .1s linear;
+}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:0% 0}}
 
-            --font-display: 'Playfair Display', Georgia, serif;
-            --font-body:    'DM Sans', system-ui, sans-serif;
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .8s cubic-bezier(.16,.84,.44,1),transform .8s cubic-bezier(.16,.84,.44,1);}
+.reveal.in-view{opacity:1;transform:translateY(0);}
 
-            --r-sm: 6px;
-            --r-md: 12px;
-            --r-lg: 20px;
-            --r-xl: 32px;
+/* ============================================================
+   PAGINA — misura da quotidiano
+============================================================ */
+.broadsheet{max-width:860px; margin:0 auto; padding:2.2rem 1.5rem 0;}
 
-            --shadow-card: 0 4px 24px rgba(15,17,23,0.08), 0 1px 4px rgba(15,17,23,0.04);
-            --shadow-lift: 0 12px 40px rgba(15,17,23,0.14), 0 2px 8px rgba(15,17,23,0.06);
-            --shadow-gold: 0 8px 32px rgba(200,169,110,0.25);
-        }
+/* ============================================================
+   FOLIO — la riga d'edizione sopra la testata
+============================================================ */
+.folio{
+  display:flex; justify-content:space-between; align-items:baseline; gap:1rem;
+  border-top:1px solid var(--rule);
+  border-bottom:1px solid var(--rule);
+  padding:.5rem .2rem;
+  font-size:.66rem; font-weight:700; letter-spacing:.18em; text-transform:uppercase;
+  color:var(--sub);
+  transition:border-color .3s;
+}
+.folio .folio-c{color:var(--gold-dk); text-align:center; flex:1;}
+.folio .folio-l, .folio .folio-r{white-space:nowrap;}
+.folio-clock{
+  font-variant-numeric:tabular-nums; /* le cifre cambiano senza far ballare la riga */
+  letter-spacing:.22em;
+  color:var(--ink);
+  transition:color .3s;
+}
+body.night-mode .folio-clock{color:#F2EFE8;}
+@media(max-width:640px){
+  .folio{flex-direction:column; align-items:center; gap:.25rem; text-align:center;}
+}
 
-        /* ============================================================
-           RESET & BASE
-        ============================================================ */
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html { height: 100%; overflow-x: hidden; scroll-behavior: smooth; }
+/* ============================================================
+   NAMEPLATE — la testata
+============================================================ */
+.nameplate{text-align:center; padding:2rem 0 1.8rem;}
+.nameplate h1{
+  font-family:var(--font-display); font-weight:900; color:var(--ink);
+  font-size:clamp(3rem,10vw,6.6rem); line-height:.96; letter-spacing:-.025em;
+}
+.nameplate h1 em{font-style:italic; color:var(--navy); letter-spacing:-.01em;}
+.nameplate-sub{
+  margin-top:1.1rem;
+  font-size:.68rem; font-weight:700; letter-spacing:.34em; text-transform:uppercase;
+  color:var(--gold-dk);
+  display:flex; align-items:center; justify-content:center; gap:14px;
+}
+.nameplate-sub::before, .nameplate-sub::after{
+  content:''; display:block; width:44px; height:1px; background:var(--gold);
+}
+.nameplate-rule{
+  border:none; border-top:4px double var(--rule); margin:0;
+  transition:border-color .3s;
+}
 
-        body {
-            background-color: var(--ivory);
-            font-family: var(--font-body);
-            color: var(--body);
-            line-height: 1.7;
-            min-height: 100%;
-            position: relative;
-            padding-bottom: 100px;
-            -webkit-overflow-scrolling: touch;
-            width: 100%;
-            font-size: 16px;
-        }
+/* BADGES — piccoli, sotto la testata */
+.badges-row{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;padding:1.4rem 0 0;}
+.author-badge{
+  display:inline-flex;align-items:center;gap:10px;background:#fff;padding:6px 15px 6px 6px;
+  border-radius:50px;text-decoration:none;border:1px solid var(--dust);box-shadow:var(--shadow-card);
+  transition:transform .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s, border-color .25s, background-color .3s;
+}
+.author-badge:hover{transform:translateY(-3px);box-shadow:var(--shadow-lift);border-color:var(--gold);}
+.author-img{width:30px;height:30px;border-radius:50%;object-fit:cover;}
+.author-name{font-size:.78rem;font-weight:500;color:var(--ink);}
+.author-name strong{font-weight:700;}
 
-        /* ============================================================
-           BARRA DI PROGRESSO
-        ============================================================ */
-        #scroll-progress-container {
-            position: fixed; top: 0; left: 0; width: 100%; height: 3px;
-            background: transparent; z-index: 9999999;
-        }
-        #scroll-progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, var(--gold), var(--gold-lt), var(--gold));
-            background-size: 200% 100%;
-            width: 0%;
-            transition: width 0.1s linear;
-            animation: shimmer 3s infinite linear;
-        }
-        @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:0% 0} }
+/* ============================================================
+   SEZIONE — intestazione da rubrica di quotidiano
+   ("—— Catalogo delle Materie ——")
+============================================================ */
+.rubrica-head{
+  display:flex; align-items:center; gap:18px;
+  margin:2rem 0 1.6rem;
+}
+.rubrica-head::before, .rubrica-head::after{
+  content:''; flex:1; border-top:1px solid var(--rule);
+  transition:border-color .3s;
+}
+.rubrica-head h2{
+  font-family:var(--font-display); font-weight:700; font-style:italic;
+  font-size:clamp(1.6rem,4.2vw,2.3rem); color:var(--ink);
+  white-space:nowrap; line-height:1;
+}
+.rubrica-count{
+  text-align:center;
+  font-size:.66rem; font-weight:700; letter-spacing:.24em; text-transform:uppercase;
+  color:var(--gold-dk);
+  margin-bottom:1.8rem;
+}
 
-        /* ============================================================
-           BACKGROUND
-        ============================================================ */
-        .giants-background {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1; pointer-events: none; overflow: hidden;
-            background: var(--ivory);
-        }
-        .main-background-image {
-            width: 100%; height: 100%; object-fit: cover;
-            opacity: 0.04;
-            filter: grayscale(100%) sepia(0.4);
-            mix-blend-mode: multiply;
-        }
-        .giants-background::after {
-            content: '';
-            position: absolute; inset: 0;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-            opacity: 0.6;
-            pointer-events: none;
-        }
+/* ============================================================
+   RICERCA — campo da schedario, sotto filetto
+============================================================ */
+.catalogo-search{
+  display:flex; align-items:center; gap:14px;
+  border:none;
+  border-bottom:2px solid var(--rule);
+  background:transparent;
+  padding:0 .2rem;
+  margin:0 auto 1.4rem;
+  max-width:680px;
+  transition:border-color .25s;
+}
+.catalogo-search:focus-within{border-color:var(--gold-dk);}
+.catalogo-search svg{
+  width:22px; height:22px; stroke:var(--sub); fill:none;
+  stroke-width:1.7; stroke-linecap:round; flex-shrink:0;
+}
+.catalogo-search input{
+  flex:1; border:none; outline:none; background:transparent;
+  font-family:var(--font-display); font-style:italic;
+  font-size:1.35rem; color:var(--ink);
+  padding:1.05rem 0; min-width:0;
+}
+.catalogo-search input::placeholder{color:var(--mist); font-style:italic;}
+.search-clear{
+  background:none; border:none; cursor:pointer; color:var(--mist);
+  font-size:1.5rem; line-height:1; font-weight:300; padding:4px;
+  display:none; transition:color .2s;
+}
+.search-clear.visible{display:block;}
+.search-clear:hover{color:var(--navy);}
 
-        /* ============================================================
-           HEADER
-        ============================================================ */
-        header {
-            text-align: center;
-            padding: 5rem 2rem 3rem;
-            position: relative;
-        }
+/* ============================================================
+   L'INDICE — voci con LETTRINA
+   Il capolettera Playfair gigante è l'iniziale della materia:
+   stesso peso 900 dei numeroni del template lezione, dust che
+   vira all'oro al passaggio, esattamente come i ch-number.
+============================================================ */
+.indice{list-style:none; padding-bottom:1rem;}
+.indice-row{border-bottom:1px solid var(--dust); transition:border-color .3s;}
+.indice-row:last-child{border-bottom:none;}
+.indice-link{
+  display:flex; align-items:center; gap:1.6rem; width:100%;
+  padding:1.7rem .2rem; text-decoration:none; cursor:pointer;
+  background:none; border:none; font:inherit; text-align:left; color:inherit;
+  -webkit-appearance:none; appearance:none;
+}
 
-        /* Eyebrow — stesso trattamento grafico della lezione dinamica */
-        .header-eyebrow {
-            display: inline-flex; align-items: center; gap: 10px;
-            font-family: var(--font-body);
-            font-size: 0.72rem; font-weight: 700; letter-spacing: 0.22em;
-            text-transform: uppercase; color: var(--gold-dk);
-            margin-bottom: 1.5rem;
-        }
-        .header-eyebrow::before,
-        .header-eyebrow::after {
-            content: ''; display: block; width: 32px; height: 1px;
-            background: var(--gold);
-        }
+/* La lettrina */
+.indice-lettrina{
+  font-family:var(--font-display); font-weight:900;
+  font-size:clamp(3.6rem,8.5vw,5.4rem); line-height:.82;
+  color:var(--dust);
+  width:92px; min-width:92px; text-align:center;
+  letter-spacing:-.04em; user-select:none;
+  transition:color .3s;
+}
+.indice-link:hover .indice-lettrina{color:var(--gold);}
 
-        h1 {
-            font-family: var(--font-display);
-            font-size: clamp(2.8rem, 6vw, 5.2rem);
-            font-weight: 900;
-            color: var(--ink);
-            line-height: 1.07;
-            letter-spacing: -0.02em;
-            margin-bottom: 1rem;
-        }
+.indice-text{flex:1; min-width:0; display:flex; align-items:baseline; gap:14px;}
+.indice-title-wrap{flex-shrink:0; max-width:72%;}
+.indice-eyebrow{
+  display:block;
+  font-size:.64rem; font-weight:700; letter-spacing:.24em; text-transform:uppercase;
+  color:var(--gold-dk); margin-bottom:4px;
+}
+.indice-title{
+  font-family:var(--font-display); font-weight:700;
+  font-size:clamp(1.4rem,3.6vw,1.95rem); color:var(--ink); line-height:1.15;
+  transition:color .2s;
+}
+.indice-link:hover .indice-title{color:var(--navy);}
 
-        .subtitle {
-            font-family: var(--font-body);
-            font-size: 0.78rem;
-            font-weight: 700;
-            letter-spacing: 0.3em;
-            text-transform: uppercase;
-            color: var(--sub);
-            margin-bottom: 2.5rem;
-        }
+/* leader puntinato, come l'indice di un volume */
+.indice-leader{
+  flex:1; border-bottom:2px dotted var(--mist);
+  transform:translateY(-3px); min-width:24px;
+  transition:border-color .25s;
+}
+.indice-link:hover .indice-leader{border-color:var(--gold);}
 
-        /* ============================================================
-           AUTHOR BADGES
-        ============================================================ */
-        .badges-row {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            flex-wrap: wrap;
-            padding: 0 10px;
-        }
+.indice-meta{
+  font-size:.7rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--sub); white-space:nowrap; flex-shrink:0;
+  transition:color .2s;
+}
+.indice-link:hover .indice-meta{color:var(--gold-dk);}
 
-        .author-badge {
-            display: inline-flex; align-items: center; gap: 10px;
-            background: #fff;
-            padding: 8px 18px 8px 8px;
-            border-radius: 50px;
-            text-decoration: none;
-            border: 1px solid var(--dust);
-            box-shadow: var(--shadow-card);
-            transition: all 0.25s cubic-bezier(.2,.8,.2,1);
-        }
-        .author-badge:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-lift);
-            border-color: var(--gold);
-        }
-        .author-img {
-            width: 36px; height: 36px; border-radius: 50%; object-fit: cover; display: block;
-        }
-        .author-name {
-            font-size: 0.82rem; font-weight: 500; color: var(--ink);
-            font-family: var(--font-body);
-        }
-        .author-name strong { font-weight: 700; }
+@media(max-width:640px){
+  .indice-link{gap:1.1rem; padding:1.35rem .1rem;}
+  .indice-lettrina{width:60px; min-width:60px;}
+  .indice-text{flex-wrap:wrap; gap:6px 12px;}
+  .indice-title-wrap{max-width:100%;}
+  .indice-leader{display:none;}
+  .indice-meta{font-size:.6rem;}
+}
 
-        @media (max-width: 600px) {
-            .author-img { width: 32px; height: 32px; }
-            .author-name { font-size: 0.78rem; }
-        }
+/* Nessun risultato */
+.indice-empty{
+  display:none; text-align:center; padding:3.2rem 1rem;
+  font-family:var(--font-display); font-style:italic;
+  color:var(--sub); font-size:1.1rem; line-height:1.7;
+}
+.indice-empty.visible{display:block;}
 
-        /* ============================================================
-           MAIN CARD WRAPPER
-        ============================================================ */
-        .content-card {
-            background: #fff;
-            border: 1px solid var(--dust);
-            border-radius: var(--r-xl);
-            padding: 3.5rem;
-            margin: 0 auto 2rem;
-            width: 90%; max-width: 1200px;
-            position: relative;
-            box-shadow: var(--shadow-card);
-            z-index: 1;
-        }
-        @media (max-width: 700px) {
-            .content-card { padding: 1.5rem; width: 94%; border-radius: var(--r-lg); }
-        }
+/* Filetto doppio di chiusura dell'indice */
+.indice-endrule{
+  border:none; border-top:4px double var(--rule);
+  margin:1.2rem 0 0; transition:border-color .3s;
+}
 
-        /* ============================================================
-           ACCORDION — MASTER
-        ============================================================ */
-        .master-accordion-item { border-bottom: none; }
+/* ============================================================
+   LANGUAGE SELECTOR — ripreso dal template lezione dinamica
+============================================================ */
+#google_translate_element{display:none;}
+#custom-lang-selector{display:none;}
+#custom-lang-selector.loaded{
+  display:inline-flex; flex-direction:column; align-items:center;
+  background:#fff; border:1px solid var(--dust); border-radius:var(--r-md);
+  padding:6px 14px; margin-top:1.4rem;
+  position:relative; box-shadow:var(--shadow-card); z-index:999990;
+  transition:background-color .3s, border-color .3s;
+}
+#lang-toggle-btn{
+  background:transparent; border:none; color:var(--navy);
+  font-size:13px; font-weight:700; cursor:pointer; text-transform:uppercase;
+  letter-spacing:.12em; font-family:var(--font-body); outline:none;
+  display:inline-flex; align-items:center; gap:6px;
+}
+#lang-toggle-btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
+#lang-loading{font-size:18px; animation:spin 1s linear infinite; margin-bottom:5px;}
+@keyframes spin{100%{transform:rotate(360deg);}}
+.lang-options{
+  display:none; position:absolute; top:112%; left:50%; transform:translateX(-50%);
+  background:#fff; border:1px solid var(--dust); border-radius:var(--r-lg);
+  grid-template-columns:repeat(4,1fr); gap:8px; padding:14px;
+  box-shadow:var(--shadow-lift); min-width:240px; z-index:999991;
+  transition:background-color .3s, border-color .3s;
+}
+.lang-options.show{display:grid;}
+.lang-options button{
+  background:transparent; border:1px solid transparent; padding:6px;
+  cursor:pointer; border-radius:var(--r-sm); font-size:22px; transition:.2s;
+}
+.lang-options button.active-lang{background:rgba(200,169,110,.12); border-color:var(--gold);}
+.lang-options button:hover{transform:scale(1.15);}
+.skiptranslate{display:none !important;}
+body{top:0 !important;}
+#goog-gt-tt, .goog-te-balloon-frame{display:none !important;}
+.goog-text-highlight{background:transparent !important; box-shadow:none !important; border:none !important;}
 
-        .master-header {
-            display: flex; align-items: center; justify-content: space-between;
-            width: 100%;
-            background: var(--navy);
-            border: none; border-radius: var(--r-lg);
-            padding: 1.4rem 2rem;
-            cursor: pointer;
-            color: #fff;
-            font-family: var(--font-display);
-            font-size: 1.5rem; font-weight: 600;
-            transition: background 0.25s, box-shadow 0.25s;
-            box-shadow: 0 6px 24px rgba(26,47,79,0.25);
-            margin-bottom: 0;
-        }
-        .master-header:hover { background: var(--navy-lt); box-shadow: 0 10px 32px rgba(26,47,79,0.32); }
-        .master-header .mh-arrow {
-            font-size: 1.2rem; opacity: 0.7; transition: transform 0.35s;
-            font-family: var(--font-body); font-weight: 300;
-        }
-        .master-header.active .mh-arrow { transform: rotate(90deg); opacity: 1; }
+#translation-disclaimer{
+  display:none;
+  background:#FFFBEA; color:#7A6220; padding:10px 16px; border-radius:var(--r-md);
+  margin:14px auto 0; font-size:.8rem; border:1px solid #F0E08A; max-width:560px;
+}
+body.night-mode #custom-lang-selector.loaded,
+body.night-mode .lang-options{background:#1E212A; border-color:#2B2E38;}
+body.night-mode #lang-toggle-btn{color:#8FB4E8;}
+body.night-mode #translation-disclaimer{background:#221D10; color:#D9BC85; border-color:#4A3F1E;}
 
-        .master-content {
-            max-height: 0; overflow: hidden;
-            transition: max-height 0.5s cubic-bezier(0.4,0,0.2,1);
-        }
-        .master-content.open { max-height: 999999px; }
-        .master-content-inner { padding-top: 2.5rem; }
+/* DISCLAIMER */
+.disclaimer-card{
+  background:#fff;border:1px solid var(--dust);border-radius:var(--r-xl);
+  padding:3rem;margin:4rem auto 2rem;width:90%;max-width:1200px;box-shadow:var(--shadow-card);
+  transition:background-color .3s, border-color .3s;
+}
+@media(max-width:700px){.disclaimer-card{padding:1.5rem;width:94%;border-radius:var(--r-lg);}}
+.disclaimer-card h3{font-family:var(--font-body);font-size:.65rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-dk);margin-bottom:.8rem;}
+.disclaimer-card h3:not(:first-child){margin-top:2rem;}
+.disclaimer-card p{font-size:.82rem;color:var(--sub);line-height:1.75;}
 
-        /* ============================================================
-           ACCORDION — CHAPTERS
-        ============================================================ */
-        .accordion-item { margin-bottom: 0; }
+/* FOOTER */
+.site-footer{text-align:center;padding:3rem 1.5rem;border-top:1px solid var(--dust);transition:border-color .3s;}
+.site-footer p{font-size:.72rem;color:var(--mist);letter-spacing:.1em;text-transform:uppercase;font-weight:600;}
+.site-footer strong{color:var(--sub);}
 
-        .accordion-header {
-            display: flex; align-items: center;
-            width: 100%; background: transparent; border: none;
-            padding: 1.5rem 0;
-            border-bottom: 1px solid var(--dust);
-            cursor: pointer;
-            text-align: left;
-            transition: all 0.2s;
-            gap: 1.5rem;
-            position: relative;
-        }
-        .accordion-header:hover .ch-title { color: var(--navy); }
+/* ============================================================
+   MODALE — ELENCO LEZIONI (invariato)
+============================================================ */
+.lz-modal{
+  position:fixed; inset:0; background:rgba(15,17,23,.72); backdrop-filter:blur(6px);
+  z-index:99999; display:none; align-items:center; justify-content:center; padding:20px;
+}
+.lz-modal.open{display:flex;}
+.lz-modal-paper{
+  background:#fff; width:100%; max-width:560px; padding:2.4rem;
+  border-radius:var(--r-xl); position:relative; max-height:86vh; overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+  box-shadow:0 40px 80px rgba(0,0,0,.3); border-top:4px solid var(--gold);
+  transition:background-color .3s;
+}
+.lz-modal-paper h3{
+  font-family:var(--font-display); font-size:1.5rem; font-weight:700; color:var(--ink);
+  margin-bottom:.4rem; padding-right:1.5rem;
+}
+.lz-modal-sub{ font-size:.85rem; color:var(--sub); margin-bottom:1.4rem; }
+.lz-close{
+  position:absolute; top:16px; right:20px; font-size:1.6rem; cursor:pointer;
+  color:var(--mist); transition:color .2s; line-height:1; font-weight:300; background:none; border:none;
+}
+.lz-close:hover{color:var(--navy);}
+.lz-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(52px,1fr)); gap:10px; }
+.lz-item{
+  display:flex; align-items:center; justify-content:center; aspect-ratio:1/1;
+  background:var(--ivory); border:1px solid var(--dust); border-radius:var(--r-sm);
+  text-decoration:none; font-family:var(--font-display); font-weight:700; font-size:1.05rem;
+  color:var(--navy); transition:all .2s;
+}
+.lz-item:hover{ background:var(--navy); color:#fff; border-color:var(--navy); transform:translateY(-2px); }
 
-        .ch-number {
-            font-family: var(--font-display);
-            font-size: 4rem; font-weight: 900; line-height: 1;
-            color: var(--dust);
-            width: 70px; min-width: 70px;
-            text-align: center;
-            transition: color 0.25s;
-            user-select: none;
-            letter-spacing: -0.04em;
-        }
-        .accordion-header:hover .ch-number,
-        .accordion-header.active .ch-number { color: var(--gold); }
+/* ============================================================
+   NIGHT MODE
+============================================================ */
+#night-toggle{
+  position:fixed; bottom:24px; right:24px; z-index:9999998;
+  width:52px; height:52px; border-radius:50%;
+  border:1px solid var(--dust); background:#fff; color:var(--ink);
+  font-size:1.3rem; line-height:1; cursor:pointer; box-shadow:var(--shadow-lift);
+  display:flex; align-items:center; justify-content:center;
+  transition:transform .2s, background-color .3s, border-color .3s, color .3s;
+}
+#night-toggle:hover{ transform:scale(1.08); border-color:var(--gold); }
+#night-toggle:active{ transform:scale(.96); }
 
-        .ch-text { flex: 1; }
-        .ch-eyebrow {
-            font-size: 0.68rem; font-weight: 700; letter-spacing: 0.22em;
-            text-transform: uppercase; color: var(--gold-dk);
-            margin-bottom: 3px; display: block;
-        }
-        .ch-title {
-            font-family: var(--font-display);
-            font-size: clamp(1.15rem, 3vw, 1.55rem);
-            font-weight: 700; color: var(--ink);
-            line-height: 1.2;
-            transition: color 0.2s;
-        }
+body{ transition:background-color .3s ease, color .3s ease; }
 
-        .ch-icon {
-            font-size: 1.2rem; color: var(--mist);
-            transition: all 0.3s; font-family: var(--font-body); font-weight: 300;
-            min-width: 24px; text-align: right;
-        }
-        .accordion-header.active .ch-icon { color: var(--navy); transform: rotate(45deg); }
+body.night-mode{ background:#14161C; color:#C7C4BC; --rule:#F2EFE8; }
+body.night-mode #night-toggle{ background:#1E212A; border-color:#2B2E38; color:#F2EFE8; }
 
-        .accordion-content {
-            max-height: 0; overflow: hidden;
-            transition: max-height 0.45s cubic-bezier(0.4,0,0.2,1), opacity 0.3s;
-            padding: 0; opacity: 0;
-        }
-        .accordion-content.active {
-            max-height: 20000px; opacity: 1;
-            padding-top: 2rem; padding-bottom: 2.5rem;
-            overflow: visible;
-        }
+body.night-mode .folio{ color:#918E86; }
+body.night-mode .folio .folio-c,
+body.night-mode .nameplate-sub,
+body.night-mode .indice-eyebrow,
+body.night-mode .rubrica-count,
+body.night-mode .disclaimer-card h3{ color:#D9BC85; }
 
-        @media (max-width: 600px) {
-            .ch-number { font-size: 2.8rem; width: 50px; min-width: 50px; }
-            .ch-title { font-size: 1.1rem; }
-        }
+body.night-mode .nameplate h1,
+body.night-mode .rubrica-head h2,
+body.night-mode .indice-title,
+body.night-mode .author-name,
+body.night-mode .catalogo-search input,
+body.night-mode .lz-modal-paper h3{ color:#F2EFE8; }
+body.night-mode .nameplate h1 em{ color:#8FB4E8; }
 
-        .btn-close-section {
-            width: 100%; margin-top: 2rem; padding: 14px;
-            background: transparent; border: 1px solid var(--dust);
-            border-radius: var(--r-md); font-family: var(--font-body);
-            font-weight: 600; font-size: 0.78rem; letter-spacing: 0.12em;
-            text-transform: uppercase; color: var(--sub);
-            cursor: pointer; transition: all 0.2s;
-        }
-        .btn-close-section:hover { border-color: var(--navy); color: var(--navy); background: rgba(26,47,79,0.03); }
+body.night-mode .disclaimer-card p,
+body.night-mode .lz-modal-sub,
+body.night-mode .indice-meta{ color:#918E86; }
 
-        /* ============================================================
-           OBJ BOX (intro testuale di sezione)
-        ============================================================ */
-        .obj-box {
-            background: linear-gradient(135deg, #F0F6FF 0%, #E8F0FA 100%);
-            border: 1px solid rgba(26,47,79,0.12);
-            border-left: 4px solid var(--navy);
-            padding: 1.8rem;
-            border-radius: 0 var(--r-md) var(--r-md) 0;
-            margin-bottom: 2rem;
-        }
-        .obj-box strong {
-            font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
-            color: var(--navy); display: block; margin-bottom: 0.8rem;
-        }
-        .obj-box p { color: var(--body); line-height: 1.8; }
+body.night-mode .indice-lettrina{ color:#2B2E38; }
+body.night-mode .indice-link:hover .indice-lettrina{ color:var(--gold); }
+body.night-mode .indice-link:hover .indice-title{ color:#8FB4E8; }
+body.night-mode .indice-link:hover .indice-meta{ color:#D9BC85; }
 
-        /* ============================================================
-           CORSI — COURSE GRID (stile factor-card)
-        ============================================================ */
-        .factors-intro {
-            font-size: 0.72rem; font-weight: 700; letter-spacing: 0.18em;
-            text-transform: uppercase; color: var(--sub);
-            margin-bottom: 1rem; display: block;
-        }
-        .factors-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 1rem; margin: 0 0 1rem;
-        }
-        .factor-card, .course-card {
-            background: var(--ivory);
-            border: 1px solid var(--dust);
-            padding: 1.4rem;
-            border-radius: var(--r-md);
-            cursor: pointer;
-            transition: all 0.25s cubic-bezier(.2,.8,.2,1);
-            position: relative;
-            overflow: hidden;
-        }
-        .factor-card::before, .course-card::before {
-            content: '';
-            position: absolute; top: 0; left: 0; right: 0; height: 2px;
-            background: linear-gradient(90deg, var(--gold), transparent);
-            transform: scaleX(0); transform-origin: left;
-            transition: transform 0.3s;
-        }
-        .factor-card:hover, .course-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); border-color: var(--gold-lt); }
-        .factor-card:hover::before, .course-card:hover::before { transform: scaleX(1); }
-        .factor-card strong, .course-card strong { display: block; font-size: 0.92rem; font-weight: 700; color: var(--ink); margin-bottom: 0.4rem; }
-        .factor-card small, .course-card small { font-size: 0.8rem; color: var(--sub); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .factor-card .fc-plus { position: absolute; top: 12px; right: 14px; font-size: 1.1rem; color: var(--gold); opacity: 0.6; font-family: var(--font-body); font-weight: 300; }
+body.night-mode .indice-row{ border-color:#2B2E38; }
+body.night-mode .indice-leader{ border-color:#5C5F6A; }
+body.night-mode .indice-link:hover .indice-leader{ border-color:var(--gold); }
+body.night-mode .indice-empty{ color:#918E86; }
 
-        .course-card { text-decoration: none; display: block; }
-        .course-card .cc-arrow {
-            position: absolute; top: 12px; right: 14px;
-            font-size: 1rem; color: var(--gold); opacity: 0.6;
-            transition: transform 0.25s;
-        }
-        .course-card:hover .cc-arrow { transform: translateX(3px); }
+body.night-mode .catalogo-search:focus-within{ border-color:var(--gold); }
+body.night-mode .catalogo-search svg{ stroke:#918E86; }
 
-        /* Badge "N lezioni" per i corsi con percorso JSON dinamico */
-        .course-card .cc-count {
-            position: absolute; top: 12px; right: 14px;
-            font-size: 0.6rem; font-weight: 700; letter-spacing: 0.07em;
-            text-transform: uppercase; color: var(--gold-dk);
-            background: rgba(200,169,110,0.14);
-            padding: 4px 10px; border-radius: 50px;
-            white-space: nowrap;
-        }
-        .course-card-dynamic { padding-right: 1.4rem; }
-        .course-card-dynamic small { display: block; margin-top: 2px; }
+body.night-mode .author-badge,
+body.night-mode .disclaimer-card,
+body.night-mode .lz-modal-paper{ background:#1E212A; border-color:#2B2E38; }
 
-        /* ============================================================
-           MODAL — APPROFONDIMENTI / LEZIONI (stile lezione)
-        ============================================================ */
-        #factor-modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15,17,23,0.75); backdrop-filter: blur(6px);
-            z-index: 99999; display: none; justify-content: center; align-items: center; padding: 20px;
-        }
-        #factor-modal.open { display: flex; }
-        .modal-paper {
-            background: #fff; width: 100%; max-width: 580px;
-            padding: 2.5rem; border-radius: var(--r-xl);
-            position: relative; max-height: 88vh; overflow-y: auto;
-            line-height: 1.8; box-shadow: 0 40px 80px rgba(0,0,0,0.3);
-            -webkit-overflow-scrolling: touch;
-            border-top: 4px solid var(--gold);
-        }
-        #m-title {
-            font-family: var(--font-display); font-size: 1.6rem; font-weight: 700;
-            color: var(--ink); margin-bottom: 1rem;
-        }
-        #m-body { color: var(--body); font-size: 0.95rem; }
-        .close-modal {
-            position: absolute; top: 16px; right: 20px;
-            font-size: 1.6rem; cursor: pointer; color: var(--mist);
-            transition: color 0.2s; font-family: var(--font-body); font-weight: 300;
-            line-height: 1;
-        }
-        .close-modal:hover { color: var(--navy); }
+body.night-mode .site-footer{ border-color:#2B2E38; }
 
-        /* Griglia lezioni dentro il modale */
-        .lz-intro {
-            margin-bottom: 1.2rem; color: var(--sub); font-size: 0.85rem;
-        }
-        .lz-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(52px, 1fr));
-            gap: 10px;
-        }
-        .lz-item {
-            display: flex; align-items: center; justify-content: center;
-            aspect-ratio: 1 / 1;
-            background: var(--ivory);
-            border: 1px solid var(--dust);
-            border-radius: var(--r-sm);
-            text-decoration: none;
-            font-family: var(--font-display);
-            font-weight: 700; font-size: 1.05rem;
-            color: var(--navy);
-            transition: all 0.2s;
-        }
-        .lz-item:hover {
-            background: var(--navy); color: #fff; border-color: var(--navy);
-            transform: translateY(-2px);
-        }
-
-        /* ============================================================
-           TEXT CONTENT BOX
-        ============================================================ */
-        .text-content-box {
-            background: transparent;
-            color: var(--body); line-height: 1.85; font-size: 1.02rem;
-        }
-        .text-content-box p { margin-bottom: 1rem; }
-
-        .cornell-box {
-            background: linear-gradient(135deg, #FFFDF7, #FFF8E8);
-            border-left: 3px solid var(--gold);
-            padding: 1.5rem;
-            margin: 1.8rem 0 0.5rem;
-            border-radius: 0 var(--r-md) var(--r-md) 0;
-        }
-        .cornell-box .cp-label {
-            font-size: 0.65rem; font-weight: 700; letter-spacing: 0.2em;
-            text-transform: uppercase; color: var(--gold-dk); margin-bottom: 0.8rem;
-            display: block;
-        }
-        .cornell-box p { margin: 0; font-size: 0.92rem; line-height: 1.75; color: var(--body); }
-
-        /* ============================================================
-           NIGHT MODE — pulsante on/off
-        ============================================================ */
-        #night-toggle {
-            position: fixed; bottom: 24px; right: 24px;
-            z-index: 9999998;
-            width: 52px; height: 52px; border-radius: 50%;
-            border: 1px solid var(--dust);
-            background: #fff; color: var(--ink);
-            font-size: 1.35rem; line-height: 1;
-            cursor: pointer;
-            box-shadow: var(--shadow-lift);
-            display: flex; align-items: center; justify-content: center;
-            transition: transform 0.2s, background 0.3s, border-color 0.3s;
-        }
-        #night-toggle:hover { transform: scale(1.08); border-color: var(--gold); }
-        #night-toggle:active { transform: scale(0.96); }
-
-        /* Transizioni morbide al cambio tema */
-        body, .content-card, .author-badge, .factor-card, .course-card,
-        .modal-paper, .obj-box, .cornell-box, #night-toggle {
-            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-        }
-
-        /* ---- Rimappatura token in modalità notte (stessa palette della lezione) ---- */
-        body.night-mode {
-            color-scheme: dark;
-            --ivory:    #14161C;
-            --ivory-dk: #1B1E26;
-            --dust:     #2B2E38;
-            --mist:     #5C5F6A;
-            --ink:      #F2EFE8;
-            --body:     #C7C4BC;
-            --sub:      #918E86;
-            --gold-dk:  #D9BC85;
-            --shadow-card: 0 4px 24px rgba(0,0,0,0.45), 0 1px 4px rgba(0,0,0,0.3);
-            --shadow-lift: 0 12px 40px rgba(0,0,0,0.55), 0 2px 8px rgba(0,0,0,0.35);
-        }
-        .night-mode .content-card,
-        .night-mode .modal-paper,
-        .night-mode #night-toggle,
-        .night-mode .author-badge { background: #1E212A; }
-        .night-mode .factor-card,
-        .night-mode .course-card { background: #1E212A; }
-        .night-mode .lz-item { background: #262933; color: #8FB4E8; border-color: #2B2E38; }
-        .night-mode .lz-item:hover { background: var(--navy); color: #fff; }
-        .night-mode .cc-count { background: rgba(217,188,133,0.15); }
-        .night-mode .obj-box {
-            background: linear-gradient(135deg, #182238 0%, #151D2E 100%);
-            border-color: rgba(143,180,232,0.18);
-        }
-        .night-mode .cornell-box { background: linear-gradient(135deg, #221D10, #1C180D); }
-        .night-mode .close-modal:hover { color: #8FB4E8; }
-        .night-mode .btn-close-section:hover {
-            border-color: #8FB4E8; color: #8FB4E8; background: rgba(143,180,232,0.06);
-        }
-        .night-mode .accordion-header:hover .ch-title { color: #8FB4E8; }
-        .night-mode .accordion-header.active .ch-icon { color: #8FB4E8; }
-        .night-mode .main-background-image { mix-blend-mode: screen; opacity: 0.05; }
-
-        /* ============================================================
-           FOOTER SITEMARK
-        ============================================================ */
-        .site-footer {
-            text-align: center; padding: 2rem 1rem;
-            font-size: 0.72rem; color: var(--mist);
-            letter-spacing: 0.12em; text-transform: uppercase;
-            font-weight: 600;
-        }
-        .site-footer strong { color: var(--sub); }
-    </style>
+body.night-mode .lz-item{ background:#262933; color:#8FB4E8; border-color:#2B2E38; }
+body.night-mode .lz-item:hover{ background:var(--navy); color:#fff; }
+body.night-mode .lz-close{ color:#5C5F6A; }
+body.night-mode .lz-close:hover{ color:#8FB4E8; }
+</style>
 </head>
 <body>
-    <!-- NIGHT MODE — applica subito il tema salvato per evitare il "flash" chiaro -->
-    <script>try{if(localStorage.getItem('ums_night_mode')==='1'){document.body.classList.add('night-mode');}}catch(e){}</script>
+<!-- NIGHT MODE — applica subito il tema salvato per evitare il "flash" chiaro -->
+<script>try{if(localStorage.getItem('ums_night_mode')==='1'){document.body.classList.add('night-mode');}}catch(e){}</script>
 
-    <!-- Progress Bar -->
-    <div id="scroll-progress-container">
-        <div id="scroll-progress-bar"></div>
+<div id="scroll-progress-container"><div id="scroll-progress-bar"></div></div>
+
+<!-- NIGHT MODE — pulsante on/off, coerente con la lezione dinamica -->
+<button id="night-toggle" type="button" aria-label="Attiva modalità notte" title="Modalità notte on/off">🌙</button>
+
+<!-- MODALE — ELENCO LEZIONI -->
+<div id="lezioni-modal" class="lz-modal" onclick="if(event.target===this) closeLezioniModal()">
+  <div class="lz-modal-paper">
+    <button type="button" class="lz-close" onclick="closeLezioniModal()" aria-label="Chiudi">&times;</button>
+    <h3 id="lz-title-text"></h3>
+    <p class="lz-modal-sub" id="lz-count-text"></p>
+    <div id="lz-body"></div>
+  </div>
+</div>
+
+<div class="broadsheet">
+
+  <!-- FOLIO — riga d'edizione -->
+  <div class="folio reveal">
+    <span class="folio-l folio-clock" id="folio-clock" aria-label="Ora corrente">00:00:00</span>
+    <span class="folio-c" aria-hidden="true">&#10022;</span>
+    <span class="folio-r" id="folio-date"></span>
+  </div>
+
+  <!-- NAMEPLATE -->
+  <header class="nameplate reveal">
+    <h1>Una Mano <em>Spensierata</em></h1>
+    <div class="nameplate-sub">Il tuo compagno di studi</div>
+    <div class="badges-row">
+      <a href="https://www.instagram.com/sciallato_lorenzo/" target="_blank" class="author-badge">
+        <img src="https://files.catbox.moe/qvck5j.png" alt="Lorenzo Sciallato" class="author-img">
+        <span class="author-name">Creato da <strong>Lorenzo</strong> &copy; 2025</span>
+      </a>
+      <a href="https://chat.whatsapp.com/EaX5kr14XxHL9o3qxdDVEP?mode=gi_t" target="_blank" class="author-badge">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="" class="author-img" style="padding:7px;">
+        <span class="author-name">Entra nel <strong>Gruppo</strong></span>
+      </a>
     </div>
 
-    <!-- Background -->
-    <div class="giants-background">
-        <img class="main-background-image" src="https://files.catbox.moe/46qh1i.jpg" alt="">
+    <!-- SELETTORE LINGUA — identico al template lezione -->
+    <div id="google_translate_element"></div>
+    <div id="custom-lang-selector" class="notranslate">
+      <div id="lang-loading" style="display:none;">&hellip;</div>
+      <button id="lang-toggle-btn" onclick="toggleLangMenu()">
+        <span id="lang-label"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10Z"/></svg> Lingua</span> <small id="lang-arrow">▼</small>
+      </button>
+      <div class="lang-options" id="lang-options-menu">
+        <button onclick="triggerTranslation('it', this)" title="Italiano" class="active-lang">🇮🇹</button>
+        <button onclick="triggerTranslation('en', this)" title="English">🇬🇧</button>
+        <button onclick="triggerTranslation('fr', this)" title="Français">🇫🇷</button>
+        <button onclick="triggerTranslation('de', this)" title="Deutsch">🇩🇪</button>
+        <button onclick="triggerTranslation('es', this)" title="Español">🇪🇸</button>
+        <button onclick="triggerTranslation('bg', this)" title="Български">🇧🇬</button>
+        <button onclick="triggerTranslation('pl', this)" title="Polski">🇵🇱</button>
+        <button onclick="triggerTranslation('el', this)" title="Ελληνικά">🇬🇷</button>
+        <button onclick="triggerTranslation('lt', this)" title="Lietuvių">🇱🇹</button>
+        <button onclick="triggerTranslation('da', this)" title="Dansk">🇩🇰</button>
+        <button onclick="triggerTranslation('pt', this)" title="Português">🇵🇹</button>
+        <button onclick="triggerTranslation('zh-CN', this)" title="中文">🇨🇳</button>
+        <button onclick="triggerTranslation('ar', this)" title="العربية">🇸🇦</button>
+        <button onclick="triggerTranslation('hi', this)" title="हिन्दी">🇮🇳</button>
+        <button onclick="triggerTranslation('ru', this)" title="Русский">🇷🇺</button>
+        <button onclick="triggerTranslation('ja', this)" title="日本語">🇯🇵</button>
+      </div>
+    </div>
+    <div id="translation-disclaimer">🌐 Nota: traduzione automatica. Alta accuratezza, possibili sfumature perse.</div>
+  </header>
+
+  <hr class="nameplate-rule reveal">
+
+  <!-- CATALOGO -->
+  <section id="studia">
+
+    <div class="rubrica-head reveal">
+      <h2>Catalogo delle Materie</h2>
+    </div>
+    <div class="rubrica-count reveal" id="course-count"></div>
+
+    <div class="catalogo-search reveal">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <label for="course-search" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);">Cerca una materia</label>
+      <input type="text" id="course-search" placeholder="Cerca una materia&hellip;" autocomplete="off">
+      <button type="button" class="search-clear" id="search-clear" aria-label="Cancella ricerca">&times;</button>
     </div>
 
-    <!-- NIGHT MODE — pulsante on/off, coerente con le lezioni -->
-    <button id="night-toggle" type="button" aria-label="Attiva modalità notte" title="Modalità notte on/off">🌙</button>
+    <ul class="indice reveal" id="course-grid"></ul>
 
-    <!-- Modal — Teorie dell'apprendimento / Elenco lezioni -->
-    <div id="factor-modal" onclick="closeModal(event)">
-        <div class="modal-paper" onclick="event.stopPropagation()">
-            <span class="close-modal" onclick="closeModalDirect()">&times;</span>
-            <div id="m-title"></div>
-            <div id="m-body"></div>
-        </div>
+    <div class="indice-empty" id="indice-empty">
+      Nessuna materia trovata.<br>Prova con un termine diverso.
     </div>
 
-    <!-- Header -->
-    <header>
-        <div class="header-eyebrow">Una Mano Spensierata</div>
-        <h1>Una Mano Spensierata</h1>
-        <div class="subtitle">La conoscenza è di tutti</div>
+    <hr class="indice-endrule reveal">
 
-        <div class="badges-row">
-            <a href="https://www.instagram.com/sciallato_lorenzo/" target="_blank" class="author-badge">
-                <img src="https://files.catbox.moe/qvck5j.png" alt="Lorenzo Sciallato" class="author-img">
-                <span class="author-name">Creato da <strong>Lorenzo</strong> &copy; 2025</span>
-            </a>
-            <a href="https://chat.whatsapp.com/EaX5kr14XxHL9o3qxdDVEP?mode=gi_t" target="_blank" class="author-badge">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="Gruppo WhatsApp" class="author-img" style="padding:10px;">
-                <span class="author-name">Entra nel <strong>Gruppo</strong></span>
-            </a>
-        </div>
-    </header>
+  </section>
 
-    <!-- Main Content Card -->
-    <div class="content-card">
+</div><!-- /broadsheet -->
 
-        <div class="master-accordion-item">
-            <button class="master-header" id="master-toggle-btn" onclick="toggleMaster()">
-                <span>Inizia</span>
-                <span class="mh-arrow">→</span>
-            </button>
+<!-- DISCLAIMER -->
+<div class="disclaimer-card reveal">
+  <h3>Tutela del diritto d'autore e limitazione di responsabilità</h3>
+  <p>Tutti i materiali didattici presenti all'interno del portale Una Mano Spensierata (inclusi, a titolo esemplificativo e non esaustivo: riassunti, schemi, mappe concettuali, flashcard e quiz) costituiscono una rielaborazione personale, critica e originale degli appunti universitari. Tali contenuti sono realizzati e condivisi esclusivamente per finalità didattiche, di studio e di mutuo soccorso accademico, ai sensi e nel pieno rispetto dell'Art. 70 della Legge 22 aprile 1941 n. 633 in materia di protezione del diritto d'autore. I materiali presenti sulla piattaforma hanno natura puramente integrativa e non intendono in alcun modo porsi come sostitutivi dei libri di testo ufficiali, delle dispense fornite dai docenti o della frequenza alle lezioni frontali. Si dichiara espressamente l'assenza di riproduzioni pedisseque, integrali o non autorizzate di opere intellettuali protette da copyright di terzi. L'utente fruitore solleva i gestori della piattaforma da qualsivoglia responsabilità derivante da un uso improprio del materiale fornito.</p>
+  <h3>Aiutami a tenere in ordine la piattaforma! 🛠️</h3>
+  <p>Ciao! Come sai, costruisco, aggiorno e mantengo questo sito interamente da solo. Se incappi in un refuso, in un link che non funziona, o se ti accorgi che l'audio del podcast sta dicendo qualcosa di non coerente con il resto della lezione, per favore non ignorarlo. Scrivimi subito sul nostro gruppo WhatsApp specificando l'errore o la lezione incriminata. Così posso correggere il codice o il testo in tempo reale e tenere la piattaforma pulita e affidabile per tutti gli iscritti. Questo progetto cresce anche grazie alle vostre revisioni. Grazie per l'aiuto!</p>
+</div>
 
-            <div class="master-content" id="master-content">
-                <div class="master-content-inner">
+<footer class="site-footer">
+  <p><strong>Una Mano Spensierata</strong> &nbsp;&middot;&nbsp; Tutti i diritti riservati &nbsp;&middot;&nbsp; Lorenzo Sciallato &copy; 2025</p>
+</footer>
 
-                    <!-- 01. STUDIA -->
-                    <div class="accordion-item">
-                        <button class="accordion-header">
-                            <span class="ch-number">01</span>
-                            <span class="ch-text">
-                                <span class="ch-eyebrow">Risorse</span>
-                                <span class="ch-title">Studia</span>
-                            </span>
-                            <span class="ch-icon">+</span>
-                        </button>
-                        <div class="accordion-content">
+<script>
+// =========================================================================
+// DATI CORSI
+// I corsi con "lezioni" aprono il selettore di lezioni (elenco numerato);
+// quelli con "url" restano link diretti (es. Google Sites) come prima.
+// Per aggiungere un nuovo corso col percorso JSON pronto, basta un blocco
+// { name, lezioni: { count, urlTemplate } } con {n} al posto del numero.
+// =========================================================================
+const courses = [
+  { name: "Sociologia dell'Educazione",    url: "https://sites.google.com/view/una-mano-spensierata/sociologia-delleducazione?authuser=0" },
+  { name: "Psicologia dello Sviluppo",     url: "https://sites.google.com/view/una-mano-spensierata/psicologia-dello-sviluppo?authuser=0" },
+  { name: "Neuropsichiatria Infantile",    lezioni: { count: 11, urlTemplate: "https://lorenzosciallato.github.io/Una-mano-spensierata/lezione-template.html?file=neuropsichiatria/lezione-{n}.json" } },
+  { name: "Ed. Musicale",                  url: "https://sites.google.com/view/una-mano-spensierata/ed-musicale?authuser=0" },
+  { name: "Didattica Generale",            lezioni: { count: 11, urlTemplate: "https://lorenzosciallato.github.io/Una-mano-spensierata/lezione-template.html?file=didattica/lezione-{n}.json" } },
+  { name: "Storia dell'Educazione",        lezioni: { count: 17, urlTemplate: "https://lorenzosciallato.github.io/Una-mano-spensierata/lezione-template.html?file=storiadelleducazione/storiaeducazione-lezione-{n}.json" } },
+  { name: "Storia Contemporanea",          lezioni: { count: 15, urlTemplate: "https://lorenzosciallato.github.io/Una-mano-spensierata/lezione-template.html?file=storiacontemporanea/lezione-{n}.json" } }
+];
 
-                            <span class="factors-intro">Percorsi completi — clicca per scegliere la lezione</span>
-                            <div class="factors-grid">
-                                <div class="course-card course-card-dynamic" onclick="openLezioni('storiaEducazione')">
-                                    <span class="cc-count">17 lezioni</span>
-                                    <strong>Storia dell'Educazione</strong>
-                                    <small>Sfoglia il percorso completo, lezione per lezione</small>
-                                </div>
-                                <div class="course-card course-card-dynamic" onclick="openLezioni('storiaContemporanea')">
-                                    <span class="cc-count">15 lezioni</span>
-                                    <strong>Storia Contemporanea</strong>
-                                    <small>Sfoglia il percorso completo, lezione per lezione</small>
-                                </div>
-                                <div class="course-card course-card-dynamic" onclick="openLezioni('didattica')">
-                                    <span class="cc-count">11 lezioni</span>
-                                    <strong>Didattica Generale</strong>
-                                    <small>Sfoglia il percorso completo, lezione per lezione</small>
-                                </div>
-                                <div class="course-card course-card-dynamic" onclick="openLezioni('neuropsichiatria')">
-                                    <span class="cc-count">11 lezioni</span>
-                                    <strong>Neuropsichiatria Infantile</strong>
-                                    <small>Sfoglia il percorso completo, lezione per lezione</small>
-                                </div>
-                            </div>
+// =========================================================================
+// FOLIO — data d'edizione in italiano + orologio live
+// =========================================================================
+(function(){
+  const el = document.getElementById('folio-date');
+  const d = new Date().toLocaleDateString('it-IT', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+  el.textContent = d.charAt(0).toUpperCase() + d.slice(1);
 
-                            <span class="factors-intro">Altri corsi</span>
-                            <div class="factors-grid">
-                                <a href="https://sites.google.com/view/una-mano-spensierata/sociologia-delleducazione?authuser=0" class="course-card"><span class="cc-arrow">↗</span><strong>Sociologia dell'Educazione</strong></a>
-                                <a href="https://sites.google.com/view/una-mano-spensierata/psicologia-dello-sviluppo?authuser=0" class="course-card"><span class="cc-arrow">↗</span><strong>Psicologia dello Sviluppo</strong></a>
-                                <a href="https://sites.google.com/view/una-mano-spensierata/pedagogia-generale?authuser=0" class="course-card"><span class="cc-arrow">↗</span><strong>Pedagogia Generale (Beta)</strong></a>
-                                <a href="https://sites.google.com/view/una-mano-spensierata/educazione-motoria?authuser=0" class="course-card"><span class="cc-arrow">↗</span><strong>Ed. Motoria (Solo Flashcard)</strong></a>
-                                <a href="https://sites.google.com/view/una-mano-spensierata/ed-musicale?authuser=0" class="course-card"><span class="cc-arrow">↗</span><strong>Ed. Musicale</strong></a>
-                                <a href="https://sites.google.com/view/una-mano-spensierata/appunti?authuser=0" class="course-card"><span class="cc-arrow">↗</span><strong>Appunti dei colleghi</strong></a>
-                            </div>
+  // Orologio: HH:MM:SS, aggiornato ogni secondo
+  const clock = document.getElementById('folio-clock');
+  function tick(){
+    clock.textContent = new Date().toLocaleTimeString('it-IT', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
+  }
+  tick();
+  setInterval(tick, 1000);
+})();
 
-                            <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi ▲</button>
-                        </div>
-                    </div>
+// =========================================================================
+// INDICE MATERIE — lettrina + leader puntinato + ricerca live
+// =========================================================================
+function normalizza(s){
+  return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
 
-                    <!-- 02. CHI SONO E PERCHÉ -->
-                    <div class="accordion-item">
-                        <button class="accordion-header">
-                            <span class="ch-number">02</span>
-                            <span class="ch-text">
-                                <span class="ch-eyebrow">Missione</span>
-                                <span class="ch-title">Chi sono e Perché</span>
-                            </span>
-                            <span class="ch-icon">+</span>
-                        </button>
-                        <div class="accordion-content">
-                            <div class="text-content-box">
-                                <p>Ciao! Sono <strong>Lorenzo</strong>. </p> <p> Ho creato questo sito per rispondere a una sfida comune: <strong>conciliare studio e lavoro</strong>, un ostacolo che troppo spesso allontana le persone dal sapere e dal miglioramento delle proprie condizioni di vita.</p>
+function renderCourses(){
+  const grid = document.getElementById('course-grid');
+  courses.forEach((c) => {
+    const hasLezioni = !!c.lezioni;
+    const li = document.createElement('li');
+    li.className = 'indice-row';
+    li.dataset.search = normalizza(c.name);
 
-                                <p>Credo fermamente che <strong>la conoscenza sia un diritto di tutti</strong>.</p> <p> Per me, rendere i contenuti accessibili non significa "semplificare" o svalutare l'insegnamento universitario, ma offrire una <em>porta d'accesso</em> al sapere.</p> <p> Un punto di partenza <strong> davvero </strong> uguale per tutti. </p>
+    const el = document.createElement(hasLezioni ? 'button' : 'a');
+    el.className = 'indice-link';
+    if (hasLezioni) {
+      el.type = 'button';
+      el.addEventListener('click', () => openLezioni(c));
+    } else {
+      el.href = c.url;
+      el.target = '_blank';
+      el.rel = 'noopener';
+    }
 
-                                <p>Questo spazio è per te, per i tuoi <strong>obiettivi</strong> e per la tua crescita.</p> <p> Buono studio! Ci vediamo all'esame. </p>
+    // Lettrina: prima lettera alfabetica del nome (salta "Ed." -> usa la E comunque)
+    const lettrina = c.name.trim()[0].toUpperCase();
 
-                                <div class="cornell-box">
-                                    <span class="cp-label">Nota importante</span>
-                                    <p><strong>⚠️ Nota importante:</strong> I contenuti presenti su questa piattaforma nascono come strumenti di supporto per facilitare la comprensione e la memorizzazione. Essi sono da intendersi come integrativi e <strong>non sostituiscono</strong> in alcun modo i libri di testo ufficiali, le dispense dei professori o la frequenza alle lezioni universitarie.</p>
-                                </div>
-                            </div>
-                            <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi ▲</button>
-                        </div>
-                    </div>
+    el.innerHTML = `
+      <span class="indice-lettrina" aria-hidden="true">${lettrina}</span>
+      <span class="indice-text">
+        <span class="indice-title-wrap">
+          <span class="indice-eyebrow">${hasLezioni ? 'Corso completo' : 'Raccolta esterna'}</span>
+          <span class="indice-title">${c.name}</span>
+        </span>
+        <span class="indice-leader" aria-hidden="true"></span>
+        <span class="indice-meta">${hasLezioni ? c.lezioni.count + ' lezioni' : 'sito esterno \u2197'}</span>
+      </span>`;
 
-                    <!-- 03. TEORIE DELL'APPRENDIMENTO -->
-                    <div class="accordion-item">
-                        <button class="accordion-header">
-                            <span class="ch-number">03</span>
-                            <span class="ch-text">
-                                <span class="ch-eyebrow">Metodo</span>
-                                <span class="ch-title">Teorie dell'Apprendimento</span>
-                            </span>
-                            <span class="ch-icon">+</span>
-                        </button>
-                        <div class="accordion-content">
+    li.appendChild(el);
+    grid.appendChild(li);
+  });
+  aggiornaConteggio(courses.length);
+}
 
-                            <div class="obj-box">
-                                <strong>I Pilastri Scientifici del Metodo</strong>
-                                <p>Ogni elemento di questa piattaforma è progettato per allinearsi con il funzionamento biologico della memoria. Clicca per scoprire come:</p>
-                            </div>
+function aggiornaConteggio(n){
+  const label = document.getElementById('course-count');
+  label.textContent = n === 1 ? 'Una materia in catalogo' : n + ' materie in catalogo';
+}
 
-                            <span class="factors-intro">Punti chiave — clicca per approfondire</span>
-                            <div class="factors-grid" id="dyn-teorie"></div>
+function filtraMaterie(){
+  const q = normalizza(document.getElementById('course-search').value.trim());
+  const rows = document.querySelectorAll('.indice-row');
+  let visibili = 0;
+  rows.forEach(row => {
+    const match = q === '' || row.dataset.search.includes(q);
+    row.style.display = match ? '' : 'none';
+    if (match) visibili++;
+  });
+  document.getElementById('indice-empty').classList.toggle('visible', visibili === 0);
+  document.getElementById('search-clear').classList.toggle('visible', q !== '');
+  aggiornaConteggio(visibili);
+}
 
-                            <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi ▲</button>
-                        </div>
-                    </div>
+const searchInput = document.getElementById('course-search');
+searchInput.addEventListener('input', filtraMaterie);
+document.getElementById('search-clear').addEventListener('click', () => {
+  searchInput.value = '';
+  filtraMaterie();
+  searchInput.focus();
+});
+searchInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') { searchInput.value = ''; filtraMaterie(); }
+});
 
-                </div><!-- /master-content-inner -->
-            </div><!-- /master-content -->
-        </div><!-- /master-accordion-item -->
+// =========================================================================
+// MODALE — ELENCO LEZIONI
+// =========================================================================
+function openLezioni(course){
+  document.getElementById('lz-title-text').textContent = course.name;
+  document.getElementById('lz-count-text').textContent = course.lezioni.count + ' lezioni disponibili — scegli quella da aprire.';
 
-    </div><!-- /content-card -->
+  let html = '<div class="lz-grid">';
+  for (let i = 1; i <= course.lezioni.count; i++) {
+    const url = course.lezioni.urlTemplate.replace('{n}', i);
+    html += `<a class="lz-item" href="${url}" target="_blank" title="Lezione ${i}">${i}</a>`;
+  }
+  html += '</div>';
+  document.getElementById('lz-body').innerHTML = html;
 
-    <footer class="site-footer">
-        <strong>Una Mano Spensierata</strong> &nbsp;·&nbsp; Tutti i diritti riservati &nbsp;·&nbsp; Lorenzo Sciallato &copy; 2025
-    </footer>
+  document.getElementById('lezioni-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLezioniModal(){
+  document.getElementById('lezioni-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeLezioniModal();
+});
 
-    <!-- ================================================================
-         JAVASCRIPT
-    ================================================================ -->
-    <script>
-        // =========================================================================
-        // DATI — Teorie dell'Apprendimento (testo verbatim dalla home originale)
-        // =========================================================================
-        const teorieData = {
-            cognitivo: {
-                title: "🧠 Gestione del Carico Cognitivo",
-                sub: "Sweller, 1988",
-                body: `<p><strong>(Sweller, 1988):</strong> L'informazione è segmentata in "chunk" (blocchi) per evitare il sovraccarico della memoria di lavoro e facilitare l'assimilazione immediata (Miller, 1956).</p>`
-            },
-            recall: {
-                title: "🏋️ Testing Effect & Active Recall",
-                sub: "Roediger & Karpicke, 2006",
-                body: `<p><strong>(Roediger & Karpicke, 2006):</strong> Le flashcard non servono solo a "ripassare", ma a costringere il cervello a recuperare attivamente l'informazione, rafforzando le tracce mnestiche molto più della rilettura passiva.</p>`
-            },
-            costruttivismo: {
-                title: "🧱 Costruttivismo Interattivo",
-                sub: "Piaget, 1950; Papert, 1980",
-                body: `<p><strong>(Piaget, 1950; Papert, 1980):</strong> Non sei un contenitore da riempire. Attraverso il widget degli appunti e l'interazione con l'IA, costruisci attivamente la tua conoscenza invece di subirla passivamente.</p>`
-            },
-            emotiva: {
-                title: "❤️ Regolazione Emotiva",
-                sub: "Goleman, 1995",
-                body: `<p><strong>(Goleman, 1995):</strong> L'intelligenza emotiva è la base dello studio. Creiamo un ambiente a bassa tensione (Low-Stakes Testing) per favorire la plasticità neurale e la curiosità.</p>`
-            },
-            dualcoding: {
-                title: "✌️ Dual Coding Theory",
-                sub: "Paivio, 1971",
-                body: `<p><strong>(Paivio, 1971):</strong> Il cervello processa informazioni verbali e visive in canali separati. Usandoli entrambi (Video + Testo), raddoppiamo la probabilità che il concetto venga memorizzato.</p>`
-            }
-        };
+renderCourses();
 
-        // =========================================================================
-        // DATI — Corsi con percorso lezioni JSON dinamico
-        // Aggiungi qui un nuovo corso quando le sue lezioni sono pronte:
-        // basta un nuovo blocco { nome, count, urlTemplate } dove {n} è
-        // il segnaposto del numero di lezione nel percorso del file.
-        // =========================================================================
-        const corsiConLezioni = {
-            storiaEducazione: {
-                nome: "Storia dell'Educazione",
-                count: 17,
-                urlTemplate: "https://lorenzosciallato.github.io/Una-mano-spensierata/lezione-template.html?file=storiadelleducazione/storiaeducazione-lezione-{n}.json"
-            },
-            storiaContemporanea: {
-                nome: "Storia Contemporanea",
-                count: 15,
-                urlTemplate: "https://lorenzosciallato.github.io/Una-mano-spensierata/lezione-template.html?file=storiacontemporanea/lezione-{n}.json"
-            },
-            didattica: {
-                nome: "Didattica Generale",
-                count: 11,
-                urlTemplate: "https://lorenzosciallato.github.io/Una-mano-spensierata/lezione-template.html?file=didattica/lezione-{n}.json"
-            },
-            neuropsichiatria: {
-                nome: "Neuropsichiatria Infantile",
-                count: 11,
-                urlTemplate: "https://lorenzosciallato.github.io/Una-mano-spensierata/lezione-template.html?file=neuropsichiatria/lezione-{n}.json"
-            }
-        };
+window.addEventListener('scroll', () => {
+  const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  const scrolled = document.documentElement.scrollTop;
+  document.getElementById('scroll-progress-bar').style.width = (h > 0 ? (scrolled / h * 100) : 0) + '%';
+});
 
-        function openLezioni(key) {
-            const corso = corsiConLezioni[key];
-            if (!corso) return;
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const revealEls = document.querySelectorAll('.reveal');
+if (reduceMotion) {
+  revealEls.forEach(el => el.classList.add('in-view'));
+} else {
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) { entry.target.classList.add('in-view'); io.unobserve(entry.target); }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  revealEls.forEach(el => io.observe(el));
+}
+</script>
 
-            document.getElementById('m-title').innerText = corso.nome;
+<!-- ================================================================
+     LANGUAGE JS — ripreso dal template lezione dinamica
+================================================================ -->
+<script>
+  const langLabels = {
+    'it':'Lingua','en':'Language','fr':'Langue','de':'Sprache','es':'Idioma',
+    'bg':'Език','pl':'Język','el':'Γλώσσα','lt':'Kalba','da':'Sprog',
+    'pt':'Língua','zh-CN':'语言','ar':'اللغة','hi':'भाषा','ru':'Язык','ja':'日本語'
+  };
+  const langGlobeSVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10Z"/></svg>';
+  function googleTranslateElementInit() {
+    new google.translate.TranslateElement({
+      pageLanguage: 'it',
+      includedLanguages: 'en,it,fr,de,es,bg,pl,el,lt,da,pt,zh-CN,ar,hi,ru,ja',
+      autoDisplay: false
+    }, 'google_translate_element');
+  }
+  function toggleLangMenu() {
+    const menu = document.getElementById('lang-options-menu');
+    const arrow = document.getElementById('lang-arrow');
+    menu.classList.toggle('show');
+    arrow.innerHTML = menu.classList.contains('show') ? '▲' : '▼';
+  }
+  function triggerTranslation(lang, btnElement) {
+    const loadingDiv = document.getElementById('lang-loading');
+    const menu = document.getElementById('lang-options-menu');
+    const toggleBtn = document.getElementById('lang-toggle-btn');
+    const labelSpan = document.getElementById('lang-label');
+    const disclaimer = document.getElementById('translation-disclaimer');
+    labelSpan.innerHTML = langGlobeSVG + ' ' + (langLabels[lang] || 'Language');
+    loadingDiv.style.display = 'block';
+    menu.classList.remove('show');
+    toggleBtn.style.display = 'none';
+    document.querySelectorAll('.lang-options button').forEach(b => b.classList.remove('active-lang'));
+    btnElement.classList.add('active-lang');
+    const selectField = document.querySelector('select.goog-te-combo');
+    if (selectField) { selectField.value = lang; selectField.dispatchEvent(new Event('change', { bubbles: true })); }
+    if (disclaimer) disclaimer.style.display = lang !== 'it' ? 'block' : 'none';
+    setTimeout(() => {
+      loadingDiv.style.display = 'none';
+      toggleBtn.style.display = 'inline-flex';
+      document.getElementById('lang-arrow').innerHTML = '▼';
+    }, 1500);
+  }
+  // Mostra il widget (come nel template: appare solo dopo il caricamento)
+  (function(){
+    const w = document.getElementById('custom-lang-selector');
+    if (w) w.classList.add('loaded');
+  })();
+</script>
+<script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
-            let html = '<p class="lz-intro">Scegli la lezione da aprire.</p><div class="lz-grid">';
-            for (let i = 1; i <= corso.count; i++) {
-                const url = corso.urlTemplate.replace('{n}', i);
-                html += `<a class="lz-item" href="${url}" title="Lezione ${i}">${i}</a>`;
-            }
-            html += '</div>';
+<!-- ================================================================
+     NIGHT MODE — SCRIPT ADDITIVO (toggle + persistenza)
+     Usa la stessa chiave localStorage della lezione dinamica, cosi'
+     il tema scelto resta coerente in tutta la navigazione del sito.
+================================================================ -->
+<script>
+(function () {
+  const NIGHT_KEY = 'ums_night_mode';
+  const btn = document.getElementById('night-toggle');
 
-            document.getElementById('m-body').innerHTML = html;
-            document.getElementById('factor-modal').classList.add('open');
-        }
+  function applyNightMode(on) {
+    document.body.classList.toggle('night-mode', on);
+    btn.textContent = on ? '☀️' : '🌙';
+    btn.setAttribute('aria-label', on ? 'Attiva modalità giorno' : 'Attiva modalità notte');
+  }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const teorieContainer = document.getElementById('dyn-teorie');
-            Object.keys(teorieData).forEach(key => {
-                const t = teorieData[key];
-                const card = document.createElement('div');
-                card.className = 'factor-card';
-                card.setAttribute('onclick', `openFactor('${key}')`);
-                card.innerHTML = `<span class="fc-plus">+</span><strong>${t.title}</strong><small>${t.sub}</small>`;
-                teorieContainer.appendChild(card);
-            });
+  // Sincronizza icona con lo stato applicato dallo script iniziale
+  applyNightMode(document.body.classList.contains('night-mode'));
 
-            setupAccordions();
-        });
-
-        // =========================================================================
-        // MASTER ACCORDION
-        // =========================================================================
-        function toggleMaster() {
-            const btn = document.getElementById('master-toggle-btn');
-            const content = document.getElementById('master-content');
-            btn.classList.toggle('active');
-            content.classList.toggle('open');
-        }
-
-        // =========================================================================
-        // CHAPTER ACCORDIONS
-        // =========================================================================
-        function setupAccordions() {
-            const accs = document.querySelectorAll('.accordion-header');
-            accs.forEach(acc => {
-                acc.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    this.classList.toggle('active');
-                    const panel = this.nextElementSibling;
-                    const icon = this.querySelector('.ch-icon');
-                    if (panel.classList.contains('active')) {
-                        panel.style.maxHeight = null;
-                        panel.classList.remove('active');
-                        if (icon) icon.textContent = '+';
-                    } else {
-                        panel.classList.add('active');
-                        panel.style.maxHeight = panel.scrollHeight + 5000 + 'px';
-                        if (icon) icon.textContent = '−';
-                    }
-                });
-            });
-        }
-
-        function closeThisSection(btn) {
-            const content = btn.parentElement;
-            const header = content.previousElementSibling;
-            header.click();
-            header.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-
-        // =========================================================================
-        // SCROLL PROGRESS
-        // =========================================================================
-        window.onscroll = () => {
-            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            document.getElementById('scroll-progress-bar').style.width = (winScroll / height * 100) + '%';
-        };
-
-        // =========================================================================
-        // MODAL — TEORIE DELL'APPRENDIMENTO / ELENCO LEZIONI
-        // =========================================================================
-        function openFactor(key) {
-            const t = teorieData[key];
-            document.getElementById('m-title').innerText = t.title;
-            document.getElementById('m-body').innerHTML = t.body;
-            document.getElementById('factor-modal').classList.add('open');
-        }
-        function closeModalDirect() { document.getElementById('factor-modal').classList.remove('open'); }
-        function closeModal(e) { if (e.target.id === 'factor-modal') closeModalDirect(); }
-    </script>
-
-    <!-- ================================================================
-         NIGHT MODE — SCRIPT ADDITIVO (toggle + persistenza)
-         Usa la stessa chiave localStorage della lezione dinamica, cosi'
-         il tema scelto resta coerente in tutta la navigazione del sito.
-    ================================================================ -->
-    <script>
-        (function () {
-            const NIGHT_KEY = 'ums_night_mode';
-            const toggleBtn = document.getElementById('night-toggle');
-            const ICON_SUN = '<svg viewBox="0 0 24 24" width="1.15em" height="1.15em" stroke="currentColor" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>';
-            const ICON_MOON = '<svg viewBox="0 0 24 24" width="1.15em" height="1.15em" stroke="currentColor" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>';
-
-            function applyNightMode(on) {
-                document.body.classList.toggle('night-mode', on);
-                toggleBtn.innerHTML = on ? ICON_SUN : ICON_MOON;
-                toggleBtn.setAttribute('aria-label', on ? 'Attiva modalità giorno' : 'Attiva modalità notte');
-            }
-
-            // Sincronizza icona con lo stato applicato dallo script iniziale
-            applyNightMode(document.body.classList.contains('night-mode'));
-
-            toggleBtn.addEventListener('click', () => {
-                const on = !document.body.classList.contains('night-mode');
-                applyNightMode(on);
-                try { localStorage.setItem(NIGHT_KEY, on ? '1' : '0'); } catch (e) {}
-            });
-        })();
-    </script>
+  btn.addEventListener('click', () => {
+    const on = !document.body.classList.contains('night-mode');
+    applyNightMode(on);
+    try { localStorage.setItem(NIGHT_KEY, on ? '1' : '0'); } catch (e) {}
+  });
+})();
+</script>
 
 </body>
 </html>
