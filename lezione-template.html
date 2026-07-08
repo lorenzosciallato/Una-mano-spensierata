@@ -1810,7 +1810,7 @@
 
     <!-- Header -->
     <header>
-        <div class="header-eyebrow">Una Mano Spensierata</div>
+        <div class="header-eyebrow ums-brandmark notranslate" translate="no">Una Mano <em>Spensierata</em></div>
         <h1 id="dyn-title">Caricamento<em>…</em></h1>
         <div class="subtitle" id="dyn-subtitle">Attendere</div>
 
@@ -2087,6 +2087,12 @@
                                         </div>
                                     </div>
 
+                                    <!-- Come funziona la sottolineatura (copy sotto il banner/lavagna) -->
+                                    <div class="wb-hint">
+                                        <span class="hl-copy-desktop"><svg class="ums-ic" aria-hidden="true"><use href="#ic-highlighter"/></svg> Seleziona una frase qui sotto col mouse e premi &laquo;Sottolinea&raquo;: il concetto appare qui sopra, sulla Lavagna. Quando hai finito, &laquo;Stampa / PDF&raquo; trasforma le tue sottolineature in un foglio di ripasso.</span>
+                                        <span class="hl-copy-mobile"><svg class="ums-ic" aria-hidden="true"><use href="#ic-highlighter"/></svg> Tieni premuto su una parola qui sotto, allarga la selezione coi cursori e tocca &laquo;Sottolinea&raquo;: il concetto appare qui sopra, sulla Lavagna. Con &laquo;Stampa / PDF&raquo; salvi il foglio di ripasso sul telefono.</span>
+                                    </div>
+
                                     <!-- Il contenitore testuale DEVE rimanere dentro la colonna di sinistra -->
                                     <div id="dyn-riassuntone-container" class="text-content-box"></div>
                                 </div>
@@ -2100,8 +2106,7 @@
                                     </div>
                                     <!-- Palette evidenziatore -->
                                     <div class="hl-palette-row">
-                                        <span class="hl-palette-micro hl-copy-desktop"><svg class="ums-ic" aria-hidden="true"><use href="#ic-highlighter"/></svg> Seleziona il testo col mouse e premi &laquo;Sottolinea&raquo;: la frase si salva nella Lavagna in fondo, dove &laquo;Stampa / PDF&raquo; crea il foglio dei tuoi appunti</span>
-                                        <span class="hl-palette-micro hl-copy-mobile"><svg class="ums-ic" aria-hidden="true"><use href="#ic-highlighter"/></svg> Tieni premuto sul testo e trascina i cursori, poi tocca &laquo;Sottolinea&raquo;: la frase va nella Lavagna in fondo, e con &laquo;Stampa / PDF&raquo; la salvi come PDF</span>
+                                        <span class="hl-palette-micro"><svg class="ums-ic" aria-hidden="true"><use href="#ic-highlighter"/></svg> Seleziona il testo per evidenziarlo e salvarlo nella lavagna</span>
                                         <div class="hl-palette-swatches" id="hl-palette">
                                             <div class="hl-swatch hl-swatch-active" data-color="#FFF176" style="background:#FFF176;" title="Giallo" onclick="hlSetColor(this)"></div>
                                             <div class="hl-swatch" data-color="#A5D6A7" style="background:#A5D6A7;" title="Verde" onclick="hlSetColor(this)"></div>
@@ -2527,12 +2532,12 @@
             const printDate = new Date().toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
 
             let printContents = `
-                <img src="https://i.postimg.cc/dQWmbDLp/crea-wallpaper-stile-arte-giapponese-woodblock-rilassato-con-fiori-natura-paesaggio.png"
-                     alt="" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.06; filter: grayscale(35%) sepia(0.15); z-index: -1;">
+                <img src="https://res.cloudinary.com/dlppkpjqs/image/upload/f_auto,q_auto:eco,w_1600/v1783528098/crea_wallpaper_stile_arte_giapponese_woodblock_rilassato_con_fiori_natura_paesaggio_lilnz8.png"
+                     alt="" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.06; z-index: -1;">
                 <div style="font-family: 'DM Sans', Arial, sans-serif; padding: 28px 24px; color: #1C1C22; max-width: 780px; margin: 0 auto; -webkit-print-color-adjust: exact; print-color-adjust: exact;">
 
-                    <div style="font-size: 10px; font-weight: 700; letter-spacing: 0.3em; text-transform: uppercase; color: #9A7A3F; margin-bottom: 10px;">
-                        Una Mano Spensierata
+                    <div style="font-family: 'Playfair Display', Georgia, serif; font-weight: 900; font-size: 24px; letter-spacing: -0.02em; color: #1C1C22; line-height: 1; margin-bottom: 12px;">
+                        Una Mano <em style="font-style: italic; color: #1A2F4F;">Spensierata</em>
                     </div>
                     <h1 style="font-family: 'Playfair Display', Georgia, serif; font-size: 30px; font-weight: 700; color: #1A2F4F; margin: 0 0 6px 0; line-height: 1.15;">
                         ${lessonTitle}
@@ -2630,7 +2635,7 @@
 
             printContents += `
                     <div style="margin-top: 34px; border-top: 4px double #1C1C22; padding-top: 14px; text-align: center;">
-                        <div style="font-family: 'Playfair Display', Georgia, serif; font-style: italic; font-size: 15px; color: #1A2F4F;">Una Mano Spensierata</div>
+                        <div style="font-family: 'Playfair Display', Georgia, serif; font-weight: 900; font-size: 15px; letter-spacing: -0.02em; color: #1C1C22;">Una Mano <em style="font-style: italic; color: #1A2F4F;">Spensierata</em></div>
                         <div style="width: 44px; border-top: 2px solid #C8A96E; margin: 10px auto 0;"></div>
                     </div>
                 </div>`;
@@ -4306,7 +4311,78 @@ if (!fileDaCaricare) {
             filter: none;
         }
 
-        /* Ingresso "da app": header e card entrano in sequenza come nella home */
+        /* ------------------------------------------------------------
+           BRANDMARK — "Una Mano Spensierata" formattato come la home
+        ------------------------------------------------------------ */
+        .ums-brandmark{
+            font-family: var(--font-display) !important;
+            font-weight: 900 !important;
+            font-size: clamp(1.5rem, 4.5vw, 2.1rem) !important;
+            letter-spacing: -0.02em !important;
+            text-transform: none !important;
+            color: var(--ink) !important;
+            line-height: 1 !important;
+            gap: 0 !important;
+        }
+        .ums-brandmark::before, .ums-brandmark::after{ display: none !important; }
+        .ums-brandmark em{ font-style: italic; color: var(--navy); margin-left: .26em; }
+        .night-mode .ums-brandmark{ color: #F2EFE8 !important; }
+        .night-mode .ums-brandmark em{ color: #8FB4E8; }
+
+        /* ------------------------------------------------------------
+           TOP-BAR DA SCROLL — come la home in app-mode: brand piccolo
+           in alto a sinistra su barra sfocata; appare superato l'header
+        ------------------------------------------------------------ */
+        #ums-topbar{
+            position: fixed; top: 0; left: 0; width: 100%; height: 62px; z-index: 999995;
+            background: rgba(247,244,239,.88);
+            -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--dust);
+            display: flex; align-items: center; padding: 0 22px;
+            transform: translateY(-100%);
+            transition: transform .4s var(--ease), background-color .3s, border-color .3s;
+        }
+        #ums-topbar.visible{ transform: translateY(0); }
+        #ums-topbar .ums-brandmark{
+            font-size: 1.25rem !important;
+            cursor: pointer; user-select: none;
+            margin: 0 !important;
+        }
+        .night-mode #ums-topbar{ background: rgba(20,22,28,.88); border-color: #2B2E38; }
+        @media (max-width: 560px){ #ums-topbar .ums-brandmark{ font-size: 1.05rem !important; } }
+
+        /* ------------------------------------------------------------
+           "INIZIA LA LEZIONE" — pillola compatta come INIZIA della home
+        ------------------------------------------------------------ */
+        .master-accordion-item{ text-align: center; }
+        .master-header{
+            display: inline-flex !important;
+            width: auto !important;
+            justify-content: center !important;
+            align-items: center;
+            gap: 12px;
+            border-radius: var(--r-pill) !important;
+            padding: 1.05rem 2.6rem !important;
+            font-family: var(--font-body) !important;
+            font-size: .82rem !important;
+            font-weight: 700 !important;
+            letter-spacing: .2em;
+            text-transform: uppercase;
+            box-shadow: 0 10px 30px rgba(26,47,79,.28) !important;
+            margin: 0 auto !important;
+            transition: transform .25s var(--ease), box-shadow .25s, background-color .25s !important;
+        }
+        .master-header:hover{
+            transform: translateY(-3px);
+            box-shadow: 0 16px 40px rgba(26,47,79,.36) !important;
+        }
+        .master-header:active{ transform: translateY(-1px); }
+        .master-header .mh-arrow{ font-size: 1rem; transition: transform .3s var(--ease); }
+        .master-header.active .mh-arrow{ transform: rotate(90deg); }
+
+        /* ------------------------------------------------------------
+           INGRESSO "DA APP" — header e card in sequenza come la home
+        ------------------------------------------------------------ */
         @keyframes umsFadeUp{
             from{ opacity: 0; transform: translateY(18px); }
             to{ opacity: 1; transform: translateY(0); }
@@ -4319,16 +4395,48 @@ if (!fileDaCaricare) {
         .content-card{ animation: umsFadeUp .7s .72s var(--ease) both; }
         .disclaimer-card, .site-footer{ animation: umsFadeUp .7s .85s var(--ease) both; }
 
+        /* ------------------------------------------------------------
+           CASCATA DELLE SEZIONI — all'apertura di "Inizia la Lezione"
+           le 8 sezioni entrano una dopo l'altra (come le righe lezione
+           nella vista corso della home)
+        ------------------------------------------------------------ */
+        .master-content .accordion-item{ opacity: 0; }
+        .master-content.open .accordion-item{
+            animation: umsFadeUp .5s var(--ease) both;
+        }
+        .master-content.open .accordion-item:nth-child(1){ animation-delay: .05s; }
+        .master-content.open .accordion-item:nth-child(2){ animation-delay: .11s; }
+        .master-content.open .accordion-item:nth-child(3){ animation-delay: .17s; }
+        .master-content.open .accordion-item:nth-child(4){ animation-delay: .23s; }
+        .master-content.open .accordion-item:nth-child(5){ animation-delay: .29s; }
+        .master-content.open .accordion-item:nth-child(6){ animation-delay: .35s; }
+        .master-content.open .accordion-item:nth-child(7){ animation-delay: .41s; }
+        .master-content.open .accordion-item:nth-child(8){ animation-delay: .47s; }
+
         /* Micro-tocchi da app sugli elementi interattivi principali */
         .author-badge{ transition: transform .25s var(--ease), box-shadow .25s, border-color .25s, background-color .3s; }
         .accordion-header .ch-icon{ transition: transform .3s var(--ease), color .2s; }
+        .accordion-header:hover .ch-number{ transform: translateX(2px); }
+        .accordion-header .ch-number{ transition: color .25s, transform .25s var(--ease); }
         .btn-close-section{ transition: all .2s var(--ease); }
 
-        /* Copy palette: due varianti, una per desktop e una per touch */
+        /* ------------------------------------------------------------
+           COPY LAVAGNA — sotto il banner pinguini, due varianti
+        ------------------------------------------------------------ */
+        .wb-hint{
+            margin: 10px 0 18px;
+            padding: 10px 14px;
+            background: rgba(200,169,110,.08);
+            border-left: 3px solid var(--gold);
+            border-radius: 0 var(--r-sm) var(--r-sm) 0;
+            font-size: .78rem; line-height: 1.65; color: var(--sub);
+        }
+        .wb-hint .ums-ic{ vertical-align: -2px; margin-right: 4px; }
+        .night-mode .wb-hint{ background: rgba(200,169,110,.07); color: #918E86; }
         .hl-copy-mobile{ display: none; }
         @media (max-width: 900px), (pointer: coarse){
             .hl-copy-desktop{ display: none; }
-            .hl-copy-mobile{ display: inline-flex; align-items: flex-start; gap: 6px; }
+            .hl-copy-mobile{ display: inline; }
         }
 
         /* Il pulsante flottante deve essere comodo da toccare col pollice */
@@ -4343,9 +4451,12 @@ if (!fileDaCaricare) {
 
         @media (prefers-reduced-motion: reduce){
             .header-eyebrow, header h1, header .subtitle, header .badges-row,
-            #custom-lang-selector.loaded, .content-card, .disclaimer-card, .site-footer{
+            #custom-lang-selector.loaded, .content-card, .disclaimer-card, .site-footer,
+            .master-content .accordion-item{
                 animation: none !important;
+                opacity: 1 !important;
             }
+            #ums-topbar{ transition: none; }
         }
     </style>
 
@@ -4411,6 +4522,35 @@ if (!fileDaCaricare) {
                     }
                 }, 280);
             });
+        })();
+    </script>
+
+    <script id="ums-topbar-script">
+        // ================================================================
+        // TOP-BAR DA SCROLL — BLOCCO ADDITIVO
+        // Superato l'header, appare una barra sfocata con il brand piccolo
+        // in alto a sinistra, come la home in modalita' app. Cliccando il
+        // brand si torna in cima alla lezione.
+        // ================================================================
+        (function () {
+            const bar = document.createElement('div');
+            bar.id = 'ums-topbar';
+            bar.innerHTML = '<div class="ums-brandmark notranslate" translate="no" role="button" tabindex="0" aria-label="Torna a inizio pagina">Una Mano <em>Spensierata</em></div>';
+            document.body.appendChild(bar);
+
+            const goTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+            const mark = bar.firstElementChild;
+            mark.addEventListener('click', goTop);
+            mark.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); goTop(); } });
+
+            const headerEl = document.querySelector('header');
+            if (!headerEl || !('IntersectionObserver' in window)) return;
+            const io = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    bar.classList.toggle('visible', !entry.isIntersecting);
+                });
+            }, { threshold: 0, rootMargin: '-60px 0px 0px 0px' });
+            io.observe(headerEl);
         })();
     </script>
 
