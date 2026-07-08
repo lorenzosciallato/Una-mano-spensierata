@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Psicologia dello Sviluppo | Lezione 7</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- VARIABILI & RESET --- */
+        :root {
+            --bg-color: #f0f0f2;
+            --paper-color: #fdfbf7;
+            --ink-color: #1a1a1a;
+            --accent-color: #375a7f;
+            
+            /* COLORI POP */
+            --pop-cyan: #00f2ff;
+            --pop-magenta: #ff00ff;
+            --pop-ocean: #0044cc;
+            --pop-yellow: #ffee00;
+
+            --font-title: 'Abril Fatface', cursive;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { height: 100%; overflow-x: hidden; }
+
+        body {
+            background-color: var(--bg-color);
+            font-family: var(--font-body);
+            color: var(--ink-color);
+            line-height: 1.6;
+            min-height: 100%;
+            position: relative;
+            padding-bottom: 80px;
+            -webkit-overflow-scrolling: touch;
+            width: 100%;
+        }
+
+        /* --- BARRA DI PROGRESSO (SCROLL) --- */
+        #scroll-progress-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 6px;
+            background: rgba(0,0,0,0.05); z-index: 9999999;
+        }
+        #scroll-progress-bar {
+            height: 100%; 
+            background: rgba(55, 90, 127, 0.7); /* Blu semi-trasparente */
+            width: 0%;
+            transition: width 0.1s; 
+            box-shadow: 0 0 10px rgba(55, 90, 127, 0.3);
+        }
+
+        /* --- BACKGROUND --- */
+        .giants-background {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; pointer-events: none; overflow: hidden;
+            display: flex; justify-content: center; align-items: center;
+            background: #e0e0e5; 
+        }
+        .main-background-image {
+            width: 100%; height: 100%; object-fit: cover; opacity: 0.1; 
+            filter: grayscale(100%) sepia(1) hue-rotate(210deg) contrast(1.2);
+            mix-blend-mode: multiply;
+        }
+
+        /* --- HEADER --- */
+        header { text-align: center; margin-top: 3rem; margin-bottom: 1rem; padding: 0 1rem; }
+        h1 { font-family: var(--font-title); font-size: clamp(2.5rem, 5vw, 4rem); margin: 0; color: var(--ink-color); line-height: 1.1; }
+        .subtitle {
+            font-family: var(--font-body); font-size: 1.5rem; color: var(--accent-color); font-weight: 700; 
+            text-transform: uppercase; letter-spacing: 4px; margin-top: 10px;
+        }
+
+        /* --- CONTENITORE PRINCIPALE --- */
+        .content-card {
+            background: var(--paper-color); padding: 3rem; margin: 0 auto;
+            width: 90%; max-width: 1200px; position: relative;
+            border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.05); z-index: 1;
+            margin-bottom: 2rem; margin-top: 2rem;
+        }
+        @media (max-width: 600px) { .content-card { padding: 1.5rem; width: 95%; margin-top: 1rem; } }
+
+        h3 { font-family: var(--font-title); font-size: 1.5rem; margin-top: 1.5rem; margin-bottom: 0.5rem; }
+
+        /* --- LAYOUT GRIGLIA --- */
+        .media-notes-grid { display: grid; grid-template-columns: 2.5fr 1fr; gap: 2rem; align-items: stretch; }
+        @media (max-width: 900px) { .media-notes-grid { grid-template-columns: 1fr; gap: 1.5rem; } }
+
+        /* --- MODIFICA SCROLL RIASSUNTO (Desktop) --- */
+        @media (min-width: 900px) {
+            #contenitore-riassunto {
+                max-height: 550px; 
+                overflow-y: auto;
+                padding-right: 15px; 
+                border-bottom: 1px solid #eee; 
+            }
+            #contenitore-riassunto::-webkit-scrollbar { width: 8px; }
+            #contenitore-riassunto::-webkit-scrollbar-thumb { background-color: #ccc; border-radius: 4px; }
+            #contenitore-riassunto::-webkit-scrollbar-track { background-color: #f9f9f9; }
+        }
+
+        /* --- BANNER IMMAGINI --- */
+        .section-banner { width: 100%; height: auto; max-height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 1.5rem; border: 1px solid #ddd; }
+
+        /* --- WIDGET APPUNTI (ZEN MODE UPDATE) --- */
+        .notes-widget {
+            background: #fff; 
+            border: 2px dashed #ccc; 
+            border-radius: 8px;
+            display: flex; 
+            flex-direction: column; 
+            align-self: start; 
+            height: 60vh; /* ZEN MODE: Altezza fissa */
+            overflow: hidden; /* ZEN MODE: Niente scroll esterno */
+            position: sticky; 
+            top: 20px; 
+            z-index: 5;
+            width: 100%; 
+            min-width: 0;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        }
+        
+        @media (max-width: 900px) {
+            .notes-widget { position: relative; top: 0; align-self: stretch; }
+        }
+
+        .notes-toolbar {
+            background: #f4f4f4; padding: 10px; border-bottom: 1px solid #ddd;
+            border-radius: 6px 6px 0 0; display: flex; justify-content: flex-end;
+        }
+        .tool-btn {
+            padding: 8px 15px; font-size: 0.85rem; cursor: pointer; border: 1px solid #bbb; 
+            background: white; border-radius: 4px; font-weight: 600; font-family: var(--font-body); transition: all 0.2s;
+        }
+        
+        .notes-area {
+            width: 100%;
+            height: 100%;
+            border: none;
+            resize: none;
+            padding: 20px;
+            padding-top: 50px; /* Spazio per toolbar */
+            padding-bottom: 80vh; /* IL TRUCCO ZEN: Spazio infinito */
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            background: transparent;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        /* --- ACCORDION --- */
+        .accordion-item { margin-bottom: 1rem; border-bottom: 1px solid #eee; }
+        .accordion-header {
+            background: transparent; border: none; width: 100%; text-align: left;
+            padding: 1.2rem 0; font-family: var(--font-title); font-size: clamp(1.2rem, 4vw, 1.8rem);
+            cursor: pointer; transition: color 0.3s; display: flex;
+            justify-content: space-between; align-items: center; color: var(--ink-color); font-weight: 400;
+        }
+        .accordion-header strong {
+            font-family: var(--font-body); font-weight: 700; font-size: 1.3rem;
+            color: var(--accent-color); text-transform: uppercase; letter-spacing: 2px; margin-right: 15px;
+        }
+        .accordion-content {
+            max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out;
+            padding: 0; opacity: 0; display: flex; flex-direction: column; 
+        }
+        .accordion-content.active { max-height: 20000px; opacity: 1; padding-top: 1rem; padding-bottom: 2rem; overflow: visible; } 
+        .icon-plus { font-size: 1.5rem; font-weight: 300; font-family: var(--font-body); color: var(--accent-color); margin-left: auto; }
+
+        /* --- MASTER HEADER --- */
+        .master-header {
+            background: transparent; border: 2px solid var(--accent-color); border-radius: 8px;
+            padding: 10px 20px; justify-content: center; font-size: 1.5rem; 
+            color: var(--accent-color); width: 100%; margin-bottom: 1rem;
+        }
+        .master-header .icon-plus { margin-left: 15px; flex-grow: 0; }
+        @media (max-width: 600px) { .master-header { font-size: 1.1rem; padding: 10px; } }
+
+        .btn-close-section {
+            width: 100%; text-align: center; margin-top: 30px; padding: 15px; background: #eee; 
+            border: 1px solid #ddd; border-radius: 8px; font-family: var(--font-body); font-weight: 700; 
+            color: #666; cursor: pointer; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px;
+        }
+
+        /* --- STILI DEL RIASSUNTO TESTUALE --- */
+        .text-content-box {
+            background: #fff; border: 1px solid #eee; border-radius: 8px; padding: 2rem;
+            color: #333; line-height: 1.8; font-size: 1.05rem;
+        }
+        @media(max-width:600px) { .text-content-box { padding: 1rem; font-size: 1rem; } }
+        
+        .text-content-box h3 { color: var(--accent-color); border-bottom: 2px solid #eee; padding-bottom: 10px; margin-top: 2.5rem; margin-bottom: 1.5rem; }
+        .text-content-box h3:first-child { margin-top: 0; }
+        .text-content-box h4 { color: #555; margin-top: 1.5rem; margin-bottom: 0.5rem; font-size: 1.2rem; }
+        .text-content-box p { margin-bottom: 1rem; }
+        
+        .cornell-box {
+            background: #f4f8fb; border-left: 5px solid var(--accent-color); padding: 1.5rem;
+            margin: 2rem 0; border-radius: 0 8px 8px 0;
+        }
+        .cornell-question { font-weight: bold; color: var(--accent-color); margin-bottom: 0.2rem; }
+        .cornell-answer { margin-bottom: 1.5rem; margin-left: 10px; }
+        .cornell-answer:last-child { margin-bottom: 0; }
+
+        .metafora-box {
+            background: #fff8e1; border: 2px dashed var(--pop-yellow); padding: 1.5rem;
+            border-radius: 12px; margin-top: 3rem; font-style: italic;
+        }
+
+        /* --- VIDEO CONTAINER --- */
+        .video-container { 
+            position: relative; width: 100%; padding-bottom: 56.25%; height: 0; 
+            background: #000; border-radius: 8px; overflow: hidden; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); z-index: 1; margin-bottom: 1rem;
+        }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+
+        /* --- FLASHCARDS --- */
+        .flashcard-wrapper {
+            position: relative; perspective: 1000px; width: 100%; height: 500px; margin-bottom: 1rem;
+            cursor: pointer; /* Cursore mano su desktop */
+        }
+        .flashcard-inner {
+            position: relative; width: 100%; height: 100%; text-align: center;
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15); border-radius: 12px;
+        }
+        .flashcard-wrapper.flipped .flashcard-inner { transform: rotateY(180deg); }
+        
+        .flashcard-front, .flashcard-back {
+            position: absolute; width: 100%; height: 100%;
+            backface-visibility: hidden; display: flex; flex-direction: column; 
+            align-items: center; justify-content: center;
+            border-radius: 12px; padding: 1.5rem;
+            background-image: url('https://i.postimg.cc/tJSTPJPW/indiani-d-america-e-uova-sode-stile-bruno-munari-molto-movimentato-e-colorato.jpg'); 
+            background-size: contain; background-repeat: no-repeat; background-position: center; background-color: #222;
+        }
+        .flashcard-back { transform: rotateY(180deg); }
+        .flashcard-back::before {
+            content: ""; position: absolute; top:0; left:0; width:100%; height:100%;
+            background-image: url('https://i.postimg.cc/tJSTPJPW/indiani-d-america-e-uova-sode-stile-bruno-munari-molto-movimentato-e-colorato.jpg');
+            background-size: contain; background-repeat: no-repeat; background-position: center;
+            transform: scaleX(-1); z-index: -1;
+        }
+
+        .flashcard-back p, .flashcard-front h2 {
+            position: relative; z-index: 2; 
+            background: rgba(255,255,255,0.95); 
+            padding: 20px 25px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); 
+            width: 100%; color: #111;
+        }
+        .flashcard-front h2 { font-family: var(--font-title); font-size: 1.6rem; line-height: 1.3; }
+        .flashcard-back p { 
+            font-size: 1rem; text-align: left; line-height: 1.5; white-space: pre-line;
+            overflow-y: auto; max-height: 85%; -webkit-overflow-scrolling: touch; pointer-events: auto; 
+        }
+
+        /* --- BOTTONE GIRA CARTA (SOLO MOBILE) --- */
+        .btn-flip-mobile {
+            display: none; 
+            margin-top: 15px;
+            background: var(--pop-yellow);
+            color: #000;
+            border: 3px solid #000;
+            padding: 10px 30px;
+            font-weight: 900;
+            border-radius: 30px;
+            z-index: 20;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            text-transform: uppercase;
+            font-family: var(--font-body);
+            white-space: nowrap;
+            pointer-events: auto;
+        }
+        .btn-flip-mobile:active { transform: translateY(2px); }
+
+        @media (max-width: 900px) {
+            .flashcard-wrapper { height: 500px; cursor: default; /* Niente manina su mobile */ }
+            .flashcard-front, .flashcard-back { justify-content: flex-start; padding: 1rem; padding-top: 1.5rem; }
+            .flashcard-front h2 { font-size: 1.2rem; padding: 15px; margin-top: 20px; }
+            .flashcard-back p { font-size: 0.95rem; padding: 15px; max-height: 75%; }
+            .btn-flip-mobile { display: inline-block; position: absolute; bottom: 20px; }
+            .fc-controls { margin-top: 10px; grid-template-columns: 45px 1fr 45px; gap: 5px; }
+            .btn-pop { padding: 12px 5px; font-size: 0.8rem; }
+            .btn-start { width: 100%; }
+        }
+
+        .fc-counter { text-align: center; margin-bottom: 10px; font-weight: bold; color: var(--accent-color); }
+        .fc-controls { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; margin-top: 20px; }
+        .fc-actions { display: flex; gap: 5px; justify-content: center; width: 100%; }
+
+        .btn-pop {
+            padding: 10px 20px; border: none; border-radius: 8px;
+            font-weight: 700; font-family: var(--font-body); text-transform: uppercase; cursor: pointer;
+            transition: transform 0.1s, box-shadow 0.2s; border: 2px solid #000; box-shadow: 3px 3px 0px #000;
+        }
+        .btn-pop:active { transform: translateY(2px); box-shadow: 1px 1px 0px #000; }
+        .btn-nav { background: #fff; color: #000; font-size: 1.2rem; min-width: 40px; }
+        .btn-no { background: var(--pop-magenta); color: #fff; flex-grow: 1; }
+        .btn-yes { background: var(--pop-cyan); color: #000; flex-grow: 1; }
+        .btn-start { background: var(--pop-yellow); color: #000; font-size: 1.2rem; padding: 15px 40px; margin-top: 20px; }
+
+        #win-screen {
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            height: 400px; text-align: center; background: #fff; border-radius: 12px; border: 2px dashed #000; padding: 2rem;
+        }
+        #win-screen h2 { border: none; margin: 0; padding: 0; color: var(--pop-ocean); }
+
+        #toast-container { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 9999999; pointer-events: none; }
+        .toast {
+            background: rgba(0,0,0,0.9); color: white; padding: 15px 30px; border-radius: 50px;
+            margin-top: 10px; font-weight: bold; font-family: var(--font-body); text-align: center;
+            opacity: 0; transition: opacity 0.3s, transform 0.3s; transform: translateY(20px); border: 2px solid; pointer-events: auto;
+        }
+        .toast.show { opacity: 1; transform: translateY(0); }
+        .toast-success { border-color: var(--pop-cyan); box-shadow: 0 0 15px var(--pop-cyan); color: var(--pop-cyan); }
+        .toast-retry { border-color: var(--pop-magenta); box-shadow: 0 0 15px var(--pop-magenta); color: var(--pop-magenta); }
+
+        /* --- FREUD BOT --- */
+        .freud-bot-container { background: #fff; padding: 2rem; border-radius: 8px; text-align: center; border: 1px solid #ddd; }
+        .bot-image {
+            display: block; margin: 0 auto 1.5rem auto; max-width: 100%; width: 100%; height: auto; 
+            object-fit: contain; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .bot-content { position: relative; background: transparent; padding: 0; border: none; display: block; max-width: 100%; }
+
+        /* --- TESTO OBIETTIVI --- */
+        .obj-list { margin-top:10px; padding-left:20px; line-height: 1.8; }
+        .obj-box { background: #f9f9f9; border-left: 4px solid var(--accent-color); padding: 1.5rem; margin-bottom: 2rem; }
+        .definition-box { background: #375a7f; color: white; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; line-height: 1.6; }
+
+        /* --- FATTORI --- */
+        .factors-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 2rem 0; }
+        .factor-card {
+            background: #fff; border: 1px solid #ddd; padding: 1.5rem; border-radius: 8px;
+            cursor: pointer; text-align: center; transition: 0.2s; position: relative;
+        }
+        .factor-card:hover { border-color: var(--accent-color); transform: translateY(-3px); }
+        .factor-card::after { content: '+'; position: absolute; top: 5px; right: 10px; color: #ccc; }
+
+        /* --- MODAL --- */
+        #factor-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85);
+            z-index: 99999; display: none; justify-content: center; align-items: center; padding: 20px;
+        }
+        #factor-modal.open { display: flex; }
+        .modal-paper { 
+            background: #fff; width: 100%; max-width: 600px; padding: 2.5rem; border-radius: 12px; position: relative; 
+            max-height: 90vh; overflow-y: auto; line-height: 1.8; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); -webkit-overflow-scrolling: touch;
+        }
+        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 2rem; cursor: pointer; color: var(--accent-color); z-index: 10; }
+        .btn-choice {
+            padding: 10px 25px; margin: 5px; font-size: 0.9rem; cursor: pointer;
+            background: #fff; color: var(--accent-color); border: 2px solid #ccc; border-radius: 50px; font-weight: bold;
+        }
+
+        /* --- ASMR --- */
+        .visual-toggle-container { background: #eef2f5; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; text-align: center; border: 1px solid #d1d9e0; }
+        .visual-toggle-title { font-family: var(--font-title); font-size: 1.2rem; margin-bottom: 1rem; color: var(--accent-color); }
+        .toggle-btn {
+            padding: 8px 24px; margin: 0 10px; border: 2px solid var(--accent-color); background: transparent;
+            color: var(--accent-color); font-weight: bold; border-radius: 30px; cursor: pointer; transition: all 0.3s;
+        }
+        .toggle-btn:hover { background: rgba(55, 90, 127, 0.1); }
+        .toggle-btn.active { background: var(--accent-color); color: white; }
+        #visual-wrapper { display: none; margin-bottom: 25px; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- NUOVO POP-UP RISPOSTA FLASHCARD (MOBILE) --- */
+        #fc-mobile-modal {
+            display: none; /* nascosto di base */
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); z-index: 999999;
+            justify-content: center; align-items: center; padding: 20px;
+            backdrop-filter: blur(4px);
+        }
+        .fc-mobile-content {
+            background: #fff; 
+            width: 95%; max-width: 500px;
+            max-height: 80vh; /* Limite altezza */
+            overflow-y: auto; /* Abilita SCROLL interno */
+            padding: 30px 25px; 
+            border-radius: 16px;
+            position: relative;
+            font-size: 1.1rem; line-height: 1.6; color: #222;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            -webkit-overflow-scrolling: touch; /* Scroll fluido su iOS */
+        }
+        .fc-mobile-close {
+            margin-top: 20px; width: 100%; padding: 15px; 
+            background: var(--pop-cyan); border: 2px solid #000; 
+            font-weight: bold; font-size: 1rem; cursor: pointer; border-radius: 50px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="source-riassunto" style="display: none;">
+        
+        <h3>1. Valutazione e Continuità dell'Attaccamento</h3>
+        <p>L'attaccamento è un legame biologico universale: in tutte le culture, ogni bambino sviluppa una forma di legame, e circa il 60-70% presenta uno stile sicuro. Questo legame è così vitale che l'isolamento per un neonato può risultare letale. Gli studi longitudinali confermano una continuità nel tempo: un bambino sicuro tende a diventare un adulto con relazioni funzionali, mentre un attaccamento insicuro o disorganizzato aumenta il rischio di psicopatologie. I problemi possono essere esternalizzanti (aggressività, ADHD, disturbo oppositivo provocatorio) o internalizzanti (ansia, depressione, ritiro sociale).</p>
+        <p>Per valutare l'attaccamento si utilizzano strumenti specifici:</p>
+        <ul>
+            <li><strong>Adult Attachment Interview (AAI):</strong> Ideata da Mary Main, analizza i Modelli Operativi Interni (MOI) negli adulti attraverso una narrazione coerente o frammentata della propria infanzia.</li>
+            <li><strong>Attachment Q-Sort:</strong> Uno strumento osservativo per bambini dai 12 ai 48 mesi, basato sull'ordinamento di 90 item (carte con descrizioni comportamentali) in contesti naturali come casa o asilo.</li>
+        </ul>
+        <p>Trasmissione intergenerazionale: Esiste una forte correlazione tra il modello di attaccamento del genitore (misurato durante la gravidanza con l'AAI) e quello del figlio a 12 mesi (misurato con la Strange Situation).</p>
+        <p>Esempio pratico: Un educatore utilizza il Q-Sort osservando un bambino di 2 anni all'asilo nido; nota che il piccolo cerca attivamente l'adulto quando è spaventato, classificando questa carta come "comportamento tipico".</p>
+        
+        <div class="cornell-box">
+            <p class="cornell-question">Domande e risposte brevi:</p>
+            <p class="cornell-question">D: Cosa valuta l'AAI?</p>
+            <p class="cornell-answer">R: I Modelli Operativi Interni e la coerenza della narrazione adulta sull'infanzia.</p>
+            <p class="cornell-question">D: Qual è l'ormone associato all'attaccamento?</p>
+            <p class="cornell-answer">R: L'ossitocina, che promuove la creazione di legami.</p>
+            <p class="cornell-question">D: Cosa sono i disturbi esternalizzanti?</p>
+            <p class="cornell-answer">R: Comportamenti rivolti all'esterno, come aggressività o disubbidienza.</p>
+        </div>
+
+        <h3>2. Dinamiche Familiari: II Lausanne Triadic Play (LTP)</h3>
+        <p>II Lausanne Triadic Play è uno strumento osservativo che introduce una prospettiva triadica (madre-padre-bambino), superando la visione limitata alla sola diade. La famiglia viene vista come una "squadra" (practicing family), un sistema attivo in cui i membri collaborano per un compito comune. Il gioco si divide in quattro fasi: interazione diade A, interazione diade B, interazione a tre e interazione tra genitori con bambino osservatore.</p>
+        <p>Gli studi dimostrano che già a 3 mesi il bambino è in grado di gestire relazioni triadiche, alternando lo sguardo tra i genitori e coordinando segnali affettivi come i sorrisi. Le alleanze familiari possono essere:</p>
+        <ul>
+            <li>Cooperative: Alta sintonia e ruoli chiari.</li>
+            <li>In tensione: Collaborazione presente ma con attriti temporanei.</li>
+            <li>Collusive: Esclusione di un membro e ruoli confusi.</li>
+            <li>Disturbate: Interazione caotica e assenza di coordinazione.</li>
+        </ul>
+        <p>Esempio pratico: Durante il gioco, il bambino costruisce una torre e guarda la madre; se lei sorride, il bambino si sente gratificato. Questo scambio di sintonizzazione è definito intersoggettività.</p>
+
+        <div class="cornell-box">
+            <p class="cornell-question">Domande e risposte brevi:</p>
+            <p class="cornell-question">D: Cosa significa "practicing family"?</p>
+            <p class="cornell-answer">R: La famiglia intesa come una squadra che collabora e si aiuta a vicenda.</p>
+            <p class="cornell-question">D: A che età il bambino gestisce la triade?</p>
+            <p class="cornell-answer">R: Già a partire dai 3 mesi.</p>
+            <p class="cornell-question">D: Cosa si intende per "alleanza collusiva"?</p>
+            <p class="cornell-answer">R: Una complicità disfunzionale con esclusione di uno dei membri.</p>
+        </div>
+
+        <h3>3. Toddlerhood: Autonomia, Emozioni e Temperamento</h3>
+        <p>La fase della toddlerhood (18 mesi - 3 anni) corrisponde al secondo compito psicosociale di Erikson: autonomia contro vergogna e dubbio. Il bambino inizia a camminare, parlare ed esplorare; se sostenuto, sviluppa fiducia, altrimenti prova insicurezza. In questo periodo emerge l'autocoscienza, ovvero la capacità di percepirsi come individui distinti dagli altri.</p>
+        <p>Lo sviluppo emotivo si divide in:</p>
+        <ul>
+            <li>Emozioni primarie (innate): Gioia, paura, rabbia, tristezza, disgusto, sorpresa.</li>
+            <li>Emozioni secondarie o autocoscienti (acquisite): Vergogna, colpa, imbarazzo, orgoglio, invidia.</li>
+        </ul>
+        <p>Il successo della socializzazione è influenzato dal temperamento (caratteristiche innate) e dalla Goodness of Fit (bontà di adattamento): se lo stile educativo del genitore è in sintonia con il temperamento del bambino, la crescita sarà armonica.</p>
+        <p>Esempio pratico: Per verificare l'autocoscienza si usa il test della macchia (rouge test): se un bambino di 20 mesi si vede allo specchio con una macchia di rossetto sul naso e cerca di pulire il proprio viso invece dello specchio, dimostra di riconoscersi.</p>
+
+        <div class="cornell-box">
+            <p class="cornell-question">Domande e risposte brevi:</p>
+            <p class="cornell-question">D: Qual è la sfida di Erikson in questa fase?</p>
+            <p class="cornell-answer">R: Autonomia contro vergogna e dubbio.</p>
+            <p class="cornell-question">D: Cosa si intende per pro-socialità?</p>
+            <p class="cornell-answer">R: L'inclinazione naturale, ma socialmente costruita, a donare e aiutare gli altri.</p>
+            <p class="cornell-question">D: Cos'è la Goodness of Fit?</p>
+            <p class="cornell-answer">R: L'adattamento tra il temperamento del bambino e le aspettative ambientali.</p>
+        </div>
+
+        <h3>4. Sviluppo Fisico e Cognitivo nella Prima Fanciullezza (3-6 anni)</h3>
+        <p>In questa fase la crescita segue il principio cefalo-caudale (dall'alto in basso). Le abilità motorie si distinguono in grosso-motorie (grandi muscoli, es. correre) e motorie fini (movimenti piccoli coordinati, es. scrivere). Lo sviluppo fisico può essere minacciato dalla malnutrizione o dall'eccesso di internet a scapito del gioco all'aperto.</p>
+        <p>Sul piano cognitivo, Piaget identifica lo stadio preoperatorio (2-7 anni), caratterizzato da:</p>
+        <ul>
+            <li>Egocentrismo cognitivo: Difficoltà nel considerare il punto di vista altrui.</li>
+            <li>Animismo: Attribuire vita a oggetti inanimati.</li>
+            <li>Mancanza di conservazione: Incapacità di capire che la quantità resta uguale anche se cambia la forma (es. liquidi in contenitori diversi) a causa della centratura su un solo aspetto sensoriale.</li>
+        </ul>
+        <p>Vygotskij, invece, introduce la Zona di Sviluppo Prossimale (ZSP): la distanza tra ciò che il bambino fa da solo e ciò che può fare con l'aiuto di un adulto (scaffolding).</p>
+        <p>Esempio pratico: Un bambino crede che in un bicchiere alto e stretto ci sia "più acqua" rispetto a uno largo e basso, nonostante abbia visto versare lo stesso liquido; questo accade perché non padroneggia la reversibilità.</p>
+
+        <div class="cornell-box">
+            <p class="cornell-question">Domande e risposte brevi:</p>
+            <p class="cornell-question">D: Cos'è lo scaffolding?</p>
+            <p class="cornell-answer">R: Il supporto modulato dall'adulto per insegnare nuove abilità nella ZSP.</p>
+            <p class="cornell-question">D: Cosa caratterizza l'artificialismo?</p>
+            <p class="cornell-answer">R: La credenza che tutto in natura sia stato creato dagli esseri umani.</p>
+            <p class="cornell-question">D: Cos'è il discorso interiore per Vygotskij?</p>
+            <p class="cornell-answer">R: Parlare a se stessi per controllare il comportamento e affrontare sfide.</p>
+        </div>
+
+        <h3>5. Linguaggio, Gioco e Identità di Genere</h3>
+        <p>Il linguaggio si evolve rapidamente, ma i bambini compiono errori tipici: l'ipercorrettismo (es. "prenduto" invece di "preso"), la sovraestensione (es. chiamare "cane" ogni animale a quattro zampe) e la sottoestensione. La memoria autobiografica inizia a formarsi intorno ai 2 anni attraverso le conversazioni con i genitori sul passato.</p>
+        <p>Un traguardo sociale cruciale è la Teoria della Mente (TOM): capire che gli altri hanno prospettive e credenze diverse dalle proprie, solitamente raggiunta a 4-5 anni e misurata con il test della falsa credenza. Il gioco evolve da quello di esercizio a quello di fantasia collaborativo, fondamentale per interiorizzare le norme sociali.</p>
+        <p>L'identità di genere segue tre tappe:</p>
+        <ol>
+            <li>Etichettamento (2,5 anni): Identificazione superficiale (capelli, vestiti).</li>
+            <li>Stabilità (3-4 anni): II genere è visto come stabile nel tempo.</li>
+            <li>Costanza di genere (5-6 anni): II genere resta uguale anche se cambiano vestiti o attività.</li>
+        </ol>
+        <p>Esempio pratico: Nel test della falsa credenza, un bambino di 3 anni dirà che la signorina X cercherà il giocattolo nel nuovo nascondiglio (dove lui sa che si trova), perché non capisce ancora che lei ha una "falsa credenza".</p>
+
+        <div class="cornell-box">
+            <p class="cornell-question">Domande e risposte brevi:</p>
+            <p class="cornell-question">D: Cosa causa i disturbi dello spettro autistico secondo le fonti?</p>
+            <p class="cornell-answer">R: Deficit gravi nella ToM, ma non i vaccini.</p>
+            <p class="cornell-question">D: Quando inizia la segregazione di genere nel gioco?</p>
+            <p class="cornell-answer">R: Nella scuola dell'infanzia, consolidandosi a 5-6 anni.</p>
+            <p class="cornell-question">D: Cos'è l'ipercorrettismo?</p>
+            <p class="cornell-answer">R: Applicare regole grammaticali standard anche alle eccezioni.</p>
+        </div>
+
+    </div>
+    <div id="scroll-progress-container">
+        <div id="scroll-progress-bar"></div>
+    </div>
+
+    <div class="giants-background">
+        <img class="main-background-image" src="https://i.ibb.co/ym31GBzJ/nell-immagine-sotto-mantieni-coerenza-le-ombre-devono-essere-di-bambini-maschi-che-diventano-adult.jpg" alt="Sfondo Ombre">
+    </div>
+
+    <div id="toast-container"></div>
+
+    <header>
+        <h1>Psicologia dello Sviluppo</h1>
+        <div class="subtitle">Lezione 7</div>
+    </header>
+
+    <div id="factor-modal" onclick="closeModal(event)">
+        <div class="modal-paper" onclick="event.stopPropagation()">
+            <span class="close-modal" onclick="closeModalDirect()">&times;</span>
+            <h2 id="m-title" style="margin-top:0;"></h2>
+            <div id="m-body"></div>
+        </div>
+    </div>
+
+    <div id="fc-mobile-modal" onclick="closeMobileAnswerPopup()">
+        <div class="fc-mobile-content" onclick="event.stopPropagation()">
+            <h3 style="margin-top:0; color:var(--accent-color);">Risposta:</h3>
+            <div id="fc-mobile-body">
+                </div>
+            <button class="fc-mobile-close" onclick="closeMobileAnswerPopup()">Ho capito, chiudi</button>
+        </div>
+    </div>
+
+    <div class="content-card">
+        
+        <div class="accordion-item" style="border-bottom: none;">
+            <button class="accordion-header master-header">
+                <span>Inizia</span> 
+                <span class="icon-plus">→</span>
+            </button>
+            <div class="accordion-content">
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span><strong>01.</strong> Obiettivi & Punti Chiave</span> 
+                        <span class="icon-plus">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        
+                        <div class="obj-box">
+                            <p><strong>Obiettivi della lezione:</strong></p>
+                            <ul class="obj-list">
+                                <li>Approfondire la valutazione dell'attaccamento nell'adulto e nel bambino attraverso strumenti clinici e osservativi come l'Adult Attachment Interview e l'Attachment Q-Sort.</li>
+                                <li>Analizzare le dinamiche familiari da una prospettiva triadica, superando la visione della diade madre-bambino per includere il ruolo del padre e l'alleanza familiare attraverso il gioco di Losanna.</li>
+                                <li>Esaminare lo sviluppo fisico e motorio nella prima fanciullezza (3-6 anni), distinguendo tra abilità grosso-motorie e fini.</li>
+                                <li>Comprendere lo sviluppo cognitivo secondo Piaget e Vygotskij, analizzando lo stadio preoperatorio, il concetto di conservazione e la Zona di Sviluppo Prossimale.</li>
+                                <li>Indagare l'evoluzione del linguaggio e delle emozioni, focalizzandosi sull'autocoscienza, la memoria autobiografica e gli errori linguistici tipici dello sviluppo.</li>
+                                <li>Studiare lo sviluppo sociale e l'identità di genere, esplorando le tipologie di gioco e i processi che portano alla costanza di genere e alla Teoria della Mente.</li>
+                            </ul>
+                        </div>
+
+                        <p><strong>Punti chiave della lezione:</strong> (Clicca per approfondire)</p>
+                        <div class="factors-grid">
+                            <div class="factor-card" onclick="openFactor('attaccamento')">
+                                <strong>1. Attaccamento & Famiglia</strong><br><small>AAI, Q-Sort e LTP</small>
+                            </div>
+                            <div class="factor-card" onclick="openFactor('fisico')">
+                                <strong>2. Sviluppo Fisico</strong><br><small>3-6 anni & Motricità</small>
+                            </div>
+                            <div class="factor-card" onclick="openFactor('cognitivo')">
+                                <strong>3. Cognizione</strong><br><small>Piaget vs Vygotskij</small>
+                            </div>
+                            <div class="factor-card" onclick="openFactor('sociale')">
+                                <strong>4. Sociale & Genere</strong><br><small>ToM e Identità</small>
+                            </div>
+                        </div>
+
+                        <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione ▲</button>
+                    </div>
+                </div>
+
+                <br>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span><strong>02.</strong> Il Podcast</span>
+                        <span class="icon-plus">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="media-notes-grid">
+                            <div>
+                                <div class="visual-toggle-container">
+                                    <div class="visual-toggle-title">Vuoi la compagnia visiva?</div>
+                                    <button class="toggle-btn" onclick="toggleVisual(true)">SÌ</button>
+                                    <button class="toggle-btn" onclick="toggleVisual(false)">NO</button>
+                                </div>
+
+                                <div id="visual-wrapper">
+                                    <div class="video-container">
+                                        <iframe id="visual-iframe" src="" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                    </div>
+                                    <p style="font-size: 0.8rem; text-align: center; margin-top: 5px; color: #888;">
+                                        <em>Clicca Play per iniziare. Il video andrà in loop.</em>
+                                    </p>
+                                </div>
+
+                                <p style="margin-bottom:10px; margin-top: 20px;">Ascolta la lezione audio.</p>
+                                <iframe id="podcast-iframe" width="100%" height="166" style="border:none;"
+                                src="https://drive.google.com/file/d/1DrDgrbe0V7As2dcJWvsjFKyW41U1_hTG/preview"></iframe>
+                            </div>
+                            <div class="notes-widget">
+                                <div class="notes-toolbar">
+                                    <button class="tool-btn copy" onclick="copyNotes(this)">Copia Appunti</button>
+                                </div>
+                                <textarea class="notes-area" placeholder="Scrivi qui i tuoi appunti..."></textarea>
+                            </div>
+                        </div>
+                        <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione ▲</button>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span><strong>03.</strong> Video Sintesi</span>
+                        <span class="icon-plus">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="media-notes-grid">
+                            <div>
+                                <p style="margin-bottom:10px;">Guarda il video.</p>
+                                <div class="video-container">
+                                    <iframe src="https://www.youtube.com/embed/rjMKY35XZGw?controls=1&fs=1" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                </div>
+                            </div>
+                            <div class="notes-widget">
+                                <div class="notes-toolbar">
+                                    <button class="tool-btn copy" onclick="copyNotes(this)">Copia Appunti</button>
+                                </div>
+                                <textarea class="notes-area" placeholder="Scrivi qui i tuoi appunti..."></textarea>
+                            </div>
+                        </div>
+                        <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione ▲</button>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span><strong>04.</strong> Dritti al Sodo</span>
+                        <span class="icon-plus">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        
+                        <div class="media-notes-grid">
+                            <div>
+                                <div id="fc-start-screen" style="text-align: center; padding: 2rem;">
+                                    <div class="flashcard-wrapper">
+                                        <div class="flashcard-inner">
+                                            <div class="flashcard-front">
+                                                <h2>Pronto a ripassare?</h2>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="btn-pop btn-start" onclick="startFlashcards()">INIZIA</button>
+                                </div>
+
+                                <div id="fc-game-screen" style="display: none;">
+                                    <div class="fc-counter" id="fc-counter"></div>
+
+                                    <div id="flashcard-deck" class="flashcard-wrapper" onclick="handleWrapperClick(event)">
+                                        <div class="flashcard-inner">
+                                            <div class="flashcard-front">
+                                                <h2 id="fc-front-text">Caricamento...</h2>
+                                                <button class="btn-flip-mobile" onclick="forceFlip(event)">GIRA ↻</button>
+                                            </div>
+                                            <div class="flashcard-back">
+                                                <p id="fc-back-text" onclick="event.stopPropagation()">Caricamento...</p>
+                                                <button class="btn-flip-mobile" onclick="forceFlip(event)">GIRA ↻</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="fc-controls" id="fc-controls-bar">
+                                        <button class="btn-pop btn-nav" onclick="navCard(-1)">◄</button>
+                                        <div class="fc-actions">
+                                            <button class="btn-pop btn-no" onclick="markUnknown()">Ripasso dopo :(</button>
+                                            <button class="btn-pop btn-yes" onclick="markKnown()">La so! :)</button>
+                                        </div>
+                                        <button class="btn-pop btn-nav" onclick="navCard(1)">►</button>
+                                    </div>
+                                </div>
+
+                                <div id="win-screen">
+                                    <h2>Ma allora se le sai tutte io vado via!!</h2>
+                                    <p style="margin: 20px 0;">🎉🎉🎉</p>
+                                    <button class="btn-pop btn-yes" onclick="resetDeck()">Ricomincia da capo</button>
+                                </div>
+                            </div>
+
+                            <div class="notes-widget">
+                                <div class="notes-toolbar">
+                                    <button class="tool-btn copy" onclick="copyNotes(this)">Copia Appunti</button>
+                                </div>
+                                <textarea class="notes-area" placeholder="Scrivi qui i tuoi appunti..."></textarea>
+                            </div>
+                        </div>
+
+                        <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione ▲</button>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span><strong>05.</strong> Il Riassuntone</span>
+                        <span class="icon-plus">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="media-notes-grid">
+                            <div>
+                                <img src="https://i.postimg.cc/BbgFzJFJ/disegna-dei-pinguini-tutti-in-mucchio-come-fanno-in-natura-stile-del-disegno-corporate.jpg" class="section-banner" alt="Banner Riassuntone">
+                                
+                                <p style="margin-bottom:15px; color:#555;">Leggi il riassunto completo qui sotto.</p>
+                                
+                                <div id="contenitore-riassunto">
+                                    </div>
+
+                            </div>
+                            <div class="notes-widget">
+                                <div class="notes-toolbar">
+                                    <button class="tool-btn copy" onclick="copyNotes(this)">Copia Appunti</button>
+                                </div>
+                                <textarea class="notes-area" placeholder="Scrivi qui i tuoi appunti..."></textarea>
+                            </div>
+                        </div>
+                        <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione ▲</button>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span><strong>06.</strong> Fai una Pausa</span>
+                        <span class="icon-plus">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        
+                        <div style="text-align:center; padding: 2rem; background: #fafafa; border-radius: 8px;">
+                            <h3>Tempo di respirare.</h3>
+                            <p>Prenditi 5 minuti lontano dallo schermo. Hai elaborato molti concetti.</p>
+                            <div style="font-size:3rem; margin-top:1rem;">☕</div>
+                        </div>
+
+                        <p style="text-align: center; margin-top: 2rem; font-weight: bold; color: var(--accent-color);">
+                            oppure, gioca ai nostri giochi: il Cerca Parole e il Super Solitario
+                        </p>
+
+                        <div style="text-align: center; margin-top: 1.5rem;">
+                            <a href="https://sites.google.com/view/una-mano-spensierata/psicologia-dello-sviluppo/i-giochi" target="_blank" class="btn-pop btn-start" style="text-decoration:none; display:inline-block;">Vai ai giochi</a>
+                        </div>
+
+                        <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione ▲</button>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span><strong>07.</strong> Chiedi all'Assistente AI</span>
+                        <span class="icon-plus">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="freud-bot-container">
+                            <img src="https://i.ibb.co/LXQ0RwkT/elimina-il-robot-cattivo.jpg" alt="Assistente IA" class="bot-image">
+                            <div class="bot-content">
+                                <h3>Dr. Freud-Bot 3000</h3>
+                                <p>Hai dubbi sull'inconscio della lezione?</p>
+                                <a href="https://notebooklm.google.com/notebook/4548d536-ae8a-4574-9a3c-7f0b45d5e9a5" target="_blank" class="btn-choice" style="display:inline-block; text-decoration:none; background:var(--ink-color); color:white; border:none; margin-top:10px;">Avvia Chat</a>
+                            </div>
+                        </div>
+                        <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione ▲</button>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span><strong>08.</strong> ASMR & Chill</span>
+                        <span class="icon-plus">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div style="max-width: 800px; margin: 0 auto;">
+                            <div>
+                                <p style="font-size:0.9rem; color:#666; margin-bottom:15px; text-align:center;">Nota: Clicca Play per avviare.</p>
+                                
+                                <h4 style="margin-bottom: 10px; color: var(--accent-color);">ASMR</h4>
+                                <div class="video-container" style="margin-bottom: 2rem;">
+                                    <iframe id="asmr-brown" src="" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                </div>
+                                
+                                <h4 style="margin-bottom: 10px; color: var(--accent-color);">Musica Relax / Lofi</h4>
+                                <div class="video-container">
+                                    <iframe id="asmr-music" src="" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione ▲</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+
+        // --- TRANSFER RIASSUNTO LOGIC ---
+        window.addEventListener('DOMContentLoaded', () => {
+            const source = document.getElementById('source-riassunto');
+            const target = document.getElementById('contenitore-riassunto');
+            if (source && target) {
+                target.innerHTML = source.innerHTML;
+            }
+            setRandomYTStart('asmrBrown');
+            setRandomYTStart('asmrMusic');
+        });
+
+        // --- SCROLL PROGRESS BAR LOGIC ---
+        window.onscroll = function() { updateProgressBar() };
+
+        function updateProgressBar() {
+            var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            var scrolled = (winScroll / height) * 100;
+            document.getElementById("scroll-progress-bar").style.width = scrolled + "%";
+        }
+
+        // --- DATA FATTORI AGGIORNATI PER LEZIONE 7 ---
+        const factorsData = {
+            attaccamento: {
+                title: "Valutazione dell'Attaccamento e Famiglia",
+                body: `<p>L'attaccamento è un dato universale che si trasmette di generazione in generazione e può essere valutato con l'Adult Attachment Interview (AAI). Per i bambini (12-48 mesi) si utilizza l'Attachment Q-Sort. Una novità fondamentale è rappresentata dal Lausanne Triadic Play (LTP), che studia la famiglia come una "squadra" (practicing family).</p>`
+            },
+            fisico: {
+                title: "Sviluppo Fisico e Motorio",
+                body: `<p>Nella prima fanciullezza la crescita segue il principio cefalo-caudale. Le abilità grosso-motorie coinvolgono i grandi muscoli (correre, saltare), mentre le abilità fini riguardano movimenti coordinati come scrivere e disegnare. Fattori come la malnutrizione, la mancanza di gioco all'aperto e l'accesso eccessivo a internet possono minacciare queste abilità.</p>`
+            },
+            cognitivo: {
+                title: "Sviluppo Cognitivo: Piaget vs Vygotskij",
+                body: `<p>Il bambino tra i 2 e i 7 anni si trova nello stadio preoperatorio, caratterizzato da egocentrismo cognitivo, animismo e incapacità di comprendere il principio della conservazione. Vygotskij propone invece la Zona di Sviluppo Prossimale (ZSP), definendo l'apprendimento come un processo collaborativo supportato dallo scaffolding dell'adulto.</p>`
+            },
+            sociale: {
+                title: "Sviluppo Emotivo, Sociale e Identità",
+                body: `<p>Verso i 2 anni emergono le emozioni secondarie o autocoscienti. La Teoria della Mente si raggiunge solitamente tra i 4 e i 5 anni. L'identità di genere attraversa tre tappe: l'etichettamento, la stabilità e infine la costanza di genere.</p>`
+            }
+        };
+
+        /* ==========================================================
+            LOGICA FLASHCARDS 
+            ========================================================== */
+        
+        // FLASHCARD INTEGRALI ESTRATTE DAL PDF (SENZA PREAMBOLI)
+        const initialCards = [
+            {
+                front: `Perché, secondo Piaget, un bambino nello stadio preoperatorio fallisce nei compiti di conservazione (es. il liquido nei bicchieri)?`,
+                back: `II fallimento deriva da due limiti cognitivi principali: la centratura e l'assenza di reversibilità. La centratura spinge il bambino a focalizzarsi su un solo aspetto percettivo evidente (come l'altezza del liquido) trascurando gli altri (la larghezza del contenitore). La mancanza di reversibilità, invece, impedisce al bambino di annullare mentalmente l'azione del travaso per tornare allo stato iniziale, rendendolo schiavo del dato percettivo immediato. In questa fase, la percezione prevale sulla logica concettuale.`
+            },
+            {
+                front: `Qual è la differenza sostanziale tra ciò che un bambino sa fare e il suo "potenziale" nella teoria di Vygotskij?`,
+                back: `Vygotskij definisce la ZSP come la distanza tra il livello di sviluppo attuale (compiti risolti autonomamente) e il livello di sviluppo potenziale (compiti risolti con l'aiuto di un adulto o coetaneo più esperto). L'adulto agisce tramite lo scaffolding, adattando il supporto alle competenze del bambino per promuovere l'indipendenza. L'apprendimento è quindi un'esperienza collaborativa e bidirezionale, non un processo solitario come ipotizzato da Piaget.`
+            },
+            {
+                front: `Distingui, con esempi, tra "ipercorrettismo" e "sovraestensione" nel linguaggio infantile.`,
+                back: `L'ipercorrettismo si verifica quando il bambino applica regole grammaticali standard a eccezioni (es. dire "prenduto" invece di "preso"). La sovraestensione consiste nell'usare un'etichetta verbale in modo troppo ampio (es. chiamare "cane" ogni animale a quattro zampe). Esiste anche la sottoestensione, ovvero l'uso di un termine in senso troppo ristretto (es. "cane" riferito solo al proprio animale domestico).`
+            },
+            {
+                front: `Perché è tecnicamente errato definire l'insegnante come "figura di attaccamento" in uno studio di caso?`,
+                back: `L'insegnante rappresenta una figura di riferimento fondamentale, ma non è il caregiver primario. Il legame di attaccamento è un sistema biologico programmato per la ricerca di protezione e sicurezza estrema. L'insegnante osserva lo stile di attaccamento del bambino verso i genitori e può fungere da base sicura nel contesto scolastico, ma non condivide con il bambino la storia di cure e sintonizzazione primaria che definisce il legame di attaccamento vero e proprio.`
+            },
+            {
+                front: `Quali tratti narrativi caratterizzano un adulto "distanziante" durante l'intervista AAI?`,
+                back: `Un adulto con attaccamento distanziante tende a minimizzare l'importanza delle relazioni e dell'attaccamento stesso. Durante l'intervista, può idealizzare i genitori senza fornire prove concrete o, al contrario, affermare di non ricordare nulla della propria infanzia. Mostra freddezza emotiva e distacco rispetto alle esperienze passate, cercando di apparire estremamente indipendente e poco influenzato dai legami affettivi.`
+            },
+            {
+                front: `Cosa si intende per prospettiva triadica e "famiglia come squadra" negli studi di Losanna?`,
+                back: `La prospettiva triadica supera la diade madre-bambino per includere simultaneamente il padre, vedendo la famiglia come un'unità relazionale integrata. II concetto di practicing family definisce la famiglia come un sistema attivo dove i membri collaborano e interagiscono come una squadra per raggiungere un obiettivo comune. L'LTP valuta la coordinazione, l'inclusione di tutti i membri e la sintonizzazione emotiva collettiva.`
+            },
+            {
+                front: `In che modo il superamento del test della macchia (rouge test) si collega allo sviluppo delle emozioni secondarie?`,
+                back: `Il superamento del test (solitamente tra i 18 e i 24 mesi) indica l'acquisizione dell'autocoscienza, ovvero la capacità di percepirsi come individui distinti dagli altri. Solo dopo aver sviluppato questa consapevolezza di sé, il bambino può provare emozioni autocoscienti (o secondarie) come vergogna, colpa, orgoglio o imbarazzo, poiché queste richiedono una riflessione sulla propria immagine e sulle proprie azioni rispetto alle aspettative altrui.`
+            },
+            {
+                front: `Cosa dimostra il "test della falsa credenza" riguardo alle capacità cognitive dei bambini sotto i 4 anni?`,
+                back: `II test misura la capacità di capire che gli altri possono avere prospettive e credenze diverse dalle proprie e dalla realtà dei fatti. Un bambino sotto i 4 anni risponderà basandosi sulla propria conoscenza (la realtà), non capendo che l'altro agisce in base a una falsa credenza (es. cercare un oggetto dove pensa che sia, non dove è stato spostato). La ToM è deficitaria nei disturbi dello spettro autistico.`
+            },
+            {
+                front: `Spiega il concetto di "costanza di genere" che compare verso i 5-6 anni.`,
+                back: `La costanza di genere è l'ultima tappa dell'identità sessuale: il bambino comprende che il genere rimane stabile nonostante cambiamenti superficiali nelle attività, nei capelli o nei vestiti (es. un maschio con un vestito resta maschio). Precede l'etichettamento (2,5 anni, basato sull'aspetto esteriore) e la stabilità di genere (3-4 anni, comprensione che il genere dura nel tempo).`
+            },
+            {
+                front: `Secondo Jerome Kagan, come interagiscono la base biologica del temperamento e l'ambiente educativo?`,
+                back: `Kagan sostiene che tratti come la timidezza abbiano una base biologica innata legata alla reattività del sistema nervoso. Tuttavia, l'ambiente può influenzare profondamente l'espressione di questi tratti. La Goodness of Fit (bontà di adattamento) descrive quanto lo stile educativo dei genitori si accordi con il temperamento del bambino. Un buon adattamento favorisce una crescita armonica, mentre un conflitto tra temperamento innato e aspettative ambientali può causare difficoltà emotive e comportamentali.`
+            }
+        ];
+
+        let activeCards = [...initialCards];
+        let currentCardIndex = 0;
+
+        function startFlashcards() {
+            document.getElementById('fc-start-screen').style.display = 'none';
+            document.getElementById('fc-game-screen').style.display = 'block';
+            updateCardDisplay();
+        }
+
+        function updateCardDisplay() {
+            const deck = document.getElementById('flashcard-deck');
+            const controls = document.getElementById('fc-controls-bar');
+            const winScreen = document.getElementById('win-screen');
+            const counter = document.getElementById('fc-counter');
+
+            if (activeCards.length === 0) {
+                document.getElementById('fc-game-screen').style.display = 'none';
+                winScreen.style.display = 'flex';
+                return;
+            } else {
+                winScreen.style.display = 'none';
+            }
+
+            if (currentCardIndex >= activeCards.length) currentCardIndex = 0;
+            if (currentCardIndex < 0) currentCardIndex = activeCards.length - 1;
+
+            const card = activeCards[currentCardIndex];
+            counter.innerText = `Carte da studiare: ${activeCards.length}`;
+
+            // Animazione di cambio carta
+            deck.style.opacity = '0.5';
+            setTimeout(() => {
+                // USARE INNERHTML PER INTERPRETARE I TAG <BR>
+                document.getElementById('fc-front-text').innerHTML = card.front;
+                document.getElementById('fc-back-text').innerHTML = card.back;
+                
+                // Reset scroll del testo posteriore
+                document.getElementById('fc-back-text').scrollTop = 0;
+                
+                // Reset flip
+                deck.classList.remove('flipped'); 
+                deck.style.opacity = '1';
+            }, 200);
+        }
+
+        // --- GESTIONE FLIP ---
+        
+        // Funzione per il click sul wrapper (PC)
+        function handleWrapperClick(e) {
+            // Se siamo su mobile (schermo < 900px), IGNORA il click sul wrapper
+            // per permettere lo scroll del testo senza girare la carta.
+            if (window.innerWidth <= 900) return;
+            
+            toggleFlip();
+        }
+
+        // Funzione per il bottone Mobile (GIRA)
+        function forceFlip(e) {
+            if(e) e.stopPropagation();
+
+            // LOGICA MOBILE: SE SIAMO SU SCHERMO PICCOLO (< 900px) APRI MODALE INVECE DI GIRARE
+            if (window.innerWidth <= 900) {
+                // Recupera il testo della risposta della carta corrente
+                const card = activeCards[currentCardIndex];
+                const answerText = card.back; 
+                
+                // Inserisci nel modale
+                document.getElementById('fc-mobile-body').innerHTML = answerText;
+                
+                // Mostra modale
+                document.getElementById('fc-mobile-modal').style.display = 'flex';
+            } else {
+                // LOGICA DESKTOP: GIRA NORMALE
+                toggleFlip();
+            }
+        }
+
+        // Funzione per chiudere il popup mobile della risposta
+        function closeMobileAnswerPopup() {
+            document.getElementById('fc-mobile-modal').style.display = 'none';
+        }
+
+        // La logica effettiva del flip (usata solo su desktop ora)
+        function toggleFlip() {
+            document.getElementById('flashcard-deck').classList.toggle('flipped');
+        }
+
+        // --- NAVIGAZIONE ---
+        function navCard(direction) {
+            currentCardIndex += direction;
+            if (currentCardIndex < 0) currentCardIndex = activeCards.length - 1;
+            if (currentCardIndex >= activeCards.length) currentCardIndex = 0;
+            updateCardDisplay();
+        }
+
+        // --- GESTIONE RISPOSTE ---
+        function markKnown() {
+            showToast("Grande! Continua così.", "success");
+            activeCards.splice(currentCardIndex, 1);
+            if (currentCardIndex >= activeCards.length) currentCardIndex = 0;
+            
+            // Ritardo per permettere l'animazione del toast prima di cambiare carta visivamente
+            setTimeout(() => {
+                document.getElementById('flashcard-deck').classList.remove('flipped');
+                updateCardDisplay();
+            }, 500);
+        }
+
+        function markUnknown() {
+            showToast("Nessun problema, la rivedremo dopo.", "retry");
+            // Sposta la carta in fondo al mazzo
+            const currentCard = activeCards.splice(currentCardIndex, 1)[0];
+            activeCards.push(currentCard);
+            
+            if (currentCardIndex >= activeCards.length) currentCardIndex = 0;
+            
+            setTimeout(() => {
+                document.getElementById('flashcard-deck').classList.remove('flipped');
+                updateCardDisplay();
+            }, 500);
+        }
+
+        function resetDeck() {
+            activeCards = [...initialCards];
+            currentCardIndex = 0;
+            document.getElementById('win-screen').style.display = 'none';
+            document.getElementById('fc-game-screen').style.display = 'block';
+            document.getElementById('fc-start-screen').style.display = 'block';
+            // Nasconde il gioco, mostra start screen
+            document.getElementById('fc-game-screen').style.display = 'none';
+        }
+
+        function showToast(message, type) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.innerText = message;
+            container.appendChild(toast);
+            
+            // Trigger reflow
+            void toast.offsetWidth; 
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 2000);
+        }
+
+        // --- UTILS ---
+        
+        function openFactor(key) {
+            document.getElementById('m-title').innerText = factorsData[key].title;
+            document.getElementById('m-body').innerHTML = factorsData[key].body;
+            document.getElementById('factor-modal').classList.add('open');
+            document.body.classList.add('modal-open');
+        }
+        function closeModalDirect() { 
+            document.getElementById('factor-modal').classList.remove('open');
+            document.body.classList.remove('modal-open');
+        }
+        function closeModal(e) { if(e.target.id === 'factor-modal') closeModalDirect(); }
+
+        function showCopySuccess(btn) {
+            const originalText = btn.innerText;
+            btn.innerText = "Copiato!";
+            btn.style.background = "#d4edda";
+            setTimeout(() => {
+                btn.innerText = originalText;
+                btn.style.background = "white";
+            }, 1500);
+        }
+
+        function copyNotes(btn) {
+            const widget = btn.closest('.notes-widget');
+            const noteArea = widget.querySelector('.notes-area');
+            const text = noteArea.value; /* UPDATED FOR TEXTAREA */
+
+            if (!text.trim()) {
+                alert("Non c'è nulla da copiare! Scrivi prima qualcosa.");
+                return;
+            }
+
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showCopySuccess(btn);
+                }).catch(err => {
+                    fallbackCopyTextToClipboard(text, btn);
+                });
+            } else {
+                fallbackCopyTextToClipboard(text, btn);
+            }
+        }
+
+        function fallbackCopyTextToClipboard(text, btn) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed"; 
+            textArea.style.left = "-9999px";
+            textArea.style.top = "0";
+            document.body.appendChild(textArea);
+            textArea.focus({preventScroll: true});
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showCopySuccess(btn);
+            } catch (err) {
+                alert('Errore nel copiare gli appunti.');
+            }
+            document.body.removeChild(textArea);
+        }
+        
+        // --- AUTO-SCROLL & SAVING (ZEN MODE) ---
+        // Applicazione chirurgica per tutte le textareas presenti
+        const area = document.querySelector('.notes-area');
+        area.addEventListener('input', function() {
+            // Salvataggio
+            localStorage.setItem('NOTES_KEY_DINAMICA', this.value); 
+            // Auto-scroll solo se scrivo in fondo
+            if(this.selectionStart === this.value.length) {
+                this.scrollTo(0, this.scrollHeight);
+            }
+        });
+
+        // --- ACCORDION LOGIC ---
+        const accs = document.getElementsByClassName("accordion-header");
+        for (let i = 0; i < accs.length; i++) {
+            accs[i].addEventListener("click", function(e) {
+                e.stopPropagation();
+                
+                this.classList.toggle("active");
+                const panel = this.nextElementSibling;
+                const icon = this.querySelector('.icon-plus');
+                
+                if (this.classList.contains("active")) {
+                      panel.style.maxHeight = panel.scrollHeight + 15000 + "px"; 
+                      panel.classList.add("active");
+                      if(icon) icon.textContent = "-";
+                } else {
+                      panel.style.maxHeight = null;
+                      panel.classList.remove("active");
+                      if(icon) icon.textContent = "+";
+                }
+            });
+        }
+
+        function closeThisSection(btn) {
+            const content = btn.parentElement;
+            const header = content.previousElementSibling;
+            header.click();
+            header.scrollIntoView({behavior: "smooth", block: "center"});
+        }
+
+        /* -------------------------------------------------------------
+            LOGICA VIDEO YOUTUBE (NO AUTOPLAY + RANDOM START)
+        ------------------------------------------------------------- */
+        
+        const VIDEO_CONFIG = {
+            visualCompanion: { 
+                id: 'visual-iframe', 
+                videoId: 'pb-j3svRQLI', // Studio with me
+                duration: 3600, // stima
+                muted: true 
+            },
+            asmrBrown: {
+                id: 'asmr-brown',
+                videoId: 'P48QELwruQs', // ASMR
+                duration: 36000, 
+                muted: false
+            },
+            asmrMusic: {
+                id: 'asmr-music',
+                videoId: 'oGCu47JESi0', // Musica Relax
+                duration: 3600, 
+                muted: false
+            }
+        };
+
+        function setRandomYTStart(configKey) {
+            const config = VIDEO_CONFIG[configKey];
+            const iframe = document.getElementById(config.id);
+            if(!iframe) return;
+
+            const randomSec = Math.floor(Math.random() * (config.duration - 30));
+            
+            let url = `https://www.youtube.com/embed/${config.videoId}?playlist=${config.videoId}&loop=1&autoplay=0&start=${randomSec}&controls=1&fs=1`;
+            
+            if(config.muted) {
+                url += "&mute=1";
+            }
+            
+            iframe.src = url;
+        }
+
+        // --- GESTIONE VISUAL COMPANION TOGGLE ---
+        function toggleVisual(show) {
+            const wrapper = document.getElementById('visual-wrapper');
+            const btns = document.querySelectorAll('.toggle-btn');
+            
+            btns[0].classList.toggle('active', show);
+            btns[1].classList.toggle('active', !show);
+
+            if (show) {
+                wrapper.style.display = 'block';
+                setRandomYTStart('visualCompanion');
+            } else {
+                wrapper.style.display = 'none';
+                document.getElementById('visual-iframe').src = "";
+            }
+        }
+
+    </script>
+</body>
+</html>

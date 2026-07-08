@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Psicologia dello Sviluppo | Lezione 5</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- VARIABILI & RESET --- */
+        :root {
+            --bg-color: #f0f0f2;
+            --paper-color: #fdfbf7;
+            --ink-color: #1a1a1a;
+            --accent-color: #375a7f;
+            
+            /* COLORI POP */
+            --pop-cyan: #00f2ff;
+            --pop-magenta: #ff00ff;
+            --pop-ocean: #0044cc;
+            --pop-yellow: #ffee00;
+
+            --font-title: 'Abril Fatface', cursive;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { height: 100%; overflow-x: hidden; }
+
+        body {
+            background-color: var(--bg-color);
+            font-family: var(--font-body);
+            color: var(--ink-color);
+            line-height: 1.6;
+            min-height: 100%;
+            position: relative;
+            padding-bottom: 80px;
+            -webkit-overflow-scrolling: touch;
+            width: 100%;
+        }
+
+        /* --- BARRA DI PROGRESSO (SCROLL) --- */
+        #scroll-progress-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 6px;
+            background: rgba(0,0,0,0.05); z-index: 9999999;
+        }
+        #scroll-progress-bar {
+            height: 100%; 
+            background: rgba(55, 90, 127, 0.7); /* Blu semi-trasparente */
+            width: 0%;
+            transition: width 0.1s; 
+            box-shadow: 0 0 10px rgba(55, 90, 127, 0.3);
+        }
+
+        /* --- BACKGROUND --- */
+        .giants-background {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; pointer-events: none; overflow: hidden;
+            display: flex; justify-content: center; align-items: center;
+            background: #e0e0e5; 
+        }
+        .main-background-image {
+            width: 100%; height: 100%; object-fit: cover; opacity: 0.1; 
+            filter: grayscale(100%) sepia(1) hue-rotate(210deg) contrast(1.2);
+            mix-blend-mode: multiply;
+        }
+
+        /* --- HEADER --- */
+        header { text-align: center; margin-top: 3rem; margin-bottom: 1rem; padding: 0 1rem; }
+        h1 { font-family: var(--font-title); font-size: clamp(2.5rem, 5vw, 4rem); margin: 0; color: var(--ink-color); line-height: 1.1; }
+        .subtitle {
+            font-family: var(--font-body); font-size: 1.5rem; color: var(--accent-color); font-weight: 700; 
+            text-transform: uppercase; letter-spacing: 4px; margin-top: 10px;
+        }
+
+        /* --- CONTENITORE PRINCIPALE --- */
+        .content-card {
+            background: var(--paper-color); padding: 3rem; margin: 0 auto;
+            width: 90%; max-width: 1200px; position: relative;
+            border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.05); z-index: 1;
+            margin-bottom: 2rem; margin-top: 2rem;
+        }
+        @media (max-width: 600px) { .content-card { padding: 1.5rem; width: 95%; margin-top: 1rem; } }
+
+        h3 { font-family: var(--font-title); font-size: 1.5rem; margin-top: 1.5rem; margin-bottom: 0.5rem; }
+
+        /* --- LAYOUT GRIGLIA --- */
+        .media-notes-grid { display: grid; grid-template-columns: 2.5fr 1fr; gap: 2rem; align-items: stretch; }
+        @media (max-width: 900px) { .media-notes-grid { grid-template-columns: 1fr; gap: 1.5rem; } }
+
+        /* --- MODIFICA SCROLL RIASSUNTO (Desktop) --- */
+        @media (min-width: 900px) {
+            #contenitore-riassunto {
+                max-height: 550px; 
+                overflow-y: auto;
+                padding-right: 15px; 
+                border-bottom: 1px solid #eee; 
+            }
+            #contenitore-riassunto::-webkit-scrollbar { width: 8px; }
+            #contenitore-riassunto::-webkit-scrollbar-thumb { background-color: #ccc; border-radius: 4px; }
+            #contenitore-riassunto::-webkit-scrollbar-track { background-color: #f9f9f9; }
+        }
+
+        /* --- BANNER IMMAGINI --- */
+        .section-banner { width: 100%; height: auto; max-height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 1.5rem; border: 1px solid #ddd; }
+
+        /* --- WIDGET APPUNTI ZEN --- */
+        .notes-widget {
+            background: #fff; 
+            border: 2px dashed #ccc; 
+            border-radius: 8px;
+            display: flex; 
+            flex-direction: column; 
+            align-self: start; 
+            height: 60vh; /* Altezza fissa */
+            position: sticky; 
+            top: 20px; 
+            z-index: 5;
+            width: 100%; 
+            min-width: 0;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+        
+        @media (max-width: 900px) {
+            .notes-widget { position: relative; top: 0; height: 500px; align-self: stretch; }
+        }
+
+        .notes-toolbar {
+            background: #f4f4f4; padding: 10px; border-bottom: 1px solid #ddd;
+            border-radius: 6px 6px 0 0; display: flex; justify-content: flex-end;
+            flex-shrink: 0;
+        }
+        .tool-btn {
+            padding: 8px 15px; font-size: 0.85rem; cursor: pointer; border: 1px solid #bbb; 
+            background: white; border-radius: 4px; font-weight: 600; font-family: var(--font-body); transition: all 0.2s;
+        }
+        
+        .notes-area {
+            width: 100%;
+            height: 100%;
+            border: none;
+            resize: none;
+            padding: 20px;
+            padding-top: 50px; /* Spazio per toolbar */
+            padding-bottom: 80vh; /* IL TRUCCO ZEN: Spazio infinito */
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            background: transparent;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem; 
+            line-height: 1.6; 
+            outline: none;
+        }
+        .notes-area::placeholder { color: #aaa; }
+
+        /* --- ACCORDION --- */
+        .accordion-item { margin-bottom: 1rem; border-bottom: 1px solid #eee; }
+        .accordion-header {
+            background: transparent; border: none; width: 100%; text-align: left;
+            padding: 1.2rem 0; font-family: var(--font-title); font-size: clamp(1.2rem, 4vw, 1.8rem);
+            cursor: pointer; transition: color 0.3s; display: flex;
+            justify-content: space-between; align-items: center; color: var(--ink-color); font-weight: 400;
+        }
+        .accordion-header strong {
+            font-family: var(--font-body); font-weight: 700; font-size: 1.3rem;
+            color: var(--accent-color); text-transform: uppercase; letter-spacing: 2px; margin-right: 15px;
+        }
+        .accordion-content {
+            max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out;
+            padding: 0; opacity: 0; display: flex; flex-direction: column; 
+        }
+        .accordion-content.active { max-height: 20000px; opacity: 1; padding-top: 1rem; padding-bottom: 2rem; overflow: visible; } 
+        .icon-plus { font-size: 1.5rem; font-weight: 300; font-family: var(--font-body); color: var(--accent-color); margin-left: auto; }
+
+        /* --- MASTER HEADER --- */
+        .master-header {
+            background: transparent; border: 2px solid var(--accent-color); border-radius: 8px;
+            padding: 10px 20px; justify-content: center; font-size: 1.5rem; 
+            color: var(--accent-color); width: 100%; margin-bottom: 1rem;
+        }
+        .master-header .icon-plus { margin-left: 15px; flex-grow: 0; }
+        @media (max-width: 600px) { .master-header { font-size: 1.1rem; padding: 10px; } }
+
+        .btn-close-section {
+            width: 100%; text-align: center; margin-top: 30px; padding: 15px; background: #eee; 
+            border: 1px solid #ddd; border-radius: 8px; font-family: var(--font-body); font-weight: 700; 
+            color: #666; cursor: pointer; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px;
+        }
+
+        /* --- STILI DEL RIASSUNTO TESTUALE --- */
+        .text-content-box {
+            background: #fff; border: 1px solid #eee; border-radius: 8px; padding: 2rem;
+            color: #333; line-height: 1.8; font-size: 1.05rem;
+        }
+        @media(max-width:600px) { .text-content-box { padding: 1rem; font-size: 1rem; } }
+        
+        .text-content-box h3 { color: var(--accent-color); border-bottom: 2px solid #eee; padding-bottom: 10px; margin-top: 2.5rem; margin-bottom: 1.5rem; }
+        .text-content-box h3:first-child { margin-top: 0; }
+        .text-content-box h4 { color: #555; margin-top: 1.5rem; margin-bottom: 0.5rem; font-size: 1.2rem; }
+        .text-content-box p { margin-bottom: 1rem; }
+        
+        .cornell-box {
+            background: #f4f8fb; border-left: 5px solid var(--accent-color); padding: 1.5rem;
+            margin: 2rem 0; border-radius: 0 8px 8px 0;
+        }
+        .cornell-question { font-weight: bold; color: var(--accent-color); margin-bottom: 0.2rem; }
+        .cornell-answer { margin-bottom: 1.5rem; margin-left: 10px; }
+        .cornell-answer:last-child { margin-bottom: 0; }
+
+        .metafora-box {
+            background: #fff8e1; border: 2px dashed var(--pop-yellow); padding: 1.5rem;
+            border-radius: 12px; margin-top: 3rem; font-style: italic;
+        }
+
+        /* --- VIDEO CONTAINER --- */
+        .video-container { 
+            position: relative; width: 100%; padding-bottom: 56.25%; height: 0; 
+            background: #000; border-radius: 8px; overflow: hidden; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); z-index: 1; margin-bottom: 1rem;
+        }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+
+        /* --- FLASHCARDS --- */
+        .flashcard-wrapper {
+            position: relative; perspective: 1000px; width: 100%; height: 500px; margin-bottom: 1rem;
+            cursor: pointer; /* Cursore mano su desktop */
+        }
+        .flashcard-inner {
+            position: relative; width: 100%; height: 100%; text-align: center;
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15); border-radius: 12px;
+        }
+        .flashcard-wrapper.flipped .flashcard-inner { transform: rotateY(180deg); }
+        
+        .flashcard-front, .flashcard-back {
+            position: absolute; width: 100%; height: 100%;
+            backface-visibility: hidden; display: flex; flex-direction: column; 
+            align-items: center; justify-content: center;
+            border-radius: 12px; padding: 1.5rem;
+            background-image: url('https://i.postimg.cc/tJSTPJPW/indiani-d-america-e-uova-sode-stile-bruno-munari-molto-movimentato-e-colorato.jpg'); 
+            background-size: contain; background-repeat: no-repeat; background-position: center; background-color: #222;
+        }
+        .flashcard-back { transform: rotateY(180deg); }
+        .flashcard-back::before {
+            content: ""; position: absolute; top:0; left:0; width:100%; height:100%;
+            background-image: url('https://i.postimg.cc/tJSTPJPW/indiani-d-america-e-uova-sode-stile-bruno-munari-molto-movimentato-e-colorato.jpg');
+            background-size: contain; background-repeat: no-repeat; background-position: center;
+            transform: scaleX(-1); z-index: -1;
+        }
+
+        .flashcard-back p, .flashcard-front h2 {
+            position: relative; z-index: 2; 
+            background: rgba(255,255,255,0.95); 
+            padding: 20px 25px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); 
+            width: 100%; color: #111;
+        }
+        .flashcard-front h2 { font-family: var(--font-title); font-size: 1.6rem; line-height: 1.3; }
+        .flashcard-back p { 
+            font-size: 1rem; text-align: left; line-height: 1.5; white-space: pre-line;
+            overflow-y: auto; max-height: 85%; -webkit-overflow-scrolling: touch; pointer-events: auto; 
+        }
+
+        /* --- BOTTONE GIRA CARTA (SOLO MOBILE) --- */
+        .btn-flip-mobile {
+            display: none; 
+            margin-top: 15px;
+            background: var(--pop-yellow);
+            color: #000;
+            border: 3px solid #000;
+            padding: 10px 30px;
+            font-weight: 900;
+            border-radius: 30px;
+            z-index: 20;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            text-transform: uppercase;
+            font-family: var(--font-body);
+            white-space: nowrap;
+            pointer-events: auto;
+        }
+        .btn-flip-mobile:active { transform: translateY(2px); }
+
+        @media (max-width: 900px) {
+            .flashcard-wrapper { height: 500px; cursor: default; /* Niente manina su mobile */ }
+            .flashcard-front, .flashcard-back { justify-content: flex-start; padding: 1rem; padding-top: 1.5rem; }
+            .flashcard-front h2 { font-size: 1.2rem; padding: 15px; margin-top: 20px; }
+            .flashcard-back p { font-size: 0.95rem; padding: 15px; max-height: 75%; }
+            .btn-flip-mobile { display: inline-block; position: absolute; bottom: 20px; }
+            .fc-controls { margin-top: 10px; grid-template-columns: 45px 1fr 45px; gap: 5px; }
+            .btn-pop { padding: 12px 5px; font-size: 0.8rem; }
+            .btn-start { width: 100%; }
+        }
+
+        .fc-counter { text-align: center; margin-bottom: 10px; font-weight: bold; color: var(--accent-color); }
+        .fc-controls { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; margin-top: 20px; }
+        .fc-actions { display: flex; gap: 5px; justify-content: center; width: 100%; }
+
+        .btn-pop {
+            padding: 10px 20px; border: none; border-radius: 8px;
+            font-weight: 700; font-family: var(--font-body); text-transform: uppercase; cursor: pointer;
+            transition: transform 0.1s, box-shadow 0.2s; border: 2px solid #000; box-shadow: 3px 3px 0px #000;
+        }
+        .btn-pop:active { transform: translateY(2px); box-shadow: 1px 1px 0px #000; }
+        .btn-nav { background: #fff; color: #000; font-size: 1.2rem; min-width: 40px; }
+        .btn-no { background: var(--pop-magenta); color: #fff; flex-grow: 1; }
+        .btn-yes { background: var(--pop-cyan); color: #000; flex-grow: 1; }
+        .btn-start { background: var(--pop-yellow); color: #000; font-size: 1.2rem; padding: 15px 40px; margin-top: 20px; }
+
+        #win-screen {
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            height: 400px; text-align: center; background: #fff; border-radius: 12px; border: 2px dashed #000; padding: 2rem;
+        }
+        #win-screen h2 { border: none; margin: 0; padding: 0; color: var(--pop-ocean); }
+
+        #toast-container { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 9999999; pointer-events: none; }
+        .toast {
+            background: rgba(0,0,0,0.9); color: white; padding: 15px 30px; border-radius: 50px;
+            margin-top: 10px; font-weight: bold; font-family: var(--font-body); text-align: center;
+            opacity: 0; transition: opacity 0.3s, transform 0.3s; transform: translateY(20px); border: 2px solid; pointer-events: auto;
+        }
+        .toast.show { opacity: 1; transform: translateY(0); }
+        .toast-success { border-color: var(--pop-cyan); box-shadow: 0 0 15px var(--pop-cyan); color: var(--pop-cyan); }
+        .toast-retry { border-color: var(--pop-magenta); box-shadow: 0 0 15px var(--pop-magenta); color: var(--pop-magenta); }
+
+        /* --- FREUD BOT --- */
+        .freud-bot-container { background: #fff; padding: 2rem; border-radius: 8px; text-align: center; border: 1px solid #ddd; }
+        .bot-image {
+            display: block; margin: 0 auto 1.5rem auto; max-width: 100%; width: 100%; height: auto; 
+            object-fit: contain; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .bot-content { position: relative; background: transparent; padding: 0; border: none; display: block; max-width: 100%; }
+
+        /* --- TESTO OBIETTIVI --- */
+        .obj-list { margin-top:10px; padding-left:20px; line-height: 1.8; }
+        .obj-box { background: #f9f9f9; border-left: 4px solid var(--accent-color); padding: 1.5rem; margin-bottom: 2rem; }
+        .definition-box { background: #375a7f; color: white; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; line-height: 1.6; }
+
+        /* --- FATTORI --- */
+        .factors-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 2rem 0; }
+        .factor-card {
+            background: #fff; border: 1px solid #ddd; padding: 1.5rem; border-radius: 8px;
+            cursor: pointer; text-align: center; transition: 0.2s; position: relative;
+        }
+        .factor-card:hover { border-color: var(--accent-color); transform: translateY(-3px); }
+        .factor-card::after { content: '+'; position: absolute; top: 5px; right: 10px; color: #ccc; }
+
+        /* --- MODAL --- */
+        #factor-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85);
+            z-index: 99999; display: none; justify-content: center; align-items: center; padding: 20px;
+        }
+        #factor-modal.open { display: flex; }
+        .modal-paper { 
+            background: #fff; width: 100%; max-width: 600px; padding: 2.5rem; border-radius: 12px; position: relative; 
+            max-height: 90vh; overflow-y: auto; line-height: 1.8; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); -webkit-overflow-scrolling: touch;
+        }
+        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 2rem; cursor: pointer; color: var(--accent-color); z-index: 10; }
+        .btn-choice {
+            padding: 10px 25px; margin: 5px; font-size: 0.9rem; cursor: pointer;
+            background: #fff; color: var(--accent-color); border: 2px solid #ccc; border-radius: 50px; font-weight: bold;
+        }
+
+        /* --- ASMR --- */
+        .visual-toggle-container { background: #eef2f5; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; text-align: center; border: 1px solid #d1d9e0; }
+        .visual-toggle-title { font-family: var(--font-title); font-size: 1.2rem; margin-bottom: 1rem; color: var(--accent-color); }
+        .toggle-btn {
+            padding: 8px 24px; margin: 0 10px; border: 2px solid var(--accent-color); background: transparent;
+            color: var(--accent-color); font-weight: bold; border-radius: 30px; cursor: pointer; transition: all 0.3s;
+        }
+        .toggle-btn:hover { background: rgba(55, 90, 127, 0.1); }
+        .toggle-btn.active { background: var(--accent-color); color: white; }
+        #visual-wrapper { display: none; margin-bottom: 25px; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- NUOVO POP-UP RISPOSTA FLASHCARD (MOBILE) --- */
+        #fc-mobile-modal {
+            display: none; /* nascosto di base */
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); z-index: 999999;
+            justify-content: center; align-items: center; padding: 20px;
+            backdrop-filter: blur(4px);
+        }
+        .fc-mobile-content {
+            background: #fff; 
+            width: 95%; max-width: 500px;
+            max-height: 80vh; /* Limite altezza */
+            overflow-y: auto; /* Abilita SCROLL interno */
+            padding: 30px 25px; 
+            border-radius: 16px;
+            position: relative;
+            font-size: 1.1rem; line-height: 1.6; color: #222;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            -webkit-overflow-scrolling: touch; /* Scroll fluido su iOS */
+        }
+        .fc-mobile-close {
+            margin-top: 20px; width: 100%; padding: 15px; 
+            background: var(--pop-cyan); border: 2px solid #000; 
+            font-weight: bold; font-size: 1rem; cursor: pointer; border-radius: 50px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="source-riassunto" style="display: none;">
+        
+        <h3>1. Sviluppo Cerebrale e Principi Motori</h3>
+        <p>Nei primi anni di vita, il cervello attraversa una fase di crescita rapidissima, guidata dalla maturazione della corteccia cerebrale, responsabile delle funzioni più complesse. Mentre le aree sensoriali maturano precocemente, la corteccia prefrontale, sede del ragionamento e dell'autocontrollo, completa lo sviluppo solo dopo i 20 anni. L'unità funzionale è il neurone, che trasmette segnali tramite l'assone (che si mielinizza per velocizzare gli impulsi) e riceve informazioni attraverso i dendriti. Lo sviluppo è segnato dalla sinaptogenesi (creazione di nuove connessioni) e dal successivo pruning (potatura), che elimina le sinapsi inutilizzate per rafforzare quelle efficienti. Questa straordinaria plasticità cerebrale permette al cervello di adattarsi costantemente all'esperienza.</p>
+        <p>Parallelamente, lo sviluppo motorio segue tre sequenze specifiche: cefalo-caudale (controllo dalla testa ai piedi), prossimale-distale (dalle spalle alle mani) e grosso-fine (dai movimenti ampi come gattonare a quelli precisi come afferrare).</p>
+        <p><strong>Esempio pratico:</strong> Un neonato riesce a sollevare e controllare la testa molto prima di essere in grado di coordinare le gambe per camminare, seguendo il principio cefalo-caudale.</p>
+        
+        <div class="cornell-box">
+            <p class="cornell-question">Domande brevi:</p>
+            <p class="cornell-question">Cos'è la plasticità cerebrale?</p>
+            <p class="cornell-answer">È la capacità del cervello di modificarsi e adattarsi in base all'esperienza.</p>
+            <p class="cornell-question">In quale ordine maturano le aree della corteccia?</p>
+            <p class="cornell-answer">Prima le aree sensoriali, poi quelle prefrontali dopo i 20 anni.</p>
+            <p class="cornell-question">A cosa serve la mielina?</p>
+            <p class="cornell-answer">È uno strato di grasso che aumenta la velocità di trasmissione degli impulsi nervosi.</p>
+        </div>
+
+        <h3>2. Nutrizione, Sonno e il "Ciuccio Emotivo"</h3>
+        <p>La nutrizione è il fondamento della vita; l'allattamento al seno è vitale per la protezione immunitaria e lo sviluppo della mielina, riducendo anche lo stress nel bambino. Tuttavia, la malnutrizione in alcune aree del mondo causa ritardi irreversibili nella crescita e nelle capacità cognitive.</p>
+        <p>Il pianto è il primo segnale comunicativo: raggiunge il picco a un mese e, dai quattro mesi, diventa uno strumento intenzionale per esprimere bisogni. Per calmarlo si suggeriscono il contatto pelle a pelle e la marsupioterapia.</p>
+        <p>È invece sconsigliato l'uso dello smartphone come "oggetto di conforto": esso attiva il sistema della ricompensa rilasciando dopamina, creando un ciclo di gratificazione immediata che può portare a crisi di astinenza e danni alle aree dell'autocontrollo.</p>
+        <p>Il sonno del neonato è altrettanto cruciale per lo sviluppo fisico e cerebrale; nei primi mesi il bambino entra subito nella fase REM, favorendo la costruzione di connessioni neuronali. Verso i sei mesi si sviluppa la capacità di autoconsolarsi.</p>
+        <p><strong>Esempio pratico:</strong> Un genitore che usa il cellulare per calmare un capriccio sta innescando una stimolazione dopaminergica che renderà il bambino incapace di gestire la noia senza lo stimolo digitale.</p>
+
+        <div class="cornell-box">
+            <p class="cornell-question">Domande brevi:</p>
+            <p class="cornell-question">Cos'è la fase REM nel neonato?</p>
+            <p class="cornell-answer">Una fase di intensa attività cerebrale che aiuta a costruire connessioni neuronali.</p>
+            <p class="cornell-question">Qual è un rimedio contro la SIDS?</p>
+            <p class="cornell-answer">Posizionare il bambino sulla schiena durante il sonno (back to sleep).</p>
+            <p class="cornell-question">Quando il pianto diventa intenzionale?</p>
+            <p class="cornell-answer">Intorno ai 4 mesi di vita.</p>
+        </div>
+
+        <h3>3. Percezione Sensoriale e Specializzazione</h3>
+        <p>I neonati utilizzano il paradigma dello sguardo preferenziale per osservare ciò che trovano interessante, mostrando una predilezione innata per i volti umani organizzati, simmetrici e in movimento. Già a otto mesi compare il bias della paura, una tendenza a prestare maggiore attenzione alle espressioni impaurite per riconoscere i pericoli.</p>
+        <p>Intorno ai nove mesi, la capacità di riconoscere i volti si specializza: grazie al pruning, i bambini diventano esperti nel distinguere i volti della propria etnia (stimoli frequenti) e perdono sensibilità verso quelli di etnie diverse.</p>
+        <p>La percezione della profondità, studiata tramite l'esperimento del precipizio visivo, emerge verso gli otto mesi, in coincidenza con l'inizio del gattonamento. Gli altri sensi sono già attivi: i neonati preferiscono l'odore del latte materno, le voci femminili acute e sono sensibili ai sapori di base.</p>
+        <p><strong>Esempio pratico:</strong> Un bambino di otto mesi posto su un tavolo di vetro trasparente che simula un dislivello (precipizio visivo) si fermerà perché percepisce il pericolo della profondità.</p>
+
+        <div class="cornell-box">
+            <p class="cornell-question">Domande brevi:</p>
+            <p class="cornell-question">Cos'è l'habituation (abituazione)?</p>
+            <p class="cornell-answer">La diminuzione di interesse per uno stimolo dopo che è diventato familiare.</p>
+            <p class="cornell-question">Cosa preferiscono sentire i neonati?</p>
+            <p class="cornell-answer">Voci femminili con toni acuti.</p>
+            <p class="cornell-question">Quando si specializza il riconoscimento dei volti etnici?</p>
+            <p class="cornell-answer">Intorno ai 9 mesi.</p>
+        </div>
+
+        <h3>4. Sviluppo Cognitivo: Piaget e la Social Cognition</h3>
+        <p>Secondo Piaget, nello stadio sensomotorio (0-2 anni), i bambini comprendono il mondo coordinando sensazioni e azioni. Il processo avviene tramite assimilazione (nuove informazioni in schemi esistenti) e accomodamento (modifica degli schemi per adattarsi alle novità). Lo stadio è diviso in sei sottostadi: dai riflessi innati alle reazioni circolari (primarie sul corpo, secondarie sul mondo, terziarie come "piccolo scienziato") fino all'interiorizzazione degli schemi.</p>
+        <p>Un traguardo fondamentale è la permanenza dell'oggetto, ovvero capire che le cose esistono anche se non viste, abilità che si consolida verso l'anno di età, nonostante critiche recenti suggeriscano una comparsa più precoce. La teoria dell'elaborazione delle informazioni paragona invece la mente a un computer che segue i passaggi di evento, attenzione, memoria, pensiero e risposta. Infine, la cognizione sociale permette ai bambini di giudicare le intenzioni altrui già prima dei due anni.</p>
+        <p><strong>Esempio pratico:</strong> Un bambino che cerca un giocattolo nascosto sotto un cuscino dimostra di aver acquisito la permanenza dell'oggetto.</p>
+
+        <div class="cornell-box">
+            <p class="cornell-question">Domande brevi:</p>
+            <p class="cornell-question">Cos'è l'errore "A non B"?</p>
+            <p class="cornell-answer">Cercare un oggetto nel luogo familiare (A) anche se è stato spostato in uno nuovο (Β).</p>
+            <p class="cornell-question">Quali sono i primi segni del pensiero?</p>
+            <p class="cornell-answer">L'imitazione differita, il gioco del "fare finta" e il comportamento strategico.</p>
+            <p class="cornell-question">Cos'è una reazione circolare primaria?</p>
+            <p class="cornell-answer">Un'azione ripetuta basata sul proprio corpo, come succhiarsi il pollice.</p>
+        </div>
+
+        <h3>5. Lo Sviluppo del Linguaggio</h3>
+        <p>Il linguaggio segna la fine dello stadio sensomotorio. Le teorie variano: Chomsky ipotizza un dispositivo innato per l'acquisizione del linguaggio (LAD), Skinner punta sui rinforzi dell'esperienza, mentre l'interazione sociale sottolinea la funzione comunicativa.</p>
+        <p>Le tappe includono il cooing (2-4 mesi), la lallazione (5-11 mesi), le olofrasi (una parola per un'intera frase a 12 mesi) e il discorso telegrafico (combinazioni di due parole a 18-24 mesi). Gli adulti facilitano l'apprendimento attraverso l'IDS (Infant-Directed Speech) o baby talk, caratterizzato da toni acuti e parole semplici.</p>
+        <p>Un indicatore precoce di un lessico ricco è il gesto di indicare con la mano destra intorno ai dieci mesi, poiché attiva i centri linguistici dell'emisfero sinistro.</p>
+        <p><strong>Esempio pratico:</strong> Un bambino che dice "pappa" per intendere "mamma, voglio mangiare" sta usando un'olofrasi.</p>
+
+        <div class="cornell-box">
+            <p class="cornell-question">Domande brevi:</p>
+            <p class="cornell-question">Cosa si intende per discorso telegrafico?</p>
+            <p class="cornell-answer">Combinazioni di due parole essenziali, come "mamma latte".</p>
+            <p class="cornell-question">Cos'è il LAD?</p>
+            <p class="cornell-answer">Un'ipotetica struttura cerebrale che consente di produrre e comprendere il linguaggio.</p>
+            <p class="cornell-question">Perché l'IDS è utile?</p>
+            <p class="cornell-answer">Attrae l'attenzione del bambino e facilita l'apprendimento linguistico.</p>
+        </div>
+
+    </div>
+    <div id="scroll-progress-container">
+        <div id="scroll-progress-bar"></div>
+    </div>
+
+    <div class="giants-background">
+        <img class="main-background-image" src="https://i.ibb.co/ym31GBzJ/nell-immagine-sotto-mantieni-coerenza-le-ombre-devono-essere-di-bambini-maschi-che-diventano-adult.jpg" alt="Sfondo Ombre">
+    </div>
+
+    <div id="toast-container"></div>
+
+    <header>
+        <h1>Psicologia dello Sviluppo</h1>
+        <div class="subtitle">Lezione 5</div>
+    </header>
+
+    <div id="factor-modal" onclick="closeModal(event)">
+        <div class="modal-paper" onclick="event.stopPropagation()">
+            <span class="close-modal" onclick="closeModalDirect()">&times;</span>
+            <h2 id="m-title" style="margin-top:0;"></h2>
+            <div id="m-body"></div>
+        </div>
+    </div>
+
+    <div id="fc-mobile-modal" onclick="closeMobileAnswerPopup()">
+        <div class="fc-mobile-content" onclick="event.stopPropagation()">
+            <h3 style="margin-top:0; color:var(--accent-color);">Risposta:</h3>
+            <div id="fc-mobile-body">
+                </div>
+            <button class="fc-mobile-close" onclick="closeMobileAnswerPopup()">Ho capito, chiudi</button>
+        </div>
+    </div>
+
+    <div class="content-card">
+        
+        <div class="accordion-item" style="border-bottom: none;">
+            <button class="accordion-header master-header">
+                <span>Inizia</span> 
+                <span class="icon-plus">→</span>
+            </button>
+            <div class="accordion-content">
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span><strong>01.</strong> Obiettivi & Punti Chiave</span> 
+                        <span class="icon-plus">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        
+                        <div class="obj-box">
+                            <p><strong>Obiettivi della lezione:</strong></p>
+                            <ul class="obj-list">
+                                <li><strong>Analizzare la crescita neurologica:</strong> Comprendere come si struttura il cervello attraverso la sinaptogenesi, la mielinizzazione e il ruolo della plasticità cerebrale.</li>
+                                <li><strong>Esaminare le attività vitali del neonato:</strong> Studiare l'importanza del sonno, della nutrizione e del pianto come primo segnale comunicativo.</li>
+                                <li><strong>Approfondire lo sviluppo percettivo e motorio:</strong> Identificare i principi che regolano la crescita fisica e le capacità sensoriali (visione, udito, percezione della profondità).</li>
+                                <li><strong>Studiare lo sviluppo cognitivo:</strong> Analizzare lo stadio sensomotorio di Piaget e i meccanismi di elaborazione delle informazioni.</li>
+                                <li><strong>Identificare le tappe del linguaggio:</strong> Esplorare le teorie dell'acquisizione linguistica e le fasi che portano dalla lallazione al discorso telegrafico.</li>
+                            </ul>
+                        </div>
+
+                        <p><strong>Punti chiave della lezione:</strong> (Clicca per approfondire)</p>
+                        <div class="factors-grid">
+                            <div class="factor-card" onclick="openFactor('cervello')">
+                                <strong>1. Cervello & Plasticità</strong><br><small>Sinaptogenesi</small>
+                            </div>
+                            <div class="factor-card" onclick="openFactor('sonno')">
+                                <strong>2. Sonno & Tech</strong><br><small>Ciuccio Emotivo</small>
+                            </div>
+                            <div class="factor-card" onclick="openFactor('percezione')">
+                                <strong>3. Percezione & Motricità</strong><br><small>Bias Paura</small>
+                            </div>
+                            <div class="factor-card" onclick="openFactor('piaget')">
+                                <strong>4. Piaget & Linguaggio</strong><br><small>Sensomotorio</small>
+                            </div>
+                        </div>
+
+                        <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione ▲</button>
+                    </div>
+                </div>
+
+                <br>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span><strong>02.</strong> Il Podcast</span>
+                        <span class="icon-plus">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="media-notes-grid">
+                            <div>
+                                <div class="visual-toggle-container">
+                                    <div class="visual-toggle-title">Vuoi la compagnia visiva?</div>
+                                    <button class="toggle-btn" onclick="toggleVisual(true)">SÌ</button>
+                                    <button class="toggle-btn" onclick="toggleVisual(false)">NO</button>
+                                </div>
+
+                                <div id="visual-wrapper">
+                                    <div class="video-container">
+                                        <iframe id="visual-iframe" src="" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                    </div>
+                                    <p style="font-size: 0.8rem; text-align: center; margin-top: 5px; color: #888;">
+                                        <em>Clicca Play per iniziare. Il video andrà in loop.</em>
+                                    </p>
+                                </div>
+
+                                <p style="margin-bottom:10px; margin-top: 20px;">Ascolta la lezione audio.</p>
+                                <iframe id="podcast-iframe" width="100%" height="166" style="border:none;"
+                                src="https://drive.google.com/file/d/1psaBwRA2DIbY1i1qB0FAW2VrYmOxYYuT/preview"></iframe>
+                            </div>
+                            <div class="notes-widget">
+                                <div class="notes-toolbar">
+                                    <button class="tool-btn copy" onclick="copyNotes(this)">Copia Appunti</button>
+                                </div>
+                                <textarea class="notes-area" placeholder="Scrivi qui i tuoi appunti..."></textarea>
+                            </div>
+                        </div>
+                        <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione ▲</button>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span><strong>03.</strong> Video Sintesi</span>
+                        <span class="icon-plus">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="media-notes-grid">
+                            <div>
+                                <p style="margin-bottom:10px;">Guarda il video.</p>
+                                <div class="video-container">
+                                    <iframe src="https://www.youtube.com/embed/-O2zy4RGzPQ?controls=1&fs=1" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                </div>
+                            </div>
+                            <div class="notes-widget">
+                                <div class="notes-toolbar">
+                                    <button class="tool-btn copy" onclick="copyNotes(this)">Copia Appunti</button>
+                                </div>
+                                <textarea class="notes-area" placeholder="Scrivi qui i tuoi appunti..."></textarea>
+                            </div>
+                        </div>
+                        <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione ▲</button>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span><strong>04.</strong> Dritti al Sodo</span>
+                        <span class="icon-plus">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        
+                        <div class="media-notes-grid">
+                            <div>
+                                <div id="fc-start-screen" style="text-align: center; padding: 2rem;">
+                                    <div class="flashcard-wrapper">
+                                        <div class="flashcard-inner">
+                                            <div class="flashcard-front">
+                                                <h2>Pronto a ripassare?</h2>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="btn-pop btn-start" onclick="startFlashcards()">INIZIA</button>
+                                </div>
+
+                                <div id="fc-game-screen" style="display: none;">
+                                    <div class="fc-counter" id="fc-counter"></div>
+
+                                    <div id="flashcard-deck" class="flashcard-wrapper" onclick="handleWrapperClick(event)">
+                                        <div class="flashcard-inner">
+                                            <div class="flashcard-front">
+                                                <h2 id="fc-front-text">Caricamento...</h2>
+                                                <button class="btn-flip-mobile" onclick="forceFlip(event)">GIRA ↻</button>
+                                            </div>
+                                            <div class="flashcard-back">
+                                                <p id="fc-back-text" onclick="event.stopPropagation()">Caricamento...</p>
+                                                <button class="btn-flip-mobile" onclick="forceFlip(event)">GIRA ↻</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="fc-controls" id="fc-controls-bar">
+                                        <button class="btn-pop btn-nav" onclick="navCard(-1)">◄</button>
+                                        <div class="fc-actions">
+                                            <button class="btn-pop btn-no" onclick="markUnknown()">Ripasso dopo :(</button>
+                                            <button class="btn-pop btn-yes" onclick="markKnown()">La so! :)</button>
+                                        </div>
+                                        <button class="btn-pop btn-nav" onclick="navCard(1)">►</button>
+                                    </div>
+                                </div>
+
+                                <div id="win-screen">
+                                    <h2>Ma allora se le sai tutte io vado via!!</h2>
+                                    <p style="margin: 20px 0;">🎉🎉🎉</p>
+                                    <button class="btn-pop btn-yes" onclick="resetDeck()">Ricomincia da capo</button>
+                                </div>
+                            </div>
+
+                            <div class="notes-widget">
+                                <div class="notes-toolbar">
+                                    <button class="tool-btn copy" onclick="copyNotes(this)">Copia Appunti</button>
+                                </div>
+                                <textarea class="notes-area" placeholder="Scrivi qui i tuoi appunti..."></textarea>
+                            </div>
+                        </div>
+
+                        <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione ▲</button>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span><strong>05.</strong> Il Riassuntone</span>
+                        <span class="icon-plus">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="media-notes-grid">
+                            <div>
+                                <img src="https://i.postimg.cc/BbgFzJFJ/disegna-dei-pinguini-tutti-in-mucchio-come-fanno-in-natura-stile-del-disegno-corporate.jpg" class="section-banner" alt="Banner Riassuntone">
+                                
+                                <p style="margin-bottom:15px; color:#555;">Leggi il riassunto completo qui sotto.</p>
+                                
+                                <div id="contenitore-riassunto">
+                                    </div>
+
+                            </div>
+                            <div class="notes-widget">
+                                <div class="notes-toolbar">
+                                    <button class="tool-btn copy" onclick="copyNotes(this)">Copia Appunti</button>
+                                </div>
+                                <textarea class="notes-area" placeholder="Scrivi qui i tuoi appunti..."></textarea>
+                            </div>
+                        </div>
+                        <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione ▲</button>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span><strong>06.</strong> Fai una Pausa</span>
+                        <span class="icon-plus">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        
+                        <div style="text-align:center; padding: 2rem; background: #fafafa; border-radius: 8px;">
+                            <h3>Tempo di respirare.</h3>
+                            <p>Prenditi 5 minuti lontano dallo schermo. Hai elaborato molti concetti.</p>
+                            <div style="font-size:3rem; margin-top:1rem;">☕</div>
+                        </div>
+
+                        <p style="text-align: center; margin-top: 2rem; font-weight: bold; color: var(--accent-color);">
+                            oppure, gioca ai nostri giochi: il Cerca Parole e il Super Solitario
+                        </p>
+
+                        <div style="text-align: center; margin-top: 1.5rem;">
+                            <a href="https://sites.google.com/view/una-mano-spensierata/psicologia-dello-sviluppo/i-giochi" target="_blank" class="btn-pop btn-start" style="text-decoration:none; display:inline-block;">Vai ai giochi</a>
+                        </div>
+
+                        <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione ▲</button>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span><strong>07.</strong> Chiedi all'Assistente AI</span>
+                        <span class="icon-plus">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="freud-bot-container">
+                            <img src="https://i.ibb.co/LXQ0RwkT/elimina-il-robot-cattivo.jpg" alt="Assistente IA" class="bot-image">
+                            <div class="bot-content">
+                                <h3>Dr. Freud-Bot 3000</h3>
+                                <p>Hai dubbi sull'inconscio della lezione?</p>
+                                <a href="https://notebooklm.google.com/notebook/4548d536-ae8a-4574-9a3c-7f0b45d5e9a5" target="_blank" class="btn-choice" style="display:inline-block; text-decoration:none; background:var(--ink-color); color:white; border:none; margin-top:10px;">Avvia Chat</a>
+                            </div>
+                        </div>
+                        <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione ▲</button>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span><strong>08.</strong> ASMR & Chill</span>
+                        <span class="icon-plus">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div style="max-width: 800px; margin: 0 auto;">
+                            <div>
+                                <p style="font-size:0.9rem; color:#666; margin-bottom:15px; text-align:center;">Nota: Clicca Play per avviare.</p>
+                                
+                                <h4 style="margin-bottom: 10px; color: var(--accent-color);">ASMR</h4>
+                                <div class="video-container" style="margin-bottom: 2rem;">
+                                    <iframe id="asmr-brown" src="" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                </div>
+                                
+                                <h4 style="margin-bottom: 10px; color: var(--accent-color);">Musica Relax / Lofi</h4>
+                                <div class="video-container">
+                                    <iframe id="asmr-music" src="" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione ▲</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+
+        // --- TRANSFER RIASSUNTO LOGIC ---
+        window.addEventListener('DOMContentLoaded', () => {
+            const source = document.getElementById('source-riassunto');
+            const target = document.getElementById('contenitore-riassunto');
+            if (source && target) {
+                target.innerHTML = source.innerHTML;
+            }
+            setRandomYTStart('asmrBrown');
+            setRandomYTStart('asmrMusic');
+        });
+
+        // --- SCROLL PROGRESS BAR LOGIC ---
+        window.onscroll = function() { updateProgressBar() };
+
+        function updateProgressBar() {
+            var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            var scrolled = (winScroll / height) * 100;
+            document.getElementById("scroll-progress-bar").style.width = scrolled + "%";
+        }
+
+        // --- DATA FATTORI AGGIORNATI PER LEZIONE 5 ---
+        const factorsData = {
+            cervello: {
+                title: "Sviluppo Cerebrale e Plasticità",
+                body: `<p>Il cervello attraversa una crescita rapida (sinaptogenesi) e un successivo pruning (potatura). La plasticità cerebrale è massima in questa fase, permettendo all'esperienza di modellare l'architettura neuronale.</p>`
+            },
+            sonno: {
+                title: "Sonno, Pianto e 'Ciuccio Emotivo'",
+                body: `<p>Il sonno REM stimola la crescita neuronale. Il pianto comunica bisogni, ma l'uso dello smartphone per calmarlo è dannoso perché attiva il sistema dopaminergico della gratificazione immediata.</p>`
+            },
+            percezione: {
+                title: "Percezione e Bias della Paura",
+                body: `<p>I neonati preferiscono volti umani simmetrici. A 8 mesi sviluppano il bias della paura (attenzione ai pericoli) e la percezione della profondità (esperimento del precipizio visivo).</p>`
+            },
+            piaget: {
+                title: "Principi Motori e Cognizione",
+                body: `<p>Lo sviluppo motorio segue principi cefalo-caudali e prossimale-distali. Cognitivamente, Piaget descrive lo stadio sensomotorio, dove si acquisisce la permanenza dell'oggetto.</p>`
+            }
+        };
+
+        /* ==========================================================
+           LOGICA FLASHCARDS 
+           ========================================================== */
+        
+        // NUOVE FLASHCARD CON TESTO INTEGRALE ESTRATTO DAL "DRITTI AL SODO"
+        // NOTA: Utilizzo i backtick (`) per racchiudere le stringhe per evitare errori con gli apostrofi nel testo.
+        const initialCards = [
+            {
+                front: `1. Quali sono i processi principali che modellano il cervello nei primi anni di vita?`,
+                back: `Il cervello attraversa una fase di crescita rapida caratterizzata dalla sinaptogenesi (formazione di nuove connessioni) e dal pruning (potatura), che elimina le sinapsi inutili per rafforzare quelle efficienti. Fondamentale è la plasticità cerebrale, ovvero la capacità del cervello di modificarsi e adattarsi in base all'esperienza. Mentre le aree sensoriali maturano presto, la corteccia prefrontale (autocontrollo e ragionamento) completa lo sviluppo solo dopo i 20 anni. La mielinizzazione degli assoni aumenta la velocità degli impulsi nervosi.`
+            },
+            {
+                front: `2. Perché l'uso dello smartphone è considerato pericoloso per un neonato?`,
+                back: `Lo smartphone attiva il sistema della ricompensa rilasciando dopamina, il neurotrasmettitore del piacere, in modo simile alla dipendenza da droghe. Il bambino entra in un ciclo di gratificazione immediata, abituandosi a cercarlo per calmare noia o ansia. Quando il dispositivo viene tolto, la dopamina cala bruscamente, causando crisi di pianto simili a sintomi di astinenza. Questo uso precoce può danneggiare le aree cerebrali imature deputate all'autocontrollo e alla gestione delle emozioni.`
+            },
+            {
+                front: `3. In che modo il sonno dei neonati differisce da quello degli adulti e perché è importante?`,
+                back: `I neonati dormono circa 16-18 ore al giorno in cicli brevi. A differenza degli adulti, i neonati entrano immediatamente nella fase REM, caratterizzata da un'intensa attività cerebrale che serve a costruire e consolidare le connessioni neuronali. Il sonno è vitale non solo per il riposo, ma per la crescita fisica e lo sviluppo del cervello. Verso i 6 mesi, molti bambini sviluppano la capacità di autoconsolarsi, ovvero rimettersi a dormire da soli dopo un risveglio notturno.`
+            },
+            {
+                front: `4. Cos'è la SIDS e quali sono le principali raccomandazioni per prevenirla?`,
+                back: `La SIDS è la morte inspiegabile e improvvisa di un lattante apparentemente sano, spesso durante il sonno. Tra i fattori di rischio ci sono anomalie cerebrali, fumo passivo, prematurità e posizioni pericolose nel sonno. Il rimedio principale è la campagna "Back to Sleep", che consiglia di far dormire i bambini in posizione supina (sulla schiena). Altre misure includono l'uso di materassi rigidi, evitare coperte eccessive e la condivisione della stanza (room sharing) ma non del letto, per evitare il soffocamento accidentale.`
+            },
+            {
+                front: `5. Come evolve la capacità dei neonati di percepire e distinguere i volti umani?`,
+                back: `I neonati preferiscono volti simmetrici, organizzati e in movimento. A 8 mesi compare il bias della paura, una tendenza innata a prestare più attenzione alle espressioni impaurite per riconoscere i segnali di pericolo e sopravvivere. Intorno ai 9 mesi avviene una specializzazione: i bambini diventano esperti nel distinguere volti della propria etnia ma perdono sensibilità verso altre etnie (effetto pruning), a meno che non vivano in ambienti con elevata diversità interetnica.`
+            },
+            {
+                front: `6. Cos'è l'esperimento del "Precipizio Visivo" e cosa dimostra?`,
+                back: `L'apparato sperimentale di Gibson consiste in un tavolo di vetro che simula un dislivello improvviso. Dimostra che la percezione della profondità emerge intorno agli 8 mesi, in coincidenza con l'inizio del gattonamento. Sebbene il bambino veda la madre dall'altra parte che lo incita, percepisce il "vuoto visivo" come un pericolo e tende a fermarsi, dimostrando che la capacità di percepire l'altezza si lega allo sviluppo delle capacità motorie.`
+            },
+            {
+                front: `7. Quali sono le tre sequenze che regolano la crescita fisica e motoria?`,
+                back: `Lo sviluppo segue tappe specifiche basate su tre principi:<br>1. Sequenza cefalo-caudale: il controllo viene acquisito dalla testa ai piedi (es. sollevare la testa prima di camminare).<br>2. Sequenza prossimale-distale: lo sviluppo procede dal centro del corpo verso le estremità (dalle spalle alle mani).<br>3. Sequenza grosso-fine: si acquisiscono prima le abilità motorie grossolane (gattonare) e successivamente quelle fini (afferrare piccoli oggetti, disegnare).<br>Queste tappe hanno una grande variabilità individuale e non sono correlate all'intelligenza.`
+            },
+            {
+                front: `8. Cosa caratterizza lo stadio sensomotorio e le sue "reazioni circolari"?`,
+                back: `Piaget definisce lo stadio sensomotorio (0-2 anni) come il periodo in cui i bambini comprendono il mondo coordinando sensazioni e azioni. Le reazioni circolari sono schemi d'azione ripetuti:<br>Primarie (1-4 mesi): incentrate sul proprio corpo (es. succhiarsi il pollice).<br>Secondarie (4-12 mesi): rivolte all'ambiente esterno (es. scuotere un sonaglio).<br>Terziarie (12-18 mesi): esplorazione creativa da "piccolo scienziato" (es. provare diverse azioni per vedere cosa succede).<br>Tutto avviene tramite i processi di assimilazione e accomodamento.`
+            },
+            {
+                front: `9. Cos'è la permanenza dell'oggetto e quali sono le critiche alla visione di Piaget?`,
+                back: `È la consapevolezza che gli oggetti esistono anche quando non sono visibili. Piaget credeva si consolidasse verso l'anno di età, notando a 9 mesi l'errore "A non B": il bambino cerca l'oggetto nel luogo dove lo ha trovato prima (A) anche se ha visto che è stato spostato in un nuovo nascondiglio (B). Ricerche moderne (Baillargeon) criticano Piaget, sostenendo che i bambini comprendano la realtà fisica e la permanenza dell'oggetto molto prima di un anno, già a 5 mesi.`
+            },
+            {
+                front: `10. Quali sono le tappe del linguaggio e come possono favorirlo gli adulti?`,
+                back: `Le tappe includono: cooing (2-4 mesi, vocalizzi), lallazione (5-11 mesi, consonante-vocale), olofrasi (12 mesi, una parola per un'intera frase) e discorso telegrafico (18-24 mesi, frasi di due parole). Gli adulti aiutano tramite l'IDS (Infant-Directed Speech), usando toni acuti e parole semplici per attirare l'attenzione. Un indicatore precoce di un lessico ricco è il gesto di indicare con la mano destra a 10 mesi, poiché attiva i centri linguistici dell'emisfero sinistro.`
+            }
+        ];
+
+        let activeCards = [...initialCards];
+        let currentCardIndex = 0;
+
+        function startFlashcards() {
+            document.getElementById('fc-start-screen').style.display = 'none';
+            document.getElementById('fc-game-screen').style.display = 'block';
+            updateCardDisplay();
+        }
+
+        function updateCardDisplay() {
+            const deck = document.getElementById('flashcard-deck');
+            const controls = document.getElementById('fc-controls-bar');
+            const winScreen = document.getElementById('win-screen');
+            const counter = document.getElementById('fc-counter');
+
+            if (activeCards.length === 0) {
+                document.getElementById('fc-game-screen').style.display = 'none';
+                winScreen.style.display = 'flex';
+                return;
+            } else {
+                winScreen.style.display = 'none';
+            }
+
+            if (currentCardIndex >= activeCards.length) currentCardIndex = 0;
+            if (currentCardIndex < 0) currentCardIndex = activeCards.length - 1;
+
+            const card = activeCards[currentCardIndex];
+            counter.innerText = `Carte da studiare: ${activeCards.length}`;
+
+            // Animazione di cambio carta
+            deck.style.opacity = '0.5';
+            setTimeout(() => {
+                document.getElementById('fc-front-text').innerHTML = card.front;
+                document.getElementById('fc-back-text').innerHTML = card.back;
+                
+                // Reset scroll del testo posteriore
+                document.getElementById('fc-back-text').scrollTop = 0;
+                
+                // Reset flip
+                deck.classList.remove('flipped'); 
+                deck.style.opacity = '1';
+            }, 200);
+        }
+
+        // --- GESTIONE FLIP ---
+        
+        // Funzione per il click sul wrapper (PC)
+        function handleWrapperClick(e) {
+            // Se siamo su mobile (schermo < 900px), IGNORA il click sul wrapper
+            // per permettere lo scroll del testo senza girare la carta.
+            if (window.innerWidth <= 900) return;
+            
+            toggleFlip();
+        }
+
+        // Funzione per il bottone Mobile (GIRA)
+        function forceFlip(e) {
+            if(e) e.stopPropagation();
+
+            // LOGICA MOBILE: SE SIAMO SU SCHERMO PICCOLO (< 900px) APRI MODALE INVECE DI GIRARE
+            if (window.innerWidth <= 900) {
+                // Recupera il testo della risposta della carta corrente
+                const card = activeCards[currentCardIndex];
+                const answerText = card.back; 
+                
+                // Inserisci nel modale
+                document.getElementById('fc-mobile-body').innerHTML = answerText;
+                
+                // Mostra modale
+                document.getElementById('fc-mobile-modal').style.display = 'flex';
+            } else {
+                // LOGICA DESKTOP: GIRA NORMALE
+                toggleFlip();
+            }
+        }
+
+        // Funzione per chiudere il popup mobile della risposta
+        function closeMobileAnswerPopup() {
+            document.getElementById('fc-mobile-modal').style.display = 'none';
+        }
+
+        // La logica effettiva del flip (usata solo su desktop ora)
+        function toggleFlip() {
+            document.getElementById('flashcard-deck').classList.toggle('flipped');
+        }
+
+        // --- NAVIGAZIONE ---
+        function navCard(direction) {
+            currentCardIndex += direction;
+            if (currentCardIndex < 0) currentCardIndex = activeCards.length - 1;
+            if (currentCardIndex >= activeCards.length) currentCardIndex = 0;
+            updateCardDisplay();
+        }
+
+        // --- GESTIONE RISPOSTE ---
+        function markKnown() {
+            showToast("Grande! Continua così.", "success");
+            activeCards.splice(currentCardIndex, 1);
+            if (currentCardIndex >= activeCards.length) currentCardIndex = 0;
+            
+            // Ritardo per permettere l'animazione del toast prima di cambiare carta visivamente
+            setTimeout(() => {
+                document.getElementById('flashcard-deck').classList.remove('flipped');
+                updateCardDisplay();
+            }, 500);
+        }
+
+        function markUnknown() {
+            showToast("Nessun problema, la rivedremo dopo.", "retry");
+            // Sposta la carta in fondo al mazzo
+            const currentCard = activeCards.splice(currentCardIndex, 1)[0];
+            activeCards.push(currentCard);
+            
+            if (currentCardIndex >= activeCards.length) currentCardIndex = 0;
+            
+            setTimeout(() => {
+                document.getElementById('flashcard-deck').classList.remove('flipped');
+                updateCardDisplay();
+            }, 500);
+        }
+
+        function resetDeck() {
+            activeCards = [...initialCards];
+            currentCardIndex = 0;
+            document.getElementById('win-screen').style.display = 'none';
+            document.getElementById('fc-game-screen').style.display = 'block';
+            document.getElementById('fc-start-screen').style.display = 'block';
+            // Nasconde il gioco, mostra start screen
+            document.getElementById('fc-game-screen').style.display = 'none';
+        }
+
+        function showToast(message, type) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.innerText = message;
+            container.appendChild(toast);
+            
+            // Trigger reflow
+            void toast.offsetWidth; 
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 2000);
+        }
+
+        // --- UTILS ---
+        
+        function openFactor(key) {
+            document.getElementById('m-title').innerText = factorsData[key].title;
+            document.getElementById('m-body').innerHTML = factorsData[key].body;
+            document.getElementById('factor-modal').classList.add('open');
+            document.body.classList.add('modal-open');
+        }
+        function closeModalDirect() { 
+            document.getElementById('factor-modal').classList.remove('open');
+            document.body.classList.remove('modal-open');
+        }
+        function closeModal(e) { if(e.target.id === 'factor-modal') closeModalDirect(); }
+
+        function showCopySuccess(btn) {
+            const originalText = btn.innerText;
+            btn.innerText = "Copiato!";
+            btn.style.background = "#d4edda";
+            setTimeout(() => {
+                btn.innerText = originalText;
+                btn.style.background = "white";
+            }, 1500);
+        }
+
+        function copyNotes(btn) {
+            const widget = btn.closest('.notes-widget');
+            const noteArea = widget.querySelector('.notes-area');
+            const text = noteArea.value;
+
+            if (!text.trim()) {
+                alert("Non c'è nulla da copiare! Scrivi prima qualcosa.");
+                return;
+            }
+
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showCopySuccess(btn);
+                }).catch(err => {
+                    fallbackCopyTextToClipboard(text, btn);
+                });
+            } else {
+                fallbackCopyTextToClipboard(text, btn);
+            }
+        }
+
+        function fallbackCopyTextToClipboard(text, btn) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed"; 
+            textArea.style.left = "-9999px";
+            textArea.style.top = "0";
+            document.body.appendChild(textArea);
+            textArea.focus({preventScroll: true});
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showCopySuccess(btn);
+            } catch (err) {
+                alert('Errore nel copiare gli appunti.');
+            }
+            document.body.removeChild(textArea);
+        }
+        
+        // --- ACCORDION LOGIC ---
+        const accs = document.getElementsByClassName("accordion-header");
+        for (let i = 0; i < accs.length; i++) {
+            accs[i].addEventListener("click", function(e) {
+                e.stopPropagation();
+                
+                this.classList.toggle("active");
+                const panel = this.nextElementSibling;
+                const icon = this.querySelector('.icon-plus');
+                
+                if (panel.style.maxHeight || panel.classList.contains('active')) {
+                    panel.style.maxHeight = null;
+                    panel.classList.remove("active");
+                    if(icon) icon.textContent = "+";
+                } else {
+                    panel.classList.add("active");
+                    panel.style.maxHeight = panel.scrollHeight + 15000 + "px"; 
+                    if(icon) icon.textContent = "-";
+                }
+            });
+        }
+
+        function closeThisSection(btn) {
+            const content = btn.parentElement;
+            const header = content.previousElementSibling;
+            header.click();
+            header.scrollIntoView({behavior: "smooth", block: "center"});
+        }
+
+        /* -------------------------------------------------------------
+            LOGICA VIDEO YOUTUBE (NO AUTOPLAY + RANDOM START)
+        ------------------------------------------------------------- */
+        
+        const VIDEO_CONFIG = {
+            visualCompanion: { 
+                id: 'visual-iframe', 
+                videoId: 'pb-j3svRQLI', // Studio with me
+                duration: 3600, // stima
+                muted: true 
+            },
+            asmrBrown: {
+                id: 'asmr-brown',
+                videoId: 'P48QELwruQs', // ASMR
+                duration: 36000, 
+                muted: false
+            },
+            asmrMusic: {
+                id: 'asmr-music',
+                videoId: 'oGCu47JESi0', // Musica Relax
+                duration: 3600, 
+                muted: false
+            }
+        };
+
+        function setRandomYTStart(configKey) {
+            const config = VIDEO_CONFIG[configKey];
+            const iframe = document.getElementById(config.id);
+            if(!iframe) return;
+
+            const randomSec = Math.floor(Math.random() * (config.duration - 30));
+            
+            let url = `https://www.youtube.com/embed/${config.videoId}?playlist=${config.videoId}&loop=1&autoplay=0&start=${randomSec}&controls=1&fs=1`;
+            
+            if(config.muted) {
+                url += "&mute=1";
+            }
+            
+            iframe.src = url;
+        }
+
+        // --- GESTIONE VISUAL COMPANION TOGGLE ---
+        function toggleVisual(show) {
+            const wrapper = document.getElementById('visual-wrapper');
+            const btns = document.querySelectorAll('.toggle-btn');
+            
+            btns[0].classList.toggle('active', show);
+            btns[1].classList.toggle('active', !show);
+
+            if (show) {
+                wrapper.style.display = 'block';
+                setRandomYTStart('visualCompanion');
+            } else {
+                wrapper.style.display = 'none';
+                document.getElementById('visual-iframe').src = "";
+            }
+        }
+
+        /* ================================================================
+           >>> NUOVA LOGICA APPUNTI ZEN (SIMILE AL TUO ESEMPIO) <<<
+           ================================================================
+        */
+        const STORAGE_KEY = 'flashcard_sticky_final';
+        
+        // Applichiamo la logica Zen a tutte le aree note
+        const noteAreas = document.querySelectorAll('.notes-area');
+
+        noteAreas.forEach(area => {
+            // Carica dati salvati
+            let savedText = localStorage.getItem(STORAGE_KEY);
+            if (savedText) area.value = savedText; // Usa .value per textarea
+
+            // Evento Input Semplice e Diretto
+            area.addEventListener('input', function() {
+                const val = this.value;
+                // 1. Salva
+                try { localStorage.setItem(STORAGE_KEY, val); } catch(e) {}
+                
+                // 2. Il trucco scroll è gestito nativamente dal browser grazie 
+                //    al padding-bottom: 80vh impostato nel CSS.
+                //    Se l'utente scrive in fondo, forziamo lo scroll per sicurezza
+                if(this.selectionStart === this.value.length) {
+                    this.scrollTo(0, this.scrollHeight);
+                }
+            });
+        });
+        /* ================================================================ */
+
+    </script>
+</body>
+</html>

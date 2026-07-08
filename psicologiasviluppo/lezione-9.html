@@ -1,0 +1,1378 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Psicologia dello Sviluppo | Lezione 9</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- VARIABILI & RESET --- */
+        :root {
+            --bg-color: #f0f0f2;
+            --paper-color: #fdfbf7;
+            --ink-color: #1a1a1a;
+            --accent-color: #375a7f;
+            
+            /* COLORI POP */
+            --pop-cyan: #00f2ff;
+            --pop-magenta: #ff00ff;
+            --pop-ocean: #0044cc;
+            --pop-yellow: #ffee00;
+
+            --font-title: 'Abril Fatface', cursive;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html {
+    /* Rimuovi height: 100% che blocca tutto */
+    overflow-x: hidden;
+}
+
+body {
+    background-color: var(--bg-color);
+    font-family: var(--font-body);
+    color: var(--ink-color);
+    line-height: 1.6;
+    
+    /* Usa min-height per lasciare che la pagina cresca */
+    min-height: 100vh;
+    position: relative;
+    padding-bottom: 80px;
+    width: 100%;
+    
+    /* --- FIX DEFINITIVO: RIMUOVI IL BLOCCO --- */
+    /* Queste righe che avevi prima BLOCCANO lo scroll su iPhone. */
+    /* Le ho rimosse per te. Ora lo scroll è gestito nativamente dal browser. */
+    overflow-x: hidden;
+}
+
+        /* --- BARRA DI PROGRESSO (SCROLL) --- */
+        #scroll-progress-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 6px;
+            background: rgba(0,0,0,0.05); z-index: 9999999;
+        }
+        #scroll-progress-bar {
+            height: 100%; 
+            background: rgba(55, 90, 127, 0.7); 
+            width: 0%;
+            transition: width 0.1s; 
+            box-shadow: 0 0 10px rgba(55, 90, 127, 0.3);
+        }
+
+        /* --- BACKGROUND --- */
+        .giants-background {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; pointer-events: none; overflow: hidden;
+            display: flex; justify-content: center; align-items: center;
+            background: #e0e0e5; 
+        }
+        .main-background-image {
+            width: 100%; height: 100%; object-fit: cover; opacity: 0.1; 
+            filter: grayscale(100%) sepia(1) hue-rotate(210deg) contrast(1.2);
+            mix-blend-mode: multiply;
+        }
+
+        /* --- HEADER --- */
+        header { text-align: center; margin-top: 3rem; margin-bottom: 1rem; padding: 0 1rem; }
+        h1 { font-family: var(--font-title); font-size: clamp(2.5rem, 5vw, 4rem); margin: 0; color: var(--ink-color); line-height: 1.1; }
+        .subtitle {
+            font-family: var(--font-body); font-size: 1.5rem; color: var(--accent-color); font-weight: 700; 
+            text-transform: uppercase; letter-spacing: 4px; margin-top: 10px;
+        }
+
+        /* --- CONTENITORE PRINCIPALE --- */
+        .content-card {
+            background: var(--paper-color); padding: 3rem; margin: 0 auto;
+            width: 90%; max-width: 1200px; position: relative;
+            border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.05); z-index: 1;
+            margin-bottom: 2rem; margin-top: 2rem;
+        }
+        @media (max-width: 600px) { .content-card { padding: 1.5rem; width: 95%; margin-top: 1rem; } }
+
+        h3 { font-family: var(--font-title); font-size: 1.5rem; margin-top: 1.5rem; margin-bottom: 0.5rem; }
+        h4 { font-family: var(--font-body); font-weight: 700; color: var(--accent-color); margin-top: 1.2rem; }
+
+        /* --- LAYOUT GRIGLIA --- */
+        .media-notes-grid { display: grid; grid-template-columns: 2.5fr 1fr; gap: 2rem; align-items: stretch; }
+        @media (max-width: 900px) { .media-notes-grid { grid-template-columns: 1fr; gap: 1.5rem; } }
+
+        /* --- MODIFICA SCROLL RIASSUNTO (Desktop) --- */
+        @media (min-width: 900px) {
+            #contenitore-riassunto {
+                max-height: 550px; 
+                overflow-y: auto;
+                padding-right: 15px; 
+                border-bottom: 1px solid #eee; 
+            }
+            #contenitore-riassunto::-webkit-scrollbar { width: 8px; }
+            #contenitore-riassunto::-webkit-scrollbar-thumb { background-color: #ccc; border-radius: 4px; }
+            #contenitore-riassunto::-webkit-scrollbar-track { background-color: #f9f9f9; }
+        }
+
+        /* --- BANNER IMMAGINI --- */
+        .section-banner { width: 100%; height: auto; max-height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 1.5rem; border: 1px solid #ddd; }
+
+        /* --- WIDGET APPUNTI (ZEN MODE) --- */
+        .notes-widget {
+            background: #fff; 
+            border: 2px dashed #ccc; 
+            border-radius: 8px;
+            display: flex; 
+            flex-direction: column; 
+            align-self: start; 
+            height: 60vh; /* ZEN MODE: Altezza fissa */
+            overflow: hidden; /* ZEN MODE: No overflow contenitore */
+            position: sticky; 
+            top: 20px; 
+            z-index: 5;
+            width: 100%; 
+            min-width: 0;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        }
+        
+        @media (max-width: 900px) {
+            .notes-widget { position: relative; top: 0; height: 400px; max-height: none; align-self: stretch; }
+        }
+
+        .notes-toolbar {
+            background: #f4f4f4; padding: 10px; border-bottom: 1px solid #ddd;
+            border-radius: 6px 6px 0 0; display: flex; justify-content: flex-end;
+        }
+        .tool-btn {
+            padding: 8px 15px; font-size: 0.85rem; cursor: pointer; border: 1px solid #bbb; 
+            background: white; border-radius: 4px; font-weight: 600; font-family: var(--font-body); transition: all 0.2s;
+        }
+        
+        .notes-area {
+            /* ZEN MODE: TEXTAREA STYLES */
+            width: 100%;
+            height: 100%;
+            border: none;
+            resize: none;
+            padding: 20px;
+            padding-top: 50px; /* Spazio per toolbar */
+            padding-bottom: 80vh; /* IL TRUCCO ZEN: Spazio infinito */
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            background: transparent;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            outline: none;
+        }
+
+        /* --- ACCORDION --- */
+        .accordion-item { margin-bottom: 1rem; border-bottom: 1px solid #eee; }
+        .accordion-header {
+            background: transparent; border: none; width: 100%; text-align: left;
+            padding: 1.2rem 0; font-family: var(--font-title); font-size: clamp(1.2rem, 4vw, 1.8rem);
+            cursor: pointer; transition: color 0.3s; display: flex;
+            justify-content: space-between; align-items: center; color: var(--ink-color); font-weight: 400;
+        }
+        .accordion-header strong {
+            font-family: var(--font-body); font-weight: 700; font-size: 1.3rem;
+            color: var(--accent-color); text-transform: uppercase; letter-spacing: 2px; margin-right: 15px;
+        }
+        .accordion-content {
+            max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out;
+            padding: 0; opacity: 0; display: flex; flex-direction: column; 
+        }
+        .accordion-content.active { max-height: 20000px; opacity: 1; padding-top: 1rem; padding-bottom: 2rem; overflow: visible; } 
+        .icon-plus { font-size: 1.5rem; font-weight: 300; font-family: var(--font-body); color: var(--accent-color); margin-left: auto; }
+
+        /* --- MASTER HEADER --- */
+        .master-header {
+            background: transparent; border: 2px solid var(--accent-color); border-radius: 8px;
+            padding: 10px 20px; justify-content: center; font-size: 1.5rem; 
+            color: var(--accent-color); width: 100%; margin-bottom: 1rem;
+        }
+        .master-header .icon-plus { margin-left: 15px; flex-grow: 0; }
+        @media (max-width: 600px) { .master-header { font-size: 1.1rem; padding: 10px; } }
+
+        .btn-close-section {
+            width: 100%; text-align: center; margin-top: 30px; padding: 15px; background: #eee; 
+            border: 1px solid #ddd; border-radius: 8px; font-family: var(--font-body); font-weight: 700; 
+            color: #666; cursor: pointer; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px;
+        }
+
+        /* --- STILI DEL RIASSUNTO TESTUALE --- */
+        .text-content-box {
+            background: #fff; border: 1px solid #eee; border-radius: 8px; padding: 2rem;
+            color: #333; line-height: 1.8; font-size: 1.05rem;
+        }
+        @media(max-width:600px) { .text-content-box { padding: 1rem; font-size: 1rem; } }
+        
+        .cornell-box {
+            background: #f4f8fb; border-left: 5px solid var(--accent-color); padding: 1.5rem;
+            margin: 2rem 0; border-radius: 0 8px 8px 0;
+        }
+        .cornell-question { font-weight: bold; color: var(--accent-color); margin-bottom: 0.2rem; }
+        .cornell-answer { margin-bottom: 1.5rem; margin-left: 10px; }
+        .cornell-answer:last-child { margin-bottom: 0; }
+
+        .metafora-box {
+            background: #fff8e1; border: 2px dashed var(--pop-yellow); padding: 1.5rem;
+            border-radius: 12px; margin-top: 3rem; font-style: italic;
+        }
+
+        /* --- VIDEO CONTAINER --- */
+        .video-container { 
+            position: relative; width: 100%; padding-bottom: 56.25%; height: 0; 
+            background: #000; border-radius: 8px; overflow: hidden; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); z-index: 1; margin-bottom: 1rem;
+        }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+
+        /* --- FLASHCARDS --- */
+        .flashcard-wrapper {
+            position: relative; perspective: 1000px; width: 100%; height: 500px; margin-bottom: 1rem;
+            cursor: pointer;
+        }
+        .flashcard-inner {
+            position: relative; width: 100%; height: 100%; text-align: center;
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15); border-radius: 12px;
+        }
+        .flashcard-wrapper.flipped .flashcard-inner { transform: rotateY(180deg); }
+        
+        .flashcard-front, .flashcard-back {
+            position: absolute; width: 100%; height: 100%;
+            backface-visibility: hidden; display: flex; flex-direction: column; 
+            align-items: center; justify-content: center;
+            border-radius: 12px; padding: 1.5rem;
+            background-image: url('https://i.postimg.cc/tJSTPJPW/indiani-d-america-e-uova-sode-stile-bruno-munari-molto-movimentato-e-colorato.jpg'); 
+            background-size: contain; background-repeat: no-repeat; background-position: center; background-color: #222;
+        }
+        .flashcard-back { transform: rotateY(180deg); }
+        .flashcard-back::before {
+            content: ""; position: absolute; top:0; left:0; width:100%; height:100%;
+            background-image: url('https://i.postimg.cc/tJSTPJPW/indiani-d-america-e-uova-sode-stile-bruno-munari-molto-movimentato-e-colorato.jpg');
+            background-size: contain; background-repeat: no-repeat; background-position: center;
+            transform: scaleX(-1); z-index: -1;
+        }
+
+        .flashcard-back p, .flashcard-front h2 {
+            position: relative; z-index: 2; 
+            background: rgba(255,255,255,0.95); 
+            padding: 20px 25px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); 
+            width: 100%; color: #111;
+        }
+        .flashcard-front h2 { font-family: var(--font-title); font-size: 1.6rem; line-height: 1.3; }
+        .flashcard-back p { 
+            font-size: 1rem; text-align: left; line-height: 1.5; white-space: pre-line;
+            overflow-y: auto; max-height: 85%; -webkit-overflow-scrolling: touch; 
+        }
+
+        /* --- BOTTONE GIRA CARTA (SOLO MOBILE) --- */
+        .btn-flip-mobile {
+            display: none; 
+            margin-top: 15px;
+            background: var(--pop-yellow);
+            color: #000;
+            border: 3px solid #000;
+            padding: 10px 30px;
+            font-weight: 900;
+            border-radius: 30px;
+            z-index: 20;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            text-transform: uppercase;
+            font-family: var(--font-body);
+            white-space: nowrap;
+            pointer-events: auto;
+        }
+        .btn-flip-mobile:active { transform: translateY(2px); }
+
+        @media (max-width: 900px) {
+            .flashcard-wrapper { height: 500px; cursor: default; }
+            .flashcard-front, .flashcard-back { justify-content: flex-start; padding: 1rem; padding-top: 1.5rem; }
+            .flashcard-front h2 { font-size: 1.2rem; padding: 15px; margin-top: 20px; }
+            .flashcard-back p { font-size: 0.95rem; padding: 15px; max-height: 75%; }
+            .btn-flip-mobile { display: inline-block; position: absolute; bottom: 20px; }
+            .fc-controls { margin-top: 10px; grid-template-columns: 45px 1fr 45px; gap: 5px; }
+            .btn-pop { padding: 12px 5px; font-size: 0.8rem; }
+            .btn-start { width: 100%; }
+        }
+
+        .fc-counter { text-align: center; margin-bottom: 10px; font-weight: bold; color: var(--accent-color); }
+        .fc-controls { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; margin-top: 20px; }
+        .fc-actions { display: flex; gap: 5px; justify-content: center; width: 100%; }
+
+        .btn-pop {
+            padding: 10px 20px; border: none; border-radius: 8px;
+            font-weight: 700; font-family: var(--font-body); text-transform: uppercase; cursor: pointer;
+            transition: transform 0.1s, box-shadow 0.2s; border: 2px solid #000; box-shadow: 3px 3px 0px #000;
+        }
+        .btn-pop:active { transform: translateY(2px); box-shadow: 1px 1px 0px #000; }
+        .btn-nav { background: #fff; color: #000; font-size: 1.2rem; min-width: 40px; }
+        .btn-no { background: var(--pop-magenta); color: #fff; flex-grow: 1; }
+        .btn-yes { background: var(--pop-cyan); color: #000; flex-grow: 1; }
+        .btn-start { background: var(--pop-yellow); color: #000; font-size: 1.2rem; padding: 15px 40px; margin-top: 20px; }
+
+        #win-screen {
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            height: 400px; text-align: center; background: #fff; border-radius: 12px; border: 2px dashed #000; padding: 2rem;
+        }
+        #win-screen h2 { border: none; margin: 0; padding: 0; color: var(--pop-ocean); }
+
+        #toast-container { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 9999999; pointer-events: none; }
+        .toast {
+            background: rgba(0,0,0,0.9); color: white; padding: 15px 30px; border-radius: 50px;
+            margin-top: 10px; font-weight: bold; font-family: var(--font-body); text-align: center;
+            opacity: 0; transition: opacity 0.3s, transform 0.3s; transform: translateY(20px); border: 2px solid; pointer-events: auto;
+        }
+        .toast.show { opacity: 1; transform: translateY(0); }
+        .toast-success { border-color: var(--pop-cyan); box-shadow: 0 0 15px var(--pop-cyan); color: var(--pop-cyan); }
+        .toast-retry { border-color: var(--pop-magenta); box-shadow: 0 0 15px var(--pop-magenta); color: var(--pop-magenta); }
+
+        /* --- FREUD BOT --- */
+        .freud-bot-container { background: #fff; padding: 2rem; border-radius: 8px; text-align: center; border: 1px solid #ddd; }
+        .bot-image {
+            display: block; margin: 0 auto 1.5rem auto; max-width: 100%; width: 100%; height: auto; 
+            object-fit: contain; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .bot-content { position: relative; background: transparent; padding: 0; border: none; display: block; max-width: 100%; }
+
+        /* --- TESTO OBIETTIVI --- */
+        .obj-list { margin-top:10px; padding-left:20px; line-height: 1.8; }
+        .obj-box { background: #f9f9f9; border-left: 4px solid var(--accent-color); padding: 1.5rem; margin-bottom: 2rem; }
+        .definition-box { background: #375a7f; color: white; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; line-height: 1.6; }
+
+        /* --- FATTORI --- */
+        .factors-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 2rem 0; }
+        .factor-card {
+            background: #fff; border: 1px solid #ddd; padding: 1.5rem; border-radius: 8px;
+            cursor: pointer; text-align: center; transition: 0.2s; position: relative;
+        }
+        .factor-card:hover { border-color: var(--accent-color); transform: translateY(-3px); }
+        .factor-card::after { content: '+'; position: absolute; top: 5px; right: 10px; color: #ccc; }
+
+        /* --- MODAL --- */
+        #factor-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85);
+            z-index: 99999; display: none; justify-content: center; align-items: center; padding: 20px;
+        }
+        #factor-modal.open { display: flex; }
+        .modal-paper { 
+            background: #fff; width: 100%; max-width: 600px; padding: 2.5rem; border-radius: 12px; position: relative; 
+            max-height: 90vh; overflow-y: auto; line-height: 1.8; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); -webkit-overflow-scrolling: touch;
+        }
+        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 2rem; cursor: pointer; color: var(--accent-color); z-index: 10; }
+        .btn-choice {
+            padding: 10px 25px; margin: 5px; font-size: 0.9rem; cursor: pointer;
+            background: #fff; color: var(--accent-color); border: 2px solid #ccc; border-radius: 50px; font-weight: bold;
+        }
+
+        /* --- ASMR --- */
+        .visual-toggle-container { background: #eef2f5; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; text-align: center; border: 1px solid #d1d9e0; }
+        .visual-toggle-title { font-family: var(--font-title); font-size: 1.2rem; margin-bottom: 1rem; color: var(--accent-color); }
+        .toggle-btn {
+            padding: 8px 24px; margin: 0 10px; border: 2px solid var(--accent-color); background: transparent;
+            color: var(--accent-color); font-weight: bold; border-radius: 30px; cursor: pointer; transition: all 0.3s;
+        }
+        .toggle-btn:hover { background: rgba(55, 90, 127, 0.1); }
+        .toggle-btn.active { background: var(--accent-color); color: white; }
+        #visual-wrapper { display: none; margin-bottom: 25px; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- NUOVO POP-UP RISPOSTA FLASHCARD (MOBILE) --- */
+        #fc-mobile-modal {
+            display: none; 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); z-index: 999999;
+            justify-content: center; align-items: center; padding: 20px;
+            backdrop-filter: blur(4px);
+        }
+        .fc-mobile-content {
+            background: #fff; 
+            width: 95%; max-width: 500px;
+            max-height: 80vh; 
+            overflow-y: auto; 
+            padding: 30px 25px; 
+            border-radius: 16px;
+            position: relative;
+            font-size: 1.1rem; line-height: 1.6; color: #222;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            -webkit-overflow-scrolling: touch; 
+        }
+        .fc-mobile-close {
+            margin-top: 20px; width: 100%; padding: 15px; 
+            background: var(--pop-cyan); border: 2px solid #000; 
+            font-weight: bold; font-size: 1rem; cursor: pointer; border-radius: 50px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="source-riassunto" style="display: none;">
+        
+        <h3>1. Il Compito Psicosociale: Industriosità vs. Senso di Inferiorità</h3>
+        <p>Il periodo della media fanciullezza, compreso tra i 7 e i 12 anni, coincide con l'ingresso e la permanenza del bambino nel sistema della scuola primaria. Dal punto di vista dello sviluppo psicosociale, il riferimento teorico fondamentale è Erik Erikson, il quale identifica in questa fase il conflitto tra industriosità (o operosità) e senso di inferiorità.</p>
+        <p>L'industriosità rappresenta la capacità del bambino di "piegarsi al mondo degli adulti", imparando a lavorare sistematicamente per conseguire i propri obiettivi. In questa fase, i bambini manifestano un impulso naturale a sperimentare attività differenti e a risolvere problemi complessi, misurandosi in abilità nuove. Il ruolo degli educatori e dei genitori è cruciale: se il bambino viene sostenuto e incoraggiato nel suo impegno e nella sua voglia di fare, il compito evolutivo si risolve positivamente, generando un senso di padronanza.</p>
+        <p>Al contrario, se l'industriosità non viene stimolata o se il bambino riceve feedback esclusivamente negativi sui suoi fallimenti, egli rischia di interiorizzare un profondo senso di inferiorità, percependosi come inadeguato rispetto ai pari e alle richieste sociali. Questo compito implica non solo l'impegno nei compiti, ma anche la capacità di adattarsi a regole strutturate e obiettivi a lungo termine.</p>
+        
+        <div class="obj-box">
+            <h4>Esempi Pratici:</h4>
+            <ul>
+                <li>Un bambino di 8 anni decide di iscriversi a un corso di chitarra. Nonostante le difficoltà iniziali nel coordinare le dita, continua a esercitarsi ogni giorno per riuscire a suonare una melodia semplice al saggio di fine anno. Il genitore che loda la costanza dell'esercizio, piuttosto che la perfezione dell'esecuzione, promuove l'industriosità.</li>
+                <li>In classe, un alunno fatica a comprendere le frazioni. Se l'insegnante gli assegna compiti graduali che gli permettono di sperimentare piccoli successi, contrasta l'insorgere del senso di inferiorità.</li>
+            </ul>
+        </div>
+        
+        <div class="cornell-box">
+            <h4>Check Point:</h4>
+            <p><strong>1. D:</strong> Cosa intende Erikson per "industriosità"?<br><strong>R:</strong> La capacità e la voglia del bambino di impegnarsi in attività diverse, lavorando per raggiungere obiettivi e adattandosi alle regole del mondo adulto.</p>
+            <p><strong>2. D:</strong> Qual è la conseguenza del mancato incoraggiamento durante questa fase?<br><strong>R:</strong> L'insorgere di un senso di inferiorità e inadeguatezza nel bambino.</p>
+        </div>
+
+        <h3>2. Lo Stadio Operatorio Concreto di Jean Piaget</h3>
+        <p>Intorno ai 7-8 anni, il bambino entra in quello che Jean Piaget definisce lo stadio operatorio concreto. La transizione dalla prima fanciullezza a questa fase è segnata dalla comparsa del pensiero logico, che però rimane strettamente ancorato a situazioni, oggetti ed eventi reali e tangibili.</p>
+        <p>Le caratteristiche fondamentali di questo stadio includono:</p>
+        <ul>
+            <li><strong>Conservazione:</strong> Il bambino comprende che proprietà fisiche come quantità, peso, volume o numero restano invariate nonostante trasformazioni superficiali della forma o della disposizione spaziale.</li>
+            <li><strong>Classificazione:</strong> La capacità di organizzare gli oggetti in categorie e sottocategorie gerarchiche. Il bambino capisce ora che un oggetto può appartenere contemporaneamente a una classe specifica e a una più generale (es. le rose sono fiori).</li>
+            <li><strong>Seriazione:</strong> L'abilità di ordinare elementi in base a una proprietà quantitativa data, come la lunghezza o la grandezza (es. riordinare bastoncini dal più corto al più lungo).</li>
+            <li><strong>Reversibilità:</strong> La comprensione che un'operazione mentale o fisica può essere invertita per tornare allo stato iniziale (es. capire che 5-3=2 è l'inverso di 2+3=5 o che una pallina di pongo schiacciata può tornare pallina).</li>
+            <li><strong>Decentramento:</strong> Il superamento dell'egocentrismo intellettuale dello stadio precedente; il bambino riesce ora a considerare prospettive diverse dalla propria e a valutare più variabili contemporaneamente.</li>
+            <li><strong>Logica Concreta:</strong> Il ragionamento diventa coerente e sistematico, ma deve sempre appoggiarsi a una rappresentazione concreta o visibile.</li>
+        </ul>
+        <p><strong>I limiti del pensiero:</strong> Nonostante questi progressi, il bambino presenta ancora difficoltà insormontabili nel trattare concetti astratti o ipotetici. Non è in grado di formulare ipotesi teoriche o dedurre conclusioni da premesse puramente verbali senza un supporto iconografico o grafico.</p>
+
+        <div class="obj-box">
+            <h4>Esempi Pratici:</h4>
+            <ul>
+                <li><strong>Test della conservazione:</strong> Se mostriamo a un bambino di 9 anni due file di 5 monete identiche e poi allarghiamo una delle due file, egli affermerà correttamente che il numero di monete è rimasto uguale, a differenza di un bambino più piccolo che si lascerebbe ingannare dallo spazio occupato.</li>
+                <li><strong>Rappresentazione grafica:</strong> Per spiegare un problema matematico in seconda primaria, l'insegnante usa disegni o segmenti; il bambino ha bisogno di questa "concretezza" visiva per applicare la logica, poiché il solo ragionamento verbale lo manderebbe in crisi.</li>
+            </ul>
+        </div>
+
+        <div class="cornell-box">
+            <h4>Check Point:</h4>
+            <p><strong>1. D:</strong> Qual è il limite principale del pensiero operatorio concreto?<br><strong>R:</strong> L'incapacità di trattare concetti astratti o ipotetici e di dedurre conclusioni da premesse puramente verbali.</p>
+            <p><strong>2. D:</strong> In cosa consiste la "seriazione"?<br><strong>R:</strong> Nell'abilità di ordinare oggetti secondo una caratteristica specifica, come la lunghezza o il peso.</p>
+        </div>
+
+        <h3>3. Sviluppo Cerebrale: Maturazione e Specializzazione</h3>
+        <p>Durante la media fanciullezza, il cervello non cresce più in volume totale quanto nei primi anni, ma subisce una profonda riorganizzazione interna volta all'efficienza e alla specializzazione.</p>
+        <ul>
+            <li><strong>Lobi Frontali (Corteccia Prefrontale):</strong> Queste aree sono sede delle funzioni esecutive (attenzione, pianificazione, autoregolazione, memoria di lavoro). La loro crescita è estremamente lenta e non giunge a compimento prima dell'adolescenza. Ciò spiega perché i bambini della primaria migliorano progressivamente nella concentrazione, ma mancano ancora di un pieno autocontrollo.</li>
+            <li><strong>Corteccia Cerebrale:</strong> La parte più esterna e complessa del cervello continua a svilupparsi, con una crescente specializzazione delle regioni dedicate al linguaggio, alla lettura, alla scrittura e al calcolo logico.</li>
+            <li><strong>Mielinizzazione:</strong> La mielina, sostanza che riveste le fibre nervose, continua a depositarsi, velocizzando la trasmissione degli impulsi elettrici. Questo processo è particolarmente evidente nelle aree che controllano i movimenti fini e nelle connessioni tra i due emisferi, portando a una maggiore precisione cognitiva e motoria.</li>
+            <li><strong>Pruning Sinaptico (Potatura):</strong> Più che la nascita di nuove sinapsi, in questa fase prevale l'eliminazione delle connessioni poco utilizzate a favore del rafforzamento di quelle funzionali. Questo rende il cervello più specializzato ed efficiente.</li>
+        </ul>
+        <p>Le aree visive e motorie maturano prima dei lobi frontali. Di conseguenza, i bambini di 7-10 anni mostrano già eccellenti capacità percettive e di coordinazione nei giochi motori (correre, saltare), mentre le capacità di astrazione e pianificazione a lungo termine richiedono più tempo per consolidarsi.</p>
+
+        <div class="obj-box">
+            <h4>Esempi Pratici:</h4>
+            <ul>
+                <li><strong>Sincronizzazione:</strong> Un bambino che impara a suonare il pianoforte beneficia della mielinizzazione che accelera la comunicazione tra gli emisferi, permettendo alla mano destra e sinistra di eseguire movimenti complessi in sincrono.</li>
+                <li><strong>Specializzazione:</strong> Attraverso il pruning, il cervello di un bambino che pratica costantemente il disegno "pota" le connessioni neuronali irrilevanti e rafforza quelle dedicate alla coordinazione oculo-manuale.</li>
+            </ul>
+        </div>
+
+        <div class="cornell-box">
+            <h4>Check Point:</h4>
+            <p><strong>1. D:</strong> Perché i bambini della primaria migliorano gradualmente nella concentrazione?<br><strong>R:</strong> Grazie alla lenta ma costante crescita dei lobi frontali, sede dell'attenzione e della pianificazione.</p>
+            <p><strong>2. D:</strong> Qual è la funzione della mielinizzazione?<br><strong>R:</strong> Rivestire le fibre nervose per velocizzare la trasmissione degli impulsi e aumentare la precisione dei movimenti.</p>
+        </div>
+
+        <h3>4. Salute Fisica e Abilità Motorie: Obesità e Coordinazione</h3>
+        <p>La media fanciullezza è il periodo d'oro per la coordinazione motoria, che appare più armonica rispetto alla goffaggine tipica dell'adolescenza dovuta ai rapidi cambiamenti fisici. Tuttavia, gli studi evidenziano una preoccupante tendenza: i bambini odierni sono meno abili fisicamente rispetto al passato a causa di stili di vita sedentari e scarsa attività quotidiana.</p>
+        <p>Le abilità si dividono in:</p>
+        <ol>
+            <li><strong>Abilità Grosso-motorie:</strong> Coinvolgono i grandi muscoli (correre, saltare, lanciare). Favoriscono il benessere fisico e la socialità, ma non mostrano una correlazione diretta con il rendimento scolastico.</li>
+            <li><strong>Abilità Motorie Fini:</strong> Movimenti precisi e controllati (scrivere, disegnare, usare le forbici) che richiedono coordinazione oculo-manuale. Queste sono fortemente collegate a migliori performance scolastiche in lettura e scrittura, poiché coinvolgono aree cerebrali comuni alle funzioni esecutive e alla memoria di lavoro.</li>
+        </ol>
+        <p><strong>Il problema dell'Obesità:</strong> L'obesità infantile è in costante aumento e rappresenta una minaccia sia fisica che psicologica.</p>
+        <ul>
+            <li><strong>BMI (Indice di Massa Corporea):</strong> Un BMI elevato già in età prescolare è un forte predittore di sovrappeso in età adulta.</li>
+            <li><strong>Cause:</strong> Dieta eccessiva e ricca di grassi, stili di vita genitoriali disfunzionali e mancanza di esercizio.</li>
+            <li><strong>Modellamento:</strong> Esiste una stretta correlazione tra lo stile di vita motorio dei genitori e quello dei figli; i bambini interiorizzano le abitudini e le routine familiari.</li>
+            <li><strong>Conseguenze psicologiche:</strong> Bassa autostima, ansia, difficoltà relazionali e rischio elevato di essere bersaglio di bullismo o cyberbullismo.</li>
+        </ul>
+
+        <div class="obj-box">
+            <h4>Esempi Pratici:</h4>
+            <ul>
+                <li><strong>Screening scolastico:</strong> I programmi che misurano il BMI e informano le famiglie si sono dimostrati efficaci come forma di prevenzione e consapevolezza.</li>
+                <li><strong>Coordinazione fine:</strong> Un bambino che mostra difficoltà nel ritaglio preciso o nella scrittura potrebbe avere un deficit nella memoria di lavoro, data la connessione neurologica tra queste funzioni.</li>
+            </ul>
+        </div>
+
+        <div class="cornell-box">
+            <h4>Check Point:</h4>
+            <p><strong>1. D:</strong> Quale tipologia di abilità motoria è predittiva di buoni risultati scolastici?<br><strong>R:</strong> Le abilità motorie fini, legate alla scrittura e alla coordinazione occhio-mano.</p>
+            <p><strong>2. D:</strong> Quali sono i rischi psicologici legati all'obesità infantile?<br><strong>R:</strong> Bassa autostima, ansia, isolamento sociale e vittimizzazione da bullismo.</p>
+        </div>
+
+        <h3>5. Sviluppo Cognitivo: La Memoria e le Funzioni Esecutive</h3>
+        <p>La teoria dell'elaborazione delle informazioni paragona la mente umana a un computer, analizzando come i dati vengono immessi (input), archiviati (immagazzinamento) e usati (elaborazione/recupero).</p>
+        <ol>
+            <li><strong>Memoria Sensoriale:</strong> È il filtro iniziale che riceve informazioni dai sensi; ha una durata brevissima.</li>
+            <li><strong>Memoria di Lavoro:</strong> È la sede dell'azione cognitiva, paragonabile a un "blocco di appunti temporaneo" necessario per ragionare e apprendere. Ha una capienza limitata: storicamente indicata in 7±2 elementi (Miller), oggi stimata intorno ai 4-5 elementi. La sua capacità aumenta enormemente durante i primi anni della primaria, di pari passo con la maturazione dei lobi frontali.</li>
+            <li><strong>Funzioni Esecutive:</strong> Sono le abilità di autocontrollo dirette dai lobi frontali:
+                <ul>
+                    <li><strong>Attenzione Selettiva:</strong> Scegliere le informazioni rilevanti inibendo le distrazioni. I bambini più grandi ricordano in modo mirato, mentre i piccoli memorizzano anche dati irrilevanti.</li>
+                    <li><strong>Pianificazione:</strong> Organizzare sequenze di azioni per raggiungere un obiettivo.</li>
+                    <li><strong>Inibizione (Controllo Inibitorio):</strong> Resistere a risposte impulsive o automatiche.</li>
+                    <li><strong>Flessibilità Cognitiva:</strong> Cambiare strategia se la situazione lo richiede.</li>
+                </ul>
+            </li>
+        </ol>
+
+        <div class="obj-box">
+            <h4>Esempi Pratici:</h4>
+            <ul>
+                <li><strong>Compito di attenzione:</strong> Se chiediamo a un bambino di 6 anni di memorizzare solo gli animali in una serie di carte che ritraggono anche oggetti, lui ricorderà anche gli oggetti; un bambino di 10 anni, grazie all'attenzione selettiva, ricorderà solo gli animali.</li>
+                <li><strong>Memoria di lavoro:</strong> Quando un bambino risolve un'operazione a mente (es. 12+15), deve tenere a mente le decine mentre somma le unità; questa manipolazione di dati avviene nella memoria di lavoro.</li>
+            </ul>
+        </div>
+
+        <div class="cornell-box">
+            <h4>Check Point:</h4>
+            <p><strong>1. D:</strong> Qual è la capienza della memoria di lavoro secondo le stime odierne?<br><strong>R:</strong> Circa 4-5 elementi contemporaneamente.</p>
+            <p><strong>2. D:</strong> Cos'è l'attenzione selettiva?<br><strong>R:</strong> La capacità di focalizzarsi solo sulle informazioni importanti ignorando gli stimoli distraenti.</p>
+        </div>
+
+        <h3>6. Il Disturbo da Deficit di Attenzione/Iperattività (ADHD)</h3>
+        <p>L'ADHD è uno dei disturbi del neurosviluppo più frequenti, diagnosticato solitamente durante la scuola primaria e più comune tra i maschi. È caratterizzato da un deficit nelle funzioni esecutive (memoria di lavoro, inibizione, attenzione).</p>
+        <p><strong>Criteri Diagnostici (DSM-5):</strong></p>
+        <ul>
+            <li><strong>Disattenzione:</strong> Almeno 6 sintomi su 9 per 6 mesi (es. errori di distrazione, sembra non ascoltare, perde oggetti, facile distraibilità).</li>
+            <li><strong>Iperattività e Impulsività:</strong> Almeno 6 sintomi su 9 (es. si muove sulla sedia, parla eccessivamente, interrompe, non riesce a stare seduto).</li>
+            <li><strong>Criteri temporali e di contesto:</strong> I sintomi devono comparire prima dei 12 anni, manifestarsi in almeno due contesti (es. casa e scuola) e causare una compromissione significativa del funzionamento.</li>
+        </ul>
+        <p><strong>Fattori Implicati (Disturbo Multifattoriale):</strong></p>
+        <ul>
+            <li><strong>Genetici:</strong> Forte componente ereditaria.</li>
+            <li><strong>Neurobiologici:</strong> Ritardo nella maturazione della corteccia prefrontale e minor rilascio di dopamina e noradrenalina, neurotrasmettitori chiave per l'attenzione.</li>
+            <li><strong>Ambientali:</strong> Esposizione prenatale ad alcol o fumo, nascite premature, contesti familiari disorganizzati.</li>
+        </ul>
+        <p><strong>Strategie di Intervento:</strong> L'approccio deve essere integrato: routine strutturate con calendari visivi, istruzioni brevi e semplici (un compito alla volta), pause frequenti e attive, rinforzi positivi immediati per premiare i comportamenti adeguati. Importante è anche il training per i genitori (parent training) e la terapia cognitivo-comportamentale per fornire al bambino strategie di coping.</p>
+
+        <div class="obj-box">
+            <h4>Esempi Pratici:</h4>
+            <ul>
+                <li><strong>Istruzioni spezzettate:</strong> Invece di dire "Prendi il quaderno, scrivi la data e fai l'esercizio", l'insegnante dice: "Prendi il quaderno" (pausa), "Ora scrivi la data" (pausa). Questo supporta la memoria di lavoro deficitaria.</li>
+                <li><strong>Tecnica della Tartaruga:</strong> Un gioco per insegnare l'autocontrollo emotivo: il bambino "entra nel guscio" (si chiude in se stesso) per fare respiri profondi e calmarsi prima di reagire a una provocazione.</li>
+            </ul>
+        </div>
+
+        <div class="cornell-box">
+            <h4>Check Point:</h4>
+            <p><strong>1. D:</strong> Quali neurotrasmettitori sono coinvolti nell'ADHD?<br><strong>R:</strong> Dopamina e noradrenalina, fondamentali per l'attenzione e l'autoregolazione.</p>
+            <p><strong>2. D:</strong> Entro quale età devono manifestarsi i sintomi per la diagnosi?<br><strong>R:</strong> Prima dei 12 anni.</p>
+        </div>
+
+        <h3>7. Sviluppo Emotivo: Autoconsapevolezza e Autostima</h3>
+        <p>Nella media fanciullezza, i bambini iniziano a valutarsi in modo più realistico. L'autoconsapevolezza è la capacità di osservare le proprie abilità assumendo un punto di vista esterno, mentre l'autostima è la tendenza a vedersi in termini positivi o negativi.</p>
+        <p><strong>Le Cinque Aree di Harter:</strong> Susan Harter sostiene che i bambini giudichino se stessi basandosi su:</p>
+        <ol>
+            <li>Competenza scolastica.</li>
+            <li>Condotta (comportamento).</li>
+            <li>Competenza atletica.</li>
+            <li>Popolarità tra i compagni.</li>
+            <li>Aspetto fisico.</li>
+        </ol>
+        <p>L'autostima può subire distorsioni: tendenze esternalizzanti (aggressività e proiezione esterna dei problemi) o internalizzanti (paura, inibizione sociale e depressione). Il senso di autoefficacia (Bandura) è la convinzione nelle proprie capacità di raggiungere un obiettivo ed è il motore dell'autostima. Al contrario, l'impotenza appresa (Seligman) si verifica quando il bambino percepisce di non avere controllo sui successi e smette di impegnarsi ("Tanto non sono capace"), generando passività.</p>
+
+        <div class="obj-box">
+            <h4>Esempi Pratici:</h4>
+            <ul>
+                <li><strong>Feedback realistico:</strong> Lodare l'impegno ("Ho visto quanto ti sei sforzato per questo disegno") anziché l'abilità fissa ("Sei un genio") promuove l'autoefficacia e l'accuratezza della percezione di sé.</li>
+                <li><strong>Confronto sociale:</strong> Un bambino di 9 anni che si guarda allo specchio e si paragona ai compagni di classe per quanto riguarda l'aspetto fisico sta esercitando la sua autoconsapevolezza secondo le aree di Harter.</li>
+            </ul>
+        </div>
+
+        <div class="cornell-box">
+            <h4>Check Point:</h4>
+            <p><strong>1. D:</strong> Quali sono le due principali distorsioni dell'autostima?<br><strong>R:</strong> Tendenze esternalizzanti (aggressività) e internalizzanti (ansia e inibizione).</p>
+            <p><strong>2. D:</strong> Cos'è l'impotenza appresa?<br><strong>R:</strong> La percezione di non avere controllo sugli eventi, che porta a smettere di impegnarsi.</p>
+        </div>
+
+        <h3>8. Moralità e Comportamento Prosociale</h3>
+        <p>La media fanciullezza è la fase della socializzazione morale. Il comportamento prosociale (condividere, aiutare) compare presto ma si struttura ora grazie all'empatia.</p>
+        <ul>
+            <li><strong>Empatia:</strong> Sentire l'emozione altrui. Ha una componente cognitiva (capire cosa prova l'altro) e una affettiva (sentire qualcosa di simile).</li>
+            <li><strong>Simpatia:</strong> Provare dispiacere per qualcuno senza necessariamente vivere la sua stessa emozione.</li>
+            <li><strong>Induzione:</strong> La tecnica educativa ideale. Consiste nello spiegare al bambino le conseguenze delle proprie azioni sugli altri per stimolare l'empatia e l'interiorizzazione delle regole.</li>
+            <li><strong>Disimpegno Morale (Bandura):</strong> Razionalizzare azioni negative per non provare senso di colpa ("L'ho fatto perché se lo meritava").</li>
+        </ul>
+        <p><strong>Lo Sviluppo Morale di Kohlberg:</strong></p>
+        <ol>
+            <li><strong>Livello Preconvenzionale (Bambini):</strong> La morale si basa su punizione e ricompensa ("Faccio il bravo per non essere punito").</li>
+            <li><strong>Livello Convenzionale (Adolescenti):</strong> Basato sul rispetto delle leggi e sul voler piacere agli altri.</li>
+            <li><strong>Livello Postconvenzionale (Adulti):</strong> Basato su principi etici universali e diritti umani.</li>
+        </ol>
+
+        <div class="obj-box">
+            <h4>Esempi Pratici:</h4>
+            <ul>
+                <li><strong>Riparazione:</strong> Se un bambino rompe il giocattolo di un compagno, l'adulto usa l'induzione facendogli notare la tristezza dell'altro. Il bambino prova un senso di colpa costruttivo che lo spinge a riparare il danno, a differenza della vergogna che lo farebbe sentire solo umiliato.</li>
+                <li><strong>Evoluzione morale:</strong> Un bambino che restituisce un portafoglio trovato perché ha paura della polizia è al livello preconvenzionale; se lo restituisce perché "rubare è sbagliato verso la società", è al livello convenzionale.</li>
+            </ul>
+        </div>
+
+        <div class="cornell-box">
+            <h4>Check Point:</h4>
+            <p><strong>1. D:</strong> Qual è la differenza tra empatia cognitiva e affettiva?<br><strong>R:</strong> La cognitiva è capire l'emozione altrui; l'affettiva è sentirla su di sé.</p>
+            <p><strong>2. D:</strong> Qual è lo stile educativo che favorisce la prosocialità?<br><strong>R:</strong> L'induzione, che spiega gli effetti delle proprie azioni sugli altri.</p>
+        </div>
+
+        <h3>9. L'Aggressività e il Rifiuto Sociale</h3>
+        <p>L'aggressività è la tendenza a compiere atti ostili o distruttivi.</p>
+        <ul>
+            <li><strong>Strumentale:</strong> Per ottenere un obiettivo (es. rubare un gioco).</li>
+            <li><strong>Reattiva:</strong> In risposta a una provocazione o frustrazione.</li>
+            <li><strong>Relazionale:</strong> Volta a danneggiare i rapporti sociali (escludere qualcuno dal gruppo).</li>
+        </ul>
+        <p>I bambini molto aggressivi manifestano spesso una distorsione attributiva ostile: interpretano segnali sociali neutri come minacce intenzionali. Questo comportamento può derivare da un ciclo di disciplina rigida e rifiuto sociale che alimenta la rabbia.</p>
+        <p><strong>L'Amicizia e la Popolarità:</strong> L'amicizia è vitale: protegge il sé e insegna a gestire le emozioni. La popolarità coinvolge la gerarchia dei pari e può nutrirsi di aggressività relazionale, mentre la gentilezza favorisce l'accettazione genuina. Il rifiuto sociale avviene per non conformità, disturbi internalizzanti o esternalizzanti; i bambini rifiutati rischiano problemi emotivi (ansia, depressione) in età adulta, sebbene alcuni bambini "diversi" possano eccellere una volta cresciuti.</p>
+
+        <div class="obj-box">
+            <h4>Esempi Pratici:</h4>
+            <ul>
+                <li><strong>Inclusione:</strong> Giochi di gruppo come il "paracadute colorato" o la "ragnatela di lana" servono a promuovere la socialità e l'unione, contrastando le tendenze all'esclusione.</li>
+                <li><strong>Interpretazione errata:</strong> Durante l'intervallo, un compagno urta involontariamente un bambino aggressivo. Quest'ultimo, a causa del bias ostile, reagisce con un pugno convinto che l'urto fosse un attacco intenzionale.</li>
+            </ul>
+        </div>
+
+        <div class="cornell-box">
+            <h4>Check Point:</h4>
+            <p><strong>1. D:</strong> Cos'è l'aggressività relazionale?<br><strong>R:</strong> Un atto ostile volto a danneggiare le relazioni sociali di una persona, come l'esclusione.</p>
+            <p><strong>2. D:</strong> Cosa si intende per "distorsione attributiva ostile"?<br><strong>R:</strong> La tendenza a interpretare come aggressivi indizi sociali che sono in realtà neutri o innocui.</p>
+        </div>
+
+    </div>
+    <div id="scroll-progress-container">
+        <div id="scroll-progress-bar"></div>
+    </div>
+
+    <div class="giants-background">
+        <img class="main-background-image" src="https://i.ibb.co/ym31GBzJ/nell-immagine-sotto-mantieni-coerenza-le-ombre-devono-essere-di-bambini-maschi-che-diventano-adult.jpg" alt="Sfondo Ombre">
+    </div>
+
+    <div id="toast-container"></div>
+
+    <header>
+        <h1>La Media Fanciullezza</h1>
+        <div class="subtitle">Lezione 9</div>
+    </header>
+
+    <div id="factor-modal" onclick="closeModal(event)">
+        <div class="modal-paper" onclick="event.stopPropagation()">
+            <span class="close-modal" onclick="closeModalDirect()">&times;</span>
+            <h2 id="m-title" style="margin-top:0;"></h2>
+            <div id="m-body"></div>
+        </div>
+    </div>
+
+    <div id="fc-mobile-modal" onclick="closeMobileAnswerPopup()">
+        <div class="fc-mobile-content" onclick="event.stopPropagation()">
+            <h3 style="margin-top:0; color:var(--accent-color);">Risposta:</h3>
+            <div id="fc-mobile-body">
+                </div>
+            <button class="fc-mobile-close" onclick="closeMobileAnswerPopup()">Ho capito, chiudi</button>
+        </div>
+    </div>
+
+    <div class="content-card">
+        
+        <div class="accordion-item" style="border-bottom: none;">
+            <button class="accordion-header master-header">
+                <span>Inizia</span> 
+                <span class="icon-plus">→</span>
+            </button>
+            <div class="accordion-content">
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span><strong>01.</strong> Obiettivi & Concetti Chiave</span> 
+                        <span class="icon-plus">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        
+                        <div class="obj-box">
+                            <p><strong>L'obiettivo di questa lezione</strong> è esplorare la media fanciullezza (7-12 anni) e le sue sfide evolutive. Nello specifico, mira a:</p>
+                            <ul class="obj-list">
+                                <li>Comprendere il compito psicosociale di Erikson: industriosità vs. inferiorità.</li>
+                                <li>Analizzare lo stadio operatorio concreto di Piaget e le nuove abilità logiche.</li>
+                                <li>Esaminare lo sviluppo cerebrale, fisico e le funzioni esecutive (memoria, attenzione).</li>
+                                <li>Approfondire i disturbi come l'ADHD e le dinamiche emotive e morali (autostima, empatia, aggressività).</li>
+                            </ul>
+                        </div>
+
+                        <h3>Cosa dovresti sapere a menadito</h3>
+                        
+                        <div class="definition-box">
+                            <strong>Definizione di Media Fanciullezza:</strong><br><br>
+                            Periodo compreso tra i 7 e i 12 anni, coincidente con la scuola primaria. È caratterizzato dallo sviluppo del pensiero logico concreto, dall'affinamento delle abilità motorie e dall'espansione delle competenze sociali e morali.
+                        </div>
+
+                        <p><strong>I 4 Fattori Chiave:</strong> (Clicca per approfondire)</p>
+                        <div class="factors-grid">
+                            <div class="factor-card" onclick="openFactor('erikson')">
+                                <strong>1. Industriosità</strong><br><small>Erik Erikson</small>
+                            </div>
+                            <div class="factor-card" onclick="openFactor('piaget')">
+                                <strong>2. Operatorio Concreto</strong><br><small>Jean Piaget</small>
+                            </div>
+                            <div class="factor-card" onclick="openFactor('adhd')">
+                                <strong>3. ADHD</strong><br><small>Deficit Attenzione</small>
+                            </div>
+                            <div class="factor-card" onclick="openFactor('moralita')">
+                                <strong>4. Moralità</strong><br><small>Kohlberg</small>
+                            </div>
+                        </div>
+
+                        <div style="background: #fdf6e3; border: 1px solid #eee8d5; padding: 1.5rem; margin-top: 1.5rem; border-radius: 4px;">
+                            <strong>L'approccio educativo:</strong> È fondamentale sostenere l'impegno del bambino ("industriosità") per evitare il senso di inferiorità. Bisogna fornire feedback realistici e valorizzare i progressi individuali.
+                        </div>
+
+                        <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione ▲</button>
+                    </div>
+                </div>
+
+                <br>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span><strong>02.</strong> Il Podcast</span>
+                        <span class="icon-plus">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="media-notes-grid">
+                            <div>
+                                <div class="visual-toggle-container">
+                                    <div class="visual-toggle-title">Vuoi la compagnia visiva?</div>
+                                    <button class="toggle-btn" onclick="toggleVisual(true)">SÌ</button>
+                                    <button class="toggle-btn" onclick="toggleVisual(false)">NO</button>
+                                </div>
+
+                                <div id="visual-wrapper">
+                                    <div class="video-container">
+                                        <iframe id="visual-iframe" src="" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                    </div>
+                                    <p style="font-size: 0.8rem; text-align: center; margin-top: 5px; color: #888;">
+                                        <em>Clicca Play per iniziare. Il video andrà in loop.</em>
+                                    </p>
+                                </div>
+
+                                <p style="margin-bottom:10px; margin-top: 20px;">Ascolta la lezione.</p>
+                                <iframe id="podcast-iframe" width="100%" height="166" style="border:none;"
+                                src="https://files.catbox.moe/fwu5rn.m4a"></iframe>
+                            </div>
+                            <div class="notes-widget">
+                                <div class="notes-toolbar">
+                                    <button class="tool-btn copy" onclick="copyNotes(this)">Copia Appunti</button>
+                                </div>
+                                <textarea class="notes-area" placeholder="Scrivi qui i tuoi appunti..."></textarea>
+                            </div>
+                        </div>
+                        <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione ▲</button>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span><strong>03.</strong> Video Sintesi</span>
+                        <span class="icon-plus">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="media-notes-grid">
+                            <div>
+                                <p style="margin-bottom:10px;">Guarda il video.</p>
+                                <div class="video-container">
+                                    <iframe src="https://www.youtube.com/embed/33ebU7fLFmM?controls=1&fs=1" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                </div>
+                            </div>
+                            <div class="notes-widget">
+                                <div class="notes-toolbar">
+                                    <button class="tool-btn copy" onclick="copyNotes(this)">Copia Appunti</button>
+                                </div>
+                                <textarea class="notes-area" placeholder="Scrivi qui i tuoi appunti..."></textarea>
+                            </div>
+                        </div>
+                        <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione ▲</button>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span><strong>04.</strong> Dritti al Sodo</span>
+                        <span class="icon-plus">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        
+                        <div class="media-notes-grid">
+                            <div>
+                                <div id="fc-start-screen" style="text-align: center; padding: 2rem;">
+                                    <div class="flashcard-wrapper">
+                                        <div class="flashcard-inner">
+                                            <div class="flashcard-front">
+                                                <h2>Pronto a ripassare?</h2>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="btn-pop btn-start" onclick="startFlashcards()">INIZIA</button>
+                                </div>
+
+                                <div id="fc-game-screen" style="display: none;">
+                                    <div class="fc-counter" id="fc-counter"></div>
+
+                                    <div id="flashcard-deck" class="flashcard-wrapper" onclick="handleWrapperClick(event)">
+                                        <div class="flashcard-inner">
+                                            <div class="flashcard-front">
+                                                <h2 id="fc-front-text">Caricamento...</h2>
+                                                <button class="btn-flip-mobile" onclick="forceFlip(event)">GIRA ↻</button>
+                                            </div>
+                                            <div class="flashcard-back">
+                                                <p id="fc-back-text" onclick="event.stopPropagation()">Caricamento...</p>
+                                                <button class="btn-flip-mobile" onclick="forceFlip(event)">GIRA ↻</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="fc-controls" id="fc-controls-bar">
+                                        <button class="btn-pop btn-nav" onclick="navCard(-1)">◄</button>
+                                        <div class="fc-actions">
+                                            <button class="btn-pop btn-no" onclick="markUnknown()">Ripasso dopo :(</button>
+                                            <button class="btn-pop btn-yes" onclick="markKnown()">La so! :)</button>
+                                        </div>
+                                        <button class="btn-pop btn-nav" onclick="navCard(1)">►</button>
+                                    </div>
+                                </div>
+
+                                <div id="win-screen">
+                                    <h2>Ma allora se le sai tutte io vado via!!</h2>
+                                    <p style="margin: 20px 0;">🎉🎉🎉</p>
+                                    <button class="btn-pop btn-yes" onclick="resetDeck()">Ricomincia da capo</button>
+                                </div>
+                            </div>
+
+                            <div class="notes-widget">
+                                <div class="notes-toolbar">
+                                    <button class="tool-btn copy" onclick="copyNotes(this)">Copia Appunti</button>
+                                </div>
+                                <textarea class="notes-area" placeholder="Scrivi qui i tuoi appunti..."></textarea>
+                            </div>
+                        </div>
+
+                        <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione ▲</button>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span><strong>05.</strong> Il Riassuntone</span>
+                        <span class="icon-plus">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="media-notes-grid">
+                            <div>
+                                <img src="https://i.postimg.cc/BbgFzJFJ/disegna-dei-pinguini-tutti-in-mucchio-come-fanno-in-natura-stile-del-disegno-corporate.jpg" class="section-banner" alt="Banner Riassuntone">
+                                
+                                <p style="margin-bottom:15px; color:#555;">Leggi il riassunto completo qui sotto.</p>
+                                
+                                <div id="contenitore-riassunto">
+                                    </div>
+
+                            </div>
+                            <div class="notes-widget">
+                                <div class="notes-toolbar">
+                                    <button class="tool-btn copy" onclick="copyNotes(this)">Copia Appunti</button>
+                                </div>
+                                <textarea class="notes-area" placeholder="Scrivi qui i tuoi appunti..."></textarea>
+                            </div>
+                        </div>
+                        <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione ▲</button>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span><strong>06.</strong> Fai una Pausa</span>
+                        <span class="icon-plus">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        
+                        <div style="text-align:center; padding: 2rem; background: #fafafa; border-radius: 8px;">
+                            <h3>Tempo di respirare.</h3>
+                            <p>Prenditi 5 minuti lontano dallo schermo. Hai elaborato molti concetti.</p>
+                            <div style="font-size:3rem; margin-top:1rem;">☕</div>
+                        </div>
+
+                        <p style="text-align: center; margin-top: 2rem; font-weight: bold; color: var(--accent-color);">
+                            oppure, gioca ai nostri giochi: il Cerca Parole e il Super Solitario
+                        </p>
+
+                        <div style="text-align: center; margin-top: 1.5rem;">
+                            <a href="https://sites.google.com/view/una-mano-spensierata/psicologia-dello-sviluppo/i-giochi" target="_blank" class="btn-pop btn-start" style="text-decoration:none; display:inline-block;">Vai ai giochi</a>
+                        </div>
+
+                        <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione ▲</button>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span><strong>07.</strong> Chiedi all'Assistente AI</span>
+                        <span class="icon-plus">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="freud-bot-container">
+                            <img src="https://i.postimg.cc/FzXvL1zw/collage-materico-robot-e-sociologia.jpg" alt="Assistente IA" class="bot-image">
+                            <div class="bot-content">
+                                <h3>Dr. Freud-Bot 3000</h3>
+                                <p>Hai dubbi sull'inconscio della lezione?</p>
+                                <a href="https://notebooklm.google.com/notebook/4548d536-ae8a-4574-9a3c-7f0b45d5e9a5" target="_blank" class="btn-choice" style="display:inline-block; text-decoration:none; background:var(--ink-color); color:white; border:none; margin-top:10px;">Avvia Chat</a>
+                            </div>
+                        </div>
+                        <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione ▲</button>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span><strong>08.</strong> ASMR & Chill</span>
+                        <span class="icon-plus">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div style="max-width: 800px; margin: 0 auto;">
+                            <div>
+                                <p style="font-size:0.9rem; color:#666; margin-bottom:15px; text-align:center;">Nota: Clicca Play per avviare.</p>
+                                
+                                <h4 style="margin-bottom: 10px; color: var(--accent-color);">ASMR</h4>
+                                <div class="video-container" style="margin-bottom: 2rem;">
+                                    <iframe id="asmr-brown" src="" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                </div>
+                                
+                                <h4 style="margin-bottom: 10px; color: var(--accent-color);">Musica Relax / Lofi</h4>
+                                <div class="video-container">
+                                    <iframe id="asmr-music" src="" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione ▲</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+
+        // --- TRANSFER RIASSUNTO LOGIC ---
+        window.addEventListener('DOMContentLoaded', () => {
+            const source = document.getElementById('source-riassunto');
+            const target = document.getElementById('contenitore-riassunto');
+            if (source && target) {
+                target.innerHTML = source.innerHTML;
+            }
+            setRandomYTStart('asmrBrown');
+            setRandomYTStart('asmrMusic');
+        });
+
+        // --- SCROLL PROGRESS BAR LOGIC ---
+        window.onscroll = function() { updateProgressBar() };
+
+        function updateProgressBar() {
+            var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            var scrolled = (winScroll / height) * 100;
+            document.getElementById("scroll-progress-bar").style.width = scrolled + "%";
+        }
+
+        // --- DATA FATTORI ---
+        const factorsData = {
+            erikson: {
+                title: "1. Industriosità vs. Inferiorità",
+                body: `<p>È il compito psicosociale identificato da Erik Erikson per la media fanciullezza (7-12 anni). L'industriosità è la capacità del bambino di lavorare sistematicamente per raggiungere obiettivi e adattarsi alle regole del mondo adulto. Se incoraggiata, porta a un senso di padronanza; se ostacolata o criticata eccessivamente, genera un senso di inferiorità e inadeguatezza.</p>`
+            },
+            piaget: {
+                title: "2. Stadio Operatorio Concreto",
+                body: `<p>Fase cognitiva descritta da Jean Piaget (7-12 anni), caratterizzata dalla comparsa del pensiero logico applicato a situazioni reali e tangibili. Il bambino acquisisce capacità come la conservazione, la classificazione, la seriazione e la reversibilità, ma fatica ancora con concetti astratti o ipotetici privi di supporto visivo.</p>`
+            },
+            adhd: {
+                title: "3. ADHD (Deficit Attenzione/Iperattività)",
+                body: `<p>Disturbo del neurosviluppo frequente, caratterizzato da deficit nelle funzioni esecutive (memoria di lavoro, inibizione, attenzione). Si manifesta con disattenzione, iperattività e impulsività che compromettono il funzionamento in più contesti (es. casa e scuola). Ha cause genetiche, neurobiologiche e ambientali.</p>`
+            },
+            moralita: {
+                title: "4. Sviluppo Morale (Kohlberg)",
+                body: `<p>Lawrence Kohlberg teorizza tre livelli di sviluppo morale: Preconvenzionale (basato su punizioni e ricompense, tipico dei bambini), Convenzionale (basato sul rispetto delle leggi e l'approvazione sociale, tipico degli adolescenti) e Postconvenzionale (basato su principi etici universali, raggiunto da alcuni adulti).</p>`
+            }
+        };
+
+        /* ==========================================================
+           LOGICA FLASHCARDS 
+           ========================================================== */
+        
+        // Uso i backticks (template literals) per gestire apostrofi e virgolette senza problemi.
+        const initialCards = [
+            {
+                front: `Qual è il compito psicosociale della media fanciullezza secondo Erik Erikson?`,
+                back: `Il compito centrale è il conflitto tra industriosità e senso di inferiorità. L'industriosità è la voglia del bambino (7-12 anni) di impegnarsi in attività diverse, imparare a risolvere problemi e lavorare sistematicamente per raggiungere obiettivi, adattandosi alle regole degli adulti. Se il bambino viene sostenuto in questo sforzo, sviluppa un senso di competenza e padronanza. Al contrario, se l'impegno non viene incoraggiato o se il bambino fallisce ripetutamente senza supporto, emerge un senso di inferiorità e inadeguatezza che può compromettere l'autostima futura. È fondamentale che educatori e genitori valorizzino l'operosità e l'impegno costante.`
+            },
+            {
+                front: `Quali sono le caratteristiche principali dello stadio operatorio concreto di Piaget?`,
+                back: `Lo stadio operatorio concreto (7-12 anni) è segnato dalla comparsa del pensiero logico applicato a situazioni tangibili. Le operazioni mentali chiave includono: la conservazione (quantità e volume non variano con la forma), la classificazione (organizzazione in categorie gerarchiche), la seriazione (ordinamento per proprietà fisiche), la reversibilità (capacità di invertire mentalmente un'azione) e il decentramento (considerare più punti di vista). Il limite principale è l'incapacità di ragionare su concetti puramente astratti o ipotetici senza un supporto concreto.`
+            },
+            {
+                front: `In che modo lo sviluppo del cervello influenza le funzioni esecutive in questa fase?`,
+                back: `La media fanciullezza è caratterizzata dalla lenta maturazione dei lobi frontali, sede delle funzioni esecutive come l'attenzione selettiva e l'autocontrollo. Mentre le aree visive e motorie maturano precocemente, la corteccia prefrontale richiede molto tempo. Processi come la mielinizzazione velocizzano la trasmissione degli impulsi, migliorando la precisione, mentre il pruning sinaptico elimina le connessioni poco usate per rendere il cervello più efficiente. Questa crescita lenta spiega perché i bambini migliorano gradualmente nella concentrazione ma non possiedono ancora un pieno autocontrollo.`
+            },
+            {
+                front: `Quali sono le differenze tra abilità grosso-motorie e fini e il loro impatto scolastico?`,
+                back: `Le abilità grosso-motorie (correre, saltare) coinvolgono i grandi muscoli e promuovono benessere fisico e socialità, ma non sono correlate direttamente al rendimento scolastico. Le abilità motorie fini (scrivere, disegnare) riguardano movimenti precisi e coordinazione oculo-manuale. Queste ultime sono strettamente collegate a migliori performance in lettura e scrittura, poiché coinvolgono aree cerebrali comuni alle funzioni esecutive e alla memoria di lavoro. Un buon controllo motorio fine è indicatore di efficienza nelle attività cognitive complesse.`
+            },
+            {
+                front: `Come viene descritta la memoria nella teoria dell'elaborazione delle informazioni?`,
+                back: `La mente è paragonata a un computer: memoria sensoriale (input brevi), memoria di lavoro (elaborazione) e memoria a lungo termine. La memoria di lavoro ha una capienza limitata (circa 4-5 elementi) che aumenta durante la primaria con la maturazione dei lobi frontali. È legata alle funzioni esecutive come l'attenzione selettiva e la pianificazione, permettendo al bambino di filtrare distrazioni e organizzare dati per risolvere compiti complessi e apprendere.`
+            },
+            {
+                front: `Quali sono i criteri diagnostici principali dell'ADHD secondo il DSM-5?`,
+                back: `L'ADHD è un disturbo caratterizzato da disattenzione e/o iperattività-impulsività persistenti. Per la diagnosi, devono essere presenti almeno 6 sintomi su 9 per almeno 6 mesi, manifestarsi prima dei 12 anni e in almeno due contesti (es. casa e scuola). Il disturbo è multifattoriale (genetico, neurobiologico, ambientale) e compromette funzioni esecutive come il controllo inibitorio e la memoria di lavoro due neurotrasmettitori chiave coinvolti sono dopamina e noradrenalina.`
+            },
+            {
+                front: `Quali sono le cinque aree dell'autostima identificate da Susan Harter?`,
+                back: `Harter sostiene che i bambini si valutino in modo realistico su 5 aree: competenza scolastica, condotta, competenza atletica, popolarità tra i compagni e aspetto fisico. L'autostima nasce da queste percezioni ed è alimentata dal senso di autoefficacia. Se il bambino sente di non avere controllo sui successi, può cadere nell'impotenza appresa. Gli educatori dovrebbero favorire un'autostima realistica enfatizzando l'impegno.`
+            },
+            {
+                front: `Qual è la differenza tra empatia e simpatia e come si promuove la socialità morale?`,
+                back: `L'empatia è sentire l'emozione altrui (componente cognitiva e affettiva). La simpatia è provare dispiacere per qualcuno senza condividerne necessariamente lo stato emotivo. La socialità morale si promuove con l'induzione, spiegando al bambino le conseguenze delle sue azioni sugli altri per stimolare empatia e riparazione. Il disimpegno morale, invece, razionalizza le azioni negative per evitare il senso di colpa.`
+            },
+            {
+                front: `Quali sono i tre livelli dello sviluppo morale teorizzati da Kohlberg?`,
+                back: `1. Preconvenzionale (fino a 9 anni): morale basata su punizioni e ricompense esterne. 2. Convenzionale (adolescenti/adulti): morale basata sull'approvazione sociale, il rispetto delle leggi e dell'ordine. 3. Postconvenzionale (alcuni adulti): morale basata su principi etici universali e diritti umani che trascendono le leggi. Si evolve dall'egocentrismo verso valori universali.`
+            },
+            {
+                front: `Quali tipologie di aggressività esistono e cos'è la distorsione attributiva ostile?`,
+                back: `L'aggressività può essere strumentale (per ottenere qualcosa), reattiva (risposta a provocazione) o relazionale (danneggiare rapporti sociali, es. esclusione). La distorsione attributiva ostile è la tendenza dei bambini aggressivi a interpretare come intenzionalmente ostili anche azioni neutre o innocue degli altri, innescando reazioni violente e rifiuto sociale.`
+            }
+        ];
+
+        let activeCards = [...initialCards];
+        let currentCardIndex = 0;
+
+        function startFlashcards() {
+            document.getElementById('fc-start-screen').style.display = 'none';
+            document.getElementById('fc-game-screen').style.display = 'block';
+            updateCardDisplay();
+        }
+
+        function updateCardDisplay() {
+            const deck = document.getElementById('flashcard-deck');
+            const controls = document.getElementById('fc-controls-bar');
+            const winScreen = document.getElementById('win-screen');
+            const counter = document.getElementById('fc-counter');
+
+            if (activeCards.length === 0) {
+                document.getElementById('fc-game-screen').style.display = 'none';
+                winScreen.style.display = 'flex';
+                return;
+            } else {
+                winScreen.style.display = 'none';
+            }
+
+            if (currentCardIndex >= activeCards.length) currentCardIndex = 0;
+            if (currentCardIndex < 0) currentCardIndex = activeCards.length - 1;
+
+            const card = activeCards[currentCardIndex];
+            counter.innerText = `Carte da studiare: ${activeCards.length}`;
+
+            // Animazione di cambio carta
+            deck.style.opacity = '0.5';
+            setTimeout(() => {
+                document.getElementById('fc-front-text').innerText = card.front;
+                document.getElementById('fc-back-text').innerText = card.back;
+                
+                // Reset scroll del testo posteriore
+                document.getElementById('fc-back-text').scrollTop = 0;
+                
+                // Reset flip
+                deck.classList.remove('flipped'); 
+                deck.style.opacity = '1';
+            }, 200);
+        }
+
+        // --- GESTIONE FLIP ---
+        
+        // Funzione per il click sul wrapper (PC)
+        function handleWrapperClick(e) {
+            // Se siamo su mobile (schermo < 900px), IGNORA il click sul wrapper
+            // per permettere lo scroll del testo senza girare la carta.
+            if (window.innerWidth <= 900) return;
+            
+            toggleFlip();
+        }
+
+        // Funzione per il bottone Mobile (GIRA)
+        function forceFlip(e) {
+            if(e) e.stopPropagation();
+
+            // LOGICA MOBILE: SE SIAMO SU SCHERMO PICCOLO (< 900px) APRI MODALE INVECE DI GIRARE
+            if (window.innerWidth <= 900) {
+                // Recupera il testo della risposta della carta corrente
+                const card = activeCards[currentCardIndex];
+                const answerText = card.back; 
+                
+                // Inserisci nel modale
+                document.getElementById('fc-mobile-body').innerHTML = answerText;
+                
+                // Mostra modale
+                document.getElementById('fc-mobile-modal').style.display = 'flex';
+            } else {
+                // LOGICA DESKTOP: GIRA NORMALE
+                toggleFlip();
+            }
+        }
+
+        // Funzione per chiudere il popup mobile della risposta
+        function closeMobileAnswerPopup() {
+            document.getElementById('fc-mobile-modal').style.display = 'none';
+        }
+
+        // La logica effettiva del flip (usata solo su desktop ora)
+        function toggleFlip() {
+            document.getElementById('flashcard-deck').classList.toggle('flipped');
+        }
+
+        // --- NAVIGAZIONE ---
+        function navCard(direction) {
+            currentCardIndex += direction;
+            if (currentCardIndex < 0) currentCardIndex = activeCards.length - 1;
+            if (currentCardIndex >= activeCards.length) currentCardIndex = 0;
+            updateCardDisplay();
+        }
+
+        // --- GESTIONE RISPOSTE ---
+        function markKnown() {
+            showToast("Grande! Continua così.", "success");
+            activeCards.splice(currentCardIndex, 1);
+            if (currentCardIndex >= activeCards.length) currentCardIndex = 0;
+            
+            // Ritardo per permettere l'animazione del toast prima di cambiare carta visivamente
+            setTimeout(() => {
+                document.getElementById('flashcard-deck').classList.remove('flipped');
+                updateCardDisplay();
+            }, 500);
+        }
+
+        function markUnknown() {
+            showToast("Nessun problema, la rivedremo dopo.", "retry");
+            // Sposta la carta in fondo al mazzo
+            const currentCard = activeCards.splice(currentCardIndex, 1)[0];
+            activeCards.push(currentCard);
+            
+            if (currentCardIndex >= activeCards.length) currentCardIndex = 0;
+            
+            setTimeout(() => {
+                document.getElementById('flashcard-deck').classList.remove('flipped');
+                updateCardDisplay();
+            }, 500);
+        }
+
+        function resetDeck() {
+            activeCards = [...initialCards];
+            currentCardIndex = 0;
+            document.getElementById('win-screen').style.display = 'none';
+            document.getElementById('fc-game-screen').style.display = 'block';
+            document.getElementById('fc-start-screen').style.display = 'block';
+            // Nasconde il gioco, mostra start screen
+            document.getElementById('fc-game-screen').style.display = 'none';
+        }
+
+        function showToast(message, type) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.innerText = message;
+            container.appendChild(toast);
+            
+            // Trigger reflow
+            void toast.offsetWidth; 
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 2000);
+        }
+
+        // --- UTILS ---
+        
+        function openFactor(key) {
+            document.getElementById('m-title').innerText = factorsData[key].title;
+            document.getElementById('m-body').innerHTML = factorsData[key].body;
+            document.getElementById('factor-modal').classList.add('open');
+            document.body.classList.add('modal-open');
+        }
+        function closeModalDirect() { 
+            document.getElementById('factor-modal').classList.remove('open');
+            document.body.classList.remove('modal-open');
+        }
+        function closeModal(e) { if(e.target.id === 'factor-modal') closeModalDirect(); }
+
+        function showCopySuccess(btn) {
+            const originalText = btn.innerText;
+            btn.innerText = "Copiato!";
+            btn.style.background = "#d4edda";
+            setTimeout(() => {
+                btn.innerText = originalText;
+                btn.style.background = "white";
+            }, 1500);
+        }
+
+        function copyNotes(btn) {
+            const widget = btn.closest('.notes-widget');
+            const noteArea = widget.querySelector('.notes-area');
+            const text = noteArea.value;
+
+            if (!text.trim()) {
+                alert("Non c'è nulla da copiare! Scrivi prima qualcosa.");
+                return;
+            }
+
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showCopySuccess(btn);
+                }).catch(err => {
+                    fallbackCopyTextToClipboard(text, btn);
+                });
+            } else {
+                fallbackCopyTextToClipboard(text, btn);
+            }
+        }
+
+        function fallbackCopyTextToClipboard(text, btn) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed"; 
+            textArea.style.left = "-9999px";
+            textArea.style.top = "0";
+            document.body.appendChild(textArea);
+            textArea.focus({preventScroll: true});
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showCopySuccess(btn);
+            } catch (err) {
+                alert('Errore nel copiare gli appunti.');
+            }
+            document.body.removeChild(textArea);
+        }
+        
+        // --- AUTO-SCROLL LOGIC (CHIRURGICO) ---
+        const noteAreas = document.querySelectorAll('.notes-area');
+        noteAreas.forEach(area => {
+            area.addEventListener('input', function() {
+                // Salvataggio
+                localStorage.setItem('NOTES_KEY_DINAMICA', this.value); 
+                // Auto-scroll solo se scrivo in fondo
+                if(this.selectionStart === this.value.length) {
+                    this.scrollTo(0, this.scrollHeight);
+                }
+            });
+        });
+
+        // --- ACCORDION LOGIC ---
+        const accs = document.getElementsByClassName("accordion-header");
+        for (let i = 0; i < accs.length; i++) {
+            accs[i].addEventListener("click", function(e) {
+                e.stopPropagation();
+                
+                this.classList.toggle("active");
+                const panel = this.nextElementSibling;
+                const icon = this.querySelector('.icon-plus');
+                
+                if (panel.style.maxHeight || panel.classList.contains('active')) {
+                    panel.style.maxHeight = null;
+                    panel.classList.remove("active");
+                    if(icon) icon.textContent = "+";
+                } else {
+                    panel.classList.add("active");
+                    panel.style.maxHeight = panel.scrollHeight + 15000 + "px"; 
+                    if(icon) icon.textContent = "-";
+                }
+            });
+        }
+
+        function closeThisSection(btn) {
+            const content = btn.parentElement;
+            const header = content.previousElementSibling;
+            header.click();
+            header.scrollIntoView({behavior: "smooth", block: "center"});
+        }
+
+        /* -------------------------------------------------------------
+            LOGICA VIDEO YOUTUBE (NO AUTOPLAY + RANDOM START)
+        ------------------------------------------------------------- */
+        
+        const VIDEO_CONFIG = {
+            visualCompanion: { 
+                id: 'visual-iframe', 
+                videoId: 'pb-j3svRQLI', // Studio with me
+                duration: 3600, // stima
+                muted: true 
+            },
+            asmrBrown: {
+                id: 'asmr-brown',
+                videoId: 'P48QELwruQs', // ASMR
+                duration: 36000, 
+                muted: false
+            },
+            asmrMusic: {
+                id: 'asmr-music',
+                videoId: 'oGCu47JESi0', // Musica Relax
+                duration: 3600, 
+                muted: false
+            }
+        };
+
+        function setRandomYTStart(configKey) {
+            const config = VIDEO_CONFIG[configKey];
+            const iframe = document.getElementById(config.id);
+            if(!iframe) return;
+
+            const randomSec = Math.floor(Math.random() * (config.duration - 30));
+            
+            let url = `https://www.youtube.com/embed/${config.videoId}?playlist=${config.videoId}&loop=1&autoplay=0&start=${randomSec}&controls=1&fs=1`;
+            
+            if(config.muted) {
+                url += "&mute=1";
+            }
+            
+            iframe.src = url;
+        }
+
+        // --- GESTIONE VISUAL COMPANION TOGGLE ---
+        function toggleVisual(show) {
+            const wrapper = document.getElementById('visual-wrapper');
+            const btns = document.querySelectorAll('.toggle-btn');
+            
+            btns[0].classList.toggle('active', show);
+            btns[1].classList.toggle('active', !show);
+
+            if (show) {
+                wrapper.style.display = 'block';
+                setRandomYTStart('visualCompanion');
+            } else {
+                wrapper.style.display = 'none';
+                document.getElementById('visual-iframe').src = "";
+            }
+        }
+
+    </script>
+</body>
+</html>

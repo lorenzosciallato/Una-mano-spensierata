@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Psicologia dello Sviluppo | Lezione 2</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- VARIABILI & RESET --- */
+        :root {
+            --bg-color: #f0f0f2;
+            --paper-color: #fdfbf7;
+            --ink-color: #1a1a1a;
+            --accent-color: #375a7f;
+            --pop-cyan: #00f2ff;
+            --pop-magenta: #ff00ff;
+            --pop-ocean: #0044cc;
+            --pop-yellow: #ffee00;
+            --font-title: 'Abril Fatface', cursive;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { height: 100%; overflow-x: hidden; }
+        body {
+            background-color: var(--bg-color);
+            font-family: var(--font-body);
+            color: var(--ink-color);
+            line-height: 1.6;
+            min-height: 100%;
+            position: relative;
+            padding-bottom: 80px;
+            -webkit-overflow-scrolling: touch;
+            width: 100%;
+        }
+
+        /* --- BARRA DI PROGRESSO --- */
+        #scroll-progress-container { position: fixed; top: 0; left: 0; width: 100%; height: 6px; background: rgba(0,0,0,0.05); z-index: 9999999; }
+        #scroll-progress-bar { height: 100%; background: rgba(55, 90, 127, 0.7); width: 0%; transition: width 0.1s; box-shadow: 0 0 10px rgba(55, 90, 127, 0.3); }
+
+        /* --- BACKGROUND --- */
+        .giants-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; overflow: hidden; display: flex; justify-content: center; align-items: center; background: #e0e0e5; }
+        .main-background-image { width: 100%; height: 100%; object-fit: cover; opacity: 0.1; filter: grayscale(100%) sepia(1) hue-rotate(210deg) contrast(1.2); mix-blend-mode: multiply; }
+
+        /* --- HEADER --- */
+        header { text-align: center; margin-top: 3rem; margin-bottom: 1rem; padding: 0 1rem; }
+        h1 { font-family: var(--font-title); font-size: clamp(2.5rem, 5vw, 4rem); margin: 0; color: var(--ink-color); line-height: 1.1; }
+        .subtitle { font-family: var(--font-body); font-size: 1.5rem; color: var(--accent-color); font-weight: 700; text-transform: uppercase; letter-spacing: 4px; margin-top: 10px; }
+
+        /* --- CONTENITORE PRINCIPALE --- */
+        .content-card {
+            background: var(--paper-color); padding: 3rem; margin: 0 auto;
+            width: 90%; max-width: 1200px; position: relative;
+            border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.05); z-index: 1;
+            margin-bottom: 2rem; margin-top: 2rem;
+        }
+        @media (max-width: 600px) { .content-card { padding: 1.5rem; width: 95%; margin-top: 1rem; } }
+
+        h3 { font-family: var(--font-title); font-size: 1.5rem; margin-top: 1.5rem; margin-bottom: 0.5rem; }
+
+        /* --- LAYOUT GRIGLIA --- */
+        .media-notes-grid { display: grid; grid-template-columns: 2.5fr 1fr; gap: 2rem; align-items: stretch; }
+        @media (max-width: 900px) { .media-notes-grid { grid-template-columns: 1fr; gap: 1.5rem; } }
+
+        /* --- MODIFICA SCROLL RIASSUNTO --- */
+        @media (min-width: 900px) {
+            #contenitore-riassunto { max-height: 550px; overflow-y: auto; padding-right: 15px; border-bottom: 1px solid #eee; }
+            #contenitore-riassunto::-webkit-scrollbar { width: 8px; }
+            #contenitore-riassunto::-webkit-scrollbar-thumb { background-color: #ccc; border-radius: 4px; }
+            #contenitore-riassunto::-webkit-scrollbar-track { background-color: #f9f9f9; }
+        }
+
+        /* --- BANNER IMMAGINI --- */
+        .section-banner { width: 100%; height: auto; max-height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 1.5rem; border: 1px solid #ddd; }
+
+        /* ================================================================
+           >>> WIDGET APPUNTI ZEN (MODIFICATO SECONDO ISTRUZIONI V4) <<< 
+           ================================================================
+        */
+        .notes-widget {
+            background: #fff; 
+            border: 2px dashed #ccc; 
+            border-radius: 8px;
+            display: flex; 
+            flex-direction: column; 
+            align-self: start; 
+            
+            /* ALTEZZA FISSA: Essenziale per contenere la textarea e lo scroll */
+            height: 60vh; 
+            
+            position: sticky; 
+            top: 20px; 
+            z-index: 5;
+            width: 100%; 
+            min-width: 0;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            overflow: hidden; 
+        }
+        
+        @media (max-width: 900px) {
+            .notes-widget { position: relative; top: 0; height: 500px; align-self: stretch; }
+        }
+
+        .notes-toolbar {
+            background: #f4f4f4; padding: 10px; border-bottom: 1px solid #ddd;
+            border-radius: 6px 6px 0 0; display: flex; justify-content: flex-end;
+            flex-shrink: 0; 
+        }
+        .tool-btn {
+            padding: 8px 15px; font-size: 0.85rem; cursor: pointer; border: 1px solid #bbb; 
+            background: white; border-radius: 4px; font-weight: 600; font-family: var(--font-body); transition: all 0.2s;
+        }
+        
+        /* STILE TEXTAREA "ZEN MODE" */
+        .notes-area {
+            display: block;
+            width: 100%;
+            height: 100%;
+            border: none;
+            outline: none;
+            resize: none;
+            
+            /* Spaziatura interna */
+            padding: 15px;
+            padding-top: 20px;
+            
+            /* IL TRUCCO DELLO SPAZIO INFINITO (ZEN) */
+            padding-bottom: 80vh; 
+            
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem; 
+            line-height: 1.6;
+            color: #333;
+            background-color: transparent;
+            overflow-y: auto; 
+            -webkit-overflow-scrolling: touch; 
+        }
+        /* ================================================================ */
+
+
+        /* --- ACCORDION --- */
+        .accordion-item { margin-bottom: 1rem; border-bottom: 1px solid #eee; }
+        .accordion-header {
+            background: transparent; border: none; width: 100%; text-align: left;
+            padding: 1.2rem 0; font-family: var(--font-title); font-size: clamp(1.2rem, 4vw, 1.8rem);
+            cursor: pointer; transition: color 0.3s; display: flex;
+            justify-content: space-between; align-items: center; color: var(--ink-color); font-weight: 400;
+        }
+        .accordion-header strong {
+            font-family: var(--font-body); font-weight: 700; font-size: 1.3rem;
+            color: var(--accent-color); text-transform: uppercase; letter-spacing: 2px; margin-right: 15px;
+        }
+        .accordion-content {
+            max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out;
+            padding: 0; opacity: 0; display: flex; flex-direction: column; 
+        }
+        .accordion-content.active { max-height: 20000px; opacity: 1; padding-top: 1rem; padding-bottom: 2rem; overflow: visible; } 
+        .icon-plus { font-size: 1.5rem; font-weight: 300; font-family: var(--font-body); color: var(--accent-color); margin-left: auto; }
+
+        /* --- MASTER HEADER --- */
+        .master-header {
+            background: transparent; border: 2px solid var(--accent-color); border-radius: 8px;
+            padding: 10px 20px; justify-content: center; font-size: 1.5rem; 
+            color: var(--accent-color); width: 100%; margin-bottom: 1rem;
+        }
+        .master-header .icon-plus { margin-left: 15px; flex-grow: 0; }
+        @media (max-width: 600px) { .master-header { font-size: 1.1rem; padding: 10px; } }
+
+        .btn-close-section {
+            width: 100%; text-align: center; margin-top: 30px; padding: 15px; background: #eee; 
+            border: 1px solid #ddd; border-radius: 8px; font-family: var(--font-body); font-weight: 700; 
+            color: #666; cursor: pointer; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px;
+        }
+
+        /* --- STILI DEL RIASSUNTO --- */
+        .text-content-box { background: #fff; border: 1px solid #eee; border-radius: 8px; padding: 2rem; color: #333; line-height: 1.8; font-size: 1.05rem; }
+        @media(max-width:600px) { .text-content-box { padding: 1rem; font-size: 1rem; } }
+        .text-content-box h3 { color: var(--accent-color); border-bottom: 2px solid #eee; padding-bottom: 10px; margin-top: 2.5rem; margin-bottom: 1.5rem; }
+        .text-content-box h3:first-child { margin-top: 0; }
+        .text-content-box h4 { color: #555; margin-top: 1.5rem; margin-bottom: 0.5rem; font-size: 1.2rem; }
+        .text-content-box p { margin-bottom: 1rem; }
+        .cornell-box { background: #f4f8fb; border-left: 5px solid var(--accent-color); padding: 1.5rem; margin: 2rem 0; border-radius: 0 8px 8px 0; }
+        .cornell-question { font-weight: bold; color: var(--accent-color); margin-bottom: 0.2rem; }
+        .cornell-answer { margin-bottom: 1.5rem; margin-left: 10px; }
+        .cornell-answer:last-child { margin-bottom: 0; }
+        .metafora-box { background: #fff8e1; border: 2px dashed var(--pop-yellow); padding: 1.5rem; border-radius: 12px; margin-top: 3rem; font-style: italic; }
+
+        /* --- VIDEO CONTAINER --- */
+        .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; background: #000; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); z-index: 1; margin-bottom: 1rem; }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+
+        /* --- FLASHCARDS --- */
+        .flashcard-wrapper { position: relative; perspective: 1000px; width: 100%; height: 500px; margin-bottom: 1rem; cursor: pointer; }
+        .flashcard-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); transform-style: preserve-3d; box-shadow: 0 10px 30px rgba(0,0,0,0.15); border-radius: 12px; }
+        .flashcard-wrapper.flipped .flashcard-inner { transform: rotateY(180deg); }
+        .flashcard-front, .flashcard-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 12px; padding: 1.5rem; background-image: url('https://i.postimg.cc/tJSTPJPW/indiani-d-america-e-uova-sode-stile-bruno-munari-molto-movimentato-e-colorato.jpg'); background-size: contain; background-repeat: no-repeat; background-position: center; background-color: #222; }
+        .flashcard-back { transform: rotateY(180deg); }
+        .flashcard-back::before { content: ""; position: absolute; top:0; left:0; width:100%; height:100%; background-image: url('https://i.postimg.cc/tJSTPJPW/indiani-d-america-e-uova-sode-stile-bruno-munari-molto-movimentato-e-colorato.jpg'); background-size: contain; background-repeat: no-repeat; background-position: center; transform: scaleX(-1); z-index: -1; }
+        .flashcard-back p, .flashcard-front h2 { position: relative; z-index: 2; background: rgba(255,255,255,0.95); padding: 20px 25px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); width: 100%; color: #111; }
+        .flashcard-front h2 { font-family: var(--font-title); font-size: 1.6rem; line-height: 1.3; }
+        .flashcard-back p { font-size: 1rem; text-align: left; line-height: 1.5; white-space: pre-line; overflow-y: auto; max-height: 85%; -webkit-overflow-scrolling: touch; pointer-events: auto; }
+
+        /* --- BOTTONE GIRA CARTA (SOLO MOBILE) --- */
+        .btn-flip-mobile { display: none; margin-top: 15px; background: var(--pop-yellow); color: #000; border: 3px solid #000; padding: 10px 30px; font-weight: 900; border-radius: 30px; z-index: 20; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); text-transform: uppercase; font-family: var(--font-body); white-space: nowrap; pointer-events: auto; }
+        .btn-flip-mobile:active { transform: translateY(2px); }
+        @media (max-width: 900px) {
+            .flashcard-wrapper { height: 500px; cursor: default; }
+            .flashcard-front, .flashcard-back { justify-content: flex-start; padding: 1rem; padding-top: 1.5rem; }
+            .flashcard-front h2 { font-size: 1.2rem; padding: 15px; margin-top: 20px; }
+            .flashcard-back p { font-size: 0.95rem; padding: 15px; max-height: 75%; }
+            .btn-flip-mobile { display: inline-block; position: absolute; bottom: 20px; }
+            .fc-controls { margin-top: 10px; grid-template-columns: 45px 1fr 45px; gap: 5px; }
+            .btn-pop { padding: 12px 5px; font-size: 0.8rem; }
+            .btn-start { width: 100%; }
+        }
+
+        .fc-counter { text-align: center; margin-bottom: 10px; font-weight: bold; color: var(--accent-color); }
+        .fc-controls { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; margin-top: 20px; }
+        .fc-actions { display: flex; gap: 5px; justify-content: center; width: 100%; }
+        .btn-pop { padding: 10px 20px; border: none; border-radius: 8px; font-weight: 700; font-family: var(--font-body); text-transform: uppercase; cursor: pointer; transition: transform 0.1s, box-shadow 0.2s; border: 2px solid #000; box-shadow: 3px 3px 0px #000; }
+        .btn-pop:active { transform: translateY(2px); box-shadow: 1px 1px 0px #000; }
+        .btn-nav { background: #fff; color: #000; font-size: 1.2rem; min-width: 40px; }
+        .btn-no { background: var(--pop-magenta); color: #fff; flex-grow: 1; }
+        .btn-yes { background: var(--pop-cyan); color: #000; flex-grow: 1; }
+        .btn-start { background: var(--pop-yellow); color: #000; font-size: 1.2rem; padding: 15px 40px; margin-top: 20px; }
+
+        #win-screen { display: none; flex-direction: column; align-items: center; justify-content: center; height: 400px; text-align: center; background: #fff; border-radius: 12px; border: 2px dashed #000; padding: 2rem; }
+        #win-screen h2 { border: none; margin: 0; padding: 0; color: var(--pop-ocean); }
+
+        #toast-container { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 9999999; pointer-events: none; }
+        .toast { background: rgba(0,0,0,0.9); color: white; padding: 15px 30px; border-radius: 50px; margin-top: 10px; font-weight: bold; font-family: var(--font-body); text-align: center; opacity: 0; transition: opacity 0.3s, transform 0.3s; transform: translateY(20px); border: 2px solid; pointer-events: auto; }
+        .toast.show { opacity: 1; transform: translateY(0); }
+        .toast-success { border-color: var(--pop-cyan); box-shadow: 0 0 15px var(--pop-cyan); color: var(--pop-cyan); }
+        .toast-retry { border-color: var(--pop-magenta); box-shadow: 0 0 15px var(--pop-magenta); color: var(--pop-magenta); }
+
+        /* --- FREUD BOT --- */
+        .freud-bot-container { background: #fff; padding: 2rem; border-radius: 8px; text-align: center; border: 1px solid #ddd; }
+        .bot-image { display: block; margin: 0 auto 1.5rem auto; max-width: 100%; width: 100%; height: auto; object-fit: contain; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .bot-content { position: relative; background: transparent; padding: 0; border: none; display: block; max-width: 100%; }
+
+        /* --- TESTO OBIETTIVI --- */
+        .obj-list { margin-top:10px; padding-left:20px; line-height: 1.8; }
+        .obj-box { background: #f9f9f9; border-left: 4px solid var(--accent-color); padding: 1.5rem; margin-bottom: 2rem; }
+        .definition-box { background: #375a7f; color: white; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; line-height: 1.6; }
+
+        /* --- FATTORI --- */
+        .factors-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 2rem 0; }
+        .factor-card { background: #fff; border: 1px solid #ddd; padding: 1.5rem; border-radius: 8px; cursor: pointer; text-align: center; transition: 0.2s; position: relative; }
+        .factor-card:hover { border-color: var(--accent-color); transform: translateY(-3px); }
+        .factor-card::after { content: '+'; position: absolute; top: 5px; right: 10px; color: #ccc; }
+
+        /* --- MODAL --- */
+        #factor-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 99999; display: none; justify-content: center; align-items: center; padding: 20px; }
+        #factor-modal.open { display: flex; }
+        .modal-paper { background: #fff; width: 100%; max-width: 600px; padding: 2.5rem; border-radius: 12px; position: relative; max-height: 90vh; overflow-y: auto; line-height: 1.8; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); -webkit-overflow-scrolling: touch; }
+        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 2rem; cursor: pointer; color: var(--accent-color); z-index: 10; }
+        .btn-choice { padding: 10px 25px; margin: 5px; font-size: 0.9rem; cursor: pointer; background: #fff; color: var(--accent-color); border: 2px solid #ccc; border-radius: 50px; font-weight: bold; }
+
+        /* --- ASMR --- */
+        .visual-toggle-container { background: #eef2f5; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; text-align: center; border: 1px solid #d1d9e0; }
+        .visual-toggle-title { font-family: var(--font-title); font-size: 1.2rem; margin-bottom: 1rem; color: var(--accent-color); }
+        .toggle-btn { padding: 8px 24px; margin: 0 10px; border: 2px solid var(--accent-color); background: transparent; color: var(--accent-color); font-weight: bold; border-radius: 30px; cursor: pointer; transition: all 0.3s; }
+        .toggle-btn:hover { background: rgba(55, 90, 127, 0.1); }
+        .toggle-btn.active { background: var(--accent-color); color: white; }
+        #visual-wrapper { display: none; margin-bottom: 25px; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- NUOVO POP-UP RISPOSTA FLASHCARD (MOBILE) --- */
+        #fc-mobile-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 999999; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(4px); }
+        .fc-mobile-content { background: #fff; width: 95%; max-width: 500px; max-height: 80vh; overflow-y: auto; padding: 30px 25px; border-radius: 16px; position: relative; font-size: 1.1rem; line-height: 1.6; color: #222; box-shadow: 0 10px 30px rgba(0,0,0,0.5); -webkit-overflow-scrolling: touch; }
+        .fc-mobile-close { margin-top: 20px; width: 100%; padding: 15px; background: var(--pop-cyan); border: 2px solid #000; font-weight: bold; font-size: 1rem; cursor: pointer; border-radius: 50px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+
+    </style>
+</head>
+<body>
+
+    <div id="source-riassunto" style="display: none;">
+        <h3>1. Introduzione: Lo Scopo delle Teorie e il Dibattito Natura-Cultura</h3>
+        <p>Le teorie psicologiche non si limitano a descrivere un comportamento, ma cercano di spiegarne le cause profonde, ovvero il "perché" le persone agiscono in un determinato modo. Questo permette di prevedere il comportamento e intervenire per migliorarlo.</p>
+        <p>Uno dei dilemmi centrali è la controversia tra natura (biologia) e cultura (ambiente): ci si chiede se lo sviluppo sia determinato da forze genetiche o dall'ambiente circostante. Prima di studiare i contenuti, è utile praticare esercizi di consapevolezza (mindfulness) per favorire un apprendimento significativo, poiché le emozioni positive rendono la memoria più duratura rispetto ai rimproveri.</p>
+        <p><strong>Esempio pratico:</strong> Di fronte a un bambino che urla in classe, la teoria psicanalitica cercherà un trauma represso, quella cognitiva un pensiero disfunzionale ("non tollero il compagno") e quella dell'attaccamento un'insicurezza relazionale.</p>
+        <div class="cornell-box">
+            <p class="cornell-question">Domande brevi:</p>
+            <p class="cornell-question">Qual è la differenza tra descrivere e spiegare un comportamento?</p>
+            <p class="cornell-answer">Perché le emozioni positive sono fondamentali per l'apprendimento a scuola?</p>
+        </div>
+        <h3>2. Le Teorie Psicanalitiche: Freud ed Erikson</h3>
+        <p><strong>Sigmund Freud:</strong> Analizza la psiche ipotizzando tre strutture: Es (istinti e bisogni primari, principio del piacere), lo (parte conscia e razionale, principio di realtà) e Super-lo (istanza morale). Lo sviluppo è psico-sessuale e avviene attraverso fasi legate a zone erogene: orale (bocca), anale (ano/controllo sfinterico), fallica (genitali), latenza (socialità) e genitale (risveglio sessuale). Nella fase fallica emerge il complesso di Edipo, risolto con l'identificazione nel genitore dello stesso sesso.</p>
+        <p><strong>Erik Erikson:</strong> Propone una teoria psico-sociale che copre l'intero arco della vita in otto fasi. Ogni fase è una crisi tra due opposti (es. fiducia/diffidenza nel primo anno, identità/confusione in adolescenza) che l'individuo deve superare per svilupparsi correttamente.</p>
+        <p><strong>Esempio pratico:</strong> Se un bambino di 2 anni prova a vestirsi da solo (fase di autonomia/vergogna di Erikson) e viene lodato pur mettendo la maglia al contrario, sviluppa indipendenza; se rimproverato aspramente, proverà vergogna e dubbio sulle proprie capacità.</p>
+        <div class="cornell-box">
+            <p class="cornell-question">Domande brevi:</p>
+            <p class="cornell-question">Cosa intendeva Freud con l'espressione "Là dove c'era l'Es ci sarà l'IO"?</p>
+            <p class="cornell-question">Quali sono le principali differenze tra le fasi di Freud e quelle di Erikson?</p>
+        </div>
+        <h3>3. Le Teorie Cognitive: Piaget, Vygotskij e l'Elaborazione delle Informazioni</h3>
+        <p><strong>Jean Piaget:</strong> Lo sviluppo avviene per stadi qualitativi: sensomotorio (0-2 anni), preoperatorio (2-7 anni, caratterizzato da animismo ed egocentrismo), operatorio concreto (8-12 anni) e formale (pensiero astratto). L'adattamento avviene tramite assimilazione (inserire nuovi dati in schemi vecchi) e accomodamento (modificare gli schemi per i nuovi dati).</p>
+        <p><strong>Lev Vygotskij:</strong> La conoscenza è sociale e collaborativa. Introduce la Zona di Sviluppo Prossimale (ZPS): la distanza tra ciò che il bambino fa solo e ciò che può fare con supporto (scaffolding).</p>
+        <p><strong>Elaborazione delle Informazioni:</strong> Considera la mente come un computer (hardware/software) che manipola, codifica, immagazzina e recupera dati.</p>
+        <p><strong>Esempio pratico:</strong> Un bambino applica la regola del plurale "o -> i" dicendo "uovi" (assimilazione). Quando impara che il plurale di uovo è "uova", sta attuando un accomodamento delle sue strutture cognitive.</p>
+        <div class="cornell-box">
+            <p class="cornell-question">Domande brevi:</p>
+            <p class="cornell-question">In cosa consiste il concetto di "scaffolding"?</p>
+            <p class="cornell-question">Cosa si intende per "animismo" nello stadio preoperatorio di Piaget?</p>
+        </div>
+        <h3>4. Teorie Comportamentiste e Socio-Cognitive</h3>
+        <p>Queste teorie studiano solo ciò che è osservabile e misurabile, ignorando i processi interiori (pensieri ed emozioni).</p>
+        <ul>
+            <li><strong>Pavlov (Condizionamento Classico):</strong> Apprendimento per associazione stimolo-risposta (es. le paure apprese).</li>
+            <li><strong>Skinner (Condizionamento Operante):</strong> II comportamento è modellato da rinforzi (premi che aumentano la probabilità di un'azione) o punizioni (che la diminuiscono).</li>
+            <li><strong>Bandura (Teoria Socio-Cognitiva):</strong> Introduce il modellamento (imitazione tramite osservazione) e l'autoefficacia (fiducia nelle proprie capacità).</li>
+        </ul>
+        <p><strong>Esempio pratico:</strong> Nell'esperimento della Bobo Doll, i bambini che osservavano un adulto picchiare una bambola tendevano a imitare il comportamento aggressivo, dimostrando che l'ambiente influenza la persona attraverso l'osservazione.</p>
+        <div class="cornell-box">
+            <p class="cornell-question">Domande brevi:</p>
+            <p class="cornell-question">Qual è la differenza tra un rinforzo positivo e uno negativo?</p>
+            <p class="cornell-question">Come Watson applicò il condizionamento classico agli esseri umani?</p>
+        </div>
+        <h3>5. Teorie Ecologiche, Etologiche e Genetica del Comportamento</h3>
+        <p><strong>Urie Bronfenbrenner (Teoria Ecologica):</strong> Lo sviluppo è influenzato da sistemi ambientali: microsistema (famiglia/scuola), mesosistema (relazioni tra microsistemi), esosistema, macrosistema (cultura) e cronosistema (tempo/eventi storici).</p>
+        <p><strong>Konrad Lorenz (Teoria Etologica):</strong> Sottolinea l'influenza della biologia. Studio l'imprinting, un legame immediato e duraturo che avviene in un periodo critico subito dopo la nascita.</p>
+        <p><strong>Epigenetica:</strong> Studia come l'ambiente possa modificare l'espressione dei geni (es. lo stress può "accendere" o "spegnere" determinati geni). Esistono forze evocative (il nostro temperamento suscita risposte negli altri) e forze attive (scegliamo ambienti adatti alle nostre inclinazioni).</p>
+        <p><strong>Esempio pratico:</strong> Samir è stato influenzato dalla pandemia di COVID-19 (evento del cronosistema), che ha segnato il suo percorso educativo e relazionale.</p>
+        <div class="cornell-box">
+            <p class="cornell-question">Domande brevi:</p>
+            <p class="cornell-question">Cos'è l'imprinting e perché è legato alla teoria dell'attaccamento?</p>
+            <p class="cornell-question">In che modo l'ambiente può modificare l'espressione del DNA secondo l'epigenetica?</p>
+        </div>
+        <div class="metafora-box">
+            <strong>Conclusione:</strong> Poiché nessuna teoria da sola spiega la complessità umana, è necessario adottare un approccio teorico eclettico, scegliendo da ogni modello gli elementi più convincenti per comprendere ogni specifico caso di sviluppo.
+        </div>
+    </div>
+    
+    <div id="scroll-progress-container">
+        <div id="scroll-progress-bar"></div>
+    </div>
+
+    <div class="giants-background">
+        <img class="main-background-image" src="https://i.ibb.co/ym31GBzJ/nell-immagine-sotto-mantieni-coerenza-le-ombre-devono-essere-di-bambini-maschi-che-diventano-adult.jpg" alt="Sfondo Ombre">
+    </div>
+
+    <div id="toast-container"></div>
+
+    <header>
+        <h1>Psicologia dello Sviluppo</h1>
+        <div class="subtitle">Lezione 2</div>
+    </header>
+
+    <div id="factor-modal" onclick="closeModal(event)">
+        <div class="modal-paper" onclick="event.stopPropagation()">
+            <span class="close-modal" onclick="closeModalDirect()">&times;</span>
+            <h2 id="m-title" style="margin-top:0;"></h2>
+            <div id="m-body"></div>
+        </div>
+    </div>
+
+    <div id="fc-mobile-modal" onclick="closeMobileAnswerPopup()">
+        <div class="fc-mobile-content" onclick="event.stopPropagation()">
+            <h3 style="margin-top:0; color:var(--accent-color);">Risposta:</h3>
+            <div id="fc-mobile-body">
+                </div>
+            <button class="fc-mobile-close" onclick="closeMobileAnswerPopup()">Ho capito, chiudi</button>
+        </div>
+    </div>
+
+    <div class="content-card">
+        
+        <div class="accordion-item" style="border-bottom: none;">
+            <button class="accordion-header master-header">
+                <span>Inizia</span> 
+                <span class="icon-plus">→</span>
+            </button>
+            <div class="accordion-content">
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span><strong>01.</strong> Obiettivi & Punti Chiave</span> 
+                        <span class="icon-plus">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        
+                        <div class="obj-box">
+                            <p><strong>Obiettivi della lezione:</strong></p>
+                            <ul class="obj-list">
+                                <li><strong>Spiegare le cause profonde:</strong> Le teorie non si limitano a descrivere un comportamento, ma cercano di comprenderne il "perché", indagando le motivazioni che spingono le persone ad agire in un determinato modo.</li>
+                                <li><strong>Prevedere e intervenire:</strong> Fornire strumenti scientifici per prevedere i comportamenti futuri e pianificare interventi mirati a migliorarli, specialmente in contesti educativi.</li>
+                                <li><strong>Risolvere il dibattito Natura vs Cultura:</strong> Esaminare se lo sviluppo umano sia plasmato principalmente da forze biologiche (genetica) o dall'ambiente e dalle esperienze di vita.</li>
+                                <li><strong>Promuovere pratiche educative efficaci:</strong> Fornire ai futuri insegnanti attività pratiche (come esercizi di consapevolezza e attivazione) che favoriscano un apprendimento significativo basato su emozioni positive.</li>
+                            </ul>
+                        </div>
+
+                        <h3>Concetto Fondamentale</h3>
+                        
+                        <div class="definition-box">
+                            <strong>Approccio Teorico Eclettico:</strong><br><br>
+                            Viene ribadito che nessuna teoria singola può spiegare esaustivamente lo sviluppo; è necessaria una sinergia tra i diversi modelli teorici.
+                        </div>
+                        <div style="background: #fdf6e3; border: 1px solid #eee8d5; padding: 1.5rem; margin-top: 1.5rem; border-radius: 4px;">
+                             <strong>Interazione Natura-Cultura ed Epigenetica:</strong> Si riconosce che quasi tutti i comportamenti hanno una base genetica, ma l'ambiente è fondamentale per modellarne l'espressione. L'epigenetica studia proprio come lo stress o i traumi possano "accendere" o "spegnere" determinati geni.
+                        </div>
+
+                        <p><strong>Punti chiave della lezione:</strong> (Clicca per approfondire)</p>
+                        <div class="factors-grid">
+                            <div class="factor-card" onclick="openFactor('psycho')">
+                                <strong>1. Teorie Psicanalitiche</strong><br><small>Freud & Erikson</small>
+                            </div>
+                            <div class="factor-card" onclick="openFactor('cog')">
+                                <strong>2. Sviluppo Cognitivo</strong><br><small>Piaget & Vygotskij</small>
+                            </div>
+                            <div class="factor-card" onclick="openFactor('behav')">
+                                <strong>3. Comportamentismo</strong><br><small>Apprendimento Sociale</small>
+                            </div>
+                            <div class="factor-card" onclick="openFactor('eco')">
+                                <strong>4. Ecologia & Etologia</strong><br><small>Bronfenbrenner & Lorenz</small>
+                            </div>
+                        </div>
+
+                        <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione ▲</button>
+                    </div>
+                </div>
+
+                <br>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span><strong>02.</strong> Il Podcast</span>
+                        <span class="icon-plus">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="media-notes-grid">
+                            <div>
+                                <div class="visual-toggle-container">
+                                    <div class="visual-toggle-title">Vuoi la compagnia visiva?</div>
+                                    <button class="toggle-btn" onclick="toggleVisual(true)">SÌ</button>
+                                    <button class="toggle-btn" onclick="toggleVisual(false)">NO</button>
+                                </div>
+
+                                <div id="visual-wrapper">
+                                    <div class="video-container">
+                                        <iframe id="visual-iframe" src="" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                    </div>
+                                    <p style="font-size: 0.8rem; text-align: center; margin-top: 5px; color: #888;">
+                                        <em>Clicca Play per iniziare. Il video andrà in loop.</em>
+                                    </p>
+                                </div>
+
+                                <p style="margin-bottom:10px; margin-top: 20px;">Ascolta la lezione introduttiva.</p>
+                                <iframe id="podcast-iframe" width="100%" height="166" style="border:none;"
+                                src="https://drive.google.com/file/d/1YCXbvVTwYf4YI1MChR_BgikcC1OK0jUg/preview"></iframe>
+                            </div>
+                            <div class="notes-widget">
+                                <div class="notes-toolbar">
+                                    <button class="tool-btn copy" onclick="copyNotes(this)">Copia Appunti</button>
+                                </div>
+                                <textarea class="notes-area" placeholder="Scrivi qui i tuoi appunti..."></textarea>
+                            </div>
+                        </div>
+                        <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione ▲</button>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span><strong>03.</strong> Video Sintesi</span>
+                        <span class="icon-plus">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="media-notes-grid">
+                            <div>
+                                <p style="margin-bottom:10px;">Guarda il video.</p>
+                                <div class="video-container">
+                                    <iframe src="https://www.youtube.com/embed/5MiP1yNXib0?controls=1&fs=1" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                </div>
+                            </div>
+                            <div class="notes-widget">
+                                <div class="notes-toolbar">
+                                    <button class="tool-btn copy" onclick="copyNotes(this)">Copia Appunti</button>
+                                </div>
+                                <textarea class="notes-area" placeholder="Scrivi qui i tuoi appunti..."></textarea>
+                            </div>
+                        </div>
+                        <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione ▲</button>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span><strong>04.</strong> Dritti al Sodo</span>
+                        <span class="icon-plus">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        
+                        <div class="media-notes-grid">
+                            <div>
+                                <div id="fc-start-screen" style="text-align: center; padding: 2rem;">
+                                    <div class="flashcard-wrapper">
+                                        <div class="flashcard-inner">
+                                            <div class="flashcard-front">
+                                                <h2>Pronto a ripassare?</h2>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="btn-pop btn-start" onclick="startFlashcards()">INIZIA</button>
+                                </div>
+
+                                <div id="fc-game-screen" style="display: none;">
+                                    <div class="fc-counter" id="fc-counter"></div>
+
+                                    <div id="flashcard-deck" class="flashcard-wrapper" onclick="handleWrapperClick(event)">
+                                        <div class="flashcard-inner">
+                                            <div class="flashcard-front">
+                                                <h2 id="fc-front-text">Caricamento...</h2>
+                                                <button class="btn-flip-mobile" onclick="forceFlip(event)">GIRA ↻</button>
+                                            </div>
+                                            <div class="flashcard-back">
+                                                <p id="fc-back-text" onclick="event.stopPropagation()">Caricamento...</p>
+                                                <button class="btn-flip-mobile" onclick="forceFlip(event)">GIRA ↻</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="fc-controls" id="fc-controls-bar">
+                                        <button class="btn-pop btn-nav" onclick="navCard(-1)">◄</button>
+                                        <div class="fc-actions">
+                                            <button class="btn-pop btn-no" onclick="markUnknown()">Ripasso dopo :(</button>
+                                            <button class="btn-pop btn-yes" onclick="markKnown()">La so! :)</button>
+                                        </div>
+                                        <button class="btn-pop btn-nav" onclick="navCard(1)">►</button>
+                                    </div>
+                                </div>
+
+                                <div id="win-screen">
+                                    <h2>Ma allora se le sai tutte io vado via!!</h2>
+                                    <p style="margin: 20px 0;">🎉🎉🎉</p>
+                                    <button class="btn-pop btn-yes" onclick="resetDeck()">Ricomincia da capo</button>
+                                </div>
+                            </div>
+
+                            <div class="notes-widget">
+                                <div class="notes-toolbar">
+                                    <button class="tool-btn copy" onclick="copyNotes(this)">Copia Appunti</button>
+                                </div>
+                                <textarea class="notes-area" placeholder="Scrivi qui i tuoi appunti..."></textarea>
+                            </div>
+                        </div>
+
+                        <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione ▲</button>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span><strong>05.</strong> Il Riassuntone</span>
+                        <span class="icon-plus">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="media-notes-grid">
+                            <div>
+                                <img src="https://i.postimg.cc/BbgFzJFJ/disegna-dei-pinguini-tutti-in-mucchio-come-fanno-in-natura-stile-del-disegno-corporate.jpg" class="section-banner" alt="Banner Riassuntone">
+                                
+                                <p style="margin-bottom:15px; color:#555;">Leggi il riassunto completo qui sotto.</p>
+                                
+                                <div id="contenitore-riassunto">
+                                    </div>
+
+                            </div>
+                            <div class="notes-widget">
+                                <div class="notes-toolbar">
+                                    <button class="tool-btn copy" onclick="copyNotes(this)">Copia Appunti</button>
+                                </div>
+                                <textarea class="notes-area" placeholder="Scrivi qui i tuoi appunti..."></textarea>
+                            </div>
+                        </div>
+                        <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione ▲</button>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span><strong>06.</strong> Fai una Pausa</span>
+                        <span class="icon-plus">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        
+                        <div style="text-align:center; padding: 2rem; background: #fafafa; border-radius: 8px;">
+                            <h3>Tempo di respirare.</h3>
+                            <p>Prenditi 5 minuti lontano dallo schermo. Hai elaborato molti concetti.</p>
+                            <div style="font-size:3rem; margin-top:1rem;">☕</div>
+                        </div>
+
+                        <p style="text-align: center; margin-top: 2rem; font-weight: bold; color: var(--accent-color);">
+                            oppure, gioca ai nostri giochi: il Cerca Parole e il Super Solitario
+                        </p>
+
+                        <div style="text-align: center; margin-top: 1.5rem;">
+                            <a href="https://sites.google.com/view/una-mano-spensierata/psicologia-dello-sviluppo/i-giochi" target="_blank" class="btn-pop btn-start" style="text-decoration:none; display:inline-block;">Vai ai giochi</a>
+                        </div>
+
+                        <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione ▲</button>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span><strong>07.</strong> Chiedi all'Assistente AI</span>
+                        <span class="icon-plus">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="freud-bot-container">
+                            <img src="https://i.ibb.co/LXQ0RwkT/elimina-il-robot-cattivo.jpg" alt="Assistente IA" class="bot-image">
+                            <div class="bot-content">
+                                <h3>Dr. Freud-Bot 3000</h3>
+                                <p>Hai dubbi sull'inconscio della lezione?</p>
+                                <a href="https://notebooklm.google.com/notebook/4548d536-ae8a-4574-9a3c-7f0b45d5e9a5" target="_blank" class="btn-choice" style="display:inline-block; text-decoration:none; background:var(--ink-color); color:white; border:none; margin-top:10px;">Avvia Chat</a>
+                            </div>
+                        </div>
+                        <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione ▲</button>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header">
+                        <span><strong>08.</strong> ASMR & Chill</span>
+                        <span class="icon-plus">+</span>
+                    </button>
+                    <div class="accordion-content">
+                        <div style="max-width: 800px; margin: 0 auto;">
+                            <div>
+                                <p style="font-size:0.9rem; color:#666; margin-bottom:15px; text-align:center;">Nota: Clicca Play per avviare.</p>
+                                
+                                <h4 style="margin-bottom: 10px; color: var(--accent-color);">ASMR</h4>
+                                <div class="video-container" style="margin-bottom: 2rem;">
+                                    <iframe id="asmr-brown" src="" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                </div>
+                                
+                                <h4 style="margin-bottom: 10px; color: var(--accent-color);">Musica Relax / Lofi</h4>
+                                <div class="video-container">
+                                    <iframe id="asmr-music" src="" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione ▲</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- TRANSFER RIASSUNTO LOGIC ---
+        window.addEventListener('DOMContentLoaded', () => {
+            const source = document.getElementById('source-riassunto');
+            const target = document.getElementById('contenitore-riassunto');
+            if (source && target) { target.innerHTML = source.innerHTML; }
+            setRandomYTStart('asmrBrown');
+            setRandomYTStart('asmrMusic');
+        });
+
+        // --- SCROLL PROGRESS BAR LOGIC ---
+        window.onscroll = function() { updateProgressBar() };
+        function updateProgressBar() {
+            var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            var scrolled = (winScroll / height) * 100;
+            document.getElementById("scroll-progress-bar").style.width = scrolled + "%";
+        }
+
+        // --- DATA FATTORI ---
+        const factorsData = {
+            psycho: { title: "Teorie Psicanalitiche", body: `<p><strong>Freud</strong> si focalizza sull'inconscio (Es, lo, Super-lo) e sullo sviluppo psico-sessuale; <strong>Erikson</strong> amplia la prospettiva analizzando otto fasi psico-sociali che coprono l'intero arco della vita.</p>` },
+            cog: { title: "Sviluppo Cognitivo", body: `<p><strong>Piaget</strong> identifica l'adattamento attraverso assimilazione e accomodamento; <strong>Vygotskij</strong> introduce la Zona di Sviluppo Prossimale (ZPS), sottolineando l'importanza dell'interazione sociale e del supporto (scaffolding).</p>` },
+            behav: { title: "Comportamentismo e Apprendimento Sociale", body: `<p>Il focus è sul comportamento osservabile tramite il condizionamento classico (Pavlov/Watson) e operante (Skinner), basato su rinforzi e punizioni. <strong>Bandura</strong> introduce il modellamento (imitazione) e l'autoefficacia.</p>` },
+            eco: { title: "Approccio Ecologico ed Etologico", body: `<p><strong>Bronfenbrenner</strong> descrive lo sviluppo all'interno di molteplici sistemi ambientali (micro, meso, eso, macro e cronosistema); <strong>Lorenz</strong> evidenzia il ruolo della biologia attraverso l'imprinting.</p>` }
+        };
+
+        // --- FLASHCARDS DATA ---
+        const initialCards = [
+            { front: `1. Qual è lo scopo fondamentale delle teorie psicologiche?`, back: `Le teorie cercano di spiegare le cause profonde dietro le nostre azioni, andando oltre la semplice descrizione del comportamento. Servono a comprendere il "perché" le persone agiscano in un determinato modo, permettendo di prevedere i comportamenti futuri e di intervenire per migliorarli, specialmente in contesti clinici o educativi. Senza una teoria di riferimento, un'azione rimarrebbe un dato isolato; con essa, diventa possibile interpretare se quel gesto derivi da un trauma, da un pensiero disfunzionale o da una predisposizione genetica, offrendo strumenti operativi agli esperti per supportare lo sviluppo individuale.` },
+            { front: `2. Descrivi le tre istanze della psiche secondo Freud.`, back: `Freud ipotizza l'esistenza di tre strutture: l'Es, l'lo e il Super-lo. L'Es è la sede degli istinti e dei bisogni primari (fame, aggressività, sessualità) e opera secondo il principio del piacere. L'lo è la parte conscia, razionale e consapevole che agisce secondo il principio di realtà, fungendo da mediatore tra gli impulsi dell'Es e le restrizioni del mondo esterno. II Super-lo rappresenta l'istanza morale che distingue il giusto dallo sbagliato in base alle regole sociali. L'obiettivo della psicanalisi è rafforzare l'lo per liberarlo dalla "tirannia" dell'inconscio.` },
+            { front: `3. Quali sono le fasi dello sviluppo psico-sessuale di Freud?`, back: `Lo sviluppo avviene attraverso cinque fasi legate a specifiche zone erogene: Orale (0-1,5 anni, bocca), Anale (1,5-3 anni, ano e controllo sfinterico), Fallica (3-6 anni, area genitale e complesso di Edipo), Latenza (6 anni-pubertà, repressione sessuale e sviluppo di abilità sociali) e Genitale (dalla pubertà, risveglio sessuale verso partner esterni). Se un individuo sperimenta conflitti o mancanze in una fase, può manifestare una "fissazione" da adulto: ad esempio, problemi nella fase orale possono tradursi in dipendenze da fumo o alcol, mentre conflitti nella fase anale possono portare a un'ossessione per l'ordine e la pulizia.` },
+            { front: `4. In cosa consiste la teoria psico-sociale di Erik Erikson?`, back: `A differenza di Freud, Erikson propone otto fasi che coprono tutto l'arco della vita, dall'infanzia alla vecchiaia. Ogni stadio è caratterizzato da un compito evolutivo che pone l'individuo di fronte a una crisi da superare. Ad esempio, nel primo anno la crisi è tra "Fiducia e Diffidenza"; in adolescenza tra "Identità e Confusione di identità"; nella vecchiaia tra "Integrità e Disperazione". Se l'individuo è sostenuto dall'ambiente, supera la crisi positivamente e progredisce; se viene frenato o rimproverato, può sperimentare blocchi o sensi di inadeguatezza che influenzano le fasi successive.` },
+            { front: `5. Spiega la differenza tra Assimilazione e Accomodamento per Piaget.`, back: `Piaget sostiene che l'adattamento cognitivo avvenga tramite due modalità. L'Assimilazione è il processo di continuità in cui il bambino incorpora nuove informazioni dell'ambiente adattandole ai propri schemi mentali esistenti (es. chiamare "cane" ogni animale a quattro zampe). L'Accomodamento è invece il processo di cambiamento in cui il bambino modifica o amplia le proprie strutture cognitive per far spazio a nuovi stimoli che non rientrano negli schemi precedenti (es. creare lo schema "gatto" distinguendolo da quello del cane o imparare che il plurale di "uovo" è "uova" e non "uovi").` },
+            { front: `6. Cos'è la Zona di Sviluppo Prossimale (ZPS) di Vygotskij?`, back: `La ZPS è la differenza tra il livello di sviluppo effettivo di un individuo (ciò che riesce a risolvere da solo) e il suo livello potenziale (ciò che potrebbe raggiungere se supportato da una persona più competente, come un adulto o un compagno esperto). Da questo concetto deriva lo Scaffolding (impalcatura), ovvero la modulazione del livello di supporto fornito al bambino attraverso strategie come la scomposizione di un compito complesso in parti semplici, l'uso di esempi o di mediatori culturali come il computer. La conoscenza è dunque vista come un processo situato e collaborativo.` },
+            { front: `7. Qual è la differenza tra Condizionamento Classico e Operante?`, back: `Condizionamento Classico (Pavlov) si basa sull'associazione stimolo-risposta: uno stimolo neutro associato a uno incondizionato finisce per produrre una risposta riflessa automatica (es. la salivazione di un cane al suono di una campanella o la paura di un bambino verso il medico). Il Condizionamento Operante (Skinner) si focalizza invece sulle conseguenze delle azioni: se un comportamento è seguito da un rinforzo positivo (premio), la sua probabilità di ripetersi aumenta; se è seguito da una punizione, la probabilità diminuisce. Entrambi i modelli studiano esclusivamente il comportamento osservabile.` },
+            { front: `8. Descrivi il Modellamento e l'Autoefficacia in Bandura.`, back: `La teoria socio-cognitiva di Bandura identifica due pilastri dello sviluppo. II Modellamento è l'apprendimento che avviene attraverso l'osservazione e l'imitazione degli altri; l'esperimento della Bobo Doll ha mostrato come i bambini imitino i comportamenti (aggressivi o pacifici) che vedono agire dagli adulti. L'Autoefficacia è la convinzione personale di essere in grado di svolgere con successo un determinato compito. Bandura evidenzia un'interconnessione continua tra persona, comportamento e ambiente, suggerendo che noi siamo influenzati dal contesto ma, al tempo stesso, influenziamo l'ambiente attraverso le nostre azioni e la fiducia in noi stessi.` },
+            { front: `9. Illustra i sistemi ambientali di Bronfenbrenner.`, back: `Il modello ecologico sostiene che lo sviluppo sia determinato da diversi contesti ambientali. II Microsistema comprende gli ambienti diretti (famiglia, scuola, coetanei); il Mesosistema riguarda le connessioni tra questi (es. rapporto famiglia-scuola); l'Esosistema include contesti che influenzano indirettamente (es. mass media, lavoro dei genitori); il Macrosistema è la cultura di appartenenza. Infine, il Cronosistema rappresenta la dimensione temporale e gli eventi storici che segnano la vita dell'individuo, come l'impatto di una pandemia sullo sviluppo di un bambino.` },
+            { front: `10. Spiega il concetto di Epigenetica e la sua importanza.`, back: `L'epigenetica studia come l'ambiente modifichi l'espressione dei geni senza alterare la sequenza del DNA. Essa dimostra che, sebbene possediamo istruzioni genetiche di base, fattori come lo stress intenso, l'alimentazione o i traumi infantili possono "accendere" o "spegnere" determinati geni legati alla salute e al comportamento. Questo campo risolve il dibattito natura-cultura, concludendo che per esprimere le nostre predisposizioni genetiche è necessaria la giusta "cultura", ovvero le esperienze di vita adeguate. In sintesi, la nostra base biologica è un potenziale che l'ambiente ha il potere di modellare attivamente.` }
+        ];
+
+        let activeCards = [...initialCards];
+        let currentCardIndex = 0;
+        function startFlashcards() { document.getElementById('fc-start-screen').style.display = 'none'; document.getElementById('fc-game-screen').style.display = 'block'; updateCardDisplay(); }
+        function updateCardDisplay() {
+            const deck = document.getElementById('flashcard-deck');
+            const winScreen = document.getElementById('win-screen');
+            const counter = document.getElementById('fc-counter');
+            if (activeCards.length === 0) { document.getElementById('fc-game-screen').style.display = 'none'; winScreen.style.display = 'flex'; return; } else { winScreen.style.display = 'none'; }
+            if (currentCardIndex >= activeCards.length) currentCardIndex = 0;
+            if (currentCardIndex < 0) currentCardIndex = activeCards.length - 1;
+            const card = activeCards[currentCardIndex];
+            counter.innerText = `Carte da studiare: ${activeCards.length}`;
+            deck.style.opacity = '0.5';
+            setTimeout(() => {
+                document.getElementById('fc-front-text').innerText = card.front;
+                document.getElementById('fc-back-text').innerText = card.back;
+                document.getElementById('fc-back-text').scrollTop = 0;
+                deck.classList.remove('flipped'); deck.style.opacity = '1';
+            }, 200);
+        }
+        function handleWrapperClick(e) { if (window.innerWidth <= 900) return; toggleFlip(); }
+        function forceFlip(e) { if(e) e.stopPropagation(); if (window.innerWidth <= 900) { document.getElementById('fc-mobile-body').innerHTML = activeCards[currentCardIndex].back; document.getElementById('fc-mobile-modal').style.display = 'flex'; } else { toggleFlip(); } }
+        function closeMobileAnswerPopup() { document.getElementById('fc-mobile-modal').style.display = 'none'; }
+        function toggleFlip() { document.getElementById('flashcard-deck').classList.toggle('flipped'); }
+        function navCard(direction) { currentCardIndex += direction; if (currentCardIndex < 0) currentCardIndex = activeCards.length - 1; if (currentCardIndex >= activeCards.length) currentCardIndex = 0; updateCardDisplay(); }
+        function markKnown() { showToast("Grande! Continua così.", "success"); activeCards.splice(currentCardIndex, 1); if (currentCardIndex >= activeCards.length) currentCardIndex = 0; setTimeout(() => { document.getElementById('flashcard-deck').classList.remove('flipped'); updateCardDisplay(); }, 500); }
+        function markUnknown() { showToast("Nessun problema, la rivedremo dopo.", "retry"); const currentCard = activeCards.splice(currentCardIndex, 1)[0]; activeCards.push(currentCard); if (currentCardIndex >= activeCards.length) currentCardIndex = 0; setTimeout(() => { document.getElementById('flashcard-deck').classList.remove('flipped'); updateCardDisplay(); }, 500); }
+        function resetDeck() { activeCards = [...initialCards]; currentCardIndex = 0; document.getElementById('win-screen').style.display = 'none'; document.getElementById('fc-game-screen').style.display = 'block'; document.getElementById('fc-start-screen').style.display = 'block'; document.getElementById('fc-game-screen').style.display = 'none'; }
+        
+        function showToast(message, type) {
+            const container = document.getElementById('toast-container'); const toast = document.createElement('div'); toast.className = `toast toast-${type}`; toast.innerText = message; container.appendChild(toast);
+            void toast.offsetWidth; toast.classList.add('show');
+            setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 300); }, 2000);
+        }
+
+        // --- UTILS ---
+        function openFactor(key) { document.getElementById('m-title').innerText = factorsData[key].title; document.getElementById('m-body').innerHTML = factorsData[key].body; document.getElementById('factor-modal').classList.add('open'); document.body.classList.add('modal-open'); }
+        function closeModalDirect() { document.getElementById('factor-modal').classList.remove('open'); document.body.classList.remove('modal-open'); }
+        function closeModal(e) { if(e.target.id === 'factor-modal') closeModalDirect(); }
+        function showCopySuccess(btn) { const originalText = btn.innerText; btn.innerText = "Copiato!"; btn.style.background = "#d4edda"; setTimeout(() => { btn.innerText = originalText; btn.style.background = "white"; }, 1500); }
+        function copyNotes(btn) {
+            const widget = btn.closest('.notes-widget'); const noteArea = widget.querySelector('.notes-area'); const text = noteArea.value;
+            if (!text.trim()) { alert("Non c'è nulla da copiare! Scrivi prima qualcosa."); return; }
+            if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(text).then(() => { showCopySuccess(btn); }).catch(err => { fallbackCopyTextToClipboard(text, btn); }); } else { fallbackCopyTextToClipboard(text, btn); }
+        }
+        function fallbackCopyTextToClipboard(text, btn) { const textArea = document.createElement("textarea"); textArea.value = text; textArea.style.position = "fixed"; textArea.style.left = "-9999px"; textArea.style.top = "0"; document.body.appendChild(textArea); textArea.focus({preventScroll: true}); textArea.select(); try { document.execCommand('copy'); showCopySuccess(btn); } catch (err) { alert('Errore nel copiare gli appunti.'); } document.body.removeChild(textArea); }
+
+        // --- ACCORDION LOGIC ---
+        const accs = document.getElementsByClassName("accordion-header");
+        for (let i = 0; i < accs.length; i++) {
+            accs[i].addEventListener("click", function(e) {
+                e.stopPropagation(); this.classList.toggle("active"); const panel = this.nextElementSibling; const icon = this.querySelector('.icon-plus');
+                if (panel.style.maxHeight || panel.classList.contains('active')) { panel.style.maxHeight = null; panel.classList.remove("active"); if(icon) icon.textContent = "+"; } else { panel.classList.add("active"); panel.style.maxHeight = panel.scrollHeight + 15000 + "px"; if(icon) icon.textContent = "-"; }
+            });
+        }
+        function closeThisSection(btn) { const content = btn.parentElement; const header = content.previousElementSibling; header.click(); header.scrollIntoView({behavior: "smooth", block: "center"}); }
+
+        // --- YOUTUBE LOGIC ---
+        const VIDEO_CONFIG = { visualCompanion: { id: 'visual-iframe', videoId: 'pb-j3svRQLI', duration: 3600, muted: true }, asmrBrown: { id: 'asmr-brown', videoId: 'P48QELwruQs', duration: 36000, muted: false }, asmrMusic: { id: 'asmr-music', videoId: 'oGCu47JESi0', duration: 3600, muted: false } };
+        function setRandomYTStart(configKey) {
+            const config = VIDEO_CONFIG[configKey]; const iframe = document.getElementById(config.id); if(!iframe) return;
+            const randomSec = Math.floor(Math.random() * (config.duration - 30));
+            let url = `https://www.youtube.com/embed/${config.videoId}?playlist=${config.videoId}&loop=1&autoplay=0&start=${randomSec}&controls=1&fs=1`; if(config.muted) { url += "&mute=1"; } iframe.src = url;
+        }
+        function toggleVisual(show) { const wrapper = document.getElementById('visual-wrapper'); const btns = document.querySelectorAll('.toggle-btn'); btns[0].classList.toggle('active', show); btns[1].classList.toggle('active', !show); if (show) { wrapper.style.display = 'block'; setRandomYTStart('visualCompanion'); } else { wrapper.style.display = 'none'; document.getElementById('visual-iframe').src = ""; } }
+
+        /* ================================================================
+           >>> NUOVA LOGICA APPUNTI ZEN (SIMILE AL TUO ESEMPIO) <<<
+           ================================================================
+        */
+        const STORAGE_KEY = 'flashcard_sticky_final';
+        
+        // Applichiamo la logica Zen a tutte le aree note
+        const noteAreas = document.querySelectorAll('.notes-area');
+
+        noteAreas.forEach(area => {
+            // Carica dati salvati
+            let savedText = localStorage.getItem(STORAGE_KEY);
+            if (savedText) area.value = savedText; // Usa .value per textarea
+
+            // Evento Input Semplice e Diretto
+            area.addEventListener('input', function() {
+                const val = this.value;
+                // 1. Salva
+                try { localStorage.setItem(STORAGE_KEY, val); } catch(e) {}
+                
+                // 2. Il trucco scroll è gestito nativamente dal browser grazie 
+                //    al padding-bottom: 80vh impostato nel CSS.
+                //    Se l'utente scrive in fondo, forziamo lo scroll per sicurezza
+                if(this.selectionStart === this.value.length) {
+                    this.scrollTo(0, this.scrollHeight);
+                }
+            });
+        });
+        /* ================================================================ */
+
+    </script>
+</body>
+</html>
