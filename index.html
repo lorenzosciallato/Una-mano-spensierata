@@ -3,426 +3,467 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Una Mano Spensierata | Home</title>
+<title>Una Mano Spensierata</title>
 <meta name="description" content="Flashcard, riassunti e videolezioni gratuite per preparare i tuoi esami universitari.">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600;1,700;1,900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,600;1,700;1,900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700&display=swap" rel="stylesheet">
 
 <style>
 :root{
-  --night:#0F1117; --ivory:#F7F4EF; --ivory-dk:#EDE9E0;
+  --ivory:#F7F4EF; --ivory-2:#EFEBE2;
   --gold:#C8A96E; --gold-lt:#E8D5AA; --gold-dk:#9A7A3F;
   --navy:#1A2F4F; --navy-lt:#2A4A72;
   --dust:#E8E4DC; --mist:#C5C1B8;
   --ink:#1C1C22; --body:#3D3C3A; --sub:#7A7770;
-  --rule:#1C1C22;
   --font-display:'Playfair Display', Georgia, serif;
   --font-body:'DM Sans', system-ui, sans-serif;
-  --r-sm:6px; --r-md:12px; --r-lg:20px; --r-xl:32px;
-  --shadow-card:0 4px 24px rgba(15,17,23,0.08), 0 1px 4px rgba(15,17,23,0.04);
-  --shadow-lift:0 16px 44px rgba(15,17,23,0.16), 0 2px 8px rgba(15,17,23,0.06);
+  --r-sm:8px; --r-md:14px; --r-lg:20px; --r-xl:28px; --r-pill:50px;
+  --shadow-card:0 4px 20px rgba(15,17,23,0.06), 0 1px 3px rgba(15,17,23,0.04);
+  --shadow-lift:0 18px 46px rgba(15,17,23,0.16), 0 3px 10px rgba(15,17,23,0.06);
+  --ease:cubic-bezier(.16,.84,.44,1);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
 body{
   background:var(--ivory); font-family:var(--font-body); color:var(--body);
   line-height:1.7; position:relative; overflow-x:hidden; font-size:16px;
+  min-height:100vh;
+  transition:background-color .35s ease, color .35s ease;
 }
+/* In splash lo scroll è bloccato: la pagina è un'unica schermata */
+body.splash{overflow:hidden; height:100vh;}
 img{display:block;max-width:100%;}
 a{color:inherit;}
-@media (prefers-reduced-motion: reduce){*{animation:none !important; transition:none !important;}}
-a:focus-visible, button:focus-visible, input:focus-visible{outline:2px solid var(--gold); outline-offset:3px; border-radius:4px;}
-
-/* PROGRESS BAR */
-#scroll-progress-container{position:fixed;top:0;left:0;width:100%;height:3px;z-index:9999;}
-#scroll-progress-bar{
-  height:100%; width:0%;
-  background:linear-gradient(90deg,var(--gold),var(--gold-lt),var(--gold));
-  background-size:200% 100%; animation:shimmer 3s linear infinite;
-  transition:width .1s linear;
-}
-@keyframes shimmer{0%{background-position:200% 0}100%{background-position:0% 0}}
-
-/* REVEAL */
-.reveal{opacity:0;transform:translateY(22px);transition:opacity .8s cubic-bezier(.16,.84,.44,1),transform .8s cubic-bezier(.16,.84,.44,1);}
-.reveal.in-view{opacity:1;transform:translateY(0);}
+button{font-family:inherit;}
+a:focus-visible, button:focus-visible, input:focus-visible{outline:2px solid var(--gold); outline-offset:3px; border-radius:6px;}
+::selection{background:var(--gold-lt); color:var(--ink);}
 
 /* ============================================================
-   PAGINA — misura da quotidiano
+   FILIGRANA — sfondo fisso, dietro a tutto (z-index:-1),
+   presente da subito, "che si vede e non si vede"
 ============================================================ */
-.broadsheet{max-width:860px; margin:0 auto; padding:2.2rem 1.5rem 0;}
+#watermark{
+  position:fixed; inset:0; z-index:-1; pointer-events:none;
+  background:url('https://res.cloudinary.com/dlppkpjqs/image/upload/v1782674570/Screenshot_2026-06-28_9.22.15_PM_dz1h0i.png') center center / cover no-repeat;
+  opacity:.07;
+  transition:opacity .3s ease;
+}
+body.night-mode #watermark{opacity:.045;}
 
 /* ============================================================
-   FOLIO — la riga d'edizione sopra la testata
+   BRAND — morfa dallo splash (grande, centrato) all'app (piccolo, alto a sx)
 ============================================================ */
-.folio{
-  display:flex; justify-content:space-between; align-items:baseline; gap:1rem;
-  border-top:1px solid var(--rule);
-  border-bottom:1px solid var(--rule);
-  padding:.5rem .2rem;
-  font-size:.66rem; font-weight:700; letter-spacing:.18em; text-transform:uppercase;
-  color:var(--sub);
-  transition:border-color .3s;
+#brandStage{
+  position:fixed; left:50%; top:40%; transform:translate(-50%,-50%);
+  z-index:60; text-align:center; cursor:default;
+  transition:top .95s var(--ease), left .95s var(--ease), transform .95s var(--ease);
 }
-.folio .folio-c{color:var(--gold-dk); text-align:center; flex:1;}
-.folio .folio-l, .folio .folio-r{white-space:nowrap;}
-.folio-clock{
-  font-variant-numeric:tabular-nums; /* le cifre cambiano senza far ballare la riga */
-  letter-spacing:.22em;
-  color:var(--ink);
-  transition:color .3s;
-}
-body.night-mode .folio-clock{color:#F2EFE8;}
-@media(max-width:640px){
-  .folio{flex-direction:column; align-items:center; gap:.25rem; text-align:center;}
-}
-
-/* ============================================================
-   NAMEPLATE — la testata
-============================================================ */
-.nameplate{text-align:center; padding:2rem 0 1.8rem;}
-.nameplate h1{
+#brand{
   font-family:var(--font-display); font-weight:900; color:var(--ink);
-  font-size:clamp(3rem,10vw,6.6rem); line-height:.96; letter-spacing:-.025em;
+  font-size:clamp(3rem,10vw,6.4rem); line-height:.92; letter-spacing:-.025em;
+  transition:font-size .95s var(--ease);
+  display:inline-block;
 }
-.nameplate h1 em{font-style:italic; color:var(--navy); letter-spacing:-.01em;}
-.nameplate-sub{
-  margin-top:1.1rem;
-  font-size:.68rem; font-weight:700; letter-spacing:.34em; text-transform:uppercase;
-  color:var(--gold-dk);
-  display:flex; align-items:center; justify-content:center; gap:14px;
+#brand .brand-l1, #brand .brand-l2{display:block; white-space:nowrap;}
+#brand .brand-l2{font-style:italic; color:var(--navy);}
+
+/* entrata dai due lati */
+@keyframes slideFromLeft{from{opacity:0; transform:translateX(-115vw);} to{opacity:1; transform:translateX(0);}}
+@keyframes slideFromRight{from{opacity:0; transform:translateX(115vw);} to{opacity:1; transform:translateX(0);}}
+#brand .brand-l1{animation:slideFromLeft 1s var(--ease) both;}
+#brand .brand-l2{animation:slideFromRight 1s .12s var(--ease) both;}
+
+/* stato APP: rimpicciolisce e va in alto a sinistra */
+body.app-mode #brandStage{
+  left:26px; top:22px; transform:translate(0,0); cursor:pointer;
 }
-.nameplate-sub::before, .nameplate-sub::after{
-  content:''; display:block; width:44px; height:1px; background:var(--gold);
+body.app-mode #brand{
+  font-size:clamp(1.35rem,4.5vw,1.9rem); line-height:.95;
 }
-.nameplate-rule{
-  border:none; border-top:4px double var(--rule); margin:0;
-  transition:border-color .3s;
+body.app-mode #brand .brand-l1, body.app-mode #brand .brand-l2{display:inline;}
+body.app-mode #brand .brand-l2{margin-left:.28em;}
+@media(max-width:560px){
+  body.app-mode #brand{font-size:1.25rem;}
+  body.app-mode #brand .brand-l1, body.app-mode #brand .brand-l2{display:block;}
+  body.app-mode #brand .brand-l2{margin-left:0;}
 }
 
-/* BADGES — piccoli, sotto la testata */
-.badges-row{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;padding:1.4rem 0 0;}
+/* ============================================================
+   EXTRA DELLO SPLASH — sottotitolo, INIZIA, badge
+============================================================ */
+#hero-extras{
+  position:fixed; left:50%; top:63%; transform:translateX(-50%);
+  z-index:55; text-align:center; width:min(90vw,640px);
+  transition:opacity .5s ease, transform .5s ease;
+}
+.brand-tagline{
+  margin-top:1.05rem;
+  font-size:.7rem; font-weight:700; letter-spacing:.3em; text-transform:uppercase;
+  color:var(--gold-dk);
+  display:flex; align-items:center; justify-content:center; gap:13px;
+  opacity:0; animation:fadeUp .7s 1.2s ease both;
+  max-height:40px; overflow:hidden;
+  transition:opacity .45s ease, max-height .55s ease, margin-top .45s ease;
+}
+.brand-tagline::before, .brand-tagline::after{content:''; display:block; width:34px; height:1px; background:var(--gold);}
+body.app-mode .brand-tagline{opacity:0; max-height:0; margin-top:0; pointer-events:none;}
+
+#inizia{
+  margin-top:0;
+  display:inline-flex; align-items:center; gap:12px;
+  background:var(--navy); color:var(--ivory);
+  border:none; border-radius:var(--r-pill);
+  padding:1.05rem 2.6rem;
+  font-size:.82rem; font-weight:700; letter-spacing:.2em; text-transform:uppercase;
+  cursor:pointer; box-shadow:0 10px 30px rgba(26,47,79,.28);
+  opacity:0; animation:fadeUp .7s 1.7s ease both;
+  transition:transform .25s var(--ease), box-shadow .25s, background-color .25s;
+}
+#inizia:hover{transform:translateY(-3px); box-shadow:0 16px 40px rgba(26,47,79,.36); background:var(--navy-lt);}
+#inizia:active{transform:translateY(-1px);}
+#inizia svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;}
+
+.hero-badges{
+  display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin-top:2.4rem;
+  opacity:0; animation:fadeUp .7s 2s ease both;
+}
+@keyframes fadeUp{from{opacity:0; transform:translateY(18px);} to{opacity:1; transform:translateY(0);}}
+
+/* i badge (riusati anche nel footer) */
 .author-badge{
   display:inline-flex;align-items:center;gap:10px;background:#fff;padding:6px 15px 6px 6px;
-  border-radius:50px;text-decoration:none;border:1px solid var(--dust);box-shadow:var(--shadow-card);
-  transition:transform .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s, border-color .25s, background-color .3s;
+  border-radius:var(--r-pill);text-decoration:none;border:1px solid var(--dust);box-shadow:var(--shadow-card);
+  transition:transform .25s var(--ease), box-shadow .25s, border-color .25s, background-color .3s;
 }
 .author-badge:hover{transform:translateY(-3px);box-shadow:var(--shadow-lift);border-color:var(--gold);}
 .author-img{width:30px;height:30px;border-radius:50%;object-fit:cover;}
 .author-name{font-size:.78rem;font-weight:500;color:var(--ink);}
 .author-name strong{font-weight:700;}
 
-/* ============================================================
-   SEZIONE — intestazione da rubrica di quotidiano
-   ("—— Catalogo delle Materie ——")
-============================================================ */
-.rubrica-head{
-  display:flex; align-items:center; gap:18px;
-  margin:2rem 0 1.6rem;
-}
-.rubrica-head::before, .rubrica-head::after{
-  content:''; flex:1; border-top:1px solid var(--rule);
-  transition:border-color .3s;
-}
-.rubrica-head h2{
-  font-family:var(--font-display); font-weight:700; font-style:italic;
-  font-size:clamp(1.6rem,4.2vw,2.3rem); color:var(--ink);
-  white-space:nowrap; line-height:1;
-}
-.rubrica-count{
-  text-align:center;
-  font-size:.66rem; font-weight:700; letter-spacing:.24em; text-transform:uppercase;
-  color:var(--gold-dk);
-  margin-bottom:1.8rem;
-}
+/* quando entriamo in app, lo splash-extra sparisce */
+body.app-mode #hero-extras{opacity:0; transform:translateX(-50%) translateY(-24px); pointer-events:none;}
 
 /* ============================================================
-   RICERCA — campo da schedario, sotto filetto
+   TOP BAR (solo in app) — sfondo dietro brand + controlli
 ============================================================ */
-.catalogo-search{
-  display:flex; align-items:center; gap:14px;
-  border:none;
-  border-bottom:2px solid var(--rule);
-  background:transparent;
-  padding:0 .2rem;
-  margin:0 auto 1.4rem;
-  max-width:680px;
-  transition:border-color .25s;
+#topbar{
+  position:fixed; top:0; left:0; width:100%; height:76px; z-index:50;
+  background:rgba(247,244,239,.9); backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--dust);
+  opacity:0; pointer-events:none;
+  transition:opacity .5s ease .15s, background-color .3s, border-color .3s;
 }
-.catalogo-search:focus-within{border-color:var(--gold-dk);}
-.catalogo-search svg{
-  width:22px; height:22px; stroke:var(--sub); fill:none;
-  stroke-width:1.7; stroke-linecap:round; flex-shrink:0;
-}
-.catalogo-search input{
-  flex:1; border:none; outline:none; background:transparent;
-  font-family:var(--font-display); font-style:italic;
-  font-size:1.35rem; color:var(--ink);
-  padding:1.05rem 0; min-width:0;
-}
-.catalogo-search input::placeholder{color:var(--mist); font-style:italic;}
-.search-clear{
-  background:none; border:none; cursor:pointer; color:var(--mist);
-  font-size:1.5rem; line-height:1; font-weight:300; padding:4px;
-  display:none; transition:color .2s;
-}
-.search-clear.visible{display:block;}
-.search-clear:hover{color:var(--navy);}
+body.app-mode #topbar{opacity:1;}
 
 /* ============================================================
-   L'INDICE — voci con LETTRINA
-   Il capolettera Playfair gigante è l'iniziale della materia:
-   stesso peso 900 dei numeroni del template lezione, dust che
-   vira all'oro al passaggio, esattamente come i ch-number.
+   CONTROLLI FISSI — lingua (in app) + night (sempre)
 ============================================================ */
-.indice{list-style:none; padding-bottom:1rem;}
-.indice-row{border-bottom:1px solid var(--dust); transition:border-color .3s;}
-.indice-row:last-child{border-bottom:none;}
-.indice-link{
-  display:flex; align-items:center; gap:1.6rem; width:100%;
-  padding:1.7rem .2rem; text-decoration:none; cursor:pointer;
-  background:none; border:none; font:inherit; text-align:left; color:inherit;
-  -webkit-appearance:none; appearance:none;
+#top-controls{
+  position:fixed; top:18px; right:22px; z-index:65;
+  display:flex; align-items:center; gap:10px;
+  opacity:0; pointer-events:none;
+  transition:opacity .5s ease .2s;
 }
+body.app-mode #top-controls{opacity:1; pointer-events:auto;}
+.top-wa{
+  width:44px; height:44px; border-radius:50%;
+  background:#fff; border:1px solid var(--dust); box-shadow:var(--shadow-card);
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  transition:transform .2s var(--ease), box-shadow .2s, border-color .2s, background-color .3s;
+}
+.top-wa img{width:22px; height:22px;}
+.top-wa:hover{transform:translateY(-2px); box-shadow:var(--shadow-lift); border-color:var(--gold);}
 
-/* La lettrina */
-.indice-lettrina{
-  font-family:var(--font-display); font-weight:900;
-  font-size:clamp(3.6rem,8.5vw,5.4rem); line-height:.82;
-  color:var(--dust);
-  width:92px; min-width:92px; text-align:center;
-  letter-spacing:-.04em; user-select:none;
-  transition:color .3s;
-}
-.indice-link:hover .indice-lettrina{color:var(--gold);}
-
-.indice-text{flex:1; min-width:0; display:flex; align-items:baseline; gap:14px;}
-.indice-title-wrap{flex-shrink:0; max-width:72%;}
-.indice-eyebrow{
-  display:block;
-  font-size:.64rem; font-weight:700; letter-spacing:.24em; text-transform:uppercase;
-  color:var(--gold-dk); margin-bottom:4px;
-}
-.indice-title{
-  font-family:var(--font-display); font-weight:700;
-  font-size:clamp(1.4rem,3.6vw,1.95rem); color:var(--ink); line-height:1.15;
-  transition:color .2s;
-}
-.indice-link:hover .indice-title{color:var(--navy);}
-
-/* leader puntinato, come l'indice di un volume */
-.indice-leader{
-  flex:1; border-bottom:2px dotted var(--mist);
-  transform:translateY(-3px); min-width:24px;
-  transition:border-color .25s;
-}
-.indice-link:hover .indice-leader{border-color:var(--gold);}
-
-.indice-meta{
-  font-size:.7rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase;
-  color:var(--sub); white-space:nowrap; flex-shrink:0;
-  transition:color .2s;
-}
-.indice-link:hover .indice-meta{color:var(--gold-dk);}
-
-@media(max-width:640px){
-  .indice-link{gap:1.1rem; padding:1.35rem .1rem;}
-  .indice-lettrina{width:60px; min-width:60px;}
-  .indice-text{flex-wrap:wrap; gap:6px 12px;}
-  .indice-title-wrap{max-width:100%;}
-  .indice-leader{display:none;}
-  .indice-meta{font-size:.6rem;}
-}
-
-/* Nessun risultato */
-.indice-empty{
-  display:none; text-align:center; padding:3.2rem 1rem;
-  font-family:var(--font-display); font-style:italic;
-  color:var(--sub); font-size:1.1rem; line-height:1.7;
-}
-.indice-empty.visible{display:block;}
-
-/* Filetto doppio di chiusura dell'indice */
-.indice-endrule{
-  border:none; border-top:4px double var(--rule);
-  margin:1.2rem 0 0; transition:border-color .3s;
-}
-
-/* ============================================================
-   LANGUAGE SELECTOR — ripreso dal template lezione dinamica
-============================================================ */
-#google_translate_element{display:none;}
-#custom-lang-selector{display:none;}
-#custom-lang-selector.loaded{
-  display:inline-flex; flex-direction:column; align-items:center;
-  background:#fff; border:1px solid var(--dust); border-radius:var(--r-md);
-  padding:6px 14px; margin-top:1.4rem;
-  position:relative; box-shadow:var(--shadow-card); z-index:999990;
-  transition:background-color .3s, border-color .3s;
-}
-#lang-toggle-btn{
-  background:transparent; border:none; color:var(--navy);
-  font-size:13px; font-weight:700; cursor:pointer; text-transform:uppercase;
-  letter-spacing:.12em; font-family:var(--font-body); outline:none;
-  display:inline-flex; align-items:center; gap:6px;
-}
-#lang-toggle-btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
-#lang-loading{font-size:18px; animation:spin 1s linear infinite; margin-bottom:5px;}
-@keyframes spin{100%{transform:rotate(360deg);}}
-.lang-options{
-  display:none; position:absolute; top:112%; left:50%; transform:translateX(-50%);
-  background:#fff; border:1px solid var(--dust); border-radius:var(--r-lg);
-  grid-template-columns:repeat(4,1fr); gap:8px; padding:14px;
-  box-shadow:var(--shadow-lift); min-width:240px; z-index:999991;
-  transition:background-color .3s, border-color .3s;
-}
-.lang-options.show{display:grid;}
-.lang-options button{
-  background:transparent; border:1px solid transparent; padding:6px;
-  cursor:pointer; border-radius:var(--r-sm); font-size:22px; transition:.2s;
-}
-.lang-options button.active-lang{background:rgba(200,169,110,.12); border-color:var(--gold);}
-.lang-options button:hover{transform:scale(1.15);}
-.skiptranslate{display:none !important;}
-body{top:0 !important;}
-#goog-gt-tt, .goog-te-balloon-frame{display:none !important;}
-.goog-text-highlight{background:transparent !important; box-shadow:none !important; border:none !important;}
-
-#translation-disclaimer{
-  display:none;
-  background:#FFFBEA; color:#7A6220; padding:10px 16px; border-radius:var(--r-md);
-  margin:14px auto 0; font-size:.8rem; border:1px solid #F0E08A; max-width:560px;
-}
-body.night-mode #custom-lang-selector.loaded,
-body.night-mode .lang-options{background:#1E212A; border-color:#2B2E38;}
-body.night-mode #lang-toggle-btn{color:#8FB4E8;}
-body.night-mode #translation-disclaimer{background:#221D10; color:#D9BC85; border-color:#4A3F1E;}
-
-/* DISCLAIMER */
-.disclaimer-card{
-  background:#fff;border:1px solid var(--dust);border-radius:var(--r-xl);
-  padding:3rem;margin:4rem auto 2rem;width:90%;max-width:1200px;box-shadow:var(--shadow-card);
-  transition:background-color .3s, border-color .3s;
-}
-@media(max-width:700px){.disclaimer-card{padding:1.5rem;width:94%;border-radius:var(--r-lg);}}
-.disclaimer-card h3{font-family:var(--font-body);font-size:.65rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-dk);margin-bottom:.8rem;}
-.disclaimer-card h3:not(:first-child){margin-top:2rem;}
-.disclaimer-card p{font-size:.82rem;color:var(--sub);line-height:1.75;}
-
-/* FOOTER */
-.site-footer{text-align:center;padding:3rem 1.5rem;border-top:1px solid var(--dust);transition:border-color .3s;}
-.site-footer p{font-size:.72rem;color:var(--mist);letter-spacing:.1em;text-transform:uppercase;font-weight:600;}
-.site-footer strong{color:var(--sub);}
-
-/* ============================================================
-   MODALE — ELENCO LEZIONI (invariato)
-============================================================ */
-.lz-modal{
-  position:fixed; inset:0; background:rgba(15,17,23,.72); backdrop-filter:blur(6px);
-  z-index:99999; display:none; align-items:center; justify-content:center; padding:20px;
-}
-.lz-modal.open{display:flex;}
-.lz-modal-paper{
-  background:#fff; width:100%; max-width:560px; padding:2.4rem;
-  border-radius:var(--r-xl); position:relative; max-height:86vh; overflow-y:auto;
-  -webkit-overflow-scrolling:touch;
-  box-shadow:0 40px 80px rgba(0,0,0,.3); border-top:4px solid var(--gold);
-  transition:background-color .3s;
-}
-.lz-modal-paper h3{
-  font-family:var(--font-display); font-size:1.5rem; font-weight:700; color:var(--ink);
-  margin-bottom:.4rem; padding-right:1.5rem;
-}
-.lz-modal-sub{ font-size:.85rem; color:var(--sub); margin-bottom:1.4rem; }
-.lz-close{
-  position:absolute; top:16px; right:20px; font-size:1.6rem; cursor:pointer;
-  color:var(--mist); transition:color .2s; line-height:1; font-weight:300; background:none; border:none;
-}
-.lz-close:hover{color:var(--navy);}
-.lz-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(52px,1fr)); gap:10px; }
-.lz-item{
-  display:flex; align-items:center; justify-content:center; aspect-ratio:1/1;
-  background:var(--ivory); border:1px solid var(--dust); border-radius:var(--r-sm);
-  text-decoration:none; font-family:var(--font-display); font-weight:700; font-size:1.05rem;
-  color:var(--navy); transition:all .2s;
-}
-.lz-item:hover{ background:var(--navy); color:#fff; border-color:var(--navy); transform:translateY(-2px); }
-
-/* ============================================================
-   NIGHT MODE
-============================================================ */
 #night-toggle{
-  position:fixed; bottom:24px; right:24px; z-index:9999998;
+  position:fixed; bottom:24px; right:24px; z-index:70;
   width:52px; height:52px; border-radius:50%;
   border:1px solid var(--dust); background:#fff; color:var(--ink);
   font-size:1.3rem; line-height:1; cursor:pointer; box-shadow:var(--shadow-lift);
   display:flex; align-items:center; justify-content:center;
   transition:transform .2s, background-color .3s, border-color .3s, color .3s;
 }
-#night-toggle:hover{ transform:scale(1.08); border-color:var(--gold); }
-#night-toggle:active{ transform:scale(.96); }
+#night-toggle:hover{transform:scale(1.08); border-color:var(--gold);}
+#night-toggle:active{transform:scale(.96);}
 
-body{ transition:background-color .3s ease, color .3s ease; }
+/* ============================================================
+   LANGUAGE SELECTOR (ripreso dal template lezione)
+============================================================ */
+#google_translate_element{display:none;}
+#custom-lang-selector{display:inline-flex; flex-direction:column; align-items:center;
+  background:#fff; border:1px solid var(--dust); border-radius:var(--r-md);
+  padding:6px 14px; position:relative; box-shadow:var(--shadow-card);
+  transition:background-color .3s, border-color .3s;}
+#lang-toggle-btn{background:transparent; border:none; color:var(--navy);
+  font-size:12px; font-weight:700; cursor:pointer; text-transform:uppercase;
+  letter-spacing:.12em; outline:none; display:inline-flex; align-items:center; gap:6px;}
+#lang-toggle-btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
+#lang-loading{font-size:18px; animation:spin 1s linear infinite; margin-bottom:5px;}
+@keyframes spin{100%{transform:rotate(360deg);}}
+.lang-options{display:none; position:absolute; top:112%; right:0;
+  background:#fff; border:1px solid var(--dust); border-radius:var(--r-lg);
+  grid-template-columns:repeat(4,1fr); gap:8px; padding:14px;
+  box-shadow:var(--shadow-lift); min-width:240px; z-index:80;
+  transition:background-color .3s, border-color .3s;}
+.lang-options.show{display:grid;}
+.lang-options button{background:transparent; border:1px solid transparent; padding:6px;
+  cursor:pointer; border-radius:var(--r-sm); font-size:22px; transition:.2s;}
+.lang-options button.active-lang{background:rgba(200,169,110,.12); border-color:var(--gold);}
+.lang-options button:hover{transform:scale(1.15);}
+.skiptranslate{display:none !important;}
+body{top:0 !important;}
+#goog-gt-tt,.goog-te-balloon-frame{display:none !important;}
+.goog-text-highlight{background:transparent !important; box-shadow:none !important; border:none !important;}
+#translation-disclaimer{display:none; position:fixed; top:64px; right:22px; z-index:64;
+  background:#FFFBEA; color:#7A6220; padding:8px 14px; border-radius:var(--r-md);
+  font-size:.75rem; border:1px solid #F0E08A; max-width:280px;}
 
-body.night-mode{ background:#14161C; color:#C7C4BC; --rule:#F2EFE8; }
-body.night-mode #night-toggle{ background:#1E212A; border-color:#2B2E38; color:#F2EFE8; }
+/* ============================================================
+   APP VIEW — catalogo materie (nascosto durante lo splash)
+============================================================ */
+#appview{
+  opacity:0; transform:translateY(24px); pointer-events:none;
+  transition:opacity .6s ease .25s, transform .6s var(--ease) .25s;
+  padding:112px 1.5rem 0;
+  max-width:1080px; margin:0 auto;
+}
+body.app-mode #appview{opacity:1; transform:translateY(0); pointer-events:auto;}
 
-body.night-mode .folio{ color:#918E86; }
-body.night-mode .folio .folio-c,
-body.night-mode .nameplate-sub,
-body.night-mode .indice-eyebrow,
-body.night-mode .rubrica-count,
-body.night-mode .disclaimer-card h3{ color:#D9BC85; }
+.app-head{display:flex; align-items:flex-end; justify-content:space-between; gap:1rem; margin-bottom:1.6rem;}
+.app-kicker{display:block; font-size:.64rem; font-weight:700; letter-spacing:.28em; text-transform:uppercase; color:var(--gold-dk); margin-bottom:6px;}
+.app-head h2{font-family:var(--font-display); font-weight:700; font-style:italic;
+  font-size:clamp(1.7rem,4.4vw,2.4rem); color:var(--ink); line-height:1;}
+.app-head .count-chip{
+  font-size:.66rem; font-weight:700; letter-spacing:.18em; text-transform:uppercase;
+  color:var(--gold-dk); background:rgba(200,169,110,.12);
+  padding:6px 12px; border-radius:var(--r-pill); white-space:nowrap;
+}
 
-body.night-mode .nameplate h1,
-body.night-mode .rubrica-head h2,
-body.night-mode .indice-title,
-body.night-mode .author-name,
-body.night-mode .catalogo-search input,
-body.night-mode .lz-modal-paper h3{ color:#F2EFE8; }
-body.night-mode .nameplate h1 em{ color:#8FB4E8; }
+/* Ricerca a pillola */
+.search-pill{
+  display:flex; align-items:center; gap:14px;
+  background:#fff; border:1px solid var(--dust); border-radius:var(--r-pill);
+  padding:0 1.4rem; margin-bottom:2rem; box-shadow:var(--shadow-card);
+  transition:border-color .25s, box-shadow .25s, background-color .3s;
+}
+.search-pill:focus-within{border-color:var(--gold); box-shadow:0 0 0 4px rgba(200,169,110,.14);}
+.search-pill svg{width:20px;height:20px;stroke:var(--sub);fill:none;stroke-width:1.8;stroke-linecap:round;flex-shrink:0;}
+.search-pill input{flex:1; border:none; outline:none; background:transparent;
+  font-family:var(--font-body); font-size:1.05rem; color:var(--ink); padding:1.05rem 0; min-width:0;}
+.search-pill input::placeholder{color:var(--mist);}
+.search-clear{background:none; border:none; cursor:pointer; color:var(--mist);
+  font-size:1.4rem; line-height:1; padding:4px; display:none; transition:color .2s;}
+.search-clear.visible{display:block;}
+.search-clear:hover{color:var(--navy);}
 
-body.night-mode .disclaimer-card p,
-body.night-mode .lz-modal-sub,
-body.night-mode .indice-meta{ color:#918E86; }
+/* Griglia materie */
+.subj-grid{display:grid; grid-template-columns:1fr; gap:10px;}
+@media(min-width:720px){.subj-grid{grid-template-columns:1fr 1fr; gap:12px;}}
 
-body.night-mode .indice-lettrina{ color:#2B2E38; }
-body.night-mode .indice-link:hover .indice-lettrina{ color:var(--gold); }
-body.night-mode .indice-link:hover .indice-title{ color:#8FB4E8; }
-body.night-mode .indice-link:hover .indice-meta{ color:#D9BC85; }
+.subj-card{
+  display:flex; align-items:center; gap:0.9rem; width:100%; text-align:left;
+  background:#fff; border:1px solid var(--dust); border-radius:var(--r-md);
+  padding:0.8rem 1rem; cursor:pointer;
+  box-shadow:0 1px 2px rgba(15,17,23,.04);
+  transition:transform .2s var(--ease), box-shadow .2s, border-color .2s, background-color .3s;
+  -webkit-appearance:none; appearance:none; font:inherit; color:inherit;
+  text-decoration:none;
+}
+.subj-card:hover{transform:translateY(-2px); box-shadow:var(--shadow-card); border-color:var(--gold);}
+.subj-lettrina{
+  font-family:var(--font-display); font-weight:900; font-size:2.1rem; line-height:.8;
+  color:var(--dust); width:40px; min-width:40px; text-align:center;
+  letter-spacing:-.04em; user-select:none; transition:color .2s;
+}
+.subj-card:hover .subj-lettrina{color:var(--gold);}
+.subj-body{flex:1; min-width:0;}
+.subj-name{font-family:var(--font-display); font-weight:700; font-size:1.05rem;
+  color:var(--ink); line-height:1.25;}
+.subj-meta{font-size:.63rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--sub); margin-top:1px;}
+.subj-chevron{color:var(--mist); flex-shrink:0; transition:transform .2s var(--ease), color .2s;}
+.subj-chevron svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.subj-card:hover .subj-chevron{color:var(--gold-dk); transform:translateX(3px);}
 
-body.night-mode .indice-row{ border-color:#2B2E38; }
-body.night-mode .indice-leader{ border-color:#5C5F6A; }
-body.night-mode .indice-link:hover .indice-leader{ border-color:var(--gold); }
-body.night-mode .indice-empty{ color:#918E86; }
+.subj-empty{display:none; text-align:center; padding:3rem 1rem;
+  font-family:var(--font-display); font-style:italic; color:var(--sub); font-size:1.1rem; line-height:1.7;
+  grid-column:1/-1;}
+.subj-empty.visible{display:block;}
 
-body.night-mode .catalogo-search:focus-within{ border-color:var(--gold); }
-body.night-mode .catalogo-search svg{ stroke:#918E86; }
+/* DISCLAIMER + FOOTER (in coda all'app) */
+.disclaimer-card{background:#fff; border:1px solid var(--dust); border-radius:var(--r-xl);
+  padding:2.6rem; margin:3.5rem auto 1.5rem; box-shadow:var(--shadow-card);
+  transition:background-color .3s, border-color .3s;}
+@media(max-width:700px){.disclaimer-card{padding:1.5rem; border-radius:var(--r-lg);}}
+.disclaimer-card h3{font-size:.64rem; font-weight:700; letter-spacing:.22em; text-transform:uppercase; color:var(--gold-dk); margin-bottom:.8rem;}
+.disclaimer-card h3:not(:first-child){margin-top:1.8rem;}
+.disclaimer-card p{font-size:.8rem; color:var(--sub); line-height:1.75;}
+.footer-badges{display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin:2rem 0 1rem;}
+.site-footer{text-align:center; padding:2rem 1.5rem 3rem;}
+.site-footer p{font-size:.7rem; color:var(--mist); letter-spacing:.1em; text-transform:uppercase; font-weight:600;}
+.site-footer strong{color:var(--sub);}
 
+/* ============================================================
+   MODALE — ELENCO LEZIONI
+============================================================ */
+.lz-modal{position:fixed; inset:0; background:rgba(15,17,23,.72); backdrop-filter:blur(6px);
+  z-index:99999; display:none; align-items:center; justify-content:center; padding:20px;}
+.lz-modal.open{display:flex;}
+.lz-modal-paper{background:#fff; width:100%; max-width:560px; padding:2.4rem;
+  border-radius:var(--r-xl); position:relative; max-height:86vh; overflow-y:auto;
+  -webkit-overflow-scrolling:touch; box-shadow:0 40px 80px rgba(0,0,0,.3);
+  border-top:4px solid var(--gold); transition:background-color .3s;}
+.lz-modal-paper h3{font-family:var(--font-display); font-size:1.5rem; font-weight:700; color:var(--ink); margin-bottom:.4rem; padding-right:1.5rem;}
+.lz-modal-sub{font-size:.85rem; color:var(--sub); margin-bottom:1.4rem;}
+.lz-close{position:absolute; top:16px; right:20px; font-size:1.6rem; cursor:pointer; color:var(--mist);
+  transition:color .2s; line-height:1; font-weight:300; background:none; border:none;}
+.lz-close:hover{color:var(--navy);}
+.lz-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(52px,1fr)); gap:10px;}
+.lz-item{display:flex; align-items:center; justify-content:center; aspect-ratio:1/1;
+  background:var(--ivory); border:1px solid var(--dust); border-radius:var(--r-sm);
+  text-decoration:none; font-family:var(--font-display); font-weight:700; font-size:1.05rem;
+  color:var(--navy); transition:all .2s;}
+.lz-item:hover{background:var(--navy); color:#fff; border-color:var(--navy); transform:translateY(-2px);}
+
+/* ============================================================
+   NIGHT MODE
+============================================================ */
+body.night-mode{background:#14161C; color:#C7C4BC;}
+body.night-mode #brand{color:#F2EFE8;}
+body.night-mode #brand .brand-l2{color:#8FB4E8;}
+body.night-mode .brand-tagline{color:#D9BC85;}
+body.night-mode #inizia{background:var(--navy); color:#F2EFE8;}
+body.night-mode #inizia:hover{background:var(--navy-lt);}
+body.night-mode #night-toggle{background:#1E212A; border-color:#2B2E38; color:#F2EFE8;}
+body.night-mode #topbar{background:rgba(20,22,28,.9); border-color:#2B2E38;}
+body.night-mode .app-head h2{color:#F2EFE8;}
+body.night-mode .app-head .count-chip{color:#D9BC85; background:rgba(200,169,110,.14);}
 body.night-mode .author-badge,
+body.night-mode #custom-lang-selector,
+body.night-mode .lang-options,
+body.night-mode .search-pill,
+body.night-mode .subj-card,
 body.night-mode .disclaimer-card,
-body.night-mode .lz-modal-paper{ background:#1E212A; border-color:#2B2E38; }
+body.night-mode .lz-modal-paper{background:#1E212A; border-color:#2B2E38;}
+body.night-mode .author-name{color:#F2EFE8;}
+body.night-mode #lang-toggle-btn{color:#8FB4E8;}
+body.night-mode .search-pill input{color:#F2EFE8;}
+body.night-mode .search-pill svg{stroke:#918E86;}
+body.night-mode .search-pill:focus-within{box-shadow:0 0 0 4px rgba(200,169,110,.1);}
+body.night-mode .subj-name{color:#F2EFE8;}
+body.night-mode .subj-meta,
+body.night-mode .disclaimer-card p,
+body.night-mode .lz-modal-sub{color:#918E86;}
+body.night-mode .subj-lettrina{color:#2B2E38;}
+body.night-mode .subj-card:hover .subj-lettrina{color:var(--gold);}
+body.night-mode .subj-eyebrow, body.night-mode .app-kicker{color:#D9BC85;}
+body.night-mode .top-wa{background:#1E212A; border-color:#2B2E38;}
+body.night-mode .disclaimer-card h3{color:#D9BC85;}
+body.night-mode .subj-empty{color:#918E86;}
+body.night-mode .lz-item{background:#262933; color:#8FB4E8; border-color:#2B2E38;}
+body.night-mode .lz-item:hover{background:var(--navy); color:#fff;}
+body.night-mode .lz-close{color:#5C5F6A;}
+body.night-mode .lz-close:hover{color:#8FB4E8;}
+body.night-mode #translation-disclaimer{background:#221D10; color:#D9BC85; border-color:#4A3F1E;}
+body.night-mode .site-footer p{color:#5C5F6A;}
 
-body.night-mode .site-footer{ border-color:#2B2E38; }
+/* ============================================================
+   INSTANT — quando si salta lo splash (già visto): niente animazioni al primo paint
+============================================================ */
+body.instant #brand .brand-l1, body.instant #brand .brand-l2, body.instant .brand-tagline{animation:none !important; opacity:1; transform:none;}
+body.instant .brand-tagline{opacity:0;}
+body.instant #brandStage, body.instant #brand, body.instant #hero-extras,
+body.instant #appview, body.instant #topbar, body.instant #top-controls{transition:none !important;}
 
-body.night-mode .lz-item{ background:#262933; color:#8FB4E8; border-color:#2B2E38; }
-body.night-mode .lz-item:hover{ background:var(--navy); color:#fff; }
-body.night-mode .lz-close{ color:#5C5F6A; }
-body.night-mode .lz-close:hover{ color:#8FB4E8; }
+/* ============================================================
+   REDUCED MOTION — niente slide, mostra tutto pronto
+============================================================ */
+@media (prefers-reduced-motion: reduce){
+  #brand .brand-l1, #brand .brand-l2, .brand-tagline, #inizia, .hero-badges{animation:none !important; opacity:1 !important; transform:none !important;}
+  body.app-mode .brand-tagline{opacity:0 !important;}
+  #brandStage, #brand, #hero-extras, #appview, #topbar, #top-controls{transition:none !important;}
+}
 </style>
 </head>
-<body>
-<!-- NIGHT MODE — applica subito il tema salvato per evitare il "flash" chiaro -->
-<script>try{if(localStorage.getItem('ums_night_mode')==='1'){document.body.classList.add('night-mode');}}catch(e){}</script>
+<body class="splash">
+<script>try{
+  if(localStorage.getItem('ums_night_mode')==='1'){document.body.classList.add('night-mode');}
+  if(sessionStorage.getItem('ums_seen_splash')==='1'){
+    document.body.classList.remove('splash');
+    document.body.classList.add('app-mode','instant');
+  }
+}catch(e){}</script>
 
-<div id="scroll-progress-container"><div id="scroll-progress-bar"></div></div>
+<!-- FILIGRANA — sfondo fisso, dietro a tutto, a bassissima opacità -->
+<div id="watermark" aria-hidden="true"></div>
 
-<!-- NIGHT MODE — pulsante on/off, coerente con la lezione dinamica -->
+<!-- TOP BAR (sfondo in app) -->
+<div id="topbar"></div>
+
+<!-- BRAND che morfa -->
+<div id="brandStage">
+  <div id="brand">
+    <span class="brand-l1">Una Mano</span>
+    <span class="brand-l2">Spensierata</span>
+  </div>
+  <div class="brand-tagline">Il tuo compagno di studi</div>
+</div>
+
+<!-- EXTRA SPLASH -->
+<div id="hero-extras">
+  <button id="inizia" type="button">
+    Inizia
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+  </button>
+  <div class="hero-badges">
+    <a href="https://www.instagram.com/sciallato_lorenzo/" target="_blank" class="author-badge">
+      <img src="https://files.catbox.moe/qvck5j.png" alt="Lorenzo Sciallato" class="author-img">
+      <span class="author-name">Creato da <strong>Lorenzo</strong> &copy; 2025</span>
+    </a>
+    <a href="https://chat.whatsapp.com/EaX5kr14XxHL9o3qxdDVEP?mode=gi_t" target="_blank" class="author-badge">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="" class="author-img" style="padding:7px;">
+      <span class="author-name">Entra nel <strong>Gruppo</strong></span>
+    </a>
+  </div>
+</div>
+
+<!-- CONTROLLI IN ALTO (in app): WhatsApp + lingua -->
+<div id="top-controls">
+  <a class="top-wa" href="https://chat.whatsapp.com/EaX5kr14XxHL9o3qxdDVEP?mode=gi_t" target="_blank" rel="noopener" aria-label="Gruppo WhatsApp" title="Entra nel Gruppo WhatsApp">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="">
+  </a>
+  <div id="google_translate_element"></div>
+  <div id="custom-lang-selector" class="notranslate">
+    <div id="lang-loading" style="display:none;">&hellip;</div>
+    <button id="lang-toggle-btn" onclick="toggleLangMenu()">
+      <span id="lang-label"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10Z"/></svg> Lingua</span> <small id="lang-arrow">▼</small>
+    </button>
+    <div class="lang-options" id="lang-options-menu">
+      <button onclick="triggerTranslation('it', this)" title="Italiano" class="active-lang">🇮🇹</button>
+      <button onclick="triggerTranslation('en', this)" title="English">🇬🇧</button>
+      <button onclick="triggerTranslation('fr', this)" title="Français">🇫🇷</button>
+      <button onclick="triggerTranslation('de', this)" title="Deutsch">🇩🇪</button>
+      <button onclick="triggerTranslation('es', this)" title="Español">🇪🇸</button>
+      <button onclick="triggerTranslation('bg', this)" title="Български">🇧🇬</button>
+      <button onclick="triggerTranslation('pl', this)" title="Polski">🇵🇱</button>
+      <button onclick="triggerTranslation('el', this)" title="Ελληνικά">🇬🇷</button>
+      <button onclick="triggerTranslation('lt', this)" title="Lietuvių">🇱🇹</button>
+      <button onclick="triggerTranslation('da', this)" title="Dansk">🇩🇰</button>
+      <button onclick="triggerTranslation('pt', this)" title="Português">🇵🇹</button>
+      <button onclick="triggerTranslation('zh-CN', this)" title="中文">🇨🇳</button>
+      <button onclick="triggerTranslation('ar', this)" title="العربية">🇸🇦</button>
+      <button onclick="triggerTranslation('hi', this)" title="हिन्दी">🇮🇳</button>
+      <button onclick="triggerTranslation('ru', this)" title="Русский">🇷🇺</button>
+      <button onclick="triggerTranslation('ja', this)" title="日本語">🇯🇵</button>
+    </div>
+  </div>
+</div>
+<div id="translation-disclaimer">🌐 Traduzione automatica: possibili sfumature perse.</div>
+
+<!-- NIGHT -->
 <button id="night-toggle" type="button" aria-label="Attiva modalità notte" title="Modalità notte on/off">🌙</button>
 
-<!-- MODALE — ELENCO LEZIONI -->
+<!-- MODALE LEZIONI -->
 <div id="lezioni-modal" class="lz-modal" onclick="if(event.target===this) closeLezioniModal()">
   <div class="lz-modal-paper">
     <button type="button" class="lz-close" onclick="closeLezioniModal()" aria-label="Chiudi">&times;</button>
@@ -432,226 +473,141 @@ body.night-mode .lz-close:hover{ color:#8FB4E8; }
   </div>
 </div>
 
-<div class="broadsheet">
-
-  <!-- FOLIO — riga d'edizione -->
-  <div class="folio reveal">
-    <span class="folio-l folio-clock" id="folio-clock" aria-label="Ora corrente">00:00:00</span>
-    <span class="folio-c" aria-hidden="true">&#10022;</span>
-    <span class="folio-r" id="folio-date"></span>
+<!-- APP VIEW -->
+<main id="appview">
+  <div class="app-head">
+    <div>
+      <span class="app-kicker">Catalogo</span>
+      <h2>Corsi</h2>
+    </div>
+    <span class="count-chip" id="course-count"></span>
   </div>
 
-  <!-- NAMEPLATE -->
-  <header class="nameplate reveal">
-    <h1>Una Mano <em>Spensierata</em></h1>
-    <div class="nameplate-sub">Il tuo compagno di studi</div>
-    <div class="badges-row">
-      <a href="https://www.instagram.com/sciallato_lorenzo/" target="_blank" class="author-badge">
-        <img src="https://files.catbox.moe/qvck5j.png" alt="Lorenzo Sciallato" class="author-img">
-        <span class="author-name">Creato da <strong>Lorenzo</strong> &copy; 2025</span>
-      </a>
-      <a href="https://chat.whatsapp.com/EaX5kr14XxHL9o3qxdDVEP?mode=gi_t" target="_blank" class="author-badge">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="" class="author-img" style="padding:7px;">
-        <span class="author-name">Entra nel <strong>Gruppo</strong></span>
-      </a>
-    </div>
+  <div class="search-pill">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+    <label for="course-search" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);">Cerca una materia</label>
+    <input type="text" id="course-search" placeholder="Cerca una materia&hellip;" autocomplete="off">
+    <button type="button" class="search-clear" id="search-clear" aria-label="Cancella ricerca">&times;</button>
+  </div>
 
-    <!-- SELETTORE LINGUA — identico al template lezione -->
-    <div id="google_translate_element"></div>
-    <div id="custom-lang-selector" class="notranslate">
-      <div id="lang-loading" style="display:none;">&hellip;</div>
-      <button id="lang-toggle-btn" onclick="toggleLangMenu()">
-        <span id="lang-label"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10Z"/></svg> Lingua</span> <small id="lang-arrow">▼</small>
-      </button>
-      <div class="lang-options" id="lang-options-menu">
-        <button onclick="triggerTranslation('it', this)" title="Italiano" class="active-lang">🇮🇹</button>
-        <button onclick="triggerTranslation('en', this)" title="English">🇬🇧</button>
-        <button onclick="triggerTranslation('fr', this)" title="Français">🇫🇷</button>
-        <button onclick="triggerTranslation('de', this)" title="Deutsch">🇩🇪</button>
-        <button onclick="triggerTranslation('es', this)" title="Español">🇪🇸</button>
-        <button onclick="triggerTranslation('bg', this)" title="Български">🇧🇬</button>
-        <button onclick="triggerTranslation('pl', this)" title="Polski">🇵🇱</button>
-        <button onclick="triggerTranslation('el', this)" title="Ελληνικά">🇬🇷</button>
-        <button onclick="triggerTranslation('lt', this)" title="Lietuvių">🇱🇹</button>
-        <button onclick="triggerTranslation('da', this)" title="Dansk">🇩🇰</button>
-        <button onclick="triggerTranslation('pt', this)" title="Português">🇵🇹</button>
-        <button onclick="triggerTranslation('zh-CN', this)" title="中文">🇨🇳</button>
-        <button onclick="triggerTranslation('ar', this)" title="العربية">🇸🇦</button>
-        <button onclick="triggerTranslation('hi', this)" title="हिन्दी">🇮🇳</button>
-        <button onclick="triggerTranslation('ru', this)" title="Русский">🇷🇺</button>
-        <button onclick="triggerTranslation('ja', this)" title="日本語">🇯🇵</button>
-      </div>
-    </div>
-    <div id="translation-disclaimer">🌐 Nota: traduzione automatica. Alta accuratezza, possibili sfumature perse.</div>
-  </header>
+  <div class="subj-grid" id="course-grid"></div>
+  <div class="subj-empty" id="subj-empty">Nessuna materia trovata.<br>Prova con un termine diverso.</div>
 
-  <hr class="nameplate-rule reveal">
+  <div class="disclaimer-card">
+    <h3>Tutela del diritto d'autore e limitazione di responsabilità</h3>
+    <p>Tutti i materiali didattici presenti all'interno del portale Una Mano Spensierata (inclusi, a titolo esemplificativo e non esaustivo: riassunti, schemi, mappe concettuali, flashcard e quiz) costituiscono una rielaborazione personale, critica e originale degli appunti universitari. Tali contenuti sono realizzati e condivisi esclusivamente per finalità didattiche, di studio e di mutuo soccorso accademico, ai sensi e nel pieno rispetto dell'Art. 70 della Legge 22 aprile 1941 n. 633 in materia di protezione del diritto d'autore. I materiali presenti sulla piattaforma hanno natura puramente integrativa e non intendono in alcun modo porsi come sostitutivi dei libri di testo ufficiali, delle dispense fornite dai docenti o della frequenza alle lezioni frontali. Si dichiara espressamente l'assenza di riproduzioni pedisseque, integrali o non autorizzate di opere intellettuali protette da copyright di terzi. L'utente fruitore solleva i gestori della piattaforma da qualsivoglia responsabilità derivante da un uso improprio del materiale fornito.</p>
+    <h3>Aiutami a tenere in ordine la piattaforma! 🛠️</h3>
+    <p>Ciao! Come sai, costruisco, aggiorno e mantengo questo sito interamente da solo. Se incappi in un refuso, in un link che non funziona, o se ti accorgi che l'audio del podcast sta dicendo qualcosa di non coerente con il resto della lezione, per favore non ignorarlo. Scrivimi subito sul nostro gruppo WhatsApp specificando l'errore o la lezione incriminata. Così posso correggere il codice o il testo in tempo reale e tenere la piattaforma pulita e affidabile per tutti gli iscritti. Questo progetto cresce anche grazie alle vostre revisioni. Grazie per l'aiuto!</p>
+  </div>
 
-  <!-- CATALOGO -->
-  <section id="studia">
+  <div class="footer-badges">
+    <a href="https://www.instagram.com/sciallato_lorenzo/" target="_blank" class="author-badge">
+      <img src="https://files.catbox.moe/qvck5j.png" alt="Lorenzo Sciallato" class="author-img">
+      <span class="author-name">Creato da <strong>Lorenzo</strong> &copy; 2025</span>
+    </a>
+    <a href="https://chat.whatsapp.com/EaX5kr14XxHL9o3qxdDVEP?mode=gi_t" target="_blank" class="author-badge">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="" class="author-img" style="padding:7px;">
+      <span class="author-name">Entra nel <strong>Gruppo</strong></span>
+    </a>
+  </div>
 
-    <div class="rubrica-head reveal">
-      <h2>Catalogo delle Materie</h2>
-    </div>
-    <div class="rubrica-count reveal" id="course-count"></div>
-
-    <div class="catalogo-search reveal">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-      <label for="course-search" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);">Cerca una materia</label>
-      <input type="text" id="course-search" placeholder="Cerca una materia&hellip;" autocomplete="off">
-      <button type="button" class="search-clear" id="search-clear" aria-label="Cancella ricerca">&times;</button>
-    </div>
-
-    <ul class="indice reveal" id="course-grid"></ul>
-
-    <div class="indice-empty" id="indice-empty">
-      Nessuna materia trovata.<br>Prova con un termine diverso.
-    </div>
-
-    <hr class="indice-endrule reveal">
-
-  </section>
-
-</div><!-- /broadsheet -->
-
-<!-- DISCLAIMER -->
-<div class="disclaimer-card reveal">
-  <h3>Tutela del diritto d'autore e limitazione di responsabilità</h3>
-  <p>Tutti i materiali didattici presenti all'interno del portale Una Mano Spensierata (inclusi, a titolo esemplificativo e non esaustivo: riassunti, schemi, mappe concettuali, flashcard e quiz) costituiscono una rielaborazione personale, critica e originale degli appunti universitari. Tali contenuti sono realizzati e condivisi esclusivamente per finalità didattiche, di studio e di mutuo soccorso accademico, ai sensi e nel pieno rispetto dell'Art. 70 della Legge 22 aprile 1941 n. 633 in materia di protezione del diritto d'autore. I materiali presenti sulla piattaforma hanno natura puramente integrativa e non intendono in alcun modo porsi come sostitutivi dei libri di testo ufficiali, delle dispense fornite dai docenti o della frequenza alle lezioni frontali. Si dichiara espressamente l'assenza di riproduzioni pedisseque, integrali o non autorizzate di opere intellettuali protette da copyright di terzi. L'utente fruitore solleva i gestori della piattaforma da qualsivoglia responsabilità derivante da un uso improprio del materiale fornito.</p>
-  <h3>Aiutami a tenere in ordine la piattaforma! 🛠️</h3>
-  <p>Ciao! Come sai, costruisco, aggiorno e mantengo questo sito interamente da solo. Se incappi in un refuso, in un link che non funziona, o se ti accorgi che l'audio del podcast sta dicendo qualcosa di non coerente con il resto della lezione, per favore non ignorarlo. Scrivimi subito sul nostro gruppo WhatsApp specificando l'errore o la lezione incriminata. Così posso correggere il codice o il testo in tempo reale e tenere la piattaforma pulita e affidabile per tutti gli iscritti. Questo progetto cresce anche grazie alle vostre revisioni. Grazie per l'aiuto!</p>
-</div>
-
-<footer class="site-footer">
-  <p><strong>Una Mano Spensierata</strong> &nbsp;&middot;&nbsp; Tutti i diritti riservati &nbsp;&middot;&nbsp; Lorenzo Sciallato &copy; 2025</p>
-</footer>
+  <footer class="site-footer">
+    <p><strong>Una Mano Spensierata</strong> &nbsp;&middot;&nbsp; Tutti i diritti riservati &nbsp;&middot;&nbsp; Lorenzo Sciallato &copy; 2025</p>
+  </footer>
+</main>
 
 <script>
 // =========================================================================
 // DATI CORSI
-// I corsi con "lezioni" aprono il selettore di lezioni (elenco numerato);
-// quelli con "url" restano link diretti (es. Google Sites) come prima.
-// Per aggiungere un nuovo corso col percorso JSON pronto, basta un blocco
-// { name, lezioni: { count, urlTemplate } } con {n} al posto del numero.
 // =========================================================================
 const courses = [
-  { name: "Sociologia dell'Educazione",    url: "https://sites.google.com/view/una-mano-spensierata/sociologia-delleducazione?authuser=0" },
-  { name: "Psicologia dello Sviluppo",     url: "https://sites.google.com/view/una-mano-spensierata/psicologia-dello-sviluppo?authuser=0" },
-  { name: "Neuropsichiatria Infantile",    lezioni: { count: 11, urlTemplate: "https://lorenzosciallato.github.io/Una-mano-spensierata/lezione-template.html?file=neuropsichiatria/lezione-{n}.json" } },
-  { name: "Ed. Musicale",                  url: "https://sites.google.com/view/una-mano-spensierata/ed-musicale?authuser=0" },
-  { name: "Didattica Generale",            lezioni: { count: 11, urlTemplate: "https://lorenzosciallato.github.io/Una-mano-spensierata/lezione-template.html?file=didattica/lezione-{n}.json" } },
-  { name: "Storia dell'Educazione",        lezioni: { count: 17, urlTemplate: "https://lorenzosciallato.github.io/Una-mano-spensierata/lezione-template.html?file=storiadelleducazione/storiaeducazione-lezione-{n}.json" } },
-  { name: "Storia Contemporanea",          lezioni: { count: 15, urlTemplate: "https://lorenzosciallato.github.io/Una-mano-spensierata/lezione-template.html?file=storiacontemporanea/lezione-{n}.json" } }
+  { name: "Sociologia dell'Educazione",  url: "https://sites.google.com/view/una-mano-spensierata/sociologia-delleducazione?authuser=0" },
+  { name: "Psicologia dello Sviluppo",   url: "https://sites.google.com/view/una-mano-spensierata/psicologia-dello-sviluppo?authuser=0" },
+  { name: "Neuropsichiatria Infantile",  lezioni: { count: 11, urlTemplate: "https://lorenzosciallato.github.io/Una-mano-spensierata/lezione-template.html?file=neuropsichiatria/lezione-{n}.json" } },
+  { name: "Ed. Musicale",                url: "https://sites.google.com/view/una-mano-spensierata/ed-musicale?authuser=0" },
+  { name: "Didattica Generale",          lezioni: { count: 11, urlTemplate: "https://lorenzosciallato.github.io/Una-mano-spensierata/lezione-template.html?file=didattica/lezione-{n}.json" } },
+  { name: "Storia dell'Educazione",      lezioni: { count: 17, urlTemplate: "https://lorenzosciallato.github.io/Una-mano-spensierata/lezione-template.html?file=storiadelleducazione/storiaeducazione-lezione-{n}.json" } },
+  { name: "Storia Contemporanea",        lezioni: { count: 15, urlTemplate: "https://lorenzosciallato.github.io/Una-mano-spensierata/lezione-template.html?file=storiacontemporanea/lezione-{n}.json" } }
 ];
 
-// =========================================================================
-// FOLIO — data d'edizione in italiano + orologio live
-// =========================================================================
-(function(){
-  const el = document.getElementById('folio-date');
-  const d = new Date().toLocaleDateString('it-IT', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
-  el.textContent = d.charAt(0).toUpperCase() + d.slice(1);
+const chevronSVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>';
 
-  // Orologio: HH:MM:SS, aggiornato ogni secondo
-  const clock = document.getElementById('folio-clock');
-  function tick(){
-    clock.textContent = new Date().toLocaleTimeString('it-IT', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
-  }
-  tick();
-  setInterval(tick, 1000);
-})();
-
-// =========================================================================
-// INDICE MATERIE — lettrina + leader puntinato + ricerca live
-// =========================================================================
-function normalizza(s){
-  return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-}
+function normalizza(s){ return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
 
 function renderCourses(){
   const grid = document.getElementById('course-grid');
   courses.forEach((c) => {
     const hasLezioni = !!c.lezioni;
-    const li = document.createElement('li');
-    li.className = 'indice-row';
-    li.dataset.search = normalizza(c.name);
-
     const el = document.createElement(hasLezioni ? 'button' : 'a');
-    el.className = 'indice-link';
-    if (hasLezioni) {
-      el.type = 'button';
-      el.addEventListener('click', () => openLezioni(c));
-    } else {
-      el.href = c.url;
-      el.target = '_blank';
-      el.rel = 'noopener';
-    }
-
-    // Lettrina: prima lettera alfabetica del nome (salta "Ed." -> usa la E comunque)
-    const lettrina = c.name.trim()[0].toUpperCase();
-
+    el.className = 'subj-card';
+    el.dataset.search = normalizza(c.name);
+    if (hasLezioni){ el.type = 'button'; el.addEventListener('click', () => openLezioni(c)); }
+    else { el.href = c.url; el.target = '_blank'; el.rel = 'noopener'; }
+    const lettera = c.name.trim()[0].toUpperCase();
     el.innerHTML = `
-      <span class="indice-lettrina" aria-hidden="true">${lettrina}</span>
-      <span class="indice-text">
-        <span class="indice-title-wrap">
-          <span class="indice-eyebrow">${hasLezioni ? 'Corso completo' : 'Raccolta esterna'}</span>
-          <span class="indice-title">${c.name}</span>
-        </span>
-        <span class="indice-leader" aria-hidden="true"></span>
-        <span class="indice-meta">${hasLezioni ? c.lezioni.count + ' lezioni' : 'sito esterno \u2197'}</span>
-      </span>`;
-
-    li.appendChild(el);
-    grid.appendChild(li);
+      <span class="subj-lettrina" aria-hidden="true">${lettera}</span>
+      <span class="subj-body">
+        <span class="subj-name">${c.name}</span>
+        <span class="subj-meta">${hasLezioni ? c.lezioni.count + ' lezioni' : 'Sito esterno \u2197'}</span>
+      </span>
+      <span class="subj-chevron" aria-hidden="true">${chevronSVG}</span>`;
+    grid.appendChild(el);
   });
   aggiornaConteggio(courses.length);
 }
-
 function aggiornaConteggio(n){
-  const label = document.getElementById('course-count');
-  label.textContent = n === 1 ? 'Una materia in catalogo' : n + ' materie in catalogo';
+  document.getElementById('course-count').textContent = n === 1 ? '1 materia' : n + ' materie';
 }
-
 function filtraMaterie(){
   const q = normalizza(document.getElementById('course-search').value.trim());
-  const rows = document.querySelectorAll('.indice-row');
   let visibili = 0;
-  rows.forEach(row => {
-    const match = q === '' || row.dataset.search.includes(q);
-    row.style.display = match ? '' : 'none';
-    if (match) visibili++;
+  document.querySelectorAll('.subj-card').forEach(card => {
+    const match = q === '' || card.dataset.search.includes(q);
+    card.style.display = match ? '' : 'flex';
+    if(!match) card.style.display = 'none'; else visibili++;
   });
-  document.getElementById('indice-empty').classList.toggle('visible', visibili === 0);
+  document.getElementById('subj-empty').classList.toggle('visible', visibili === 0);
   document.getElementById('search-clear').classList.toggle('visible', q !== '');
   aggiornaConteggio(visibili);
 }
 
-const searchInput = document.getElementById('course-search');
-searchInput.addEventListener('input', filtraMaterie);
-document.getElementById('search-clear').addEventListener('click', () => {
-  searchInput.value = '';
-  filtraMaterie();
-  searchInput.focus();
+// =========================================================================
+// SPLASH → APP
+// =========================================================================
+const inizia = document.getElementById('inizia');
+function enterApp(){
+  document.body.classList.remove('splash');
+  document.body.classList.add('app-mode');
+  try{ sessionStorage.setItem('ums_seen_splash','1'); }catch(e){}
+  setTimeout(() => { document.getElementById('course-search').focus({preventScroll:true}); }, 700);
+}
+function backToSplash(){
+  document.body.classList.remove('app-mode');
+  document.body.classList.add('splash');
+  window.scrollTo({top:0, behavior:'auto'});
+}
+inizia.addEventListener('click', enterApp);
+// clic sul logo rimpicciolito → torna allo splash
+document.getElementById('brandStage').addEventListener('click', () => {
+  if(document.body.classList.contains('app-mode')) backToSplash();
 });
-searchInput.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') { searchInput.value = ''; filtraMaterie(); }
-});
+// se abbiamo saltato lo splash, togliamo "instant" dopo il primo paint
+// così le transizioni tornano attive per le interazioni successive
+requestAnimationFrame(() => { requestAnimationFrame(() => { document.body.classList.remove('instant'); }); });
 
 // =========================================================================
-// MODALE — ELENCO LEZIONI
+// MODALE LEZIONI
 // =========================================================================
 function openLezioni(course){
   document.getElementById('lz-title-text').textContent = course.name;
   document.getElementById('lz-count-text').textContent = course.lezioni.count + ' lezioni disponibili — scegli quella da aprire.';
-
   let html = '<div class="lz-grid">';
-  for (let i = 1; i <= course.lezioni.count; i++) {
+  for (let i = 1; i <= course.lezioni.count; i++){
     const url = course.lezioni.urlTemplate.replace('{n}', i);
     html += `<a class="lz-item" href="${url}" target="_blank" title="Lezione ${i}">${i}</a>`;
   }
   html += '</div>';
   document.getElementById('lz-body').innerHTML = html;
-
   document.getElementById('lezioni-modal').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
@@ -659,108 +615,42 @@ function closeLezioniModal(){
   document.getElementById('lezioni-modal').classList.remove('open');
   document.body.style.overflow = '';
 }
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') closeLezioniModal();
-});
+document.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeLezioniModal(); });
+
+// ricerca
+const searchInput = document.getElementById('course-search');
+searchInput.addEventListener('input', filtraMaterie);
+document.getElementById('search-clear').addEventListener('click', () => { searchInput.value=''; filtraMaterie(); searchInput.focus(); });
+searchInput.addEventListener('keydown', (e) => { if(e.key==='Escape'){ searchInput.value=''; filtraMaterie(); } });
 
 renderCourses();
-
-window.addEventListener('scroll', () => {
-  const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-  const scrolled = document.documentElement.scrollTop;
-  document.getElementById('scroll-progress-bar').style.width = (h > 0 ? (scrolled / h * 100) : 0) + '%';
-});
-
-const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-const revealEls = document.querySelectorAll('.reveal');
-if (reduceMotion) {
-  revealEls.forEach(el => el.classList.add('in-view'));
-} else {
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) { entry.target.classList.add('in-view'); io.unobserve(entry.target); }
-    });
-  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-  revealEls.forEach(el => io.observe(el));
-}
 </script>
 
-<!-- ================================================================
-     LANGUAGE JS — ripreso dal template lezione dinamica
-================================================================ -->
+<!-- LANGUAGE JS -->
 <script>
-  const langLabels = {
-    'it':'Lingua','en':'Language','fr':'Langue','de':'Sprache','es':'Idioma',
-    'bg':'Език','pl':'Język','el':'Γλώσσα','lt':'Kalba','da':'Sprog',
-    'pt':'Língua','zh-CN':'语言','ar':'اللغة','hi':'भाषा','ru':'Язык','ja':'日本語'
-  };
+  const langLabels = {'it':'Lingua','en':'Language','fr':'Langue','de':'Sprache','es':'Idioma','bg':'Език','pl':'Język','el':'Γλώσσα','lt':'Kalba','da':'Sprog','pt':'Língua','zh-CN':'语言','ar':'اللغة','hi':'भाषा','ru':'Язык','ja':'日本語'};
   const langGlobeSVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10Z"/></svg>';
-  function googleTranslateElementInit() {
-    new google.translate.TranslateElement({
-      pageLanguage: 'it',
-      includedLanguages: 'en,it,fr,de,es,bg,pl,el,lt,da,pt,zh-CN,ar,hi,ru,ja',
-      autoDisplay: false
-    }, 'google_translate_element');
+  function googleTranslateElementInit(){ new google.translate.TranslateElement({pageLanguage:'it',includedLanguages:'en,it,fr,de,es,bg,pl,el,lt,da,pt,zh-CN,ar,hi,ru,ja',autoDisplay:false}, 'google_translate_element'); }
+  function toggleLangMenu(){ const m=document.getElementById('lang-options-menu'); const a=document.getElementById('lang-arrow'); m.classList.toggle('show'); a.innerHTML=m.classList.contains('show')?'▲':'▼'; }
+  function triggerTranslation(lang, btn){
+    const loading=document.getElementById('lang-loading'), menu=document.getElementById('lang-options-menu'), toggleBtn=document.getElementById('lang-toggle-btn'), label=document.getElementById('lang-label'), disc=document.getElementById('translation-disclaimer');
+    label.innerHTML = langGlobeSVG + ' ' + (langLabels[lang]||'Language');
+    loading.style.display='block'; menu.classList.remove('show'); toggleBtn.style.display='none';
+    document.querySelectorAll('.lang-options button').forEach(b=>b.classList.remove('active-lang')); btn.classList.add('active-lang');
+    const sel=document.querySelector('select.goog-te-combo'); if(sel){ sel.value=lang; sel.dispatchEvent(new Event('change',{bubbles:true})); }
+    if(disc) disc.style.display = lang!=='it' ? 'block' : 'none';
+    setTimeout(()=>{ loading.style.display='none'; toggleBtn.style.display='inline-flex'; document.getElementById('lang-arrow').innerHTML='▼'; }, 1500);
   }
-  function toggleLangMenu() {
-    const menu = document.getElementById('lang-options-menu');
-    const arrow = document.getElementById('lang-arrow');
-    menu.classList.toggle('show');
-    arrow.innerHTML = menu.classList.contains('show') ? '▲' : '▼';
-  }
-  function triggerTranslation(lang, btnElement) {
-    const loadingDiv = document.getElementById('lang-loading');
-    const menu = document.getElementById('lang-options-menu');
-    const toggleBtn = document.getElementById('lang-toggle-btn');
-    const labelSpan = document.getElementById('lang-label');
-    const disclaimer = document.getElementById('translation-disclaimer');
-    labelSpan.innerHTML = langGlobeSVG + ' ' + (langLabels[lang] || 'Language');
-    loadingDiv.style.display = 'block';
-    menu.classList.remove('show');
-    toggleBtn.style.display = 'none';
-    document.querySelectorAll('.lang-options button').forEach(b => b.classList.remove('active-lang'));
-    btnElement.classList.add('active-lang');
-    const selectField = document.querySelector('select.goog-te-combo');
-    if (selectField) { selectField.value = lang; selectField.dispatchEvent(new Event('change', { bubbles: true })); }
-    if (disclaimer) disclaimer.style.display = lang !== 'it' ? 'block' : 'none';
-    setTimeout(() => {
-      loadingDiv.style.display = 'none';
-      toggleBtn.style.display = 'inline-flex';
-      document.getElementById('lang-arrow').innerHTML = '▼';
-    }, 1500);
-  }
-  // Mostra il widget (come nel template: appare solo dopo il caricamento)
-  (function(){
-    const w = document.getElementById('custom-lang-selector');
-    if (w) w.classList.add('loaded');
-  })();
 </script>
 <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
-<!-- ================================================================
-     NIGHT MODE — SCRIPT ADDITIVO (toggle + persistenza)
-     Usa la stessa chiave localStorage della lezione dinamica, cosi'
-     il tema scelto resta coerente in tutta la navigazione del sito.
-================================================================ -->
+<!-- NIGHT MODE -->
 <script>
-(function () {
-  const NIGHT_KEY = 'ums_night_mode';
-  const btn = document.getElementById('night-toggle');
-
-  function applyNightMode(on) {
-    document.body.classList.toggle('night-mode', on);
-    btn.textContent = on ? '☀️' : '🌙';
-    btn.setAttribute('aria-label', on ? 'Attiva modalità giorno' : 'Attiva modalità notte');
-  }
-
-  // Sincronizza icona con lo stato applicato dallo script iniziale
-  applyNightMode(document.body.classList.contains('night-mode'));
-
-  btn.addEventListener('click', () => {
-    const on = !document.body.classList.contains('night-mode');
-    applyNightMode(on);
-    try { localStorage.setItem(NIGHT_KEY, on ? '1' : '0'); } catch (e) {}
-  });
+(function(){
+  const KEY='ums_night_mode', btn=document.getElementById('night-toggle');
+  function apply(on){ document.body.classList.toggle('night-mode', on); btn.textContent = on?'☀️':'🌙'; btn.setAttribute('aria-label', on?'Attiva modalità giorno':'Attiva modalità notte'); }
+  apply(document.body.classList.contains('night-mode'));
+  btn.addEventListener('click', ()=>{ const on=!document.body.classList.contains('night-mode'); apply(on); try{localStorage.setItem(KEY, on?'1':'0');}catch(e){} });
 })();
 </script>
 
