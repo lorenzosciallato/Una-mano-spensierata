@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Una Mano Spensierata | Lezione Dinamica</title>
-    <meta name="ums-build" content="v11">
 
-    <!-- FIX 3 — rimosso html2pdf (caricato ma mai usato: wbExportPDF usa window.print) -->
+    <!-- Task 4 — html2pdf via CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -103,8 +103,8 @@
         }
         .main-background-image {
             width: 100%; height: 100%; object-fit: cover;
-            opacity: 0.07;
-            filter: grayscale(35%) sepia(0.15);
+            opacity: 0.04;
+            filter: grayscale(100%) sepia(0.4);
             mix-blend-mode: multiply;
         }
         .giants-background::after {
@@ -648,6 +648,15 @@
         }
         .text-content-box h3:first-child { margin-top: 0; }
         .text-content-box p { margin-bottom: 1rem; }
+
+        /* Contenitore del testo estratto dall'HTML originale */
+        .riassunto-testo { margin-bottom: 1rem; line-height: 1.85; }
+        .riassunto-testo p { margin-bottom: 0.85rem; }
+        .riassunto-testo ul, .riassunto-testo ol { padding-left: 1.4rem; margin-bottom: 0.85rem; }
+        .riassunto-testo li { margin-bottom: 0.35rem; }
+        .riassunto-testo strong { font-weight: 700; color: var(--ink); }
+        .riassunto-testo em { font-style: italic; }
+        .riassunto-testo h4 { font-family: var(--font-display); font-size: 1.05rem; font-weight: 700; color: var(--navy); margin: 1rem 0 0.4rem; }
 
         .cornell-box {
             background: linear-gradient(135deg, #FFFDF7, #FFF8E8);
@@ -1246,597 +1255,8 @@
             .ia-text-col { padding: 1.5rem; }
         }
     </style>
-
-    <!-- ================================================================
-         NIGHT MODE — BLOCCO ADDITIVO (non modifica il CSS originale)
-         Nessun filtro/inversione sulle immagini: cambiano solo i token
-         colore e gli sfondi hardcoded. Le foto restano intatte.
-    ================================================================ -->
-    <style id="ums-upgrades-style">
-        /* ============================================================
-           UPGRADE — LAVAGNA ESPANDIBILE
-           La lavagna passa da 220px a 520px con animazione morbida;
-           il riassuntone sotto scende automaticamente perché la lavagna
-           è nel flusso normale della colonna sinistra.
-        ============================================================ */
-        #smart-whiteboard { transition: height 0.35s ease; }
-        #smart-whiteboard.wb-expanded { height: 520px; }
-        @media (max-height: 720px) {
-            #smart-whiteboard.wb-expanded { height: 68vh; }
-        }
-        .wb-header { position: relative; }
-        .wb-expand-btn {
-            position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
-            background: transparent;
-            border: 1px solid rgba(255,255,255,0.45);
-            color: #fff;
-            width: 26px; height: 26px;
-            border-radius: 6px;
-            font-size: 0.85rem; line-height: 1;
-            cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            padding: 0;
-            transition: background 0.2s, border-color 0.2s;
-        }
-        .wb-expand-btn:hover { background: rgba(255,255,255,0.18); border-color: #fff; }
-
-        /* ============================================================
-           UPGRADE GRAFICA 1 — ICONE LINE-ART
-           Icone SVG a tratto sottile (stroke 1.7) al posto delle emoji:
-           rendering identico su tutti i sistemi e coerente col brand.
-        ============================================================ */
-        .ums-ic {
-            width: 1em; height: 1em;
-            stroke: currentColor; fill: none;
-            stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round;
-            display: inline-block; vertical-align: -0.125em;
-            flex-shrink: 0;
-        }
-        .wb-title .ums-ic, #wb-badge .ums-ic { width: 1.05em; height: 1.05em; }
-        #night-toggle .ums-ic { width: 1.15em; height: 1.15em; }
-        .quiz-explanation .ums-ic { margin-right: 2px; }
-
-        /* ============================================================
-           UPGRADE GRAFICA 2 — PALETTE DISCIPLINATA (sezioni interattive)
-           Verde/rosso "da semaforo" -> salvia e terracotta editoriali;
-           azzurrini fuori palette -> tinte del navy di brand.
-        ============================================================ */
-        :root {
-            --quiz-correct:      #4A7A5A;   /* salvia */
-            --quiz-correct-bg:   #EFF4EE;
-            --quiz-incorrect:    #B4573E;   /* terracotta */
-            --quiz-incorrect-bg: #F8EFEA;
-        }
-        .obj-box { background: linear-gradient(135deg, #F3F5F9 0%, #EBEFF5 100%); }
-        .ws-win-msg { background: linear-gradient(135deg, #F3F5F9, #EBEFF5); }
-        .toast-success {
-            border-color: var(--gold);
-            box-shadow: 0 0 20px rgba(200,169,110,0.35);
-            color: var(--gold-dk);
-        }
-        .ws-cell.ws-found { background: var(--navy); color: #fff; }
-        .night-mode .ws-cell.ws-found { background: #8FB4E8; color: #14161C; }
-        .night-mode .toast-success { color: var(--gold-lt); }
-
-        /* ============================================================
-           UPGRADE GRAFICA 3 — RIASSUNTONE DA RIVISTA
-           Capolettera Playfair in oro + misura di riga controllata.
-        ============================================================ */
-        /* FIX — il capolettera ora è applicato via JS solo alla prima vera lettera
-           del primo paragrafo (mai a titoli o numeri: prima ::first-letter prendeva
-           il "1." dell'intestazione di sezione) */
-        #dyn-riassuntone-container { max-width: 68ch; }
-        /* Il capolettera vive in ::first-letter del paragrafo "lead": il testo resta
-           intero nel DOM, quindi Google Translate lo traduce normalmente e il
-           capolettera diventa automaticamente la prima lettera TRADOTTA. */
-        .ums-lead::first-letter {
-            font-family: var(--font-display);
-            font-weight: 700;
-            font-size: 3.4em;
-            line-height: 0.8;
-            color: var(--gold-dk);
-            float: left;
-            padding: 0.08em 0.13em 0 0;
-        }
-        .night-mode .ums-lead::first-letter { color: var(--gold); }
-
-        /* UPGRADE TIPOGRAFIA — il riassuntone come articolo di rivista */
-        #dyn-riassuntone-container {
-            line-height: 1.85;
-            font-size: 1.02rem;
-        }
-        @media (min-width: 701px) {
-            #dyn-riassuntone-container {
-                text-align: justify;
-                hyphens: auto;
-                -webkit-hyphens: auto;
-            }
-        }
-        #dyn-riassuntone-container h3 {
-            font-family: var(--font-display);
-            font-size: 1.45rem;
-            font-weight: 700;
-            line-height: 1.3;
-            border-bottom: none;
-            padding-bottom: 0;
-            margin-top: 2.6rem;
-            text-align: left;
-        }
-        #dyn-riassuntone-container h3::before {
-            content: '';
-            display: block;
-            width: 44px;
-            border-top: 3px solid var(--gold);
-            margin-bottom: 0.7rem;
-        }
-        #dyn-riassuntone-container ::selection { background: var(--gold-lt); color: var(--night); }
-
-        /* ============================================================
-           UPGRADE GRAFICA 4 — CRUCIPUZZLE "PAGINA ENIGMISTICA"
-           Stile da rubrica di quotidiano: filetti doppi, griglia da
-           cruciverba con bordi sottili, niente ombre pop.
-           + FIX MOBILE: griglia fluida, non taglia più le celle.
-        ============================================================ */
-        .pausa-wordsearch {
-            background: var(--ivory);
-            border: none;
-            border-top: 4px double var(--ink);
-            border-bottom: 4px double var(--ink);
-            border-radius: 0;
-        }
-        .ws-kicker {
-            font-family: var(--font-body);
-            font-size: 0.66rem; font-weight: 700;
-            letter-spacing: 0.28em; text-transform: uppercase;
-            color: var(--gold-dk);
-            margin-bottom: 0.5rem;
-        }
-        .pausa-ws-header h3 { font-style: italic; }
-        .ws-grid-wrap {
-            display: block;
-            width: 100%;
-            max-width: 460px;
-            margin: 0 auto;
-            background: var(--ivory);
-            border: 2px solid var(--ink);
-            border-radius: 0;
-            padding: 0;
-            box-shadow: none;
-        }
-        .ws-grid { gap: 0; background: transparent; }
-        .ws-cell {
-            width: auto; height: auto;
-            aspect-ratio: 1 / 1;
-            border-right: 1px solid rgba(28,28,34,0.28);
-            border-bottom: 1px solid rgba(28,28,34,0.28);
-            border-right: 1px solid color-mix(in srgb, var(--ink) 30%, transparent);
-            border-bottom: 1px solid color-mix(in srgb, var(--ink) 30%, transparent);
-            border-radius: 0;
-            font-size: clamp(0.58rem, 2.4vw, 0.85rem);
-        }
-        .ws-grid .ws-cell:nth-child(12n) { border-right: none; }
-        .ws-grid .ws-cell:nth-last-child(-n+12) { border-bottom: none; }
-        .ws-word-tag { border-radius: 4px; background: transparent; }
-        .night-mode .ws-word-tag { background: transparent; }
-        @media (max-width: 480px) {
-            .pausa-wordsearch { padding: 1.4rem 0.7rem; }
-        }
-
-        /* ============================================================
-           FIX — TOOLTIP GOOGLE TRANSLATE
-           Sul testo tradotto, il widget evidenzia la frase sotto il cursore
-           in azzurro e apre un balloon con l'originale: in night mode diventa
-           illeggibile. Disattiviamo evidenziazione e balloon del tutto.
-        ============================================================ */
-        .goog-text-highlight {
-            background: transparent !important;
-            box-shadow: none !important;
-            border: none !important;
-        }
-        #goog-gt-tt, .goog-te-balloon-frame, .goog-tooltip, .goog-tooltip:hover {
-            display: none !important;
-            visibility: hidden !important;
-        }
-
-        /* ============================================================
-           UPGRADE — SUDOKU (stesso linguaggio enigmistica)
-        ============================================================ */
-        .sd-diff-row { display: flex; justify-content: center; gap: 10px; margin-bottom: 1.2rem; flex-wrap: wrap; }
-        .sd-wrap {
-            width: 100%; max-width: 420px; margin: 0 auto;
-            border: 2px solid var(--ink); background: var(--ivory);
-            touch-action: manipulation; user-select: none;
-        }
-        .sd-grid { display: grid; grid-template-columns: repeat(9, 1fr); }
-        .sd-cell {
-            aspect-ratio: 1 / 1;
-            display: flex; align-items: center; justify-content: center;
-            background: #fff; cursor: pointer;
-            font-family: var(--font-body); font-weight: 500;
-            font-size: clamp(0.85rem, 3.6vw, 1.15rem);
-            color: var(--navy);
-            border-right: 1px solid rgba(28,28,34,0.22);
-            border-bottom: 1px solid rgba(28,28,34,0.22);
-            -webkit-tap-highlight-color: transparent;
-        }
-        .sd-grid .sd-cell:nth-child(9n) { border-right: none; }
-        .sd-grid .sd-cell:nth-last-child(-n+9) { border-bottom: none; }
-        .sd-grid .sd-cell:nth-child(3n):not(:nth-child(9n)) { border-right: 2px solid var(--ink); }
-        .sd-grid .sd-cell:nth-child(n+19):nth-child(-n+27),
-        .sd-grid .sd-cell:nth-child(n+46):nth-child(-n+54) { border-bottom: 2px solid var(--ink); }
-        .sd-cell.sd-fixed { font-weight: 800; color: var(--ink); background: #F6F3EA; cursor: default; }
-        .sd-cell.sd-sel { background: var(--gold-lt) !important; color: var(--night); }
-        .sd-cell.sd-err { color: var(--quiz-incorrect); font-weight: 800; }
-        .night-mode .sd-cell { background: #262933; color: #8FB4E8; }
-        /* FIX — in night mode l'errore era rosa pallido e ambiguo: ora terracotta
-           piena su fondo tinto, impossibile non capire che e' un errore */
-        .night-mode .sd-cell.sd-err {
-            color: #F08A63 !important;
-            background: rgba(180, 87, 62, 0.22);
-        }
-        .sd-cell.sd-err { background: rgba(180, 87, 62, 0.10); }
-        .night-mode .sd-cell.sd-fixed { background: #1E212A; color: var(--ink); }
-        .night-mode .sd-cell.sd-sel { background: var(--gold-lt) !important; color: #1C1C22; }
-
-        .sd-pad { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-top: 1.1rem; }
-        .sd-pad button {
-            width: 40px; height: 40px;
-            border: 1px solid var(--dust); background: #fff; border-radius: 8px;
-            font-family: var(--font-body); font-weight: 700; font-size: 1rem;
-            color: var(--navy); cursor: pointer; transition: all 0.15s;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .sd-pad button:hover { border-color: var(--navy); transform: translateY(-1px); }
-        .night-mode .sd-pad button { background: #262933; color: #8FB4E8; }
-
-        .sd-howto {
-            max-width: 62ch; margin: 1.5rem auto 0;
-            font-size: 0.85rem; line-height: 1.75; color: var(--sub);
-            text-align: center;
-        }
-
-        /* ============================================================
-           UPGRADE — SOLITARIO (stesso linguaggio enigmistica)
-        ============================================================ */
-        .sol-board {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 8px;
-            max-width: 620px;
-            margin: 0 auto;
-            padding-bottom: clamp(190px, 44vw, 310px);
-            touch-action: none;
-        }
-        .sol-pile {
-            border: 1.5px solid var(--dust);
-            border-radius: 8px;
-            aspect-ratio: 2.5 / 3.5;
-            position: relative;
-            background: rgba(255, 255, 255, 0.35);
-            transition: box-shadow 0.15s, border-color 0.15s;
-        }
-        .night-mode .sol-pile { background: rgba(255, 255, 255, 0.05); }
-        .sol-found {
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.15rem; color: var(--mist);
-        }
-        .sol-pile.sol-valid {
-            border-color: var(--gold);
-            box-shadow: 0 0 0 3px var(--gold-lt);
-        }
-        #sol-stock { cursor: pointer; }
-        .sol-redeal {
-            position: absolute; inset: 0;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.5rem; color: var(--mist);
-        }
-        .sol-card {
-            position: absolute; left: 0;
-            width: 100%; aspect-ratio: 2.5 / 3.5;
-            background: #fff;
-            border: 1.5px solid #C9C4B8;
-            border-radius: 8px;
-            display: flex; flex-direction: column; align-items: center;
-            padding-top: 4%;
-            font-family: var(--font-body); font-weight: 800;
-            font-size: clamp(0.72rem, 2.7vw, 1.05rem);
-            line-height: 1.05;
-            box-shadow: 0 1px 3px rgba(20, 20, 30, 0.18);
-            z-index: 10;
-        }
-        .sol-card .sol-s { font-size: 1.45em; }
-        .sol-card.sol-red { color: #B4573E; }
-        .sol-card.sol-black { color: #1C1C22; }
-        .sol-card.sol-hidden {
-            background: var(--navy);
-            background-image: radial-gradient(rgba(200, 169, 110, 0.5) 22%, transparent 23%);
-            background-size: 9px 9px;
-            border-color: var(--navy);
-            cursor: default;
-        }
-        #sol-clone { position: fixed; z-index: 99999; pointer-events: none; }
-        #sol-clone .sol-card {
-            position: absolute; left: 0;
-            box-shadow: 0 14px 28px rgba(20, 20, 30, 0.35);
-        }
-
-        /* ============================================================
-           UPGRADE — "LO SAPEVI?" (rubrica da quotidiano)
-        ============================================================ */
-        .losapevi {
-            margin-top: 2.2rem;
-            border-top: 1px solid var(--ink);
-            padding-top: 1.3rem;
-        }
-        .ls-item {
-            position: relative; padding-left: 1.5rem;
-            margin-bottom: 0.85rem;
-            font-size: 0.92rem; line-height: 1.7; color: var(--body);
-        }
-        .ls-item::before {
-            content: '\2014';
-            position: absolute; left: 0;
-            color: var(--gold-dk); font-weight: 700;
-        }
-        .ls-btn {
-            background: transparent; color: var(--navy);
-            border: 1px solid var(--dust); border-radius: 50px;
-            padding: 7px 20px; font-family: var(--font-body);
-            font-weight: 700; font-size: 0.72rem; letter-spacing: 0.1em;
-            text-transform: uppercase; cursor: pointer; transition: all 0.2s;
-        }
-        .ls-btn:hover { border-color: var(--gold); color: var(--gold-dk); }
-        .night-mode .ls-btn { color: #8FB4E8; }
-        .ls-label {
-            font-size: 0.62rem; font-weight: 700;
-            letter-spacing: 0.16em; text-transform: uppercase;
-            color: var(--gold-dk); margin-right: 6px;
-        }
-        .ls-more {
-            background: none; border: none; padding: 0;
-            font-family: var(--font-body); font-size: 0.8rem; font-weight: 700;
-            color: var(--navy); cursor: pointer;
-            border-bottom: 1px solid var(--gold);
-            transition: color 0.2s;
-            white-space: nowrap;
-        }
-        .ls-more:hover { color: var(--gold-dk); }
-        .night-mode .ls-more { color: #8FB4E8; }
-
-        /* BLINDATURA — errore sudoku in night mode: regola finale con specificità
-           massima, così nessun altro stile può attenuarla */
-        body.night-mode .sd-grid .sd-cell.sd-err {
-            color: #F08A63 !important;
-            background: rgba(224, 110, 80, 0.28) !important;
-            font-weight: 800 !important;
-        }
-
-        /* ============================================================
-           SEZIONE 09 — DATE APPELLI (bacheca integrata nella lezione)
-        ============================================================ */
-        .ap-disclaimer {
-            display: flex; gap: 14px; align-items: center;
-            justify-content: space-between; flex-wrap: wrap;
-            background: #FFFDF7;
-            border: 1px solid var(--gold-lt);
-            border-left: 3px solid var(--gold);
-            border-radius: 0 var(--r-md) var(--r-md) 0;
-            padding: 0.9rem 1.2rem;
-            font-size: 0.82rem; color: var(--sub);
-            margin-bottom: 1.8rem;
-        }
-        .night-mode .ap-disclaimer { background: #221D10; border-color: var(--gold-dk); }
-        .ap-official {
-            text-decoration: none; font-weight: 700;
-            font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
-            color: var(--navy);
-            border-bottom: 1px solid var(--gold); padding-bottom: 1px;
-            white-space: nowrap;
-        }
-        .ap-official:hover { color: var(--gold-dk); }
-        .night-mode .ap-official { color: #8FB4E8; }
-
-        .ap-year { border-bottom: 1px solid var(--dust); }
-        .ap-year:last-child { border-bottom: none; }
-        .ap-year-head {
-            width: 100%; display: flex; justify-content: space-between; align-items: center;
-            background: transparent; border: none; cursor: pointer;
-            padding: 1.1rem 0.2rem;
-            font-family: var(--font-display); font-size: 1.15rem; font-weight: 700;
-            color: var(--ink); transition: color 0.2s;
-            text-align: left;
-        }
-        .ap-year-head:hover, .ap-year-head.active { color: var(--navy); }
-        .night-mode .ap-year-head:hover, .night-mode .ap-year-head.active { color: #8FB4E8; }
-        .ap-year-icon { font-family: var(--font-body); font-weight: 300; color: var(--mist); font-size: 1.15rem; }
-        .ap-year-body { display: none; padding: 0.2rem 0 1.3rem; }
-        .ap-year-body.open { display: block; }
-
-        .ap-mat-btn {
-            width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 10px;
-            text-align: left; background: #fff;
-            border: 1px solid var(--dust); border-radius: var(--r-md);
-            padding: 0.85rem 1.1rem; margin-bottom: 8px;
-            cursor: pointer;
-            font-family: var(--font-body); font-weight: 600; font-size: 0.9rem;
-            color: var(--body); transition: all 0.2s;
-        }
-        .ap-mat-btn:hover, .ap-mat-btn.active { border-color: var(--gold); color: var(--ink); }
-        .night-mode .ap-mat-btn { background: #1E212A; }
-        .ap-mat-count {
-            font-size: 0.64rem; font-weight: 700;
-            letter-spacing: 0.12em; text-transform: uppercase;
-            color: var(--gold-dk); white-space: nowrap;
-        }
-
-        .ap-dates {
-            display: none;
-            margin: -2px 0 14px;
-            padding: 4px 0 4px 14px;
-            border-left: 3px solid var(--gold);
-        }
-        .ap-dates.open { display: block; }
-        .ap-row {
-            display: flex; justify-content: space-between; align-items: baseline;
-            gap: 10px; flex-wrap: wrap;
-            padding: 7px 6px;
-            font-size: 0.87rem; color: var(--body);
-            border-bottom: 1px dashed var(--dust);
-        }
-        .ap-row:last-child { border-bottom: none; }
-        .ap-row strong { color: var(--ink); font-weight: 700; }
-        .ap-doc { color: var(--sub); font-size: 0.78rem; }
-        .ap-chip {
-            font-size: 0.66rem; font-weight: 700;
-            letter-spacing: 0.08em; text-transform: uppercase;
-            color: var(--navy);
-            border: 1px solid var(--dust); border-radius: 50px;
-            padding: 2px 10px; white-space: nowrap;
-        }
-        .night-mode .ap-chip { color: #8FB4E8; }
-        .ap-row.ap-past { opacity: 0.45; }
-        .ap-row.ap-past .ap-chip { color: var(--sub); }
-        .ap-empty { font-size: 0.85rem; font-style: italic; color: var(--sub); padding: 6px; }
-    </style>
-
-    <style id="night-mode-style">
-        /* Pulsante toggle fisso */
-        #night-toggle {
-            position: fixed; bottom: 24px; right: 24px;
-            z-index: 9999998;
-            width: 52px; height: 52px; border-radius: 50%;
-            border: 1px solid var(--dust);
-            background: #fff; color: var(--ink);
-            font-size: 1.35rem; line-height: 1;
-            cursor: pointer;
-            box-shadow: var(--shadow-lift);
-            display: flex; align-items: center; justify-content: center;
-            transition: transform 0.2s, background 0.3s, border-color 0.3s;
-        }
-        #night-toggle:hover { transform: scale(1.08); border-color: var(--gold); }
-        #night-toggle:active { transform: scale(0.96); }
-
-        /* Transizioni morbide al cambio tema (solo superfici principali) */
-        body, .content-card, .disclaimer-card, .author-badge, .factor-card,
-        .quiz-card, .quiz-option, .notes-widget, .notes-toolbar, .ia-container,
-        .modal-paper, .fc-mobile-content, .ws-word-tag, .ws-lang-btn,
-        #smart-whiteboard, .obj-box, .cornell-box {
-            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-        }
-
-        /* ---- Rimappatura token in modalità notte ---- */
-        body.night-mode {
-            color-scheme: dark;
-            --ivory:    #14161C;
-            --ivory-dk: #1B1E26;
-            --dust:     #2B2E38;
-            --mist:     #5C5F6A;
-            --ink:      #F2EFE8;
-            --body:     #C7C4BC;
-            --sub:      #918E86;
-            --gold-dk:  #D9BC85;
-            --quiz-correct:      #7BC67F;
-            --quiz-correct-bg:   #14261A;
-            --quiz-incorrect:    #EF9A9A;
-            --quiz-incorrect-bg: #2A1414;
-            --shadow-card: 0 4px 24px rgba(0,0,0,0.45), 0 1px 4px rgba(0,0,0,0.3);
-            --shadow-lift: 0 12px 40px rgba(0,0,0,0.55), 0 2px 8px rgba(0,0,0,0.35);
-        }
-
-        /* ---- Superfici con #fff hardcoded ---- */
-        .night-mode .content-card,
-        .night-mode .disclaimer-card,
-        .night-mode .modal-paper,
-        .night-mode .fc-mobile-content,
-        .night-mode .lang-options,
-        .night-mode #custom-lang-selector.loaded,
-        .night-mode .notes-toolbar,
-        .night-mode .hl-palette-row,
-        .night-mode #smart-whiteboard,
-        .night-mode .wb-footer,
-        .night-mode #night-toggle { background: #1E212A; }
-
-        .night-mode .author-badge { background: #1E212A; }
-        .night-mode .author-badge.primary { background: var(--navy); }
-
-        .night-mode .quiz-option { background: #1E212A; }
-        .night-mode .quiz-option:hover:not(:disabled) { background: #262B36; }
-
-        .night-mode .tool-btn { background: #262933; }
-        .night-mode .tool-btn:hover { background: #1E212A; color: #8FB4E8; border-color: #8FB4E8; }
-
-        .night-mode .btn-nav { background: #262933; }
-        .night-mode .btn-nav:hover { color: #8FB4E8; border-color: #8FB4E8; }
-
-        .night-mode .wb-btn { background: #262933; color: #8FB4E8; }
-        .night-mode .wb-btn-pdf { background: var(--gold); color: var(--night); }
-
-        .night-mode .ws-lang-btn { background: #1E212A; }
-        .night-mode .ws-lang-btn.active { background: var(--navy); color: #fff; }
-        .night-mode .ws-word-tag { background: #1E212A; }
-        .night-mode .ws-cell { background: #262933; color: var(--ink); }
-        .night-mode .ws-cell.ws-sel { background: var(--gold-lt); color: #1C1C22; }
-        .night-mode .ws-cell.ws-found { background: var(--cyan); color: var(--night); }
-
-        /* ---- Gradienti chiari hardcoded ---- */
-        .night-mode .obj-box {
-            background: linear-gradient(135deg, #182238 0%, #151D2E 100%);
-            border-color: rgba(143,180,232,0.18);
-        }
-        .night-mode .cornell-box { background: linear-gradient(135deg, #221D10, #1C180D); }
-        .night-mode #win-screen,
-        .night-mode .ws-win-msg {
-            background: linear-gradient(135deg, #182238, #151D2E);
-            border-color: rgba(143,180,232,0.15);
-        }
-
-        /* ---- Testi navy (illeggibili su scuro): schiariti solo dove sono testo ---- */
-        .night-mode h1 em,
-        .night-mode .obj-box p strong,
-        .night-mode .cornell-question,
-        .night-mode #win-screen h2,
-        .night-mode .ws-win-msg p,
-        .night-mode #lang-toggle-btn,
-        .night-mode .video-direct-link { color: #8FB4E8; }
-        .night-mode .video-direct-link { border-color: #8FB4E8; }
-        .night-mode .accordion-header:hover .ch-title { color: #8FB4E8; }
-        .night-mode .accordion-header.active .ch-icon { color: #8FB4E8; }
-        .night-mode .close-modal:hover { color: #8FB4E8; }
-        .night-mode .btn-close-section:hover {
-            border-color: #8FB4E8; color: #8FB4E8; background: rgba(143,180,232,0.06);
-        }
-
-        /* ---- Box dinamici con stile inline chiaro ---- */
-        .night-mode #dyn-nota-extra {
-            background: #221D10 !important;
-            border-color: var(--gold-dk) !important;
-        }
-        .night-mode #translation-disclaimer {
-            background: #221D10; color: #D9BC85; border-color: #4A3F1E;
-        }
-
-        /* ---- Evidenziazioni: sfondo chiaro → testo scuro forzato ---- */
-        .night-mode mark.highlighted-text { color: #1C1C22; }
-
-        /* ---- Flashcard: i pannelli restano bianchi sopra l'immagine,
-                quindi il testo deve restare scuro anche in night mode ---- */
-        .night-mode .flashcard-back p,
-        .night-mode .flashcard-front h2 { color: #1C1C22; }
-
-        /* ---- Quiz: testi spiegazione ---- */
-        .night-mode .quiz-explanation-correct { color: #A5D6A7; }
-        .night-mode .quiz-explanation-incorrect { color: #EF9A9A; }
-
-        /* ---- Sfondo decorativo: niente inversione, solo blend adatto al buio ---- */
-        .night-mode .main-background-image {
-            mix-blend-mode: screen;
-            opacity: 0.05;
-        }
-    </style>
 </head>
 <body>
-    <!-- NIGHT MODE — applica subito il tema salvato per evitare il "flash" chiaro -->
-    <script>try{if(localStorage.getItem('ums_night_mode')==='1'){document.body.classList.add('night-mode');}}catch(e){}</script>
 
     <!-- Progress Bar -->
     <div id="scroll-progress-container">
@@ -1846,33 +1266,12 @@
     <!-- Background -->
     <div class="giants-background">
         <img class="main-background-image"
-            src="https://i.postimg.cc/dQWmbDLp/crea-wallpaper-stile-arte-giapponese-woodblock-rilassato-con-fiori-natura-paesaggio.png"
+            src="https://res.cloudinary.com/dlppkpjqs/image/upload/v1774702730/collage_materico_storia_contemporanea_muro_di_berlino_anni_70_in_italia_torri_gemelle_leif0u.jpg"
             alt="">
     </div>
 
     <!-- Toast Container -->
-    <div id="toast-container" class="notranslate"></div>
-
-    <!-- UPGRADE GRAFICA — sprite icone line-art (sostituiscono le emoji) -->
-    <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
-        <symbol id="ic-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></symbol>
-        <symbol id="ic-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></symbol>
-        <symbol id="ic-pen" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></symbol>
-        <symbol id="ic-highlighter" viewBox="0 0 24 24"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4l8 8Z"/></symbol>
-        <symbol id="ic-printer" viewBox="0 0 24 24"><path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8" rx="1"/></symbol>
-        <symbol id="ic-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></symbol>
-        <symbol id="ic-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10Z"/></symbol>
-        <symbol id="ic-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></symbol>
-        <symbol id="ic-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
-        <symbol id="ic-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
-        <symbol id="ic-home" viewBox="0 0 24 24"><path d="m3 11 9-8 9 8"/><path d="M5 9.5V21h14V9.5"/><path d="M9 21v-6h6v6"/></symbol>
-        <symbol id="ic-wrench" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76Z"/></symbol>
-        <symbol id="ic-award" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.5 13 17 22l-5-3-5 3 1.5-9"/></symbol>
-    </svg>
-
-
-    <!-- NIGHT MODE — pulsante on/off -->
-    <button id="night-toggle" type="button" aria-label="Attiva modalità notte" title="Modalità notte on/off"><svg class="ums-ic" aria-hidden="true"><use href="#ic-moon"/></svg></button>
+    <div id="toast-container"></div>
 
     <!-- Modali -->
     <div id="factor-modal" onclick="closeModal(event)">
@@ -1897,12 +1296,11 @@
         <h1 id="dyn-title">Caricamento<em>…</em></h1>
         <div class="subtitle" id="dyn-subtitle">Attendere</div>
 
-
-        <div id="translation-disclaimer"><svg class="ums-ic" aria-hidden="true"><use href="#ic-globe"/></svg> Nota: traduzione automatica via IA. Alta accuratezza, possibili sfumature perse.</div>
+        <div id="translation-disclaimer">🌍 Nota: traduzione automatica via IA. Alta accuratezza, possibili sfumature perse.</div>
 
         <div class="badges-row">
             <a href="#" class="author-badge primary">
-                <span class="author-name" style="padding: 4px 6px;"><svg class="ums-ic" aria-hidden="true"><use href="#ic-home"/></svg> Torna alla Home</span>
+                <span class="author-name" style="padding: 4px 6px;">🏠 Torna alla Home</span>
             </a>
             <a href="https://www.instagram.com/sciallato_lorenzo/" target="_blank" class="author-badge">
                 <img src="https://files.catbox.moe/qvck5j.png" alt="Lorenzo Sciallato" class="author-img">
@@ -1916,9 +1314,9 @@
 
         <div id="google_translate_element" style="display:none;"></div>
         <div id="custom-lang-selector" class="notranslate">
-            <div id="lang-loading" style="display:none;">&hellip;</div>
+            <div id="lang-loading" style="display:none;">⏳</div>
             <button id="lang-toggle-btn" onclick="toggleLangMenu()">
-                <span id="lang-label"><svg class="ums-ic" aria-hidden="true"><use href="#ic-globe"/></svg> Lingua</span> <small id="lang-arrow">▼</small>
+                <span id="lang-label">🌐 Lingua</span> <small id="lang-arrow">▼</small>
             </button>
             <div class="lang-options" id="lang-options-menu">
                 <button onclick="triggerTranslation('it', this)" title="Italiano" class="active-lang">🇮🇹</button>
@@ -1945,7 +1343,7 @@
     <div class="content-card">
 
         <div class="master-accordion-item">
-            <button class="master-header" id="master-toggle-btn" onclick="toggleMaster()" aria-expanded="false">
+            <button class="master-header" id="master-toggle-btn" onclick="toggleMaster()">
                 <span>Inizia la Lezione</span>
                 <span class="mh-arrow">→</span>
             </button>
@@ -2014,7 +1412,7 @@
                                     <div class="notes-toolbar">
                                         <span class="notes-label">Appunti</span>
                                         <button class="tool-btn copy-btn">Copia</button>
-                                        <button class="tool-btn download-btn"><svg class="ums-ic" aria-hidden="true"><use href="#ic-download"/></svg> .txt</button>
+                                        <button class="tool-btn download-btn">⬇ .txt</button>
                                     </div>
                                     <textarea class="notes-area" placeholder="Scrivi qui i tuoi appunti mentre ascolti…"></textarea>
                                 </div>
@@ -2046,7 +1444,7 @@
                                     <div class="notes-toolbar">
                                         <span class="notes-label">Appunti</span>
                                         <button class="tool-btn copy-btn">Copia</button>
-                                        <button class="tool-btn download-btn"><svg class="ums-ic" aria-hidden="true"><use href="#ic-download"/></svg> .txt</button>
+                                        <button class="tool-btn download-btn">⬇ .txt</button>
                                     </div>
                                     <textarea class="notes-area" placeholder="Scrivi qui i tuoi appunti mentre guardi…"></textarea>
                                 </div>
@@ -2105,7 +1503,7 @@
 
                                     <div id="win-screen">
                                         <h2>Ma allora se le sai tutte io vado via!!</h2>
-                                        <p style="margin:20px 0; font-size:2.5rem; color:var(--gold-dk);"><svg class="ums-ic" aria-hidden="true"><use href="#ic-award"/></svg></p>
+                                        <p style="margin:20px 0; font-size:2.5rem;">🎉</p>
                                         <button class="btn-pop btn-yes" onclick="resetDeck()">Ricomincia da capo</button>
                                     </div>
                                 </div>
@@ -2114,7 +1512,7 @@
                                     <div class="notes-toolbar">
                                         <span class="notes-label">Appunti</span>
                                         <button class="tool-btn copy-btn">Copia</button>
-                                        <button class="tool-btn download-btn"><svg class="ums-ic" aria-hidden="true"><use href="#ic-download"/></svg> .txt</button>
+                                        <button class="tool-btn download-btn">⬇ .txt</button>
                                     </div>
                                     <textarea class="notes-area" placeholder="Annota quello che non ricordi…"></textarea>
                                 </div>
@@ -2146,14 +1544,12 @@
                                             alt="Pinguini"
                                             onclick="wbMaximize()">
                                         
-                                        <div id="wb-badge" onclick="wbMaximize()"><svg class="ums-ic" aria-hidden="true"><use href="#ic-pen"/></svg> <span id="wb-badge-count">0</span> concetti</div>
+                                        <div id="wb-badge" onclick="wbMaximize()">📝 <span id="wb-badge-count">0</span> concetti</div>
 
                                         <!-- Smart Whiteboard -->
                                         <div id="smart-whiteboard">
                                             <div class="wb-header">
-                                                <span class="wb-title"><svg class="ums-ic" aria-hidden="true"><use href="#ic-pen"/></svg> Lavagna Concetti</span>
-                                                <!-- UPGRADE — pulsante ingrandisci/ripristina (stile finestra browser) -->
-                                                <button id="wb-expand-btn" class="wb-expand-btn" onclick="wbToggleExpand()" title="Ingrandisci lavagna" aria-label="Ingrandisci lavagna">▢</button>
+                                                <span class="wb-title">📝 Lavagna Concetti</span>
                                             </div>
                                             <div class="wb-body-wrap">
                                                 <div class="wb-body" id="wb-body"></div>
@@ -2165,7 +1561,7 @@
                                             <!-- Footer con bottoni sempre visibili in basso -->
                                             <div class="wb-footer">
                                                 <button class="wb-btn" onclick="wbMinimize()">Riduci</button>
-                                                <button class="wb-btn wb-btn-pdf" onclick="wbExportPDF()"><svg class="ums-ic" aria-hidden="true"><use href="#ic-printer"/></svg> Stampa / PDF</button>
+                                                <button class="wb-btn wb-btn-pdf" onclick="wbExportPDF()">🖨️ Stampa / PDF</button>
                                             </div>
                                         </div>
                                     </div>
@@ -2179,11 +1575,11 @@
                                     <div class="notes-toolbar">
                                         <span class="notes-label">Appunti</span>
                                         <button class="tool-btn copy-btn">Copia</button>
-                                        <button class="tool-btn download-btn"><svg class="ums-ic" aria-hidden="true"><use href="#ic-download"/></svg> .txt</button>
+                                        <button class="tool-btn download-btn">⬇ .txt</button>
                                     </div>
                                     <!-- Palette evidenziatore -->
                                     <div class="hl-palette-row">
-                                        <span class="hl-palette-micro"><svg class="ums-ic" aria-hidden="true"><use href="#ic-highlighter"/></svg> Seleziona il testo per evidenziarlo e salvarlo nella lavagna</span>
+                                        <span class="hl-palette-micro">🖍️ Seleziona il testo per evidenziarlo e salvarlo nella lavagna</span>
                                         <div class="hl-palette-swatches" id="hl-palette">
                                             <div class="hl-swatch hl-swatch-active" data-color="#FFF176" style="background:#FFF176;" title="Giallo" onclick="hlSetColor(this)"></div>
                                             <div class="hl-swatch" data-color="#A5D6A7" style="background:#A5D6A7;" title="Verde" onclick="hlSetColor(this)"></div>
@@ -2213,90 +1609,28 @@
                         <div class="accordion-content">
 
                             <!-- TASK 1: aggiunta classe notranslate + rimosso il <p> ridondante -->
-                            <div class="pausa-wordsearch">
+                            <div class="pausa-wordsearch notranslate">
                                 <div class="pausa-ws-header">
-                                    <div class="ws-kicker">La Pagina Enigmistica</div>
-                                    <h3>L'angolo dei Giochi <svg class="ums-ic" aria-hidden="true"><use href="#ic-search"/></svg></h3>
+                                    <h3>Cerca le parole 🔍</h3>
                                 </div>
 
-                                <!-- Selettore gioco -->
                                 <div class="ws-lang-row">
-                                    <button class="ws-lang-btn active" id="ws-btn-words" onclick="pausaSetGame('words')">Cerca le Parole</button>
-                                    <button class="ws-lang-btn" id="ws-btn-sudoku" onclick="pausaSetGame('sudoku')">Sudoku</button>
-                                    <button class="ws-lang-btn" id="ws-btn-sol" onclick="pausaSetGame('sol')">Solitario</button>
+                                    <button class="ws-lang-btn active" id="ws-btn-it" onclick="wsSetLang('it')">🇮🇹 Italiano</button>
+                                    <button class="ws-lang-btn" id="ws-btn-en" onclick="wsSetLang('en')">🇬🇧 English</button>
                                 </div>
 
-                                <!-- GIOCO 1: Cerca le Parole (parole della lezione, tradotte con la pagina) -->
-                                <div id="ws-game">
-                                    <div class="ws-layout">
-                                        <div>
-                                            <div class="ws-grid-wrap notranslate">
-                                                <div class="ws-grid" id="ws-grid"></div>
-                                            </div>
-                                            <div class="ws-status notranslate" id="ws-status">Trascina o tocca per selezionare le lettere.</div>
-                                            <div class="ws-win-msg" id="ws-win-msg">
-                                                <p><svg class="ums-ic" aria-hidden="true"><use href="#ic-award"/></svg> Trovate tutte! Bravissimo/a!</p>
-                                                <button class="ws-new-btn" onclick="wsNewGame()">Nuova partita</button>
-                                            </div>
+                                <div class="ws-layout">
+                                    <div>
+                                        <div class="ws-grid-wrap">
+                                            <div class="ws-grid" id="ws-grid"></div>
                                         </div>
-                                        <div class="ws-word-list notranslate" id="ws-word-list"></div>
+                                        <div class="ws-status" id="ws-status">Trascina o tocca per selezionare le lettere.</div>
+                                        <div class="ws-win-msg" id="ws-win-msg">
+                                            <p>🎉 Trovate tutte! Bravissimo/a!</p>
+                                            <button class="ws-new-btn" onclick="wsNewGame()">Nuova partita</button>
+                                        </div>
                                     </div>
-                                    <p class="sd-howto">Le parole nascoste sono i concetti chiave di questa lezione: trovarle è un piccolo ripasso travestito da pausa.</p>
-                                </div>
-
-                                <!-- GIOCO 2: Sudoku -->
-                                <div id="sd-game" style="display:none;">
-                                    <div class="sd-diff-row">
-                                        <button class="ws-lang-btn active" id="sd-btn-facile" onclick="sdSetDiff('facile')">Facile</button>
-                                        <button class="ws-lang-btn" id="sd-btn-medio" onclick="sdSetDiff('medio')">Medio</button>
-                                        <button class="ws-lang-btn" id="sd-btn-difficile" onclick="sdSetDiff('difficile')">Difficile</button>
-                                    </div>
-                                    <div class="sd-wrap notranslate">
-                                        <div class="sd-grid" id="sd-grid"></div>
-                                    </div>
-                                    <div class="sd-pad notranslate" id="sd-pad"></div>
-                                    <div class="ws-status notranslate" id="sd-status">Tocca una casella vuota e scegli un numero.</div>
-                                    <div class="ws-win-msg" id="sd-win-msg">
-                                        <p><svg class="ums-ic" aria-hidden="true"><use href="#ic-award"/></svg> Sudoku completato! Mente riposata e allenata.</p>
-                                        <button class="ws-new-btn" onclick="sdNewGame()">Nuova partita</button>
-                                    </div>
-                                    <p class="sd-howto"><strong>Come si gioca:</strong> riempi la griglia in modo che ogni riga, ogni colonna e ogni riquadro 3&times;3 contengano tutti i numeri da 1 a 9, senza ripetizioni. I numeri in grassetto sono gli indizi fissi di partenza: tocca una casella vuota e scegli un numero dalla tastiera qui sopra (o dalla tastiera fisica). Durante la partita nessun aiuto: quando avrai riempito l'ultima casella, il gioco ti dir&agrave; se la soluzione &egrave; corretta oppure evidenzier&agrave; in terracotta le caselle in conflitto da correggere. Non serve indovinare: ogni schema ha una sola soluzione, raggiungibile con la logica.</p>
-                                </div>
-
-                                <!-- GIOCO 3: Solitario (variante a seme unico) -->
-                                <div id="sol-game" style="display:none;">
-                                    <div class="sol-board notranslate" id="sol-board">
-                                        <div class="sol-pile" id="sol-stock"></div>
-                                        <div class="sol-pile" id="sol-waste"></div>
-                                        <div class="sol-spacer"></div>
-                                        <div class="sol-pile sol-found" id="sol-f0" data-suit="♥">♥</div>
-                                        <div class="sol-pile sol-found" id="sol-f1" data-suit="♦">♦</div>
-                                        <div class="sol-pile sol-found" id="sol-f2" data-suit="♣">♣</div>
-                                        <div class="sol-pile sol-found" id="sol-f3" data-suit="♠">♠</div>
-                                        <div class="sol-pile sol-tab" id="sol-t1"></div>
-                                        <div class="sol-pile sol-tab" id="sol-t2"></div>
-                                        <div class="sol-pile sol-tab" id="sol-t3"></div>
-                                        <div class="sol-pile sol-tab" id="sol-t4"></div>
-                                        <div class="sol-pile sol-tab" id="sol-t5"></div>
-                                        <div class="sol-pile sol-tab" id="sol-t6"></div>
-                                        <div class="sol-pile sol-tab" id="sol-t7"></div>
-                                    </div>
-                                    <div class="ws-status notranslate" id="sol-status">Tocca il mazzo per pescare, trascina le carte per spostarle.</div>
-                                    <div class="ws-win-msg" id="sol-win-msg">
-                                        <p><svg class="ums-ic" aria-hidden="true"><use href="#ic-award"/></svg> Solitario completato!</p>
-                                        <button class="ws-new-btn" onclick="solNewGame()">Nuova partita</button>
-                                    </div>
-                                    <div style="text-align:center; margin-top:1.1rem;">
-                                        <button class="ls-btn" onclick="solNewGame()">Nuova partita</button>
-                                    </div>
-                                    <p class="sd-howto"><strong>Come si gioca:</strong> l'obiettivo &egrave; portare tutte le carte nelle quattro basi in alto, una per seme, in ordine crescente dall'Asso al Re. Sulle sette colonne del tavolo le carte si impilano in ordine decrescente e <strong>dello stesso seme</strong>; una colonna vuota accetta qualsiasi carta. Tocca il mazzo in alto a sinistra per pescare una carta; quando il mazzo finisce, un altro tocco lo rigira. Le carte coperte si scoprono da sole quando restano in cima alla loro colonna. Trascina una carta, o una pila gi&agrave; ordinata, sulla destinazione: se la mossa &egrave; valida, la casella si illumina d'oro.</p>
-                                </div>
-
-                                <!-- ACCADDE OGGI — rubrica dinamica (Wikipedia), tradotta insieme alla pagina -->
-                                <div class="losapevi" id="losapevi-box">
-                                    <div class="ws-kicker">Accadde Oggi</div>
-                                    <div id="losapevi-list"></div>
-                                    <button class="ls-btn" onclick="lsShuffle()">Altri fatti</button>
+                                    <div class="ws-word-list" id="ws-word-list"></div>
                                 </div>
                             </div>
 
@@ -2346,26 +1680,6 @@
                         </div>
                     </div>
 
-                    <!-- 09. DATE APPELLI -->
-                    <div class="accordion-item">
-                        <button class="accordion-header">
-                            <span class="ch-number">09</span>
-                            <span class="ch-text">
-                                <span class="ch-eyebrow">Organizzazione</span>
-                                <span class="ch-title">Date Appelli</span>
-                            </span>
-                            <span class="ch-icon">+</span>
-                        </button>
-                        <div class="accordion-content">
-                            <div class="ap-disclaimer">
-                                <span>Le date sono estratte con l'ausilio dell'IA: verifica sempre sul portale ufficiale prima di iscriverti a un appello.</span>
-                                <a href="https://studenti.unimc.it/ListaAppelliOfferta.do" target="_blank" rel="noopener" class="ap-official">Portale UniMC &nearr;</a>
-                            </div>
-                            <div id="ap-years"></div>
-                            <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione ▲</button>
-                        </div>
-                    </div>
-
                 </div><!-- /master-content-inner -->
             </div><!-- /master-content -->
         </div><!-- /master-accordion-item -->
@@ -2376,7 +1690,7 @@
     <div class="disclaimer-card">
         <h3>Tutela del diritto d'autore e limitazione di responsabilità</h3>
         <p>Tutti i materiali didattici presenti all'interno del portale Una Mano Spensierata (inclusi, a titolo esemplificativo e non esaustivo: riassunti, schemi, mappe concettuali, flashcard e quiz) costituiscono una rielaborazione personale, critica e originale degli appunti universitari. Tali contenuti sono realizzati e condivisi esclusivamente per finalità didattiche, di studio e di mutuo soccorso accademico, ai sensi e nel pieno rispetto dell'Art. 70 della Legge 22 aprile 1941 n. 633 in materia di protezione del diritto d'autore. I materiali presenti sulla piattaforma hanno natura puramente integrativa e non intendono in alcun modo porsi come sostitutivi dei libri di testo ufficiali, delle dispense fornite dai docenti o della frequenza alle lezioni frontali. Si dichiara espressamente l'assenza di riproduzioni pedisseque, integrali o non autorizzate di opere intellettuali protette da copyright di terzi. L'utente fruitore solleva i gestori della piattaforma da qualsivoglia responsabilità derivante da un uso improprio del materiale fornito.</p>
-        <h3>Aiutami a tenere in ordine la piattaforma! <svg class="ums-ic" aria-hidden="true"><use href="#ic-wrench"/></svg></h3>
+        <h3>Aiutami a tenere in ordine la piattaforma! 🛠️</h3>
         <p>Ciao! Come sai, costruisco, aggiorno e mantengo questo sito interamente da solo. Se incappi in un refuso, in un link che non funziona, o se ti accorgi che l'audio del podcast sta dicendo qualcosa di non coerente con il resto della lezione, per favore non ignorarlo. Scrivimi subito sul nostro gruppo WhatsApp specificando l'errore o la lezione incriminata. Così posso correggere il codice o il testo in tempo reale e tenere la piattaforma pulita e affidabile per tutti gli iscritti. Questo progetto cresce anche grazie alle vostre revisioni. Grazie per l'aiuto!</p>
     </div>
 
@@ -2397,12 +1711,6 @@
         let currentCardIndex = 0;
         const STORAGE_KEY = 'una_mano_spensierata_notes';
 
-        // FIX 1+2 — chiave della lezione corrente (dal parametro ?file=), usata per
-        // salvare appunti, evidenziazioni e lavagna SEPARATAMENTE per ogni lezione
-        let umsLessonKey = 'default';
-        let umsPristineHash = '';
-        let umsPersistTimer = null;
-
         // TASK 3 — colore evidenziatore attivo (default giallo)
         let hlActiveColor = '#FFF176';
 
@@ -2411,36 +1719,6 @@
 
         // TASK 5 — dati Il Super Quiz
         let superQuizData = [];
-
-        // =========================================================================
-        // FORMATTAZIONE TESTO — grassetto/corsivo markdown + passthrough HTML legacy
-        // =========================================================================
-        // I file JSON delle lezioni arrivano da NotebookLM passando per il
-        // convertitore Python: a volte il testo e' puro (senza markup), a volte
-        // contiene gia' HTML vero (es. punti_chiave.testo_modale con <p><strong>),
-        // a volte usa solo <br> per gli a capo (es. le flashcard), a volte usa la
-        // sintassi markdown **grassetto**/*corsivo* lasciata dal modello.
-        // umsFormat() distingue questi casi e restituisce sempre HTML pronto per
-        // essere assegnato con innerHTML (mai innerText, altrimenti i tag
-        // comparirebbero come testo letterale invece di essere interpretati).
-        function umsHasRealHtml(text) {
-            // Vero se il testo contiene un tag diverso da <br>: quello e' l'unico
-            // tag "innocuo" usato nei JSON solo per gli a capo, non per marcare
-            // formattazione ricca. Qualsiasi altro tag = contenuto HTML gia' pronto,
-            // da non ritoccare.
-            return /<(?!\/?br\s*\/?>)[a-zA-Z!][^>]*>/.test(text);
-        }
-
-        function umsFormat(raw) {
-            if (raw === null || raw === undefined) return '';
-            let text = String(raw);
-            if (umsHasRealHtml(text)) return text; // HTML vero (es. testo_modale): non toccare
-            // Markdown-style: **grassetto** e *corsivo* diventano tag reali.
-            // I <br> eventualmente presenti restano intatti (nessun asterisco al loro interno).
-            text = text.replace(/\*\*([^*]+?)\*\*/g, '<strong>$1</strong>');
-            text = text.replace(/(^|[^*])\*([^\s*][^*]*?)\*(?!\*)/g, '$1<em>$2</em>');
-            return text;
-        }
 
         // =========================================================================
         // TASK 3 — Selezione colore palette
@@ -2455,94 +1733,10 @@
         // TASK 4 — Smart Whiteboard helpers
         // =========================================================================
         function wbMinimize() {
-            // UPGRADE — se la lavagna era ingrandita, torna alle dimensioni normali
-            if (document.getElementById('smart-whiteboard').classList.contains('wb-expanded')) wbToggleExpand();
             document.getElementById('smart-whiteboard').classList.remove('wb-visible');
             document.getElementById('wb-section-banner').style.display = 'block';
             document.getElementById('wb-badge').style.display = 'block';
             document.getElementById('wb-badge-count').textContent = wbCount;
-        }
-
-        // FIX 6 — questa funzione veniva chiamata dal pulsante "✕ Rimuovi" ma non esisteva:
-        // rimuovere un'evidenziazione con la lavagna ridotta mandava il codice in errore
-        function wbUpdateBadge() {
-            const badge = document.getElementById('wb-badge');
-            document.getElementById('wb-badge-count').textContent = wbCount;
-            const wbVisible = document.getElementById('smart-whiteboard').classList.contains('wb-visible');
-            badge.style.display = (wbCount > 0 && !wbVisible) ? 'block' : 'none';
-        }
-
-        // UPGRADE — ingrandisci/ripristina la lavagna (pulsante quadrato nell'header)
-        function wbToggleExpand() {
-            const wb = document.getElementById('smart-whiteboard');
-            const btn = document.getElementById('wb-expand-btn');
-            const expanded = wb.classList.toggle('wb-expanded');
-            if (btn) {
-                btn.textContent = expanded ? '❐' : '▢';
-                const label = expanded ? 'Ripristina dimensioni lavagna' : 'Ingrandisci lavagna';
-                btn.title = label;
-                btn.setAttribute('aria-label', label);
-            }
-        }
-
-        // FIX 2 — PERSISTENZA: evidenziazioni + lavagna sopravvivono al refresh.
-        // Salva (con debounce) l'HTML del riassuntone evidenziato e le righe della
-        // lavagna (testo, colore, nota) in localStorage, con chiave per-lezione.
-        function umsHash(str) {
-            let h = 0;
-            for (let i = 0; i < str.length; i++) { h = ((h << 5) - h + str.charCodeAt(i)) | 0; }
-            return String(h);
-        }
-
-        function umsPersistState() {
-            clearTimeout(umsPersistTimer);
-            umsPersistTimer = setTimeout(() => {
-                try {
-                    const container = document.getElementById('dyn-riassuntone-container');
-                    const rows = [];
-                    document.querySelectorAll('#wb-body .wb-row').forEach(row => {
-                        rows.push({
-                            id: row.dataset.hlId,
-                            text: row.querySelector('.wb-hl-text').textContent,
-                            color: row.dataset.hlColor || '#FFF176',
-                            note: row.querySelector('.wb-note-input').value
-                        });
-                    });
-                    localStorage.setItem('ums_hl::' + umsLessonKey, JSON.stringify({
-                        hash: umsPristineHash,
-                        html: container ? container.innerHTML : '',
-                        wb: rows
-                    }));
-                } catch(e) {}
-            }, 400);
-        }
-
-        function umsRestoreState() {
-            try {
-                const raw = localStorage.getItem('ums_hl::' + umsLessonKey);
-                if (!raw) return;
-                const data = JSON.parse(raw);
-                // Se il contenuto della lezione è cambiato, i vecchi salvataggi non sono
-                // più affidabili: meglio scartarli che ripristinare evidenziazioni sballate.
-                if (data.hash !== umsPristineHash) {
-                    localStorage.removeItem('ums_hl::' + umsLessonKey);
-                    return;
-                }
-                const container = document.getElementById('dyn-riassuntone-container');
-                if (container && data.html) container.innerHTML = data.html;
-                (data.wb || []).forEach(r => {
-                    wbAddEntry(r.text, r.color, r.id);
-                    const row = document.querySelector(`.wb-row[data-hl-id="${r.id}"]`);
-                    if (row && r.note) {
-                        const inp = row.querySelector('.wb-note-input');
-                        inp.value = r.note;
-                        inp.style.height = 'auto';
-                        inp.style.height = inp.scrollHeight + 'px';
-                    }
-                });
-                // Non spalancare la lavagna all'apertura: mostra il banner col badge conteggio
-                if (wbCount > 0) wbMinimize();
-            } catch(e) {}
         }
 
         function wbMaximize() {
@@ -2562,7 +1756,6 @@
             const row = document.createElement('div');
             row.className = 'wb-row';
             row.dataset.hlId = hlId;
-            row.dataset.hlColor = color; // FIX 2 — serve alla persistenza
 
             const swatch = document.createElement('div');
             swatch.className = 'wb-hl-swatch';
@@ -2590,7 +1783,6 @@
             noteInput.addEventListener('input', function() {
                 this.style.height = 'auto';
                 this.style.height = this.scrollHeight + 'px';
-                umsPersistState(); // FIX 2 — salva le note della lavagna
             });
 
             noteContainer.appendChild(arrow);
@@ -2618,8 +1810,6 @@
             }
 
             setTimeout(() => { body.scrollTop = body.scrollHeight; }, 50);
-
-            umsPersistState(); // FIX 2
         }
 
         function wbDeleteEntry(hlId) {
@@ -2644,128 +1834,37 @@
             }
             
             showToast('Concetto rimosso.', 'success');
-
-            umsPersistState(); // FIX 2
         }
 
         function wbExportPDF() {
             if (wbCount === 0) { showToast('Nessun concetto da esportare.', 'retry'); return; }
             
             showToast('Apertura finestra di stampa...', 'success');
-
-            // UPGRADE — la stampa ora ha lo stile editoriale di Una Mano Spensierata
-            // (SEMPRE in versione giorno: la notturna consumerebbe troppo inchiostro)
-            const lessonTitle = (document.getElementById('dyn-title') || {}).textContent || 'Lezione Dinamica';
-            const printDate = new Date().toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
-
+            
             let printContents = `
-                <img src="https://i.postimg.cc/dQWmbDLp/crea-wallpaper-stile-arte-giapponese-woodblock-rilassato-con-fiori-natura-paesaggio.png"
-                     alt="" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.06; filter: grayscale(35%) sepia(0.15); z-index: -1;">
-                <div style="font-family: 'DM Sans', Arial, sans-serif; padding: 28px 24px; color: #1C1C22; max-width: 780px; margin: 0 auto; -webkit-print-color-adjust: exact; print-color-adjust: exact;">
-
-                    <div style="font-size: 10px; font-weight: 700; letter-spacing: 0.3em; text-transform: uppercase; color: #9A7A3F; margin-bottom: 10px;">
-                        Una Mano Spensierata
-                    </div>
-                    <h1 style="font-family: 'Playfair Display', Georgia, serif; font-size: 30px; font-weight: 700; color: #1A2F4F; margin: 0 0 6px 0; line-height: 1.15;">
-                        ${lessonTitle}
-                    </h1>
-                    <div style="font-size: 12px; color: #918E86; margin-bottom: 14px;">
-                        Lavagna Concetti &middot; ${printDate}
-                    </div>
-                    <div style="border-top: 4px double #1C1C22; margin-bottom: 28px;"></div>
+                <div style="font-family: Arial, sans-serif; padding: 20px; color: #1C1C22; max-width: 800px; margin: 0 auto;">
+                    <h2 style="font-size: 24px; color: #1A2F4F; border-bottom: 2px solid #C8A96E; padding-bottom: 10px; margin-bottom: 30px;">
+                        I miei Appunti — Una Mano Spensierata
+                    </h2>
             `;
 
-            // UPGRADE — mappa ogni evidenziazione al suo MACROARGOMENTO e raccoglie
-            // le domande di Check Point di ogni macro (SENZA risposte: la stampa
-            // diventa uno strumento di autoverifica).
-            const secOfHl = {};
-            const questionsBySec = {};
-            const secOrder = [];
-            (function () {
-                const cont = document.getElementById('dyn-riassuntone-container');
-                if (!cont) return;
-                let current = null;
-                cont.querySelectorAll('h3, mark.highlighted-text, .cornell-question').forEach(el => {
-                    if (el.tagName === 'H3') {
-                        current = el.textContent.trim();
-                        if (!secOrder.includes(current)) secOrder.push(current);
-                        if (!questionsBySec[current]) questionsBySec[current] = [];
-                    } else if (el.classList.contains('highlighted-text')) {
-                        const id = el.getAttribute('data-hl-id');
-                        if (id && current) secOfHl[id] = current;
-                    } else if (current) {
-                        // FIX — molti JSON hanno come prima "domanda" una semplice
-                        // etichetta ("Punto di controllo:" e traduzioni varie): non e'
-                        // una domanda e non va stampata. Una vera domanda contiene un
-                        // "?" oppure e' una consegna lunga; le etichette brevi che
-                        // finiscono con ":" vengono scartate, in qualunque lingua.
-                        const qText = el.textContent.trim();
-                        const isLabel = !qText.includes('?') && (/[:\uFF1A]\s*$/.test(qText) || qText.length < 25);
-                        if (!isLabel) questionsBySec[current].push(qText);
-                    }
-                });
-            })();
-
-            // Raggruppa le righe della lavagna per macroargomento (ordine della lezione)
-            const OTHER = 'Altri concetti';
-            const groups = {};
             const body = document.getElementById('wb-body');
             body.querySelectorAll('.wb-row').forEach(row => {
-                const hlId = row.dataset.hlId;
-                const sec = secOfHl[hlId] || OTHER;
-                (groups[sec] = groups[sec] || []).push(row);
-            });
-            const orderedSecs = secOrder.filter(s => groups[s]).concat(groups[OTHER] ? [OTHER] : []);
+                const hlText = row.querySelector('.wb-hl-text').textContent;
+                const noteInputVal = row.querySelector('.wb-note-input').value.trim();
+                const color = row.querySelector('.wb-hl-swatch').style.background;
 
-            let wbPrintIdx = 0;
-            orderedSecs.forEach(sec => {
-                // intestazione del macroargomento, stile testata di rubrica
+                // page-break-inside: avoid; impedisce al blocco di spaccarsi a metà pagina!
+                // white-space: pre-wrap; permette di stampare fedelmente gli "a capo" inseriti nella textarea.
                 printContents += `
-                    <div style="margin: 30px 0 18px; page-break-inside: avoid; break-inside: avoid;">
-                        <div style="font-size: 9px; font-weight: 700; letter-spacing: 0.28em; text-transform: uppercase; color: #9A7A3F; margin-bottom: 5px;">Macroargomento</div>
-                        <h2 style="font-family: 'Playfair Display', Georgia, serif; font-size: 20px; font-weight: 700; color: #1A2F4F; margin: 0; line-height: 1.3;">${sec}</h2>
-                        <div style="width: 44px; border-top: 3px solid #C8A96E; margin-top: 8px;"></div>
+                    <div style="margin-bottom: 20px; border-left: 6px solid ${color}; padding: 12px 18px; background-color: #fcfcfc; page-break-inside: avoid; break-inside: avoid;">
+                        <p style="font-weight: bold; font-size: 16px; margin: 0 0 8px 0; line-height: 1.5;">${hlText}</p>
+                        ${noteInputVal ? `<p style="font-size: 14px; color: #555; margin: 0; line-height: 1.6; white-space: pre-wrap;">&#8627; ${noteInputVal}</p>` : ''}
                     </div>
                 `;
-
-                groups[sec].forEach(row => {
-                    const hlText = row.querySelector('.wb-hl-text').textContent;
-                    const noteInputVal = row.querySelector('.wb-note-input').value.trim();
-                    const color = row.querySelector('.wb-hl-swatch').style.background;
-                    const num = String(++wbPrintIdx).padStart(2, '0');
-
-                    // Numero in stile "ch-number" del sito + barra del colore di evidenziazione.
-                    // page-break-inside: avoid; impedisce al blocco di spaccarsi a metà pagina!
-                    // white-space: pre-wrap; stampa fedelmente gli "a capo" della textarea.
-                    printContents += `
-                        <div style="display: flex; gap: 16px; margin-bottom: 22px; page-break-inside: avoid; break-inside: avoid;">
-                            <div style="font-family: 'Playfair Display', Georgia, serif; font-weight: 700; font-size: 22px; color: #C8A96E; min-width: 34px; line-height: 1.2; text-align: right;">${num}</div>
-                            <div style="flex: 1; border-left: 4px solid ${color}; border-bottom: 1px solid #E4E0D6; padding: 2px 0 14px 16px;">
-                                <p style="font-family: 'Playfair Display', Georgia, serif; font-weight: 700; font-size: 17px; color: #1A2F4F; margin: 0 0 7px 0; line-height: 1.45;">${hlText}</p>
-                                ${noteInputVal ? `<p style="font-size: 13.5px; color: #555149; margin: 0; line-height: 1.65; white-space: pre-wrap;">&#8627; ${noteInputVal}</p>` : ''}
-                            </div>
-                        </div>
-                    `;
-                });
-
-                // domande di Check Point del macroargomento, SENZA risposte
-                const qs = questionsBySec[sec] || [];
-                if (qs.length) {
-                    printContents += `
-                        <div style="border: 1px solid #E4E0D6; border-left: 3px solid #C8A96E; padding: 14px 18px; margin: 4px 0 8px 50px; page-break-inside: avoid; break-inside: avoid;">
-                            <div style="font-size: 9px; font-weight: 700; letter-spacing: 0.24em; text-transform: uppercase; color: #9A7A3F; margin-bottom: 9px;">Check Point &mdash; rispondi senza guardare gli appunti</div>
-                            ${qs.map(q => `<p style="font-size: 13px; color: #1C1C22; margin: 0 0 7px 0; line-height: 1.6;">&#9744;&nbsp; ${q}</p>`).join('')}
-                        </div>
-                    `;
-                }
             });
 
-            printContents += `
-                    <div style="margin-top: 34px; border-top: 4px double #1C1C22; padding-top: 14px; text-align: center;">
-                        <div style="font-family: 'Playfair Display', Georgia, serif; font-style: italic; font-size: 15px; color: #1A2F4F;">Una Mano Spensierata</div>
-                        <div style="width: 44px; border-top: 2px solid #C8A96E; margin: 10px auto 0;"></div>
-                    </div>
-                </div>`;
+            printContents += `</div>`;
 
             const iframe = document.createElement('iframe');
             iframe.style.position = 'fixed';
@@ -2780,15 +1879,8 @@
             doc.open();
             doc.write(`
                 <html>
-                    <head>
-                        <title>Appunti — Una Mano Spensierata</title>
-                        <link rel="preconnect" href="https://fonts.googleapis.com">
-                        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-                        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-                    </head>
-                    <body style="margin:0; background:#fff;">${printContents}
-                        <scr` + `ipt>window.onload = () => setTimeout(() => window.print(), 450);</scr` + `ipt>
-                    </body>
+                    <head><title>Appunti - Lezione Dinamica</title></head>
+                    <body onload="window.print();">${printContents}</body>
                 </html>
             `);
             doc.close();
@@ -2796,55 +1888,25 @@
             setTimeout(() => { document.body.removeChild(iframe); }, 10000);
         }
         // =========================================================================
-        // FIX CAPOLETTERA — applicato SOLO alla prima vera lettera del primo
-        // paragrafo: salta titoli (h1-h5) e caratteri non alfabetici, cosi' non
-        // puo' piu' agganciarsi al numero dell'intestazione di sezione.
-        // =========================================================================
-        function applyDropCap() {
-            const cont = document.getElementById('dyn-riassuntone-container');
-            if (!cont || cont.querySelector('.ums-lead')) return;
-            const walker = document.createTreeWalker(cont, NodeFilter.SHOW_TEXT, {
-                acceptNode: (n) => {
-                    if (!n.nodeValue || !n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
-                    if (n.parentElement && n.parentElement.closest('h1,h2,h3,h4,h5,.cornell-box')) return NodeFilter.FILTER_REJECT;
-                    return NodeFilter.FILTER_ACCEPT;
-                }
-            });
-            const node = walker.nextNode();
-            if (!node) return;
-            const m = node.nodeValue.trimStart().match(/^[A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF]/);
-            if (!m) return; // se il testo non inizia con una lettera, nessun capolettera
-            // Sale fino all'elemento figlio diretto del container (il <p> del primo macro)
-            let block = node.parentElement;
-            while (block && block.parentElement && block.parentElement !== cont) block = block.parentElement;
-            if (block && block !== cont && !/^H[1-5]$/.test(block.tagName)) {
-                block.classList.add('ums-lead');
-            }
-        }
-        // =========================================================================
         // TASK 2 — Chunking testo riassuntone
         // =========================================================================
-        function chunkParagraphs(rawText) {
-            // FIX TRADUZIONE — prima il testo era UN solo <p> spezzato da <br><br>:
-            // Google Translate ri-segmenta le frasi ATTRAVERSO quei confini e
-            // produce parole troncate e "L'" orfani. Ogni blocco di 2 frasi ora
-            // diventa un <p> vero: il widget lo traduce come unità indipendente
-            // e il testo resta pulito in qualsiasi lingua.
-            if (!rawText) return [];
-            if (typeof rawText !== 'string') rawText = String(rawText); // dati sporchi nel JSON
+        function chunkText(rawText) {
+            // Conta i punti fermi seguiti da spazio o fine stringa.
+            // Ogni 2 occorrenze inserisce <br><br>.
+            // Non tocca tag HTML già presenti (li salta con regex lookahead).
+            if (!rawText) return '';
 
-            // Se il testo contiene già HTML vero, nessun chunking (per non rompere i tag):
-            // la formattazione (umsFormat) viene applicata DOPO, per singolo blocco,
-            // cosi' il rilevamento "e' gia' HTML?" qui sopra resta basato sul testo
-            // originale e non su tag che aggiungeremmo noi in un secondo momento.
-            if (umsHasRealHtml(rawText)) return [rawText];
+            // Se il testo contiene HTML, non applica il chunking per non rompere i tag
+            if (/<[a-z][\s\S]*>/i.test(rawText)) return rawText;
 
             let count = 0;
-            const marked = rawText.replace(/\.\s+/g, (match) => {
+            return rawText.replace(/\.\s+/g, (match) => {
                 count++;
-                return (count % 2 === 0) ? '.\u0001' : match;
+                if (count % 2 === 0) {
+                    return '.' + '<br><br>';
+                }
+                return match;
             });
-            return marked.split('\u0001').map(s => s.trim()).filter(Boolean);
         }
 
         // =========================================================================
@@ -2865,9 +1927,6 @@ if (!fileDaCaricare) {
     return;
 }
 
-            // FIX 1+2 — identifica la lezione corrente per la persistenza
-            umsLessonKey = decodeURIComponent(fileDaCaricare);
-
             try {
                 // decodeURIComponent gestisce correttamente gli slash e gli spazi nel percorso
                 const response = await fetch(decodeURIComponent(fileDaCaricare));
@@ -2877,40 +1936,18 @@ if (!fileDaCaricare) {
                 const data = await response.json();
                 
                 popolaInterfaccia(data);
-
+                caricaSuperQuiz(fileDaCaricare);
+                setupAccordions();
+                initFlashcards(data.flashcards);
+                setupNotesAutoScroll();
+                setupCopyButtons();
+                setupDownloadButtons();
+                
                 // Aggiorna il titolo della scheda del browser
                 document.title = data.titolo_lezione || "Una Mano Spensierata";
-
-                // BLINDATURA GENERALE — da qui in poi sono rifiniture: se una
-                // qualsiasi fallisce, la lezione resta comunque leggibile.
-                // MAI più "Lezione non disponibile" per colpa di un accessorio.
-                try {
-                    // FIX 2 — impronta del riassuntone + ripristino evidenziazioni/lavagna
-                    const riassCont = document.getElementById('dyn-riassuntone-container');
-                    umsPristineHash = umsHash('p2::' + (riassCont ? riassCont.textContent : ''));
-                    umsRestoreState();
-                    applyDropCap(); // FIX capolettera (dopo il restore)
-                } catch (e) { console.error('Persistenza/capolettera:', e); }
-
-                try {
-                    setupAccordions();
-                    initFlashcards(data.flashcards);
-                    setupNotesAutoScroll();
-                    setupCopyButtons();
-                    setupDownloadButtons();
-                } catch (e) { console.error('Setup interfaccia:', e); }
             } catch (error) {
-                // DIAGNOSTICA IN PAGINA — niente più errori muti: il messaggio
-                // reale e la build in esecuzione compaiono sotto il titolo.
                 console.error("Errore nel caricamento:", error);
                 document.getElementById('dyn-title').innerText = "Lezione non disponibile";
-                try {
-                    const diag = document.createElement('div');
-                    diag.style.cssText = 'max-width:640px;margin:0.8rem auto 0;padding:10px 16px;border:1px solid #B4573E;border-radius:8px;font-family:monospace;font-size:0.72rem;line-height:1.6;color:#B4573E;background:rgba(180,87,62,0.06);text-align:left;word-break:break-word;';
-                    diag.textContent = '[build v11] ' + (error && error.stack ? error.stack.split('\n').slice(0, 2).join(' \u2014 ') : String(error));
-                    const st = document.getElementById('dyn-subtitle');
-                    if (st && st.parentNode) st.parentNode.insertBefore(diag, st.nextSibling);
-                } catch (e2) {}
             }
 
             // ... (il resto del tuo codice init rimane invariato)
@@ -2919,7 +1956,7 @@ if (!fileDaCaricare) {
             // ----------------------------------------------------------------
             const highlighterBtn = document.createElement('div');
             highlighterBtn.id = 'floating-highlighter';
-            highlighterBtn.innerHTML = '<span class="hl-add"><svg class="ums-ic" aria-hidden="true"><use href="#ic-highlighter"/></svg> Sottolinea</span><span class="hl-remove" id="hl-remove-btn"><svg class="ums-ic" aria-hidden="true"><use href="#ic-x"/></svg> Rimuovi</span>';
+            highlighterBtn.innerHTML = '<span class="hl-add">🖍️ Sottolinea</span><span class="hl-remove" id="hl-remove-btn">✕ Rimuovi</span>';
             document.body.appendChild(highlighterBtn);
 
             let currentSelectionRange = null;
@@ -3007,7 +2044,6 @@ if (!fileDaCaricare) {
                         }
                     }
                     showToast("Sottolineatura rimossa.", "success");
-                    umsPersistState(); // FIX 2
                 }
                 selection.removeAllRanges();
                 highlighterBtn.style.display = 'none';
@@ -3029,31 +2065,14 @@ if (!fileDaCaricare) {
                             if (typeof cn === 'string' && cn.includes('goog-te-spinner')) {
                                 node.style.display = 'none'; node.remove();
                             }
-                            // BLINDATURA — il balloon/tooltip di Google Translate viene
-                            // rimosso fisicamente appena creato (il CSS da solo può
-                            // perdere contro gli stili runtime del widget)
-                            if (node.id === 'goog-gt-tt' || (typeof cn === 'string' && (cn.includes('goog-te-balloon') || cn.includes('goog-tooltip')))) {
-                                node.remove();
-                            }
                         }
                     });
                 });
             });
             observer.observe(document.body, { childList: true, subtree: true });
 
-            // Init sezione Pausa
-            // Il crucipuzzle usa SOLO le parole chiave della lezione; se la lezione
-            // ha poco testo, integra con la lista classica per arrivare a 20 parole.
-            wsBaseWords = wsExtractLessonWords();
-            if (wsBaseWords.length < 20) {
-                for (const w of WS_WORDS.it) {
-                    if (wsBaseWords.length >= 20) break;
-                    if (!wsBaseWords.includes(w) && w.length <= 11) wsBaseWords.push(w);
-                }
-            }
-            wsCurrentWords = wsBaseWords.slice();
+            // Init word search
             wsInit();
-            lsLoad(); // rubrica "Accadde Oggi"
         });
 
         // =========================================================================
@@ -3064,15 +2083,13 @@ if (!fileDaCaricare) {
             document.getElementById('dyn-subtitle').innerText = data.sottotitolo || "";
 
             // --- SEZIONE 01: ORIENTAMENTO (Gestione Annidata) ---
-            try { // BLINDATURA
             if (data.orientamento) {
-                // Obiettivi — FIX: innerHTML + umsFormat, cosi' eventuali **grassetti**
-                // o <strong> gia' presenti nel JSON vengono letti correttamente
+                // Obiettivi
                 const objContainer = document.getElementById('dyn-obiettivi');
                 objContainer.innerHTML = '';
                 (data.orientamento.obiettivi || []).forEach(ob => {
                     const li = document.createElement('li');
-                    li.innerHTML = umsFormat(ob);
+                    li.innerText = ob;
                     objContainer.appendChild(li);
                 });
 
@@ -3081,7 +2098,7 @@ if (!fileDaCaricare) {
                     const conc = data.orientamento.concetto_fondamentale;
                     const concDiv = document.getElementById('dyn-concetto-fondamentale');
                     concDiv.style.display = 'block';
-                    concDiv.innerHTML = `<strong>${umsFormat(conc.titolo)}:</strong><br><br>${umsFormat(conc.testo)}`;
+                    concDiv.innerHTML = `<strong>${conc.titolo}:</strong><br><br>${conc.testo}`;
                 }
 
                 // Nota Extra
@@ -3089,7 +2106,7 @@ if (!fileDaCaricare) {
                     const nota = data.orientamento.nota_extra;
                     const notaDiv = document.getElementById('dyn-nota-extra');
                     notaDiv.style.display = 'block';
-                    notaDiv.innerHTML = `<strong>${umsFormat(nota.titolo)}:</strong> ${umsFormat(nota.testo)}`;
+                    notaDiv.innerHTML = `<strong>${nota.titolo}:</strong> ${nota.testo}`;
                 }
 
                 // Domande Autovalutazione
@@ -3099,16 +2116,13 @@ if (!fileDaCaricare) {
                     domContainer.innerHTML = '';
                     data.orientamento.domande_autovalutazione.forEach(dom => {
                         const li = document.createElement('li');
-                        li.innerHTML = umsFormat(dom);
+                        li.innerText = dom;
                         domContainer.appendChild(li);
                     });
                 }
             }
 
-            } catch (e) { console.error('Orientamento saltato:', e); }
-
             // --- PUNTI CHIAVE (Merge visivo) ---
-            try { // BLINDATURA
             const factorsContainer = document.getElementById('dyn-punti-chiave');
             factorsContainer.innerHTML = '';
             factorsData = {}; 
@@ -3116,18 +2130,16 @@ if (!fileDaCaricare) {
             (data.punti_chiave || []).forEach((punto) => {
                 const key = punto.id;
                 factorsData[key] = { 
-                    title: umsFormat(punto.titolo_esteso), 
-                    body: umsFormat(punto.testo_modale) // gia' HTML vero (<p><strong>): passthrough
+                    title: punto.titolo_esteso, 
+                    body: punto.testo_modale 
                 };
                 
                 const card = document.createElement('div');
                 card.className = 'factor-card';
                 card.setAttribute('onclick', `openFactor('${key}')`);
-                card.innerHTML = `<span class="fc-plus">+</span><strong>${umsFormat(punto.titolo_breve)}</strong><small>${umsFormat(punto.sottotitolo)}</small>`;
+                card.innerHTML = `<span class="fc-plus">+</span><strong>${punto.titolo_breve}</strong><small>${punto.sottotitolo}</small>`;
                 factorsContainer.appendChild(card);
             });
-
-            } catch (e) { console.error('Punti chiave saltati:', e); }
 
             // --- RESTO DEI CONTENUTI ---
             if (data.podcast_url) {
@@ -3140,35 +2152,33 @@ if (!fileDaCaricare) {
                 document.getElementById('dyn-video-link').href = data.video_sintesi_url;
             }
 
-            // Riassunto — umsFormat applicato titolo e per singolo blocco di testo
+            // Riassunto
             const riassuntoContainer = document.getElementById('dyn-riassuntone-container');
             riassuntoContainer.innerHTML = '';
             (data.riassuntone || []).forEach(macro => {
-                try { // BLINDATURA — un macro malformato viene saltato, non uccide la lezione
                 const buf = [];
-                buf.push(`<h3>${umsFormat(macro.titolo)}</h3>`);
+                buf.push(`<h3>${macro.titolo}</h3>`);
                 if (macro.testo) {
-                    chunkParagraphs(macro.testo).forEach(chunk => buf.push(`<p>${umsFormat(chunk)}</p>`));
+                    const chunkedText = chunkText(macro.testo);
+                    buf.push(`<div class="riassunto-testo">${chunkedText}</div>`);
                 }
                 if (macro.check_points && macro.check_points.length > 0) {
                     buf.push(`<div class="cornell-box"><span class="cp-label">Check Point</span>`);
                     macro.check_points.forEach(cp => {
-                        buf.push(`<p class="cornell-question">${umsFormat(cp.domanda)}</p>`);
-                        buf.push(`<p class="cornell-answer">${umsFormat(cp.risposta)}</p>`);
+                        buf.push(`<p class="cornell-question">${cp.domanda}</p>`);
+                        buf.push(`<p class="cornell-answer">${cp.risposta}</p>`);
                     });
                     buf.push(`</div>`);
                 }
                 riassuntoContainer.insertAdjacentHTML('beforeend', buf.join(''));
-                } catch (e) { console.error('Macro riassuntone saltato:', e); }
             });
 
             // --- ASSISTENTE IA ---
-            try { // BLINDATURA
             // TASK 5 — fix: questi campi non venivano mai popolati, restando bloccati su "Caricamento…"
             if (data.assistente_ia) {
                 const ia = data.assistente_ia;
-                document.getElementById('dyn-ia-nome').innerHTML = umsFormat(ia.nome || "Assistente IA");
-                document.getElementById('dyn-ia-sottotesto').innerHTML = umsFormat(ia.sottotesto || "");
+                document.getElementById('dyn-ia-nome').innerText = ia.nome || "Assistente IA";
+                document.getElementById('dyn-ia-sottotesto').innerText = ia.sottotesto || "";
                 const iaLink = document.getElementById('dyn-ia-url');
                 if (ia.url) {
                     iaLink.href = ia.url;
@@ -3176,12 +2186,40 @@ if (!fileDaCaricare) {
                     iaLink.href = "#";
                 }
             }
-
-            } catch (e) { console.error('Assistente IA saltato:', e); }
-
-            // --- IL SUPER QUIZ ---
-            try { renderSuperQuiz(data.il_super_quiz); } catch (e) { console.error('Quiz:', e); }
         }
+
+        // =========================================================================
+        // TASK 6 — IL SUPER QUIZ in file JSON separato (cartella "super-quiz/")
+        // =========================================================================
+        // Il file principale della lezione (es. didattica/lezione-7.json) NON contiene
+        // più il quiz al suo interno. Il quiz vive in un file a sé, con lo STESSO NOME
+        // del file della lezione ma dentro la cartella "super-quiz/" (qualsiasi sia la
+        // cartella tematica di partenza). Esempio:
+        //   lezione caricata da:  storia-educazione/lezione-12.json
+        //   quiz cercato in:      super-quiz/lezione-12.json
+        function ricavaPercorsoQuiz(percorsoLezione) {
+            const nomeFile = percorsoLezione.split('/').pop();
+            return `super-quiz/${nomeFile}`;
+        }
+
+        async function caricaSuperQuiz(percorsoLezione) {
+            const percorsoQuiz = ricavaPercorsoQuiz(percorsoLezione);
+            try {
+                const response = await fetch(decodeURIComponent(percorsoQuiz));
+                if (!response.ok) {
+                    // Nessun file di quiz per questa lezione: non è un errore bloccante,
+                    // semplicemente questa lezione non ha ancora un Super Quiz pubblicato.
+                    renderSuperQuiz([]);
+                    return;
+                }
+                const quizData = await response.json();
+                renderSuperQuiz(quizData.il_super_quiz || []);
+            } catch (error) {
+                console.warn("Super Quiz non disponibile per questa lezione:", error);
+                renderSuperQuiz([]);
+            }
+        }
+
         // =========================================================================
         // TASK 5 — IL SUPER QUIZ
         // =========================================================================
@@ -3189,7 +2227,7 @@ if (!fileDaCaricare) {
             const container = document.getElementById('dyn-super-quiz');
             if (!container) return;
             container.innerHTML = '';
-            superQuizData = Array.isArray(quizArr) ? quizArr : []; // dati sporchi -> nota, non crash
+            superQuizData = quizArr || [];
 
             if (superQuizData.length === 0) {
                 container.innerHTML = '<p class="quiz-empty-note">Quiz non disponibile per questa lezione.</p>';
@@ -3204,7 +2242,7 @@ if (!fileDaCaricare) {
 
                 const question = document.createElement('p');
                 question.className = 'quiz-question';
-                question.innerHTML = (qIdx + 1) + '. ' + umsFormat(q.domanda);
+                question.innerText = `${qIdx + 1}. ${q.domanda}`;
                 card.appendChild(question);
 
                 const optsWrap = document.createElement('div');
@@ -3214,7 +2252,7 @@ if (!fileDaCaricare) {
                     const btn = document.createElement('button');
                     btn.className = 'quiz-option';
                     btn.type = 'button';
-                    btn.innerHTML = umsFormat(opt.testo);
+                    btn.innerText = opt.testo;
                     btn.addEventListener('click', () => quizAnswer(qIdx, oIdx));
                     optsWrap.appendChild(btn);
                 });
@@ -3250,7 +2288,7 @@ if (!fileDaCaricare) {
             const explDiv = document.getElementById(`quiz-expl-${qIdx}`);
             explDiv.className = 'quiz-explanation ' + (chosen.corretta ? 'quiz-explanation-correct' : 'quiz-explanation-incorrect');
             explDiv.style.display = 'block';
-            explDiv.innerHTML = `<strong>${chosen.corretta ? '<svg class="ums-ic" aria-hidden="true"><use href="#ic-check"/></svg> Risposta corretta' : '<svg class="ums-ic" aria-hidden="true"><use href="#ic-x"/></svg> Risposta errata'}</strong>${umsFormat(q.spiegazione || chosen.spiegazione || '')}`;
+            explDiv.innerHTML = `<strong>${chosen.corretta ? '✅ Risposta corretta' : '❌ Risposta errata'}</strong>${q.spiegazione || chosen.spiegazione || ''}`;
         }
 
         // =========================================================================
@@ -3261,7 +2299,6 @@ if (!fileDaCaricare) {
             const content = document.getElementById('master-content');
             btn.classList.toggle('active');
             content.classList.toggle('open');
-            btn.setAttribute('aria-expanded', content.classList.contains('open') ? 'true' : 'false'); // FIX 7
         }
 
         // =========================================================================
@@ -3270,7 +2307,6 @@ if (!fileDaCaricare) {
         function setupAccordions() {
             const accs = document.querySelectorAll('.accordion-header');
             accs.forEach(acc => {
-                acc.setAttribute('aria-expanded', 'false'); // FIX 7 — accessibilità screen reader
                 acc.addEventListener('click', function(e) {
                     e.stopPropagation();
                     this.classList.toggle('active');
@@ -3280,12 +2316,10 @@ if (!fileDaCaricare) {
                         panel.style.maxHeight = null;
                         panel.classList.remove('active');
                         if (icon) icon.textContent = '+';
-                        this.setAttribute('aria-expanded', 'false'); // FIX 7
                     } else {
                         panel.classList.add('active');
                         panel.style.maxHeight = panel.scrollHeight + 15000 + 'px';
                         if (icon) icon.textContent = '−';
-                        this.setAttribute('aria-expanded', 'true'); // FIX 7
                     }
                 });
             });
@@ -3311,7 +2345,7 @@ if (!fileDaCaricare) {
         // MODAL — PUNTI CHIAVE
         // =========================================================================
         function openFactor(key) {
-            document.getElementById('m-title').innerHTML = factorsData[key].title;
+            document.getElementById('m-title').innerText = factorsData[key].title;
             document.getElementById('m-body').innerHTML = factorsData[key].body;
             document.getElementById('factor-modal').classList.add('open');
         }
@@ -3346,12 +2380,8 @@ if (!fileDaCaricare) {
             counter.innerText = `Carte da studiare: ${activeCards.length}`;
             deck.style.opacity = '0.5';
             setTimeout(() => {
-                // FIX — PRIMA: innerText, quindi "<br>" nel JSON delle flashcard
-                // (es. elenchi puntati nel campo "back") appariva come testo
-                // letterale invece di andare a capo. Ora innerHTML + umsFormat,
-                // coerente con il popup mobile che già usava innerHTML.
-                document.getElementById('fc-front-text').innerHTML = umsFormat(card.front);
-                document.getElementById('fc-back-text').innerHTML = umsFormat(card.back);
+                document.getElementById('fc-front-text').innerText = card.front;
+                document.getElementById('fc-back-text').innerText = card.back;
                 document.getElementById('fc-back-text').scrollTop = 0;
                 deck.classList.remove('flipped');
                 deck.style.opacity = '1';
@@ -3365,7 +2395,7 @@ if (!fileDaCaricare) {
             if (e) e.stopPropagation();
             if (window.innerWidth <= 900) {
                 const card = activeCards[currentCardIndex];
-                document.getElementById('fc-mobile-body').innerHTML = umsFormat(card.back);
+                document.getElementById('fc-mobile-body').innerHTML = card.back;
                 document.getElementById('fc-mobile-modal').style.display = 'flex';
             } else { toggleFlip(); }
         }
@@ -3405,7 +2435,7 @@ if (!fileDaCaricare) {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
             toast.className = `toast toast-${type}`;
-            toast.textContent = umsT(message); // i18n — i toast parlano la lingua della pagina
+            toast.innerText = message;
             container.appendChild(toast);
             void toast.offsetWidth;
             toast.classList.add('show');
@@ -3450,15 +2480,11 @@ if (!fileDaCaricare) {
             });
         }
         function setupNotesAutoScroll() {
-            // FIX 1 — prima TUTTE le textarea condividevano la stessa chiave localStorage
-            // (scrivere in una sovrascriveva le altre, e gli appunti "migravano" tra lezioni).
-            // Ora la chiave è unica per lezione E per area.
-            document.querySelectorAll('.notes-area').forEach((area, idx) => {
-                const areaKey = STORAGE_KEY + '::' + umsLessonKey + '::' + idx;
-                const saved = localStorage.getItem(areaKey);
+            document.querySelectorAll('.notes-area').forEach(area => {
+                const saved = localStorage.getItem(STORAGE_KEY);
                 if (saved) area.value = saved;
                 area.addEventListener('input', function() {
-                    try { localStorage.setItem(areaKey, this.value); } catch(e) {}
+                    try { localStorage.setItem(STORAGE_KEY, this.value); } catch(e) {}
                 });
                 area.addEventListener('keydown', function(e) {
                     if (e.key === 'Enter') requestAnimationFrame(() => { this.scrollTop = this.scrollHeight; });
@@ -3484,15 +2510,7 @@ if (!fileDaCaricare) {
             ]
         };
 
-        // UPGRADE PAUSA — stato: un solo set di parole (quelle della lezione),
-        // tradotto via API quando l'utente cambia lingua; Sudoku come gioco alternativo.
-        let wsBaseWords = [];      // parole della lezione in italiano (top 20)
-        let wsCurrentWords = [];   // parole nella lingua corrente della pagina
-        let pausaLang = 'it';
-        let pausaGame = 'words';
-        let wsRenderedLang = 'it'; // lingua con cui è stata generata l'ultima griglia
-        const PAUSA_NONLATIN = new Set(['bg', 'el', 'zh-CN', 'ar', 'hi', 'ru', 'ja']);
-
+        let wsLang = 'it';
         let wsSize = 12;
         let wsGrid = [];
         let wsActiveWords = [];
@@ -3501,131 +2519,11 @@ if (!fileDaCaricare) {
         let wsStartIdx = -1;
         let wsSelection = [];
 
-        function pausaSetGame(game) {
-            pausaGame = game;
-            [['words', 'ws-btn-words', 'ws-game'],
-             ['sudoku', 'ws-btn-sudoku', 'sd-game'],
-             ['sol', 'ws-btn-sol', 'sol-game']].forEach(([g, btnId, panelId]) => {
-                const btn = document.getElementById(btnId);
-                const panel = document.getElementById(panelId);
-                if (btn) btn.classList.toggle('active', game === g);
-                if (panel) panel.style.display = game === g ? 'block' : 'none';
-            });
-            if (game === 'sudoku' && !sdReady) sdNewGame();
-            if (game === 'sol' && !solReady) solNewGame();
-            // FIX — lingua cambiata mentre si era su un altro gioco: griglia da rifare
-            if (game === 'words' && wsRenderedLang !== pausaLang) wsNewGame();
-        }
-
-        // =========================================================================
-        // MOTORE i18n — perche' non il widget: Google Translate traduce SOLO cio'
-        // che entra nel viewport, quindi ignorava sia la vecchia "banca parole"
-        // fuori schermo sia i toast (vivono 3 secondi). Qui, al cambio lingua,
-        // UNA chiamata batch all'endpoint di Google costruisce un dizionario per
-        // TUTTE le stringhe dinamiche: toast, stati dei giochi e parole del
-        // crucipuzzle. Gli elementi coinvolti sono notranslate: li gestiamo noi.
-        // Se la rete fallisce, tutto resta in italiano senza errori.
-        // =========================================================================
-        const UMS_STRINGS = [
-            'Concetto rimosso.',
-            'Nessun concetto da esportare.',
-            'Apertura finestra di stampa...',
-            "Seleziona testo all'interno dello stesso blocco per sottolineare.",
-            'Sottolineatura rimossa.',
-            'Grande! Continua così.',
-            'Nessun problema, la rivedremo dopo.',
-            'Scrivi prima qualcosa!',
-            'Appunti copiati!',
-            'Errore nella copia.',
-            'Appunti scaricati!',
-            'Trascina o tocca per selezionare le lettere.',
-            'Trovate:',
-            'Tocca una casella vuota e scegli un numero.',
-            'Griglia completa, ma ci sono conflitti: correggi le caselle in terracotta.',
-            'Mazzo rigirato.',
-            'Tocca il mazzo per pescare, trascina le carte per spostarle.'
-        ];
-        let umsDict = {};
-
-        // Pulisce le parole per la griglia: maiuscole, senza accenti, solo A-Z, 4-11 lettere
-        function wsSanitizeWords(arr) {
-            const out = arr.map(w =>
-                String(w).toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^A-Z]/g, '')
-            );
-            return [...new Set(out.filter(w => w.length >= 4 && w.length <= 11))];
-        }
-
-        function umsT(s) {
-            return umsDict[s] || s;
-        }
-
-        async function umsBuildDict(lang) {
-            umsDict = {};
-            if (lang === 'it') return;
-            const strings = UMS_STRINGS.concat(wsBaseWords.map(w => w.toLowerCase()));
-            const q = encodeURIComponent(strings.join('\n'));
-            const res = await fetch('https://translate.googleapis.com/translate_a/single?client=gtx&sl=it&tl=' + encodeURIComponent(lang) + '&dt=t&q=' + q);
-            if (!res.ok) throw new Error('translate http ' + res.status);
-            const data = await res.json();
-            const out = (data[0] || []).map(seg => seg[0]).join('').split('\n');
-            if (out.length !== strings.length) throw new Error('translate: righe disallineate');
-            strings.forEach((s, i) => { umsDict[s] = (out[i] || '').trim() || s; });
-            console.log('[UMS i18n] dizionario pronto per', lang, '(' + strings.length + ' voci)');
-        }
-
-        async function pausaOnLanguageChange(lang) {
-            pausaLang = lang;
-            const wordsBtn = document.getElementById('ws-btn-words');
-            if (PAUSA_NONLATIN.has(lang)) {
-                // niente crucipuzzle per alfabeti non latini: Sudoku e Solitario
-                // funzionano ovunque (numeri e carte sono universali)
-                if (pausaGame === 'words') pausaSetGame('sudoku');
-                if (wordsBtn) wordsBtn.style.display = 'none';
-            } else if (wordsBtn) {
-                wordsBtn.style.display = '';
-            }
-
-            try { await umsBuildDict(lang); }
-            catch (e) { console.error('[UMS i18n] traduzione non disponibile:', e); umsDict = {}; }
-
-            // parole del crucipuzzle nella nuova lingua
-            if (lang === 'it') {
-                wsCurrentWords = wsBaseWords.slice();
-            } else {
-                const clean = wsSanitizeWords(wsBaseWords.map(w => umsDict[w.toLowerCase()] || ''));
-                if (clean.length >= 5) wsCurrentWords = clean;
-            }
-            if (pausaGame === 'words' && !PAUSA_NONLATIN.has(lang)) wsNewGame();
-
-            // stati a video riallineati alla nuova lingua
-            const wsSt = document.getElementById('ws-status');
-            if (wsSt) wsSt.innerText = umsT('Trascina o tocca per selezionare le lettere.');
-            if (pausaGame === 'sudoku' && typeof sdRefresh === 'function' && sdReady) sdRefresh();
-            const solSt = document.getElementById('sol-status');
-            if (solSt) solSt.innerText = umsT('Tocca il mazzo per pescare, trascina le carte per spostarle.');
-        }
-
-        // Estrae le parole piu' rilevanti dal testo della lezione.
-        // Rilevanza = frequenza x lunghezza (i termini tecnici sono lunghi e ripetuti),
-        // dopo aver filtrato le parole "vuote" della lingua italiana.
-        function wsExtractLessonWords() {
-            const cont = document.getElementById('dyn-riassuntone-container');
-            const title = document.getElementById('dyn-title');
-            const src = (cont ? cont.textContent : '') + ' ' + (title ? title.textContent : '');
-            const stop = new Set(['ANCHE','COME','DELLA','DELLE','DELLO','DEGLI','SONO','ESSERE','QUESTO','QUESTA','QUESTI','QUESTE','QUELLO','QUELLA','QUELLE','QUELLI','NELLA','NELLE','NELLO','SULLA','SULLE','SULLO','DALLA','DALLE','PERCHE','QUANDO','ALLORA','INFATTI','INOLTRE','TUTTAVIA','QUINDI','DUNQUE','OGNI','TUTTI','TUTTE','TUTTO','TUTTA','MOLTO','MOLTI','MOLTE','MENO','VIENE','VENGONO','PUO','POSSONO','POSSIAMO','DEVE','DEVONO','FANNO','STATO','STATA','STATI','STATE','AVERE','HANNO','ABBIAMO','ALTRO','ALTRA','ALTRI','ALTRE','PROPRIO','PROPRIA','ATTRAVERSO','SECONDO','MENTRE','ANCORA','SEMPRE','PRIMA','DOPO','CONTRO','VERSO','SENZA','ALCUNI','ALCUNE','CIOE','OVVERO','ESEMPIO','PARTE','MODO','CASO','FATTO','COSA','COSE','ANNI','ANNO','SOLO','STESSO','STESSA','LORO','NOSTRO','NOSTRA','QUALE','QUALI','INVECE','OSSIA','TRAMITE','PRESSO','DENTRO','FUORI','SOPRA','SOTTO','GRAZIE','PUNTO','LIVELLO']);
-            const freq = {};
-            src.toUpperCase()
-               .normalize('NFD').replace(/[\u0300-\u036f]/g, '')  // À -> A, È -> E ecc.
-               .replace(/[^A-Z]+/g, ' ')
-               .split(' ')
-               .forEach(w => {
-                   if (w.length < 5 || w.length > 11) return; // deve entrare nella griglia 12x12
-                   if (stop.has(w)) return;
-                   freq[w] = (freq[w] || 0) + 1;
-               });
-            return Object.keys(freq)
-                .sort((a, b) => (freq[b] * b.length) - (freq[a] * a.length))
-                .slice(0, 20);
+        function wsSetLang(lang) {
+            wsLang = lang;
+            document.getElementById('ws-btn-it').classList.toggle('active', lang === 'it');
+            document.getElementById('ws-btn-en').classList.toggle('active', lang === 'en');
+            wsNewGame();
         }
 
         function wsInit() {
@@ -3634,18 +2532,16 @@ if (!fileDaCaricare) {
 
         function wsNewGame() {
             document.getElementById('ws-win-msg').style.display = 'none';
-            document.getElementById('ws-status').innerText = umsT('Trascina o tocca per selezionare le lettere.');
+            document.getElementById('ws-status').innerText = 'Trascina o tocca per selezionare le lettere.';
 
-            wsRenderedLang = pausaLang; // FIX — per rigenerare se si torna qui dopo un cambio lingua
-            const source = wsCurrentWords.length >= 5 ? wsCurrentWords : WS_WORDS.it;
-            const pool = [...source].sort(() => 0.5 - Math.random()).slice(0, 5);
+            const pool = [...WS_WORDS[wsLang]].sort(() => 0.5 - Math.random()).slice(0, 5);
             wsActiveWords = pool;
             wsFoundCount = 0;
 
             wsGrid = Array(wsSize).fill(0).map(() => Array(wsSize).fill(''));
 
             const dirs = [[0,1],[1,0],[1,1],[0,-1],[-1,0],[-1,-1],[1,-1],[-1,1]];
-            const abc = pausaLang === 'it' ? 'ABCDEFGHILMNOPQRSTUVZ' : 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const abc = 'ABCDEFGHILMNOPQRSTUVZ';
 
             for (const word of wsActiveWords) {
                 let placed = false, attempts = 0;
@@ -3741,7 +2637,7 @@ if (!fileDaCaricare) {
                     if (tag && !tag.classList.contains('ws-done')) {
                         tag.classList.add('ws-done');
                         wsFoundCount++;
-                        document.getElementById('ws-status').innerText = umsT('Trovate:') + ` ${wsFoundCount} / ${wsActiveWords.length}`;
+                        document.getElementById('ws-status').innerText = `Trovate: ${wsFoundCount} / ${wsActiveWords.length}`;
                         if (wsFoundCount === wsActiveWords.length) {
                             setTimeout(() => {
                                 document.getElementById('ws-win-msg').style.display = 'block';
@@ -3762,970 +2658,6 @@ if (!fileDaCaricare) {
             window.addEventListener('touchmove', wsMove, { passive: false });
             window.addEventListener('touchend', wsEnd);
         }
-
-        // =========================================================================
-        // UPGRADE — SUDOKU
-        // Generatore con backtracking randomizzato + verifica di UNICITA' della
-        // soluzione: ogni cella viene svuotata solo se lo schema resta risolvibile
-        // in un solo modo. Tre livelli: gli indizi di partenza determinano la
-        // difficolta' (facile 40, medio 32, difficile 26).
-        // =========================================================================
-        let sdSolution = [], sdPuzzle = [], sdUser = [], sdSel = -1;
-        let sdDiff = 'facile', sdReady = false;
-        const SD_CLUES = { facile: 40, medio: 32, difficile: 26 };
-
-        function sdShuffleArr(a) {
-            for (let i = a.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [a[i], a[j]] = [a[j], a[i]];
-            }
-            return a;
-        }
-        function sdFindEmpty(g) {
-            for (let i = 0; i < 81; i++) if (g[i] === 0) return i;
-            return -1;
-        }
-        function sdOk(g, i, v) {
-            const r = Math.floor(i / 9), c = i % 9;
-            for (let k = 0; k < 9; k++) {
-                if (g[r * 9 + k] === v || g[k * 9 + c] === v) return false;
-            }
-            const br = r - r % 3, bc = c - c % 3;
-            for (let rr = br; rr < br + 3; rr++)
-                for (let cc = bc; cc < bc + 3; cc++)
-                    if (g[rr * 9 + cc] === v) return false;
-            return true;
-        }
-        function sdFill(g) {
-            const i = sdFindEmpty(g);
-            if (i < 0) return true;
-            for (const v of sdShuffleArr([1,2,3,4,5,6,7,8,9])) {
-                if (sdOk(g, i, v)) {
-                    g[i] = v;
-                    if (sdFill(g)) return true;
-                    g[i] = 0;
-                }
-            }
-            return false;
-        }
-        function sdCountSolutions(g, limit) {
-            const i = sdFindEmpty(g);
-            if (i < 0) return 1;
-            let n = 0;
-            for (let v = 1; v <= 9 && n < limit; v++) {
-                if (sdOk(g, i, v)) {
-                    g[i] = v;
-                    n += sdCountSolutions(g, limit - n);
-                    g[i] = 0;
-                }
-            }
-            return n;
-        }
-        function sdMakePuzzle(clues) {
-            const solution = Array(81).fill(0);
-            sdFill(solution);
-            const puzzle = solution.slice();
-            const target = 81 - clues;
-            let removed = 0;
-            for (const i of sdShuffleArr([...Array(81).keys()])) {
-                if (removed >= target) break;
-                const bak = puzzle[i];
-                puzzle[i] = 0;
-                if (sdCountSolutions(puzzle.slice(), 2) !== 1) {
-                    puzzle[i] = bak; // toglierla renderebbe la soluzione ambigua
-                } else {
-                    removed++;
-                }
-            }
-            return { puzzle, solution };
-        }
-
-        function sdSetDiff(d) {
-            sdDiff = d;
-            ['facile','medio','difficile'].forEach(k =>
-                document.getElementById('sd-btn-' + k).classList.toggle('active', k === d));
-            sdNewGame();
-        }
-
-        function sdNewGame() {
-            const { puzzle, solution } = sdMakePuzzle(SD_CLUES[sdDiff]);
-            sdPuzzle = puzzle;
-            sdSolution = solution;
-            sdUser = puzzle.slice();
-            sdSel = -1;
-            sdReady = true;
-            document.getElementById('sd-win-msg').style.display = 'none';
-            document.getElementById('sd-status').innerText = umsT('Tocca una casella vuota e scegli un numero.');
-            sdRenderPad();
-            sdRender();
-        }
-
-        function sdRender() {
-            const gridEl = document.getElementById('sd-grid');
-            let html = '';
-            for (let i = 0; i < 81; i++) {
-                const fixed = sdPuzzle[i] !== 0;
-                const v = sdUser[i];
-                html += `<div class="sd-cell${fixed ? ' sd-fixed' : ''}" data-idx="${i}">${v !== 0 ? v : ''}</div>`;
-            }
-            gridEl.innerHTML = html;
-            gridEl.querySelectorAll('.sd-cell').forEach(cell => {
-                cell.addEventListener('click', () => sdSelect(parseInt(cell.dataset.idx)));
-            });
-            sdRefresh();
-        }
-
-        function sdRenderPad() {
-            const pad = document.getElementById('sd-pad');
-            if (pad.childElementCount) return;
-            let html = '';
-            for (let v = 1; v <= 9; v++) html += `<button type="button" onclick="sdInput(${v})">${v}</button>`;
-            html += '<button type="button" onclick="sdInput(0)" aria-label="Cancella"><svg class="ums-ic" aria-hidden="true"><use href="#ic-x"/></svg></button>';
-            pad.innerHTML = html;
-        }
-
-        function sdSelect(i) {
-            sdSel = i;
-            sdRefresh();
-        }
-
-        function sdInput(v) {
-            if (sdSel < 0 || sdPuzzle[sdSel] !== 0) return;
-            sdUser[sdSel] = v;
-            const cell = document.querySelector(`.sd-cell[data-idx="${sdSel}"]`);
-            if (cell) cell.textContent = v !== 0 ? v : '';
-            sdRefresh();
-        }
-
-        // Trova le celle in conflitto (numero duplicato in riga, colonna o riquadro)
-        function sdConflicts() {
-            const bad = new Set();
-            const groups = [];
-            for (let r = 0; r < 9; r++) groups.push([...Array(9).keys()].map(c => r * 9 + c));
-            for (let c = 0; c < 9; c++) groups.push([...Array(9).keys()].map(r => r * 9 + c));
-            for (let br = 0; br < 9; br += 3)
-                for (let bc = 0; bc < 9; bc += 3) {
-                    const g = [];
-                    for (let r = br; r < br + 3; r++)
-                        for (let c = bc; c < bc + 3; c++) g.push(r * 9 + c);
-                    groups.push(g);
-                }
-            for (const g of groups) {
-                const seen = {};
-                for (const i of g) {
-                    const v = sdUser[i];
-                    if (v === 0) continue;
-                    if (seen[v] !== undefined) { bad.add(i); bad.add(seen[v]); }
-                    else seen[v] = i;
-                }
-            }
-            return bad;
-        }
-
-        function sdRefresh() {
-            // UPGRADE — niente correzione in tempo reale: segnalare l'errore a ogni
-            // mossa invitava a tirare a indovinare. Si gioca liberi; il controllo
-            // scatta SOLO quando la griglia e' completa.
-            const filled = sdUser.every(v => v !== 0);
-            const bad = filled ? sdConflicts() : new Set();
-            document.querySelectorAll('.sd-cell').forEach(cell => {
-                const i = parseInt(cell.dataset.idx);
-                cell.classList.toggle('sd-sel', i === sdSel);
-                cell.classList.toggle('sd-err', bad.has(i) && sdPuzzle[i] === 0);
-            });
-            if (!filled) {
-                document.getElementById('sd-status').innerText = umsT('Tocca una casella vuota e scegli un numero.');
-                return;
-            }
-            if (bad.size === 0) {
-                // griglia completa e senza conflitti = soluzione valida (ed e' unica)
-                document.getElementById('sd-status').innerText = '';
-                setTimeout(() => {
-                    document.getElementById('sd-win-msg').style.display = 'block';
-                }, 300);
-            } else {
-                document.getElementById('sd-status').innerText = umsT('Griglia completa, ma ci sono conflitti: correggi le caselle in terracotta.');
-            }
-        }
-
-        // Tastiera fisica: numeri, canc, frecce
-        document.addEventListener('keydown', (e) => {
-            const sdGame = document.getElementById('sd-game');
-            if (!sdGame || sdGame.style.display === 'none') return;
-            const ae = document.activeElement;
-            if (ae && (ae.tagName === 'TEXTAREA' || ae.tagName === 'INPUT')) return;
-            if (e.key >= '1' && e.key <= '9') { sdInput(parseInt(e.key)); e.preventDefault(); }
-            else if (e.key === 'Backspace' || e.key === 'Delete' || e.key === '0') { sdInput(0); e.preventDefault(); }
-            else if (e.key.startsWith('Arrow') && sdSel >= 0) {
-                const delta = { ArrowUp: -9, ArrowDown: 9, ArrowLeft: -1, ArrowRight: 1 }[e.key];
-                const next = sdSel + delta;
-                if (next >= 0 && next < 81) { sdSel = next; sdRefresh(); }
-                e.preventDefault();
-            }
-        });
-
-        // =========================================================================
-        // UPGRADE — SOLITARIO (variante a seme unico)
-        // Sul tavolo si impilano carte decrescenti dello STESSO seme; basi per
-        // seme dall'Asso al Re; mazzo con rigiro. Drag con clone + elementFromPoint
-        // (mouse e touch), destinazione valida illuminata d'oro.
-        // =========================================================================
-        const SOL_VALS = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
-        const SOL_SUITS = ['\u2665','\u2666','\u2663','\u2660'];
-        let solDeck = [], solReady = false;
-        let solDragEl = null, solClone = null, solStartX = 0, solStartY = 0, solLastHl = null;
-
-        function solOffset() { return window.innerWidth < 560 ? 13 : 22; }
-
-        function solNewGame() {
-            solReady = true;
-            solDeck = [];
-            document.getElementById('sol-win-msg').style.display = 'none';
-            document.getElementById('sol-status').innerText = umsT('Tocca il mazzo per pescare, trascina le carte per spostarle.');
-            document.querySelectorAll('#sol-board .sol-pile').forEach(p => {
-                p.innerHTML = p.classList.contains('sol-found') ? p.dataset.suit : '';
-            });
-            for (const s of SOL_SUITS) {
-                for (const v of SOL_VALS) {
-                    solDeck.push({ s, v, r: SOL_VALS.indexOf(v) + 1, c: (s === '\u2665' || s === '\u2666') ? 'red' : 'black' });
-                }
-            }
-            solDeck.sort(() => Math.random() - 0.5);
-            const off = solOffset();
-            for (let i = 1; i <= 7; i++) {
-                const p = document.getElementById('sol-t' + i);
-                for (let j = 0; j < i; j++) {
-                    const card = solCardEl(solDeck.pop(), j === i - 1);
-                    card.style.top = (j * off) + 'px';
-                    p.appendChild(card);
-                }
-            }
-            solStockFace();
-            const stock = document.getElementById('sol-stock');
-            stock.onclick = solStockClick;
-        }
-
-        function solCardEl(data, up) {
-            const div = document.createElement('div');
-            div.className = 'sol-card ' + (up ? 'sol-' + data.c : 'sol-hidden');
-            div.dataset.r = data.r;
-            div.dataset.s = data.s;
-            div.dataset.c = data.c;
-            div.dataset.v = data.v;
-            if (up) div.innerHTML = '<span class="sol-v">' + data.v + '</span><span class="sol-s">' + data.s + '</span>';
-            if (up) solBindDrag(div);
-            return div;
-        }
-
-        function solBindDrag(el) {
-            el.addEventListener('mousedown', solStartDrag);
-            el.addEventListener('touchstart', solStartDrag, { passive: false });
-        }
-
-        function solStockFace() {
-            const stock = document.getElementById('sol-stock');
-            stock.querySelectorAll('.sol-card, .sol-redeal').forEach(e => e.remove());
-            if (solDeck.length > 0) {
-                const back = document.createElement('div');
-                back.className = 'sol-card sol-hidden';
-                back.style.top = '0';
-                stock.appendChild(back);
-            } else {
-                const re = document.createElement('div');
-                re.className = 'sol-redeal';
-                re.textContent = '\u21BB';
-                stock.appendChild(re);
-            }
-        }
-
-        function solStockClick() {
-            const waste = document.getElementById('sol-waste');
-            if (solDeck.length === 0) {
-                if (waste.querySelectorAll('.sol-card').length > 0) {
-                    Array.from(waste.querySelectorAll('.sol-card')).reverse().forEach(c => {
-                        solDeck.push({ s: c.dataset.s, v: c.dataset.v, r: parseInt(c.dataset.r), c: c.dataset.c });
-                        c.remove();
-                    });
-                    showToast('Mazzo rigirato.', 'success');
-                    solStockFace();
-                }
-                return;
-            }
-            const data = solDeck.pop();
-            const card = solCardEl(data, true);
-            card.style.top = '0';
-            waste.appendChild(card);
-            solStockFace();
-        }
-
-        function solIsValid(cardEl, pile, stackLen) {
-            const cards = pile.querySelectorAll('.sol-card');
-            const top = cards.length ? cards[cards.length - 1] : null;
-            if (pile.classList.contains('sol-tab')) {
-                if (!top) return true; // colonna vuota: qualsiasi carta
-                if (top.classList.contains('sol-hidden')) return false;
-                return cardEl.dataset.s === top.dataset.s &&
-                       parseInt(cardEl.dataset.r) === parseInt(top.dataset.r) - 1;
-            }
-            if (pile.classList.contains('sol-found')) {
-                if (stackLen > 1) return false;
-                if (cardEl.dataset.s !== pile.dataset.suit) return false;
-                if (!top) return parseInt(cardEl.dataset.r) === 1;
-                return parseInt(cardEl.dataset.r) === parseInt(top.dataset.r) + 1;
-            }
-            return false;
-        }
-
-        function solStack(fromEl) {
-            const stack = [fromEl];
-            let next = fromEl.nextElementSibling;
-            while (next) {
-                if (next.classList && next.classList.contains('sol-card')) stack.push(next);
-                next = next.nextElementSibling;
-            }
-            return stack;
-        }
-
-        function solStartDrag(e) {
-            const target = e.target.closest('.sol-card');
-            if (!target || target.classList.contains('sol-hidden')) return;
-            const parent = target.parentElement;
-            if (parent.id === 'sol-stock') return;
-            if (parent.id === 'sol-waste') {
-                const cards = parent.querySelectorAll('.sol-card');
-                if (target !== cards[cards.length - 1]) return;
-            }
-            e.preventDefault();
-            solDragEl = target;
-            solStartX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
-            solStartY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
-
-            const stack = solStack(target);
-            const rect = target.getBoundingClientRect();
-            const off = solOffset();
-            solClone = document.createElement('div');
-            solClone.id = 'sol-clone';
-            solClone.style.left = rect.left + 'px';
-            solClone.style.top = rect.top + 'px';
-            solClone.style.width = rect.width + 'px';
-            stack.forEach((c, i) => {
-                const copy = c.cloneNode(true);
-                copy.style.top = (i * off) + 'px';
-                copy.style.width = rect.width + 'px';
-                solClone.appendChild(copy);
-                c.style.opacity = '0';
-            });
-            document.body.appendChild(solClone);
-
-            document.addEventListener('mousemove', solMoveDrag);
-            document.addEventListener('touchmove', solMoveDrag, { passive: false });
-            document.addEventListener('mouseup', solEndDrag);
-            document.addEventListener('touchend', solEndDrag);
-        }
-
-        function solMoveDrag(e) {
-            if (!solClone) return;
-            e.preventDefault();
-            const x = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
-            const y = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
-            solClone.style.transform = 'translate(' + (x - solStartX) + 'px, ' + (y - solStartY) + 'px)';
-
-            const below = document.elementFromPoint(x, y);
-            const pile = below ? below.closest('#sol-board .sol-pile') : null;
-            if (solLastHl && solLastHl !== pile) { solLastHl.classList.remove('sol-valid'); solLastHl = null; }
-            if (pile && solIsValid(solDragEl, pile, solStack(solDragEl).length)) {
-                pile.classList.add('sol-valid');
-                solLastHl = pile;
-            }
-        }
-
-        function solEndDrag(e) {
-            if (!solDragEl) return;
-            document.querySelectorAll('.sol-valid').forEach(el => el.classList.remove('sol-valid'));
-            solLastHl = null;
-            document.removeEventListener('mousemove', solMoveDrag);
-            document.removeEventListener('touchmove', solMoveDrag);
-            document.removeEventListener('mouseup', solEndDrag);
-            document.removeEventListener('touchend', solEndDrag);
-
-            const x = e.type.includes('touch') ? e.changedTouches[0].clientX : e.clientX;
-            const y = e.type.includes('touch') ? e.changedTouches[0].clientY : e.clientY;
-            const below = document.elementFromPoint(x, y);
-            const pile = below ? below.closest('#sol-board .sol-pile') : null;
-            const stack = solStack(solDragEl);
-
-            if (pile && solIsValid(solDragEl, pile, stack.length)) {
-                solMoveStack(stack, pile, solDragEl.parentElement);
-            } else {
-                stack.forEach(c => { c.style.opacity = '1'; });
-            }
-            if (solClone) solClone.remove();
-            solClone = null;
-            solDragEl = null;
-        }
-
-        function solMoveStack(stack, target, source) {
-            const off = solOffset();
-            const base = target.classList.contains('sol-tab') ? target.querySelectorAll('.sol-card').length * off : 0;
-            stack.forEach((c, i) => {
-                c.style.opacity = '1';
-                c.style.top = (base + i * off) + 'px';
-                target.appendChild(c);
-            });
-            // scopri l'ultima carta rimasta nella colonna di partenza
-            if (source.classList.contains('sol-tab')) {
-                const rest = source.querySelectorAll('.sol-card');
-                const last = rest.length ? rest[rest.length - 1] : null;
-                if (last && last.classList.contains('sol-hidden')) {
-                    last.classList.remove('sol-hidden');
-                    last.classList.add('sol-' + last.dataset.c);
-                    last.innerHTML = '<span class="sol-v">' + last.dataset.v + '</span><span class="sol-s">' + last.dataset.s + '</span>';
-                    solBindDrag(last);
-                }
-            }
-            if (document.querySelectorAll('#sol-board .sol-found .sol-card').length === 52) {
-                document.getElementById('sol-status').innerText = '';
-                setTimeout(() => { document.getElementById('sol-win-msg').style.display = 'block'; }, 300);
-            }
-        }
-
-        // =========================================================================
-        // UPGRADE — "ACCADDE OGGI"
-        // Rubrica dinamica dall'API "on this day" di Wikipedia Italia (CORS aperto,
-        // nessuna chiave), con TUTTE le categorie: in evidenza, eventi, nascite,
-        // scomparse e ricorrenze. Ogni fatto ha "Scopri di piu'": apre il riassunto
-        // dell'articolo NEL modale del sito, con link alla voce completa.
-        // Riserva curata su culture/giochi/feste del mondo se la rete non risponde.
-        // Il testo NON e' notranslate: viene tradotto insieme alla pagina.
-        // =========================================================================
-        const LS_CURATED = [
-            "Il Sudoku moderno e' esploso in Giappone negli anni Ottanta, ma le sue radici affondano nei quadrati latini studiati dal matematico Eulero nel Settecento.",
-            "Durante la festa di Holi, in India, milioni di persone si lanciano polveri colorate per celebrare l'arrivo della primavera e la vittoria del bene sul male.",
-            "Il Go, nato in Cina piu' di 2.500 anni fa, e' considerato il gioco da tavolo piu' antico ancora praticato nella sua forma originale.",
-            "Alla Tomatina di Bunol, in Spagna, ogni agosto migliaia di persone combattono una battaglia a colpi di pomodori maturi: oltre cento tonnellate in un'ora.",
-            "Nell'antica Roma 'abbandonare le noci' significava diventare adulti: le noci erano il giocattolo piu' diffuso tra i bambini.",
-            "Il primo cruciverba della storia apparve nel 1913 sul New York World, inventato dal giornalista Arthur Wynne.",
-            "In Mongolia si gioca ancora con gli shagai, ossicini di pecora usati da secoli come dadi e pedine.",
-            "Gli scacchi nacquero in India con il nome di chaturanga, 'le quattro divisioni dell'esercito': fanteria, cavalleria, elefanti e carri.",
-            "In Corea del Sud il capodanno lunare, il Seollal, si festeggia indossando l'abito tradizionale hanbok e giocando in famiglia allo yut nori.",
-            "Il Carnevale di Venezia nel Settecento durava cosi' tanto che, tra proroghe e feste, occupava diversi mesi dell'anno."
-        ];
-        const LS_LABELS = {
-            selected: 'In evidenza',
-            events:   'Evento',
-            births:   'Nato oggi',
-            deaths:   'Scomparso oggi',
-            holidays: 'Ricorrenza'
-        };
-        let lsItems = [];
-        let lsShown = [];
-
-        async function lsLoad() {
-            try {
-                const d = new Date();
-                const mm = String(d.getMonth() + 1).padStart(2, '0');
-                const dd = String(d.getDate()).padStart(2, '0');
-                const res = await fetch(`https://it.wikipedia.org/api/rest_v1/feed/onthisday/all/${mm}/${dd}`);
-                if (res.ok) {
-                    const j = await res.json();
-                    Object.keys(LS_LABELS).forEach(cat => {
-                        (j[cat] || []).forEach(e => {
-                            if (!e.text || e.text.length < 25 || e.text.length > 200) return;
-                            const pg = (e.pages && e.pages[0]) || null;
-                            lsItems.push({
-                                label: LS_LABELS[cat],
-                                text: (e.year ? e.year + ' \u2014 ' : '') + e.text,
-                                title: pg ? ((pg.titles && (pg.titles.normalized || pg.titles.display)) || pg.title || '') : '',
-                                extract: pg ? (pg.extract || '') : '',
-                                thumb: (pg && pg.thumbnail) ? pg.thumbnail.source : '',
-                                url: (pg && pg.content_urls && pg.content_urls.desktop) ? pg.content_urls.desktop.page : ''
-                            });
-                        });
-                    });
-                }
-            } catch (e) { /* offline o API ko: si usa la riserva curata */ }
-            lsShuffle();
-        }
-
-        function lsShuffle() {
-            const list = document.getElementById('losapevi-list');
-            if (!list) return;
-            list.innerHTML = '';
-            if (lsItems.length >= 3) {
-                // pesca 3 fatti privilegiando categorie DIVERSE
-                const mixed = [...lsItems].sort(() => 0.5 - Math.random());
-                const usedLabels = new Set();
-                lsShown = [];
-                for (const it of mixed) {
-                    if (lsShown.length >= 3) break;
-                    if (usedLabels.has(it.label)) continue;
-                    usedLabels.add(it.label);
-                    lsShown.push(it);
-                }
-                for (const it of mixed) {
-                    if (lsShown.length >= 3) break;
-                    if (!lsShown.includes(it)) lsShown.push(it);
-                }
-            } else {
-                lsShown = [...LS_CURATED].sort(() => 0.5 - Math.random()).slice(0, 3)
-                    .map(t => ({ label: 'Curiosita\u0300 dal mondo', text: t, url: '' }));
-            }
-            lsShown.forEach((it, idx) => {
-                const p = document.createElement('p');
-                p.className = 'ls-item';
-                const lab = document.createElement('span');
-                lab.className = 'ls-label';
-                lab.textContent = it.label;
-                p.appendChild(lab);
-                p.appendChild(document.createTextNode(' ' + it.text + ' '));
-                if (it.url) {
-                    const btn = document.createElement('button');
-                    btn.type = 'button';
-                    btn.className = 'ls-more';
-                    btn.textContent = 'Scopri di piu\u0300';
-                    btn.addEventListener('click', () => lsOpenArticle(idx));
-                    p.appendChild(btn);
-                }
-                list.appendChild(p);
-            });
-        }
-
-        // Apre la voce Wikipedia NEL modale del sito (stesso stile). Il riassunto
-        // breve compare subito; in background viene caricata l'INTERA sezione
-        // introduttiva della voce (Action API, CORS aperto) per una lettura
-        // piu' lunga e godibile. Se la rete non risponde, resta il riassunto.
-        async function lsOpenArticle(idx) {
-            const it = lsShown[idx];
-            if (!it) return;
-            document.getElementById('m-title').innerText = it.title || 'Accadde Oggi';
-            const body = document.getElementById('m-body');
-            body.innerHTML = '';
-            if (it.thumb) {
-                const img = document.createElement('img');
-                img.src = it.thumb;
-                img.alt = '';
-                img.style.cssText = 'width:100%; max-height:260px; object-fit:cover; border-radius:8px; margin-bottom:1.1rem;';
-                body.appendChild(img);
-            }
-            const holder = document.createElement('div');
-            const p = document.createElement('p');
-            p.textContent = it.extract || it.text;
-            p.style.cssText = 'line-height:1.85; margin-bottom:0.9rem;';
-            holder.appendChild(p);
-            body.appendChild(holder);
-            if (it.url) {
-                const a = document.createElement('a');
-                a.href = it.url;
-                a.target = '_blank';
-                a.rel = 'noopener';
-                a.className = 'btn-ia';
-                a.style.cssText = 'display:inline-block; margin-top:1.1rem;';
-                a.textContent = 'Leggi la voce completa su Wikipedia \u2197';
-                body.appendChild(a);
-            }
-            document.getElementById('factor-modal').classList.add('open');
-
-            // caricamento dell'introduzione completa (di solito 2-4 paragrafi)
-            if (it.title) {
-                try {
-                    const res = await fetch('https://it.wikipedia.org/w/api.php?action=query&prop=extracts&exintro=1&explaintext=1&redirects=1&format=json&origin=*&titles=' + encodeURIComponent(it.title));
-                    if (res.ok) {
-                        const j = await res.json();
-                        const pages = (j.query && j.query.pages) ? Object.values(j.query.pages) : [];
-                        const full = (pages.length && pages[0].extract) ? pages[0].extract.trim() : '';
-                        // sostituisce solo se e' davvero piu' ricco del riassunto breve
-                        if (full && full.length > ((it.extract || '').length + 80)) {
-                            holder.innerHTML = '';
-                            full.split(/\n+/).forEach(par => {
-                                const t = par.trim();
-                                if (!t) return;
-                                const pp = document.createElement('p');
-                                pp.textContent = t;
-                                pp.style.cssText = 'line-height:1.85; margin-bottom:0.9rem;';
-                                holder.appendChild(pp);
-                            });
-                        }
-                    }
-                } catch (e) { /* rete ko: resta il riassunto breve */ }
-            }
-        }
-
-        // =========================================================================
-        // SEZIONE 09 — DATE APPELLI
-        // Bacheca appelli integrata nella lezione: anni -> materie -> date, con
-        // countdown. Il database e' una copia della Bacheca Appelli: quando la
-        // aggiorni, aggiorna anche questo blocco (o estraete un appelli.json
-        // condiviso: basta un fetch al posto della costante).
-        // La sezione si costruisce in un listener SEPARATO e protetto: nessun
-        // suo problema puo' toccare il caricamento della lezione.
-        // =========================================================================
-        const UMS_APPELLI = [
-            { mat: "ARTE E DISEGNO", data: "08/06/2026", ora: "08:30", doc: "CAPRIOTTI GIUSEPPE" },
-            { mat: "ARTE E DISEGNO", data: "22/06/2026", ora: "08:30", doc: "CAPRIOTTI GIUSEPPE" },
-            { mat: "ARTE E DISEGNO", data: "01/07/2026", ora: "08:30", doc: "CAPRIOTTI GIUSEPPE" },
-            { mat: "ARTE E DISEGNO", data: "01/09/2026", ora: "08:30", doc: "CAPRIOTTI GIUSEPPE" },
-            { mat: "ARTE E DISEGNO", data: "25/09/2026", ora: "08:30", doc: "CAPRIOTTI GIUSEPPE" },
-            { mat: "BIBLIORIENTA", data: "04/06/2026", ora: "11:00", doc: "FELICIATI PIERLUIGI" },
-            { mat: "BIBLIORIENTA", data: "15/06/2026", ora: "11:00", doc: "FELICIATI PIERLUIGI" },
-            { mat: "BIBLIORIENTA", data: "06/07/2026", ora: "11:00", doc: "FELICIATI PIERLUIGI" },
-            { mat: "BIBLIORIENTA", data: "07/09/2026", ora: "11:00", doc: "FELICIATI PIERLUIGI" },
-            { mat: "BIBLIORIENTA", data: "25/09/2026", ora: "11:00", doc: "FELICIATI PIERLUIGI" },
-            { mat: "BIOLOGIA GENERALE", data: "28/05/2026", ora: "09:30", doc: "BUONANNO FEDERICO" },
-            { mat: "BIOLOGIA GENERALE", data: "16/06/2026", ora: "09:30", doc: "BUONANNO FEDERICO" },
-            { mat: "BIOLOGIA GENERALE", data: "30/06/2026", ora: "09:30", doc: "BUONANNO FEDERICO" },
-            { mat: "BIOLOGIA GENERALE", data: "03/09/2026", ora: "09:30", doc: "BUONANNO FEDERICO" },
-            { mat: "BIOLOGIA GENERALE", data: "24/09/2026", ora: "09:30", doc: "BUONANNO FEDERICO" },
-            { mat: "BIOLOGIA GENERALE", data: "27/05/2026", ora: "15:00", doc: "ORTENZI CLAUDIO" },
-            { mat: "BIOLOGIA GENERALE", data: "10/06/2026", ora: "15:00", doc: "ORTENZI CLAUDIO" },
-            { mat: "BIOLOGIA GENERALE", data: "24/06/2026", ora: "15:00", doc: "ORTENZI CLAUDIO" },
-            { mat: "BIOLOGIA GENERALE", data: "01/09/2026", ora: "15:00", doc: "ORTENZI CLAUDIO" },
-            { mat: "BIOLOGIA GENERALE", data: "14/09/2026", ora: "15:00", doc: "ORTENZI CLAUDIO" },
-            { mat: "DIDATTICA DELLA MATEMATICA", data: "27/05/2026", ora: "14:45", doc: "TELLONI AGNESE ILARIA" },
-            { mat: "DIDATTICA DELLA MATEMATICA", data: "19/06/2026", ora: "14:45", doc: "TELLONI AGNESE ILARIA" },
-            { mat: "DIDATTICA DELLA MATEMATICA", data: "06/07/2026", ora: "14:45", doc: "TELLONI AGNESE ILARIA" },
-            { mat: "DIDATTICA DELLA MATEMATICA", data: "03/09/2026", ora: "14:45", doc: "TELLONI AGNESE ILARIA" },
-            { mat: "DIDATTICA DELLA MATEMATICA", data: "18/09/2026", ora: "14:45", doc: "TELLONI AGNESE ILARIA" },
-            { mat: "DIDATTICA GENERALE", data: "03/06/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" },
-            { mat: "DIDATTICA GENERALE", data: "17/06/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" },
-            { mat: "DIDATTICA GENERALE", data: "01/07/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" },
-            { mat: "DIDATTICA GENERALE", data: "07/09/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" },
-            { mat: "DIDATTICA GENERALE", data: "21/09/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" },
-            { mat: "EDUCAZIONE ALL'IMMAGINE", data: "08/06/2026", ora: "08:30", doc: "CAPRIOTTI GIUSEPPE" },
-            { mat: "EDUCAZIONE ALL'IMMAGINE", data: "22/06/2026", ora: "08:30", doc: "CAPRIOTTI GIUSEPPE" },
-            { mat: "EDUCAZIONE ALL'IMMAGINE", data: "01/07/2026", ora: "08:30", doc: "CAPRIOTTI GIUSEPPE" },
-            { mat: "EDUCAZIONE ALL'IMMAGINE", data: "01/09/2026", ora: "08:30", doc: "CAPRIOTTI GIUSEPPE" },
-            { mat: "EDUCAZIONE ALL'IMMAGINE", data: "25/09/2026", ora: "08:30", doc: "CAPRIOTTI GIUSEPPE" },
-            { mat: "EDUCAZIONE AMBIENTALE", data: "27/05/2026", ora: "09:00", doc: "ORTENZI CLAUDIO" },
-            { mat: "EDUCAZIONE AMBIENTALE", data: "10/06/2026", ora: "09:00", doc: "ORTENZI CLAUDIO" },
-            { mat: "EDUCAZIONE AMBIENTALE", data: "24/06/2026", ora: "09:00", doc: "ORTENZI CLAUDIO" },
-            { mat: "EDUCAZIONE AMBIENTALE", data: "01/09/2026", ora: "09:00", doc: "ORTENZI CLAUDIO" },
-            { mat: "EDUCAZIONE AMBIENTALE", data: "14/09/2026", ora: "09:00", doc: "ORTENZI CLAUDIO" },
-            { mat: "EDUCAZIONE MOTORIA", data: "09/06/2026", ora: "11:00", doc: "GENTILOZZI CHIARA" },
-            { mat: "EDUCAZIONE MOTORIA", data: "23/06/2026", ora: "11:00", doc: "GENTILOZZI CHIARA" },
-            { mat: "EDUCAZIONE MOTORIA", data: "07/07/2026", ora: "11:00", doc: "GENTILOZZI CHIARA" },
-            { mat: "EDUCAZIONE MOTORIA", data: "08/09/2026", ora: "11:00", doc: "GENTILOZZI CHIARA" },
-            { mat: "EDUCAZIONE MOTORIA", data: "22/09/2026", ora: "11:00", doc: "GENTILOZZI CHIARA" },
-            { mat: "EDUCAZIONE MUSICALE", data: "08/06/2026", ora: "08:30", doc: "STRADA JACOPO" },
-            { mat: "EDUCAZIONE MUSICALE", data: "22/06/2026", ora: "08:30", doc: "STRADA JACOPO" },
-            { mat: "EDUCAZIONE MUSICALE", data: "01/07/2026", ora: "08:30", doc: "STRADA JACOPO" },
-            { mat: "EDUCAZIONE MUSICALE", data: "01/09/2026", ora: "08:30", doc: "STRADA JACOPO" },
-            { mat: "EDUCAZIONE MUSICALE", data: "25/09/2026", ora: "08:30", doc: "STRADA JACOPO" },
-            { mat: "ELEMENTI DI CHIMICA", data: "04/06/2026", ora: "09:00", doc: "TIFI ALFREDO" },
-            { mat: "ELEMENTI DI CHIMICA", data: "19/06/2026", ora: "09:00", doc: "TIFI ALFREDO" },
-            { mat: "ELEMENTI DI CHIMICA", data: "06/07/2026", ora: "09:00", doc: "TIFI ALFREDO" },
-            { mat: "ELEMENTI DI CHIMICA", data: "03/09/2026", ora: "09:00", doc: "TIFI ALFREDO" },
-            { mat: "ELEMENTI DI CHIMICA", data: "18/09/2026", ora: "09:00", doc: "TIFI ALFREDO" },
-            { mat: "FONDAMENTI DELLA MATEMATICA", data: "27/05/2026", ora: "14:45", doc: "TELLONI AGNESE ILARIA" },
-            { mat: "FONDAMENTI DELLA MATEMATICA", data: "19/06/2026", ora: "14:45", doc: "TELLONI AGNESE ILARIA" },
-            { mat: "FONDAMENTI DELLA MATEMATICA", data: "06/07/2026", ora: "14:45", doc: "TELLONI AGNESE ILARIA" },
-            { mat: "FONDAMENTI DELLA MATEMATICA", data: "03/09/2026", ora: "14:45", doc: "TELLONI AGNESE ILARIA" },
-            { mat: "FONDAMENTI DELLA MATEMATICA", data: "18/09/2026", ora: "14:45", doc: "TELLONI AGNESE ILARIA" },
-            { mat: "GEOGRAFIA", data: "27/05/2026", ora: "11:00", doc: "BETTI SIMONE" },
-            { mat: "GEOGRAFIA", data: "15/06/2026", ora: "11:00", doc: "BETTI SIMONE" },
-            { mat: "GEOGRAFIA", data: "29/06/2026", ora: "11:00", doc: "BETTI SIMONE" },
-            { mat: "GEOGRAFIA", data: "07/09/2026", ora: "11:00", doc: "BETTI SIMONE" },
-            { mat: "GEOGRAFIA", data: "21/09/2026", ora: "11:00", doc: "BETTI SIMONE" },
-            { mat: "GRAMMATICA ITALIANA", data: "04/06/2026", ora: "08:00", doc: "PERRONE BEATRICE" },
-            { mat: "GRAMMATICA ITALIANA", data: "18/06/2026", ora: "08:00", doc: "PERRONE BEATRICE" },
-            { mat: "GRAMMATICA ITALIANA", data: "02/07/2026", ora: "08:00", doc: "PERRONE BEATRICE" },
-            { mat: "GRAMMATICA ITALIANA", data: "01/09/2026", ora: "08:00", doc: "PERRONE BEATRICE" },
-            { mat: "GRAMMATICA ITALIANA", data: "17/09/2026", ora: "08:00", doc: "PERRONE BEATRICE" },
-            { mat: "ISTITUZIONI DI DIRITTO PUBBLICO", data: "25/05/2026", ora: "17:00", doc: "LANEVE GIUSEPPE" },
-            { mat: "ISTITUZIONI DI DIRITTO PUBBLICO", data: "09/06/2026", ora: "17:00", doc: "LANEVE GIUSEPPE" },
-            { mat: "ISTITUZIONI DI DIRITTO PUBBLICO", data: "23/06/2026", ora: "17:00", doc: "LANEVE GIUSEPPE" },
-            { mat: "ISTITUZIONI DI DIRITTO PUBBLICO", data: "10/09/2026", ora: "17:00", doc: "LANEVE GIUSEPPE" },
-            { mat: "ISTITUZIONI DI DIRITTO PUBBLICO", data: "24/09/2026", ora: "17:00", doc: "LANEVE GIUSEPPE" },
-            { mat: "LABORATORIO DI LINGUA INGLESE I", data: "29/05/2026", ora: "09:00", doc: "RAMADORI HENRY" },
-            { mat: "LABORATORIO DI LINGUA INGLESE I", data: "12/06/2026", ora: "09:00", doc: "RAMADORI HENRY" },
-            { mat: "LABORATORIO DI LINGUA INGLESE I", data: "26/06/2026", ora: "09:00", doc: "RAMADORI HENRY" },
-            { mat: "LABORATORIO DI LINGUA INGLESE I", data: "02/09/2026", ora: "09:00", doc: "RAMADORI HENRY" },
-            { mat: "LABORATORIO DI LINGUA INGLESE I", data: "16/09/2026", ora: "09:00", doc: "RAMADORI HENRY" },
-            { mat: "LABORATORIO DI LINGUA INGLESE II", data: "29/05/2026", ora: "09:00", doc: "BOLOGNESI ELISA" },
-            { mat: "LABORATORIO DI LINGUA INGLESE II", data: "10/09/2026", ora: "09:00", doc: "BOLOGNESI ELISA" },
-            { mat: "LABORATORIO DI LINGUA INGLESE II", data: "16/06/2026", ora: "11:30", doc: "BOLOGNESI ELISA" },
-            { mat: "LABORATORIO DI LINGUA INGLESE II", data: "30/06/2026", ora: "11:30", doc: "BOLOGNESI ELISA" },
-            { mat: "LABORATORIO DI LINGUA INGLESE II", data: "22/09/2026", ora: "09:00", doc: "BOLOGNESI ELISA" },
-            { mat: "LABORATORIO DI LINGUA INGLESE III", data: "28/05/2026", ora: "09:00", doc: "BOLOGNESI ELISA" },
-            { mat: "LABORATORIO DI LINGUA INGLESE III", data: "16/06/2026", ora: "09:00", doc: "BOLOGNESI ELISA" },
-            { mat: "LABORATORIO DI LINGUA INGLESE III", data: "30/06/2026", ora: "09:00", doc: "BOLOGNESI ELISA" },
-            { mat: "LABORATORIO DI LINGUA INGLESE III", data: "03/09/2026", ora: "09:00", doc: "BOLOGNESI ELISA" },
-            { mat: "LABORATORIO DI LINGUA INGLESE III", data: "17/09/2026", ora: "09:00", doc: "BOLOGNESI ELISA" },
-            { mat: "LABORATORIO DI TECNOLOGIE DIDATTICHE", data: "27/05/2026", ora: "11:30", doc: "LAICI CHIARA" },
-            { mat: "LABORATORIO DI TECNOLOGIE DIDATTICHE", data: "16/06/2026", ora: "11:30", doc: "LAICI CHIARA" },
-            { mat: "LABORATORIO DI TECNOLOGIE DIDATTICHE", data: "30/06/2026", ora: "11:30", doc: "LAICI CHIARA" },
-            { mat: "LABORATORIO DI TECNOLOGIE DIDATTICHE", data: "08/09/2026", ora: "11:30", doc: "LAICI CHIARA" },
-            { mat: "LABORATORIO DI TECNOLOGIE DIDATTICHE", data: "22/09/2026", ora: "11:30", doc: "LAICI CHIARA" },
-            { mat: "LETTERATURA ITALIANA", data: "03/06/2026", ora: "08:00", doc: "LORENZETTI SARA" },
-            { mat: "LETTERATURA ITALIANA", data: "16/06/2026", ora: "08:00", doc: "LORENZETTI SARA" },
-            { mat: "LETTERATURA ITALIANA", data: "30/06/2026", ora: "08:00", doc: "LORENZETTI SARA" },
-            { mat: "LETTERATURA ITALIANA", data: "01/09/2026", ora: "08:00", doc: "LORENZETTI SARA" },
-            { mat: "LETTERATURA ITALIANA", data: "15/09/2026", ora: "08:00", doc: "LORENZETTI SARA" },
-            { mat: "LETTERATURA PER L'INFANZIA", data: "04/06/2026", ora: "09:00", doc: "MEDA JURI" },
-            { mat: "LETTERATURA PER L'INFANZIA", data: "10/06/2026", ora: "09:00", doc: "MEDA JURI" },
-            { mat: "LETTERATURA PER L'INFANZIA", data: "01/07/2026", ora: "09:00", doc: "MEDA JURI" },
-            { mat: "LETTERATURA PER L'INFANZIA", data: "03/09/2026", ora: "09:00", doc: "MEDA JURI" },
-            { mat: "LETTERATURA PER L'INFANZIA", data: "17/09/2026", ora: "09:00", doc: "MEDA JURI" },
-            { mat: "LINGUISTICA ITALIANA", data: "04/06/2026", ora: "08:00", doc: "PERRONE BEATRICE" },
-            { mat: "LINGUISTICA ITALIANA", data: "18/06/2026", ora: "08:00", doc: "PERRONE BEATRICE" },
-            { mat: "LINGUISTICA ITALIANA", data: "02/07/2026", ora: "08:00", doc: "PERRONE BEATRICE" },
-            { mat: "LINGUISTICA ITALIANA", data: "01/09/2026", ora: "08:00", doc: "PERRONE BEATRICE" },
-            { mat: "LINGUISTICA ITALIANA", data: "17/09/2026", ora: "08:00", doc: "PERRONE BEATRICE" },
-            { mat: "METODI E TECNOLOGIE PER L'INSEGNAMENTO DELLA MATEMATICA", data: "27/05/2026", ora: "14:45", doc: "TELLONI AGNESE ILARIA" },
-            { mat: "METODI E TECNOLOGIE PER L'INSEGNAMENTO DELLA MATEMATICA", data: "19/06/2026", ora: "14:45", doc: "TELLONI AGNESE ILARIA" },
-            { mat: "METODI E TECNOLOGIE PER L'INSEGNAMENTO DELLA MATEMATICA", data: "06/07/2026", ora: "14:45", doc: "TELLONI AGNESE ILARIA" },
-            { mat: "METODI E TECNOLOGIE PER L'INSEGNAMENTO DELLA MATEMATICA", data: "03/09/2026", ora: "14:45", doc: "TELLONI AGNESE ILARIA" },
-            { mat: "METODI E TECNOLOGIE PER L'INSEGNAMENTO DELLA MATEMATICA", data: "18/09/2026", ora: "14:45", doc: "TELLONI AGNESE ILARIA" },
-            { mat: "NEUROPSICHIATRIA INFANTILE", data: "05/06/2026", ora: "09:00", doc: "VASTA MICHELANGELO" },
-            { mat: "NEUROPSICHIATRIA INFANTILE", data: "17/06/2026", ora: "15:30", doc: "VASTA MICHELANGELO" },
-            { mat: "NEUROPSICHIATRIA INFANTILE", data: "07/07/2026", ora: "09:00", doc: "VASTA MICHELANGELO" },
-            { mat: "NEUROPSICHIATRIA INFANTILE", data: "04/09/2026", ora: "09:00", doc: "VASTA MICHELANGELO" },
-            { mat: "NEUROPSICHIATRIA INFANTILE", data: "25/09/2026", ora: "09:00", doc: "VASTA MICHELANGELO" },
-            { mat: "PEDAGOGIA E DIDATTICA SPECIALE", data: "09/06/2026", ora: "11:00", doc: "GIACONI CATIA" },
-            { mat: "PEDAGOGIA E DIDATTICA SPECIALE", data: "23/06/2026", ora: "11:00", doc: "GIACONI CATIA" },
-            { mat: "PEDAGOGIA E DIDATTICA SPECIALE", data: "07/07/2026", ora: "11:00", doc: "GIACONI CATIA" },
-            { mat: "PEDAGOGIA E DIDATTICA SPECIALE", data: "08/09/2026", ora: "11:00", doc: "GIACONI CATIA" },
-            { mat: "PEDAGOGIA E DIDATTICA SPECIALE", data: "22/09/2026", ora: "11:00", doc: "GIACONI CATIA" },
-            { mat: "PEDAGOGIA GENERALE", data: "08/06/2026", ora: "14:00", doc: "FARINA / CORSI" },
-            { mat: "PEDAGOGIA GENERALE", data: "22/06/2026", ora: "14:00", doc: "FARINA / CORSI" },
-            { mat: "PEDAGOGIA GENERALE", data: "02/07/2026", ora: "14:00", doc: "FARINA / CORSI" },
-            { mat: "PEDAGOGIA GENERALE", data: "07/09/2026", ora: "14:00", doc: "FARINA / CORSI" },
-            { mat: "PEDAGOGIA GENERALE", data: "21/09/2026", ora: "14:00", doc: "FARINA / CORSI" },
-            { mat: "PEDAGOGIA SOCIALE", data: "27/05/2026", ora: "09:00", doc: "SIRIGNANO CHIARA" },
-            { mat: "PEDAGOGIA SOCIALE", data: "10/06/2026", ora: "09:00", doc: "SIRIGNANO CHIARA" },
-            { mat: "PEDAGOGIA SOCIALE", data: "25/06/2026", ora: "09:00", doc: "SIRIGNANO CHIARA" },
-            { mat: "PEDAGOGIA SOCIALE", data: "09/09/2026", ora: "09:00", doc: "SIRIGNANO CHIARA" },
-            { mat: "PEDAGOGIA SOCIALE", data: "24/09/2026", ora: "09:00", doc: "SIRIGNANO CHIARA" },
-            { mat: "PEDAGOGIA SPERIMENTALE", data: "27/05/2026", ora: "09:00", doc: "GIROTTI LUCA" },
-            { mat: "PEDAGOGIA SPERIMENTALE", data: "10/06/2026", ora: "09:00", doc: "GIROTTI LUCA" },
-            { mat: "PEDAGOGIA SPERIMENTALE", data: "24/06/2026", ora: "09:00", doc: "GIROTTI LUCA" },
-            { mat: "PEDAGOGIA SPERIMENTALE", data: "09/09/2026", ora: "09:00", doc: "GIROTTI LUCA" },
-            { mat: "PEDAGOGIA SPERIMENTALE", data: "23/09/2026", ora: "09:00", doc: "GIROTTI LUCA" },
-            { mat: "PROVA IDONEITA' DI LINGUA INGLESE", data: "27/05/2026", ora: "09:00", doc: "CASTAGNOLI SARA" },
-            { mat: "PROVA IDONEITA' DI LINGUA INGLESE", data: "01/07/2026", ora: "09:00", doc: "CASTAGNOLI SARA" },
-            { mat: "PROVA IDONEITA' DI LINGUA INGLESE", data: "04/09/2026", ora: "09:00", doc: "CASTAGNOLI SARA" },
-            { mat: "PROVA IDONEITA' DI LINGUA INGLESE", data: "23/09/2026", ora: "09:00", doc: "CASTAGNOLI SARA" },
-            { mat: "PSICOLOGIA DELL'EDUCAZIONE", data: "09/06/2026", ora: "11:00", doc: "NICOLINI PAOLA" },
-            { mat: "PSICOLOGIA DELL'EDUCAZIONE", data: "23/06/2026", ora: "15:00", doc: "NICOLINI PAOLA" },
-            { mat: "PSICOLOGIA DELL'EDUCAZIONE", data: "07/07/2026", ora: "10:00", doc: "NICOLINI PAOLA" },
-            { mat: "PSICOLOGIA DELL'EDUCAZIONE", data: "08/09/2026", ora: "12:00", doc: "NICOLINI PAOLA" },
-            { mat: "PSICOLOGIA DELL'EDUCAZIONE", data: "17/09/2026", ora: "15:00", doc: "NICOLINI PAOLA" },
-            { mat: "PSICOLOGIA DELLO SVILUPPO", data: "04/06/2026", ora: "15:00", doc: "FELICI FABIO" },
-            { mat: "PSICOLOGIA DELLO SVILUPPO", data: "18/06/2026", ora: "15:00", doc: "FELICI FABIO" },
-            { mat: "PSICOLOGIA DELLO SVILUPPO", data: "02/07/2026", ora: "15:00", doc: "FELICI FABIO" },
-            { mat: "PSICOLOGIA DELLO SVILUPPO", data: "03/09/2026", ora: "15:00", doc: "FELICI FABIO" },
-            { mat: "PSICOLOGIA DELLO SVILUPPO", data: "17/09/2026", ora: "15:00", doc: "FELICI FABIO" },
-            { mat: "SOCIOLOGIA DELL'EDUCAZIONE", data: "28/05/2026", ora: "09:00", doc: "CRESPI ISABELLA" },
-            { mat: "SOCIOLOGIA DELL'EDUCAZIONE", data: "11/06/2026", ora: "09:00", doc: "CRESPI ISABELLA" },
-            { mat: "SOCIOLOGIA DELL'EDUCAZIONE", data: "25/06/2026", ora: "09:00", doc: "CRESPI ISABELLA" },
-            { mat: "SOCIOLOGIA DELL'EDUCAZIONE", data: "02/09/2026", ora: "11:00", doc: "CRESPI ISABELLA" },
-            { mat: "SOCIOLOGIA DELL'EDUCAZIONE", data: "16/09/2026", ora: "09:00", doc: "CRESPI ISABELLA" },
-            { mat: "STORIA CONTEMPORANEA", data: "27/05/2026", ora: "14:00", doc: "BARTOLINI FRANCESCO" },
-            { mat: "STORIA CONTEMPORANEA", data: "16/06/2026", ora: "14:00", doc: "BARTOLINI FRANCESCO" },
-            { mat: "STORIA CONTEMPORANEA", data: "01/07/2026", ora: "14:00", doc: "BARTOLINI FRANCESCO" },
-            { mat: "STORIA CONTEMPORANEA", data: "08/09/2026", ora: "14:00", doc: "BARTOLINI FRANCESCO" },
-            { mat: "STORIA CONTEMPORANEA", data: "22/09/2026", ora: "14:00", doc: "BARTOLINI FRANCESCO" },
-            { mat: "STORIA DELL'EDUCAZIONE", data: "04/06/2026", ora: "13:00", doc: "MEDA JURI" },
-            { mat: "STORIA DELL'EDUCAZIONE", data: "10/06/2026", ora: "13:00", doc: "MEDA JURI" },
-            { mat: "STORIA DELL'EDUCAZIONE", data: "01/07/2026", ora: "13:00", doc: "MEDA JURI" },
-            { mat: "STORIA DELL'EDUCAZIONE", data: "03/09/2026", ora: "13:00", doc: "MEDA JURI" },
-            { mat: "STORIA DELL'EDUCAZIONE", data: "17/09/2026", ora: "13:00", doc: "MEDA JURI" },
-            { mat: "STORIA ROMANA", data: "08/06/2026", ora: "11:00", doc: "ALMAGNO GIOVANNI" },
-            { mat: "STORIA ROMANA", data: "23/06/2026", ora: "11:00", doc: "ALMAGNO GIOVANNI" },
-            { mat: "STORIA ROMANA", data: "07/07/2026", ora: "11:00", doc: "ALMAGNO GIOVANNI" },
-            { mat: "STORIA ROMANA", data: "09/09/2026", ora: "11:00", doc: "ALMAGNO GIOVANNI" },
-            { mat: "STORIA ROMANA", data: "23/09/2026", ora: "11:00", doc: "ALMAGNO GIOVANNI" },
-            { mat: "TECNOLOGIE DELL'ISTRUZIONE E DELL'APPRENDIMENTO", data: "27/05/2026", ora: "11:30", doc: "LAICI CHIARA" },
-            { mat: "TECNOLOGIE DELL'ISTRUZIONE E DELL'APPRENDIMENTO", data: "16/06/2026", ora: "11:30", doc: "LAICI CHIARA" },
-            { mat: "TECNOLOGIE DELL'ISTRUZIONE E DELL'APPRENDIMENTO", data: "30/06/2026", ora: "11:30", doc: "LAICI CHIARA" },
-            { mat: "TECNOLOGIE DELL'ISTRUZIONE E DELL'APPRENDIMENTO", data: "08/09/2026", ora: "11:30", doc: "LAICI CHIARA" },
-            { mat: "TECNOLOGIE DELL'ISTRUZIONE E DELL'APPRENDIMENTO", data: "22/09/2026", ora: "11:30", doc: "LAICI CHIARA" },
-            { mat: "TIROCINIO II", data: "27/05/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" },
-            { mat: "TIROCINIO II", data: "10/06/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" },
-            { mat: "TIROCINIO II", data: "01/07/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" },
-            { mat: "TIROCINIO II", data: "09/09/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" },
-            { mat: "TIROCINIO II", data: "16/09/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" },
-            { mat: "TIROCINIO III", data: "27/05/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" },
-            { mat: "TIROCINIO III", data: "08/06/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" },
-            { mat: "TIROCINIO III", data: "29/06/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" },
-            { mat: "TIROCINIO III", data: "09/09/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" },
-            { mat: "TIROCINIO III", data: "16/09/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" },
-            { mat: "TIROCINIO IV", data: "28/05/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" },
-            { mat: "TIROCINIO IV", data: "11/06/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" },
-            { mat: "TIROCINIO IV", data: "25/06/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" },
-            { mat: "TIROCINIO IV", data: "09/09/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" },
-            { mat: "TIROCINIO IV", data: "16/09/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" },
-            { mat: "TIROCINIO V", data: "27/05/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" },
-            { mat: "TIROCINIO V", data: "08/06/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" },
-            { mat: "TIROCINIO V", data: "22/06/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" },
-            { mat: "TIROCINIO V", data: "09/09/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" },
-            { mat: "TIROCINIO V", data: "16/09/2026", ora: "09:00", doc: "GIANNANDREA LORELLA" }
-        ];
-
-        function abParseDate(dmy) {
-            const p = dmy.split('/');
-            return new Date(+p[2], p[1] - 1, +p[0]);
-        }
-
-        const AP_YEARS = [
-            { anno: 'Primo Anno', materie: [
-                ['Didattica Generale', 'DIDATTICA GENERALE'],
-                ['Educazione Motoria', 'EDUCAZIONE MOTORIA'],
-                ['Educazione Musicale', 'EDUCAZIONE MUSICALE'],
-                ['Pedagogia Generale', 'PEDAGOGIA GENERALE'],
-                ['Psicologia dello Sviluppo', 'PSICOLOGIA DELLO SVILUPPO'],
-                ["Sociologia dell'Educazione", "SOCIOLOGIA DELL'EDUCAZIONE"],
-                ["Storia dell'Educazione", "STORIA DELL'EDUCAZIONE"],
-                ['Laboratorio di Lingua Inglese I', 'LABORATORIO DI LINGUA INGLESE I']
-            ]},
-            { anno: 'Secondo Anno', materie: [
-                ['Biologia Generale', 'BIOLOGIA GENERALE'],
-                ['Fondamenti della Matematica', 'FONDAMENTI DELLA MATEMATICA'],
-                ['Geografia', 'GEOGRAFIA'],
-                ['Istituzioni di Diritto Pubblico', 'ISTITUZIONI DI DIRITTO PUBBLICO'],
-                ['Linguistica Italiana', 'LINGUISTICA ITALIANA'],
-                ['Neuropsichiatria Infantile', 'NEUROPSICHIATRIA INFANTILE'],
-                ['Elementi di Chimica', 'ELEMENTI DI CHIMICA'],
-                ['Laboratorio di Lingua Inglese II', 'LABORATORIO DI LINGUA INGLESE II'],
-                ['Tirocinio II Anno', 'TIROCINIO II']
-            ]},
-            { anno: 'Terzo Anno', materie: [
-                ['Didattica della Matematica', 'DIDATTICA DELLA MATEMATICA'],
-                ['Grammatica Italiana', 'GRAMMATICA ITALIANA'],
-                ['Laboratorio Tecnologie Didattiche', 'LABORATORIO DI TECNOLOGIE DIDATTICHE'],
-                ['Metodi e Tecnologie Matematica', "METODI E TECNOLOGIE PER L'INSEGNAMENTO DELLA MATEMATICA"],
-                ['Pedagogia Sperimentale', 'PEDAGOGIA SPERIMENTALE'],
-                ['Storia Romana', 'STORIA ROMANA'],
-                ["Tecnologie dell'Istruzione", "TECNOLOGIE DELL'ISTRUZIONE E DELL'APPRENDIMENTO"],
-                ['Laboratorio di Lingua Inglese III', 'LABORATORIO DI LINGUA INGLESE III'],
-                ['Tirocinio III Anno', 'TIROCINIO III']
-            ]},
-            { anno: 'Quarto Anno', materie: [
-                ['Educazione Ambientale', 'EDUCAZIONE AMBIENTALE'],
-                ['Letteratura Italiana', 'LETTERATURA ITALIANA'],
-                ["Letteratura per l'Infanzia", "LETTERATURA PER L'INFANZIA"],
-                ['Pedagogia e Didattica Speciale', 'PEDAGOGIA E DIDATTICA SPECIALE'],
-                ['Pedagogia Sociale', 'PEDAGOGIA SOCIALE'],
-                ["Psicologia dell'Educazione", "PSICOLOGIA DELL'EDUCAZIONE"],
-                ['Tirocinio IV Anno', 'TIROCINIO IV']
-            ]},
-            { anno: 'Quinto Anno', materie: [
-                ['Arte e Disegno', 'ARTE E DISEGNO'],
-                ["Educazione all'Immagine", "EDUCAZIONE ALL'IMMAGINE"],
-                ['Storia Contemporanea', 'STORIA CONTEMPORANEA'],
-                ['Prova Idoneit\u00e0 Lingua Inglese', "PROVA IDONEITA' DI LINGUA INGLESE"],
-                ['Tirocinio V Anno', 'TIROCINIO V']
-            ]}
-        ];
-
-        function apCountdown(d) {
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-            const days = Math.round((d - today) / 86400000);
-            if (days < 0) return { text: 'passato', past: true };
-            if (days === 0) return { text: 'oggi', past: false };
-            if (days === 1) return { text: 'domani', past: false };
-            return { text: 'tra ' + days + ' giorni', past: false };
-        }
-
-        function renderAppelli() {
-            const wrap = document.getElementById('ap-years');
-            if (!wrap) return;
-            wrap.innerHTML = '';
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-
-            AP_YEARS.forEach(y => {
-                const yearEl = document.createElement('div');
-                yearEl.className = 'ap-year';
-
-                const head = document.createElement('button');
-                head.type = 'button';
-                head.className = 'ap-year-head';
-                head.setAttribute('aria-expanded', 'false');
-                const headLabel = document.createElement('span');
-                headLabel.textContent = y.anno;
-                const headIcon = document.createElement('span');
-                headIcon.className = 'ap-year-icon';
-                headIcon.textContent = '+';
-                head.appendChild(headLabel);
-                head.appendChild(headIcon);
-
-                const bodyEl = document.createElement('div');
-                bodyEl.className = 'ap-year-body';
-
-                head.addEventListener('click', () => {
-                    const open = bodyEl.classList.toggle('open');
-                    head.classList.toggle('active', open);
-                    headIcon.textContent = open ? '\u2212' : '+';
-                    head.setAttribute('aria-expanded', open ? 'true' : 'false');
-                });
-
-                y.materie.forEach(pair => {
-                    const label = pair[0], mat = pair[1];
-                    const rows = UMS_APPELLI
-                        .filter(a => a.mat === mat)
-                        .map(a => ({ data: a.data, ora: a.ora, doc: a.doc, d: abParseDate(a.data) }))
-                        .sort((a, b) => a.d - b.d || a.ora.localeCompare(b.ora));
-                    const futuri = rows.filter(r => r.d >= today).length;
-
-                    const mbtn = document.createElement('button');
-                    mbtn.type = 'button';
-                    mbtn.className = 'ap-mat-btn';
-                    mbtn.setAttribute('aria-expanded', 'false');
-                    const mLabel = document.createElement('span');
-                    mLabel.textContent = label;
-                    const mCount = document.createElement('span');
-                    mCount.className = 'ap-mat-count';
-                    mCount.textContent = futuri ? (futuri + (futuri === 1 ? ' appello' : ' appelli')) : '';
-                    mbtn.appendChild(mLabel);
-                    mbtn.appendChild(mCount);
-
-                    const dates = document.createElement('div');
-                    dates.className = 'ap-dates';
-                    if (!rows.length) {
-                        const empty = document.createElement('div');
-                        empty.className = 'ap-empty';
-                        empty.textContent = 'Appelli non ancora caricati.';
-                        dates.appendChild(empty);
-                    }
-                    rows.forEach(r => {
-                        const c = apCountdown(r.d);
-                        const row = document.createElement('div');
-                        row.className = 'ap-row' + (c.past ? ' ap-past' : '');
-                        const main = document.createElement('div');
-                        main.className = 'ap-row-main';
-                        const dStrong = document.createElement('strong');
-                        dStrong.textContent = r.data;
-                        main.appendChild(dStrong);
-                        main.appendChild(document.createTextNode(' \u00b7 ore ' + r.ora));
-                        const chip = document.createElement('span');
-                        chip.className = 'ap-chip';
-                        chip.textContent = c.text;
-                        row.appendChild(main);
-                        row.appendChild(chip);
-                        dates.appendChild(row);
-                    });
-
-                    mbtn.addEventListener('click', () => {
-                        const open = dates.classList.toggle('open');
-                        mbtn.classList.toggle('active', open);
-                        mbtn.setAttribute('aria-expanded', open ? 'true' : 'false');
-                    });
-
-                    bodyEl.appendChild(mbtn);
-                    bodyEl.appendChild(dates);
-                });
-
-                yearEl.appendChild(head);
-                yearEl.appendChild(bodyEl);
-                wrap.appendChild(yearEl);
-            });
-        }
-
-        // Listener SEPARATO: la sezione appelli vive di vita propria
-        document.addEventListener('DOMContentLoaded', () => {
-            try { renderAppelli(); } catch (e) { console.error('Sezione appelli:', e); }
-        });
 
     </script>
 
@@ -4755,7 +2687,7 @@ if (!fileDaCaricare) {
             const toggleBtn = document.getElementById('lang-toggle-btn');
             const labelSpan = document.getElementById('lang-label');
             const disclaimer = document.getElementById('translation-disclaimer');
-            labelSpan.innerHTML = '<svg class="ums-ic" aria-hidden="true"><use href="#ic-globe"/></svg> ' + (langLabels[lang] || 'Language');
+            labelSpan.innerHTML = '🌐 ' + (langLabels[lang] || 'Language');
             loadingDiv.style.display = 'block';
             menu.classList.remove('show');
             toggleBtn.style.display = 'none';
@@ -4763,7 +2695,6 @@ if (!fileDaCaricare) {
             btnElement.classList.add('active-lang');
             const selectField = document.querySelector('select.goog-te-combo');
             if (selectField) { selectField.value = lang; selectField.dispatchEvent(new Event('change', { bubbles: true })); }
-            if (window.pausaOnLanguageChange) window.pausaOnLanguageChange(lang); // UPGRADE — traduce anche i giochi
             if (disclaimer) disclaimer.style.display = lang !== 'it' ? 'block' : 'none';
             setTimeout(() => {
                 loadingDiv.style.display = 'none';
@@ -4773,31 +2704,6 @@ if (!fileDaCaricare) {
         }
     </script>
     <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
-    <!-- ================================================================
-         NIGHT MODE — SCRIPT ADDITIVO (toggle + persistenza)
-    ================================================================ -->
-    <script>
-        (function () {
-            const NIGHT_KEY = 'ums_night_mode';
-            const toggleBtn = document.getElementById('night-toggle');
-
-            function applyNightMode(on) {
-                document.body.classList.toggle('night-mode', on);
-                toggleBtn.innerHTML = on ? '<svg class="ums-ic" aria-hidden="true"><use href="#ic-sun"/></svg>' : '<svg class="ums-ic" aria-hidden="true"><use href="#ic-moon"/></svg>';
-                toggleBtn.setAttribute('aria-label', on ? 'Attiva modalità giorno' : 'Attiva modalità notte');
-            }
-
-            // Sincronizza icona con lo stato applicato dallo script iniziale
-            applyNightMode(document.body.classList.contains('night-mode'));
-
-            toggleBtn.addEventListener('click', () => {
-                const on = !document.body.classList.contains('night-mode');
-                applyNightMode(on);
-                try { localStorage.setItem(NIGHT_KEY, on ? '1' : '0'); } catch (e) {}
-            });
-        })();
-    </script>
 
 </body>
 </html>
