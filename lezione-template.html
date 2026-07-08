@@ -24,13 +24,13 @@
          portano poi a visibili. Con motion ridotto restano visibili.
     ================================================================ -->
     <style id="ums-preload-guard">
-        .header-eyebrow, header h1, header .subtitle, header .badges-row,
-        #custom-lang-selector.loaded, .content-card, .disclaimer-card, .site-footer{
+        .header-eyebrow, header h1, header .subtitle, .master-cta-row,
+        #custom-lang-selector.loaded, header .badges-row, .disclaimer-card, .site-footer{
             opacity: 0;
         }
         @media (prefers-reduced-motion: reduce){
-            .header-eyebrow, header h1, header .subtitle, header .badges-row,
-            #custom-lang-selector.loaded, .content-card, .disclaimer-card, .site-footer{
+            .header-eyebrow, header h1, header .subtitle, .master-cta-row,
+            #custom-lang-selector.loaded, header .badges-row, .disclaimer-card, .site-footer{
                 opacity: 1 !important;
             }
         }
@@ -1831,26 +1831,19 @@
 
     <!-- Header -->
     <header>
-        <div class="header-eyebrow">Una Mano Spensierata</div>
+        <a href="https://lorenzosciallato.github.io/Una-mano-spensierata/index.html" class="header-eyebrow" title="Torna alla Home">Una Mano Spensierata</a>
         <h1 id="dyn-title">Caricamento<em>…</em></h1>
         <div class="subtitle" id="dyn-subtitle">Attendere</div>
 
+        <!-- INIZIA — sopra a tutto, identico alla home -->
+        <div class="master-cta-row">
+            <button class="master-header" id="master-toggle-btn" onclick="toggleMaster()" aria-expanded="false">
+                <span>Inizia</span>
+                <span class="mh-arrow"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></span>
+            </button>
+        </div>
 
         <div id="translation-disclaimer"><svg class="ums-ic" aria-hidden="true"><use href="#ic-globe"/></svg> Nota: traduzione automatica via IA. Alta accuratezza, possibili sfumature perse.</div>
-
-        <div class="badges-row">
-            <a href="https://lorenzosciallato.github.io/Una-mano-spensierata/index.html" class="author-badge primary">
-                <span class="author-name" style="padding: 4px 6px;"><svg class="ums-ic" aria-hidden="true"><use href="#ic-home"/></svg> Torna alla Home</span>
-            </a>
-            <a href="https://www.instagram.com/sciallato_lorenzo/" target="_blank" class="author-badge">
-                <img src="https://files.catbox.moe/qvck5j.png" alt="Lorenzo Sciallato" class="author-img">
-                <span class="author-name">Creato da <strong>Lorenzo</strong> &copy; 2025</span>
-            </a>
-            <a href="https://chat.whatsapp.com/EaX5kr14XxHL9o3qxdDVEP?mode=gi_t" target="_blank" class="author-badge">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="Gruppo WhatsApp" class="author-img" style="padding:10px;">
-                <span class="author-name">Entra nel <strong>Gruppo</strong></span>
-            </a>
-        </div>
 
         <div id="google_translate_element" style="display:none;"></div>
         <div id="custom-lang-selector" class="notranslate">
@@ -1877,17 +1870,23 @@
                 <button onclick="triggerTranslation('ja', this)" title="日本語">🇯🇵</button>
             </div>
         </div>
+
+        <div class="badges-row">
+            <a href="https://www.instagram.com/sciallato_lorenzo/" target="_blank" class="author-badge">
+                <img src="https://files.catbox.moe/qvck5j.png" alt="Lorenzo Sciallato" class="author-img">
+                <span class="author-name">Creato da <strong>Lorenzo</strong> &copy; 2025</span>
+            </a>
+            <a href="https://chat.whatsapp.com/EaX5kr14XxHL9o3qxdDVEP?mode=gi_t" target="_blank" class="author-badge">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="Gruppo WhatsApp" class="author-img" style="padding:10px;">
+                <span class="author-name">Entra nel <strong>Gruppo</strong></span>
+            </a>
+        </div>
     </header>
 
     <!-- Main Content Card -->
     <div class="content-card">
 
         <div class="master-accordion-item">
-            <button class="master-header" id="master-toggle-btn" onclick="toggleMaster()" aria-expanded="false">
-                <span>Inizia</span>
-                <span class="mh-arrow">→</span>
-            </button>
-
             <div class="master-content" id="master-content">
                 <div class="master-content-inner">
 
@@ -4369,8 +4368,9 @@ if (!fileDaCaricare) {
         @media (max-width: 560px){ #ums-topbar .ums-brandmark{ font-size: 1.05rem !important; } }
 
         /* ------------------------------------------------------------
-           "INIZIA" — pillola nuda come nella home: finché la lezione
-           è chiusa, la card bianca intorno sparisce del tutto
+           "INIZIA" — valori ESATTI del pulsante #inizia dell'index.
+           Vive nell'header, sopra a lingua e badge; la card sotto
+           resta trasparente finché la lezione è chiusa.
         ------------------------------------------------------------ */
         body:not(.ums-master-open) .content-card{
             background: transparent;
@@ -4381,13 +4381,15 @@ if (!fileDaCaricare) {
         }
         .content-card{ transition: background-color .4s ease, border-color .4s ease, box-shadow .4s ease, padding .4s ease; }
 
-        .master-accordion-item{ text-align: center; }
+        .master-cta-row{ margin-top: 2rem; }
         .master-header{
             display: inline-flex !important;
-            width: auto !important;
-            justify-content: center !important;
             align-items: center;
             gap: 12px;
+            width: auto !important;
+            background: var(--navy) !important;
+            color: var(--ivory) !important;
+            border: none !important;
             border-radius: var(--r-pill) !important;
             padding: 1.05rem 2.6rem !important;
             font-family: var(--font-body) !important;
@@ -4395,17 +4397,33 @@ if (!fileDaCaricare) {
             font-weight: 700 !important;
             letter-spacing: .2em;
             text-transform: uppercase;
+            cursor: pointer;
             box-shadow: 0 10px 30px rgba(26,47,79,.28) !important;
-            margin: 0 auto !important;
+            margin: 0 !important;
             transition: transform .25s var(--ease), box-shadow .25s, background-color .25s !important;
         }
         .master-header:hover{
             transform: translateY(-3px);
             box-shadow: 0 16px 40px rgba(26,47,79,.36) !important;
+            background: var(--navy-lt) !important;
         }
         .master-header:active{ transform: translateY(-1px); }
-        .master-header .mh-arrow{ font-size: 1rem; transition: transform .3s var(--ease); }
+        .master-header .mh-arrow{ display: inline-flex; transition: transform .3s var(--ease); }
+        .master-header .mh-arrow svg{
+            width: 16px; height: 16px;
+            stroke: currentColor; fill: none;
+            stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round;
+        }
         .master-header.active .mh-arrow{ transform: rotate(90deg); }
+        .night-mode .master-header{ background: var(--navy) !important; color: #F2EFE8 !important; }
+        .night-mode .master-header:hover{ background: var(--navy-lt) !important; }
+
+        /* L'eyebrow ora è un link alla home: identico all'originale, solo cliccabile */
+        a.header-eyebrow{ text-decoration: none; cursor: pointer; }
+
+        /* Spaziature della nuova disposizione: INIZIA -> lingua -> badge */
+        #custom-lang-selector.loaded{ margin-top: 1.8rem; }
+        .badges-row{ margin-top: 1rem; }
 
         /* ------------------------------------------------------------
            INGRESSO "DA APP" — sequenza più teatrale: prima l'eyebrow,
@@ -4422,45 +4440,36 @@ if (!fileDaCaricare) {
         .header-eyebrow{ animation: umsFadeUp .6s .35s var(--ease) both; }
         header h1{ animation: umsFadeUp .8s .6s var(--ease) both; }
         header .subtitle{ animation: umsFadeUp .6s .95s var(--ease) both; }
-        header .badges-row{ animation: umsFadeUp .6s 1.25s var(--ease) both; }
-        #custom-lang-selector.loaded{ animation: umsFadeUp .6s 1.45s var(--ease) both; }
-        .content-card{ animation: umsPopIn .6s 1.7s var(--ease) both; }
+        .master-cta-row{ animation: umsPopIn .6s 1.25s var(--ease) both; }
+        #custom-lang-selector.loaded{ animation: umsFadeUp .6s 1.5s var(--ease) both; }
+        header .badges-row{ animation: umsFadeUp .6s 1.7s var(--ease) both; }
         .disclaimer-card, .site-footer{ animation: umsFadeUp .7s 1.9s var(--ease) both; }
 
         /* ------------------------------------------------------------
-           BADGE — chip "da app": squircle piatti tinta-su-tinta,
-           niente bordi né ombre, pressione con scale (stile iOS)
+           BADGE — valori ESATTI di .author-badge dell'index
         ------------------------------------------------------------ */
-        .badges-row{ gap: 8px; }
+        .badges-row{ gap: 10px; }
         .author-badge{
-            background: rgba(26,47,79,.07) !important;
+            background: #fff !important;
             -webkit-backdrop-filter: none; backdrop-filter: none;
-            border: none !important;
-            box-shadow: none !important;
-            border-radius: 12px !important;
-            padding: 8px 14px !important;
-            transition: background-color .2s ease, transform .15s var(--ease) !important;
+            border: 1px solid var(--dust) !important;
+            box-shadow: var(--shadow-card) !important;
+            border-radius: var(--r-pill) !important;
+            padding: 6px 15px 6px 6px !important;
+            transition: transform .25s var(--ease), box-shadow .25s, border-color .25s, background-color .3s !important;
         }
         .author-badge:hover{
-            background: rgba(26,47,79,.13) !important;
-            transform: translateY(-1px);
-            box-shadow: none !important;
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lift) !important;
+            border-color: var(--gold) !important;
+            background: #fff !important;
         }
-        .author-badge:active{ transform: scale(.96); }
-        .author-badge .author-name{ font-weight: 600; font-size: .8rem; color: var(--navy); }
+        .author-badge .author-name{ font-size: .78rem; font-weight: 500; color: var(--ink); }
         .author-badge .author-name strong{ font-weight: 700; }
-        .author-img{ width: 22px !important; height: 22px !important; }
-        .author-badge.primary{
-            background: var(--navy) !important;
-            box-shadow: none !important;
-        }
-        .author-badge.primary:hover{ background: var(--navy-lt) !important; box-shadow: none !important; }
-        .author-badge.primary .author-name{ color: #fff; }
-        .night-mode .author-badge{ background: rgba(143,180,232,.1) !important; }
-        .night-mode .author-badge:hover{ background: rgba(143,180,232,.18) !important; }
-        .night-mode .author-badge .author-name{ color: #8FB4E8; }
-        .night-mode .author-badge.primary{ background: var(--navy) !important; }
-        .night-mode .author-badge.primary .author-name{ color: #F2EFE8; }
+        .author-img{ width: 30px !important; height: 30px !important; }
+        .night-mode .author-badge{ background: #1E212A !important; border-color: #2B2E38 !important; }
+        .night-mode .author-badge:hover{ background: #1E212A !important; border-color: var(--gold) !important; }
+        .night-mode .author-badge .author-name{ color: #F2EFE8; }
 
         /* ------------------------------------------------------------
            CASCATA DELLE SEZIONI — all'apertura di "Inizia"
@@ -4533,8 +4542,8 @@ if (!fileDaCaricare) {
         }
 
         @media (prefers-reduced-motion: reduce){
-            .header-eyebrow, header h1, header .subtitle, header .badges-row,
-            #custom-lang-selector.loaded, .content-card, .disclaimer-card, .site-footer,
+            .header-eyebrow, header h1, header .subtitle, .master-cta-row,
+            #custom-lang-selector.loaded, header .badges-row, .disclaimer-card, .site-footer,
             .master-content .accordion-item{
                 animation: none !important;
                 opacity: 1 !important;
