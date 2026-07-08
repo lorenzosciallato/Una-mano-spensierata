@@ -15,6 +15,27 @@
     <!-- Filigrana: stesso asset ottimizzato della home, precaricato perché sia a schermo da subito -->
     <link rel="preload" as="image" href="https://res.cloudinary.com/dlppkpjqs/image/upload/f_auto,q_auto:eco,w_1600/v1783528098/crea_wallpaper_stile_arte_giapponese_woodblock_rilassato_con_fiori_natura_paesaggio_lilnz8.png">
 
+    <!-- ================================================================
+         GUARDIA ANTI-FLASH — deve stare nel HEAD.
+         Le animazioni d'ingresso sono definite nel blocco additivo in
+         fondo al file: senza questa guardia il browser dipinge la pagina
+         completa per un istante prima di leggerle. Qui gli elementi
+         animati nascono già invisibili; le animazioni (fill: both) li
+         portano poi a visibili. Con motion ridotto restano visibili.
+    ================================================================ -->
+    <style id="ums-preload-guard">
+        .header-eyebrow, header h1, header .subtitle, header .badges-row,
+        #custom-lang-selector.loaded, .content-card, .disclaimer-card, .site-footer{
+            opacity: 0;
+        }
+        @media (prefers-reduced-motion: reduce){
+            .header-eyebrow, header h1, header .subtitle, header .badges-row,
+            #custom-lang-selector.loaded, .content-card, .disclaimer-card, .site-footer{
+                opacity: 1 !important;
+            }
+        }
+    </style>
+
     <style>
         /* ============================================================
            TOKEN SYSTEM
