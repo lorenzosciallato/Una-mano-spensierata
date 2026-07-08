@@ -274,12 +274,12 @@ body.app-mode #appview{opacity:1; transform:translateY(0); pointer-events:auto;}
   text-decoration:none;
 }
 .subj-card:hover{transform:translateY(-2px); box-shadow:var(--shadow-card); border-color:var(--gold);}
-.subj-lettrina{
-  font-family:var(--font-display); font-weight:900; font-size:2.1rem; line-height:.8;
-  color:var(--dust); width:40px; min-width:40px; text-align:center;
-  letter-spacing:-.04em; user-select:none; transition:color .2s;
+.subj-glyph{
+  width:44px; min-width:44px; display:flex; align-items:center; justify-content:center;
+  color:var(--dust); transition:color .2s, transform .2s var(--ease);
 }
-.subj-card:hover .subj-lettrina{color:var(--gold);}
+.subj-glyph svg{width:32px; height:32px; stroke:currentColor; fill:none; stroke-width:1.9; stroke-linejoin:round; stroke-linecap:round;}
+.subj-card:hover .subj-glyph{color:var(--gold); transform:rotate(15deg);}
 .subj-body{flex:1; min-width:0;}
 .subj-name{font-family:var(--font-display); font-weight:700; font-size:1.05rem;
   color:var(--ink); line-height:1.25;}
@@ -357,8 +357,8 @@ body.night-mode .subj-name{color:#F2EFE8;}
 body.night-mode .subj-meta,
 body.night-mode .disclaimer-card p,
 body.night-mode .lz-modal-sub{color:#918E86;}
-body.night-mode .subj-lettrina{color:#2B2E38;}
-body.night-mode .subj-card:hover .subj-lettrina{color:var(--gold);}
+body.night-mode .subj-glyph{color:#2B2E38;}
+body.night-mode .subj-card:hover .subj-glyph{color:var(--gold);}
 body.night-mode .subj-eyebrow, body.night-mode .app-kicker{color:#D9BC85;}
 body.night-mode .top-wa{background:#1E212A; border-color:#2B2E38;}
 body.night-mode .disclaimer-card h3{color:#D9BC85;}
@@ -391,10 +391,6 @@ body.instant #appview, body.instant #topbar, body.instant #top-controls{transiti
 <body class="splash">
 <script>try{
   if(localStorage.getItem('ums_night_mode')==='1'){document.body.classList.add('night-mode');}
-  if(sessionStorage.getItem('ums_seen_splash')==='1'){
-    document.body.classList.remove('splash');
-    document.body.classList.add('app-mode','instant');
-  }
 }catch(e){}</script>
 
 <!-- FILIGRANA — sfondo fisso, dietro a tutto, a bassissima opacità -->
@@ -405,7 +401,7 @@ body.instant #appview, body.instant #topbar, body.instant #top-controls{transiti
 
 <!-- BRAND che morfa -->
 <div id="brandStage">
-  <div id="brand">
+  <div id="brand" class="notranslate" translate="no">
     <span class="brand-l1">Una Mano</span>
     <span class="brand-l2">Spensierata</span>
   </div>
@@ -535,20 +531,32 @@ const courses = [
 
 const chevronSVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>';
 
+// Marcatori geometrici (SVG, non testo): non vengono tradotti da Google Translate.
+// Uno per corso, in ordine; se i corsi superano 7 si ripetono ciclicamente.
+const GLYPHS = [
+  '<circle cx="20" cy="20" r="13"/>',                                  // cerchio
+  '<path d="M20 6 34 32 6 32 Z"/>',                                    // triangolo
+  '<rect x="8" y="8" width="24" height="24" rx="2"/>',                 // quadrato
+  '<path d="M20 5 35 20 20 35 5 20 Z"/>',                              // rombo
+  '<path d="M20 5 33 12.5 33 27.5 20 35 7 27.5 7 12.5 Z"/>',           // esagono
+  '<path d="M20 5 34 15.5 28.5 33 11.5 33 6 15.5 Z"/>',               // pentagono
+  '<circle cx="20" cy="20" r="13"/><circle cx="20" cy="20" r="4.5"/>' // cerchi concentrici
+];
+
 function normalizza(s){ return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
 
 function renderCourses(){
   const grid = document.getElementById('course-grid');
-  courses.forEach((c) => {
+  courses.forEach((c, i) => {
     const hasLezioni = !!c.lezioni;
     const el = document.createElement(hasLezioni ? 'button' : 'a');
     el.className = 'subj-card';
     el.dataset.search = normalizza(c.name);
     if (hasLezioni){ el.type = 'button'; el.addEventListener('click', () => openLezioni(c)); }
     else { el.href = c.url; el.target = '_blank'; el.rel = 'noopener'; }
-    const lettera = c.name.trim()[0].toUpperCase();
+    const glyph = GLYPHS[i % GLYPHS.length];
     el.innerHTML = `
-      <span class="subj-lettrina" aria-hidden="true">${lettera}</span>
+      <span class="subj-glyph" aria-hidden="true"><svg viewBox="0 0 40 40">${glyph}</svg></span>
       <span class="subj-body">
         <span class="subj-name">${c.name}</span>
         <span class="subj-meta">${hasLezioni ? c.lezioni.count + ' lezioni' : 'Sito esterno \u2197'}</span>
@@ -581,7 +589,6 @@ const inizia = document.getElementById('inizia');
 function enterApp(){
   document.body.classList.remove('splash');
   document.body.classList.add('app-mode');
-  try{ sessionStorage.setItem('ums_seen_splash','1'); }catch(e){}
   setTimeout(() => { document.getElementById('course-search').focus({preventScroll:true}); }, 700);
 }
 function backToSplash(){
