@@ -10,6 +10,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,600;1,700;1,900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700&display=swap" rel="stylesheet">
 
+<!-- Precarico la filigrana: dev'essere già a schermo prima che arrivino le lettere -->
+<link rel="preload" as="image" href="https://res.cloudinary.com/dlppkpjqs/image/upload/v1783528098/crea_wallpaper_stile_arte_giapponese_woodblock_rilassato_con_fiori_natura_paesaggio_lilnz8.png">
+
 <style>
 :root{
   --ivory:#F7F4EF; --ivory-2:#EFEBE2;
@@ -46,11 +49,11 @@ a:focus-visible, button:focus-visible, input:focus-visible{outline:2px solid var
 ============================================================ */
 #watermark{
   position:fixed; inset:0; z-index:-1; pointer-events:none;
-  background:url('https://res.cloudinary.com/dlppkpjqs/image/upload/v1782674570/Screenshot_2026-06-28_9.22.15_PM_dz1h0i.png') center center / cover no-repeat;
-  opacity:.07;
+  background:url('https://res.cloudinary.com/dlppkpjqs/image/upload/v1783528098/crea_wallpaper_stile_arte_giapponese_woodblock_rilassato_con_fiori_natura_paesaggio_lilnz8.png') center center / cover no-repeat;
+  opacity:.09;
   transition:opacity .3s ease;
 }
-body.night-mode #watermark{opacity:.045;}
+body.night-mode #watermark{opacity:.06;}
 
 /* ============================================================
    BRAND — morfa dallo splash (grande, centrato) all'app (piccolo, alto a sx)
@@ -72,8 +75,8 @@ body.night-mode #watermark{opacity:.045;}
 /* entrata dai due lati */
 @keyframes slideFromLeft{from{opacity:0; transform:translateX(-115vw);} to{opacity:1; transform:translateX(0);}}
 @keyframes slideFromRight{from{opacity:0; transform:translateX(115vw);} to{opacity:1; transform:translateX(0);}}
-#brand .brand-l1{animation:slideFromLeft 1s var(--ease) both;}
-#brand .brand-l2{animation:slideFromRight 1s .12s var(--ease) both;}
+#brand .brand-l1{animation:slideFromLeft 1s .3s var(--ease) both;}
+#brand .brand-l2{animation:slideFromRight 1s .42s var(--ease) both;}
 
 /* stato APP: rimpicciolisce e va in alto a sinistra */
 body.app-mode #brandStage{
@@ -103,7 +106,7 @@ body.app-mode #brand .brand-l2{margin-left:.28em;}
   font-size:.7rem; font-weight:700; letter-spacing:.3em; text-transform:uppercase;
   color:var(--gold-dk);
   display:flex; align-items:center; justify-content:center; gap:13px;
-  opacity:0; animation:fadeUp .7s 1.2s ease both;
+  opacity:0; animation:fadeUp .7s 1.5s ease both;
   max-height:40px; overflow:hidden;
   transition:opacity .45s ease, max-height .55s ease, margin-top .45s ease;
 }
@@ -118,7 +121,7 @@ body.app-mode .brand-tagline{opacity:0; max-height:0; margin-top:0; pointer-even
   padding:1.05rem 2.6rem;
   font-size:.82rem; font-weight:700; letter-spacing:.2em; text-transform:uppercase;
   cursor:pointer; box-shadow:0 10px 30px rgba(26,47,79,.28);
-  opacity:0; animation:fadeUp .7s 1.7s ease both;
+  opacity:0; animation:fadeUp .7s 2s ease both;
   transition:transform .25s var(--ease), box-shadow .25s, background-color .25s;
 }
 #inizia:hover{transform:translateY(-3px); box-shadow:0 16px 40px rgba(26,47,79,.36); background:var(--navy-lt);}
@@ -127,7 +130,7 @@ body.app-mode .brand-tagline{opacity:0; max-height:0; margin-top:0; pointer-even
 
 .hero-badges{
   display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin-top:2.4rem;
-  opacity:0; animation:fadeUp .7s 2s ease both;
+  opacity:0; animation:fadeUp .7s 2.3s ease both;
 }
 @keyframes fadeUp{from{opacity:0; transform:translateY(18px);} to{opacity:1; transform:translateY(0);}}
 
