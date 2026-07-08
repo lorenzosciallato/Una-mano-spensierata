@@ -1810,7 +1810,7 @@
 
     <!-- Header -->
     <header>
-        <div class="header-eyebrow ums-brandmark notranslate" translate="no">Una Mano <em>Spensierata</em></div>
+        <div class="header-eyebrow">Una Mano Spensierata</div>
         <h1 id="dyn-title">Caricamento<em>…</em></h1>
         <div class="subtitle" id="dyn-subtitle">Attendere</div>
 
@@ -1863,7 +1863,7 @@
 
         <div class="master-accordion-item">
             <button class="master-header" id="master-toggle-btn" onclick="toggleMaster()" aria-expanded="false">
-                <span>Inizia la Lezione</span>
+                <span>Inizia</span>
                 <span class="mh-arrow">→</span>
             </button>
 
@@ -2091,6 +2091,16 @@
                                     <div class="wb-hint">
                                         <span class="hl-copy-desktop"><svg class="ums-ic" aria-hidden="true"><use href="#ic-highlighter"/></svg> Seleziona una frase qui sotto col mouse e premi &laquo;Sottolinea&raquo;: il concetto appare qui sopra, sulla Lavagna. Quando hai finito, &laquo;Stampa / PDF&raquo; trasforma le tue sottolineature in un foglio di ripasso.</span>
                                         <span class="hl-copy-mobile"><svg class="ums-ic" aria-hidden="true"><use href="#ic-highlighter"/></svg> Tieni premuto su una parola qui sotto, allarga la selezione coi cursori e tocca &laquo;Sottolinea&raquo;: il concetto appare qui sopra, sulla Lavagna. Con &laquo;Stampa / PDF&raquo; salvi il foglio di ripasso sul telefono.</span>
+                                        <div class="hl-palette-row">
+                                            <span class="hl-palette-micro">Tocca un colore per cambiare evidenziatore:</span>
+                                            <div class="hl-palette-swatches" id="hl-palette">
+                                                <div class="hl-swatch hl-swatch-active" data-color="#FFF176" style="background:#FFF176;" title="Giallo" onclick="hlSetColor(this)"></div>
+                                                <div class="hl-swatch" data-color="#A5D6A7" style="background:#A5D6A7;" title="Verde" onclick="hlSetColor(this)"></div>
+                                                <div class="hl-swatch" data-color="#F48FB1" style="background:#F48FB1;" title="Rosa" onclick="hlSetColor(this)"></div>
+                                                <div class="hl-swatch" data-color="#90CAF9" style="background:#90CAF9;" title="Azzurro" onclick="hlSetColor(this)"></div>
+                                                <div class="hl-swatch" data-color="#FFCC80" style="background:#FFCC80;" title="Arancione" onclick="hlSetColor(this)"></div>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <!-- Il contenitore testuale DEVE rimanere dentro la colonna di sinistra -->
@@ -2103,17 +2113,6 @@
                                         <span class="notes-label">Appunti</span>
                                         <button class="tool-btn copy-btn">Copia</button>
                                         <button class="tool-btn download-btn"><svg class="ums-ic" aria-hidden="true"><use href="#ic-download"/></svg> .txt</button>
-                                    </div>
-                                    <!-- Palette evidenziatore -->
-                                    <div class="hl-palette-row">
-                                        <span class="hl-palette-micro"><svg class="ums-ic" aria-hidden="true"><use href="#ic-highlighter"/></svg> Seleziona il testo per evidenziarlo e salvarlo nella lavagna</span>
-                                        <div class="hl-palette-swatches" id="hl-palette">
-                                            <div class="hl-swatch hl-swatch-active" data-color="#FFF176" style="background:#FFF176;" title="Giallo" onclick="hlSetColor(this)"></div>
-                                            <div class="hl-swatch" data-color="#A5D6A7" style="background:#A5D6A7;" title="Verde" onclick="hlSetColor(this)"></div>
-                                            <div class="hl-swatch" data-color="#F48FB1" style="background:#F48FB1;" title="Rosa" onclick="hlSetColor(this)"></div>
-                                            <div class="hl-swatch" data-color="#90CAF9" style="background:#90CAF9;" title="Azzurro" onclick="hlSetColor(this)"></div>
-                                            <div class="hl-swatch" data-color="#FFCC80" style="background:#FFCC80;" title="Arancione" onclick="hlSetColor(this)"></div>
-                                        </div>
                                     </div>
                                     <textarea class="notes-area" placeholder="Annota concetti da ricordare…"></textarea>
                                 </div>
@@ -2536,9 +2535,6 @@
                      alt="" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.06; z-index: -1;">
                 <div style="font-family: 'DM Sans', Arial, sans-serif; padding: 28px 24px; color: #1C1C22; max-width: 780px; margin: 0 auto; -webkit-print-color-adjust: exact; print-color-adjust: exact;">
 
-                    <div style="font-family: 'Playfair Display', Georgia, serif; font-weight: 900; font-size: 24px; letter-spacing: -0.02em; color: #1C1C22; line-height: 1; margin-bottom: 12px;">
-                        Una Mano <em style="font-style: italic; color: #1A2F4F;">Spensierata</em>
-                    </div>
                     <h1 style="font-family: 'Playfair Display', Georgia, serif; font-size: 30px; font-weight: 700; color: #1A2F4F; margin: 0 0 6px 0; line-height: 1.15;">
                         ${lessonTitle}
                     </h1>
@@ -4352,8 +4348,16 @@ if (!fileDaCaricare) {
         @media (max-width: 560px){ #ums-topbar .ums-brandmark{ font-size: 1.05rem !important; } }
 
         /* ------------------------------------------------------------
-           "INIZIA LA LEZIONE" — pillola compatta come INIZIA della home
+           "INIZIA" — pillola nuda come nella home: finché la lezione
+           è chiusa, la card bianca intorno sparisce del tutto
         ------------------------------------------------------------ */
+        body:not(.ums-master-open) .content-card{
+            background: transparent;
+            border-color: transparent;
+            box-shadow: none;
+        }
+        .content-card{ transition: background-color .4s ease, border-color .4s ease, box-shadow .4s ease; }
+
         .master-accordion-item{ text-align: center; }
         .master-header{
             display: inline-flex !important;
@@ -4381,22 +4385,56 @@ if (!fileDaCaricare) {
         .master-header.active .mh-arrow{ transform: rotate(90deg); }
 
         /* ------------------------------------------------------------
-           INGRESSO "DA APP" — header e card in sequenza come la home
+           INGRESSO "DA APP" — sequenza più teatrale: prima l'eyebrow,
+           poi il titolo, poi (con calma) badge, lingua e il pulsante
         ------------------------------------------------------------ */
         @keyframes umsFadeUp{
             from{ opacity: 0; transform: translateY(18px); }
             to{ opacity: 1; transform: translateY(0); }
         }
-        .header-eyebrow{ animation: umsFadeUp .6s .1s var(--ease) both; }
-        header h1{ animation: umsFadeUp .7s .22s var(--ease) both; }
-        header .subtitle{ animation: umsFadeUp .6s .38s var(--ease) both; }
-        header .badges-row{ animation: umsFadeUp .6s .52s var(--ease) both; }
-        #custom-lang-selector.loaded{ animation: umsFadeUp .6s .64s var(--ease) both; }
-        .content-card{ animation: umsFadeUp .7s .72s var(--ease) both; }
-        .disclaimer-card, .site-footer{ animation: umsFadeUp .7s .85s var(--ease) both; }
+        @keyframes umsPopIn{
+            from{ opacity: 0; transform: translateY(14px) scale(.92); }
+            to{ opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .header-eyebrow{ animation: umsFadeUp .6s .35s var(--ease) both; }
+        header h1{ animation: umsFadeUp .8s .6s var(--ease) both; }
+        header .subtitle{ animation: umsFadeUp .6s .95s var(--ease) both; }
+        header .badges-row{ animation: umsFadeUp .6s 1.25s var(--ease) both; }
+        #custom-lang-selector.loaded{ animation: umsFadeUp .6s 1.45s var(--ease) both; }
+        .content-card{ animation: umsPopIn .6s 1.7s var(--ease) both; }
+        .disclaimer-card, .site-footer{ animation: umsFadeUp .7s 1.9s var(--ease) both; }
 
         /* ------------------------------------------------------------
-           CASCATA DELLE SEZIONI — all'apertura di "Inizia la Lezione"
+           BADGE — restyling "da app": vetro smerigliato, niente bordi
+           duri, ombra morbida, sollevamento netto all'hover
+        ------------------------------------------------------------ */
+        .author-badge{
+            background: rgba(255,255,255,.62) !important;
+            -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+            border: 1px solid rgba(28,28,34,.06) !important;
+            box-shadow: 0 2px 10px rgba(15,17,23,.05) !important;
+            padding: 6px 16px 6px 7px !important;
+            transition: transform .25s var(--ease), box-shadow .25s, border-color .25s, background-color .3s !important;
+        }
+        .author-badge:hover{
+            transform: translateY(-3px);
+            border-color: var(--gold) !important;
+            box-shadow: 0 10px 26px rgba(15,17,23,.12) !important;
+        }
+        .author-badge.primary{
+            background: var(--navy) !important;
+            border-color: var(--navy) !important;
+            box-shadow: 0 6px 20px rgba(26,47,79,.3) !important;
+        }
+        .author-badge.primary:hover{ box-shadow: 0 12px 30px rgba(26,47,79,.4) !important; }
+        .night-mode .author-badge{
+            background: rgba(30,33,42,.62) !important;
+            border-color: rgba(255,255,255,.06) !important;
+        }
+        .night-mode .author-badge.primary{ background: var(--navy) !important; }
+
+        /* ------------------------------------------------------------
+           CASCATA DELLE SEZIONI — all'apertura di "Inizia"
            le 8 sezioni entrano una dopo l'altra (come le righe lezione
            nella vista corso della home)
         ------------------------------------------------------------ */
@@ -4433,6 +4471,17 @@ if (!fileDaCaricare) {
         }
         .wb-hint .ums-ic{ vertical-align: -2px; margin-right: 4px; }
         .night-mode .wb-hint{ background: rgba(200,169,110,.07); color: #918E86; }
+        /* La palette colori ora vive qui dentro: via il look da toolbar */
+        .wb-hint .hl-palette-row{
+            background: transparent !important;
+            border: none !important;
+            padding: 10px 0 2px !important;
+            flex-direction: row !important; align-items: center !important;
+            flex-wrap: wrap; gap: 10px !important;
+        }
+        .wb-hint .hl-palette-micro{
+            font-size: .68rem; letter-spacing: .1em;
+        }
         .hl-copy-mobile{ display: none; }
         @media (max-width: 900px), (pointer: coarse){
             .hl-copy-desktop{ display: none; }
@@ -4551,6 +4600,22 @@ if (!fileDaCaricare) {
                 });
             }, { threshold: 0, rootMargin: '-60px 0px 0px 0px' });
             io.observe(headerEl);
+        })();
+
+        // ================================================================
+        // CARD TRASPARENTE — BLOCCO ADDITIVO
+        // Finché la lezione è chiusa, il pulsante "Inizia" resta nudo
+        // sullo sfondo (come nella home); la card bianca compare solo
+        // quando le sezioni si aprono. Si aggancia DOPO il toggleMaster
+        // originale, che resta intatto.
+        // ================================================================
+        (function () {
+            const btn = document.getElementById('master-toggle-btn');
+            const content = document.getElementById('master-content');
+            if (!btn || !content) return;
+            const sync = () => document.body.classList.toggle('ums-master-open', content.classList.contains('open'));
+            btn.addEventListener('click', () => requestAnimationFrame(sync));
+            sync();
         })();
     </script>
 
