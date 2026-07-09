@@ -4663,42 +4663,57 @@ if (!fileDaCaricare) {
          non mostrano alcun pulsante.
     ================================================================ -->
     <style id="ums-lesson-nav-style">
-        /* Due sole freccette, ai lati della testata della lezione.
-           Nessun testo, nessun contatore: pagina pulita. */
+        /* Freccette ai LATI del sottotitolo "LEZIONE X":
+           riga flex che avvolge il sottotitolo originale. */
+        .ums-subtitle-row{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            margin-bottom: 2.5rem;
+        }
+        .ums-subtitle-row .subtitle{ margin-bottom: 0; }
+
         .ums-nav-btn{
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 40px; height: 40px;
+            flex: 0 0 auto;
+            width: 34px; height: 34px;
             display: grid; place-items: center;
             border-radius: 50%;
             text-decoration: none;
             font-family: var(--font-body, sans-serif);
-            font-size: 1.5rem; line-height: 1;
+            font-size: 1.35rem; line-height: 1;
             color: var(--mist, #C5C1B8);
             transition: color .2s, background .2s, transform .2s;
             opacity: 0;
             animation: umsFadeUp .7s .5s var(--ease, ease) both;
-            z-index: 5;
         }
         @media (prefers-reduced-motion: reduce){
             .ums-nav-btn{ animation: none; opacity: 1; }
         }
-        .ums-nav-prev{ left: 18px; }
-        .ums-nav-next{ right: 18px; }
         .ums-nav-btn:hover{
             color: var(--gold-dk, #9A7A3F);
             background: rgba(200,169,110,.1);
         }
-        .ums-nav-btn:active{ transform: translateY(-50%) scale(.92); }
-        .ums-nav-btn.ums-nav-ghost{ display: none; }
-
+        .ums-nav-btn:active{ transform: scale(.92); }
+        /* Estremità: segnaposto invisibile, il sottotitolo resta centrato */
+        .ums-nav-ghost{
+            flex: 0 0 auto;
+            width: 34px; height: 34px;
+            visibility: hidden;
+        }
         /* --mist e --gold-dk si adattano da soli in night mode (rimappate dal tema) */
 
-        @media (max-width: 560px){
-            .ums-nav-btn{ width: 34px; height: 34px; font-size: 1.3rem; }
-            .ums-nav-prev{ left: 6px; }
-            .ums-nav-next{ right: 6px; }
+        /* ------------------------------------------------------------
+           DISCLAIMER — nascosto finché la lezione è chiusa; compare
+           (dov'è sempre stato, sotto la sezione di studio) quando si
+           preme INIZIA. Riusa body.ums-master-open, già sincronizzato
+           dal blocco "card trasparente".
+        ------------------------------------------------------------ */
+        .disclaimer-card{ display: none; }
+        body.ums-master-open .disclaimer-card{
+            display: block;
+            /* niente ritardo da 1.9s del fade di primo caricamento */
+            animation: umsFadeUp .6s .1s var(--ease, ease) both;
         }
     </style>
 
@@ -4739,8 +4754,14 @@ if (!fileDaCaricare) {
 
             function makeBtn(n, direction) {
                 const exists = n >= 1 && n <= total;
-                if (!exists) return null;
                 const isNext = direction === 'next';
+                if (!exists) {
+                    // segnaposto invisibile: "LEZIONE X" resta centrato
+                    const ghost = document.createElement('span');
+                    ghost.className = 'ums-nav-ghost';
+                    ghost.setAttribute('aria-hidden', 'true');
+                    return ghost;
+                }
                 const a = document.createElement('a');
                 a.className = 'ums-nav-btn ' + (isNext ? 'ums-nav-next' : 'ums-nav-prev');
                 a.href = urlForLesson(n);
@@ -4750,14 +4771,17 @@ if (!fileDaCaricare) {
                 return a;
             }
 
-            // Le freccette vivono DENTRO l'header (position:relative),
-            // ai lati del titolo della lezione.
-            const headerEl = document.querySelector('header');
-            if (!headerEl) return;
-            const prevBtn = makeBtn(currentN - 1, 'prev');
-            const nextBtn = makeBtn(currentN + 1, 'next');
-            if (prevBtn) headerEl.appendChild(prevBtn);
-            if (nextBtn) headerEl.appendChild(nextBtn);
+            // Le freccette avvolgono il sottotitolo "LEZIONE X": il div
+            // originale #dyn-subtitle viene spostato dentro una riga flex
+            // (l'id resta intatto, il data-binding continua a funzionare).
+            const subtitle = document.getElementById('dyn-subtitle');
+            if (!subtitle || !subtitle.parentNode) return;
+            const row = document.createElement('div');
+            row.className = 'ums-subtitle-row';
+            subtitle.parentNode.insertBefore(row, subtitle);
+            row.appendChild(makeBtn(currentN - 1, 'prev'));
+            row.appendChild(subtitle);
+            row.appendChild(makeBtn(currentN + 1, 'next'));
         })();
     </script>
 
