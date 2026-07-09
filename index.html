@@ -637,7 +637,11 @@ const inizia = document.getElementById('inizia');
 function enterApp(){
   document.body.classList.remove('splash');
   document.body.classList.add('app-mode');
-  setTimeout(() => { document.getElementById('course-search').focus({preventScroll:true}); }, 700);
+  // Autofocus solo su desktop (mouse): su touch farebbe sbucare la
+  // tastiera da sola — lì il focus arriva solo toccando il campo.
+  if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    setTimeout(() => { document.getElementById('course-search').focus({preventScroll:true}); }, 700);
+  }
 }
 function backToSplash(){
   document.body.classList.remove('app-mode');
@@ -797,18 +801,34 @@ renderCourses();
      alto vengono nascosti. INIZIA viene alzato (63% → 56%).
 ================================================================ -->
 <style id="ums-inav-style">
-  /* INIZIA più in alto nello splash */
-  #hero-extras{ top: 56%; }
+  /* INIZIA nello splash: alzato rispetto all'origine (63%) ma con
+     più respiro dal brand rispetto al primo tentativo (56%) */
+  #hero-extras{ top: 59%; }
+  /* Solo PC: un filo più in basso ancora, per dare respiro al brand */
+  @media (min-width: 901px){
+    #hero-extras{ top: 61%; }
+  }
 
   /* Via i vecchi accessi: badge sotto INIZIA e controlli in alto */
   .hero-badges{ display: none !important; }
   #top-controls{ display: none !important; }
 
   #ums-insta-nav{
+    /* MOBILE-FIRST: la barra in basso è lo stato di default, così
+       esiste sempre anche se una media query non scattasse; il rail
+       desktop è solo l'override sotto. */
     position: fixed;
+    left: 0; right: 0; bottom: 0;
+    height: calc(58px + env(safe-area-inset-bottom, 0px));
+    padding: 0 8px env(safe-area-inset-bottom, 0px);
     z-index: 990; /* sopra course-view (85) e topbar (50), sotto night-toggle (9999) */
-    background: #fff;
+    background: rgba(255,255,255,.92);
+    -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+    border-top: 1px solid var(--dust, #E8E4DC);
     display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
     font-family: var(--font-body, 'DM Sans', sans-serif);
   }
 
@@ -879,37 +899,30 @@ renderCourses();
   }
   .lang-options.ums-lang-portal.show{ display: grid; }
 
-  /* ---------------- DESKTOP: rail a sinistra ---------------- */
+  /* ---------------- DESKTOP: rail a sinistra (override) ---------------- */
   @media (min-width: 901px){
     #ums-insta-nav{
-      top: 0; left: 0; bottom: 0;
-      width: 76px;
+      top: 0; left: 0; bottom: 0; right: auto;
+      width: 76px; height: auto;
       flex-direction: column;
       align-items: center;
+      justify-content: flex-start;
       gap: 10px;
       padding: 28px 0;
+      background: #fff;
+      -webkit-backdrop-filter: none; backdrop-filter: none;
+      border-top: none;
       border-right: 1px solid var(--dust, #E8E4DC);
     }
-    .ums-inav-item{ width: 52px; height: 52px; }
+    .ums-inav-item{ width: 52px; height: 52px; flex: 0 0 auto; max-width: none; }
     body{ padding-left: 76px; }
     #topbar{ left: 76px !important; width: calc(100% - 76px) !important; }
     #course-view{ left: 76px !important; }
     .lang-options.ums-lang-portal{ left: 90px; top: 24px; bottom: auto; }
   }
 
-  /* ---------------- MOBILE: barra in basso ---------------- */
+  /* ---------------- MOBILE: aggiustamenti di contorno ---------------- */
   @media (max-width: 900px){
-    #ums-insta-nav{
-      left: 0; right: 0; bottom: 0;
-      height: calc(58px + env(safe-area-inset-bottom, 0px));
-      padding: 0 8px env(safe-area-inset-bottom, 0px);
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-around;
-      border-top: 1px solid var(--dust, #E8E4DC);
-      background: rgba(255,255,255,.92);
-      -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
-    }
     .ums-inav-item{ flex: 1 1 0; height: 50px; max-width: 90px; }
     #night-toggle{ bottom: calc(78px + env(safe-area-inset-bottom, 0px)) !important; }
     .site-footer{ padding-bottom: calc(3rem + 70px + env(safe-area-inset-bottom, 0px)); }
