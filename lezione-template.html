@@ -5127,6 +5127,13 @@ if (!fileDaCaricare) {
             letter-spacing: -.025em;
             color: var(--ink);
         }
+        /* FIX ZOOM MOBILE — le righe del titolo, mentre aspettano di
+           entrare, stazionano a ±115vw: quei transform allargano la
+           larghezza scrollabile e il browser mobile parte zoomato
+           all'indietro per farci stare tutto. Il clip sull'header
+           impedisce all'animazione di allargare il documento
+           (clip non crea un contenitore di scroll, hidden è il fallback). */
+        header{ overflow-x: hidden; overflow-x: clip; }
         #dyn-title .ums-title-l1,
         #dyn-title .ums-title-l2{ display: block; text-wrap: balance; }
         #dyn-title .ums-title-l2{ font-style: italic; color: var(--navy); }
