@@ -5121,8 +5121,8 @@ if (!fileDaCaricare) {
             line-height: .92;
             letter-spacing: -.025em;
             color: var(--ink);
-            /* come #brand nell'index: la dimensione transisce col morphing */
-            transition: font-size .95s var(--ease, ease);
+            /* niente transition su font-size: il cambio di taglia avviene
+               mentre le righe sono fuori scena (invisibili) */
         }
         /* FIX ZOOM MOBILE — le righe in attesa di entrare stazionano a
            ±115vw e allargherebbero la larghezza scrollabile: ora in
@@ -5200,97 +5200,55 @@ if (!fileDaCaricare) {
     </script>
 
     <!-- ================================================================
-         TITOLO STILE BRANDSTAGE — BLOCCO ADDITIVO
-         Stessa identica architettura dell'index: l'header diventa uno
-         stage FISSO centrato a top:40% (come #brandStage), il titolo ha
-         la stessa grandezza di "Una Mano Spensierata", INIZIA è fisso
-         al 59% come l'hero. Al click su INIZIA (body.ums-master-open,
-         già sincronizzato) lo stage transisce top/left/transform e il
-         titolo transisce font-size — .95s var(--ease), gli stessi
-         valori del morphing dell'index. Niente script: solo CSS.
+         TITOLO MORPHING CENTRATO — BLOCCO ADDITIVO
+         Come il brand dell'index ma con destinazione in alto e SEMPRE
+         CENTRATA: il translate(-50%,-50%) resta identico nei due stati,
+         quindi transitano solo `top` (40% → centro barra) e `font-size`
+         (grande → piccolo). Il ricentraggio orizzontale durante il
+         rimpicciolimento è automatico. Niente script: solo CSS su
+         body.ums-master-open. Il titolo mini resta blindato nella
+         barra: una riga, larghezza vincolata, ellissi sui nomi lunghi.
     ================================================================ -->
     <style id="ums-title-migrate-style">
-        /* ---------- STAGE: l'header è il brandStage dell'index ---------- */
+        /* ---------- STAGE: fisso, centrato, come brandStage ---------- */
         header{
             position: fixed;
             left: 50%; top: 40%;
-            transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%); /* identico nei due stati */
             width: max-content;
             max-width: 94vw;
             padding: 0; margin: 0;
             z-index: 999997; /* sopra la topbar da scroll (999995) */
-            transition: top .95s var(--ease, ease), left .95s var(--ease, ease),
-                        transform .95s var(--ease, ease);
+            transition: top .95s var(--ease, ease), left .95s var(--ease, ease);
+        }
+        header h1#dyn-title{
+            transition: font-size .95s var(--ease, ease);
         }
 
         /* ---------- SPLASH (lezione chiusa) ---------- */
-        /* scroll bloccato come nell'index: un'unica schermata; i transform
-           d'ingresso del titolo non possono allargare il documento */
         body:not(.ums-master-open){ overflow: hidden; height: 100vh; }
 
-        /* INIZIA resta NEL flusso della card (mai fixed: la card ha
-           animazioni con transform e diventerebbe il suo riferimento).
-           È la card intera a scendere al 52% dello schermo — via
-           transform, che il compositor anima senza ricalcoli di layout. */
+        /* INIZIA resta NEL flusso della card: è la card intera a scendere
+           al 52% dello schermo via transform (compositor, fluido) */
         .content-card{
             margin-top: 96px; /* identico nei due stati: nessun salto */
             transition: transform .95s var(--ease, ease),
                         background-color .4s ease, border-color .4s ease,
                         box-shadow .4s ease, padding .4s ease;
         }
-        body:not(.ums-master-open) .content-card{
-            transform: translateY(52vh);
-        }
-        body.ums-master-open .content-card{
-            transform: translateY(0);
-        }
-        /* l'animazione d'ingresso della card trattiene un transform
-           (fill: both) che vincerebbe sulla traslazione: si sostituisce
-           il nome dei keyframes con una versione di sola opacità,
-           conservando durata/ritardo originali */
+        body:not(.ums-master-open) .content-card{ transform: translateY(52vh); }
+        body.ums-master-open .content-card{ transform: translateY(0); }
         @keyframes umsFadeOnly{ from{ opacity: 0; } to{ opacity: 1; } }
         .content-card{ animation-name: umsFadeOnly; }
 
-        /* ---------- APP (dopo INIZIA): migra in alto a sinistra ---------- */
-        body.ums-master-open header{
-            left: 22px; top: 14px;
-            transform: translate(0, 0);
-            text-align: left;
-        }
-        @media (min-width: 901px){
-            body.ums-master-open header{ left: 98px; } /* dopo il rail */
-        }
-
-        /* Come nell'index: il titolo mini poggia su una BARRA a tutta
-           larghezza (si riusa la topbar già esistente, che scivola giù
-           durante il morphing), non su una pillola attaccata al testo. */
-        body.ums-master-open #ums-topbar{
-            transform: translateY(0);
-        }
+        /* barra piena in alto (la topbar riusata) + brand ritirato */
+        body.ums-master-open #ums-topbar{ transform: translateY(0); }
         body.ums-master-open #ums-topbar .ums-brandmark{ visibility: hidden; }
 
-        /* FLUIDITÀ — al click il browser dovrebbe calcolare il layout di
-           TUTTA la lezione nello stesso frame in cui parte il morphing:
-           content-visibility rimanda il lavoro alle sezioni fuori
-           schermo, così l'animazione non parte congelata. */
+        /* FLUIDITÀ — layout delle sezioni fuori schermo rimandato */
         .master-content .accordion-item{
             content-visibility: auto;
             contain-intrinsic-size: auto 600px;
-        }
-
-        body.ums-master-open header h1#dyn-title{
-            font-size: clamp(1.35rem, 4.5vw, 1.9rem); /* come body.app-mode #brand */
-            line-height: .95;
-            margin: 0;
-        }
-        body.ums-master-open #dyn-title .ums-title-l1,
-        body.ums-master-open #dyn-title .ums-title-l2{ display: inline; }
-        body.ums-master-open #dyn-title .ums-title-l2{ margin-left: .28em; }
-        @media (max-width: 560px){
-            body.ums-master-open header h1#dyn-title{ font-size: 1.25rem; }
-            body.ums-master-open #dyn-title .ums-title-l1,
-            body.ums-master-open #dyn-title .ums-title-l2{ display: block; }
-            body.ums-master-open #dyn-title .ums-title-l2{ margin-left: 0; }
         }
 
         /* eyebrow e riga LEZIONE X svaniscono come la tagline dell'index */
@@ -5302,6 +5260,41 @@ if (!fileDaCaricare) {
         body.ums-master-open .ums-subtitle-row{
             opacity: 0; max-height: 0; margin: 0;
             overflow: hidden; pointer-events: none;
+        }
+
+        /* ---------- APP: in alto, piccolo, SEMPRE CENTRATO ---------- */
+        body.ums-master-open header{
+            top: 31px; /* centro verticale della barra (62px) — il
+                          translate(-50%,-50%) fa il resto */
+            max-width: calc(100vw - 44px);
+            overflow: hidden;
+        }
+        @media (min-width: 901px){
+            /* centro dell'area a destra del rail (76px) */
+            body.ums-master-open header{
+                left: calc(50% + 38px);
+                max-width: calc(100vw - 76px - 46px);
+            }
+        }
+        body.ums-master-open header h1#dyn-title{
+            font-size: clamp(1.35rem, 4.5vw, 1.9rem); /* come body.app-mode #brand */
+            margin: 0;
+            max-width: 100%;
+        }
+        /* stessa struttura dello splash (due righe impilate, centrate):
+           durante il morphing NON cambia nulla di discreto — la forma
+           si riduce e sale, senza scatti di ri-arrangiamento.
+           Ellissi per riga sui nomi-lezione lunghissimi. */
+        body.ums-master-open #dyn-title .ums-title-l1,
+        body.ums-master-open #dyn-title .ums-title-l2{
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+        }
+        @media (max-width: 560px){
+            body.ums-master-open header h1#dyn-title{ font-size: 1.05rem; }
         }
     </style>
 
