@@ -5210,5 +5210,90 @@ if (!fileDaCaricare) {
         })();
     </script>
 
+    <!-- ================================================================
+         TITOLO MIGRANTE — BLOCCO ADDITIVO
+         Al click su INIZIA il nome della materia replica il brand
+         dell'index: migra in alto a sinistra e si rimpicciolisce con
+         un'animazione (stesso timing .95s), le due righe diventano
+         inline. Alla chiusura torna al centro. Tecnica FLIP: il titolo
+         è nel flusso (non fixed come il brand dell'index), quindi si
+         misura prima/dopo e si anima la differenza via transform.
+    ================================================================ -->
+    <style id="ums-title-migrate-style">
+        body.ums-title-mini header h1#dyn-title{
+            position: fixed;
+            top: 15px; left: 22px;
+            margin: 0;
+            z-index: 999997; /* sopra la topbar da scroll (999995) */
+            font-size: clamp(1.35rem, 4.5vw, 1.9rem);
+            line-height: .95;
+            pointer-events: none;
+            text-align: left;
+        }
+        body.ums-title-mini #dyn-title .ums-title-l1,
+        body.ums-title-mini #dyn-title .ums-title-l2{ display: inline; }
+        body.ums-title-mini #dyn-title .ums-title-l2{ margin-left: .28em; }
+        /* come l'index sotto i 560px: righe di nuovo in blocco */
+        @media (max-width: 560px){
+            body.ums-title-mini header h1#dyn-title{ font-size: 1.25rem; }
+            body.ums-title-mini #dyn-title .ums-title-l1,
+            body.ums-title-mini #dyn-title .ums-title-l2{ display: block; }
+            body.ums-title-mini #dyn-title .ums-title-l2{ margin-left: 0; }
+        }
+        /* su desktop parte dopo il rail */
+        @media (min-width: 901px){
+            body.ums-title-mini header h1#dyn-title{ left: 98px; }
+        }
+        /* la topbar da scroll fa da sfondo: il suo brand si ritira,
+           al suo posto c'è il titolo mini */
+        body.ums-title-mini #ums-topbar .ums-brandmark{ visibility: hidden; }
+    </style>
+
+    <script id="ums-title-migrate-script">
+        (function () {
+            const btn = document.getElementById('master-toggle-btn');
+            const content = document.getElementById('master-content');
+            const title = document.getElementById('dyn-title');
+            if (!btn || !content || !title) return;
+
+            const reduced = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+            let firstRect = null;
+
+            // CAPTURE: fotografa il titolo PRIMA che toggleMaster cambi lo stato
+            btn.addEventListener('click', () => {
+                firstRect = title.getBoundingClientRect();
+            }, true);
+
+            // BUBBLE (dopo il toggleMaster inline): applica lo stato e anima
+            btn.addEventListener('click', () => {
+                requestAnimationFrame(() => {
+                    const open = content.classList.contains('open');
+                    document.body.classList.toggle('ums-title-mini', open);
+                    if (reduced || !firstRect) return;
+
+                    const last = title.getBoundingClientRect();
+                    if (!last.width || !firstRect.width) return;
+                    const dx = firstRect.left - last.left;
+                    const dy = firstRect.top - last.top;
+                    const s  = firstRect.width / last.width;
+
+                    // FLIP: parte dalla vecchia posizione/scala e scivola alla nuova
+                    title.style.transition = 'none';
+                    title.style.transformOrigin = 'top left';
+                    title.style.transform = 'translate(' + dx + 'px,' + dy + 'px) scale(' + s + ')';
+                    requestAnimationFrame(() => {
+                        title.style.transition = 'transform .95s var(--ease, cubic-bezier(.16,.84,.44,1))';
+                        title.style.transform = '';
+                    });
+                });
+            });
+
+            // pulizia a fine corsa (lascia il transform inline vuoto)
+            title.addEventListener('transitionend', (e) => {
+                if (e.propertyName === 'transform') title.style.transition = '';
+            });
+        })();
+    </script>
+
 </body>
 </html>
