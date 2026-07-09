@@ -4841,9 +4841,18 @@ if (!fileDaCaricare) {
         #ums-inav-lang:has(#custom-lang-selector.loaded) .ums-inav-placeholder{ display: none !important; }
         .ums-inav-placeholder.ums-hidden{ display: none !important; }
 
-        /* Il menu delle bandiere si apre rispetto alla finestra, non al rail */
-        #ums-insta-nav .lang-options{ position: fixed; }
-        #ums-insta-nav .lang-options.show{ display: grid; }
+        /* Il menu delle bandiere viene SPOSTATO nel body (via JS): dentro
+           la barra, il backdrop-filter ne farebbe il riferimento del
+           position:fixed → menu dipinto in un posto e tap in un altro
+           (bug iOS Safari). Fuori dalla barra e centrato SENZA transform
+           il problema non esiste. */
+        .lang-options.ums-lang-portal{
+            position: fixed;
+            top: auto; right: auto; left: auto;
+            transform: none;
+            z-index: 9999998;
+        }
+        .lang-options.ums-lang-portal.show{ display: grid; }
 
         /* ---------------- DESKTOP: rail a sinistra ---------------- */
         @media (min-width: 901px){
@@ -4861,7 +4870,7 @@ if (!fileDaCaricare) {
             /* la topbar da scroll parte dopo il rail */
             #ums-topbar{ left: 76px !important; width: calc(100% - 76px) !important; }
             /* menu lingue: si apre accanto al rail */
-            #ums-insta-nav .lang-options{ left: 90px; top: 24px; right: auto; }
+            .lang-options.ums-lang-portal{ left: 90px; top: 24px; bottom: auto; }
         }
 
         /* ---------------- MOBILE: barra in basso ---------------- */
@@ -4882,11 +4891,14 @@ if (!fileDaCaricare) {
             /* elementi flottanti sollevati sopra la barra */
             #night-toggle{ bottom: calc(78px + env(safe-area-inset-bottom, 0px)) !important; }
             #toast-container{ bottom: calc(92px + env(safe-area-inset-bottom, 0px)) !important; }
-            /* menu lingue: si apre sopra la barra, centrato */
-            #ums-insta-nav .lang-options{
-                left: 50%; transform: translateX(-50%);
+            /* menu lingue: sopra la barra, centrato senza transform */
+            .lang-options.ums-lang-portal{
+                left: 0; right: 0;
+                margin: 0 auto;
+                width: max-content;
+                max-width: calc(100vw - 24px);
                 bottom: calc(70px + env(safe-area-inset-bottom, 0px));
-                top: auto; right: auto;
+                top: auto;
             }
         }
 
@@ -5011,6 +5023,13 @@ if (!fileDaCaricare) {
                 const s = document.getElementById('custom-lang-selector');
                 if (!s || !langSlot) return;
                 if (s.parentElement !== langSlot) langSlot.appendChild(s);
+                // Il menu bandiere vive nel BODY, mai dentro la barra
+                // (il backdrop-filter della barra sfaserebbe render e tap)
+                const menu = document.getElementById('lang-options-menu');
+                if (menu && menu.parentElement !== document.body) {
+                    menu.classList.add('ums-lang-portal');
+                    document.body.appendChild(menu);
+                }
                 // doppia rete oltre a :has() — mai due "Lingua" insieme
                 const ph = langSlot.querySelector('.ums-inav-placeholder');
                 if (ph) ph.classList.toggle('ums-hidden', s.classList.contains('loaded'));
