@@ -5220,41 +5220,62 @@ if (!fileDaCaricare) {
             padding: 0; margin: 0;
             z-index: 999997; /* sopra la topbar da scroll (999995) */
             transition: top .95s var(--ease, ease), left .95s var(--ease, ease),
-                        transform .95s var(--ease, ease),
-                        background-color .3s, box-shadow .3s, padding .95s var(--ease, ease);
+                        transform .95s var(--ease, ease);
         }
 
         /* ---------- SPLASH (lezione chiusa) ---------- */
-        /* scroll bloccato come nell'index: la pagina è un'unica schermata,
-           e i transform d'ingresso del titolo non possono più allargare
-           il documento (fix zoom mobile alla radice) */
+        /* scroll bloccato come nell'index: un'unica schermata; i transform
+           d'ingresso del titolo non possono allargare il documento */
         body:not(.ums-master-open){ overflow: hidden; height: 100vh; }
 
-        /* INIZIA fisso al 59%, come l'hero dell'index */
-        body:not(.ums-master-open) .master-header{
-            position: fixed;
-            left: 50%; top: 59%;
-            transform: translateX(-50%);
-            width: max-content;
-            z-index: 999996;
+        /* INIZIA resta NEL flusso della card (mai fixed: la card ha
+           animazioni con transform e diventerebbe il suo riferimento).
+           È la card intera a scendere al 52% dello schermo — via
+           transform, che il compositor anima senza ricalcoli di layout. */
+        .content-card{
+            margin-top: 96px; /* identico nei due stati: nessun salto */
+            transition: transform .95s var(--ease, ease),
+                        background-color .4s ease, border-color .4s ease,
+                        box-shadow .4s ease, padding .4s ease;
         }
+        body:not(.ums-master-open) .content-card{
+            transform: translateY(52vh);
+        }
+        body.ums-master-open .content-card{
+            transform: translateY(0);
+        }
+        /* l'animazione d'ingresso della card trattiene un transform
+           (fill: both) che vincerebbe sulla traslazione: si sostituisce
+           il nome dei keyframes con una versione di sola opacità,
+           conservando durata/ritardo originali */
+        @keyframes umsFadeOnly{ from{ opacity: 0; } to{ opacity: 1; } }
+        .content-card{ animation-name: umsFadeOnly; }
 
         /* ---------- APP (dopo INIZIA): migra in alto a sinistra ---------- */
         body.ums-master-open header{
             left: 22px; top: 14px;
             transform: translate(0, 0);
             text-align: left;
-            /* pillola sfocata dietro il titolo mini: leggibile anche
-               scorrendo la lezione, senza dipendere dalla topbar */
-            background: rgba(247,244,239,.82);
-            -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
-            padding: 6px 14px;
-            border-radius: 14px;
         }
-        .night-mode body.ums-master-open header,
-        body.night-mode.ums-master-open header{ background: rgba(20,22,28,.82); }
         @media (min-width: 901px){
             body.ums-master-open header{ left: 98px; } /* dopo il rail */
+        }
+
+        /* Come nell'index: il titolo mini poggia su una BARRA a tutta
+           larghezza (si riusa la topbar già esistente, che scivola giù
+           durante il morphing), non su una pillola attaccata al testo. */
+        body.ums-master-open #ums-topbar{
+            transform: translateY(0);
+        }
+        body.ums-master-open #ums-topbar .ums-brandmark{ visibility: hidden; }
+
+        /* FLUIDITÀ — al click il browser dovrebbe calcolare il layout di
+           TUTTA la lezione nello stesso frame in cui parte il morphing:
+           content-visibility rimanda il lavoro alle sezioni fuori
+           schermo, così l'animazione non parte congelata. */
+        .master-content .accordion-item{
+            content-visibility: auto;
+            contain-intrinsic-size: auto 600px;
         }
 
         body.ums-master-open header h1#dyn-title{
@@ -5282,12 +5303,6 @@ if (!fileDaCaricare) {
             opacity: 0; max-height: 0; margin: 0;
             overflow: hidden; pointer-events: none;
         }
-
-        /* la card, senza più l'header nel flusso, lascia spazio al mini */
-        body.ums-master-open .content-card{ margin-top: 96px; }
-
-        /* la topbar da scroll non serve più: la pillola fa da sfondo */
-        body.ums-master-open #ums-topbar{ display: none !important; }
     </style>
 
 </body>
