@@ -4728,7 +4728,7 @@ if (!fileDaCaricare) {
            HEADER COMPATTO — INIZIA era troppo in basso: si accorciano
            i respiri verticali sopra la card, senza toccare i font.
         ------------------------------------------------------------ */
-        header{ padding: 2.6rem 2rem 1.6rem; }
+        header{ padding: 2.6rem 2rem 2.8rem; }
         .header-eyebrow{ margin-bottom: 1rem; }
         .ums-subtitle-row{ margin-bottom: 1.2rem; }
     </style>
@@ -5128,10 +5128,20 @@ if (!fileDaCaricare) {
             color: var(--ink);
         }
         #dyn-title .ums-title-l1,
-        #dyn-title .ums-title-l2{ display: block; white-space: nowrap; }
+        #dyn-title .ums-title-l2{ display: block; text-wrap: balance; }
         #dyn-title .ums-title-l2{ font-style: italic; color: var(--navy); }
         /* stesso azzurro della seconda riga del brand in night mode */
         .night-mode #dyn-title .ums-title-l2{ color: #8FB4E8; }
+
+        /* SFONDO STABILE — 100lvh: l'altezza non cambia quando la barra
+           del browser mobile si ritira, quindi l'immagine non "respira"
+           durante lo scroll né parte con lo zoom sballato. */
+        .giants-background{ height: 100vh; height: 100lvh; }
+
+        /* Solo PC: un filo più di respiro tra header e card INIZIA */
+        @media (min-width: 901px){
+            header{ padding-bottom: 4rem; }
+        }
 
         /* stesse entrate laterali del brand dell'index */
         @keyframes umsSlideFromLeft{ from{ opacity:0; transform:translateX(-115vw);} to{ opacity:1; transform:translateX(0);} }
@@ -5162,13 +5172,27 @@ if (!fileDaCaricare) {
                 if (t.firstElementChild && t.firstElementChild.classList.contains('ums-title-l1')) return;
                 const txt = t.textContent.replace(/\s+/g, ' ').trim();
                 if (!txt) return;
-                const i = txt.indexOf(' ');
-                if (i < 0) {
+
+                // Punto di taglio: nomi corti → prima parola (STORIA /
+                // dell'Educazione); titoli lunghi (es. nomi di lezione)
+                // → spazio più vicino al centro, righe bilanciate.
+                let cut = txt.indexOf(' ');
+                if (cut >= 0 && txt.length > 26) {
+                    const mid = txt.length / 2;
+                    let best = -1, bestDist = Infinity;
+                    for (let j = txt.indexOf(' '); j !== -1; j = txt.indexOf(' ', j + 1)) {
+                        const dist = Math.abs(j - mid);
+                        if (dist < bestDist) { bestDist = dist; best = j; }
+                    }
+                    cut = best;
+                }
+
+                if (cut < 0) {
                     t.innerHTML = '<span class="ums-title-l1">' + esc(txt) + '</span>';
                 } else {
                     t.innerHTML =
-                        '<span class="ums-title-l1">' + esc(txt.slice(0, i)) + '</span>' +
-                        '<span class="ums-title-l2">' + esc(txt.slice(i + 1)) + '</span>';
+                        '<span class="ums-title-l1">' + esc(txt.slice(0, cut)) + '</span>' +
+                        '<span class="ums-title-l2">' + esc(txt.slice(cut + 1)) + '</span>';
                 }
             };
 
