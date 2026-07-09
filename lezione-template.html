@@ -5256,31 +5256,24 @@ if (!fileDaCaricare) {
             contain-intrinsic-size: auto 600px;
         }
 
-        /* eyebrow e riga LEZIONE X svaniscono come la tagline dell'index */
-        .header-eyebrow, .ums-subtitle-row{
-            max-height: 80px;
-            transition: opacity .45s ease, max-height .55s ease, margin .45s ease;
-        }
+        /* eyebrow e riga LEZIONE X: in modalità aperta ESCONO dal layout
+           (display none). Niente più fade di collasso: l'altezza
+           dell'header diventa deterministica (solo il titolo) e il
+           centraggio a 38px è esatto in ogni istante — il fade rendeva
+           il centro mobile e il titolo derivava su o giù. */
         body.ums-master-open .header-eyebrow,
-        body.ums-master-open .ums-subtitle-row{
-            opacity: 0; max-height: 0; margin: 0;
-            overflow: hidden; pointer-events: none;
-        }
+        body.ums-master-open .ums-subtitle-row{ display: none; }
 
         /* ---------- APP: in alto, piccolo, SEMPRE CENTRATO ---------- */
         /* la barra diventa alta 76px come quella dell'index: due righe
            di Playfair (aste comprese) ci stanno con margine vero */
         body.ums-master-open #ums-topbar{ height: 76px; }
         body.ums-master-open header{
-            top: 38px; /* centro verticale della barra (76px) — il
-                          translate(-50%,-50%) fa il resto */
+            top: 38px; /* centro verticale della barra (76px): l'header
+                          contiene SOLO il titolo (63.8px), il
+                          translate(-50%,-50%) lo centra esattamente */
             max-width: calc(100vw - 44px);
             overflow: hidden;
-            /* l'eyebrow collassato è inline-flex: anche a max-height 0
-               occupa la SUA riga tipografica (~27px fantasma) che
-               spingeva giù il titolo. line-height 0 sull'header la
-               uccide; h1 e figli hanno line-height propri. */
-            line-height: 0;
         }
         @media (min-width: 901px){
             body.ums-master-open header{
@@ -5309,6 +5302,103 @@ if (!fileDaCaricare) {
             body.ums-master-open header h1#dyn-title{ font-size: 1.05rem; }
         }
     </style>
+
+    <!-- ================================================================
+         FIXUPS — BLOCCO ADDITIVO
+         1) Il disclaimer traduzione viene SPOSTATO fuori dall'header
+            (dentro, gonfiava l'header fisso al cambio lingua: il titolo
+            sforava sopra la barra e il disclaimer collassava su mobile).
+            Diventa una pillola fissa, centrata, con una ✕ per chiuderla.
+         2) La ✕ del modale (voci Wikipedia di Accadde Oggi) era absolute
+            in un contenitore scrollabile: scorrendo spariva e su mobile
+            si restava incastrati. Ora è sticky (sempre visibile) con
+            area di tocco da 40px, e il modale si chiude anche con Esc.
+    ================================================================ -->
+    <style id="ums-fixups-style">
+        /* ---- 1) Disclaimer traduzione: pillola fissa, fuori dall'header ---- */
+        #translation-disclaimer{
+            position: fixed;
+            z-index: 999996;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 12px;
+            width: max-content;
+            max-width: min(680px, calc(100vw - 24px));
+            margin: 0;
+            padding-right: 46px; /* spazio per la ✕ */
+            box-shadow: var(--shadow-card, 0 4px 24px rgba(15,17,23,.08));
+        }
+        /* a lezione aperta scende sotto la barra (76px) */
+        body.ums-master-open #translation-disclaimer{ top: 88px; }
+        @media (min-width: 901px){
+            /* centrato sull'area a destra del rail, come titolo e card */
+            #translation-disclaimer{ left: calc(50% + 38px); }
+        }
+        /* chiuso con la ✕: vince anche sul display:block inline
+           che il cambio lingua imposta a ogni traduzione */
+        #translation-disclaimer.ums-dismissed{ display: none !important; }
+
+        .ums-disc-x{
+            position: absolute;
+            top: 50%; right: 8px;
+            transform: translateY(-50%);
+            width: 32px; height: 32px;
+            display: grid; place-items: center;
+            border: none; border-radius: 50%;
+            background: rgba(122,98,32,.12);
+            color: #7A6220;
+            font-size: .95rem; line-height: 1;
+            cursor: pointer;
+            transition: background .2s;
+        }
+        .ums-disc-x:hover{ background: rgba(122,98,32,.22); }
+
+        /* ---- 2) ✕ del modale Wikipedia: sempre visibile e toccabile ---- */
+        .close-modal{
+            position: sticky !important;
+            top: 0 !important;
+            float: right;
+            width: 40px; height: 40px;
+            display: grid; place-items: center;
+            background: rgba(15,17,23,.07);
+            border-radius: 50%;
+            margin: -1.4rem -1.2rem 0 0;
+            z-index: 6;
+            font-size: 1.35rem !important;
+        }
+        .close-modal:hover{ background: rgba(15,17,23,.14); }
+        .night-mode .close-modal{ background: rgba(255,255,255,.09); }
+
+        /* ---- respiro per gli alfabeti con metriche alte (JP/AR/cirillico):
+               il line box mini sale a 1.15, 2 righe = 69.9px, ancora
+               dentro la barra da 76 (3..73) ---- */
+        body.ums-master-open header h1#dyn-title{ line-height: 1.15; }
+    </style>
+
+    <script id="ums-fixups-script">
+        (function () {
+            // 1) Porta il disclaimer nel body (dentro l'header fisso ne
+            //    gonfiava l'altezza al cambio lingua) e aggiungi la ✕.
+            const disc = document.getElementById('translation-disclaimer');
+            if (disc && disc.parentElement !== document.body) {
+                document.body.appendChild(disc);
+                const x = document.createElement('button');
+                x.className = 'ums-disc-x';
+                x.type = 'button';
+                x.setAttribute('aria-label', 'Chiudi avviso traduzione');
+                x.innerHTML = '&#10005;';
+                x.addEventListener('click', () => disc.classList.add('ums-dismissed'));
+                disc.appendChild(x);
+            }
+
+            // 2) Esc chiude il modale Wikipedia/Accadde Oggi
+            document.addEventListener('keydown', (e) => {
+                if (e.key !== 'Escape') return;
+                const m = document.getElementById('factor-modal');
+                if (m && m.classList.contains('open')) m.classList.remove('open');
+            });
+        })();
+    </script>
 
 </body>
 </html>
