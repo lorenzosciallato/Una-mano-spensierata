@@ -5224,6 +5224,11 @@ if (!fileDaCaricare) {
         header h1#dyn-title{
             transition: font-size .95s var(--ease, ease);
         }
+        /* su desktop il centro è quello dell'area a destra del rail,
+           in ENTRAMBI gli stati: titolo e INIZIA in colonna perfetta */
+        @media (min-width: 901px){
+            header{ left: calc(50% + 38px); }
+        }
 
         /* ---------- SPLASH (lezione chiusa) ---------- */
         body:not(.ums-master-open){ overflow: hidden; height: 100vh; }
@@ -5263,21 +5268,23 @@ if (!fileDaCaricare) {
         }
 
         /* ---------- APP: in alto, piccolo, SEMPRE CENTRATO ---------- */
+        /* la barra diventa alta 76px come quella dell'index: due righe
+           di Playfair (aste comprese) ci stanno con margine vero */
+        body.ums-master-open #ums-topbar{ height: 76px; }
         body.ums-master-open header{
-            top: 31px; /* centro verticale della barra (62px) — il
+            top: 38px; /* centro verticale della barra (76px) — il
                           translate(-50%,-50%) fa il resto */
             max-width: calc(100vw - 44px);
             overflow: hidden;
         }
         @media (min-width: 901px){
-            /* centro dell'area a destra del rail (76px) */
             body.ums-master-open header{
-                left: calc(50% + 38px);
                 max-width: calc(100vw - 76px - 46px);
             }
         }
         body.ums-master-open header h1#dyn-title{
             font-size: clamp(1.35rem, 4.5vw, 1.9rem); /* come body.app-mode #brand */
+            line-height: 1.05; /* aria per le aste di Playfair */
             margin: 0;
             max-width: 100%;
         }
