@@ -4787,5 +4787,288 @@ if (!fileDaCaricare) {
         })();
     </script>
 
+    <!-- ================================================================
+         INSTA-NAV — BLOCCO ADDITIVO
+         Barra di navigazione stile Instagram:
+         · Desktop: rail verticale fissa a sinistra
+         · Mobile:  barra fissa in basso
+         Ordine: Lingua (icona+testo) · Home · Lorenzo (avatar → popup
+         "© 2025, tutti i diritti riservati" → Instagram) · WhatsApp.
+         I vecchi badge nell'header vengono nascosti; il selettore
+         lingua originale viene SPOSTATO (non duplicato) dentro la
+         barra, così tutta la sua logica resta intatta.
+    ================================================================ -->
+    <style id="ums-inav-style">
+        /* Via i vecchi badge dall'header (il markup resta, per sicurezza) */
+        .badges-row{ display: none !important; }
+
+        #ums-insta-nav{
+            position: fixed;
+            z-index: 999996; /* sopra la topbar (999995), sotto night-toggle e toast */
+            background: #fff;
+            display: flex;
+            font-family: var(--font-body, sans-serif);
+        }
+
+        .ums-inav-item{
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            gap: 3px;
+            border: none; background: transparent;
+            text-decoration: none; cursor: pointer;
+            color: var(--ink, #1C1C22);
+            border-radius: 12px;
+            transition: background .18s, transform .18s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .ums-inav-item:hover{ background: rgba(15,17,23,.05); }
+        .ums-inav-item:active{ transform: scale(.94); }
+        .ums-inav-item .ums-ic{ width: 24px; height: 24px; }
+
+        .ums-inav-label{
+            font-size: .56rem; font-weight: 700;
+            letter-spacing: .1em; text-transform: uppercase;
+            color: var(--sub, #7A7770);
+            line-height: 1;
+        }
+
+        .ums-inav-avatar{
+            width: 28px; height: 28px; border-radius: 50%;
+            object-fit: cover; display: block;
+            border: 2px solid transparent;
+            transition: border-color .2s;
+        }
+        .ums-inav-item:hover .ums-inav-avatar{ border-color: var(--gold, #C8A96E); }
+
+        /* --- Selettore lingua trapiantato nella barra --- */
+        #ums-insta-nav #custom-lang-selector,
+        #ums-insta-nav #custom-lang-selector.loaded{
+            background: transparent; border: none; box-shadow: none;
+            padding: 0; margin: 0;
+            animation: none; opacity: 1;
+            z-index: auto;
+            position: static;
+        }
+        #ums-insta-nav #lang-toggle-btn{
+            display: flex; flex-direction: column; align-items: center; gap: 3px;
+            font-size: .56rem; letter-spacing: .1em;
+            color: var(--sub, #7A7770);
+        }
+        #ums-insta-nav #lang-toggle-btn .ums-ic{
+            width: 24px; height: 24px; color: var(--ink, #1C1C22);
+        }
+        #ums-insta-nav #lang-arrow{ display: none; }
+        /* Placeholder mostrato finché Google Translate non è pronto */
+        #ums-inav-lang:has(#custom-lang-selector.loaded) .ums-inav-placeholder{ display: none; }
+        .ums-inav-placeholder{ opacity: .45; pointer-events: none; }
+
+        /* Il menu delle bandiere si apre rispetto alla finestra, non al rail */
+        #ums-insta-nav .lang-options{ position: fixed; }
+        #ums-insta-nav .lang-options.show{ display: grid; }
+
+        /* ---------------- DESKTOP: rail a sinistra ---------------- */
+        @media (min-width: 901px){
+            #ums-insta-nav{
+                top: 0; left: 0; bottom: 0;
+                width: 76px;
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+                padding: 28px 0;
+                border-right: 1px solid var(--dust, #E8E4DC);
+            }
+            .ums-inav-item{ width: 52px; height: 52px; }
+            body{ padding-left: 76px; }
+            /* la topbar da scroll parte dopo il rail */
+            #ums-topbar{ left: 76px !important; width: calc(100% - 76px) !important; }
+            /* menu lingue: si apre accanto al rail */
+            #ums-insta-nav .lang-options{ left: 90px; top: 24px; right: auto; }
+        }
+
+        /* ---------------- MOBILE: barra in basso ---------------- */
+        @media (max-width: 900px){
+            #ums-insta-nav{
+                left: 0; right: 0; bottom: 0;
+                height: calc(58px + env(safe-area-inset-bottom, 0px));
+                padding: 0 8px env(safe-area-inset-bottom, 0px);
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-around;
+                border-top: 1px solid var(--dust, #E8E4DC);
+                background: rgba(255,255,255,.92);
+                -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+            }
+            .ums-inav-item{ flex: 1 1 0; height: 50px; max-width: 90px; }
+            body{ padding-bottom: calc(120px + env(safe-area-inset-bottom, 0px)); }
+            /* elementi flottanti sollevati sopra la barra */
+            #night-toggle{ bottom: calc(78px + env(safe-area-inset-bottom, 0px)) !important; }
+            #toast-container{ bottom: calc(92px + env(safe-area-inset-bottom, 0px)) !important; }
+            /* menu lingue: si apre sopra la barra, centrato */
+            #ums-insta-nav .lang-options{
+                left: 50%; transform: translateX(-50%);
+                bottom: calc(70px + env(safe-area-inset-bottom, 0px));
+                top: auto; right: auto;
+            }
+        }
+
+        /* ---------------- Night mode ---------------- */
+        .night-mode #ums-insta-nav{
+            background: #16181F;
+            border-color: #2B2E38;
+        }
+        @media (max-width: 900px){
+            .night-mode #ums-insta-nav{ background: rgba(20,22,28,.92); }
+        }
+        .night-mode .ums-inav-item{ color: var(--ivory, #F7F4EF); }
+        .night-mode .ums-inav-item:hover{ background: rgba(255,255,255,.07); }
+        .night-mode #ums-insta-nav #lang-toggle-btn .ums-ic{ color: var(--ivory, #F7F4EF); }
+
+        /* ---------------- Popup "Creato da Lorenzo" ---------------- */
+        #ums-lorenzo-overlay{
+            display: none;
+            position: fixed; inset: 0;
+            z-index: 9999997;
+            background: rgba(15,17,23,.55);
+            -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+            align-items: center; justify-content: center;
+            padding: 24px;
+        }
+        #ums-lorenzo-overlay.show{ display: flex; }
+
+        .ums-lorenzo-card{
+            background: var(--ivory, #F7F4EF);
+            border-radius: var(--r-xl, 32px);
+            box-shadow: var(--shadow-lift, 0 12px 40px rgba(15,17,23,.2));
+            padding: 44px 40px 36px;
+            max-width: 340px; width: 100%;
+            text-align: center;
+            position: relative;
+            animation: umsLorenzoPop .35s var(--ease, ease) both;
+        }
+        @keyframes umsLorenzoPop{
+            from{ opacity: 0; transform: scale(.9) translateY(12px); }
+            to{ opacity: 1; transform: scale(1) translateY(0); }
+        }
+        @media (prefers-reduced-motion: reduce){
+            .ums-lorenzo-card{ animation: none; }
+        }
+
+        .ums-lorenzo-link{ text-decoration: none; display: block; }
+        .ums-lorenzo-img{
+            width: 150px; height: 150px; border-radius: 50%;
+            object-fit: cover; display: block; margin: 0 auto 20px;
+            border: 3px solid var(--gold, #C8A96E);
+            box-shadow: var(--shadow-gold, 0 8px 32px rgba(200,169,110,.25));
+            transition: transform .25s var(--ease, ease);
+        }
+        .ums-lorenzo-link:hover .ums-lorenzo-img{ transform: scale(1.04); }
+        .ums-lorenzo-title{
+            font-family: var(--font-display, serif);
+            font-size: 1.35rem; font-weight: 700; color: var(--ink, #1C1C22);
+            margin-bottom: 6px;
+        }
+        .ums-lorenzo-sub{
+            font-size: .78rem; color: var(--sub, #7A7770);
+            letter-spacing: .04em; margin-bottom: 14px;
+        }
+        .ums-lorenzo-ig{
+            display: inline-block;
+            font-size: .66rem; font-weight: 700;
+            letter-spacing: .14em; text-transform: uppercase;
+            color: var(--gold-dk, #9A7A3F);
+        }
+        .ums-lorenzo-close{
+            position: absolute; top: 14px; right: 14px;
+            width: 36px; height: 36px; border-radius: 50%;
+            border: none; background: rgba(15,17,23,.06);
+            color: var(--ink, #1C1C22);
+            font-size: 1rem; cursor: pointer;
+            display: grid; place-items: center;
+            transition: background .2s;
+        }
+        .ums-lorenzo-close:hover{ background: rgba(15,17,23,.12); }
+
+        .night-mode .ums-lorenzo-card{ background: #1C1F27; }
+        .night-mode .ums-lorenzo-title{ color: var(--ivory, #F7F4EF); }
+        .night-mode .ums-lorenzo-close{ background: rgba(255,255,255,.08); color: var(--ivory, #F7F4EF); }
+    </style>
+
+    <script id="ums-inav-script">
+        (function () {
+            const IG_URL = 'https://www.instagram.com/sciallato_lorenzo/';
+            const WA_URL = 'https://chat.whatsapp.com/EaX5kr14XxHL9o3qxdDVEP?mode=gi_t';
+            const HOME_URL = 'https://lorenzosciallato.github.io/Una-mano-spensierata/index.html';
+            const AVATAR = 'https://files.catbox.moe/qvck5j.png';
+
+            const WA_SVG = '<svg class="ums-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.5 15.3L2 22l4.9-1.4A10 10 0 1 0 12 2Z"/><path d="M8.7 7.9c-.3 0-.6.1-.8.4-.8.9-.9 2.4.2 4 1.2 1.8 2.9 3.2 4.9 3.9 1.5.5 2.6.2 3.3-.6.2-.3.3-.7.2-1l-.3-.9c-.1-.3-.4-.4-.7-.4l-1.4.2c-.2 0-.5 0-.6-.2l-1-1c-.6-.6-1.1-1.3-1.4-2-.1-.2 0-.4.1-.6l.7-.9c.2-.2.2-.5.1-.8l-.5-1.2c-.1-.3-.4-.5-.8-.5h-.9Z"/></svg>';
+
+            const nav = document.createElement('nav');
+            nav.id = 'ums-insta-nav';
+            nav.setAttribute('aria-label', 'Navigazione principale');
+            nav.innerHTML =
+                '<div class="ums-inav-item" id="ums-inav-lang">' +
+                    '<span class="ums-inav-placeholder" aria-hidden="true" style="display:flex;flex-direction:column;align-items:center;gap:3px;">' +
+                        '<svg class="ums-ic"><use href="#ic-globe"/></svg>' +
+                        '<span class="ums-inav-label">Lingua</span>' +
+                    '</span>' +
+                '</div>' +
+                '<a class="ums-inav-item" href="' + HOME_URL + '" title="Home" aria-label="Torna alla Home">' +
+                    '<svg class="ums-ic" aria-hidden="true"><use href="#ic-home"/></svg>' +
+                '</a>' +
+                '<button class="ums-inav-item" id="ums-inav-lorenzo" type="button" title="Creato da Lorenzo" aria-label="Creato da Lorenzo" aria-haspopup="dialog">' +
+                    '<img src="' + AVATAR + '" alt="" class="ums-inav-avatar">' +
+                '</button>' +
+                '<a class="ums-inav-item" href="' + WA_URL + '" target="_blank" rel="noopener" title="Gruppo WhatsApp" aria-label="Entra nel gruppo WhatsApp">' +
+                    WA_SVG +
+                '</a>';
+            document.body.appendChild(nav);
+
+            // Trapianto del selettore lingua originale (logica intatta).
+            // NB: il codice originale, dopo il caricamento dati, riappende il
+            // selettore dentro <header>: l'observer lo reclama e lo riporta
+            // nella barra ogni volta che succede.
+            const langSlot = document.getElementById('ums-inav-lang');
+            const claimLangSelector = () => {
+                const s = document.getElementById('custom-lang-selector');
+                if (s && langSlot && s.parentElement !== langSlot) langSlot.appendChild(s);
+            };
+            claimLangSelector();
+            const headerEl = document.querySelector('header');
+            if (headerEl && 'MutationObserver' in window) {
+                new MutationObserver(claimLangSelector).observe(headerEl, { childList: true });
+            }
+
+            // ---------- Popup "Creato da Lorenzo" ----------
+            const overlay = document.createElement('div');
+            overlay.id = 'ums-lorenzo-overlay';
+            overlay.setAttribute('role', 'dialog');
+            overlay.setAttribute('aria-modal', 'true');
+            overlay.setAttribute('aria-label', 'Creato da Lorenzo');
+            overlay.innerHTML =
+                '<div class="ums-lorenzo-card">' +
+                    '<button class="ums-lorenzo-close" type="button" aria-label="Chiudi">&#10005;</button>' +
+                    '<a class="ums-lorenzo-link notranslate" translate="no" href="' + IG_URL + '" target="_blank" rel="noopener">' +
+                        '<img src="' + AVATAR + '" alt="Lorenzo Sciallato" class="ums-lorenzo-img">' +
+                        '<div class="ums-lorenzo-title">Creato da Lorenzo</div>' +
+                        '<div class="ums-lorenzo-sub">&copy; 2025 &mdash; Tutti i diritti riservati</div>' +
+                        '<span class="ums-lorenzo-ig">@sciallato_lorenzo su Instagram &rarr;</span>' +
+                    '</a>' +
+                '</div>';
+            document.body.appendChild(overlay);
+
+            const openBtn = document.getElementById('ums-inav-lorenzo');
+            const closeBtn = overlay.querySelector('.ums-lorenzo-close');
+            const open = () => { overlay.classList.add('show'); closeBtn.focus(); };
+            const close = () => { overlay.classList.remove('show'); openBtn.focus(); };
+
+            openBtn.addEventListener('click', open);
+            closeBtn.addEventListener('click', close);
+            overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && overlay.classList.contains('show')) close();
+            });
+        })();
+    </script>
+
 </body>
 </html>
