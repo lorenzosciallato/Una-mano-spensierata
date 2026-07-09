@@ -4715,6 +4715,22 @@ if (!fileDaCaricare) {
             /* niente ritardo da 1.9s del fade di primo caricamento */
             animation: umsFadeUp .6s .1s var(--ease, ease) both;
         }
+
+        /* Footer "Una Mano Spensierata · Tutti i diritti…": stessa sorte
+           del disclaimer — compare in fondo solo dopo INIZIA. */
+        .site-footer{ display: none; }
+        body.ums-master-open .site-footer{
+            display: block;
+            animation: umsFadeUp .6s .15s var(--ease, ease) both;
+        }
+
+        /* ------------------------------------------------------------
+           HEADER COMPATTO — INIZIA era troppo in basso: si accorciano
+           i respiri verticali sopra la card, senza toccare i font.
+        ------------------------------------------------------------ */
+        header{ padding: 2.6rem 2rem 1.6rem; }
+        .header-eyebrow{ margin-bottom: 1rem; }
+        .ums-subtitle-row{ margin-bottom: 1.2rem; }
     </style>
 
     <script id="ums-lesson-nav-script">
@@ -4985,13 +5001,7 @@ if (!fileDaCaricare) {
         }
         .ums-lorenzo-sub{
             font-size: .78rem; color: var(--sub, #7A7770);
-            letter-spacing: .04em; margin-bottom: 14px;
-        }
-        .ums-lorenzo-ig{
-            display: inline-block;
-            font-size: .66rem; font-weight: 700;
-            letter-spacing: .14em; text-transform: uppercase;
-            color: var(--gold-dk, #9A7A3F);
+            letter-spacing: .04em;
         }
         .ums-lorenzo-close{
             position: absolute; top: 14px; right: 14px;
@@ -5081,7 +5091,6 @@ if (!fileDaCaricare) {
                         '<img src="' + AVATAR + '" alt="Lorenzo Sciallato" class="ums-lorenzo-img">' +
                         '<div class="ums-lorenzo-title">Creato da Lorenzo</div>' +
                         '<div class="ums-lorenzo-sub">&copy; 2025 &mdash; Tutti i diritti riservati</div>' +
-                        '<span class="ums-lorenzo-ig">@sciallato_lorenzo su Instagram &rarr;</span>' +
                     '</a>' +
                 '</div>';
             document.body.appendChild(overlay);
@@ -5097,6 +5106,76 @@ if (!fileDaCaricare) {
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape' && overlay.classList.contains('show')) close();
             });
+        })();
+    </script>
+
+    <!-- ================================================================
+         TITOLO STILE BRAND — BLOCCO ADDITIVO
+         Il nome della materia replica ESATTAMENTE il brand dell'index:
+         Playfair 900, clamp(3rem,10vw,6.4rem), line-height .92,
+         prima parola nel colore base, resto in corsivo blu navy
+         (azzurro #8FB4E8 in night mode), righe che entrano dai due lati.
+         Il data-binding originale riscrive il titolo con innerText dopo
+         il fetch: l'observer lo ri-spezza in due righe ogni volta.
+    ================================================================ -->
+    <style id="ums-brand-title-style">
+        header h1#dyn-title{
+            font-family: var(--font-display);
+            font-weight: 900;
+            font-size: clamp(3rem, 10vw, 6.4rem);
+            line-height: .92;
+            letter-spacing: -.025em;
+            color: var(--ink);
+        }
+        #dyn-title .ums-title-l1,
+        #dyn-title .ums-title-l2{ display: block; white-space: nowrap; }
+        #dyn-title .ums-title-l2{ font-style: italic; color: var(--navy); }
+        /* stesso azzurro della seconda riga del brand in night mode */
+        .night-mode #dyn-title .ums-title-l2{ color: #8FB4E8; }
+
+        /* stesse entrate laterali del brand dell'index */
+        @keyframes umsSlideFromLeft{ from{ opacity:0; transform:translateX(-115vw);} to{ opacity:1; transform:translateX(0);} }
+        @keyframes umsSlideFromRight{ from{ opacity:0; transform:translateX(115vw);} to{ opacity:1; transform:translateX(0);} }
+        #dyn-title .ums-title-l1{ animation: umsSlideFromLeft 1s .3s var(--ease, ease) both; }
+        #dyn-title .ums-title-l2{ animation: umsSlideFromRight 1s .42s var(--ease, ease) both; }
+        @media (prefers-reduced-motion: reduce){
+            #dyn-title .ums-title-l1, #dyn-title .ums-title-l2{ animation: none; opacity: 1; }
+        }
+
+        /* rete di sicurezza: parole molto lunghe (es. Neuropsichiatria)
+           su schermi stretti — si riduce solo il minimo del clamp */
+        @media (max-width: 420px){
+            header h1#dyn-title{ font-size: clamp(2.2rem, 10vw, 6.4rem); }
+        }
+    </style>
+
+    <script id="ums-brand-title-script">
+        (function () {
+            const t = document.getElementById('dyn-title');
+            if (!t) return;
+
+            const esc = (s) => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+            const format = () => {
+                // già formattato → non toccare (evita loop con l'observer
+                // e lascia in pace Google Translate che muta i nodi interni)
+                if (t.firstElementChild && t.firstElementChild.classList.contains('ums-title-l1')) return;
+                const txt = t.textContent.replace(/\s+/g, ' ').trim();
+                if (!txt) return;
+                const i = txt.indexOf(' ');
+                if (i < 0) {
+                    t.innerHTML = '<span class="ums-title-l1">' + esc(txt) + '</span>';
+                } else {
+                    t.innerHTML =
+                        '<span class="ums-title-l1">' + esc(txt.slice(0, i)) + '</span>' +
+                        '<span class="ums-title-l2">' + esc(txt.slice(i + 1)) + '</span>';
+                }
+            };
+
+            format(); // stato iniziale ("Caricamento…")
+            if ('MutationObserver' in window) {
+                new MutationObserver(format).observe(t, { childList: true, characterData: true, subtree: true });
+            }
         })();
     </script>
 
