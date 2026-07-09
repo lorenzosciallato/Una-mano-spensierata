@@ -446,7 +446,7 @@ body.instant #appview, body.instant #topbar, body.instant #top-controls{transiti
     <span class="brand-l1">Una Mano</span>
     <span class="brand-l2">Spensierata</span>
   </div>
-  <div class="brand-tagline">Il tuo compagno di studi</div>
+  <div class="brand-tagline"><span>Il tuo compagno <span style="white-space:nowrap">di&nbsp;studi</span></span></div>
 </div>
 
 <!-- EXTRA SPLASH -->
@@ -639,7 +639,7 @@ function enterApp(){
   document.body.classList.add('app-mode');
   // Autofocus solo su desktop (mouse): su touch farebbe sbucare la
   // tastiera da sola — lì il focus arriva solo toccando il campo.
-  if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+  if (window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
     setTimeout(() => { document.getElementById('course-search').focus({preventScroll:true}); }, 700);
   }
 }
@@ -801,6 +801,15 @@ renderCourses();
      alto vengono nascosti. INIZIA viene alzato (63% → 56%).
 ================================================================ -->
 <style id="ums-inav-style">
+  /* SFONDO STABILE — come nel template: con inset:0 il watermark si
+     riscala quando la barra del browser mobile si ritira. Ancorato in
+     alto con altezza 100lvh (il massimo del viewport) resta immobile. */
+  #watermark{
+    bottom: auto;
+    height: 100vh;
+    height: 100lvh;
+  }
+
   /* INIZIA nello splash: alzato rispetto all'origine (63%) ma con
      più respiro dal brand rispetto al primo tentativo (56%) */
   #hero-extras{ top: 59%; }
