@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -786,6 +784,286 @@ renderCourses();
   function apply(on){ document.body.classList.toggle('night-mode', on); btn.textContent = on?'☀️':'🌙'; btn.setAttribute('aria-label', on?'Attiva modalità giorno':'Attiva modalità notte'); }
   apply(document.body.classList.contains('night-mode'));
   btn.addEventListener('click', ()=>{ const on=!document.body.classList.contains('night-mode'); apply(on); try{localStorage.setItem(KEY, on?'1':'0');}catch(e){} });
+})();
+</script>
+
+<!-- ================================================================
+     INSTA-NAV — BLOCCO ADDITIVO (versione index)
+     Stessa barra del template lezione: rail a sinistra su desktop,
+     barra in basso su mobile. Ordine: Lingua · Home · Lorenzo
+     (avatar → popup © 2025 → Instagram) · WhatsApp.
+     Il selettore lingua di #top-controls viene SPOSTATO nella barra
+     (logica intatta); i vecchi badge sotto INIZIA e i controlli in
+     alto vengono nascosti. INIZIA viene alzato (63% → 56%).
+================================================================ -->
+<style id="ums-inav-style">
+  /* INIZIA più in alto nello splash */
+  #hero-extras{ top: 56%; }
+
+  /* Via i vecchi accessi: badge sotto INIZIA e controlli in alto */
+  .hero-badges{ display: none !important; }
+  #top-controls{ display: none !important; }
+
+  #ums-insta-nav{
+    position: fixed;
+    z-index: 990; /* sopra course-view (85) e topbar (50), sotto night-toggle (9999) */
+    background: #fff;
+    display: flex;
+    font-family: var(--font-body, 'DM Sans', sans-serif);
+  }
+
+  .ums-inav-item{
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 3px;
+    border: none; background: transparent;
+    text-decoration: none; cursor: pointer;
+    color: var(--ink, #1C1C22);
+    border-radius: 12px;
+    transition: background .18s, transform .18s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .ums-inav-item:hover{ background: rgba(15,17,23,.05); }
+  .ums-inav-item:active{ transform: scale(.94); }
+  .ums-inav-item > svg{
+    width: 24px; height: 24px;
+    stroke: currentColor; fill: none;
+    stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+  }
+
+  .ums-inav-label{
+    font-size: .56rem; font-weight: 700;
+    letter-spacing: .1em; text-transform: uppercase;
+    color: var(--sub, #7A7770);
+    line-height: 1;
+  }
+
+  .ums-inav-avatar{
+    width: 28px; height: 28px; border-radius: 50%;
+    object-fit: cover; display: block;
+    border: 2px solid transparent;
+    transition: border-color .2s;
+  }
+  .ums-inav-item:hover .ums-inav-avatar{ border-color: var(--gold, #C8A96E); }
+
+  /* --- Selettore lingua trapiantato nella barra --- */
+  #ums-insta-nav #custom-lang-selector{
+    background: transparent !important; border: none !important;
+    box-shadow: none !important; padding: 0 !important; margin: 0 !important;
+    position: static !important;
+  }
+  #ums-insta-nav #lang-toggle-btn{
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+    background: transparent; border: none; cursor: pointer;
+    font-family: var(--font-body, 'DM Sans', sans-serif);
+    font-size: .56rem; font-weight: 700;
+    letter-spacing: .1em; text-transform: uppercase;
+    color: var(--sub, #7A7770);
+  }
+  #ums-insta-nav #lang-label svg{
+    width: 24px; height: 24px;
+    stroke: currentColor; fill: none;
+    stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+    color: var(--ink, #1C1C22);
+    display: block; margin: 0 auto;
+  }
+  #ums-insta-nav #lang-arrow{ display: none; }
+
+  /* Menu bandiere nel BODY (mai dentro la barra: il backdrop-filter
+     sfaserebbe render e tap su iOS). Centrato senza transform. */
+  .lang-options.ums-lang-portal{
+    position: fixed;
+    top: auto; right: auto; left: auto;
+    transform: none;
+    z-index: 995;
+  }
+  .lang-options.ums-lang-portal.show{ display: grid; }
+
+  /* ---------------- DESKTOP: rail a sinistra ---------------- */
+  @media (min-width: 901px){
+    #ums-insta-nav{
+      top: 0; left: 0; bottom: 0;
+      width: 76px;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      padding: 28px 0;
+      border-right: 1px solid var(--dust, #E8E4DC);
+    }
+    .ums-inav-item{ width: 52px; height: 52px; }
+    body{ padding-left: 76px; }
+    #topbar{ left: 76px !important; width: calc(100% - 76px) !important; }
+    #course-view{ left: 76px !important; }
+    .lang-options.ums-lang-portal{ left: 90px; top: 24px; bottom: auto; }
+  }
+
+  /* ---------------- MOBILE: barra in basso ---------------- */
+  @media (max-width: 900px){
+    #ums-insta-nav{
+      left: 0; right: 0; bottom: 0;
+      height: calc(58px + env(safe-area-inset-bottom, 0px));
+      padding: 0 8px env(safe-area-inset-bottom, 0px);
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-around;
+      border-top: 1px solid var(--dust, #E8E4DC);
+      background: rgba(255,255,255,.92);
+      -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+    }
+    .ums-inav-item{ flex: 1 1 0; height: 50px; max-width: 90px; }
+    #night-toggle{ bottom: calc(78px + env(safe-area-inset-bottom, 0px)) !important; }
+    .site-footer{ padding-bottom: calc(3rem + 70px + env(safe-area-inset-bottom, 0px)); }
+    #course-view .cv-inner{ padding-bottom: calc(70px + env(safe-area-inset-bottom, 0px)); }
+    .lang-options.ums-lang-portal{
+      left: 0; right: 0;
+      margin: 0 auto;
+      width: max-content;
+      max-width: calc(100vw - 24px);
+      bottom: calc(70px + env(safe-area-inset-bottom, 0px));
+      top: auto;
+    }
+  }
+
+  /* ---------------- Night mode ----------------
+     Testi/icone usano var(--ink)/var(--sub): l'index li rimappa da
+     solo col tema scuro, qui si scurisce solo la superficie. */
+  body.night-mode #ums-insta-nav{
+    background: #16181F;
+    border-color: #2B2E38;
+  }
+  @media (max-width: 900px){
+    body.night-mode #ums-insta-nav{ background: rgba(20,22,28,.92); }
+  }
+  body.night-mode .ums-inav-item:hover{ background: rgba(255,255,255,.07); }
+  body.night-mode #ums-insta-nav #lang-label svg{ color: #F2EFE8; }
+  body.night-mode .ums-inav-item{ color: #F2EFE8; }
+
+  /* ---------------- Popup "Creato da Lorenzo" ---------------- */
+  #ums-lorenzo-overlay{
+    display: none;
+    position: fixed; inset: 0;
+    z-index: 9998;
+    background: rgba(15,17,23,.55);
+    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+    align-items: center; justify-content: center;
+    padding: 24px;
+  }
+  #ums-lorenzo-overlay.show{ display: flex; }
+
+  .ums-lorenzo-card{
+    background: var(--ivory, #F7F4EF);
+    border-radius: 32px;
+    box-shadow: 0 12px 40px rgba(15,17,23,.2);
+    padding: 44px 40px 36px;
+    max-width: 340px; width: 100%;
+    text-align: center;
+    position: relative;
+    animation: umsLorenzoPop .35s ease both;
+  }
+  @keyframes umsLorenzoPop{
+    from{ opacity: 0; transform: scale(.9) translateY(12px); }
+    to{ opacity: 1; transform: scale(1) translateY(0); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .ums-lorenzo-card{ animation: none; }
+  }
+
+  .ums-lorenzo-link{ text-decoration: none; display: block; }
+  .ums-lorenzo-img{
+    width: 150px; height: 150px; border-radius: 50%;
+    object-fit: cover; display: block; margin: 0 auto 20px;
+    border: 3px solid var(--gold, #C8A96E);
+    box-shadow: 0 8px 32px rgba(200,169,110,.25);
+    transition: transform .25s ease;
+  }
+  .ums-lorenzo-link:hover .ums-lorenzo-img{ transform: scale(1.04); }
+  .ums-lorenzo-title{
+    font-family: var(--font-display, 'Playfair Display', serif);
+    font-size: 1.35rem; font-weight: 700; color: var(--ink, #1C1C22);
+    margin-bottom: 6px;
+  }
+  .ums-lorenzo-sub{
+    font-size: .78rem; color: var(--sub, #7A7770);
+    letter-spacing: .04em;
+  }
+  .ums-lorenzo-close{
+    position: absolute; top: 14px; right: 14px;
+    width: 36px; height: 36px; border-radius: 50%;
+    border: none; background: rgba(15,17,23,.06);
+    color: var(--ink, #1C1C22);
+    font-size: 1rem; cursor: pointer;
+    display: grid; place-items: center;
+    transition: background .2s;
+  }
+  .ums-lorenzo-close:hover{ background: rgba(15,17,23,.12); }
+
+  body.night-mode .ums-lorenzo-card{ background: #1C1F27; }
+  body.night-mode .ums-lorenzo-title{ color: #F2EFE8; }
+  body.night-mode .ums-lorenzo-close{ background: rgba(255,255,255,.08); color: #F2EFE8; }
+</style>
+
+<script id="ums-inav-script">
+(function () {
+  const IG_URL = 'https://www.instagram.com/sciallato_lorenzo/';
+  const WA_URL = 'https://chat.whatsapp.com/EaX5kr14XxHL9o3qxdDVEP?mode=gi_t';
+  const HOME_URL = 'https://lorenzosciallato.github.io/Una-mano-spensierata/index.html';
+  const AVATAR = 'https://files.catbox.moe/qvck5j.png';
+
+  const HOME_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/><path d="M9 22V12h6v10"/></svg>';
+  const WA_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.5 15.3L2 22l4.9-1.4A10 10 0 1 0 12 2Z"/><path d="M8.7 7.9c-.3 0-.6.1-.8.4-.8.9-.9 2.4.2 4 1.2 1.8 2.9 3.2 4.9 3.9 1.5.5 2.6.2 3.3-.6.2-.3.3-.7.2-1l-.3-.9c-.1-.3-.4-.4-.7-.4l-1.4.2c-.2 0-.5 0-.6-.2l-1-1c-.6-.6-1.1-1.3-1.4-2-.1-.2 0-.4.1-.6l.7-.9c.2-.2.2-.5.1-.8l-.5-1.2c-.1-.3-.4-.5-.8-.5h-.9Z"/></svg>';
+
+  const nav = document.createElement('nav');
+  nav.id = 'ums-insta-nav';
+  nav.setAttribute('aria-label', 'Navigazione principale');
+  nav.innerHTML =
+    '<div class="ums-inav-item" id="ums-inav-lang"></div>' +
+    '<a class="ums-inav-item" href="' + HOME_URL + '" title="Home" aria-label="Home">' + HOME_SVG + '</a>' +
+    '<button class="ums-inav-item" id="ums-inav-lorenzo" type="button" title="Creato da Lorenzo" aria-label="Creato da Lorenzo" aria-haspopup="dialog">' +
+      '<img src="' + AVATAR + '" alt="" class="ums-inav-avatar">' +
+    '</button>' +
+    '<a class="ums-inav-item" href="' + WA_URL + '" target="_blank" rel="noopener" title="Gruppo WhatsApp" aria-label="Entra nel gruppo WhatsApp">' + WA_SVG + '</a>';
+  document.body.appendChild(nav);
+
+  // Trapianto del selettore lingua (logica intatta; qui nessuno lo riappende)
+  const langSel = document.getElementById('custom-lang-selector');
+  const langSlot = document.getElementById('ums-inav-lang');
+  if (langSel && langSlot) langSlot.appendChild(langSel);
+
+  // Menu bandiere nel body (vedi commento CSS)
+  const menu = document.getElementById('lang-options-menu');
+  if (menu && menu.parentElement !== document.body) {
+    menu.classList.add('ums-lang-portal');
+    document.body.appendChild(menu);
+  }
+
+  // ---------- Popup "Creato da Lorenzo" ----------
+  const overlay = document.createElement('div');
+  overlay.id = 'ums-lorenzo-overlay';
+  overlay.setAttribute('role', 'dialog');
+  overlay.setAttribute('aria-modal', 'true');
+  overlay.setAttribute('aria-label', 'Creato da Lorenzo');
+  overlay.innerHTML =
+    '<div class="ums-lorenzo-card">' +
+      '<button class="ums-lorenzo-close" type="button" aria-label="Chiudi">&#10005;</button>' +
+      '<a class="ums-lorenzo-link notranslate" translate="no" href="' + IG_URL + '" target="_blank" rel="noopener">' +
+        '<img src="' + AVATAR + '" alt="Lorenzo Sciallato" class="ums-lorenzo-img">' +
+        '<div class="ums-lorenzo-title">Creato da Lorenzo</div>' +
+        '<div class="ums-lorenzo-sub">&copy; 2025 &mdash; Tutti i diritti riservati</div>' +
+      '</a>' +
+    '</div>';
+  document.body.appendChild(overlay);
+
+  const openBtn = document.getElementById('ums-inav-lorenzo');
+  const closeBtn = overlay.querySelector('.ums-lorenzo-close');
+  const open = () => { overlay.classList.add('show'); closeBtn.focus(); };
+  const close = () => { overlay.classList.remove('show'); openBtn.focus(); };
+
+  openBtn.addEventListener('click', open);
+  closeBtn.addEventListener('click', close);
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && overlay.classList.contains('show')) close();
+  });
 })();
 </script>
 
