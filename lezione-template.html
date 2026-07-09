@@ -4663,60 +4663,42 @@ if (!fileDaCaricare) {
          non mostrano alcun pulsante.
     ================================================================ -->
     <style id="ums-lesson-nav-style">
-        /* Riga minimale in cima alla pagina, sopra l'eyebrow dorato.
-           Niente card, niente ombre: solo testo piccolo e discreto. */
-        .ums-lesson-nav{
-            max-width: 820px;
-            margin: 0 auto;
-            padding: 1.4rem 1.5rem 0;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 16px;
+        /* Due sole freccette, ai lati della testata della lezione.
+           Nessun testo, nessun contatore: pagina pulita. */
+        .ums-nav-btn{
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px; height: 40px;
+            display: grid; place-items: center;
+            border-radius: 50%;
+            text-decoration: none;
             font-family: var(--font-body, sans-serif);
-            font-size: .68rem;
-            font-weight: 600;
-            letter-spacing: .14em;
-            text-transform: uppercase;
-            color: var(--sub, #7A7770);
+            font-size: 1.5rem; line-height: 1;
+            color: var(--mist, #C5C1B8);
+            transition: color .2s, background .2s, transform .2s;
             opacity: 0;
-            animation: umsFadeUp .7s .3s var(--ease, ease) both;
+            animation: umsFadeUp .7s .5s var(--ease, ease) both;
+            z-index: 5;
         }
         @media (prefers-reduced-motion: reduce){
-            .ums-lesson-nav{ animation: none; opacity: 1; }
+            .ums-nav-btn{ animation: none; opacity: 1; }
         }
-
-        .ums-nav-btn{
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            text-decoration: none;
-            color: var(--sub, #7A7770);
-            padding: 6px 2px;
-            transition: color .2s;
+        .ums-nav-prev{ left: 18px; }
+        .ums-nav-next{ right: 18px; }
+        .ums-nav-btn:hover{
+            color: var(--gold-dk, #9A7A3F);
+            background: rgba(200,169,110,.1);
         }
-        .ums-nav-btn:hover{ color: var(--gold-dk, #9A7A3F); }
+        .ums-nav-btn:active{ transform: translateY(-50%) scale(.92); }
+        .ums-nav-btn.ums-nav-ghost{ display: none; }
 
-        .ums-nav-counter{
-            flex: 0 0 auto;
-            color: var(--mist, #C5C1B8);
-            font-weight: 500;
-            letter-spacing: .18em;
-        }
-
-        /* Estremità: segnaposto invisibile per tenere il contatore centrato */
-        .ums-nav-btn.ums-nav-ghost{
-            visibility: hidden;
-            pointer-events: none;
-        }
-
-        .night-mode .ums-lesson-nav{ color: #918E86; }
-        .night-mode .ums-nav-btn{ color: #918E86; }
-        .night-mode .ums-nav-btn:hover{ color: var(--gold-lt, #E8D5AA); }
-        .night-mode .ums-nav-counter{ color: #5A5851; }
+        /* --mist e --gold-dk si adattano da soli in night mode (rimappate dal tema) */
 
         @media (max-width: 560px){
-            .ums-lesson-nav{ padding: 1.1rem 1rem 0; font-size: .62rem; }
+            .ums-nav-btn{ width: 34px; height: 34px; font-size: 1.3rem; }
+            .ums-nav-prev{ left: 6px; }
+            .ums-nav-next{ right: 6px; }
         }
     </style>
 
@@ -4757,33 +4739,25 @@ if (!fileDaCaricare) {
 
             function makeBtn(n, direction) {
                 const exists = n >= 1 && n <= total;
+                if (!exists) return null;
                 const isNext = direction === 'next';
                 const a = document.createElement('a');
                 a.className = 'ums-nav-btn ' + (isNext ? 'ums-nav-next' : 'ums-nav-prev');
-                if (!exists) { a.classList.add('ums-nav-ghost'); a.setAttribute('aria-hidden', 'true'); }
-                else { a.href = urlForLesson(n); }
-                a.innerHTML = isNext
-                    ? 'Lezione ' + (exists ? n : '') + ' <span aria-hidden="true">\u2192</span>'
-                    : '<span aria-hidden="true">\u2190</span> Lezione ' + (exists ? n : '');
+                a.href = urlForLesson(n);
+                a.setAttribute('aria-label', isNext ? 'Lezione successiva' : 'Lezione precedente');
+                a.setAttribute('title', 'Lezione ' + n);
+                a.textContent = isNext ? '\u203A' : '\u2039';
                 return a;
             }
 
-            const nav = document.createElement('nav');
-            nav.className = 'ums-lesson-nav';
-            nav.setAttribute('aria-label', 'Navigazione tra le lezioni');
-
-            const counter = document.createElement('div');
-            counter.className = 'ums-nav-counter';
-            counter.textContent = currentN + ' / ' + total;
-
-            nav.appendChild(makeBtn(currentN - 1, 'prev'));
-            nav.appendChild(counter);
-            nav.appendChild(makeBtn(currentN + 1, 'next'));
-
-            // In cima a tutto: prima dell'header (sopra l'eyebrow dorato).
+            // Le freccette vivono DENTRO l'header (position:relative),
+            // ai lati del titolo della lezione.
             const headerEl = document.querySelector('header');
-            if (headerEl && headerEl.parentNode) headerEl.parentNode.insertBefore(nav, headerEl);
-            else document.body.insertBefore(nav, document.body.firstChild);
+            if (!headerEl) return;
+            const prevBtn = makeBtn(currentN - 1, 'prev');
+            const nextBtn = makeBtn(currentN + 1, 'next');
+            if (prevBtn) headerEl.appendChild(prevBtn);
+            if (nextBtn) headerEl.appendChild(nextBtn);
         })();
     </script>
 
@@ -4859,8 +4833,13 @@ if (!fileDaCaricare) {
         }
         #ums-insta-nav #lang-arrow{ display: none; }
         /* Placeholder mostrato finché Google Translate non è pronto */
-        #ums-inav-lang:has(#custom-lang-selector.loaded) .ums-inav-placeholder{ display: none; }
-        .ums-inav-placeholder{ opacity: .45; pointer-events: none; }
+        .ums-inav-placeholder{
+            display: flex; flex-direction: column;
+            align-items: center; gap: 3px;
+            opacity: .45; pointer-events: none;
+        }
+        #ums-inav-lang:has(#custom-lang-selector.loaded) .ums-inav-placeholder{ display: none !important; }
+        .ums-inav-placeholder.ums-hidden{ display: none !important; }
 
         /* Il menu delle bandiere si apre rispetto alla finestra, non al rail */
         #ums-insta-nav .lang-options{ position: fixed; }
@@ -4911,7 +4890,10 @@ if (!fileDaCaricare) {
             }
         }
 
-        /* ---------------- Night mode ---------------- */
+        /* ---------------- Night mode ----------------
+           NB: il tema rimappa le variabili (--ink diventa chiaro, --ivory
+           diventa scuro): per testi e icone basta NON toccare i colori
+           base var(--ink)/var(--sub), che si adattano da soli. */
         .night-mode #ums-insta-nav{
             background: #16181F;
             border-color: #2B2E38;
@@ -4919,9 +4901,7 @@ if (!fileDaCaricare) {
         @media (max-width: 900px){
             .night-mode #ums-insta-nav{ background: rgba(20,22,28,.92); }
         }
-        .night-mode .ums-inav-item{ color: var(--ivory, #F7F4EF); }
         .night-mode .ums-inav-item:hover{ background: rgba(255,255,255,.07); }
-        .night-mode #ums-insta-nav #lang-toggle-btn .ums-ic{ color: var(--ivory, #F7F4EF); }
 
         /* ---------------- Popup "Creato da Lorenzo" ---------------- */
         #ums-lorenzo-overlay{
@@ -4989,8 +4969,7 @@ if (!fileDaCaricare) {
         .ums-lorenzo-close:hover{ background: rgba(15,17,23,.12); }
 
         .night-mode .ums-lorenzo-card{ background: #1C1F27; }
-        .night-mode .ums-lorenzo-title{ color: var(--ivory, #F7F4EF); }
-        .night-mode .ums-lorenzo-close{ background: rgba(255,255,255,.08); color: var(--ivory, #F7F4EF); }
+        .night-mode .ums-lorenzo-close{ background: rgba(255,255,255,.08); }
     </style>
 
     <script id="ums-inav-script">
@@ -5007,7 +4986,7 @@ if (!fileDaCaricare) {
             nav.setAttribute('aria-label', 'Navigazione principale');
             nav.innerHTML =
                 '<div class="ums-inav-item" id="ums-inav-lang">' +
-                    '<span class="ums-inav-placeholder" aria-hidden="true" style="display:flex;flex-direction:column;align-items:center;gap:3px;">' +
+                    '<span class="ums-inav-placeholder" aria-hidden="true">' +
                         '<svg class="ums-ic"><use href="#ic-globe"/></svg>' +
                         '<span class="ums-inav-label">Lingua</span>' +
                     '</span>' +
@@ -5030,12 +5009,20 @@ if (!fileDaCaricare) {
             const langSlot = document.getElementById('ums-inav-lang');
             const claimLangSelector = () => {
                 const s = document.getElementById('custom-lang-selector');
-                if (s && langSlot && s.parentElement !== langSlot) langSlot.appendChild(s);
+                if (!s || !langSlot) return;
+                if (s.parentElement !== langSlot) langSlot.appendChild(s);
+                // doppia rete oltre a :has() — mai due "Lingua" insieme
+                const ph = langSlot.querySelector('.ums-inav-placeholder');
+                if (ph) ph.classList.toggle('ums-hidden', s.classList.contains('loaded'));
             };
             claimLangSelector();
-            const headerEl = document.querySelector('header');
-            if (headerEl && 'MutationObserver' in window) {
-                new MutationObserver(claimLangSelector).observe(headerEl, { childList: true });
+            const headerEl2 = document.querySelector('header');
+            if (headerEl2 && 'MutationObserver' in window) {
+                new MutationObserver(claimLangSelector).observe(headerEl2, { childList: true });
+            }
+            const selEl = document.getElementById('custom-lang-selector');
+            if (selEl && 'MutationObserver' in window) {
+                new MutationObserver(claimLangSelector).observe(selEl, { attributes: true, attributeFilter: ['class'] });
             }
 
             // ---------- Popup "Creato da Lorenzo" ----------
