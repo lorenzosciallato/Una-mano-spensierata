@@ -5276,6 +5276,11 @@ if (!fileDaCaricare) {
                           translate(-50%,-50%) fa il resto */
             max-width: calc(100vw - 44px);
             overflow: hidden;
+            /* l'eyebrow collassato è inline-flex: anche a max-height 0
+               occupa la SUA riga tipografica (~27px fantasma) che
+               spingeva giù il titolo. line-height 0 sull'header la
+               uccide; h1 e figli hanno line-height propri. */
+            line-height: 0;
         }
         @media (min-width: 901px){
             body.ums-master-open header{
