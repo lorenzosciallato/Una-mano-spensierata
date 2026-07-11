@@ -2327,6 +2327,86 @@
         let umsPristineHash = '';
         let umsPersistTimer = null;
 
+        // =========================================================================
+        // SINCRONIZZAZIONE CLOUD (tappa 3) — attiva solo se l'utente è connesso.
+        // localStorage resta la fonte primaria; il cloud è uno specchio.
+        // =========================================================================
+        const UMS_API = 'https://ums-backend.unamanospensierata.workers.dev';
+        const umsGetChiave = () => localStorage.getItem('ums_chiave') || '';
+        let umsCloudData = null;      // dati scaricati dal server per questa chiave
+        let umsSaveTimer = null;
+        let umsPending = {};          // modifiche in attesa di invio: { "kind::id": content }
+
+        // Scarica dal server tutti i dati della chiave e li versa in localStorage,
+        // ma solo se il server ha una versione più recente (o se in locale manca).
+        async function umsCloudPull() {
+            const chiave = umsGetChiave();
+            if (!chiave) return;
+            try {
+                const r = await fetch(UMS_API + '/load', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ chiave })
+                });
+                const d = await r.json();
+                if (!d.ok) return;
+                umsCloudData = d.dati || [];
+                umsCloudData.forEach(row => {
+                    // Riportiamo nei localStorage-key nativi del sito i dati di QUESTA lezione
+                    if (row.item_id !== umsLessonKey) return;
+                    let content;
+                    try { content = JSON.parse(row.content); } catch (e) { return; }
+                    if (content === null) return;
+                    if (row.kind === 'hl') {
+                        localStorage.setItem('ums_hl::' + umsLessonKey, JSON.stringify(content));
+                    } else if (row.kind === 'notes') {
+                        // content = { "0": "...", "1": "..." } per area
+                        Object.keys(content).forEach(idx => {
+                            localStorage.setItem('una_mano_spensierata_notes::' + umsLessonKey + '::' + idx, content[idx]);
+                        });
+                    }
+                });
+            } catch (e) { /* offline: pazienza, si userà il locale */ }
+        }
+
+        // Mette una modifica in coda e programma l'invio (debounce 1.5s)
+        function umsCloudQueue(kind, id, content) {
+            if (!umsGetChiave()) return;             // non connesso: niente cloud
+            umsPending[kind + '::' + id] = { kind, id, content };
+            clearTimeout(umsSaveTimer);
+            umsSaveTimer = setTimeout(umsCloudFlush, 1500);
+        }
+
+        // Invia al server tutto ciò che è in coda
+        async function umsCloudFlush() {
+            const chiave = umsGetChiave();
+            if (!chiave) return;
+            const items = Object.values(umsPending);
+            if (items.length === 0) return;
+            umsPending = {};
+            try {
+                await fetch(UMS_API + '/save', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ chiave, items })
+                });
+            } catch (e) {
+                // rimetto in coda per il prossimo tentativo
+                items.forEach(it => { umsPending[it.kind + '::' + it.id] = it; });
+            }
+        }
+
+        // Registra la visita alla lezione corrente (data/ora)
+        function umsCloudVisit() {
+            if (!umsGetChiave() || !umsLessonKey || umsLessonKey === 'default') return;
+            umsCloudQueue('visit', umsLessonKey, { at: new Date().toISOString() });
+        }
+
+        // Invio immediato quando l'utente chiude/cambia scheda (non perde nulla)
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'hidden') umsCloudFlush();
+        });
+        window.addEventListener('pagehide', umsCloudFlush);
+
+
         // TASK 3 — colore evidenziatore attivo (default giallo)
         let hlActiveColor = '#FFF176';
 
@@ -2402,11 +2482,13 @@
                             note: row.querySelector('.wb-note-input').value
                         });
                     });
-                    localStorage.setItem('ums_hl::' + umsLessonKey, JSON.stringify({
+                    const payload = {
                         hash: umsPristineHash,
                         html: container ? container.innerHTML : '',
                         wb: rows
-                    }));
+                    };
+                    localStorage.setItem('ums_hl::' + umsLessonKey, JSON.stringify(payload));
+                    umsCloudQueue('hl', umsLessonKey, payload);
                 } catch(e) {}
             }, 400);
         }
@@ -2776,7 +2858,9 @@ if (!fileDaCaricare) {
                     // FIX 2 — impronta del riassuntone + ripristino evidenziazioni/lavagna
                     const riassCont = document.getElementById('dyn-riassuntone-container');
                     umsPristineHash = umsHash('p2::' + (riassCont ? riassCont.textContent : ''));
+                    await umsCloudPull();   // se connesso, porta giù i dati dal server
                     umsRestoreState();
+                    umsCloudVisit();        // registra la visita a questa lezione
                     applyDropCap(); // FIX capolettera (dopo il restore)
                 } catch (e) { console.error('Persistenza/capolettera:', e); }
 
@@ -3342,6 +3426,12 @@ if (!fileDaCaricare) {
                 if (saved) area.value = saved;
                 area.addEventListener('input', function() {
                     try { localStorage.setItem(areaKey, this.value); } catch(e) {}
+                    try {
+                        // raccolgo tutte le aree della lezione in un unico oggetto { idx: testo }
+                        const tutte = {};
+                        document.querySelectorAll('.notes-area').forEach((a, i) => { tutte[i] = a.value; });
+                        umsCloudQueue('notes', umsLessonKey, tutte);
+                    } catch(e) {}
                 });
                 area.addEventListener('keydown', function(e) {
                     if (e.key === 'Enter') requestAnimationFrame(() => { this.scrollTop = this.scrollHeight; });
