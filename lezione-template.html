@@ -1804,6 +1804,7 @@
         <symbol id="ic-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
         <symbol id="ic-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
         <symbol id="ic-home" viewBox="0 0 24 24"><path d="m3 11 9-8 9 8"/><path d="M5 9.5V21h14V9.5"/><path d="M9 21v-6h6v6"/></symbol>
+        <symbol id="ic-login" viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/></symbol>
         <symbol id="ic-wrench" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76Z"/></symbol>
         <symbol id="ic-award" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.5 13 17 22l-5-3-5 3 1.5-9"/></symbol>
     </svg>
@@ -5011,6 +5012,106 @@ if (!fileDaCaricare) {
 
         .night-mode .ums-lorenzo-card{ background: #1C1F27; }
         .night-mode .ums-lorenzo-close{ background: rgba(255,255,255,.08); }
+
+        /* ================= ACCESSO CON CHIAVE (login) ================= */
+        .ums-login-btn .ums-ic{ color: #D14B3D; transition: color .2s; }
+        .ums-login-btn.is-in  .ums-ic{ color: #1D9E75; }
+        .ums-login-btn.is-out .ums-ic{ color: #D14B3D; }
+
+        #ums-access-overlay{
+            display: none; position: fixed; inset: 0; z-index: 9998;
+            background: rgba(15,17,23,.55);
+            -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+            align-items: center; justify-content: center; padding: 24px;
+        }
+        #ums-access-overlay.show{ display: flex; }
+        .ums-access-card{
+            background: var(--ivory, #F7F4EF);
+            border-radius: 28px;
+            box-shadow: 0 12px 40px rgba(15,17,23,.2);
+            padding: 34px 28px 28px; max-width: 380px; width: 100%;
+            max-height: 88vh; overflow-y: auto; text-align: center; position: relative;
+            animation: umsLorenzoPop .35s ease both;
+            font-family: var(--font-body, 'DM Sans', sans-serif);
+        }
+        .ums-access-close{
+            position: absolute; top: 12px; right: 12px;
+            width: 34px; height: 34px; border-radius: 50%;
+            border: none; background: rgba(15,17,23,.06); color: var(--ink,#1C1C22);
+            font-size: 1rem; cursor: pointer; display: grid; place-items: center;
+        }
+        .ums-access-close:hover{ background: rgba(15,17,23,.12); }
+        .ums-access-logo{
+            font-family: var(--font-display,'Playfair Display',serif);
+            font-weight: 700; line-height: 1.02; margin: 6px 0 22px; text-align: center;
+        }
+        .ums-access-logo .ums-logo-l1,
+        .ums-access-logo .ums-logo-l2{ display: block; font-size: 2rem; white-space: nowrap; }
+        .ums-access-logo .ums-logo-l1{ color: var(--ink,#1C1C22); }
+        .ums-access-logo .ums-logo-l2{ color: var(--navy,#22365F); font-style: italic; }
+        .ums-logo-tag{
+            margin-top: 12px;
+            font-family: var(--font-body,'DM Sans',sans-serif);
+            font-size: .62rem; font-weight: 700; letter-spacing: .3em; text-transform: uppercase;
+            color: var(--gold-dk, #A8823C);
+            display: flex; align-items: center; justify-content: center; gap: 11px;
+        }
+        .ums-logo-tag::before, .ums-logo-tag::after{ content:''; display:block; width:28px; height:1px; background: var(--gold,#C8A96E); }
+        .ums-access-h{
+            font-family: var(--font-display,'Playfair Display',serif);
+            font-size: 1.25rem; color: var(--ink,#1C1C22); margin: 4px 0 8px;
+        }
+        .ums-access-p{ font-size: .86rem; line-height: 1.55; color: var(--sub,#5f5c55); margin: 0 0 18px; }
+        .ums-access-block{ border-top: 1px solid var(--dust,#E8E4DC); padding-top: 16px; margin-top: 4px; }
+        .ums-access-lbl{ font-size: .8rem; font-weight: 700; color: var(--ink,#1C1C22); margin: 0 0 10px; }
+        .ums-access-input{
+            width: 100%; box-sizing: border-box; padding: 11px 12px;
+            font-size: 1rem; font-family: monospace; text-transform: uppercase;
+            text-align: center; letter-spacing: 1px;
+            border: 1px solid var(--dust,#E8E4DC); border-radius: 12px;
+            margin-bottom: 10px; background: #fff;
+        }
+        .ums-access-btn{
+            width: 100%; box-sizing: border-box; padding: 12px;
+            font-size: .92rem; font-weight: 700; cursor: pointer;
+            border-radius: 12px; border: 1px solid var(--ink,#1C1C22);
+            background: transparent; color: var(--ink,#1C1C22);
+            transition: background .18s, opacity .18s;
+            font-family: var(--font-body,'DM Sans',sans-serif);
+        }
+        .ums-access-btn:hover{ background: rgba(15,17,23,.05); }
+        .ums-access-btn.primary{ background: var(--ink,#1C1C22); color: #fff; border-color: var(--ink,#1C1C22); }
+        .ums-access-btn.primary:hover{ background: #33323b; }
+        .ums-access-btn:disabled{ opacity: .5; cursor: default; }
+        .ums-chiave-box{ margin-top: 12px; }
+        .ums-chiave-val{
+            font-family: monospace; font-size: 1.5rem; font-weight: 700;
+            letter-spacing: 1px; color: var(--gold,#C8A96E);
+            background: #fff; border: 1px dashed var(--gold,#C8A96E);
+            border-radius: 12px; padding: 12px; margin: 4px 0 8px; word-break: break-all;
+        }
+        .ums-copy{
+            background: transparent; border: 1px solid var(--dust,#E8E4DC);
+            border-radius: 10px; padding: 6px 14px; font-size: .78rem;
+            cursor: pointer; color: var(--sub,#5f5c55); margin-bottom: 10px;
+        }
+        .ums-nb{
+            font-size: .76rem; line-height: 1.5; color: var(--sub,#5f5c55);
+            background: rgba(200,169,110,.12); border-radius: 12px;
+            padding: 12px 14px; margin: 8px 0 14px; text-align: left;
+        }
+        .ums-access-msg{ font-size: .8rem; margin: 8px 0 0; min-height: 1em; color: var(--sub,#5f5c55); }
+        .ums-access-msg.err{ color: #D14B3D; font-weight: 600; }
+        .night-mode .ums-access-card{ background: #1C1F27; }
+        .night-mode .ums-access-h, .night-mode .ums-access-lbl{ color: #F2EFE8; }
+        .night-mode .ums-access-logo .ums-logo-l1{ color: #F2EFE8; }
+        .night-mode .ums-access-logo .ums-logo-l2{ color: #8FB4E8; }
+        .night-mode .ums-logo-tag{ color: #D9BC85; }
+        .night-mode .ums-access-btn{ color: #F2EFE8; border-color: #F2EFE8; }
+        .night-mode .ums-access-btn.primary{ background: var(--gold,#C8A96E); color: #1C1F27; border-color: var(--gold,#C8A96E); }
+        .night-mode .ums-access-input{ background: #14161C; color: #F2EFE8; border-color: #2B2E38; }
+        .night-mode .ums-chiave-val{ background: #14161C; }
+        .night-mode .ums-access-close{ background: rgba(255,255,255,.08); color: #F2EFE8; }
     </style>
 
     <script id="ums-inav-script">
@@ -5019,8 +5120,13 @@ if (!fileDaCaricare) {
             const WA_URL = 'https://chat.whatsapp.com/EaX5kr14XxHL9o3qxdDVEP?mode=gi_t';
             const HOME_URL = 'https://lorenzosciallato.github.io/Una-mano-spensierata/index.html';
             const AVATAR = 'https://files.catbox.moe/qvck5j.png';
+            const API = 'https://ums-backend.unamanospensierata.workers.dev';
 
             const WA_SVG = '<svg class="ums-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.5 15.3L2 22l4.9-1.4A10 10 0 1 0 12 2Z"/><path d="M8.7 7.9c-.3 0-.6.1-.8.4-.8.9-.9 2.4.2 4 1.2 1.8 2.9 3.2 4.9 3.9 1.5.5 2.6.2 3.3-.6.2-.3.3-.7.2-1l-.3-.9c-.1-.3-.4-.4-.7-.4l-1.4.2c-.2 0-.5 0-.6-.2l-1-1c-.6-.6-1.1-1.3-1.4-2-.1-.2 0-.4.1-.6l.7-.9c.2-.2.2-.5.1-.8l-.5-1.2c-.1-.3-.4-.5-.8-.5h-.9Z"/></svg>';
+
+            const getChiave   = () => localStorage.getItem('ums_chiave') || '';
+            const setChiaveLS = (k) => localStorage.setItem('ums_chiave', k);
+            const clearChiave = () => localStorage.removeItem('ums_chiave');
 
             const nav = document.createElement('nav');
             nav.id = 'ums-insta-nav';
@@ -5035,8 +5141,9 @@ if (!fileDaCaricare) {
                 '<a class="ums-inav-item" href="' + HOME_URL + '" title="Home" aria-label="Torna alla Home">' +
                     '<svg class="ums-ic" aria-hidden="true"><use href="#ic-home"/></svg>' +
                 '</a>' +
-                '<button class="ums-inav-item" id="ums-inav-lorenzo" type="button" title="Creato da Lorenzo" aria-label="Creato da Lorenzo" aria-haspopup="dialog">' +
-                    '<img src="' + AVATAR + '" alt="" class="ums-inav-avatar">' +
+                '<button class="ums-inav-item ums-login-btn" id="ums-inav-login" type="button" title="Accedi" aria-label="Accedi" aria-haspopup="dialog">' +
+                    '<svg class="ums-ic" aria-hidden="true"><use href="#ic-login"/></svg>' +
+                    '<span class="ums-inav-label" id="ums-login-label">Accedi</span>' +
                 '</button>' +
                 '<a class="ums-inav-item" href="' + WA_URL + '" target="_blank" rel="noopener" title="Gruppo WhatsApp" aria-label="Entra nel gruppo WhatsApp">' +
                     WA_SVG +
@@ -5044,22 +5151,16 @@ if (!fileDaCaricare) {
             document.body.appendChild(nav);
 
             // Trapianto del selettore lingua originale (logica intatta).
-            // NB: il codice originale, dopo il caricamento dati, riappende il
-            // selettore dentro <header>: l'observer lo reclama e lo riporta
-            // nella barra ogni volta che succede.
             const langSlot = document.getElementById('ums-inav-lang');
             const claimLangSelector = () => {
                 const s = document.getElementById('custom-lang-selector');
                 if (!s || !langSlot) return;
                 if (s.parentElement !== langSlot) langSlot.appendChild(s);
-                // Il menu bandiere vive nel BODY, mai dentro la barra
-                // (il backdrop-filter della barra sfaserebbe render e tap)
                 const menu = document.getElementById('lang-options-menu');
                 if (menu && menu.parentElement !== document.body) {
                     menu.classList.add('ums-lang-portal');
                     document.body.appendChild(menu);
                 }
-                // doppia rete oltre a :has() — mai due "Lingua" insieme
                 const ph = langSlot.querySelector('.ums-inav-placeholder');
                 if (ph) ph.classList.toggle('ums-hidden', s.classList.contains('loaded'));
             };
@@ -5073,34 +5174,129 @@ if (!fileDaCaricare) {
                 new MutationObserver(claimLangSelector).observe(selEl, { attributes: true, attributeFilter: ['class'] });
             }
 
-            // ---------- Popup "Creato da Lorenzo" ----------
+            // ---------- Popup ACCESSO ----------
             const overlay = document.createElement('div');
-            overlay.id = 'ums-lorenzo-overlay';
+            overlay.id = 'ums-access-overlay';
             overlay.setAttribute('role', 'dialog');
             overlay.setAttribute('aria-modal', 'true');
-            overlay.setAttribute('aria-label', 'Creato da Lorenzo');
+            overlay.setAttribute('aria-label', 'Accesso');
             overlay.innerHTML =
-                '<div class="ums-lorenzo-card">' +
-                    '<button class="ums-lorenzo-close" type="button" aria-label="Chiudi">&#10005;</button>' +
-                    '<a class="ums-lorenzo-link notranslate" translate="no" href="' + IG_URL + '" target="_blank" rel="noopener">' +
-                        '<img src="' + AVATAR + '" alt="Lorenzo Sciallato" class="ums-lorenzo-img">' +
-                        '<div class="ums-lorenzo-title">Creato da Lorenzo</div>' +
-                        '<div class="ums-lorenzo-sub">&copy; 2025 &mdash; Tutti i diritti riservati</div>' +
-                    '</a>' +
+                '<div class="ums-access-card">' +
+                    '<button class="ums-access-close" type="button" aria-label="Chiudi">&#10005;</button>' +
+                    '<div class="ums-access-logo notranslate" translate="no">' +
+                        '<span class="ums-logo-l1">Una Mano</span>' +
+                        '<span class="ums-logo-l2">Spensierata</span>' +
+                        '<div class="ums-logo-tag"><span>Il tuo compagno di studi</span></div>' +
+                    '</div>' +
+                    '<div id="ums-access-out">' +
+                        '<h3 class="ums-access-h">Salva i tuoi progressi</h3>' +
+                        '<p class="ums-access-p">Con l\'accesso tutto ci&ograve; che fai su Una Mano Spensierata resta tuo: le lezioni che segui, gli appunti che scrivi, le sottolineature e le flashcard che ripassi. Li ritrovi ogni volta che torni, anche da un altro dispositivo. Nessuna email, nessuna password, nessun dato personale: ti basta una chiave.</p>' +
+                        '<div class="ums-access-block">' +
+                            '<p class="ums-access-lbl">&Egrave; il tuo primo accesso?</p>' +
+                            '<button class="ums-access-btn primary" id="ums-genera" type="button">Genera la mia chiave</button>' +
+                            '<div id="ums-chiave-box" class="ums-chiave-box" hidden>' +
+                                '<div class="ums-chiave-val" id="ums-chiave-val"></div>' +
+                                '<button class="ums-copy" id="ums-copy" type="button">Copia</button>' +
+                                '<p class="ums-nb">&#9888;&#65039; Questa &egrave; la tua chiave, ed &egrave; unica e irripetibile. Scrivila e conservala subito &mdash; nelle note del telefono, su un foglio, dove preferisci. &Egrave; l\'unico modo per ritrovare i tuoi appunti: non &egrave; legata a nessuna email, quindi se la perdi non pu&ograve; essere recuperata.</p>' +
+                                '<button class="ums-access-btn primary" id="ums-conferma" type="button">Ho salvato la chiave, entra</button>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="ums-access-block">' +
+                            '<p class="ums-access-lbl">Hai gi&agrave; una chiave?</p>' +
+                            '<input id="ums-input-chiave" class="ums-access-input" type="text" placeholder="ESEMPIO-123" autocomplete="off" spellcheck="false">' +
+                            '<button class="ums-access-btn" id="ums-accedi" type="button">Accedi</button>' +
+                            '<p class="ums-access-msg" id="ums-login-msg"></p>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div id="ums-access-in" hidden>' +
+                        '<h3 class="ums-access-h">Sei connesso</h3>' +
+                        '<p class="ums-access-p">I tuoi progressi vengono salvati con questa chiave:</p>' +
+                        '<div class="ums-chiave-val" id="ums-chiave-mine"></div>' +
+                        '<p class="ums-nb">Conservala con cura: &egrave; ci&ograve; che ti serve per ritrovare i tuoi appunti da qualsiasi dispositivo.</p>' +
+                        '<button class="ums-access-btn" id="ums-esci" type="button">Esci</button>' +
+                    '</div>' +
                 '</div>';
             document.body.appendChild(overlay);
 
-            const openBtn = document.getElementById('ums-inav-lorenzo');
-            const closeBtn = overlay.querySelector('.ums-lorenzo-close');
-            const open = () => { overlay.classList.add('show'); closeBtn.focus(); };
-            const close = () => { overlay.classList.remove('show'); openBtn.focus(); };
+            const loginBtn   = document.getElementById('ums-inav-login');
+            const loginLabel = document.getElementById('ums-login-label');
+            const closeBtn   = overlay.querySelector('.ums-access-close');
+            const outView    = document.getElementById('ums-access-out');
+            const inView     = document.getElementById('ums-access-in');
 
-            openBtn.addEventListener('click', open);
+            function refreshState() {
+                const k = getChiave();
+                if (k) {
+                    loginBtn.classList.add('is-in'); loginBtn.classList.remove('is-out');
+                    loginLabel.textContent = 'Accesso';
+                    loginBtn.title = 'Sei connesso'; loginBtn.setAttribute('aria-label', 'Sei connesso');
+                    document.getElementById('ums-chiave-mine').textContent = k;
+                    outView.hidden = true; inView.hidden = false;
+                } else {
+                    loginBtn.classList.add('is-out'); loginBtn.classList.remove('is-in');
+                    loginLabel.textContent = 'Accedi';
+                    loginBtn.title = 'Accedi'; loginBtn.setAttribute('aria-label', 'Accedi');
+                    outView.hidden = false; inView.hidden = true;
+                }
+            }
+            refreshState();
+
+            const open  = () => { overlay.classList.add('show'); closeBtn.focus(); };
+            const close = () => { overlay.classList.remove('show'); loginBtn.focus(); };
+            loginBtn.addEventListener('click', open);
             closeBtn.addEventListener('click', close);
             overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && overlay.classList.contains('show')) close();
+            document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && overlay.classList.contains('show')) close(); });
+
+            let chiaveGenerata = '';
+            const generaBtn = document.getElementById('ums-genera');
+            const chiaveBox = document.getElementById('ums-chiave-box');
+            const chiaveVal = document.getElementById('ums-chiave-val');
+            generaBtn.addEventListener('click', async () => {
+                generaBtn.disabled = true; generaBtn.textContent = 'Genero\u2026';
+                try {
+                    const r = await fetch(API + '/create', { method: 'POST' });
+                    const d = await r.json();
+                    if (d.chiave) {
+                        chiaveGenerata = d.chiave;
+                        chiaveVal.textContent = d.chiave;
+                        chiaveBox.hidden = false;
+                        generaBtn.hidden = true;
+                    } else { generaBtn.textContent = 'Riprova'; generaBtn.disabled = false; }
+                } catch (e) { generaBtn.textContent = 'Errore, riprova'; generaBtn.disabled = false; }
             });
+
+            const copyBtn = document.getElementById('ums-copy');
+            copyBtn.addEventListener('click', () => {
+                if (!chiaveGenerata) return;
+                navigator.clipboard.writeText(chiaveGenerata).then(() => {
+                    copyBtn.textContent = 'Copiata \u2713';
+                    setTimeout(() => { copyBtn.textContent = 'Copia'; }, 1500);
+                }).catch(() => {});
+            });
+
+            document.getElementById('ums-conferma').addEventListener('click', () => {
+                if (chiaveGenerata) { setChiaveLS(chiaveGenerata); refreshState(); }
+            });
+
+            const accediBtn   = document.getElementById('ums-accedi');
+            const inputChiave = document.getElementById('ums-input-chiave');
+            const loginMsg    = document.getElementById('ums-login-msg');
+            accediBtn.addEventListener('click', async () => {
+                const chiave = (inputChiave.value || '').toUpperCase().replace(/\s/g, '');
+                if (!chiave) { loginMsg.textContent = 'Scrivi la tua chiave.'; loginMsg.className = 'ums-access-msg err'; return; }
+                accediBtn.disabled = true; loginMsg.textContent = 'Controllo\u2026'; loginMsg.className = 'ums-access-msg';
+                try {
+                    const r = await fetch(API + '/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ chiave }) });
+                    const d = await r.json();
+                    if (d.valida) { setChiaveLS(chiave); refreshState(); loginMsg.textContent = ''; }
+                    else { loginMsg.textContent = 'Chiave non trovata. Controlla di averla scritta bene.'; loginMsg.className = 'ums-access-msg err'; }
+                } catch (e) { loginMsg.textContent = 'Errore di connessione, riprova.'; loginMsg.className = 'ums-access-msg err'; }
+                accediBtn.disabled = false;
+            });
+            inputChiave.addEventListener('keydown', (e) => { if (e.key === 'Enter') accediBtn.click(); });
+
+            document.getElementById('ums-esci').addEventListener('click', () => { clearChiave(); refreshState(); });
         })();
     </script>
 
