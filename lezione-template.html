@@ -3339,12 +3339,15 @@ if (!fileDaCaricare) {
             let c = db[lk].cards[front] || { box: 0, front, back };
             c.front = front; c.back = back;
             if (esito === 'known') {
+                // usa PRIMA l'intervallo del box corrente (1a volta = box 0 = 1 giorno),
+                // POI avanza di box per la prossima volta
+                c.due = srAddGiorni(SR_INTERVALLI[Math.min(c.box || 0, SR_INTERVALLI.length - 1)]);
                 c.box = Math.min((c.box || 0) + 1, SR_INTERVALLI.length - 1);
             } else {
-                c.box = 0; // sbagliata: riparte da vicino, la rivedrai prestissimo
+                c.box = 0;                              // sbagliata: riparte da capo
+                c.due = srAddGiorni(SR_INTERVALLI[0]);  // la rivedrai domani
             }
             c.stato = esito;
-            c.due = srAddGiorni(SR_INTERVALLI[c.box]);
             db[lk].cards[front] = c;
             srSalvaTutto(db);
             if (typeof srAggiornaBadge === 'function') srAggiornaBadge();
@@ -3401,10 +3404,8 @@ if (!fileDaCaricare) {
                 let dovute = 0, sbagliate = 0, totale = 0;
                 Object.keys(cards).forEach(f => {
                     totale++;
-                    if ((cards[f].due || '') <= ora) {
-                        dovute++;
-                        if (cards[f].stato === 'unknown') sbagliate++;
-                    }
+                    if ((cards[f].due || '') <= ora) dovute++;
+                    if (cards[f].stato === 'unknown') sbagliate++;   // sbagliate = ultimo esito negativo, sempre
                 });
                 if (totale === 0) return;
                 const mat = rec.materia || srMateriaDa(lk);
@@ -5450,6 +5451,52 @@ if (!fileDaCaricare) {
         .ums-fc-howbox p:last-child{ margin-bottom: 0; }
         .night-mode .ums-fc-count{ color: #E0C486; }
         .night-mode .ums-fc-howbox{ color: #D8D3C8; }
+        /* ---- Mini-mazzo di ripasso dentro il pop-up ---- */
+        #ums-review-stage{ display: none; }
+        #ums-review-stage.on{ display: block; }
+        .urv-top{ display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+        .urv-back{ background: none; border: none; cursor: pointer; color: var(--sub,#5f5c55); font-size: .8rem; display: flex; align-items: center; gap: 5px; font-family: var(--font-body,'DM Sans',sans-serif); }
+        .urv-count{ font-size: .75rem; color: var(--sub,#5f5c55); font-weight: 700; }
+        .urv-wrapper{ perspective: 1000px; width: 100%; height: 320px; cursor: pointer; }
+        .urv-inner{
+            position: relative; width: 100%; height: 100%; text-align: center;
+            transition: transform 0.65s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d; border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,.18);
+        }
+        .urv-wrapper.flipped .urv-inner{ transform: rotateY(180deg); }
+        .urv-front, .urv-back{
+            position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            border-radius: 20px; padding: 1.2rem;
+            background-image: url('https://i.postimg.cc/tJSTPJPW/indiani-d-america-e-uova-sode-stile-bruno-munari-molto-movimentato-e-colorato.jpg');
+            background-size: contain; background-repeat: no-repeat; background-position: center;
+            background-color: #1a1a2e;
+        }
+        .urv-back{ transform: rotateY(180deg); }
+        .urv-back::before{
+            content: ""; position: absolute; inset: 0; border-radius: 20px;
+            background-image: url('https://i.postimg.cc/tJSTPJPW/indiani-d-america-e-uova-sode-stile-bruno-munari-molto-movimentato-e-colorato.jpg');
+            background-size: contain; background-repeat: no-repeat; background-position: center;
+            transform: scaleX(-1); z-index: -1;
+        }
+        .urv-front h2, .urv-back p{
+            position: relative; z-index: 2; background: rgba(255,255,255,0.96);
+            padding: 16px 18px; border-radius: 12px; box-shadow: 0 6px 24px rgba(0,0,0,0.18);
+            width: 100%; color: #1C1C22; margin: 0;
+        }
+        .urv-front h2{ font-family: var(--font-display,'Playfair Display',serif); font-size: 1.15rem; line-height: 1.3; }
+        .urv-back p{ font-size: .86rem; text-align: left; line-height: 1.55; white-space: pre-line; overflow-y: auto; max-height: 82%; }
+        .urv-hint{ font-size: .72rem; color: var(--sub,#5f5c55); text-align: center; margin: 8px 0 12px; }
+        .urv-actions{ display: flex; gap: 8px; }
+        .urv-btn{ flex: 1; padding: 12px; font-size: .9rem; font-weight: 700; cursor: pointer; border-radius: 12px; border: none; font-family: var(--font-body,'DM Sans',sans-serif); }
+        .urv-btn.no{ background: #F0E0DC; color: #B53A2E; }
+        .urv-btn.si{ background: #DDEEDF; color: #1D7A53; }
+        .urv-done{ text-align: center; padding: 20px 0; }
+        .urv-done h3{ font-family: var(--font-display,'Playfair Display',serif); font-size: 1.3rem; color: var(--ink,#1C1C22); margin: 0 0 8px; }
+        .urv-done p{ font-size: .86rem; color: var(--sub,#5f5c55); margin: 0 0 16px; }
+        .night-mode .urv-front h2, .night-mode .urv-back p{ color: #1C1C22; }
+        .night-mode .urv-done h3{ color: #F2EFE8; }
 
 
         .night-mode .ums-fc-card{ background: #1C1F27; }
@@ -5701,7 +5748,29 @@ if (!fileDaCaricare) {
                         '<p>Bastano pochi minuti al giorno per ricordare a lungo termine, con molta meno fatica del ripasso &ldquo;tutto in una volta&rdquo;.</p>' +
                     '</div>' +
                     '<div id="ums-fc-list"></div>' +
-                '</div>';
+                    '<div id="ums-review-stage">' +
+                        '<div class="urv-top">' +
+                            '<button class="urv-back" id="urv-back" type="button"><svg class="ums-ic" aria-hidden="true"><use href="#ic-x"/></svg> Torna all\'elenco</button>' +
+                            '<span class="urv-count" id="urv-count"></span>' +
+                        '</div>' +
+                        '<div class="urv-wrapper" id="urv-wrapper">' +
+                            '<div class="urv-inner">' +
+                                '<div class="urv-front"><h2 id="urv-front-text"></h2></div>' +
+                                '<div class="urv-back"><p id="urv-back-text"></p></div>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="urv-hint" id="urv-hint">Tocca la carta per vedere la risposta</div>' +
+                        '<div class="urv-actions" id="urv-actions" hidden>' +
+                            '<button class="urv-btn no" id="urv-no" type="button">Ripasso dopo</button>' +
+                            '<button class="urv-btn si" id="urv-si" type="button">La so!</button>' +
+                        '</div>' +
+                        '<div class="urv-done" id="urv-done" hidden>' +
+                            '<h3>Ripasso completato!</h3>' +
+                            '<p id="urv-done-text"></p>' +
+                            '<button class="ums-fc-run primary" id="urv-done-back" type="button">Torna all\'elenco</button>' +
+                        '</div>' +
+                    '</div>' +
+                    '</div>';
             document.body.appendChild(fcOverlay);
 
 
@@ -5772,28 +5841,86 @@ if (!fileDaCaricare) {
 
             // Avvia un ripasso: se siamo GIA' nella lezione lk usa il mazzo in pagina,
             // altrimenti apre la lezione con un parametro che fa partire il ripasso.
+            // ---- Motore del mini-mazzo DENTRO il pop-up ----
+            let urvCoda = [];       // carte ancora da vedere in questa sessione
+            let urvLk = null;       // lezione in ripasso
+            let urvVisti = {};      // front -> true : già dato il PRIMO esito (quello che conta)
+            let urvTot = 0, urvFatte = 0;
+            const stage = document.getElementById('ums-review-stage');
+            const urvWrap = document.getElementById('urv-wrapper');
+            const urvFront = document.getElementById('urv-front-text');
+            const urvBack = document.getElementById('urv-back-text');
+            const urvActions = document.getElementById('urv-actions');
+            const urvHint = document.getElementById('urv-hint');
+            const urvCount = document.getElementById('urv-count');
+            const urvDone = document.getElementById('urv-done');
+            const urvDoneText = document.getElementById('urv-done-text');
+
             function fcAvviaRipasso(lk, soloSbagliate) {
                 const db = (typeof srCaricaTutto === 'function') ? srCaricaTutto() : {};
                 const rec = db[lk]; if (!rec) return;
-                // Ripasso LIBERO: "tutte" = ogni carta del mazzo (quando vuoi),
-                // "solo sbagliate" = solo quelle il cui ultimo esito è stato negativo.
                 let carte = Object.values(rec.cards || {});
                 if (soloSbagliate) carte = carte.filter(c => c.stato === 'unknown');
                 if (carte.length === 0) return;
-
-                const inQuestaLezione = (typeof umsLessonKey !== 'undefined') && umsLessonKey === lk
-                    && typeof window.startReviewWith === 'function';
-                if (inQuestaLezione) {
-                    fcOverlay.classList.remove('show');
-                    window.startReviewWith(carte.map(c => ({ front: c.front, back: c.back })));
-                } else {
-                    // Apri la lezione e lascia un segnale per far partire il ripasso al load
-                    try { sessionStorage.setItem('ums_review_target', JSON.stringify({ lk, soloSbagliate })); } catch (e) {}
-                    const base = 'https://lorenzosciallato.github.io/Una-mano-spensierata/lezione-template.html?file=';
-                    window.location.href = base + encodeURIComponent(lk);
-                }
+                urvLk = lk;
+                urvCoda = carte.map(c => ({ front: c.front, back: c.back }));
+                urvVisti = {};
+                urvTot = urvCoda.length; urvFatte = 0;
+                fcList.style.display = 'none';
+                const how = document.getElementById('ums-fc-how'); if (how) how.style.display = 'none';
+                fcSub.style.display = 'none';
+                urvDone.hidden = true;
+                stage.classList.add('on');
+                urvMostra();
             }
             window.fcAvviaRipasso = fcAvviaRipasso;
+
+            function urvMostra() {
+                if (urvCoda.length === 0) { urvFine(); return; }
+                const card = urvCoda[0];
+                urvWrap.classList.remove('flipped');
+                urvActions.hidden = true;
+                urvHint.style.display = 'block';
+                urvCount.textContent = 'Rimaste: ' + urvCoda.length;
+                setTimeout(() => { urvFront.textContent = card.front; urvBack.textContent = card.back; }, 120);
+            }
+            function urvFlip() {
+                urvWrap.classList.toggle('flipped');
+                if (urvWrap.classList.contains('flipped')) { urvActions.hidden = false; urvHint.style.display = 'none'; }
+            }
+            function urvRispondi(esito) {
+                const card = urvCoda.shift();
+                // Il PRIMO esito su questa carta è quello che conta per lo spaced repetition
+                if (!urvVisti[card.front]) {
+                    urvVisti[card.front] = true;
+                    urvFatte++;
+                    if (typeof srApplicaEsito === 'function') srApplicaEsito(card.front, card.back, esito);
+                }
+                // Se sbagliata, torna in coda per rivederla in questa sessione (non riconta)
+                if (esito === 'unknown') urvCoda.push(card);
+                urvMostra();
+            }
+            function urvFine() {
+                urvActions.hidden = true; urvHint.style.display = 'none';
+                urvWrap.parentElement && (urvWrap.style.display = 'none');
+                urvDone.hidden = false;
+                urvDoneText.textContent = 'Hai ripassato ' + urvTot + (urvTot === 1 ? ' carta.' : ' carte.') + ' Ti riproporremo quelle giuste piu in la, e quelle sbagliate molto presto.';
+                if (typeof srAggiornaBadge === 'function') srAggiornaBadge();
+            }
+            function urvChiudiStage() {
+                stage.classList.remove('on');
+                urvWrap.style.display = '';
+                urvDone.hidden = true;
+                fcList.style.display = '';
+                fcSub.style.display = '';
+                const how = document.getElementById('ums-fc-how'); if (how) how.style.display = '';
+                fcRenderHub();
+            }
+            urvWrap.addEventListener('click', urvFlip);
+            document.getElementById('urv-si').addEventListener('click', (e) => { e.stopPropagation(); urvRispondi('known'); });
+            document.getElementById('urv-no').addEventListener('click', (e) => { e.stopPropagation(); urvRispondi('unknown'); });
+            document.getElementById('urv-back').addEventListener('click', urvChiudiStage);
+            document.getElementById('urv-done-back').addEventListener('click', urvChiudiStage);
 
             const fcHow = document.getElementById('ums-fc-how');
             const fcHowBox = document.getElementById('ums-fc-howbox');
@@ -5802,7 +5929,7 @@ if (!fileDaCaricare) {
                 fcHow.textContent = fcHowBox.hidden ? 'Come funziona il ripasso?' : 'Nascondi spiegazione';
             });
             const fcOpen = () => { fcRenderHub(); fcOverlay.classList.add('show'); fcClose.focus(); };
-            const fcCloseFn = () => { fcOverlay.classList.remove('show'); fcBtn.focus(); };
+            const fcCloseFn = () => { if (stage.classList.contains('on')) urvChiudiStage(); fcOverlay.classList.remove('show'); fcBtn.focus(); };
             fcBtn.addEventListener('click', fcOpen);
             fcClose.addEventListener('click', fcCloseFn);
             fcOverlay.addEventListener('click', (e) => { if (e.target === fcOverlay) fcCloseFn(); });
