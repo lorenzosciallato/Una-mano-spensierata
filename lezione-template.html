@@ -1805,6 +1805,7 @@
         <symbol id="ic-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
         <symbol id="ic-home" viewBox="0 0 24 24"><path d="m3 11 9-8 9 8"/><path d="M5 9.5V21h14V9.5"/><path d="M9 21v-6h6v6"/></symbol>
         <symbol id="ic-login" viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/></symbol>
+        <symbol id="ic-cards" viewBox="0 0 24 24"><rect x="3" y="5" width="13" height="16" rx="2"/><path d="M8 5V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2h-1"/></symbol>
         <symbol id="ic-wrench" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76Z"/></symbol>
         <symbol id="ic-award" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.5 13 17 22l-5-3-5 3 1.5-9"/></symbol>
     </svg>
@@ -2350,6 +2351,17 @@
                 const d = await r.json();
                 if (!d.ok) return;
                 umsCloudData = d.dati || [];
+                // Prima: la memoria SR va ricostruita da TUTTE le lezioni (non solo la corrente)
+                const srDb = {};
+                umsCloudData.forEach(row => {
+                    if (row.kind !== 'sr') return;
+                    let c; try { c = JSON.parse(row.content); } catch (e) { return; }
+                    if (c === null) return;      // cancellazione logica
+                    srDb[row.item_id] = c;
+                });
+                if (Object.keys(srDb).length > 0) {
+                    try { localStorage.setItem('ums_sr', JSON.stringify(srDb)); } catch (e) {}
+                }
                 umsCloudData.forEach(row => {
                     // Riportiamo nei localStorage-key nativi del sito i dati di QUESTA lezione
                     if (row.item_id !== umsLessonKey) return;
@@ -2861,6 +2873,8 @@ if (!fileDaCaricare) {
                     await umsCloudPull();   // se connesso, porta giù i dati dal server
                     umsRestoreState();
                     umsCloudVisit();        // registra la visita a questa lezione
+                    if (typeof srAggiornaBadge === 'function') srAggiornaBadge();
+                    umsControllaRipassoInSospeso();
                     applyDropCap(); // FIX capolettera (dopo il restore)
                 } catch (e) { console.error('Persistenza/capolettera:', e); }
 
@@ -3290,6 +3304,109 @@ if (!fileDaCaricare) {
         function closeModal(e) { if (e.target.id === 'factor-modal') closeModalDirect(); }
 
         // =========================================================================
+        // SPACED REPETITION (tappa 4)
+        // Memoria locale in localStorage 'ums_sr' (+ specchio cloud kind 'sr').
+        // Struttura: { "materia/lezione-N": { titolo, materia, cards: {
+        //     "<front>": { stato, box, due, front, back } } } }
+        // Intervalli raccomandati (giorni) per risposte corrette consecutive.
+        // =========================================================================
+        const SR_INTERVALLI = [1, 3, 7, 16, 35, 70];
+        let srSessione = {};   // esiti raccolti nel mazzo in corso: front -> 'known'|'unknown'
+
+        function srCaricaTutto() {
+            try { return JSON.parse(localStorage.getItem('ums_sr') || '{}'); } catch (e) { return {}; }
+        }
+        function srSalvaTutto(db) {
+            try { localStorage.setItem('ums_sr', JSON.stringify(db)); } catch (e) {}
+            // specchio sul cloud, per lezione, se connesso
+            if (typeof umsCloudQueue === 'function') {
+                Object.keys(db).forEach(lk => umsCloudQueue('sr', lk, db[lk]));
+            }
+        }
+        function srMateriaDa(lessonKey) {
+            // "sociologiaeducazione/lezione-3.json" -> "sociologiaeducazione"
+            return (lessonKey || '').split('/')[0] || 'lezione';
+        }
+        function srOggi() { return new Date(); }
+        function srAddGiorni(n) { const d = new Date(); d.setDate(d.getDate() + n); return d.toISOString(); }
+
+        // Registra l'esito di una carta durante il ripasso (chiamata dai pulsanti esistenti)
+        function srRegistra(front, back, esito) {
+            srSessione[front] = { esito, back };
+        }
+
+        // Alla fine del mazzo: se ci sono esiti, chiede se salvare il ripasso in memoria
+        function srFineMazzo() {
+            const fronts = Object.keys(srSessione);
+            if (fronts.length === 0) return;
+            if (!srPromptEl) return;
+            srPromptEl.dataset.count = fronts.length;
+            document.getElementById('sr-prompt-count').textContent = fronts.length;
+            srPromptEl.classList.add('show');
+        }
+
+        // Salva davvero gli esiti nella memoria SR (schedulando le prossime date)
+        function srConfermaSalva() {
+            const db = srCaricaTutto();
+            const lk = umsLessonKey;
+            if (!db[lk]) db[lk] = { titolo: document.title || lk, materia: srMateriaDa(lk), cards: {} };
+            Object.keys(srSessione).forEach(front => {
+                const { esito, back } = srSessione[front];
+                let c = db[lk].cards[front] || { box: 0, front, back };
+                c.back = back; c.front = front;
+                if (esito === 'known') {
+                    c.box = Math.min((c.box || 0) + 1, SR_INTERVALLI.length - 1);
+                } else {
+                    c.box = 0; // sbagliata: riparte da vicino
+                }
+                c.stato = esito;
+                c.due = srAddGiorni(SR_INTERVALLI[c.box]);
+                db[lk].cards[front] = c;
+            });
+            srSalvaTutto(db);
+            srSessione = {};
+            srPromptEl.classList.remove('show');
+            if (typeof showToast === 'function') showToast('Ripasso salvato! Te lo riproporremo al momento giusto.', 'success');
+            srAggiornaBadge();
+        }
+        function srAnnullaSalva() { srSessione = {}; srPromptEl.classList.remove('show'); }
+
+        // Quante carte sono "in scadenza" (due <= adesso) su tutte le lezioni
+        function srConteggioDovute() {
+            const db = srCaricaTutto();
+            const ora = srOggi().toISOString();
+            let n = 0;
+            Object.keys(db).forEach(lk => {
+                const cards = db[lk].cards || {};
+                Object.keys(cards).forEach(f => { if ((cards[f].due || '') <= ora) n++; });
+            });
+            return n;
+        }
+
+        // Raggruppa le carte dovute per materia -> lezione
+        function srDovutePerLezione() {
+            const db = srCaricaTutto();
+            const ora = srOggi().toISOString();
+            const out = {}; // materia -> [ { lk, titolo, dovute, sbagliate, totale } ]
+            Object.keys(db).forEach(lk => {
+                const rec = db[lk];
+                const cards = rec.cards || {};
+                let dovute = 0, sbagliate = 0, totale = 0;
+                Object.keys(cards).forEach(f => {
+                    totale++;
+                    if ((cards[f].due || '') <= ora) {
+                        dovute++;
+                        if (cards[f].stato === 'unknown') sbagliate++;
+                    }
+                });
+                if (totale === 0) return;
+                const mat = rec.materia || srMateriaDa(lk);
+                (out[mat] = out[mat] || []).push({ lk, titolo: rec.titolo || lk, dovute, sbagliate, totale });
+            });
+            return out;
+        }
+
+        // =========================================================================
         // FLASHCARDS
         // =========================================================================
         function initFlashcards(cardsData) {
@@ -3309,7 +3426,9 @@ if (!fileDaCaricare) {
             const counter = document.getElementById('fc-counter');
             if (activeCards.length === 0) {
                 document.getElementById('fc-game-screen').style.display = 'none';
-                winScreen.style.display = 'flex'; return;
+                winScreen.style.display = 'flex';
+                srFineMazzo();
+                return;
             } else { winScreen.style.display = 'none'; }
             if (currentCardIndex >= activeCards.length) currentCardIndex = 0;
             if (currentCardIndex < 0) currentCardIndex = activeCards.length - 1;
@@ -3346,12 +3465,14 @@ if (!fileDaCaricare) {
         }
         function markKnown() {
             showToast("Grande! Continua così.", "success");
+            const _c = activeCards[currentCardIndex]; if (_c) srRegistra(_c.front, _c.back, 'known');
             activeCards.splice(currentCardIndex, 1);
             if (currentCardIndex >= activeCards.length) currentCardIndex = 0;
             setTimeout(() => { document.getElementById('flashcard-deck').classList.remove('flipped'); updateCardDisplay(); }, 500);
         }
         function markUnknown() {
             showToast("Nessun problema, la rivedremo dopo.", "retry");
+            const _c0 = activeCards[currentCardIndex]; if (_c0) srRegistra(_c0.front, _c0.back, 'unknown');
             const c = activeCards.splice(currentCardIndex, 1)[0];
             activeCards.push(c);
             if (currentCardIndex >= activeCards.length) currentCardIndex = 0;
@@ -3363,6 +3484,44 @@ if (!fileDaCaricare) {
             document.getElementById('win-screen').style.display = 'none';
             document.getElementById('fc-start-screen').style.display = 'block';
             document.getElementById('fc-game-screen').style.display = 'none';
+        }
+
+        // Avvia un ripasso mirato (chiamato dall'hub) riusando il mazzo in pagina.
+        window.startReviewWith = function (carte) {
+            if (!carte || carte.length === 0) return;
+            srSessione = {};
+            activeCards = carte.map(c => ({ front: c.front, back: c.back }));
+            initialCards = [...activeCards];
+            currentCardIndex = 0;
+            // porta l'utente alla sezione flashcard e mostra il gioco
+            const sec = document.getElementById('fc-start-screen');
+            if (sec) {
+                const acc = sec.closest('.accordion-item');
+                if (acc) {
+                    const content = acc.querySelector('.accordion-content');
+                    if (content && content.style) content.style.maxHeight = content.scrollHeight + 2000 + 'px';
+                    acc.classList.add('active');
+                }
+            }
+            document.getElementById('fc-start-screen').style.display = 'none';
+            document.getElementById('win-screen').style.display = 'none';
+            document.getElementById('fc-game-screen').style.display = 'block';
+            updateCardDisplay();
+            try { document.getElementById('fc-game-screen').scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) {}
+        };
+
+        // Se arrivo in questa lezione da "Ripassa" dell'hub, faccio partire il ripasso.
+        function umsControllaRipassoInSospeso() {
+            let target = null;
+            try { target = JSON.parse(sessionStorage.getItem('ums_review_target') || 'null'); } catch (e) {}
+            if (!target || target.lk !== umsLessonKey) return;
+            sessionStorage.removeItem('ums_review_target');
+            const db = (typeof srCaricaTutto === 'function') ? srCaricaTutto() : {};
+            const rec = db[umsLessonKey]; if (!rec) return;
+            const ora = new Date().toISOString();
+            let carte = Object.values(rec.cards || {}).filter(c => (c.due || '') <= ora);
+            if (target.soloSbagliate) carte = carte.filter(c => c.stato === 'unknown');
+            if (carte.length > 0) setTimeout(() => window.startReviewWith(carte.map(c => ({ front: c.front, back: c.back }))), 400);
         }
 
         // =========================================================================
@@ -5209,6 +5368,97 @@ if (!fileDaCaricare) {
         .night-mode .ums-access-input{ background: #14161C; color: #F2EFE8; border-color: #2B2E38; }
         .night-mode .ums-chiave-val{ background: #14161C; }
         .night-mode .ums-access-close{ background: rgba(255,255,255,.08); color: #F2EFE8; }
+
+        /* ================= FLASHCARD / SPACED REPETITION ================= */
+        .ums-fc-btn{ position: relative; }
+        .ums-fc-badge{
+            position: absolute; top: 4px; right: 8px;
+            min-width: 17px; height: 17px; padding: 0 4px; box-sizing: border-box;
+            background: #D14B3D; color: #fff; border-radius: 999px;
+            font-size: .6rem; font-weight: 700; line-height: 17px; text-align: center;
+        }
+        @media (min-width: 901px){ .ums-fc-badge{ top: 2px; right: 8px; } }
+
+        #ums-fc-overlay{
+            display: none; position: fixed; inset: 0; z-index: 99999999;
+            background: rgba(15,17,23,.55);
+            -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+            align-items: center; justify-content: center; padding: 24px;
+        }
+        #ums-fc-overlay.show{ display: flex; }
+        .ums-fc-card{
+            background: var(--ivory, #F7F4EF); border-radius: 28px;
+            box-shadow: 0 12px 40px rgba(15,17,23,.2);
+            padding: 30px 26px 26px; max-width: 440px; width: 100%;
+            max-height: 88vh; overflow-y: auto; position: relative;
+            font-family: var(--font-body,'DM Sans',sans-serif);
+        }
+        .ums-fc-close{
+            position: absolute; top: 12px; right: 12px; width: 34px; height: 34px;
+            border-radius: 50%; border: none; background: rgba(15,17,23,.06);
+            color: var(--ink,#1C1C22); font-size: 1rem; cursor: pointer;
+            display: grid; place-items: center;
+        }
+        .ums-fc-title{
+            font-family: var(--font-display,'Playfair Display',serif);
+            font-size: 1.4rem; color: var(--ink,#1C1C22); margin: 2px 0 4px; text-align: center;
+        }
+        .ums-fc-sub{ font-size: .82rem; color: var(--sub,#5f5c55); text-align: center; margin: 0 0 18px; }
+        .ums-fc-mat{
+            font-size: .7rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+            color: var(--gold-dk,#A8823C); margin: 16px 0 8px;
+        }
+        .ums-fc-lezione{
+            border: 1px solid var(--dust,#E8E4DC); border-radius: 14px;
+            padding: 12px 14px; margin-bottom: 10px; background: #fff;
+        }
+        .ums-fc-lez-top{ display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+        .ums-fc-lez-nome{ font-size: .9rem; font-weight: 700; color: var(--ink,#1C1C22); }
+        .ums-fc-lez-conta{ font-size: .72rem; color: var(--sub,#5f5c55); margin-top: 2px; }
+        .ums-fc-del{
+            background: none; border: none; cursor: pointer; color: #B0ABA1;
+            padding: 4px; border-radius: 8px; flex-shrink: 0;
+        }
+        .ums-fc-del:hover{ color: #D14B3D; background: rgba(209,75,61,.08); }
+        .ums-fc-actions{ display: flex; gap: 8px; margin-top: 10px; }
+        .ums-fc-run{
+            flex: 1; padding: 9px; font-size: .8rem; font-weight: 700; cursor: pointer;
+            border-radius: 10px; border: 1px solid var(--ink,#1C1C22);
+            background: transparent; color: var(--ink,#1C1C22);
+            font-family: var(--font-body,'DM Sans',sans-serif);
+        }
+        .ums-fc-run.primary{ background: var(--ink,#1C1C22); color: #fff; }
+        .ums-fc-run.wrong{ border-color: #D14B3D; color: #D14B3D; }
+        .ums-fc-run.wrong:disabled{ opacity: .4; cursor: default; }
+        .ums-fc-empty{ text-align: center; color: var(--sub,#5f5c55); font-size: .9rem; padding: 24px 0; }
+
+        #sr-save-prompt{
+            display: none; position: fixed; left: 0; right: 0; bottom: 0; z-index: 99999998;
+            justify-content: center; padding: 16px;
+        }
+        #sr-save-prompt.show{ display: flex; }
+        .sr-save-inner{
+            background: var(--ink,#1C1C22); color: #fff; border-radius: 16px;
+            padding: 14px 18px; max-width: 460px; width: 100%;
+            display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+            box-shadow: 0 10px 30px rgba(0,0,0,.25);
+            font-family: var(--font-body,'DM Sans',sans-serif);
+        }
+        .sr-save-text{ font-size: .84rem; flex: 1; min-width: 160px; line-height: 1.4; }
+        .sr-save-btn{
+            padding: 8px 14px; font-size: .8rem; font-weight: 700; cursor: pointer;
+            border-radius: 10px; border: none; font-family: var(--font-body,'DM Sans',sans-serif);
+        }
+        .sr-save-btn.si{ background: var(--gold,#C8A96E); color: #1C1C22; }
+        .sr-save-btn.no{ background: transparent; color: #C9C5BB; border: 1px solid rgba(255,255,255,.25); }
+
+        .night-mode .ums-fc-card{ background: #1C1F27; }
+        .night-mode .ums-fc-title{ color: #F2EFE8; }
+        .night-mode .ums-fc-lez-nome{ color: #F2EFE8; }
+        .night-mode .ums-fc-lezione{ background: #14161C; border-color: #2B2E38; }
+        .night-mode .ums-fc-run{ color: #F2EFE8; border-color: #F2EFE8; }
+        .night-mode .ums-fc-run.primary{ background: var(--gold,#C8A96E); color: #1C1F27; border-color: var(--gold,#C8A96E); }
+        .night-mode .ums-fc-close{ background: rgba(255,255,255,.08); color: #F2EFE8; }
     </style>
 
     <script id="ums-inav-script">
@@ -5241,6 +5491,11 @@ if (!fileDaCaricare) {
                 '<button class="ums-inav-item ums-login-btn" id="ums-inav-login" type="button" title="Accedi" aria-label="Accedi" aria-haspopup="dialog">' +
                     '<svg class="ums-ic" aria-hidden="true"><use href="#ic-login"/></svg>' +
                     '<span class="ums-inav-label" id="ums-login-label">Accedi</span>' +
+                '</button>' +
+                '<button class="ums-inav-item ums-fc-btn" id="ums-inav-fc" type="button" title="Flashcard da ripassare" aria-label="Flashcard da ripassare" aria-haspopup="dialog">' +
+                    '<svg class="ums-ic" aria-hidden="true"><use href="#ic-cards"/></svg>' +
+                    '<span class="ums-fc-badge" id="ums-fc-badge" hidden>0</span>' +
+                    '<span class="ums-inav-label">Ripasso</span>' +
                 '</button>' +
                 '<a class="ums-inav-item" href="' + WA_URL + '" target="_blank" rel="noopener" title="Gruppo WhatsApp" aria-label="Entra nel gruppo WhatsApp">' +
                     WA_SVG +
@@ -5427,6 +5682,132 @@ if (!fileDaCaricare) {
             inputChiave.addEventListener('keydown', (e) => { if (e.key === 'Enter') accediBtn.click(); });
 
             document.getElementById('ums-esci').addEventListener('click', () => { clearChiave(); refreshState(); });
+
+            // ============ HUB RIPASSO FLASHCARD (tappa 4) ============
+            const fcOverlay = document.createElement('div');
+            fcOverlay.id = 'ums-fc-overlay';
+            fcOverlay.setAttribute('role', 'dialog');
+            fcOverlay.setAttribute('aria-modal', 'true');
+            fcOverlay.setAttribute('aria-label', 'Ripasso flashcard');
+            fcOverlay.innerHTML =
+                '<div class="ums-fc-card">' +
+                    '<button class="ums-fc-close" type="button" aria-label="Chiudi">&#10005;</button>' +
+                    '<div class="ums-fc-title">Da ripassare</div>' +
+                    '<div class="ums-fc-sub" id="ums-fc-sub"></div>' +
+                    '<div id="ums-fc-list"></div>' +
+                '</div>';
+            document.body.appendChild(fcOverlay);
+
+            // Prompt "salvare questo ripasso?" (usato da srFineMazzo)
+            const srPrompt = document.createElement('div');
+            srPrompt.id = 'sr-save-prompt';
+            srPrompt.innerHTML =
+                '<div class="sr-save-inner">' +
+                    '<div class="sr-save-text">Vuoi salvare questo ripasso? Ti riproporremo le carte al momento giusto (<span id="sr-prompt-count">0</span> carte).</div>' +
+                    '<button class="sr-save-btn no" id="sr-no" type="button">No grazie</button>' +
+                    '<button class="sr-save-btn si" id="sr-si" type="button">S\u00ec, salva</button>' +
+                '</div>';
+            document.body.appendChild(srPrompt);
+            window.srPromptEl = srPrompt;
+            srPrompt.querySelector('#sr-si').addEventListener('click', () => { if (typeof srConfermaSalva === 'function') srConfermaSalva(); });
+            srPrompt.querySelector('#sr-no').addEventListener('click', () => { if (typeof srAnnullaSalva === 'function') srAnnullaSalva(); });
+
+            const fcBtn = document.getElementById('ums-inav-fc');
+            const fcBadge = document.getElementById('ums-fc-badge');
+            const fcClose = fcOverlay.querySelector('.ums-fc-close');
+            const fcList = document.getElementById('ums-fc-list');
+            const fcSub = document.getElementById('ums-fc-sub');
+
+            window.srAggiornaBadge = function () {
+                if (typeof srConteggioDovute !== 'function') return;
+                const n = srConteggioDovute();
+                if (n > 0) { fcBadge.textContent = n > 99 ? '99+' : n; fcBadge.hidden = false; }
+                else { fcBadge.hidden = true; }
+            };
+
+            function fcRenderHub() {
+                const gruppi = (typeof srDovutePerLezione === 'function') ? srDovutePerLezione() : {};
+                const materie = Object.keys(gruppi);
+                fcList.innerHTML = '';
+                let totDovute = 0;
+                materie.forEach(m => gruppi[m].forEach(l => totDovute += l.dovute));
+                if (materie.length === 0) {
+                    fcSub.textContent = '';
+                    fcList.innerHTML = '<div class="ums-fc-empty">Non hai ancora salvato nessun ripasso.<br>Prova le flashcard di una lezione e salvale a fine mazzo.</div>';
+                    return;
+                }
+                fcSub.textContent = totDovute > 0 ? (totDovute + ' carte da ripassare oggi') : 'Nessuna carta in scadenza oggi \u2014 ottimo!';
+                materie.forEach(mat => {
+                    const hMat = document.createElement('div');
+                    hMat.className = 'ums-fc-mat'; hMat.textContent = mat;
+                    fcList.appendChild(hMat);
+                    gruppi[mat].forEach(l => {
+                        const box = document.createElement('div');
+                        box.className = 'ums-fc-lezione';
+                        box.innerHTML =
+                            '<div class="ums-fc-lez-top">' +
+                                '<div>' +
+                                    '<div class="ums-fc-lez-nome"></div>' +
+                                    '<div class="ums-fc-lez-conta">' + l.dovute + ' da ripassare \u00b7 ' + l.totale + ' totali</div>' +
+                                '</div>' +
+                                '<button class="ums-fc-del" type="button" title="Elimina questo mazzo" aria-label="Elimina questo mazzo"><svg class="ums-ic" aria-hidden="true"><use href="#ic-x"/></svg></button>' +
+                            '</div>' +
+                            '<div class="ums-fc-actions">' +
+                                '<button class="ums-fc-run primary run-all" type="button">Ripassa tutte</button>' +
+                                '<button class="ums-fc-run wrong run-wrong" type="button"' + (l.sbagliate === 0 ? ' disabled' : '') + '>Solo sbagliate (' + l.sbagliate + ')</button>' +
+                            '</div>';
+                        box.querySelector('.ums-fc-lez-nome').textContent = l.titolo;
+                        box.querySelector('.run-all').addEventListener('click', () => fcAvviaRipasso(l.lk, false));
+                        box.querySelector('.run-wrong').addEventListener('click', () => { if (l.sbagliate > 0) fcAvviaRipasso(l.lk, true); });
+                        box.querySelector('.ums-fc-del').addEventListener('click', () => fcEliminaMazzo(l.lk, l.titolo));
+                        fcList.appendChild(box);
+                    });
+                });
+            }
+
+            function fcEliminaMazzo(lk, titolo) {
+                if (!confirm('Eliminare il ripasso di "' + titolo + '"? Le carte non ti verranno pi\u00f9 riproposte.')) return;
+                const db = (typeof srCaricaTutto === 'function') ? srCaricaTutto() : {};
+                delete db[lk];
+                if (typeof srSalvaTutto === 'function') srSalvaTutto(db);
+                // rimuovo anche dal cloud (contenuto nullo = cancellazione logica)
+                if (typeof umsCloudQueue === 'function') umsCloudQueue('sr', lk, null);
+                fcRenderHub();
+                if (typeof srAggiornaBadge === 'function') srAggiornaBadge();
+            }
+
+            // Avvia un ripasso: se siamo GIA' nella lezione lk usa il mazzo in pagina,
+            // altrimenti apre la lezione con un parametro che fa partire il ripasso.
+            function fcAvviaRipasso(lk, soloSbagliate) {
+                const db = (typeof srCaricaTutto === 'function') ? srCaricaTutto() : {};
+                const rec = db[lk]; if (!rec) return;
+                const ora = new Date().toISOString();
+                let carte = Object.values(rec.cards || {}).filter(c => (c.due || '') <= ora);
+                if (soloSbagliate) carte = carte.filter(c => c.stato === 'unknown');
+                if (carte.length === 0) return;
+
+                const inQuestaLezione = (typeof umsLessonKey !== 'undefined') && umsLessonKey === lk
+                    && typeof window.startReviewWith === 'function';
+                if (inQuestaLezione) {
+                    fcOverlay.classList.remove('show');
+                    window.startReviewWith(carte.map(c => ({ front: c.front, back: c.back })));
+                } else {
+                    // Apri la lezione e lascia un segnale per far partire il ripasso al load
+                    try { sessionStorage.setItem('ums_review_target', JSON.stringify({ lk, soloSbagliate })); } catch (e) {}
+                    const base = 'https://lorenzosciallato.github.io/Una-mano-spensierata/lezione-template.html?file=';
+                    window.location.href = base + encodeURIComponent(lk);
+                }
+            }
+            window.fcAvviaRipasso = fcAvviaRipasso;
+
+            const fcOpen = () => { fcRenderHub(); fcOverlay.classList.add('show'); fcClose.focus(); };
+            const fcCloseFn = () => { fcOverlay.classList.remove('show'); fcBtn.focus(); };
+            fcBtn.addEventListener('click', fcOpen);
+            fcClose.addEventListener('click', fcCloseFn);
+            fcOverlay.addEventListener('click', (e) => { if (e.target === fcOverlay) fcCloseFn(); });
+            document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && fcOverlay.classList.contains('show')) fcCloseFn(); });
+
+            if (typeof srAggiornaBadge === 'function') srAggiornaBadge();
         })();
     </script>
 
