@@ -3311,7 +3311,6 @@ if (!fileDaCaricare) {
         // Intervalli raccomandati (giorni) per risposte corrette consecutive.
         // =========================================================================
         const SR_INTERVALLI = [1, 3, 7, 16, 35, 70];
-        let srSessione = {};   // esiti raccolti nel mazzo in corso: front -> 'known'|'unknown'
 
         function srCaricaTutto() {
             try { return JSON.parse(localStorage.getItem('ums_sr') || '{}'); } catch (e) { return {}; }
@@ -3330,46 +3329,54 @@ if (!fileDaCaricare) {
         function srOggi() { return new Date(); }
         function srAddGiorni(n) { const d = new Date(); d.setDate(d.getDate() + n); return d.toISOString(); }
 
-        // Registra l'esito di una carta durante il ripasso (chiamata dai pulsanti esistenti)
-        function srRegistra(front, back, esito) {
-            srSessione[front] = { esito, back };
-        }
-
-        // Alla fine del mazzo: se ci sono esiti, chiede se salvare il ripasso in memoria
-        function srFineMazzo() {
-            const fronts = Object.keys(srSessione);
-            if (fronts.length === 0) return;
-            if (!srPromptEl) return;
-            srPromptEl.dataset.count = fronts.length;
-            document.getElementById('sr-prompt-count').textContent = fronts.length;
-            srPromptEl.classList.add('show');
-        }
-
-        // Salva davvero gli esiti nella memoria SR (schedulando le prossime date)
-        function srConfermaSalva() {
+        // Applica SUBITO l'esito di una carta alla memoria SR (salvataggio per-carta).
+        // Chiamata direttamente dai pulsanti "La so / Ripasso dopo".
+        function srApplicaEsito(front, back, esito) {
+            if (!front || !umsLessonKey || umsLessonKey === 'default') return;
             const db = srCaricaTutto();
             const lk = umsLessonKey;
             if (!db[lk]) db[lk] = { titolo: document.title || lk, materia: srMateriaDa(lk), cards: {} };
-            Object.keys(srSessione).forEach(front => {
-                const { esito, back } = srSessione[front];
-                let c = db[lk].cards[front] || { box: 0, front, back };
-                c.back = back; c.front = front;
-                if (esito === 'known') {
-                    c.box = Math.min((c.box || 0) + 1, SR_INTERVALLI.length - 1);
-                } else {
-                    c.box = 0; // sbagliata: riparte da vicino
-                }
-                c.stato = esito;
-                c.due = srAddGiorni(SR_INTERVALLI[c.box]);
-                db[lk].cards[front] = c;
-            });
+            let c = db[lk].cards[front] || { box: 0, front, back };
+            c.front = front; c.back = back;
+            if (esito === 'known') {
+                c.box = Math.min((c.box || 0) + 1, SR_INTERVALLI.length - 1);
+            } else {
+                c.box = 0; // sbagliata: riparte da vicino, la rivedrai prestissimo
+            }
+            c.stato = esito;
+            c.due = srAddGiorni(SR_INTERVALLI[c.box]);
+            db[lk].cards[front] = c;
             srSalvaTutto(db);
-            srSessione = {};
-            srPromptEl.classList.remove('show');
-            if (typeof showToast === 'function') showToast('Ripasso salvato! Te lo riproporremo al momento giusto.', 'success');
-            srAggiornaBadge();
+            if (typeof srAggiornaBadge === 'function') srAggiornaBadge();
         }
-        function srAnnullaSalva() { srSessione = {}; srPromptEl.classList.remove('show'); }
+
+        // Quando manca la prossima carta dovuta di una lezione (per il countdown)
+        function srProssimaScadenza(lk) {
+            const db = srCaricaTutto();
+            const rec = db[lk]; if (!rec) return null;
+            const cards = rec.cards || {};
+            let min = null;
+            Object.keys(cards).forEach(f => {
+                const d = cards[f].due;
+                if (d && (min === null || d < min)) min = d;
+            });
+            return min;
+        }
+
+        // Testo umano del countdown ("pronte ora", "tra 3 giorni", "domani")
+        function srCountdownTesto(lk) {
+            const rec = srCaricaTutto()[lk]; if (!rec) return '';
+            const ora = new Date();
+            const dovute = Object.values(rec.cards || {}).filter(c => new Date(c.due) <= ora).length;
+            if (dovute > 0) return dovute + (dovute === 1 ? ' carta pronta ora' : ' carte pronte ora');
+            const prossima = srProssimaScadenza(lk);
+            if (!prossima) return '';
+            const diffMs = new Date(prossima) - ora;
+            const giorni = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+            if (giorni <= 0) return 'prossimo ripasso a breve';
+            if (giorni === 1) return 'prossimo ripasso domani';
+            return 'prossimo ripasso tra ' + giorni + ' giorni';
+        }
 
         // Quante carte sono "in scadenza" (due <= adesso) su tutte le lezioni
         function srConteggioDovute() {
@@ -3427,7 +3434,6 @@ if (!fileDaCaricare) {
             if (activeCards.length === 0) {
                 document.getElementById('fc-game-screen').style.display = 'none';
                 winScreen.style.display = 'flex';
-                srFineMazzo();
                 return;
             } else { winScreen.style.display = 'none'; }
             if (currentCardIndex >= activeCards.length) currentCardIndex = 0;
@@ -3465,14 +3471,14 @@ if (!fileDaCaricare) {
         }
         function markKnown() {
             showToast("Grande! Continua così.", "success");
-            const _c = activeCards[currentCardIndex]; if (_c) srRegistra(_c.front, _c.back, 'known');
+            const _c = activeCards[currentCardIndex]; if (_c) srApplicaEsito(_c.front, _c.back, 'known');
             activeCards.splice(currentCardIndex, 1);
             if (currentCardIndex >= activeCards.length) currentCardIndex = 0;
             setTimeout(() => { document.getElementById('flashcard-deck').classList.remove('flipped'); updateCardDisplay(); }, 500);
         }
         function markUnknown() {
             showToast("Nessun problema, la rivedremo dopo.", "retry");
-            const _c0 = activeCards[currentCardIndex]; if (_c0) srRegistra(_c0.front, _c0.back, 'unknown');
+            const _c0 = activeCards[currentCardIndex]; if (_c0) srApplicaEsito(_c0.front, _c0.back, 'unknown');
             const c = activeCards.splice(currentCardIndex, 1)[0];
             activeCards.push(c);
             if (currentCardIndex >= activeCards.length) currentCardIndex = 0;
@@ -3489,7 +3495,6 @@ if (!fileDaCaricare) {
         // Avvia un ripasso mirato (chiamato dall'hub) riusando il mazzo in pagina.
         window.startReviewWith = function (carte) {
             if (!carte || carte.length === 0) return;
-            srSessione = {};
             activeCards = carte.map(c => ({ front: c.front, back: c.back }));
             initialCards = [...activeCards];
             currentCardIndex = 0;
@@ -3518,8 +3523,7 @@ if (!fileDaCaricare) {
             sessionStorage.removeItem('ums_review_target');
             const db = (typeof srCaricaTutto === 'function') ? srCaricaTutto() : {};
             const rec = db[umsLessonKey]; if (!rec) return;
-            const ora = new Date().toISOString();
-            let carte = Object.values(rec.cards || {}).filter(c => (c.due || '') <= ora);
+            let carte = Object.values(rec.cards || {});
             if (target.soloSbagliate) carte = carte.filter(c => c.stato === 'unknown');
             if (carte.length > 0) setTimeout(() => window.startReviewWith(carte.map(c => ({ front: c.front, back: c.back }))), 400);
         }
@@ -5431,26 +5435,22 @@ if (!fileDaCaricare) {
         .ums-fc-run.wrong{ border-color: #D14B3D; color: #D14B3D; }
         .ums-fc-run.wrong:disabled{ opacity: .4; cursor: default; }
         .ums-fc-empty{ text-align: center; color: var(--sub,#5f5c55); font-size: .9rem; padding: 24px 0; }
+        .ums-fc-count{ font-size: .7rem; color: var(--gold-dk,#A8823C); font-weight: 700; margin-top: 4px; }
+        .ums-fc-how{
+            display: block; margin: -6px auto 14px; background: none; border: none;
+            cursor: pointer; font-size: .76rem; color: var(--sub,#5f5c55);
+            text-decoration: underline; font-family: var(--font-body,'DM Sans',sans-serif);
+        }
+        .ums-fc-howbox{
+            background: rgba(200,169,110,.12); border-radius: 14px;
+            padding: 14px 16px; margin: 0 0 16px;
+            font-size: .8rem; line-height: 1.55; color: var(--sub,#5f5c55);
+        }
+        .ums-fc-howbox p{ margin: 0 0 10px; }
+        .ums-fc-howbox p:last-child{ margin-bottom: 0; }
+        .night-mode .ums-fc-count{ color: #E0C486; }
+        .night-mode .ums-fc-howbox{ color: #D8D3C8; }
 
-        #sr-save-prompt{
-            display: none; position: fixed; left: 0; right: 0; bottom: 0; z-index: 99999998;
-            justify-content: center; padding: 16px;
-        }
-        #sr-save-prompt.show{ display: flex; }
-        .sr-save-inner{
-            background: var(--ink,#1C1C22); color: #fff; border-radius: 16px;
-            padding: 14px 18px; max-width: 460px; width: 100%;
-            display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
-            box-shadow: 0 10px 30px rgba(0,0,0,.25);
-            font-family: var(--font-body,'DM Sans',sans-serif);
-        }
-        .sr-save-text{ font-size: .84rem; flex: 1; min-width: 160px; line-height: 1.4; }
-        .sr-save-btn{
-            padding: 8px 14px; font-size: .8rem; font-weight: 700; cursor: pointer;
-            border-radius: 10px; border: none; font-family: var(--font-body,'DM Sans',sans-serif);
-        }
-        .sr-save-btn.si{ background: var(--gold,#C8A96E); color: #1C1C22; }
-        .sr-save-btn.no{ background: transparent; color: #C9C5BB; border: 1px solid rgba(255,255,255,.25); }
 
         .night-mode .ums-fc-card{ background: #1C1F27; }
         .night-mode .ums-fc-title{ color: #F2EFE8; }
@@ -5694,23 +5694,16 @@ if (!fileDaCaricare) {
                     '<button class="ums-fc-close" type="button" aria-label="Chiudi">&#10005;</button>' +
                     '<div class="ums-fc-title">Da ripassare</div>' +
                     '<div class="ums-fc-sub" id="ums-fc-sub"></div>' +
+                    '<button class="ums-fc-how" id="ums-fc-how" type="button">Come funziona il ripasso?</button>' +
+                    '<div class="ums-fc-howbox" id="ums-fc-howbox" hidden>' +
+                        '<p>Il <b>ripasso a intervalli</b> (spaced repetition) &egrave; il metodo di studio pi&ugrave; efficace mai misurato. L\'idea &egrave; semplice: invece di rileggere tutto insieme, rivedi ogni concetto <b>poco prima di dimenticarlo</b>.</p>' +
+                        '<p>Ogni volta che segni una carta come <b>&ldquo;La so&rdquo;</b>, la rivedrai pi&ugrave; in l&agrave; nel tempo (dopo 1 giorno, poi 3, 7, 16, 35...). Se invece la sbagli, torna presto. Cos&igrave; le cose che sai gi&agrave; non ti fanno perdere tempo, e quelle difficili le fissi davvero.</p>' +
+                        '<p>Bastano pochi minuti al giorno per ricordare a lungo termine, con molta meno fatica del ripasso &ldquo;tutto in una volta&rdquo;.</p>' +
+                    '</div>' +
                     '<div id="ums-fc-list"></div>' +
                 '</div>';
             document.body.appendChild(fcOverlay);
 
-            // Prompt "salvare questo ripasso?" (usato da srFineMazzo)
-            const srPrompt = document.createElement('div');
-            srPrompt.id = 'sr-save-prompt';
-            srPrompt.innerHTML =
-                '<div class="sr-save-inner">' +
-                    '<div class="sr-save-text">Vuoi salvare questo ripasso? Ti riproporremo le carte al momento giusto (<span id="sr-prompt-count">0</span> carte).</div>' +
-                    '<button class="sr-save-btn no" id="sr-no" type="button">No grazie</button>' +
-                    '<button class="sr-save-btn si" id="sr-si" type="button">S\u00ec, salva</button>' +
-                '</div>';
-            document.body.appendChild(srPrompt);
-            window.srPromptEl = srPrompt;
-            srPrompt.querySelector('#sr-si').addEventListener('click', () => { if (typeof srConfermaSalva === 'function') srConfermaSalva(); });
-            srPrompt.querySelector('#sr-no').addEventListener('click', () => { if (typeof srAnnullaSalva === 'function') srAnnullaSalva(); });
 
             const fcBtn = document.getElementById('ums-inav-fc');
             const fcBadge = document.getElementById('ums-fc-badge');
@@ -5749,6 +5742,7 @@ if (!fileDaCaricare) {
                                 '<div>' +
                                     '<div class="ums-fc-lez-nome"></div>' +
                                     '<div class="ums-fc-lez-conta">' + l.dovute + ' da ripassare \u00b7 ' + l.totale + ' totali</div>' +
+                                    '<div class="ums-fc-count">' + (typeof srCountdownTesto === 'function' ? srCountdownTesto(l.lk) : '') + '</div>' +
                                 '</div>' +
                                 '<button class="ums-fc-del" type="button" title="Elimina questo mazzo" aria-label="Elimina questo mazzo"><svg class="ums-ic" aria-hidden="true"><use href="#ic-x"/></svg></button>' +
                             '</div>' +
@@ -5781,8 +5775,9 @@ if (!fileDaCaricare) {
             function fcAvviaRipasso(lk, soloSbagliate) {
                 const db = (typeof srCaricaTutto === 'function') ? srCaricaTutto() : {};
                 const rec = db[lk]; if (!rec) return;
-                const ora = new Date().toISOString();
-                let carte = Object.values(rec.cards || {}).filter(c => (c.due || '') <= ora);
+                // Ripasso LIBERO: "tutte" = ogni carta del mazzo (quando vuoi),
+                // "solo sbagliate" = solo quelle il cui ultimo esito è stato negativo.
+                let carte = Object.values(rec.cards || {});
                 if (soloSbagliate) carte = carte.filter(c => c.stato === 'unknown');
                 if (carte.length === 0) return;
 
@@ -5800,6 +5795,12 @@ if (!fileDaCaricare) {
             }
             window.fcAvviaRipasso = fcAvviaRipasso;
 
+            const fcHow = document.getElementById('ums-fc-how');
+            const fcHowBox = document.getElementById('ums-fc-howbox');
+            if (fcHow && fcHowBox) fcHow.addEventListener('click', () => {
+                fcHowBox.hidden = !fcHowBox.hidden;
+                fcHow.textContent = fcHowBox.hidden ? 'Come funziona il ripasso?' : 'Nascondi spiegazione';
+            });
             const fcOpen = () => { fcRenderHub(); fcOverlay.classList.add('show'); fcClose.focus(); };
             const fcCloseFn = () => { fcOverlay.classList.remove('show'); fcBtn.focus(); };
             fcBtn.addEventListener('click', fcOpen);
