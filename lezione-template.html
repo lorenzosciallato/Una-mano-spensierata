@@ -3430,6 +3430,83 @@ if (!fileDaCaricare) {
             return out;
         }
 
+        // ---- UN FALDONE PER MATERIA ----
+        // Le chiavi del db restano per-lezione (la sincronizzazione cloud spedisce
+        // i mazzi con quella chiave): l'unione in un unico faldone avviene qui.
+        // FONTE DEI NOMI: il catalogo 'ums_catalogo' scritto dalla home a ogni
+        // caricamento (derivato da `courses`). La mappa qui sotto è solo un
+        // fallback di riserva per chi arriva a una lezione senza mai essere
+        // passato dalla home su questo dispositivo: NON va più aggiornata.
+        const UMS_MATERIA_NOMI = {
+            'storiaeducazione':     "Storia dell'Educazione",
+            'psicologiasviluppo':   'Psicologia dello Sviluppo',
+            'sociologiaeducazione': "Sociologia dell'Educazione",
+            'didattica':            'Didattica Generale',
+            'neuropsichiatria':     'Neuropsichiatria Infantile',
+            'storiacontemporanea':  'Storia Contemporanea'
+        };
+        function umsCatalogoMaterie() {
+            try { return JSON.parse(localStorage.getItem('ums_catalogo') || '{}'); } catch (e) { return {}; }
+        }
+        function umsNomeMateria(slug, fallback) {
+            const cat = umsCatalogoMaterie();
+            if (cat[slug] && cat[slug].nome) return cat[slug].nome;
+            return UMS_MATERIA_NOMI[slug] || fallback || slug;
+        }
+        function srDovutePerMateria() {
+            const db = srCaricaTutto();
+            const ora = srOggi().toISOString();
+            const out = {}; // slug -> { slug, nome, dovute, sbagliate, totale, lks }
+            Object.keys(db).forEach(lk => {
+                const rec = db[lk];
+                const cards = rec.cards || {};
+                let dovute = 0, sbagliate = 0, totale = 0;
+                Object.keys(cards).forEach(f => {
+                    totale++;
+                    if ((cards[f].due || '') <= ora) dovute++;
+                    if ((cards[f].bucket || (cards[f].stato === 'unknown' ? 'sbagliate' : 'giuste')) === 'sbagliate') sbagliate++;
+                });
+                if (totale === 0) return;
+                const slug = rec.materia || srMateriaDa(lk);
+                const g = out[slug] = out[slug] || { slug, nome: umsNomeMateria(slug, rec.titolo), dovute: 0, sbagliate: 0, totale: 0, lks: [] };
+                g.dovute += dovute; g.sbagliate += sbagliate; g.totale += totale;
+                g.lks.push(lk);
+            });
+            return out;
+        }
+        // Tutte le carte di una materia, ognuna col SUO lk di origine: quando
+        // rispondi, l'esito torna nel mazzo giusto (mai duplicare tra lezioni).
+        function srCarteDiMateria(slug, soloSbagliate) {
+            const db = srCaricaTutto();
+            let carte = [];
+            Object.keys(db).forEach(lk => {
+                const rec = db[lk];
+                if ((rec.materia || srMateriaDa(lk)) !== slug) return;
+                Object.values(rec.cards || {}).forEach(c => carte.push({ front: c.front, back: c.back, bucket: c.bucket, stato: c.stato, lk }));
+            });
+            if (soloSbagliate) carte = carte.filter(c => (c.bucket || (c.stato === 'unknown' ? 'sbagliate' : 'giuste')) === 'sbagliate');
+            return carte;
+        }
+        // Countdown aggregato del faldone (tutte le lezioni della materia)
+        function srCountdownTestoMateria(lks) {
+            const db = srCaricaTutto();
+            const ora = new Date();
+            let dovute = 0, min = null;
+            (lks || []).forEach(lk => {
+                const rec = db[lk]; if (!rec) return;
+                Object.values(rec.cards || {}).forEach(c => {
+                    if (c.due && new Date(c.due) <= ora) dovute++;
+                    if (c.due && (min === null || c.due < min)) min = c.due;
+                });
+            });
+            if (dovute > 0) return dovute + ' ' + umsT(dovute === 1 ? 'carta pronta ora' : 'carte pronte ora');
+            if (!min) return '';
+            const giorni = Math.ceil((new Date(min) - ora) / (1000 * 60 * 60 * 24));
+            if (giorni <= 0) return umsT('prossimo ripasso a breve');
+            if (giorni === 1) return umsT('prossimo ripasso domani');
+            return umsT('prossimo ripasso tra') + ' ' + giorni + ' ' + umsT('giorni');
+        }
+
         // =========================================================================
         // FLASHCARDS
         // =========================================================================
@@ -3559,22 +3636,23 @@ if (!fileDaCaricare) {
         function umsControllaRipassoInSospeso() {
             let target = null;
             try { target = JSON.parse(sessionStorage.getItem('ums_review_target') || 'null'); } catch (e) {}
-            if (!target || !target.lk) return;
+            if (!target) return;
             sessionStorage.removeItem('ums_review_target');
-            const db = (typeof srCaricaTutto === 'function') ? srCaricaTutto() : {};
-            const rec = db[target.lk];
-            let carte = rec ? Object.values(rec.cards || {}) : [];
-            if (target.soloSbagliate) carte = carte.filter(c => (c.bucket || (c.stato === 'unknown' ? 'sbagliate' : 'giuste')) === 'sbagliate');
+            // Target per MATERIA (nuovo) o per lezione (legacy): in entrambi i
+            // casi si ripassa il FALDONE intero della materia.
+            const mat = target.mat || (target.lk ? ((target.lk || '').split('/')[0] || null) : null);
+            if (!mat) return;
+            const carte = (typeof srCarteDiMateria === 'function') ? srCarteDiMateria(mat, !!target.soloSbagliate) : [];
             if (carte.length === 0) {
                 // Niente silenzio: dico all'utente cosa è successo.
-                if (typeof showToast === 'function') showToast('Nessuna flashcard salvata su questo dispositivo per questa lezione. Provale qui e verranno salvate.', 'retry');
+                if (typeof showToast === 'function') showToast('Nessuna flashcard salvata su questo dispositivo per questa materia. Provale qui e verranno salvate.', 'retry');
                 return;
             }
             // Avvio robusto: se il pop-up non è ancora pronto, ritento.
             let tentativi = 0;
             const avvia = () => {
                 if (typeof window.umsApriHubRipasso === 'function') {
-                    window.umsApriHubRipasso(target.lk, !!target.soloSbagliate);
+                    window.umsApriHubRipasso(mat, !!target.soloSbagliate);
                 } else if (tentativi++ < 20) {
                     setTimeout(avvia, 300);
                 }
@@ -5090,6 +5168,10 @@ if (!fileDaCaricare) {
         (function () {
             // Chiave = cartella nel ?file= (primo pezzo prima dello slash).
             // Ed. Musicale non c'è: resta su Google Sites, niente nav.
+            // NUMERO LEZIONI: prima dal catalogo 'ums_catalogo' che la home
+            // scrive a ogni caricamento (fonte: `courses` — si auto-aggiorna
+            // quando aggiungi materie o lezioni). La mappa qui sotto è solo un
+            // fallback di riserva: NON va più aggiornata a mano.
             const UMS_LEZIONI_PER_CORSO = {
                 'storiaeducazione':     17,
                 'psicologiasviluppo':   14,
@@ -5105,7 +5187,12 @@ if (!fileDaCaricare) {
 
             const decoded = decodeURIComponent(fileParam);
             const folder = decoded.split('/')[0];
-            const total  = UMS_LEZIONI_PER_CORSO[folder];
+            let total = null;
+            try {
+                const cat = JSON.parse(localStorage.getItem('ums_catalogo') || '{}');
+                if (cat[folder] && cat[folder].n > 0) total = cat[folder].n;
+            } catch (e) {}
+            if (!total) total = UMS_LEZIONI_PER_CORSO[folder];
             if (!total) return;
 
             const slash = decoded.lastIndexOf('/');
@@ -5911,53 +5998,49 @@ if (!fileDaCaricare) {
                     document.getElementById('ums-fc-login').textContent = T('Accedi ora');
                     return;
                 }
-                const gruppi = (typeof srDovutePerLezione === 'function') ? srDovutePerLezione() : {};
-                const materie = Object.keys(gruppi);
+                const gruppi = (typeof srDovutePerMateria === 'function') ? Object.values(srDovutePerMateria()) : [];
                 fcList.innerHTML = '';
                 let totDovute = 0;
-                materie.forEach(m => gruppi[m].forEach(l => totDovute += l.dovute));
-                if (materie.length === 0) {
+                gruppi.forEach(g => totDovute += g.dovute);
+                if (gruppi.length === 0) {
                     fcSub.textContent = '';
                     fcList.innerHTML = '<div class="ums-fc-empty">' + T('Non hai ancora salvato nessun ripasso.') + '<br>' + T('Prova le flashcard di una lezione: ogni risposta si salva da sola.') + '</div>';
                     return;
                 }
                 fcSub.textContent = totDovute > 0 ? (totDovute + ' ' + T(totDovute === 1 ? 'carta da ripassare oggi' : 'carte da ripassare oggi')) : T('Nessuna carta in scadenza oggi — ottimo!');
-                materie.forEach(mat => {
-                    const hMat = document.createElement('div');
-                    hMat.className = 'ums-fc-mat'; hMat.style.display = 'none';
-                    fcList.appendChild(hMat);
-                    gruppi[mat].forEach(l => {
-                        const box = document.createElement('div');
-                        box.className = 'ums-fc-lezione';
-                        box.innerHTML =
-                            '<div class="ums-fc-lez-top">' +
-                                '<div>' +
-                                    '<div class="ums-fc-lez-nome"></div>' +
-                                    '<div class="ums-fc-lez-conta">' + l.dovute + ' ' + T('da ripassare') + ' \u00b7 ' + l.totale + ' ' + T('totali') + '</div>' +
-                                    '<div class="ums-fc-count">' + (typeof srCountdownTesto === 'function' ? srCountdownTesto(l.lk) : '') + '</div>' +
-                                '</div>' +
-                                '<button class="ums-fc-del" type="button" title="' + T('Elimina questo mazzo') + '" aria-label="' + T('Elimina questo mazzo') + '"><svg class="ums-ic" aria-hidden="true"><use href="#ic-x"/></svg></button>' +
+                gruppi.forEach(g => {
+                    const box = document.createElement('div');
+                    box.className = 'ums-fc-lezione';
+                    box.innerHTML =
+                        '<div class="ums-fc-lez-top">' +
+                            '<div>' +
+                                '<div class="ums-fc-lez-nome"></div>' +
+                                '<div class="ums-fc-lez-conta">' + g.dovute + ' ' + T('da ripassare') + ' \u00b7 ' + g.totale + ' ' + T('totali') + '</div>' +
+                                '<div class="ums-fc-count">' + (typeof srCountdownTestoMateria === 'function' ? srCountdownTestoMateria(g.lks) : '') + '</div>' +
                             '</div>' +
-                            '<div class="ums-fc-actions">' +
-                                '<button class="ums-fc-run primary run-all" type="button">' + T('Ripassa tutte') + ' (' + l.totale + ')</button>' +
-                                '<button class="ums-fc-run wrong run-wrong" type="button"' + (l.sbagliate === 0 ? ' disabled' : '') + '>' + T('Solo sbagliate') + ' (' + l.sbagliate + ')</button>' +
-                            '</div>';
-                        box.querySelector('.ums-fc-lez-nome').textContent = l.titolo;
-                        box.querySelector('.run-all').addEventListener('click', () => fcAvviaRipasso(l.lk, false));
-                        box.querySelector('.run-wrong').addEventListener('click', () => { if (l.sbagliate > 0) fcAvviaRipasso(l.lk, true); });
-                        box.querySelector('.ums-fc-del').addEventListener('click', () => fcEliminaMazzo(l.lk, l.titolo));
-                        fcList.appendChild(box);
-                    });
+                            '<button class="ums-fc-del" type="button" title="' + T('Elimina questo mazzo') + '" aria-label="' + T('Elimina questo mazzo') + '"><svg class="ums-ic" aria-hidden="true"><use href="#ic-x"/></svg></button>' +
+                        '</div>' +
+                        '<div class="ums-fc-actions">' +
+                            '<button class="ums-fc-run primary run-all" type="button">' + T('Ripassa tutte') + ' (' + g.totale + ')</button>' +
+                            '<button class="ums-fc-run wrong run-wrong" type="button"' + (g.sbagliate === 0 ? ' disabled' : '') + '>' + T('Solo sbagliate') + ' (' + g.sbagliate + ')</button>' +
+                        '</div>';
+                    box.querySelector('.ums-fc-lez-nome').textContent = g.nome;
+                    box.querySelector('.run-all').addEventListener('click', () => fcAvviaRipassoMateria(g.slug, false));
+                    box.querySelector('.run-wrong').addEventListener('click', () => { if (g.sbagliate > 0) fcAvviaRipassoMateria(g.slug, true); });
+                    box.querySelector('.ums-fc-del').addEventListener('click', () => fcEliminaMateria(g.slug, g.nome, g.lks));
+                    fcList.appendChild(box);
                 });
             }
 
-            function fcEliminaMazzo(lk, titolo) {
-                if (!confirm(T('Eliminare il ripasso di') + ' "' + titolo + '"? ' + T('Le carte non ti verranno più riproposte.'))) return;
+            function fcEliminaMateria(slug, nome, lks) {
+                if (!confirm(T('Eliminare il ripasso di') + ' "' + nome + '"? ' + T('Le carte non ti verranno più riproposte.'))) return;
                 const db = (typeof srCaricaTutto === 'function') ? srCaricaTutto() : {};
-                delete db[lk];
+                (lks || []).forEach(lk => {
+                    delete db[lk];
+                    // rimuovo anche dal cloud (contenuto nullo = cancellazione logica)
+                    if (typeof umsCloudQueue === 'function') umsCloudQueue('sr', lk, null);
+                });
                 if (typeof srSalvaTutto === 'function') srSalvaTutto(db);
-                // rimuovo anche dal cloud (contenuto nullo = cancellazione logica)
-                if (typeof umsCloudQueue === 'function') umsCloudQueue('sr', lk, null);
                 fcRenderHub();
                 if (typeof srAggiornaBadge === 'function') srAggiornaBadge();
             }
@@ -5985,9 +6068,23 @@ if (!fileDaCaricare) {
                 const rec = db[lk]; if (!rec) return;
                 let carte = Object.values(rec.cards || {});
                 if (soloSbagliate) carte = carte.filter(c => (c.bucket || (c.stato === 'unknown' ? 'sbagliate' : 'giuste')) === 'sbagliate');
-                if (carte.length === 0) return;
+                fcLanciaSessione(carte.map(c => ({ front: c.front, back: c.back, lk })), lk);
+            }
+            window.fcAvviaRipasso = fcAvviaRipasso;
+
+            // Ripasso dell'intero FALDONE di una materia: unisce le carte di
+            // tutte le lezioni, ognuna col suo lk di origine, così ogni esito
+            // torna nel mazzo giusto (niente duplicati tra lezioni).
+            function fcAvviaRipassoMateria(slug, soloSbagliate) {
+                const carte = (typeof srCarteDiMateria === 'function') ? srCarteDiMateria(slug, soloSbagliate) : [];
+                fcLanciaSessione(carte.map(c => ({ front: c.front, back: c.back, lk: c.lk })), null);
+            }
+            window.fcAvviaRipassoMateria = fcAvviaRipassoMateria;
+
+            function fcLanciaSessione(coda, lk) {
+                if (!coda || coda.length === 0) return;
                 urvLk = lk;
-                urvCoda = carte.map(c => ({ front: c.front, back: c.back }));
+                urvCoda = coda;
                 urvVisti = {};
                 urvTot = urvCoda.length; urvFatte = 0;
                 fcList.style.display = 'none';
@@ -5998,7 +6095,6 @@ if (!fileDaCaricare) {
                 stage.classList.add('on');
                 urvMostra();
             }
-            window.fcAvviaRipasso = fcAvviaRipasso;
 
             const urvAnswer = document.getElementById('urv-answer');
             const urvReveal = document.getElementById('urv-reveal');
@@ -6026,7 +6122,8 @@ if (!fileDaCaricare) {
                 if (!urvVisti[card.front]) {
                     urvVisti[card.front] = true;
                     urvFatte++;
-                    if (typeof srApplicaEsito === 'function') srApplicaEsito(card.front, card.back, esito, urvLk);
+                    // ogni carta torna nel mazzo della SUA lezione di origine
+                    if (typeof srApplicaEsito === 'function') srApplicaEsito(card.front, card.back, esito, card.lk || urvLk);
                 }
                 // Se sbagliata, torna in coda per rivederla in questa sessione (non riconta)
                 if (esito === 'unknown') urvCoda.push(card);
@@ -6098,10 +6195,10 @@ if (!fileDaCaricare) {
             };
             // Apertura programmatica dell'hub: usata dall'arrivo da "Ripassa"
             // della home. Apre il POP-UP (stessa esperienza del pulsante Ripasso)
-            // e, se richiesto, fa partire subito il mazzo della lezione indicata.
-            window.umsApriHubRipasso = function (lk, soloSbagliate) {
+            // e, se richiesto, fa partire subito il FALDONE della materia indicata.
+            window.umsApriHubRipasso = function (mat, soloSbagliate) {
                 fcOpen();
-                if (lk) fcAvviaRipasso(lk, !!soloSbagliate);
+                if (mat) fcAvviaRipassoMateria(mat, !!soloSbagliate);
             };
             const fcCloseFn = () => { if (stage.classList.contains('on')) urvChiudiStage(); fcOverlay.classList.remove('show'); document.body.classList.remove('ums-noscroll'); fcBtn.focus(); };
             document.getElementById('ums-fc-login').addEventListener('click', () => { fcCloseFn(); open(); });
