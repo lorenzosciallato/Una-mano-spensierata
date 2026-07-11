@@ -5905,7 +5905,7 @@ if (!fileDaCaricare) {
                 fcSub.textContent = totDovute > 0 ? (totDovute + ' ' + T(totDovute === 1 ? 'carta da ripassare oggi' : 'carte da ripassare oggi')) : T('Nessuna carta in scadenza oggi — ottimo!');
                 materie.forEach(mat => {
                     const hMat = document.createElement('div');
-                    hMat.className = 'ums-fc-mat'; hMat.textContent = mat;
+                    hMat.className = 'ums-fc-mat'; hMat.style.display = 'none';
                     fcList.appendChild(hMat);
                     gruppi[mat].forEach(l => {
                         const box = document.createElement('div');
