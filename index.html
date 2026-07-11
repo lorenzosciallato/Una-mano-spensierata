@@ -1034,6 +1034,60 @@ renderCourses();
     font-size: .6rem; font-weight: 700; line-height: 17px; text-align: center;
   }
   @media (min-width: 901px){ .ums-fc-badge{ top: 2px; right: 8px; } }
+  body.ums-noscroll{ overflow: hidden; }
+  #ums-rv-overlay{
+    display: none; position: fixed; inset: 0; z-index: 99999999;
+    background: rgba(15,17,23,.55);
+    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  #ums-rv-overlay.show{ display: flex; }
+  .ums-rv-card{
+    background: var(--ivory, #F7F4EF); border-radius: 28px;
+    box-shadow: 0 12px 40px rgba(15,17,23,.2);
+    padding: 30px 26px 26px; max-width: 440px; width: 100%;
+    max-height: 88vh; overflow-y: auto; position: relative;
+    overscroll-behavior: contain;
+    font-family: var(--font-body,'DM Sans',sans-serif);
+  }
+  .ums-rv-close{
+    position: absolute; top: 12px; right: 12px; width: 34px; height: 34px;
+    border-radius: 50%; border: none; background: rgba(15,17,23,.06);
+    color: var(--ink,#1C1C22); font-size: 1rem; cursor: pointer;
+    display: grid; place-items: center;
+  }
+  .ums-rv-title{
+    font-family: var(--font-display,'Playfair Display',serif);
+    font-size: 1.4rem; color: var(--ink,#1C1C22); margin: 2px 0 4px; text-align: center;
+  }
+  .ums-rv-sub{ font-size: .82rem; color: var(--sub,#5f5c55); text-align: center; margin: 0 0 18px; }
+  .ums-rv-mat{
+    font-size: .7rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--gold-dk,#A8823C); margin: 16px 0 8px;
+  }
+  .ums-rv-lez{
+    border: 1px solid var(--dust,#E8E4DC); border-radius: 14px;
+    padding: 12px 14px; margin-bottom: 10px; background: #fff;
+  }
+  .ums-rv-lez-nome{ font-size: .9rem; font-weight: 700; color: var(--ink,#1C1C22); }
+  .ums-rv-lez-conta{ font-size: .72rem; color: var(--sub,#5f5c55); margin: 2px 0 0; }
+  .ums-rv-actions{ display: flex; gap: 8px; margin-top: 10px; }
+  .ums-rv-run{
+    flex: 1; padding: 9px; font-size: .8rem; font-weight: 700; cursor: pointer;
+    border-radius: 10px; border: 1px solid var(--ink,#1C1C22);
+    background: transparent; color: var(--ink,#1C1C22);
+    font-family: var(--font-body,'DM Sans',sans-serif);
+  }
+  .ums-rv-run.primary{ background: var(--ink,#1C1C22); color: #fff; }
+  .ums-rv-run.wrong{ border-color: #D14B3D; color: #D14B3D; }
+  .ums-rv-run.wrong:disabled{ opacity: .4; cursor: default; }
+  .ums-rv-empty{ text-align: center; color: var(--sub,#5f5c55); font-size: .9rem; padding: 24px 0; line-height: 1.5; }
+  body.night-mode .ums-rv-card{ background: #1C1F27; }
+  body.night-mode .ums-rv-title, body.night-mode .ums-rv-lez-nome{ color: #F2EFE8; }
+  body.night-mode .ums-rv-lez{ background: #14161C; border-color: #2B2E38; }
+  body.night-mode .ums-rv-run{ color: #F2EFE8; border-color: #F2EFE8; }
+  body.night-mode .ums-rv-run.primary{ background: var(--gold,#C8A96E); color: #1C1F27; border-color: var(--gold,#C8A96E); }
+  body.night-mode .ums-rv-close{ background: rgba(255,255,255,.08); color: #F2EFE8; }
   .ums-login-btn > svg{ color: #D14B3D; transition: color .2s; }
   .ums-login-btn.is-in  > svg{ color: #1D9E75; }
   .ums-login-btn.is-out > svg{ color: #D14B3D; }
@@ -1202,19 +1256,112 @@ renderCourses();
     if (n > 0) { badge.textContent = n > 99 ? '99+' : n; badge.hidden = false; }
     else { badge.hidden = true; }
   }
-  const fcBtnIndex = document.getElementById('ums-inav-fc');
-  if (fcBtnIndex) fcBtnIndex.addEventListener('click', () => {
-    const db = umsCaricaSR();
-    const chiavi = Object.keys(db);
-    if (chiavi.length === 0) {
-      alert('Non hai ancora salvato nessun ripasso. Apri una lezione, prova le flashcard e i tuoi progressi finiranno qui.');
+  // Nomi leggibili delle materie dal catalogo corsi (COURSES), via slug del file
+  function umsMappaMaterie() {
+    const map = {};
+    try {
+      (typeof COURSES !== 'undefined' ? COURSES : []).forEach(c => {
+        if (c.lezioni && c.lezioni.urlTemplate) {
+          const m = c.lezioni.urlTemplate.match(/file=([^/]+)\//);
+          if (m) map[m[1]] = c.name;
+        }
+      });
+    } catch (e) {}
+    return map;
+  }
+  function umsSlugMateria(lk) { return (lk || '').split('/')[0]; }
+  function umsNomeLezione(lk) {
+    // "sociologiaeducazione/lezione-3.json" -> "Lezione 3"
+    const file = (lk || '').split('/').pop() || '';
+    const n = (file.match(/(\d+)/) || [])[1];
+    return n ? ('Lezione ' + n) : file.replace(/\.json$/, '');
+  }
+
+  // ---- Pop-up "Da ripassare" sulla home ----
+  const rvOverlay = document.createElement('div');
+  rvOverlay.id = 'ums-rv-overlay';
+  rvOverlay.setAttribute('role', 'dialog');
+  rvOverlay.setAttribute('aria-modal', 'true');
+  rvOverlay.setAttribute('aria-label', 'Da ripassare');
+  rvOverlay.innerHTML =
+    '<div class="ums-rv-card">' +
+      '<button class="ums-rv-close" type="button" aria-label="Chiudi">&#10005;</button>' +
+      '<div class="ums-rv-title">Da ripassare</div>' +
+      '<div class="ums-rv-sub" id="ums-rv-sub"></div>' +
+      '<div id="ums-rv-list"></div>' +
+    '</div>';
+  document.body.appendChild(rvOverlay);
+  const rvClose = rvOverlay.querySelector('.ums-rv-close');
+  const rvList = document.getElementById('ums-rv-list');
+  const rvSub = document.getElementById('ums-rv-sub');
+
+  function umsGruppiRipasso() {
+    const db = umsCaricaSR(); const ora = new Date().toISOString();
+    const materie = umsMappaMaterie();
+    const out = {};
+    Object.keys(db).forEach(lk => {
+      const cards = db[lk].cards || {};
+      let dovute = 0, totale = 0, sbagliate = 0;
+      Object.keys(cards).forEach(f => {
+        totale++;
+        if ((cards[f].due || '') <= ora) dovute++;
+        const bucket = cards[f].bucket || (cards[f].stato === 'unknown' ? 'sbagliate' : 'giuste');
+        if (bucket === 'sbagliate') sbagliate++;
+      });
+      if (totale === 0) return;
+      const slug = umsSlugMateria(lk);
+      const nomeMat = materie[slug] || slug;
+      (out[nomeMat] = out[nomeMat] || []).push({ lk, nome: umsNomeLezione(lk), dovute, totale, sbagliate });
+    });
+    return out;
+  }
+
+  function umsAvviaRipasso(lk, soloSbagliate) {
+    try { sessionStorage.setItem('ums_review_target', JSON.stringify({ lk, soloSbagliate })); } catch (e) {}
+    window.location.href = TEMPLATE_URL + encodeURIComponent(lk);
+  }
+
+  function rvRender() {
+    const gruppi = umsGruppiRipasso();
+    const materie = Object.keys(gruppi);
+    rvList.innerHTML = '';
+    if (materie.length === 0) {
+      rvSub.textContent = '';
+      rvList.innerHTML = '<div class="ums-rv-empty">Non hai ancora salvato nessun ripasso.<br>Apri una lezione e prova le flashcard: ogni risposta si salva da sola.</div>';
       return;
     }
-    // vai alla lezione con più carte dovute; se nessuna è dovuta, alla prima disponibile
-    const target = umsLezionePiuDovuta() || chiavi[0];
-    try { sessionStorage.setItem('ums_review_target', JSON.stringify({ lk: target, soloSbagliate: false })); } catch (e) {}
-    window.location.href = TEMPLATE_URL + encodeURIComponent(target);
-  });
+    const tot = umsDueTotali();
+    rvSub.textContent = tot > 0 ? (tot + (tot === 1 ? ' carta da ripassare oggi' : ' carte da ripassare oggi')) : 'Nessuna carta in scadenza oggi — ottimo!';
+    materie.forEach(mat => {
+      const hMat = document.createElement('div');
+      hMat.className = 'ums-rv-mat'; hMat.textContent = mat;
+      rvList.appendChild(hMat);
+      gruppi[mat].forEach(l => {
+        const box = document.createElement('div');
+        box.className = 'ums-rv-lez';
+        box.innerHTML =
+          '<div class="ums-rv-lez-nome"></div>' +
+          '<div class="ums-rv-lez-conta">' + l.dovute + ' da ripassare · ' + l.totale + ' totali</div>' +
+          '<div class="ums-rv-actions">' +
+            '<button class="ums-rv-run primary" type="button">Ripassa tutte (' + l.totale + ')</button>' +
+            '<button class="ums-rv-run wrong" type="button"' + (l.sbagliate === 0 ? ' disabled' : '') + '>Solo sbagliate (' + l.sbagliate + ')</button>' +
+          '</div>';
+        box.querySelector('.ums-rv-lez-nome').textContent = l.nome;
+        box.querySelector('.primary').addEventListener('click', () => umsAvviaRipasso(l.lk, false));
+        const w = box.querySelector('.wrong');
+        if (l.sbagliate > 0) w.addEventListener('click', () => umsAvviaRipasso(l.lk, true));
+        rvList.appendChild(box);
+      });
+    });
+  }
+
+  const fcBtnIndex = document.getElementById('ums-inav-fc');
+  const rvOpen = () => { rvRender(); rvOverlay.classList.add('show'); document.body.classList.add('ums-noscroll'); rvClose.focus(); };
+  const rvCloseFn = () => { rvOverlay.classList.remove('show'); document.body.classList.remove('ums-noscroll'); if (fcBtnIndex) fcBtnIndex.focus(); };
+  if (fcBtnIndex) fcBtnIndex.addEventListener('click', rvOpen);
+  rvClose.addEventListener('click', rvCloseFn);
+  rvOverlay.addEventListener('click', (e) => { if (e.target === rvOverlay) rvCloseFn(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && rvOverlay.classList.contains('show')) rvCloseFn(); });
   umsAggiornaBadgeIndex();
 
   const langSel  = document.getElementById('custom-lang-selector');
