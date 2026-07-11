@@ -1026,6 +1026,14 @@ renderCourses();
   body.night-mode .ums-lorenzo-close{ background: rgba(255,255,255,.08); color: #F2EFE8; }
 
   /* ================= ACCESSO CON CHIAVE (login) ================= */
+  .ums-fc-btn{ position: relative; }
+  .ums-fc-badge{
+    position: absolute; top: 4px; right: 8px;
+    min-width: 17px; height: 17px; padding: 0 4px; box-sizing: border-box;
+    background: #D14B3D; color: #fff; border-radius: 999px;
+    font-size: .6rem; font-weight: 700; line-height: 17px; text-align: center;
+  }
+  @media (min-width: 901px){ .ums-fc-badge{ top: 2px; right: 8px; } }
   .ums-login-btn > svg{ color: #D14B3D; transition: color .2s; }
   .ums-login-btn.is-in  > svg{ color: #1D9E75; }
   .ums-login-btn.is-out > svg{ color: #D14B3D; }
@@ -1147,6 +1155,7 @@ renderCourses();
   const HOME_SVG  = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/><path d="M9 22V12h6v10"/></svg>';
   const WA_SVG    = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.5 15.3L2 22l4.9-1.4A10 10 0 1 0 12 2Z"/><path d="M8.7 7.9c-.3 0-.6.1-.8.4-.8.9-.9 2.4.2 4 1.2 1.8 2.9 3.2 4.9 3.9 1.5.5 2.6.2 3.3-.6.2-.3.3-.7.2-1l-.3-.9c-.1-.3-.4-.4-.7-.4l-1.4.2c-.2 0-.5 0-.6-.2l-1-1c-.6-.6-1.1-1.3-1.4-2-.1-.2 0-.4.1-.6l.7-.9c.2-.2.2-.5.1-.8l-.5-1.2c-.1-.3-.4-.5-.8-.5h-.9Z"/></svg>';
   const LOGIN_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/></svg>';
+  const CARDS_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="13" height="16" rx="2"/><path d="M8 5V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2h-1"/></svg>';
 
   const getChiave   = () => localStorage.getItem('ums_chiave') || '';
   const setChiaveLS = (k) => localStorage.setItem('ums_chiave', k);
@@ -1162,8 +1171,51 @@ renderCourses();
       LOGIN_SVG +
       '<span class="ums-inav-label" id="ums-login-label">Accedi</span>' +
     '</button>' +
+    '<button class="ums-inav-item ums-fc-btn" id="ums-inav-fc" type="button" title="Flashcard da ripassare" aria-label="Flashcard da ripassare">' +
+      CARDS_SVG +
+      '<span class="ums-fc-badge" id="ums-fc-badge" hidden>0</span>' +
+      '<span class="ums-inav-label">Ripasso</span>' +
+    '</button>' +
     '<a class="ums-inav-item" href="' + WA_URL + '" target="_blank" rel="noopener" title="Gruppo WhatsApp" aria-label="Entra nel gruppo WhatsApp">' + WA_SVG + '</a>';
   document.body.appendChild(nav);
+
+  // ---- Pallino rosso flashcard (legge la stessa memoria del template) ----
+  const TEMPLATE_URL = 'https://lorenzosciallato.github.io/Una-mano-spensierata/lezione-template.html?file=';
+  function umsCaricaSR() { try { return JSON.parse(localStorage.getItem('ums_sr') || '{}'); } catch (e) { return {}; } }
+  function umsDueTotali() {
+    const db = umsCaricaSR(); const ora = new Date().toISOString(); let n = 0;
+    Object.keys(db).forEach(lk => { const c = db[lk].cards || {}; Object.keys(c).forEach(f => { if ((c[f].due || '') <= ora) n++; }); });
+    return n;
+  }
+  function umsLezionePiuDovuta() {
+    const db = umsCaricaSR(); const ora = new Date().toISOString(); let best = null, bestN = 0;
+    Object.keys(db).forEach(lk => {
+      const c = db[lk].cards || {}; let n = 0;
+      Object.keys(c).forEach(f => { if ((c[f].due || '') <= ora) n++; });
+      if (n > bestN) { bestN = n; best = lk; }
+    });
+    return best;
+  }
+  function umsAggiornaBadgeIndex() {
+    const badge = document.getElementById('ums-fc-badge'); if (!badge) return;
+    const n = umsDueTotali();
+    if (n > 0) { badge.textContent = n > 99 ? '99+' : n; badge.hidden = false; }
+    else { badge.hidden = true; }
+  }
+  const fcBtnIndex = document.getElementById('ums-inav-fc');
+  if (fcBtnIndex) fcBtnIndex.addEventListener('click', () => {
+    const db = umsCaricaSR();
+    const chiavi = Object.keys(db);
+    if (chiavi.length === 0) {
+      alert('Non hai ancora salvato nessun ripasso. Apri una lezione, prova le flashcard e i tuoi progressi finiranno qui.');
+      return;
+    }
+    // vai alla lezione con più carte dovute; se nessuna è dovuta, alla prima disponibile
+    const target = umsLezionePiuDovuta() || chiavi[0];
+    try { sessionStorage.setItem('ums_review_target', JSON.stringify({ lk: target, soloSbagliate: false })); } catch (e) {}
+    window.location.href = TEMPLATE_URL + encodeURIComponent(target);
+  });
+  umsAggiornaBadgeIndex();
 
   const langSel  = document.getElementById('custom-lang-selector');
   const langSlot = document.getElementById('ums-inav-lang');
