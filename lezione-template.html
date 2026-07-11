@@ -5139,15 +5139,15 @@ if (!fileDaCaricare) {
             nav.id = 'ums-insta-nav';
             nav.setAttribute('aria-label', 'Navigazione principale');
             nav.innerHTML =
+                '<a class="ums-inav-item" href="' + HOME_URL + '" title="Home" aria-label="Torna alla Home">' +
+                    '<svg class="ums-ic" aria-hidden="true"><use href="#ic-home"/></svg>' +
+                '</a>' +
                 '<div class="ums-inav-item" id="ums-inav-lang">' +
                     '<span class="ums-inav-placeholder" aria-hidden="true">' +
                         '<svg class="ums-ic"><use href="#ic-globe"/></svg>' +
                         '<span class="ums-inav-label">Lingua</span>' +
                     '</span>' +
                 '</div>' +
-                '<a class="ums-inav-item" href="' + HOME_URL + '" title="Home" aria-label="Torna alla Home">' +
-                    '<svg class="ums-ic" aria-hidden="true"><use href="#ic-home"/></svg>' +
-                '</a>' +
                 '<button class="ums-inav-item ums-login-btn" id="ums-inav-login" type="button" title="Accedi" aria-label="Accedi" aria-haspopup="dialog">' +
                     '<svg class="ums-ic" aria-hidden="true"><use href="#ic-login"/></svg>' +
                     '<span class="ums-inav-label" id="ums-login-label">Accedi</span>' +
