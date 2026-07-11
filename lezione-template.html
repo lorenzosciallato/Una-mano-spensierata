@@ -3310,7 +3310,14 @@ if (!fileDaCaricare) {
         //     "<front>": { stato, box, due, front, back } } } }
         // Intervalli raccomandati (giorni) per risposte corrette consecutive.
         // =========================================================================
-        const SR_INTERVALLI = [1, 3, 7, 16, 35, 70];
+        // Intervalli in giorni. Il CASSETTO di una carta è deciso per sempre dal
+        // suo PRIMO esito: sbagliata al primo colpo -> cassetto 'sbagliate'
+        // (torna spesso, per fissarla davvero); saputa al primo colpo ->
+        // 'giuste' (torna raramente). Principio cardine della spaced repetition:
+        // massimo sforzo dove serve, minimo dove non serve.
+        const SR_INT_SBAGLIATE = [1, 2, 4, 8, 15, 30];
+        const SR_INT_GIUSTE    = [3, 7, 16, 35, 70, 140];
+        function srTabellaDi(bucket) { return bucket === 'sbagliate' ? SR_INT_SBAGLIATE : SR_INT_GIUSTE; }
 
         function srCaricaTutto() {
             try { return JSON.parse(localStorage.getItem('ums_sr') || '{}'); } catch (e) { return {}; }
@@ -3331,21 +3338,30 @@ if (!fileDaCaricare) {
 
         // Applica SUBITO l'esito di una carta alla memoria SR (salvataggio per-carta).
         // Chiamata direttamente dai pulsanti "La so / Ripasso dopo".
-        function srApplicaEsito(front, back, esito) {
-            if (!front || !umsLessonKey || umsLessonKey === 'default') return;
+        function srApplicaEsito(front, back, esito, lezione) {
+            // "lezione" = mazzo di destinazione. Se assente, è la lezione della
+            // pagina corrente (mazzo Dritti al Sodo). Il ripasso dall'hub DEVE
+            // passarla: altrimenti ripassando psicologia dentro sociologia gli
+            // esiti finirebbero nel mazzo sbagliato, duplicando le carte.
+            const lk = lezione || umsLessonKey;
+            if (!front || !lk || lk === 'default') return;
             const db = srCaricaTutto();
-            const lk = umsLessonKey;
             if (!db[lk]) db[lk] = { titolo: document.title || lk, materia: srMateriaDa(lk), cards: {} };
+            const nuova = !db[lk].cards[front];
             let c = db[lk].cards[front] || { box: 0, front, back };
             c.front = front; c.back = back;
+            // CASSETTO PERMANENTE: lo decide il PRIMO esito in assoluto e non
+            // cambia mai più. Carte vecchie senza cassetto: lo derivo dall'ultimo
+            // esito noto (migrazione morbida).
+            if (nuova || !c.bucket) c.bucket = (nuova ? esito : (c.stato || esito)) === 'known' ? 'giuste' : 'sbagliate';
+            const TAB = srTabellaDi(c.bucket);
             if (esito === 'known') {
-                // usa PRIMA l'intervallo del box corrente (1a volta = box 0 = 1 giorno),
-                // POI avanza di box per la prossima volta
-                c.due = srAddGiorni(SR_INTERVALLI[Math.min(c.box || 0, SR_INTERVALLI.length - 1)]);
-                c.box = Math.min((c.box || 0) + 1, SR_INTERVALLI.length - 1);
+                // usa PRIMA l'intervallo del box corrente, POI avanza
+                c.due = srAddGiorni(TAB[Math.min(c.box || 0, TAB.length - 1)]);
+                c.box = Math.min((c.box || 0) + 1, TAB.length - 1);
             } else {
-                c.box = 0;                              // sbagliata: riparte da capo
-                c.due = srAddGiorni(SR_INTERVALLI[0]);  // la rivedrai domani
+                c.box = 0;                     // errore: riparte da capo nel suo cassetto
+                c.due = srAddGiorni(TAB[0]);
             }
             c.stato = esito;
             db[lk].cards[front] = c;
@@ -3405,7 +3421,7 @@ if (!fileDaCaricare) {
                 Object.keys(cards).forEach(f => {
                     totale++;
                     if ((cards[f].due || '') <= ora) dovute++;
-                    if (cards[f].stato === 'unknown') sbagliate++;   // sbagliate = ultimo esito negativo, sempre
+                    if ((cards[f].bucket || (cards[f].stato === 'unknown' ? 'sbagliate' : 'giuste')) === 'sbagliate') sbagliate++;   // cassetto permanente (primo esito)
                 });
                 if (totale === 0) return;
                 const mat = rec.materia || srMateriaDa(lk);
@@ -3543,7 +3559,7 @@ if (!fileDaCaricare) {
             const db = (typeof srCaricaTutto === 'function') ? srCaricaTutto() : {};
             const rec = db[umsLessonKey]; if (!rec) return;
             let carte = Object.values(rec.cards || {});
-            if (target.soloSbagliate) carte = carte.filter(c => c.stato === 'unknown');
+            if (target.soloSbagliate) carte = carte.filter(c => (c.bucket || (c.stato === 'unknown' ? 'sbagliate' : 'giuste')) === 'sbagliate');
             if (carte.length > 0) setTimeout(() => window.startReviewWith(carte.map(c => ({ front: c.front, back: c.back }))), 400);
         }
 
@@ -5468,31 +5484,8 @@ if (!fileDaCaricare) {
             overscroll-behavior: contain;
         }
         body.ums-noscroll{ overflow: hidden; }
-        .ums-fc-langbar{ text-align: center; margin: -4px 0 12px; }
-        #ums-fc-lang-toggle{
-            background: none; border: 1px solid var(--dust,#E8E4DC); border-radius: 999px;
-            padding: 5px 12px; cursor: pointer; font-size: .8rem;
-            color: var(--sub,#5f5c55); font-family: var(--font-body,'DM Sans',sans-serif);
-            display: inline-flex; align-items: center; gap: 5px;
-        }
-        #ums-fc-lang-toggle:hover{ border-color: var(--gold,#C8A96E); }
-        .night-mode #ums-fc-lang-toggle{ border-color: #2B2E38; color: #D8D3C8; }
-        .ums-fc-langrow{
-            display: none; flex-wrap: wrap; align-items: center; justify-content: center;
-            gap: 4px; margin-top: 8px;
-        }
-        .ums-fc-langrow.show{ display: flex; }
-        .ums-fc-langrow button{
-            background: none; border: 2px solid transparent; border-radius: 8px;
-            font-size: 1.15rem; line-height: 1; padding: 3px 4px; cursor: pointer;
-            transition: transform .15s, border-color .15s;
-        }
-        .ums-fc-langrow button:hover{ transform: scale(1.15); }
-        .ums-fc-langrow button.active-lang{ border-color: var(--gold,#C8A96E); }
-        .ums-fc-langrow button:disabled{ opacity: .4; cursor: default; }
         #ums-fc-gate{ text-align: center; padding: 8px 0 4px; }
         #ums-fc-gate p{ font-size: .86rem; line-height: 1.55; color: var(--sub,#5f5c55); margin: 0 0 14px; }
-        .night-mode .ums-fc-langrow select{ background: #14161C; color: #F2EFE8; border-color: #2B2E38; }
         .night-mode #ums-fc-gate p{ color: #D8D3C8; }
         .ums-fc-close{
             position: absolute; top: 12px; right: 12px; width: 34px; height: 34px;
@@ -5838,13 +5831,7 @@ if (!fileDaCaricare) {
                     '<button class="ums-fc-close" type="button" aria-label="Chiudi">&#10005;</button>' +
                     '<div class="ums-fc-title">Da ripassare</div>' +
                     '<div class="ums-fc-sub" id="ums-fc-sub"></div>' +
-                    '<div class="ums-fc-langbar">' +
-                        '<button id="ums-fc-lang-toggle" type="button" aria-haspopup="true" aria-expanded="false">' +
-                            '<svg class="ums-ic" aria-hidden="true" style="width:15px;height:15px"><use href="#ic-globe"/></svg> ' +
-                            '<span id="ums-fc-lang-cur">\ud83c\uddee\ud83c\uddf9</span> <small id="ums-fc-lang-arrow">\u25bc</small>' +
-                        '</button>' +
-                        '<div class="ums-fc-langrow" id="ums-fc-langrow" role="group" aria-label="Lingua di questa sezione"></div>' +
-                    '</div>' +
+                    
                     '<button class="ums-fc-how" id="ums-fc-how" type="button">Come funziona il ripasso?</button>' +
                     '<div class="ums-fc-howbox" id="ums-fc-howbox" hidden>' +
                         '<p>Il <b>ripasso a intervalli</b> (spaced repetition) &egrave; il metodo di studio pi&ugrave; efficace mai misurato. L\'idea &egrave; semplice: invece di rileggere tutto insieme, rivedi ogni concetto <b>poco prima di dimenticarlo</b>.</p>' +
@@ -5978,7 +5965,7 @@ if (!fileDaCaricare) {
                 const db = (typeof srCaricaTutto === 'function') ? srCaricaTutto() : {};
                 const rec = db[lk]; if (!rec) return;
                 let carte = Object.values(rec.cards || {});
-                if (soloSbagliate) carte = carte.filter(c => c.stato === 'unknown');
+                if (soloSbagliate) carte = carte.filter(c => (c.bucket || (c.stato === 'unknown' ? 'sbagliate' : 'giuste')) === 'sbagliate');
                 if (carte.length === 0) return;
                 urvLk = lk;
                 urvCoda = carte.map(c => ({ front: c.front, back: c.back }));
@@ -6019,7 +6006,7 @@ if (!fileDaCaricare) {
                 if (!urvVisti[card.front]) {
                     urvVisti[card.front] = true;
                     urvFatte++;
-                    if (typeof srApplicaEsito === 'function') srApplicaEsito(card.front, card.back, esito);
+                    if (typeof srApplicaEsito === 'function') srApplicaEsito(card.front, card.back, esito, urvLk);
                 }
                 // Se sbagliata, torna in coda per rivederla in questa sessione (non riconta)
                 if (esito === 'unknown') urvCoda.push(card);
@@ -6084,69 +6071,10 @@ if (!fileDaCaricare) {
                 const dBack = document.getElementById('urv-done-back');
                 if (dBack) dBack.textContent = T("Torna all'elenco");
             }
-            // Selettore lingua dedicato della sezione ripasso — a bandierine,
-            // come quello principale del sito
-            const FC_LINGUE = [
-                ['it','Italiano','\ud83c\uddee\ud83c\uddf9'], ['en','English','\ud83c\uddec\ud83c\udde7'],
-                ['fr','Fran\u00e7ais','\ud83c\uddeb\ud83c\uddf7'], ['de','Deutsch','\ud83c\udde9\ud83c\uddea'],
-                ['es','Espa\u00f1ol','\ud83c\uddea\ud83c\uddf8'], ['bg','\u0411\u044a\u043b\u0433\u0430\u0440\u0441\u043a\u0438','\ud83c\udde7\ud83c\uddec'],
-                ['pl','Polski','\ud83c\uddf5\ud83c\uddf1'], ['el','\u0395\u03bb\u03bb\u03b7\u03bd\u03b9\u03ba\u03ac','\ud83c\uddec\ud83c\uddf7'],
-                ['lt','Lietuvi\u0173','\ud83c\uddf1\ud83c\uddf9'], ['da','Dansk','\ud83c\udde9\ud83c\uddf0'],
-                ['pt','Portugu\u00eas','\ud83c\uddf5\ud83c\uddf9'], ['zh-CN','\u4e2d\u6587','\ud83c\udde8\ud83c\uddf3'],
-                ['ar','\u0627\u0644\u0639\u0631\u0628\u064a\u0629','\ud83c\uddf8\ud83c\udde6'], ['hi','\u0939\u093f\u0928\u094d\u0926\u0940','\ud83c\uddee\ud83c\uddf3'],
-                ['ru','\u0420\u0443\u0441\u0441\u043a\u0438\u0439','\ud83c\uddf7\ud83c\uddfa'], ['ja','\u65e5\u672c\u8a9e','\ud83c\uddef\ud83c\uddf5']
-            ];
-            const fcLangRow = document.getElementById('ums-fc-langrow');
-            const fcLangToggle = document.getElementById('ums-fc-lang-toggle');
-            const fcLangCur = document.getElementById('ums-fc-lang-cur');
-            const fcLangArrow = document.getElementById('ums-fc-lang-arrow');
-            fcLangToggle.addEventListener('click', () => {
-                const aperto = fcLangRow.classList.toggle('show');
-                fcLangToggle.setAttribute('aria-expanded', aperto ? 'true' : 'false');
-                fcLangArrow.textContent = aperto ? '\u25b2' : '\u25bc';
-            });
-            let fcLangCorrente = 'it';
-            FC_LINGUE.forEach(([code, nome, bandiera]) => {
-                const b = document.createElement('button');
-                b.type = 'button'; b.title = nome; b.setAttribute('aria-label', nome);
-                b.textContent = bandiera; b.dataset.lang = code;
-                if (code === 'it') b.classList.add('active-lang');
-                b.addEventListener('click', () => fcCambiaLingua(code));
-                fcLangRow.appendChild(b);
-            });
-            function fcEvidenziaLingua(lang) {
-                fcLangRow.querySelectorAll('button').forEach(b => b.classList.toggle('active-lang', b.dataset.lang === lang));
-            }
-            function fcBandieraDi(lang) {
-                const t = FC_LINGUE.find(l => l[0] === lang);
-                return t ? t[2] : '\ud83c\uddee\ud83c\uddf9';
-            }
-            async function fcCambiaLingua(lang) {
-                if (lang === fcLangCorrente) return;
-                fcLangCorrente = lang;
-                fcEvidenziaLingua(lang);
-                fcLangCur.textContent = fcBandieraDi(lang);
-                fcLangRow.classList.remove('show');
-                fcLangToggle.setAttribute('aria-expanded', 'false');
-                fcLangArrow.textContent = '\u25bc';
-                try { localStorage.setItem('ums_hub_lang', lang); } catch (e) {}
-                fcLangRow.querySelectorAll('button').forEach(b => b.disabled = true);
-                try { if (typeof window.umsBuildDict === 'function') await window.umsBuildDict(lang); }
-                catch (e) { console.error('[UMS i18n hub]', e); }
-                fcLangRow.querySelectorAll('button').forEach(b => b.disabled = false);
-                fcApplicaTraduzioni();
-                fcRenderHub();
-            }
-
             const fcOpen = () => {
                 document.body.classList.add('ums-noscroll');
-                let saved = 'it';
-                try { saved = localStorage.getItem('ums_hub_lang') || 'it'; } catch (e) {}
-                fcEvidenziaLingua(saved);
-                fcLangCur.textContent = fcBandieraDi(saved);
                 fcApplicaTraduzioni(); fcRenderHub();
                 fcOverlay.classList.add('show'); fcClose.focus();
-                if (saved !== fcLangCorrente) fcCambiaLingua(saved);
             };
             const fcCloseFn = () => { if (stage.classList.contains('on')) urvChiudiStage(); fcOverlay.classList.remove('show'); document.body.classList.remove('ums-noscroll'); fcBtn.focus(); };
             document.getElementById('ums-fc-login').addEventListener('click', () => { fcCloseFn(); open(); });
