@@ -3670,6 +3670,8 @@ if (!fileDaCaricare) {
         // Se la rete fallisce, tutto resta in italiano senza errori.
         // =========================================================================
         const UMS_STRINGS = [
+            'Per usare il ripasso serve la tua chiave: accedendo, ogni flashcard che provi si salva e te la riproponiamo al momento giusto, su qualsiasi dispositivo. Bastano due tocchi, ed è gratis.',
+            'Accedi ora',
             'Da ripassare',
             'Nessuna carta in scadenza oggi — ottimo!',
             'carte da ripassare oggi',
@@ -5451,7 +5453,25 @@ if (!fileDaCaricare) {
             padding: 30px 26px 26px; max-width: 440px; width: 100%;
             max-height: 88vh; overflow-y: auto; position: relative;
             font-family: var(--font-body,'DM Sans',sans-serif);
+            overscroll-behavior: contain;
         }
+        body.ums-noscroll{ overflow: hidden; }
+        .ums-fc-langrow{
+            display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+            gap: 4px; margin: -4px 0 12px;
+        }
+        .ums-fc-langrow button{
+            background: none; border: 2px solid transparent; border-radius: 8px;
+            font-size: 1.15rem; line-height: 1; padding: 3px 4px; cursor: pointer;
+            transition: transform .15s, border-color .15s;
+        }
+        .ums-fc-langrow button:hover{ transform: scale(1.15); }
+        .ums-fc-langrow button.active-lang{ border-color: var(--gold,#C8A96E); }
+        .ums-fc-langrow button:disabled{ opacity: .4; cursor: default; }
+        #ums-fc-gate{ text-align: center; padding: 8px 0 4px; }
+        #ums-fc-gate p{ font-size: .86rem; line-height: 1.55; color: var(--sub,#5f5c55); margin: 0 0 14px; }
+        .night-mode .ums-fc-langrow select{ background: #14161C; color: #F2EFE8; border-color: #2B2E38; }
+        .night-mode #ums-fc-gate p{ color: #D8D3C8; }
         .ums-fc-close{
             position: absolute; top: 12px; right: 12px; width: 34px; height: 34px;
             border-radius: 50%; border: none; background: rgba(15,17,23,.06);
@@ -5540,7 +5560,7 @@ if (!fileDaCaricare) {
             width: 100%; color: #1C1C22; margin: 0;
         }
         .urv-front h2{ font-family: var(--font-display,'Playfair Display',serif); font-size: 1.15rem; line-height: 1.3; }
-        .urv-back p{ font-size: .86rem; text-align: left; line-height: 1.55; white-space: pre-line; overflow-y: auto; max-height: 82%; -webkit-overflow-scrolling: touch; touch-action: pan-y; pointer-events: auto; }
+        .urv-back p{ font-size: .86rem; text-align: left; line-height: 1.55; white-space: pre-line; overflow-y: auto; max-height: 82%; -webkit-overflow-scrolling: touch; touch-action: pan-y; pointer-events: auto; overscroll-behavior: contain; }
         .urv-hint{ font-size: .72rem; color: var(--sub,#5f5c55); text-align: center; margin: 8px 0 12px; }
         .urv-actions{ display: flex; gap: 8px; }
         .urv-btn{ flex: 1; padding: 12px; font-size: .9rem; font-weight: 700; cursor: pointer; border-radius: 12px; border: none; font-family: var(--font-body,'DM Sans',sans-serif); }
@@ -5710,8 +5730,8 @@ if (!fileDaCaricare) {
             document.getElementById('ums-scegli-primo').addEventListener('click', () => { choiceView.hidden = true; generaView.hidden = false; });
             document.getElementById('ums-to-genera').addEventListener('click', () => { loginView2.hidden = true; generaView.hidden = false; });
             document.getElementById('ums-to-login').addEventListener('click', () => { generaView.hidden = true; loginView2.hidden = false; });
-            const open  = () => { resetOut(); overlay.classList.add('show'); closeBtn.focus(); };
-            const close = () => { overlay.classList.remove('show'); loginBtn.focus(); };
+            const open  = () => { resetOut(); overlay.classList.add('show'); document.body.classList.add('ums-noscroll'); closeBtn.focus(); };
+            const close = () => { overlay.classList.remove('show'); document.body.classList.remove('ums-noscroll'); loginBtn.focus(); };
             loginBtn.addEventListener('click', open);
             closeBtn.addEventListener('click', close);
             overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
@@ -5795,11 +5815,16 @@ if (!fileDaCaricare) {
                     '<button class="ums-fc-close" type="button" aria-label="Chiudi">&#10005;</button>' +
                     '<div class="ums-fc-title">Da ripassare</div>' +
                     '<div class="ums-fc-sub" id="ums-fc-sub"></div>' +
+                    '<div class="ums-fc-langrow" id="ums-fc-langrow" role="group" aria-label="Lingua di questa sezione"></div>' +
                     '<button class="ums-fc-how" id="ums-fc-how" type="button">Come funziona il ripasso?</button>' +
                     '<div class="ums-fc-howbox" id="ums-fc-howbox" hidden>' +
                         '<p>Il <b>ripasso a intervalli</b> (spaced repetition) &egrave; il metodo di studio pi&ugrave; efficace mai misurato. L\'idea &egrave; semplice: invece di rileggere tutto insieme, rivedi ogni concetto <b>poco prima di dimenticarlo</b>.</p>' +
                         '<p>Ogni volta che segni una carta come <b>&ldquo;La so&rdquo;</b>, la rivedrai pi&ugrave; in l&agrave; nel tempo (dopo 1 giorno, poi 3, 7, 16, 35...). Se invece la sbagli, torna presto. Cos&igrave; le cose che sai gi&agrave; non ti fanno perdere tempo, e quelle difficili le fissi davvero.</p>' +
                         '<p>Bastano pochi minuti al giorno per ricordare a lungo termine, con molta meno fatica del ripasso &ldquo;tutto in una volta&rdquo;.</p>' +
+                    '</div>' +
+                    '<div id="ums-fc-gate" hidden>' +
+                        '<p id="ums-fc-gate-text"></p>' +
+                        '<button class="ums-access-btn primary" id="ums-fc-login" type="button"></button>' +
                     '</div>' +
                     '<div id="ums-fc-list"></div>' +
                     '<div id="ums-review-stage">' +
@@ -5842,6 +5867,17 @@ if (!fileDaCaricare) {
             };
 
             function fcRenderHub() {
+                // Senza accesso la sezione non salva né sincronizza: cancello con invito
+                const gate = document.getElementById('ums-fc-gate');
+                const connesso = !!getChiave();
+                if (gate) gate.hidden = connesso;
+                if (!connesso) {
+                    fcList.innerHTML = '';
+                    fcSub.textContent = '';
+                    document.getElementById('ums-fc-gate-text').textContent = T('Per usare il ripasso serve la tua chiave: accedendo, ogni flashcard che provi si salva e te la riproponiamo al momento giusto, su qualsiasi dispositivo. Bastano due tocchi, ed è gratis.');
+                    document.getElementById('ums-fc-login').textContent = T('Accedi ora');
+                    return;
+                }
                 const gruppi = (typeof srDovutePerLezione === 'function') ? srDovutePerLezione() : {};
                 const materie = Object.keys(gruppi);
                 fcList.innerHTML = '';
@@ -5870,7 +5906,7 @@ if (!fileDaCaricare) {
                                 '<button class="ums-fc-del" type="button" title="' + T('Elimina questo mazzo') + '" aria-label="' + T('Elimina questo mazzo') + '"><svg class="ums-ic" aria-hidden="true"><use href="#ic-x"/></svg></button>' +
                             '</div>' +
                             '<div class="ums-fc-actions">' +
-                                '<button class="ums-fc-run primary run-all" type="button">' + T('Ripassa tutte') + '</button>' +
+                                '<button class="ums-fc-run primary run-all" type="button">' + T('Ripassa tutte') + ' (' + l.totale + ')</button>' +
                                 '<button class="ums-fc-run wrong run-wrong" type="button"' + (l.sbagliate === 0 ? ' disabled' : '') + '>' + T('Solo sbagliate') + ' (' + l.sbagliate + ')</button>' +
                             '</div>';
                         box.querySelector('.ums-fc-lez-nome').textContent = l.titolo;
@@ -6014,8 +6050,55 @@ if (!fileDaCaricare) {
                 const dBack = document.getElementById('urv-done-back');
                 if (dBack) dBack.textContent = T("Torna all'elenco");
             }
-            const fcOpen = () => { fcApplicaTraduzioni(); fcRenderHub(); fcOverlay.classList.add('show'); fcClose.focus(); };
-            const fcCloseFn = () => { if (stage.classList.contains('on')) urvChiudiStage(); fcOverlay.classList.remove('show'); fcBtn.focus(); };
+            // Selettore lingua dedicato della sezione ripasso — a bandierine,
+            // come quello principale del sito
+            const FC_LINGUE = [
+                ['it','Italiano','\ud83c\uddee\ud83c\uddf9'], ['en','English','\ud83c\uddec\ud83c\udde7'],
+                ['fr','Fran\u00e7ais','\ud83c\uddeb\ud83c\uddf7'], ['de','Deutsch','\ud83c\udde9\ud83c\uddea'],
+                ['es','Espa\u00f1ol','\ud83c\uddea\ud83c\uddf8'], ['bg','\u0411\u044a\u043b\u0433\u0430\u0440\u0441\u043a\u0438','\ud83c\udde7\ud83c\uddec'],
+                ['pl','Polski','\ud83c\uddf5\ud83c\uddf1'], ['el','\u0395\u03bb\u03bb\u03b7\u03bd\u03b9\u03ba\u03ac','\ud83c\uddec\ud83c\uddf7'],
+                ['lt','Lietuvi\u0173','\ud83c\uddf1\ud83c\uddf9'], ['da','Dansk','\ud83c\udde9\ud83c\uddf0'],
+                ['pt','Portugu\u00eas','\ud83c\uddf5\ud83c\uddf9'], ['zh-CN','\u4e2d\u6587','\ud83c\udde8\ud83c\uddf3'],
+                ['ar','\u0627\u0644\u0639\u0631\u0628\u064a\u0629','\ud83c\uddf8\ud83c\udde6'], ['hi','\u0939\u093f\u0928\u094d\u0926\u0940','\ud83c\uddee\ud83c\uddf3'],
+                ['ru','\u0420\u0443\u0441\u0441\u043a\u0438\u0439','\ud83c\uddf7\ud83c\uddfa'], ['ja','\u65e5\u672c\u8a9e','\ud83c\uddef\ud83c\uddf5']
+            ];
+            const fcLangRow = document.getElementById('ums-fc-langrow');
+            let fcLangCorrente = 'it';
+            FC_LINGUE.forEach(([code, nome, bandiera]) => {
+                const b = document.createElement('button');
+                b.type = 'button'; b.title = nome; b.setAttribute('aria-label', nome);
+                b.textContent = bandiera; b.dataset.lang = code;
+                if (code === 'it') b.classList.add('active-lang');
+                b.addEventListener('click', () => fcCambiaLingua(code));
+                fcLangRow.appendChild(b);
+            });
+            function fcEvidenziaLingua(lang) {
+                fcLangRow.querySelectorAll('button').forEach(b => b.classList.toggle('active-lang', b.dataset.lang === lang));
+            }
+            async function fcCambiaLingua(lang) {
+                if (lang === fcLangCorrente) return;
+                fcLangCorrente = lang;
+                fcEvidenziaLingua(lang);
+                try { localStorage.setItem('ums_hub_lang', lang); } catch (e) {}
+                fcLangRow.querySelectorAll('button').forEach(b => b.disabled = true);
+                try { if (typeof window.umsBuildDict === 'function') await window.umsBuildDict(lang); }
+                catch (e) { console.error('[UMS i18n hub]', e); }
+                fcLangRow.querySelectorAll('button').forEach(b => b.disabled = false);
+                fcApplicaTraduzioni();
+                fcRenderHub();
+            }
+
+            const fcOpen = () => {
+                document.body.classList.add('ums-noscroll');
+                let saved = 'it';
+                try { saved = localStorage.getItem('ums_hub_lang') || 'it'; } catch (e) {}
+                fcEvidenziaLingua(saved);
+                fcApplicaTraduzioni(); fcRenderHub();
+                fcOverlay.classList.add('show'); fcClose.focus();
+                if (saved !== fcLangCorrente) fcCambiaLingua(saved);
+            };
+            const fcCloseFn = () => { if (stage.classList.contains('on')) urvChiudiStage(); fcOverlay.classList.remove('show'); document.body.classList.remove('ums-noscroll'); fcBtn.focus(); };
+            document.getElementById('ums-fc-login').addEventListener('click', () => { fcCloseFn(); open(); });
             fcBtn.addEventListener('click', fcOpen);
             fcClose.addEventListener('click', fcCloseFn);
             fcOverlay.addEventListener('click', (e) => { if (e.target === fcOverlay) fcCloseFn(); });
