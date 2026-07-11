@@ -3475,7 +3475,13 @@ if (!fileDaCaricare) {
         function markKnown() {
             showToast("Grande! Continua così.", "success");
             const _c = activeCards[currentCardIndex];
-            if (_c && !fcEsitiSessione[_c.front]) { fcEsitiSessione[_c.front] = 'known'; srApplicaEsito(_c.front, _c.back, 'known'); }
+            if (_c) {
+                const _fe = document.getElementById('fc-front-text');
+                const _be = document.getElementById('fc-back-text');
+                const _f = ((_fe && _fe.textContent) || '').trim() || _c.front;
+                const _b = ((_be && _be.textContent) || '').trim() || _c.back;
+                if (!fcEsitiSessione[_f]) { fcEsitiSessione[_f] = 'known'; srApplicaEsito(_f, _b, 'known'); }
+            }
             activeCards.splice(currentCardIndex, 1);
             if (currentCardIndex >= activeCards.length) currentCardIndex = 0;
             setTimeout(() => { document.getElementById('flashcard-deck').classList.remove('flipped'); updateCardDisplay(); }, 500);
@@ -3483,7 +3489,13 @@ if (!fileDaCaricare) {
         function markUnknown() {
             showToast("Nessun problema, la rivedremo dopo.", "retry");
             const _c0 = activeCards[currentCardIndex];
-            if (_c0 && !fcEsitiSessione[_c0.front]) { fcEsitiSessione[_c0.front] = 'unknown'; srApplicaEsito(_c0.front, _c0.back, 'unknown'); }
+            if (_c0) {
+                const _fe0 = document.getElementById('fc-front-text');
+                const _be0 = document.getElementById('fc-back-text');
+                const _f0 = ((_fe0 && _fe0.textContent) || '').trim() || _c0.front;
+                const _b0 = ((_be0 && _be0.textContent) || '').trim() || _c0.back;
+                if (!fcEsitiSessione[_f0]) { fcEsitiSessione[_f0] = 'unknown'; srApplicaEsito(_f0, _b0, 'unknown'); }
+            }
             const c = activeCards.splice(currentCardIndex, 1)[0];
             activeCards.push(c);
             if (currentCardIndex >= activeCards.length) currentCardIndex = 0;
@@ -3697,7 +3709,7 @@ if (!fileDaCaricare) {
             'prossimo ripasso tra',
             'giorni',
             'Rimaste:',
-            'Tocca la carta per vedere la risposta',
+            'Mostra la risposta',
             'Torna all\'elenco',
             'Ripasso dopo',
             'La so!',
@@ -5456,10 +5468,20 @@ if (!fileDaCaricare) {
             overscroll-behavior: contain;
         }
         body.ums-noscroll{ overflow: hidden; }
-        .ums-fc-langrow{
-            display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
-            gap: 4px; margin: -4px 0 12px;
+        .ums-fc-langbar{ text-align: center; margin: -4px 0 12px; }
+        #ums-fc-lang-toggle{
+            background: none; border: 1px solid var(--dust,#E8E4DC); border-radius: 999px;
+            padding: 5px 12px; cursor: pointer; font-size: .8rem;
+            color: var(--sub,#5f5c55); font-family: var(--font-body,'DM Sans',sans-serif);
+            display: inline-flex; align-items: center; gap: 5px;
         }
+        #ums-fc-lang-toggle:hover{ border-color: var(--gold,#C8A96E); }
+        .night-mode #ums-fc-lang-toggle{ border-color: #2B2E38; color: #D8D3C8; }
+        .ums-fc-langrow{
+            display: none; flex-wrap: wrap; align-items: center; justify-content: center;
+            gap: 4px; margin-top: 8px;
+        }
+        .ums-fc-langrow.show{ display: flex; }
         .ums-fc-langrow button{
             background: none; border: 2px solid transparent; border-radius: 8px;
             font-size: 1.15rem; line-height: 1; padding: 3px 4px; cursor: pointer;
@@ -5531,37 +5553,38 @@ if (!fileDaCaricare) {
         .urv-top{ display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
         .urv-back{ background: none; border: none; cursor: pointer; color: var(--sub,#5f5c55); font-size: .8rem; display: flex; align-items: center; gap: 5px; font-family: var(--font-body,'DM Sans',sans-serif); }
         .urv-count{ font-size: .75rem; color: var(--sub,#5f5c55); font-weight: 700; }
-        .urv-wrapper{ perspective: 1000px; width: 100%; height: 320px; cursor: pointer; }
-        .urv-inner{
-            position: relative; width: 100%; height: 100%; text-align: center;
-            transition: transform 0.65s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            transform-style: preserve-3d; border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,.18);
-        }
-        .urv-wrapper.flipped .urv-inner{ transform: rotateY(180deg); }
-        .urv-front, .urv-back{
-            position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+        .urv-wrapper{ width: 100%; height: 230px; }
+        .urv-face{
+            position: relative; width: 100%; height: 100%;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            border-radius: 20px; padding: 1.2rem;
+            border-radius: 20px; padding: 1.2rem; box-sizing: border-box;
+            box-shadow: 0 10px 30px rgba(0,0,0,.18);
             background-image: url('https://i.postimg.cc/tJSTPJPW/indiani-d-america-e-uova-sode-stile-bruno-munari-molto-movimentato-e-colorato.jpg');
             background-size: contain; background-repeat: no-repeat; background-position: center;
             background-color: #1a1a2e;
         }
-        .urv-back{ transform: rotateY(180deg); }
-        .urv-back::before{
-            content: ""; position: absolute; inset: 0; border-radius: 20px;
-            background-image: url('https://i.postimg.cc/tJSTPJPW/indiani-d-america-e-uova-sode-stile-bruno-munari-molto-movimentato-e-colorato.jpg');
-            background-size: contain; background-repeat: no-repeat; background-position: center;
-            transform: scaleX(-1); z-index: -1;
-        }
-        .urv-front h2, .urv-back p{
+        .urv-face h2{
             position: relative; z-index: 2; background: rgba(255,255,255,0.96);
-            padding: 16px 18px; border-radius: 12px; box-shadow: 0 6px 24px rgba(0,0,0,0.18);
+            padding: 14px 16px; border-radius: 12px; box-shadow: 0 6px 24px rgba(0,0,0,0.18);
             width: 100%; color: #1C1C22; margin: 0;
+            font-family: var(--font-display,'Playfair Display',serif); font-size: 1.1rem; line-height: 1.3;
         }
-        .urv-front h2{ font-family: var(--font-display,'Playfair Display',serif); font-size: 1.15rem; line-height: 1.3; }
-        .urv-back p{ font-size: .86rem; text-align: left; line-height: 1.55; white-space: pre-line; overflow-y: auto; max-height: 82%; -webkit-overflow-scrolling: touch; touch-action: pan-y; pointer-events: auto; overscroll-behavior: contain; }
-        .urv-hint{ font-size: .72rem; color: var(--sub,#5f5c55); text-align: center; margin: 8px 0 12px; }
+        .urv-reveal{
+            display: block; margin: 12px auto; padding: 10px 26px;
+            background: var(--gold,#C8A96E); color: #1C1C22;
+            border: none; border-radius: 50px; cursor: pointer;
+            font-weight: 700; font-size: .82rem; letter-spacing: .05em; text-transform: uppercase;
+            font-family: var(--font-body,'DM Sans',sans-serif);
+            box-shadow: 0 4px 12px rgba(0,0,0,.15);
+        }
+        .urv-reveal:active{ transform: translateY(1px); }
+        .urv-answer p{
+            background: #fff; border: 1px solid var(--dust,#E8E4DC); border-radius: 14px;
+            padding: 16px 18px; margin: 0 0 14px;
+            font-size: .88rem; text-align: left; line-height: 1.6; white-space: pre-line;
+            color: #1C1C22;
+        }
+        .night-mode .urv-answer p{ background: #14161C; color: #F2EFE8; border-color: #2B2E38; }
         .urv-actions{ display: flex; gap: 8px; }
         .urv-btn{ flex: 1; padding: 12px; font-size: .9rem; font-weight: 700; cursor: pointer; border-radius: 12px; border: none; font-family: var(--font-body,'DM Sans',sans-serif); }
         .urv-btn.no{ background: #F0E0DC; color: #B53A2E; }
@@ -5815,7 +5838,13 @@ if (!fileDaCaricare) {
                     '<button class="ums-fc-close" type="button" aria-label="Chiudi">&#10005;</button>' +
                     '<div class="ums-fc-title">Da ripassare</div>' +
                     '<div class="ums-fc-sub" id="ums-fc-sub"></div>' +
-                    '<div class="ums-fc-langrow" id="ums-fc-langrow" role="group" aria-label="Lingua di questa sezione"></div>' +
+                    '<div class="ums-fc-langbar">' +
+                        '<button id="ums-fc-lang-toggle" type="button" aria-haspopup="true" aria-expanded="false">' +
+                            '<svg class="ums-ic" aria-hidden="true" style="width:15px;height:15px"><use href="#ic-globe"/></svg> ' +
+                            '<span id="ums-fc-lang-cur">\ud83c\uddee\ud83c\uddf9</span> <small id="ums-fc-lang-arrow">\u25bc</small>' +
+                        '</button>' +
+                        '<div class="ums-fc-langrow" id="ums-fc-langrow" role="group" aria-label="Lingua di questa sezione"></div>' +
+                    '</div>' +
                     '<button class="ums-fc-how" id="ums-fc-how" type="button">Come funziona il ripasso?</button>' +
                     '<div class="ums-fc-howbox" id="ums-fc-howbox" hidden>' +
                         '<p>Il <b>ripasso a intervalli</b> (spaced repetition) &egrave; il metodo di studio pi&ugrave; efficace mai misurato. L\'idea &egrave; semplice: invece di rileggere tutto insieme, rivedi ogni concetto <b>poco prima di dimenticarlo</b>.</p>' +
@@ -5833,12 +5862,10 @@ if (!fileDaCaricare) {
                             '<span class="urv-count" id="urv-count"></span>' +
                         '</div>' +
                         '<div class="urv-wrapper" id="urv-wrapper">' +
-                            '<div class="urv-inner">' +
-                                '<div class="urv-front"><h2 id="urv-front-text"></h2></div>' +
-                                '<div class="urv-back"><p id="urv-back-text"></p></div>' +
-                            '</div>' +
+                            '<div class="urv-face"><h2 id="urv-front-text"></h2></div>' +
                         '</div>' +
-                        '<div class="urv-hint" id="urv-hint">Tocca la carta per vedere la risposta</div>' +
+                        '<button class="urv-reveal" id="urv-reveal" type="button">Mostra la risposta</button>' +
+                        '<div class="urv-answer" id="urv-answer" hidden><p id="urv-back-text"></p></div>' +
                         '<div class="urv-actions" id="urv-actions" hidden>' +
                             '<button class="urv-btn no" id="urv-no" type="button">Ripasso dopo</button>' +
                             '<button class="urv-btn si" id="urv-si" type="button">La so!</button>' +
@@ -5966,18 +5993,25 @@ if (!fileDaCaricare) {
             }
             window.fcAvviaRipasso = fcAvviaRipasso;
 
+            const urvAnswer = document.getElementById('urv-answer');
+            const urvReveal = document.getElementById('urv-reveal');
             function urvMostra() {
                 if (urvCoda.length === 0) { urvFine(); return; }
                 const card = urvCoda[0];
-                urvWrap.classList.remove('flipped');
                 urvActions.hidden = true;
-                urvHint.style.display = 'block';
+                urvAnswer.hidden = true;
+                urvReveal.style.display = 'block';
                 urvCount.textContent = T('Rimaste:') + ' ' + urvCoda.length;
-                setTimeout(() => { urvFront.textContent = card.front; urvBack.textContent = card.back; }, 120);
+                urvFront.textContent = card.front;
+                urvBack.textContent = card.back;
+                // riporto in cima il pop-up per la carta nuova
+                const cardEl = fcOverlay.querySelector('.ums-fc-card');
+                if (cardEl) cardEl.scrollTop = 0;
             }
-            function urvFlip() {
-                urvWrap.classList.toggle('flipped');
-                if (urvWrap.classList.contains('flipped')) { urvActions.hidden = false; urvHint.style.display = 'none'; }
+            function urvRivela() {
+                urvAnswer.hidden = false;
+                urvActions.hidden = false;
+                urvReveal.style.display = 'none';
             }
             function urvRispondi(esito) {
                 const card = urvCoda.shift();
@@ -5992,7 +6026,9 @@ if (!fileDaCaricare) {
                 urvMostra();
             }
             function urvFine() {
-                urvActions.hidden = true; urvHint.style.display = 'none';
+                urvActions.hidden = true;
+                urvAnswer.hidden = true;
+                urvReveal.style.display = 'none';
                 urvWrap.parentElement && (urvWrap.style.display = 'none');
                 urvDone.hidden = false;
                 urvDoneText.textContent = T('Hai ripassato') + ' ' + urvTot + ' ' + T(urvTot === 1 ? 'carta' : 'carte') + '. ' + T('Ti riproporremo quelle giuste più in là, e quelle sbagliate molto presto.');
@@ -6007,10 +6043,8 @@ if (!fileDaCaricare) {
                 const how = document.getElementById('ums-fc-how'); if (how) how.style.display = '';
                 fcRenderHub();
             }
-            urvWrap.addEventListener('click', urvFlip);
-            // Il testo della risposta si può scorrere e toccare senza ribaltare la carta
-            urvBack.addEventListener('click', (e) => e.stopPropagation());
-            urvBack.addEventListener('touchmove', (e) => e.stopPropagation());
+            urvReveal.addEventListener('click', urvRivela);
+            urvWrap.addEventListener('click', urvRivela); // anche toccando la carta
             document.getElementById('urv-si').addEventListener('click', (e) => { e.stopPropagation(); urvRispondi('known'); });
             document.getElementById('urv-no').addEventListener('click', (e) => { e.stopPropagation(); urvRispondi('unknown'); });
             document.getElementById('urv-back').addEventListener('click', urvChiudiStage);
@@ -6039,8 +6073,8 @@ if (!fileDaCaricare) {
                     if (italiano && fcHowHtmlOrig) el.innerHTML = fcHowHtmlOrig[i];
                     else el.textContent = T(FC_HOW_PLAIN[i] || '');
                 });
-                const hint = document.getElementById('urv-hint');
-                if (hint) hint.textContent = T('Tocca la carta per vedere la risposta');
+                const rev = document.getElementById('urv-reveal');
+                if (rev) rev.textContent = T('Mostra la risposta');
                 const bNo = document.getElementById('urv-no'); if (bNo) bNo.textContent = T('Ripasso dopo');
                 const bSi = document.getElementById('urv-si'); if (bSi) bSi.textContent = T('La so!');
                 const bBack = document.getElementById('urv-back');
@@ -6063,6 +6097,14 @@ if (!fileDaCaricare) {
                 ['ru','\u0420\u0443\u0441\u0441\u043a\u0438\u0439','\ud83c\uddf7\ud83c\uddfa'], ['ja','\u65e5\u672c\u8a9e','\ud83c\uddef\ud83c\uddf5']
             ];
             const fcLangRow = document.getElementById('ums-fc-langrow');
+            const fcLangToggle = document.getElementById('ums-fc-lang-toggle');
+            const fcLangCur = document.getElementById('ums-fc-lang-cur');
+            const fcLangArrow = document.getElementById('ums-fc-lang-arrow');
+            fcLangToggle.addEventListener('click', () => {
+                const aperto = fcLangRow.classList.toggle('show');
+                fcLangToggle.setAttribute('aria-expanded', aperto ? 'true' : 'false');
+                fcLangArrow.textContent = aperto ? '\u25b2' : '\u25bc';
+            });
             let fcLangCorrente = 'it';
             FC_LINGUE.forEach(([code, nome, bandiera]) => {
                 const b = document.createElement('button');
@@ -6075,10 +6117,18 @@ if (!fileDaCaricare) {
             function fcEvidenziaLingua(lang) {
                 fcLangRow.querySelectorAll('button').forEach(b => b.classList.toggle('active-lang', b.dataset.lang === lang));
             }
+            function fcBandieraDi(lang) {
+                const t = FC_LINGUE.find(l => l[0] === lang);
+                return t ? t[2] : '\ud83c\uddee\ud83c\uddf9';
+            }
             async function fcCambiaLingua(lang) {
                 if (lang === fcLangCorrente) return;
                 fcLangCorrente = lang;
                 fcEvidenziaLingua(lang);
+                fcLangCur.textContent = fcBandieraDi(lang);
+                fcLangRow.classList.remove('show');
+                fcLangToggle.setAttribute('aria-expanded', 'false');
+                fcLangArrow.textContent = '\u25bc';
                 try { localStorage.setItem('ums_hub_lang', lang); } catch (e) {}
                 fcLangRow.querySelectorAll('button').forEach(b => b.disabled = true);
                 try { if (typeof window.umsBuildDict === 'function') await window.umsBuildDict(lang); }
@@ -6093,6 +6143,7 @@ if (!fileDaCaricare) {
                 let saved = 'it';
                 try { saved = localStorage.getItem('ums_hub_lang') || 'it'; } catch (e) {}
                 fcEvidenziaLingua(saved);
+                fcLangCur.textContent = fcBandieraDi(saved);
                 fcApplicaTraduzioni(); fcRenderHub();
                 fcOverlay.classList.add('show'); fcClose.focus();
                 if (saved !== fcLangCorrente) fcCambiaLingua(saved);
