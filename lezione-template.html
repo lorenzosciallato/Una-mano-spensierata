@@ -5694,6 +5694,81 @@ if (!fileDaCaricare) {
         .night-mode .urv-front h2, .night-mode .urv-back p{ color: #1C1C22; }
         .night-mode .urv-done h3{ color: #F2EFE8; }
 
+        /* ------------------------------------------------------------
+           INTRO "SCARTOCCIAMENTO" — solo all'avvio di una sessione
+           (Ripassa tutte / Solo sbagliate). Sequenza: palla di carta
+           che fruscia -> si apre -> la carta si distende (pieghe che
+           svaniscono) -> le parole della domanda scivolano su.
+        ------------------------------------------------------------ */
+        .urv-wrapper{ position: relative; }
+        .urv-paper{
+            position: absolute; inset: 0; z-index: 6;
+            display: flex; align-items: center; justify-content: center;
+            pointer-events: none;
+        }
+        .urv-paper svg{
+            width: 128px; height: 128px;
+            filter: drop-shadow(0 10px 22px rgba(0,0,0,.22));
+            animation: urvBallIn .45s var(--ease, ease) both,
+                       urvBallRustle 1s .4s ease-in-out both;
+        }
+        @keyframes urvBallIn{
+            from{ opacity: 0; transform: scale(.15) rotate(-50deg); }
+            to{ opacity: 1; transform: scale(1) rotate(0); }
+        }
+        /* il fruscio: la carta "respira" e si assesta prima di aprirsi */
+        @keyframes urvBallRustle{
+            0%{ transform: scale(1) rotate(0); }
+            18%{ transform: scale(1.06) rotate(-5deg); }
+            38%{ transform: scale(.97) rotate(4deg); }
+            58%{ transform: scale(1.09) rotate(-3deg); }
+            78%{ transform: scale(1.02) rotate(2deg); }
+            100%{ transform: scale(1.13) rotate(0); }
+        }
+        .urv-paper.open svg{ animation: urvBallOpen .55s var(--ease, ease) both; }
+        @keyframes urvBallOpen{
+            from{ opacity: 1; transform: scale(1.13) rotate(0); }
+            to{ opacity: 0; transform: scale(2.5) rotate(16deg); }
+        }
+        /* la carta si distende da palla a rettangolo */
+        .urv-face.unfold{ animation: urvUnfold .85s 1.15s var(--ease, ease) both; }
+        @keyframes urvUnfold{
+            0%{ opacity: 0; transform: scale(.16) rotate(-7deg); border-radius: 999px; }
+            55%{ opacity: 1; }
+            100%{ opacity: 1; transform: scale(1) rotate(0); border-radius: 20px; }
+        }
+        /* pieghe residue che si stirano via */
+        .urv-face.unfold::after{
+            content: ''; position: absolute; inset: 0; border-radius: inherit;
+            z-index: 3; pointer-events: none;
+            background:
+                linear-gradient(112deg, transparent 37%, rgba(0,0,0,.18) 40%, transparent 44%),
+                linear-gradient(-78deg, transparent 54%, rgba(255,255,255,.30) 57%, transparent 61%),
+                linear-gradient(23deg,  transparent 61%, rgba(0,0,0,.13) 64%, transparent 68%),
+                linear-gradient(-141deg, transparent 29%, rgba(0,0,0,.11) 32%, transparent 37%),
+                linear-gradient(64deg,  transparent 74%, rgba(255,255,255,.22) 77%, transparent 81%);
+            animation: urvCreases 1.15s 1.7s ease-out both;
+        }
+        @keyframes urvCreases{ from{ opacity: 1; } to{ opacity: 0; } }
+        /* parole della domanda: scivolano su una alla volta (stile umsFadeUp) */
+        .urv-face h2 .urv-w{
+            display: inline-block; opacity: 0; transform: translateY(14px);
+            animation: urvWordUp .55s var(--ease, ease) both;
+            animation-delay: var(--d, 0s);
+        }
+        @keyframes urvWordUp{ to{ opacity: 1; transform: translateY(0); } }
+        /* durante l'intro anche contatore e bottone arrivano con calma */
+        #ums-review-stage.intro .urv-top{ animation: umsFadeUp .5s 2s var(--ease, ease) both; }
+        #ums-review-stage.intro .urv-reveal{ animation: umsFadeUp .5s 2.45s var(--ease, ease) both; }
+        @media (prefers-reduced-motion: reduce){
+            .urv-paper{ display: none; }
+            .urv-face.unfold{ animation: none; opacity: 1; }
+            .urv-face.unfold::after{ display: none; }
+            .urv-face h2 .urv-w{ animation: none; opacity: 1; transform: none; }
+            #ums-review-stage.intro .urv-top,
+            #ums-review-stage.intro .urv-reveal{ animation: none; opacity: 1; }
+        }
+
 
         .night-mode .ums-fc-card{ background: #1C1F27; }
         .night-mode .ums-fc-title{ color: #F2EFE8; }
@@ -6052,6 +6127,7 @@ if (!fileDaCaricare) {
             let urvLk = null;       // lezione in ripasso
             let urvVisti = {};      // front -> true : già dato il PRIMO esito (quello che conta)
             let urvTot = 0, urvFatte = 0;
+            let urvIntroPending = false;   // true solo all'avvio di una sessione: la PRIMA carta entra "scartocciandosi"
             const T = (s) => (window.umsT ? window.umsT(s) : s);
             const stage = document.getElementById('ums-review-stage');
             const urvWrap = document.getElementById('urv-wrapper');
@@ -6087,6 +6163,7 @@ if (!fileDaCaricare) {
                 urvCoda = coda;
                 urvVisti = {};
                 urvTot = urvCoda.length; urvFatte = 0;
+                urvIntroPending = true;   // la prima carta si "scartoccia"
                 fcList.style.display = 'none';
                 const how = document.getElementById('ums-fc-how'); if (how) how.style.display = 'none';
                 const gate = document.getElementById('ums-fc-gate'); if (gate) gate.hidden = true;
@@ -6105,13 +6182,82 @@ if (!fileDaCaricare) {
                 urvAnswer.hidden = true;
                 urvReveal.style.display = 'block';
                 urvCount.textContent = T('Rimaste:') + ' ' + urvCoda.length;
-                urvFront.textContent = card.front;
+                // Solo la PRIMA carta della sessione entra con lo scartocciamento;
+                // le successive si susseguono spedite come sempre.
+                const conIntro = urvIntroPending; urvIntroPending = false;
+                const riduci = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                if (conIntro && !riduci) {
+                    urvIntroAvvia(card);
+                } else {
+                    urvFront.textContent = card.front;
+                }
                 urvBack.textContent = card.back;
                 // riporto in cima il pop-up per la carta nuova
                 const cardEl = fcOverlay.querySelector('.ums-fc-card');
                 if (cardEl) cardEl.scrollTop = 0;
             }
+
+            // ---- Intro "scartocciamento" (prima carta della sessione) ----
+            const URV_BALL_SVG =
+                '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
+                    '<circle cx="50" cy="50" r="45" fill="#EFEAE0"/>' +
+                    '<path d="M50 5 L74 16 L58 34 Z" fill="#E2DBC9"/>' +
+                    '<path d="M50 5 L26 14 L42 32 Z" fill="#F6F2E9"/>' +
+                    '<path d="M26 14 L9 38 L34 42 Z" fill="#DDD5C2"/>' +
+                    '<path d="M74 16 L92 36 L66 44 Z" fill="#EAE3D3"/>' +
+                    '<path d="M9 38 L6 62 L30 60 Z" fill="#F1ECE1"/>' +
+                    '<path d="M92 36 L94 64 L70 58 Z" fill="#D8CFBA"/>' +
+                    '<path d="M6 62 L20 86 L38 70 Z" fill="#E6DFCE"/>' +
+                    '<path d="M94 64 L80 88 L62 72 Z" fill="#F4F0E6"/>' +
+                    '<path d="M20 86 L50 95 L44 76 Z" fill="#DCD3BF"/>' +
+                    '<path d="M80 88 L50 95 L58 78 Z" fill="#ECE6D7"/>' +
+                    '<path d="M42 32 L58 34 L50 52 L34 42 Z" fill="#E8E1D0"/>' +
+                    '<path d="M58 34 L66 44 L50 52 Z" fill="#D5CCB6"/>' +
+                    '<path d="M34 42 L30 60 L50 52 Z" fill="#F0EBDF"/>' +
+                    '<path d="M50 52 L70 58 L62 72 Z" fill="#E0D8C5"/>' +
+                    '<path d="M50 52 L38 70 L44 76 L58 78 L62 72 Z" fill="#EBE4D4"/>' +
+                    '<g fill="none" stroke="rgba(60,50,30,.14)" stroke-width="1">' +
+                        '<path d="M50 5 L58 34 M26 14 L42 32 M9 38 L34 42 M92 36 L66 44 M30 60 L50 52 M70 58 L50 52 M38 70 L44 76 M62 72 L58 78 M50 52 L50 95"/>' +
+                    '</g>' +
+                '</svg>';
+
+            function urvIntroParole(testo) {
+                urvFront.textContent = '';
+                const parole = String(testo || '').split(/\s+/).filter(Boolean);
+                parole.forEach((p, i) => {
+                    const s = document.createElement('span');
+                    s.className = 'urv-w';
+                    s.textContent = p;
+                    // partenza a carta distesa (~1.85s), poi una parola ogni 70ms
+                    // (tetto a +0.9s: le domande lunghe non devono trascinarsi)
+                    s.style.setProperty('--d', (1.85 + Math.min(i * 0.07, 0.9)).toFixed(2) + 's');
+                    urvFront.appendChild(s);
+                    urvFront.appendChild(document.createTextNode(' '));
+                });
+            }
+
+            function urvIntroPulisci() {
+                stage.classList.remove('intro');
+                const p = urvWrap.querySelector('.urv-paper'); if (p) p.remove();
+                const face = urvWrap.querySelector('.urv-face'); if (face) face.classList.remove('unfold');
+            }
+
+            function urvIntroAvvia(card) {
+                urvIntroPulisci();                 // mai due intro sovrapposte
+                stage.classList.add('intro');
+                const face = urvWrap.querySelector('.urv-face');
+                if (face) face.classList.add('unfold');
+                urvIntroParole(card.front);
+                const ball = document.createElement('div');
+                ball.className = 'urv-paper';
+                ball.innerHTML = URV_BALL_SVG;
+                urvWrap.appendChild(ball);
+                setTimeout(() => { if (ball.parentNode) ball.classList.add('open'); }, 1300);   // fine fruscio: si apre
+                setTimeout(() => { if (ball.parentNode) ball.remove(); }, 1950);
+                setTimeout(() => { if (stage.classList.contains('on')) stage.classList.remove('intro'); }, 3300);
+            }
             function urvRivela() {
+                if (stage.classList.contains('intro')) return;   // niente spoiler durante lo scartocciamento
                 urvAnswer.hidden = false;
                 urvActions.hidden = false;
                 urvReveal.style.display = 'none';
@@ -6139,6 +6285,7 @@ if (!fileDaCaricare) {
                 if (typeof srAggiornaBadge === 'function') srAggiornaBadge();
             }
             function urvChiudiStage() {
+                urvIntroPulisci();   // se si chiude a metà scartocciamento, niente residui
                 stage.classList.remove('on');
                 urvWrap.style.display = '';
                 urvDone.hidden = true;
