@@ -5019,7 +5019,7 @@ if (!fileDaCaricare) {
         .ums-login-btn.is-out .ums-ic{ color: #D14B3D; }
 
         #ums-access-overlay{
-            display: none; position: fixed; inset: 0; z-index: 9998;
+            display: none; position: fixed; inset: 0; z-index: 99999999;
             background: rgba(15,17,23,.55);
             -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
             align-items: center; justify-content: center; padding: 24px;
@@ -5102,6 +5102,13 @@ if (!fileDaCaricare) {
         }
         .ums-access-msg{ font-size: .8rem; margin: 8px 0 0; min-height: 1em; color: var(--sub,#5f5c55); }
         .ums-access-msg.err{ color: #D14B3D; font-weight: 600; }
+        .ums-switch{
+            background: none; border: none; cursor: pointer;
+            font-size: .78rem; color: var(--sub,#5f5c55);
+            text-decoration: underline; margin-top: 12px;
+            font-family: var(--font-body,'DM Sans',sans-serif);
+        }
+        .night-mode .ums-switch{ color: #C9C5BB; }
         .night-mode .ums-access-card{ background: #1C1F27; }
         .night-mode .ums-access-h, .night-mode .ums-access-lbl{ color: #F2EFE8; }
         .night-mode .ums-access-logo .ums-logo-l1{ color: #F2EFE8; }
@@ -5191,21 +5198,29 @@ if (!fileDaCaricare) {
                     '<div id="ums-access-out">' +
                         '<h3 class="ums-access-h">Salva i tuoi progressi</h3>' +
                         '<p class="ums-access-p">Con l\'accesso tutto ci&ograve; che fai su Una Mano Spensierata resta tuo: le lezioni che segui, gli appunti che scrivi, le sottolineature e le flashcard che ripassi. Li ritrovi ogni volta che torni, anche da un altro dispositivo. Nessuna email, nessuna password, nessun dato personale: ti basta una chiave.</p>' +
-                        '<div class="ums-access-block">' +
-                            '<p class="ums-access-lbl">&Egrave; il tuo primo accesso?</p>' +
-                            '<button class="ums-access-btn primary" id="ums-genera" type="button">Genera la mia chiave</button>' +
+                        '<div class="ums-access-block" id="ums-choice">' +
+                            '<button class="ums-access-btn primary" id="ums-scegli-ho" type="button">Ho gi&agrave; la mia chiave</button>' +
+                            '<div style="height:10px"></div>' +
+                            '<button class="ums-access-btn" id="ums-scegli-primo" type="button">&Egrave; la mia prima volta qui</button>' +
+                        '</div>' +
+                        '<div class="ums-access-block" id="ums-view-login" hidden>' +
+                            '<p class="ums-access-lbl">Inserisci la tua chiave</p>' +
+                            '<input id="ums-input-chiave" class="ums-access-input" type="text" placeholder="ESEMPIO-123" autocomplete="off" spellcheck="false">' +
+                            '<button class="ums-access-btn primary" id="ums-accedi" type="button">Accedi</button>' +
+                            '<p class="ums-access-msg" id="ums-login-msg"></p>' +
+                            '<button class="ums-switch" id="ums-to-genera" type="button">Non ho mai avuto una chiave</button>' +
+                        '</div>' +
+                        '<div class="ums-access-block" id="ums-view-genera" hidden>' +
+                            '<p class="ums-nb">&#9888;&#65039; Genera una chiave solo se non ne hai mai avuta una. Se in passato ne avevi gi&agrave; creata una, usa quella: una chiave nuova parte da zero e i tuoi vecchi appunti non la seguiranno.</p>' +
+                            '<button class="ums-access-btn primary" id="ums-genera" type="button">S&igrave;, &egrave; la mia prima volta: genera</button>' +
+                            '<p class="ums-access-msg" id="ums-genera-msg"></p>' +
                             '<div id="ums-chiave-box" class="ums-chiave-box" hidden>' +
                                 '<div class="ums-chiave-val" id="ums-chiave-val"></div>' +
                                 '<button class="ums-copy" id="ums-copy" type="button">Copia</button>' +
                                 '<p class="ums-nb">&#9888;&#65039; Questa &egrave; la tua chiave, ed &egrave; unica e irripetibile. Scrivila e conservala subito &mdash; nelle note del telefono, su un foglio, dove preferisci. &Egrave; l\'unico modo per ritrovare i tuoi appunti: non &egrave; legata a nessuna email, quindi se la perdi non pu&ograve; essere recuperata.</p>' +
                                 '<button class="ums-access-btn primary" id="ums-conferma" type="button">Ho salvato la chiave, entra</button>' +
                             '</div>' +
-                        '</div>' +
-                        '<div class="ums-access-block">' +
-                            '<p class="ums-access-lbl">Hai gi&agrave; una chiave?</p>' +
-                            '<input id="ums-input-chiave" class="ums-access-input" type="text" placeholder="ESEMPIO-123" autocomplete="off" spellcheck="false">' +
-                            '<button class="ums-access-btn" id="ums-accedi" type="button">Accedi</button>' +
-                            '<p class="ums-access-msg" id="ums-login-msg"></p>' +
+                            '<button class="ums-switch" id="ums-to-login" type="button">In realt&agrave; ho gi&agrave; una chiave</button>' +
                         '</div>' +
                     '</div>' +
                     '<div id="ums-access-in" hidden>' +
@@ -5241,7 +5256,15 @@ if (!fileDaCaricare) {
             }
             refreshState();
 
-            const open  = () => { overlay.classList.add('show'); closeBtn.focus(); };
+            const choiceView  = document.getElementById('ums-choice');
+            const loginView2  = document.getElementById('ums-view-login');
+            const generaView  = document.getElementById('ums-view-genera');
+            const resetOut = () => { choiceView.hidden = false; loginView2.hidden = true; generaView.hidden = true; };
+            document.getElementById('ums-scegli-ho').addEventListener('click', () => { choiceView.hidden = true; loginView2.hidden = false; });
+            document.getElementById('ums-scegli-primo').addEventListener('click', () => { choiceView.hidden = true; generaView.hidden = false; });
+            document.getElementById('ums-to-genera').addEventListener('click', () => { loginView2.hidden = true; generaView.hidden = false; });
+            document.getElementById('ums-to-login').addEventListener('click', () => { generaView.hidden = true; loginView2.hidden = false; });
+            const open  = () => { resetOut(); overlay.classList.add('show'); closeBtn.focus(); };
             const close = () => { overlay.classList.remove('show'); loginBtn.focus(); };
             loginBtn.addEventListener('click', open);
             closeBtn.addEventListener('click', close);
@@ -5253,6 +5276,8 @@ if (!fileDaCaricare) {
             const chiaveBox = document.getElementById('ums-chiave-box');
             const chiaveVal = document.getElementById('ums-chiave-val');
             generaBtn.addEventListener('click', async () => {
+                const gMsg = document.getElementById('ums-genera-msg');
+                gMsg.textContent = ''; gMsg.className = 'ums-access-msg';
                 generaBtn.disabled = true; generaBtn.textContent = 'Genero\u2026';
                 try {
                     const r = await fetch(API + '/create', { method: 'POST' });
@@ -5262,8 +5287,23 @@ if (!fileDaCaricare) {
                         chiaveVal.textContent = d.chiave;
                         chiaveBox.hidden = false;
                         generaBtn.hidden = true;
-                    } else { generaBtn.textContent = 'Riprova'; generaBtn.disabled = false; }
-                } catch (e) { generaBtn.textContent = 'Errore, riprova'; generaBtn.disabled = false; }
+                    } else if (r.status === 429) {
+                        gMsg.textContent = 'Hai gi\u00e0 creato diverse chiavi oggi. Quasi sicuramente ne hai una: cercala dove l\u2019avevi salvata e usa \u201cHo gi\u00e0 la mia chiave\u201d.';
+                        gMsg.className = 'ums-access-msg err';
+                        generaBtn.textContent = 'S\u00ec, \u00e8 la mia prima volta: genera';
+                        generaBtn.disabled = false;
+                    } else {
+                        gMsg.textContent = 'Errore, riprova.';
+                        gMsg.className = 'ums-access-msg err';
+                        generaBtn.textContent = 'S\u00ec, \u00e8 la mia prima volta: genera';
+                        generaBtn.disabled = false;
+                    }
+                } catch (e) {
+                    gMsg.textContent = 'Errore di connessione, riprova.';
+                    gMsg.className = 'ums-access-msg err';
+                    generaBtn.textContent = 'S\u00ec, \u00e8 la mia prima volta: genera';
+                    generaBtn.disabled = false;
+                }
             });
 
             const copyBtn = document.getElementById('ums-copy');
