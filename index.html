@@ -1197,7 +1197,7 @@ renderCourses();
                         '</div>' +
                         '<div class="ums-access-block" id="ums-view-login" hidden>' +
                             '<p class="ums-access-lbl">Inserisci la tua chiave</p>' +
-                            '<input id="ums-input-chiave" class="ums-access-input" type="text" placeholder="ESEMPIO-123" autocomplete="off" spellcheck="false">' +
+                            '<input id="ums-input-chiave" class="ums-access-input" type="text" placeholder="ESEMPIO123" autocomplete="off" spellcheck="false">' +
                             '<button class="ums-access-btn primary" id="ums-accedi" type="button">Accedi</button>' +
                             '<p class="ums-access-msg" id="ums-login-msg"></p>' +
                             '<button class="ums-switch" id="ums-to-genera" type="button">Non ho mai avuto una chiave</button>' +
@@ -1315,7 +1315,7 @@ renderCourses();
   const inputChiave = document.getElementById('ums-input-chiave');
   const loginMsg    = document.getElementById('ums-login-msg');
   accediBtn.addEventListener('click', async () => {
-    const chiave = (inputChiave.value || '').toUpperCase().replace(/\s/g, '');
+    const chiave = (inputChiave.value || '').toUpperCase().replace(/[\s-]/g, '');
     if (!chiave) { loginMsg.textContent = 'Scrivi la tua chiave.'; loginMsg.className = 'ums-access-msg err'; return; }
     accediBtn.disabled = true; loginMsg.textContent = 'Controllo\u2026'; loginMsg.className = 'ums-access-msg';
     try {
