@@ -3550,18 +3550,19 @@ if (!fileDaCaricare) {
             try { document.getElementById('fc-game-screen').scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) {}
         };
 
-        // Se arrivo in questa lezione da "Ripassa" dell'hub, faccio partire il ripasso.
+        // Se arrivo in questa lezione da "Ripassa" dell'hub della home, apro il
+        // POP-UP di ripasso (lo stesso del pulsante "Ripasso" della nav) già
+        // puntato sul mazzo richiesto. PRIMA veniva usato startReviewWith(), il
+        // flusso inline dentro l'accordion: ma la lezione arriva CHIUSA (dietro
+        // "INIZIA"), quindi il gioco partiva in una sezione invisibile e
+        // l'utente si trovava davanti una pagina muta. Mai più.
         function umsControllaRipassoInSospeso() {
             let target = null;
             try { target = JSON.parse(sessionStorage.getItem('ums_review_target') || 'null'); } catch (e) {}
-            if (!target) return;
-            // L'ordine di ripasso vale per QUESTA lezione. Se il file aperto non
-            // coincide con la lezione richiesta, non consumo il segnale: aspetto
-            // (potrebbe arrivare un redirect o il file giusto).
-            if (target.lk !== umsLessonKey) return;
+            if (!target || !target.lk) return;
             sessionStorage.removeItem('ums_review_target');
             const db = (typeof srCaricaTutto === 'function') ? srCaricaTutto() : {};
-            const rec = db[umsLessonKey];
+            const rec = db[target.lk];
             let carte = rec ? Object.values(rec.cards || {}) : [];
             if (target.soloSbagliate) carte = carte.filter(c => (c.bucket || (c.stato === 'unknown' ? 'sbagliate' : 'giuste')) === 'sbagliate');
             if (carte.length === 0) {
@@ -3569,11 +3570,11 @@ if (!fileDaCaricare) {
                 if (typeof showToast === 'function') showToast('Nessuna flashcard salvata su questo dispositivo per questa lezione. Provale qui e verranno salvate.', 'retry');
                 return;
             }
-            // Avvio robusto: se la sezione non è ancora pronta, ritento.
+            // Avvio robusto: se il pop-up non è ancora pronto, ritento.
             let tentativi = 0;
             const avvia = () => {
-                if (typeof window.startReviewWith === 'function' && document.getElementById('fc-game-screen')) {
-                    window.startReviewWith(carte.map(c => ({ front: c.front, back: c.back })));
+                if (typeof window.umsApriHubRipasso === 'function') {
+                    window.umsApriHubRipasso(target.lk, !!target.soloSbagliate);
                 } else if (tentativi++ < 20) {
                     setTimeout(avvia, 300);
                 }
@@ -5991,6 +5992,7 @@ if (!fileDaCaricare) {
                 urvTot = urvCoda.length; urvFatte = 0;
                 fcList.style.display = 'none';
                 const how = document.getElementById('ums-fc-how'); if (how) how.style.display = 'none';
+                const gate = document.getElementById('ums-fc-gate'); if (gate) gate.hidden = true;
                 fcSub.style.display = 'none';
                 urvDone.hidden = true;
                 stage.classList.add('on');
@@ -6093,6 +6095,13 @@ if (!fileDaCaricare) {
                 document.body.classList.add('ums-noscroll');
                 fcApplicaTraduzioni(); fcRenderHub();
                 fcOverlay.classList.add('show'); fcClose.focus();
+            };
+            // Apertura programmatica dell'hub: usata dall'arrivo da "Ripassa"
+            // della home. Apre il POP-UP (stessa esperienza del pulsante Ripasso)
+            // e, se richiesto, fa partire subito il mazzo della lezione indicata.
+            window.umsApriHubRipasso = function (lk, soloSbagliate) {
+                fcOpen();
+                if (lk) fcAvviaRipasso(lk, !!soloSbagliate);
             };
             const fcCloseFn = () => { if (stage.classList.contains('on')) urvChiudiStage(); fcOverlay.classList.remove('show'); document.body.classList.remove('ums-noscroll'); fcBtn.focus(); };
             document.getElementById('ums-fc-login').addEventListener('click', () => { fcCloseFn(); open(); });
