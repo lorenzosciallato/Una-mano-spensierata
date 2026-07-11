@@ -3554,13 +3554,31 @@ if (!fileDaCaricare) {
         function umsControllaRipassoInSospeso() {
             let target = null;
             try { target = JSON.parse(sessionStorage.getItem('ums_review_target') || 'null'); } catch (e) {}
-            if (!target || target.lk !== umsLessonKey) return;
+            if (!target) return;
+            // L'ordine di ripasso vale per QUESTA lezione. Se il file aperto non
+            // coincide con la lezione richiesta, non consumo il segnale: aspetto
+            // (potrebbe arrivare un redirect o il file giusto).
+            if (target.lk !== umsLessonKey) return;
             sessionStorage.removeItem('ums_review_target');
             const db = (typeof srCaricaTutto === 'function') ? srCaricaTutto() : {};
-            const rec = db[umsLessonKey]; if (!rec) return;
-            let carte = Object.values(rec.cards || {});
+            const rec = db[umsLessonKey];
+            let carte = rec ? Object.values(rec.cards || {}) : [];
             if (target.soloSbagliate) carte = carte.filter(c => (c.bucket || (c.stato === 'unknown' ? 'sbagliate' : 'giuste')) === 'sbagliate');
-            if (carte.length > 0) setTimeout(() => window.startReviewWith(carte.map(c => ({ front: c.front, back: c.back }))), 400);
+            if (carte.length === 0) {
+                // Niente silenzio: dico all'utente cosa è successo.
+                if (typeof showToast === 'function') showToast('Nessuna flashcard salvata su questo dispositivo per questa lezione. Provale qui e verranno salvate.', 'retry');
+                return;
+            }
+            // Avvio robusto: se la sezione non è ancora pronta, ritento.
+            let tentativi = 0;
+            const avvia = () => {
+                if (typeof window.startReviewWith === 'function' && document.getElementById('fc-game-screen')) {
+                    window.startReviewWith(carte.map(c => ({ front: c.front, back: c.back })));
+                } else if (tentativi++ < 20) {
+                    setTimeout(avvia, 300);
+                }
+            };
+            setTimeout(avvia, 400);
         }
 
         // =========================================================================
