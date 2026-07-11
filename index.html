@@ -1260,7 +1260,7 @@ renderCourses();
   function umsMappaMaterie() {
     const map = {};
     try {
-      (typeof COURSES !== 'undefined' ? COURSES : []).forEach(c => {
+      (typeof courses !== 'undefined' ? courses : []).forEach(c => {
         if (c.lezioni && c.lezioni.urlTemplate) {
           const m = c.lezioni.urlTemplate.match(/file=([^/]+)\//);
           if (m) map[m[1]] = c.name;
@@ -1311,7 +1311,10 @@ renderCourses();
       if (totale === 0) return;
       const slug = umsSlugMateria(lk);
       const nomeMat = materie[slug] || slug;
-      (out[nomeMat] = out[nomeMat] || []).push({ lk, nome: umsNomeLezione(lk), dovute, totale, sbagliate });
+      // Titolo vero della lezione (come nel template): salvato nel db alla prima
+      // risposta. Fallback su "Lezione N" per i record vecchi senza titolo.
+      const titolo = (db[lk].titolo && db[lk].titolo !== lk) ? db[lk].titolo : umsNomeLezione(lk);
+      (out[nomeMat] = out[nomeMat] || []).push({ lk, nome: titolo, dovute, totale, sbagliate });
     });
     return out;
   }
