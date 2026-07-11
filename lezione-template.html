@@ -3371,14 +3371,14 @@ if (!fileDaCaricare) {
             const rec = srCaricaTutto()[lk]; if (!rec) return '';
             const ora = new Date();
             const dovute = Object.values(rec.cards || {}).filter(c => new Date(c.due) <= ora).length;
-            if (dovute > 0) return dovute + (dovute === 1 ? ' carta pronta ora' : ' carte pronte ora');
+            if (dovute > 0) return dovute + ' ' + umsT(dovute === 1 ? 'carta pronta ora' : 'carte pronte ora');
             const prossima = srProssimaScadenza(lk);
             if (!prossima) return '';
             const diffMs = new Date(prossima) - ora;
             const giorni = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
-            if (giorni <= 0) return 'prossimo ripasso a breve';
-            if (giorni === 1) return 'prossimo ripasso domani';
-            return 'prossimo ripasso tra ' + giorni + ' giorni';
+            if (giorni <= 0) return umsT('prossimo ripasso a breve');
+            if (giorni === 1) return umsT('prossimo ripasso domani');
+            return umsT('prossimo ripasso tra') + ' ' + giorni + ' ' + umsT('giorni');
         }
 
         // Quante carte sono "in scadenza" (due <= adesso) su tutte le lezioni
@@ -3417,11 +3417,13 @@ if (!fileDaCaricare) {
         // =========================================================================
         // FLASHCARDS
         // =========================================================================
+        let fcEsitiSessione = {};   // front -> primo esito dato in questa sessione (quello che conta)
         function initFlashcards(cardsData) {
             if (!cardsData || cardsData.length === 0) return;
             initialCards = cardsData;
             activeCards = [...initialCards];
             currentCardIndex = 0;
+            fcEsitiSessione = {};
         }
         function startFlashcards() {
             document.getElementById('fc-start-screen').style.display = 'none';
@@ -3472,14 +3474,16 @@ if (!fileDaCaricare) {
         }
         function markKnown() {
             showToast("Grande! Continua così.", "success");
-            const _c = activeCards[currentCardIndex]; if (_c) srApplicaEsito(_c.front, _c.back, 'known');
+            const _c = activeCards[currentCardIndex];
+            if (_c && !fcEsitiSessione[_c.front]) { fcEsitiSessione[_c.front] = 'known'; srApplicaEsito(_c.front, _c.back, 'known'); }
             activeCards.splice(currentCardIndex, 1);
             if (currentCardIndex >= activeCards.length) currentCardIndex = 0;
             setTimeout(() => { document.getElementById('flashcard-deck').classList.remove('flipped'); updateCardDisplay(); }, 500);
         }
         function markUnknown() {
             showToast("Nessun problema, la rivedremo dopo.", "retry");
-            const _c0 = activeCards[currentCardIndex]; if (_c0) srApplicaEsito(_c0.front, _c0.back, 'unknown');
+            const _c0 = activeCards[currentCardIndex];
+            if (_c0 && !fcEsitiSessione[_c0.front]) { fcEsitiSessione[_c0.front] = 'unknown'; srApplicaEsito(_c0.front, _c0.back, 'unknown'); }
             const c = activeCards.splice(currentCardIndex, 1)[0];
             activeCards.push(c);
             if (currentCardIndex >= activeCards.length) currentCardIndex = 0;
@@ -3488,6 +3492,7 @@ if (!fileDaCaricare) {
         function resetDeck() {
             activeCards = [...initialCards];
             currentCardIndex = 0;
+            fcEsitiSessione = {};
             document.getElementById('win-screen').style.display = 'none';
             document.getElementById('fc-start-screen').style.display = 'block';
             document.getElementById('fc-game-screen').style.display = 'none';
@@ -3496,6 +3501,7 @@ if (!fileDaCaricare) {
         // Avvia un ripasso mirato (chiamato dall'hub) riusando il mazzo in pagina.
         window.startReviewWith = function (carte) {
             if (!carte || carte.length === 0) return;
+            fcEsitiSessione = {};
             activeCards = carte.map(c => ({ front: c.front, back: c.back }));
             initialCards = [...activeCards];
             currentCardIndex = 0;
@@ -3664,6 +3670,40 @@ if (!fileDaCaricare) {
         // Se la rete fallisce, tutto resta in italiano senza errori.
         // =========================================================================
         const UMS_STRINGS = [
+            'Da ripassare',
+            'Nessuna carta in scadenza oggi — ottimo!',
+            'carte da ripassare oggi',
+            'carta da ripassare oggi',
+            'Come funziona il ripasso?',
+            'Nascondi spiegazione',
+            'Il ripasso a intervalli (spaced repetition) è il metodo di studio più efficace mai misurato. L\'idea è semplice: invece di rileggere tutto insieme, rivedi ogni concetto poco prima di dimenticarlo.',
+            'Ogni volta che segni una carta come “La so”, la rivedrai più in là nel tempo (dopo 1 giorno, poi 3, 7, 16, 35...). Se invece la sbagli, torna presto. Così le cose che sai già non ti fanno perdere tempo, e quelle difficili le fissi davvero.',
+            'Bastano pochi minuti al giorno per ricordare a lungo termine, con molta meno fatica del ripasso “tutto in una volta”.',
+            'Non hai ancora salvato nessun ripasso.',
+            'Prova le flashcard di una lezione: ogni risposta si salva da sola.',
+            'da ripassare',
+            'totali',
+            'Ripassa tutte',
+            'Solo sbagliate',
+            'Elimina questo mazzo',
+            'Eliminare il ripasso di',
+            'Le carte non ti verranno più riproposte.',
+            'carta pronta ora',
+            'carte pronte ora',
+            'prossimo ripasso domani',
+            'prossimo ripasso a breve',
+            'prossimo ripasso tra',
+            'giorni',
+            'Rimaste:',
+            'Tocca la carta per vedere la risposta',
+            'Torna all\'elenco',
+            'Ripasso dopo',
+            'La so!',
+            'Ripasso completato!',
+            'Hai ripassato',
+            'carta',
+            'carte',
+            'Ti riproporremo quelle giuste più in là, e quelle sbagliate molto presto.',
             'Concetto rimosso.',
             'Nessun concetto da esportare.',
             'Apertura finestra di stampa...',
@@ -3695,18 +3735,32 @@ if (!fileDaCaricare) {
         function umsT(s) {
             return umsDict[s] || s;
         }
+        window.umsT = umsT;
+        window.umsIsItalian = function () { return Object.keys(umsDict).length === 0; };
 
         async function umsBuildDict(lang) {
             umsDict = {};
             if (lang === 'it') return;
             const strings = UMS_STRINGS.concat(wsBaseWords.map(w => w.toLowerCase()));
-            const q = encodeURIComponent(strings.join('\n'));
-            const res = await fetch('https://translate.googleapis.com/translate_a/single?client=gtx&sl=it&tl=' + encodeURIComponent(lang) + '&dt=t&q=' + q);
-            if (!res.ok) throw new Error('translate http ' + res.status);
-            const data = await res.json();
-            const out = (data[0] || []).map(seg => seg[0]).join('').split('\n');
-            if (out.length !== strings.length) throw new Error('translate: righe disallineate');
-            strings.forEach((s, i) => { umsDict[s] = (out[i] || '').trim() || s; });
+            // A BLOCCHI: una singola richiesta con troppe frasi supera il limite
+            // di lunghezza dell'URL e fallisce in silenzio (dizionario vuoto =
+            // toast e sezioni in italiano). Blocchi da ~1400 caratteri.
+            const blocchi = [];
+            let cur = [], len = 0;
+            for (const s of strings) {
+                if (len + s.length > 1400 && cur.length) { blocchi.push(cur); cur = []; len = 0; }
+                cur.push(s); len += s.length + 1;
+            }
+            if (cur.length) blocchi.push(cur);
+            for (const blocco of blocchi) {
+                const q = encodeURIComponent(blocco.join('\n'));
+                const res = await fetch('https://translate.googleapis.com/translate_a/single?client=gtx&sl=it&tl=' + encodeURIComponent(lang) + '&dt=t&q=' + q);
+                if (!res.ok) throw new Error('translate http ' + res.status);
+                const data = await res.json();
+                const out = (data[0] || []).map(seg => seg[0]).join('').split('\n');
+                if (out.length !== blocco.length) throw new Error('translate: righe disallineate');
+                blocco.forEach((s, i) => { umsDict[s] = (out[i] || '').trim() || s; });
+            }
             console.log('[UMS i18n] dizionario pronto per', lang, '(' + strings.length + ' voci)');
         }
 
@@ -5486,7 +5540,7 @@ if (!fileDaCaricare) {
             width: 100%; color: #1C1C22; margin: 0;
         }
         .urv-front h2{ font-family: var(--font-display,'Playfair Display',serif); font-size: 1.15rem; line-height: 1.3; }
-        .urv-back p{ font-size: .86rem; text-align: left; line-height: 1.55; white-space: pre-line; overflow-y: auto; max-height: 82%; }
+        .urv-back p{ font-size: .86rem; text-align: left; line-height: 1.55; white-space: pre-line; overflow-y: auto; max-height: 82%; -webkit-overflow-scrolling: touch; touch-action: pan-y; pointer-events: auto; }
         .urv-hint{ font-size: .72rem; color: var(--sub,#5f5c55); text-align: center; margin: 8px 0 12px; }
         .urv-actions{ display: flex; gap: 8px; }
         .urv-btn{ flex: 1; padding: 12px; font-size: .9rem; font-weight: 700; cursor: pointer; border-radius: 12px; border: none; font-family: var(--font-body,'DM Sans',sans-serif); }
@@ -5795,10 +5849,10 @@ if (!fileDaCaricare) {
                 materie.forEach(m => gruppi[m].forEach(l => totDovute += l.dovute));
                 if (materie.length === 0) {
                     fcSub.textContent = '';
-                    fcList.innerHTML = '<div class="ums-fc-empty">Non hai ancora salvato nessun ripasso.<br>Prova le flashcard di una lezione e salvale a fine mazzo.</div>';
+                    fcList.innerHTML = '<div class="ums-fc-empty">' + T('Non hai ancora salvato nessun ripasso.') + '<br>' + T('Prova le flashcard di una lezione: ogni risposta si salva da sola.') + '</div>';
                     return;
                 }
-                fcSub.textContent = totDovute > 0 ? (totDovute + ' carte da ripassare oggi') : 'Nessuna carta in scadenza oggi \u2014 ottimo!';
+                fcSub.textContent = totDovute > 0 ? (totDovute + ' ' + T(totDovute === 1 ? 'carta da ripassare oggi' : 'carte da ripassare oggi')) : T('Nessuna carta in scadenza oggi — ottimo!');
                 materie.forEach(mat => {
                     const hMat = document.createElement('div');
                     hMat.className = 'ums-fc-mat'; hMat.textContent = mat;
@@ -5810,14 +5864,14 @@ if (!fileDaCaricare) {
                             '<div class="ums-fc-lez-top">' +
                                 '<div>' +
                                     '<div class="ums-fc-lez-nome"></div>' +
-                                    '<div class="ums-fc-lez-conta">' + l.dovute + ' da ripassare \u00b7 ' + l.totale + ' totali</div>' +
+                                    '<div class="ums-fc-lez-conta">' + l.dovute + ' ' + T('da ripassare') + ' \u00b7 ' + l.totale + ' ' + T('totali') + '</div>' +
                                     '<div class="ums-fc-count">' + (typeof srCountdownTesto === 'function' ? srCountdownTesto(l.lk) : '') + '</div>' +
                                 '</div>' +
-                                '<button class="ums-fc-del" type="button" title="Elimina questo mazzo" aria-label="Elimina questo mazzo"><svg class="ums-ic" aria-hidden="true"><use href="#ic-x"/></svg></button>' +
+                                '<button class="ums-fc-del" type="button" title="' + T('Elimina questo mazzo') + '" aria-label="' + T('Elimina questo mazzo') + '"><svg class="ums-ic" aria-hidden="true"><use href="#ic-x"/></svg></button>' +
                             '</div>' +
                             '<div class="ums-fc-actions">' +
-                                '<button class="ums-fc-run primary run-all" type="button">Ripassa tutte</button>' +
-                                '<button class="ums-fc-run wrong run-wrong" type="button"' + (l.sbagliate === 0 ? ' disabled' : '') + '>Solo sbagliate (' + l.sbagliate + ')</button>' +
+                                '<button class="ums-fc-run primary run-all" type="button">' + T('Ripassa tutte') + '</button>' +
+                                '<button class="ums-fc-run wrong run-wrong" type="button"' + (l.sbagliate === 0 ? ' disabled' : '') + '>' + T('Solo sbagliate') + ' (' + l.sbagliate + ')</button>' +
                             '</div>';
                         box.querySelector('.ums-fc-lez-nome').textContent = l.titolo;
                         box.querySelector('.run-all').addEventListener('click', () => fcAvviaRipasso(l.lk, false));
@@ -5829,7 +5883,7 @@ if (!fileDaCaricare) {
             }
 
             function fcEliminaMazzo(lk, titolo) {
-                if (!confirm('Eliminare il ripasso di "' + titolo + '"? Le carte non ti verranno pi\u00f9 riproposte.')) return;
+                if (!confirm(T('Eliminare il ripasso di') + ' "' + titolo + '"? ' + T('Le carte non ti verranno più riproposte.'))) return;
                 const db = (typeof srCaricaTutto === 'function') ? srCaricaTutto() : {};
                 delete db[lk];
                 if (typeof srSalvaTutto === 'function') srSalvaTutto(db);
@@ -5846,6 +5900,7 @@ if (!fileDaCaricare) {
             let urvLk = null;       // lezione in ripasso
             let urvVisti = {};      // front -> true : già dato il PRIMO esito (quello che conta)
             let urvTot = 0, urvFatte = 0;
+            const T = (s) => (window.umsT ? window.umsT(s) : s);
             const stage = document.getElementById('ums-review-stage');
             const urvWrap = document.getElementById('urv-wrapper');
             const urvFront = document.getElementById('urv-front-text');
@@ -5881,7 +5936,7 @@ if (!fileDaCaricare) {
                 urvWrap.classList.remove('flipped');
                 urvActions.hidden = true;
                 urvHint.style.display = 'block';
-                urvCount.textContent = 'Rimaste: ' + urvCoda.length;
+                urvCount.textContent = T('Rimaste:') + ' ' + urvCoda.length;
                 setTimeout(() => { urvFront.textContent = card.front; urvBack.textContent = card.back; }, 120);
             }
             function urvFlip() {
@@ -5904,7 +5959,7 @@ if (!fileDaCaricare) {
                 urvActions.hidden = true; urvHint.style.display = 'none';
                 urvWrap.parentElement && (urvWrap.style.display = 'none');
                 urvDone.hidden = false;
-                urvDoneText.textContent = 'Hai ripassato ' + urvTot + (urvTot === 1 ? ' carta.' : ' carte.') + ' Ti riproporremo quelle giuste piu in la, e quelle sbagliate molto presto.';
+                urvDoneText.textContent = T('Hai ripassato') + ' ' + urvTot + ' ' + T(urvTot === 1 ? 'carta' : 'carte') + '. ' + T('Ti riproporremo quelle giuste più in là, e quelle sbagliate molto presto.');
                 if (typeof srAggiornaBadge === 'function') srAggiornaBadge();
             }
             function urvChiudiStage() {
@@ -5917,6 +5972,9 @@ if (!fileDaCaricare) {
                 fcRenderHub();
             }
             urvWrap.addEventListener('click', urvFlip);
+            // Il testo della risposta si può scorrere e toccare senza ribaltare la carta
+            urvBack.addEventListener('click', (e) => e.stopPropagation());
+            urvBack.addEventListener('touchmove', (e) => e.stopPropagation());
             document.getElementById('urv-si').addEventListener('click', (e) => { e.stopPropagation(); urvRispondi('known'); });
             document.getElementById('urv-no').addEventListener('click', (e) => { e.stopPropagation(); urvRispondi('unknown'); });
             document.getElementById('urv-back').addEventListener('click', urvChiudiStage);
@@ -5926,9 +5984,37 @@ if (!fileDaCaricare) {
             const fcHowBox = document.getElementById('ums-fc-howbox');
             if (fcHow && fcHowBox) fcHow.addEventListener('click', () => {
                 fcHowBox.hidden = !fcHowBox.hidden;
-                fcHow.textContent = fcHowBox.hidden ? 'Come funziona il ripasso?' : 'Nascondi spiegazione';
+                fcHow.textContent = fcHowBox.hidden ? T('Come funziona il ripasso?') : T('Nascondi spiegazione');
             });
-            const fcOpen = () => { fcRenderHub(); fcOverlay.classList.add('show'); fcClose.focus(); };
+            const FC_HOW_PLAIN = [
+                'Il ripasso a intervalli (spaced repetition) è il metodo di studio più efficace mai misurato. L\'idea è semplice: invece di rileggere tutto insieme, rivedi ogni concetto poco prima di dimenticarlo.',
+                'Ogni volta che segni una carta come “La so”, la rivedrai più in là nel tempo (dopo 1 giorno, poi 3, 7, 16, 35...). Se invece la sbagli, torna presto. Così le cose che sai già non ti fanno perdere tempo, e quelle difficili le fissi davvero.',
+                'Bastano pochi minuti al giorno per ricordare a lungo termine, con molta meno fatica del ripasso “tutto in una volta”.'
+            ];
+            let fcHowHtmlOrig = null;
+            function fcApplicaTraduzioni() {
+                fcOverlay.querySelector('.ums-fc-title').textContent = T('Da ripassare');
+                const how = document.getElementById('ums-fc-how');
+                if (how) how.textContent = (fcHowBox && !fcHowBox.hidden) ? T('Nascondi spiegazione') : T('Come funziona il ripasso?');
+                const ps = fcHowBox ? fcHowBox.querySelectorAll('p') : [];
+                if (ps.length && !fcHowHtmlOrig) fcHowHtmlOrig = Array.from(ps).map(el => el.innerHTML);
+                const italiano = (typeof window.umsIsItalian === 'function') ? window.umsIsItalian() : true;
+                ps.forEach((el, i) => {
+                    if (italiano && fcHowHtmlOrig) el.innerHTML = fcHowHtmlOrig[i];
+                    else el.textContent = T(FC_HOW_PLAIN[i] || '');
+                });
+                const hint = document.getElementById('urv-hint');
+                if (hint) hint.textContent = T('Tocca la carta per vedere la risposta');
+                const bNo = document.getElementById('urv-no'); if (bNo) bNo.textContent = T('Ripasso dopo');
+                const bSi = document.getElementById('urv-si'); if (bSi) bSi.textContent = T('La so!');
+                const bBack = document.getElementById('urv-back');
+                if (bBack) bBack.innerHTML = '<svg class="ums-ic" aria-hidden="true"><use href="#ic-x"/></svg> ' + T("Torna all'elenco");
+                const dTitle = urvDone ? urvDone.querySelector('h3') : null;
+                if (dTitle) dTitle.textContent = T('Ripasso completato!');
+                const dBack = document.getElementById('urv-done-back');
+                if (dBack) dBack.textContent = T("Torna all'elenco");
+            }
+            const fcOpen = () => { fcApplicaTraduzioni(); fcRenderHub(); fcOverlay.classList.add('show'); fcClose.focus(); };
             const fcCloseFn = () => { if (stage.classList.contains('on')) urvChiudiStage(); fcOverlay.classList.remove('show'); fcBtn.focus(); };
             fcBtn.addEventListener('click', fcOpen);
             fcClose.addEventListener('click', fcCloseFn);
