@@ -1816,13 +1816,6 @@
         }
 
         /* PUNTO 5 — selettore lingua tipografico + sizing icone */
-        .lang-options button {
-            font-family: var(--font-body);
-            font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em;
-            color: var(--navy); padding: 9px 4px;
-        }
-        .lang-options button:hover { transform: none; background: rgba(200,169,110,0.12); }
-        .night-mode .lang-options button { color: #8FB4E8; }
         #lang-arrow { display: inline-flex; vertical-align: middle; transition: transform 0.25s ease; }
         #lang-arrow.ums-open { transform: rotate(180deg); }
         #lang-arrow .ums-ic { width: 0.9em; height: 0.9em; }
@@ -1833,6 +1826,7 @@
         .ums-nav-btn .ums-ic { width: 22px; height: 22px; }
         .btn-flip-mobile .ums-ic { width: 1em; height: 1em; vertical-align: -2px; }
         .sol-redeal .ums-ic { width: 1em; height: 1em; }
+        #fc-start-screen .flashcard-front h2 { text-align: center; }
 
         /* PUNTO 8 — palette editoriale sugli ultimi residui pop */
         .toast-retry {
@@ -1947,22 +1941,22 @@
                 <span id="lang-label"><svg class="ums-ic" aria-hidden="true"><use href="#ic-globe"/></svg> Lingua</span> <small id="lang-arrow"><svg class="ums-ic" aria-hidden="true"><use href="#ic-chevron-down"/></svg></small>
             </button>
             <div class="lang-options" id="lang-options-menu">
-                <button onclick="triggerTranslation('it', this)" title="Italiano" class="active-lang">IT</button>
-                <button onclick="triggerTranslation('en', this)" title="English">EN</button>
-                <button onclick="triggerTranslation('fr', this)" title="Français">FR</button>
-                <button onclick="triggerTranslation('de', this)" title="Deutsch">DE</button>
-                <button onclick="triggerTranslation('es', this)" title="Español">ES</button>
-                <button onclick="triggerTranslation('bg', this)" title="Български">BG</button>
-                <button onclick="triggerTranslation('pl', this)" title="Polski">PL</button>
-                <button onclick="triggerTranslation('el', this)" title="Ελληνικά">EL</button>
-                <button onclick="triggerTranslation('lt', this)" title="Lietuvių">LT</button>
-                <button onclick="triggerTranslation('da', this)" title="Dansk">DA</button>
-                <button onclick="triggerTranslation('pt', this)" title="Português">PT</button>
-                <button onclick="triggerTranslation('zh-CN', this)" title="中文">ZH</button>
-                <button onclick="triggerTranslation('ar', this)" title="العربية">AR</button>
-                <button onclick="triggerTranslation('hi', this)" title="हिन्दी">HI</button>
-                <button onclick="triggerTranslation('ru', this)" title="Русский">RU</button>
-                <button onclick="triggerTranslation('ja', this)" title="日本語">JA</button>
+                <button onclick="triggerTranslation('it', this)" title="Italiano" class="active-lang">🇮🇹</button>
+                <button onclick="triggerTranslation('en', this)" title="English">🇬🇧</button>
+                <button onclick="triggerTranslation('fr', this)" title="Français">🇫🇷</button>
+                <button onclick="triggerTranslation('de', this)" title="Deutsch">🇩🇪</button>
+                <button onclick="triggerTranslation('es', this)" title="Español">🇪🇸</button>
+                <button onclick="triggerTranslation('bg', this)" title="Български">🇧🇬</button>
+                <button onclick="triggerTranslation('pl', this)" title="Polski">🇵🇱</button>
+                <button onclick="triggerTranslation('el', this)" title="Ελληνικά">🇬🇷</button>
+                <button onclick="triggerTranslation('lt', this)" title="Lietuvių">🇱🇹</button>
+                <button onclick="triggerTranslation('da', this)" title="Dansk">🇩🇰</button>
+                <button onclick="triggerTranslation('pt', this)" title="Português">🇵🇹</button>
+                <button onclick="triggerTranslation('zh-CN', this)" title="中文">🇨🇳</button>
+                <button onclick="triggerTranslation('ar', this)" title="العربية">🇸🇦</button>
+                <button onclick="triggerTranslation('hi', this)" title="हिन्दी">🇮🇳</button>
+                <button onclick="triggerTranslation('ru', this)" title="Русский">🇷🇺</button>
+                <button onclick="triggerTranslation('ja', this)" title="日本語">🇯🇵</button>
             </div>
         </div>
     </header>
