@@ -1906,6 +1906,7 @@
         <symbol id="ic-arrow-right" viewBox="0 0 24 24"><path d="M4 12h16"/><path d="m13 5 7 7-7 7"/></symbol>
         <symbol id="ic-rotate" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></symbol>
         <symbol id="ic-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></symbol>
+        <symbol id="ic-share" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></symbol>
     </svg>
 
 
@@ -2196,8 +2197,6 @@
                                         <div id="smart-whiteboard">
                                             <div class="wb-header">
                                                 <span class="wb-title"><svg class="ums-ic" aria-hidden="true"><use href="#ic-pen"/></svg> Lavagna Concetti</span>
-                                                <!-- UPGRADE — pulsante ingrandisci/ripristina (stile finestra browser) -->
-                                                <button id="wb-expand-btn" class="wb-expand-btn" onclick="wbToggleExpand()" title="Ingrandisci lavagna" aria-label="Ingrandisci lavagna">▢</button>
                                             </div>
                                             <div class="wb-body-wrap">
                                                 <div class="wb-body" id="wb-body"></div>
@@ -2208,7 +2207,7 @@
                                             </div>
                                             <!-- Footer con bottoni sempre visibili in basso -->
                                             <div class="wb-footer">
-                                                <button class="wb-btn" onclick="wbMinimize()">Riduci</button>
+                                                <button class="wb-btn" onclick="wbShare()"><svg class="ums-ic" aria-hidden="true"><use href="#ic-share"/></svg> Condividi</button>
                                                 <button class="wb-btn wb-btn-pdf" onclick="wbExportPDF()"><svg class="ums-ic" aria-hidden="true"><use href="#ic-printer"/></svg> Stampa / PDF</button>
                                             </div>
                                         </div>
@@ -2545,21 +2544,19 @@
         // TASK 4 — Smart Whiteboard helpers
         // =========================================================================
         function wbMinimize() {
-            // UPGRADE — se la lavagna era ingrandita, torna alle dimensioni normali
-            if (document.getElementById('smart-whiteboard').classList.contains('wb-expanded')) wbToggleExpand();
             document.getElementById('smart-whiteboard').classList.remove('wb-visible');
             document.getElementById('wb-section-banner').style.display = 'block';
-            document.getElementById('wb-badge').style.display = 'block';
+            document.getElementById('wb-badge').style.display = 'none';
             document.getElementById('wb-badge-count').textContent = wbCount;
         }
 
         // FIX 6 — questa funzione veniva chiamata dal pulsante "✕ Rimuovi" ma non esisteva:
         // rimuovere un'evidenziazione con la lavagna ridotta mandava il codice in errore
         function wbUpdateBadge() {
-            const badge = document.getElementById('wb-badge');
+            // Lavagna aperta quando ha contenuto; pinguini quando è vuota
             document.getElementById('wb-badge-count').textContent = wbCount;
-            const wbVisible = document.getElementById('smart-whiteboard').classList.contains('wb-visible');
-            badge.style.display = (wbCount > 0 && !wbVisible) ? 'block' : 'none';
+            document.getElementById('wb-badge').style.display = 'none';
+            if (wbCount > 0) { wbMaximize(); } else { wbMinimize(); }
         }
 
         // UPGRADE — ingrandisci/ripristina la lavagna (pulsante quadrato nell'header)
@@ -2632,8 +2629,9 @@
                         inp.style.height = inp.scrollHeight + 'px';
                     }
                 });
-                // Non spalancare la lavagna all'apertura: mostra il banner col badge conteggio
-                if (wbCount > 0) wbMinimize();
+                // I pinguini restano solo finché la lavagna è vuota:
+                // se ci sono concetti salvati, la lavagna si apre da sola
+                if (wbCount > 0) wbMaximize();
             } catch(e) {}
         }
 
@@ -2740,10 +2738,9 @@
             umsPersistState(); // FIX 2
         }
 
-        function wbExportPDF() {
-            if (wbCount === 0) { showToast('Nessun concetto da esportare.', 'retry'); return; }
+        // Costruisce il foglio editoriale (riusato da Stampa E Condividi)
+        function wbSheetHTML() {
             
-            showToast('Apertura finestra di stampa...', 'success');
 
             // UPGRADE — la stampa ora ha lo stile editoriale di Una Mano Spensierata
             // (SEMPRE in versione giorno: la notturna consumerebbe troppo inchiostro)
@@ -2856,6 +2853,13 @@
                     </div>
                 </div>`;
 
+            return printContents;
+        }
+
+        function wbExportPDF() {
+            if (wbCount === 0) { showToast('Nessun concetto da esportare.', 'retry'); return; }
+            showToast('Apertura finestra di stampa...', 'success');
+            const printContents = wbSheetHTML();
             const iframe = document.createElement('iframe');
             iframe.style.position = 'fixed';
             iframe.style.right = '0';
@@ -2883,6 +2887,54 @@
             doc.close();
 
             setTimeout(() => { document.body.removeChild(iframe); }, 10000);
+        }
+
+        // CONDIVISIONE — genera un vero PDF e apre il pannello del sistema
+        // (WhatsApp, Telegram, mail...). La libreria si carica solo al primo
+        // uso, così non pesa sul caricamento della pagina.
+        let umsH2pPromise = null;
+        function umsCaricaH2p() {
+            if (window.html2pdf) return Promise.resolve();
+            if (!umsH2pPromise) umsH2pPromise = new Promise((ok, ko) => {
+                const sc = document.createElement('script');
+                sc.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
+                sc.onload = ok; sc.onerror = ko;
+                document.head.appendChild(sc);
+            });
+            return umsH2pPromise;
+        }
+        function wbShare() {
+            if (wbCount === 0) { showToast('Nessun concetto da condividere.', 'retry'); return; }
+            showToast('Preparo il PDF...', 'success');
+            umsCaricaH2p().then(() => {
+                const host = document.createElement('div');
+                host.style.cssText = 'position:fixed;left:-10000px;top:0;width:794px;background:#fff;';
+                host.innerHTML = wbSheetHTML();
+                const bg = host.querySelector('img');
+                if (bg) bg.remove(); // lo sfondo "fixed" non è gestito da html2canvas
+                document.body.appendChild(host);
+                const nome = 'lavagna-' + String(umsLessonKey || 'ums').replace(/[^a-z0-9]+/gi, '-') + '.pdf';
+                return html2pdf().set({
+                    margin: [10, 8],
+                    filename: nome,
+                    html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
+                    jsPDF: { unit: 'mm', format: 'a4' },
+                    pagebreak: { mode: ['css', 'legacy'] }
+                }).from(host).outputPdf('blob').then(blob => {
+                    document.body.removeChild(host);
+                    const file = new File([blob], nome, { type: 'application/pdf' });
+                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                        return navigator.share({ files: [file], title: 'Lavagna Concetti — Una Mano Spensierata' }).catch(() => {});
+                    }
+                    // Niente pannello di condivisione (tipico su PC): scarico il PDF
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url; a.download = nome;
+                    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+                    setTimeout(() => URL.revokeObjectURL(url), 4000);
+                    showToast('PDF scaricato: condividilo da lì!', 'success');
+                });
+            }).catch(() => showToast('Non riesco a preparare il PDF, riprova.', 'retry'));
         }
         // =========================================================================
         // FIX CAPOLETTERA — applicato SOLO alla prima vera lettera del primo
@@ -7038,23 +7090,25 @@ if (!fileDaCaricare) {
          solo il pagamento apre Buy Me a Coffee in una nuova scheda.
     ================================================================ -->
     <style id="ums-sostieni-style">
+        /* Riga Inizia + Sostieni: stessa identica geometria dell'index
+           (pillole affiancate e centrate; Inizia è già pillola via app-align) */
         .ums-master-row{
-            display: flex; align-items: stretch; gap: 12px;
+            display: flex; align-items: center; justify-content: center;
+            gap: 12px; flex-wrap: nowrap;
         }
-        .ums-master-row .master-header{ flex: 1; }
         #ums-sostieni{
             display: inline-flex; align-items: center; justify-content: center; gap: 10px;
             background: var(--gold); color: #2A2113;
-            border: none; border-radius: var(--r-lg);
-            padding: 1.4rem 1.4rem;
+            border: none; border-radius: 999px;
+            padding: 1.05rem 1.6rem;
             font-family: var(--font-body);
             font-size: 0.82rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
-            cursor: pointer; box-shadow: 0 6px 24px rgba(200,169,110,0.3);
+            cursor: pointer; box-shadow: 0 10px 30px rgba(200,169,110,0.35);
             transition: transform 0.25s cubic-bezier(.2,.8,.2,1), box-shadow 0.25s, background-color 0.25s;
             width: 15.5rem; min-width: 15.5rem; flex-shrink: 0;
         }
-        #ums-sostieni:hover{ transform: translateY(-2px); box-shadow: 0 10px 32px rgba(200,169,110,0.42); background: var(--gold-lt); }
-        #ums-sostieni:active{ transform: translateY(0); }
+        #ums-sostieni:hover{ transform: translateY(-3px); box-shadow: 0 16px 40px rgba(200,169,110,0.45); background: var(--gold-lt); }
+        #ums-sostieni:active{ transform: translateY(-1px); }
         #ums-sostieni .ums-cup{
             width: 17px; height: 17px; flex-shrink: 0;
             stroke: currentColor; fill: none; stroke-width: 1.8;
@@ -7063,9 +7117,10 @@ if (!fileDaCaricare) {
         #ums-sostieni-label{ white-space: nowrap; transition: opacity 0.35s ease, font-size 0.2s ease; }
         #ums-sostieni-label.ums-fade{ opacity: 0; }
         .night-mode #ums-sostieni{ background: var(--gold); color: #2A2113; }
-        @media (max-width: 760px){
-            .ums-master-row{ flex-direction: column; }
-            #ums-sostieni{ width: 100%; min-width: 0; padding: 1.05rem 1.2rem; }
+        @media (max-width: 640px){
+            .ums-master-row{ flex-direction: column; align-items: center; gap: 10px; }
+            .ums-master-row .master-header{ width: 15.5rem !important; }
+            #ums-sostieni{ width: 15.5rem; }
         }
         @media (prefers-reduced-motion: reduce){ #ums-sostieni-label{ transition: none; } }
 
@@ -7145,8 +7200,7 @@ if (!fileDaCaricare) {
             'Offrimi un caffè!',
             'Fai studiare anche loro',
             'Un caffè alla volta...',
-            'Finanzia il diritto allo studio',
-            '🎉🎉🎉'
+            'Finanzia il diritto allo studio'
         ];
         const btn = document.getElementById('ums-sostieni');
         const label = document.getElementById('ums-sostieni-label');
@@ -7173,15 +7227,7 @@ if (!fileDaCaricare) {
             adattaScritta();
             if (document.fonts && document.fonts.ready) document.fonts.ready.then(adattaScritta);
             window.addEventListener('resize', adattaScritta);
-            setInterval(function () {
-                label.classList.add('ums-fade');
-                setTimeout(function () {
-                    i = (i + 1) % SCRITTE.length;
-                    label.textContent = T(SCRITTE[i]);
-                    adattaScritta();
-                    label.classList.remove('ums-fade');
-                }, 350);
-            }, 4500);
+            // Niente rotazione: una frase a caso per apertura, e resta quella.
         }
 
         const ov = document.createElement('div');
@@ -7237,6 +7283,91 @@ if (!fileDaCaricare) {
             });
         });
         window.umsApriSostegno = apri;
+    })();
+    </script>
+    <!-- ================================================================
+         RITOCCHI — BLOCCO ADDITIVO
+         1) Lavagna: grande di default (via ingrandisci/riduci)
+         2) Chip fissa "Lavagna": indica dov'è e ci porta al click
+         3) Giochi Pausa a tutta larghezza su mobile (celle più grandi)
+         4) Splash mobile: blocco vero dello scroll (iOS ignorava
+            overflow:hidden e il titolo fisso "seguiva" il dito)
+    ================================================================ -->
+    <style id="ums-ritocchi-style">
+        /* 1) lavagna sempre grande */
+        #smart-whiteboard{ height: 520px; }
+        @media (max-height: 720px){ #smart-whiteboard{ height: 68vh; } }
+        @media (max-width: 600px){ #smart-whiteboard{ height: 62vh; } }
+        .wb-expand-btn{ display: none !important; }
+
+        /* 2) chip fissa che porta alla lavagna */
+        #ums-wb-chip{
+            position: fixed; bottom: 24px; left: 24px; z-index: 9999997;
+            display: none; align-items: center; gap: 8px;
+            background: var(--gold); color: #2A2113;
+            border: none; border-radius: 999px; padding: 10px 18px;
+            font-family: var(--font-body); font-size: 0.74rem; font-weight: 700;
+            letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer;
+            box-shadow: 0 10px 28px rgba(0,0,0,0.25);
+        }
+        #ums-wb-chip.show{ display: inline-flex; }
+        #ums-wb-chip .ums-ic{ width: 1em; height: 1em; }
+        #ums-wb-chip:hover{ background: var(--gold-lt); }
+        @media (max-width: 600px){ #ums-wb-chip{ bottom: 88px; left: 14px; padding: 9px 15px; } }
+
+        /* 3) giochi Pausa su mobile: a tutta larghezza, celle e numeri più grandi */
+        @media (max-width: 600px){
+            .pausa-wordsearch{
+                margin-left: -1.5rem; margin-right: -1.5rem;
+                padding-left: 0.45rem; padding-right: 0.45rem;
+            }
+            .ws-grid-wrap{ max-width: none; }
+            .ws-cell{ font-size: clamp(0.72rem, 3.6vw, 1.05rem); }
+            .ws-word-tag{ font-size: 0.74rem; padding: 5px 11px; }
+            .sd-wrap{ max-width: none; margin-left: -0.5rem; margin-right: -0.5rem; width: auto; }
+            .sd-cell{ font-size: clamp(1rem, 4.8vw, 1.4rem); }
+            .sd-pad button{ width: 46px; height: 46px; font-size: 1.1rem; }
+        }
+
+        /* 4) splash: scroll bloccato davvero anche su iOS */
+        @media (max-width: 900px){
+            body:not(.ums-master-open){ position: fixed; inset: 0; width: 100%; }
+        }
+    </style>
+
+    <script id="ums-ritocchi-script">
+    (function () {
+        // La lavagna si apre da sola alla prima sottolineatura
+        const orig = window.wbAddEntry;
+        if (typeof orig === 'function') {
+            window.wbAddEntry = function (t, c, id) {
+                const r = orig(t, c, id);
+                try { wbMaximize(); } catch (e) {}
+                return r;
+            };
+        }
+
+        // Chip "Lavagna": compare quando la lavagna è aperta ma fuori schermo
+        const wb = document.getElementById('smart-whiteboard');
+        if (!wb || !('IntersectionObserver' in window)) return;
+        const chip = document.createElement('button');
+        chip.id = 'ums-wb-chip';
+        chip.type = 'button';
+        chip.setAttribute('aria-label', 'Vai alla Lavagna Concetti');
+        chip.innerHTML = '<svg class="ums-ic" aria-hidden="true"><use href="#ic-pen"/></svg> ' + (window.umsT ? window.umsT('Lavagna') : 'Lavagna');
+        document.body.appendChild(chip);
+        chip.addEventListener('click', function () {
+            wb.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+        let inVista = false;
+        function aggiorna() {
+            chip.classList.toggle('show', wb.classList.contains('wb-visible') && !inVista);
+        }
+        new IntersectionObserver(function (voci) {
+            inVista = voci[0].isIntersecting;
+            aggiorna();
+        }, { threshold: 0.05 }).observe(wb);
+        new MutationObserver(aggiorna).observe(wb, { attributes: true, attributeFilter: ['class'] });
     })();
     </script>
 </body>
