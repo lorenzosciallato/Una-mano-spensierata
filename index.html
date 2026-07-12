@@ -308,8 +308,8 @@ body.app-mode #appview{opacity:1; transform:translateY(0); pointer-events:auto;}
 .subj-card:hover .subj-glyph{color:var(--gold); transform:rotate(15deg);}
 .subj-body{flex:1; min-width:0;}
 .subj-name{font-family:var(--font-display); font-weight:700; font-size:1.05rem;
-  color:var(--ink); line-height:1.25;}
-.subj-meta{font-size:.63rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--sub); margin-top:1px;}
+  color:var(--ink); line-height:1.25; display:block;}
+.subj-meta{font-size:.63rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--sub); margin-top:3px; display:block; white-space:nowrap;}
 .subj-chevron{color:var(--mist); flex-shrink:0; transition:transform .2s var(--ease), color .2s;}
 .subj-chevron svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
 .subj-card:hover .subj-chevron{color:var(--gold-dk); transform:translateX(3px);}
@@ -574,7 +574,7 @@ body.instant #appview, body.instant #topbar, body.instant #top-controls{transiti
 
   <div class="disclaimer-card">
     <h3>Tutela del diritto d'autore e limitazione di responsabilità</h3>
-    <p>Tutti i materiali didattici presenti all'interno del portale Una Mano Spensierata (inclusi, a titolo esemplificativo e non esaustivo: riassunti, schemi, mappe concettuali, flashcard e quiz) costituiscono una rielaborazione personale, critica e originale degli appunti universitari. Tali contenuti sono realizzati e condivisi esclusivamente per finalità didattiche, di studio e di mutuo soccorso accademico, ai sensi e nel pieno rispetto dell'Art. 70 della Legge 22 aprile 1941 n. 633 in materia di protezione del diritto d'autore. I materiali presenti sulla piattaforma hanno natura puramente integrativa e non intendono in alcun modo porsi come sostitutivi dei libri di testo ufficiali, delle dispense fornite dai docenti o della frequenza alle lezioni frontali. Si dichiara espressamente l'assenza di riproduzioni pedisseque, integrali o non autorizzate di opere intellettuali protette da copyright di terzi. L'utente fruitore solleva i gestori della piattaforma da qualsivoglia responsabilità derivante da un uso improprio del materiale fornito.</p>
+    <p>Tutti i materiali didattici presenti all'interno del portale <span class="notranslate" translate="no">Una Mano Spensierata</span> (inclusi, a titolo esemplificativo e non esaustivo: riassunti, schemi, mappe concettuali, flashcard e quiz) costituiscono una rielaborazione personale, critica e originale degli appunti universitari. Tali contenuti sono realizzati e condivisi esclusivamente per finalità didattiche, di studio e di mutuo soccorso accademico, ai sensi e nel pieno rispetto dell'Art. 70 della Legge 22 aprile 1941 n. 633 in materia di protezione del diritto d'autore. I materiali presenti sulla piattaforma hanno natura puramente integrativa e non intendono in alcun modo porsi come sostitutivi dei libri di testo ufficiali, delle dispense fornite dai docenti o della frequenza alle lezioni frontali. Si dichiara espressamente l'assenza di riproduzioni pedisseque, integrali o non autorizzate di opere intellettuali protette da copyright di terzi. L'utente fruitore solleva i gestori della piattaforma da qualsivoglia responsabilità derivante da un uso improprio del materiale fornito.</p>
     <h3>Aiutami a tenere in ordine la piattaforma! 🛠️</h3>
     <p>Ciao! Come sai, costruisco, aggiorno e mantengo questo sito interamente da solo. Se incappi in un refuso, in un link che non funziona, o se ti accorgi che l'audio del podcast sta dicendo qualcosa di non coerente con il resto della lezione, per favore non ignorarlo. Scrivimi subito sul nostro gruppo WhatsApp specificando l'errore o la lezione incriminata. Così posso correggere il codice o il testo in tempo reale e tenere la piattaforma pulita e affidabile per tutti gli iscritti. Questo progetto cresce anche grazie alle vostre revisioni. Grazie per l'aiuto!</p>
   </div>
@@ -591,7 +591,7 @@ body.instant #appview, body.instant #topbar, body.instant #top-controls{transiti
   </div>
 
   <footer class="site-footer">
-    <p><strong>Una Mano Spensierata</strong> &nbsp;&middot;&nbsp; Tutti i diritti riservati &nbsp;&middot;&nbsp; Lorenzo Sciallato &copy; 2025</p>
+    <p><strong class="notranslate" translate="no">Una Mano Spensierata</strong> &nbsp;&middot;&nbsp; Tutti i diritti riservati &nbsp;&middot;&nbsp; Lorenzo Sciallato &copy; 2025</p>
   </footer>
 </main>
 
@@ -1620,7 +1620,7 @@ renderCourses();
       '</div>' +
       '<div id="ums-access-out">' +
                         '<h3 class="ums-access-h">Salva i tuoi progressi</h3>' +
-                        '<p class="ums-access-p">Con l\'accesso tutto ci&ograve; che fai su Una Mano Spensierata resta tuo: le lezioni che segui, gli appunti che scrivi, le sottolineature e le flashcard che ripassi. Li ritrovi ogni volta che torni, anche da un altro dispositivo. Nessuna email, nessuna password, nessun dato personale: ti basta una chiave.</p>' +
+                        '<p class="ums-access-p">Con l\'accesso tutto ci&ograve; che fai su <span class="notranslate" translate="no">Una Mano Spensierata</span> resta tuo: le lezioni che segui, gli appunti che scrivi, le sottolineature e le flashcard che ripassi. Li ritrovi ogni volta che torni, anche da un altro dispositivo. Nessuna email, nessuna password, nessun dato personale: ti basta una chiave.</p>' +
                         '<div class="ums-access-block" id="ums-choice">' +
                             '<button class="ums-access-btn primary" id="ums-scegli-ho" type="button">Ho gi&agrave; la mia chiave</button>' +
                             '<div style="height:10px"></div>' +
