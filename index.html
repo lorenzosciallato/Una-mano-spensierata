@@ -468,10 +468,16 @@ body.instant #appview, body.instant #topbar, body.instant #top-controls{transiti
 
 <!-- EXTRA SPLASH -->
 <div id="hero-extras">
-  <button id="inizia" type="button">
-    Inizia
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
-  </button>
+  <div id="hero-actions">
+    <button id="inizia" type="button">
+      Inizia
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+    </button>
+    <button id="ums-sostieni" type="button" aria-haspopup="dialog" aria-label="Sostieni Una Mano Spensierata">
+      <svg class="ums-cup" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V8Z"/><path d="M17 9h1.8a2.2 2.2 0 0 1 0 4.4H17"/><path d="M7 3.5c0 .8-.8 1.2-.8 2s.8 1.2.8 2"/><path d="M11 3.5c0 .8-.8 1.2-.8 2s.8 1.2.8 2"/></svg>
+      <span id="ums-sostieni-label">Tienimi acceso</span>
+    </button>
+  </div>
   <div class="hero-badges">
     <a href="https://www.instagram.com/sciallato_lorenzo/" target="_blank" class="author-badge">
       <img src="https://files.catbox.moe/qvck5j.png" alt="Lorenzo Sciallato" class="author-img">
@@ -1802,5 +1808,269 @@ renderCourses();
             };
         })();
     </script>
+<!-- ================================================================
+     SOSTEGNO — pulsante accanto a INIZIA + pop-up con le tre fasce
+     La SCELTA della fascia avviene qui dentro, con i colori e i testi
+     del sito. Solo il pagamento vero apre Buy Me a Coffee in una nuova
+     scheda (Stripe non si può incorporare: il pagamento deve avvenire
+     su un dominio riconoscibile, o i browser lo bloccano).
+================================================================ -->
+<style id="ums-sostieni-style">
+  /* --- i due pulsanti dello splash, affiancati --- */
+  #hero-actions{
+    display: flex; align-items: stretch; justify-content: center;
+    gap: 12px; flex-wrap: nowrap;
+  }
+  #ums-sostieni{
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    background: var(--gold); color: #2A2113;
+    border: none; border-radius: var(--r-pill);
+    padding: 1.05rem 1.6rem;
+    font-family: var(--font-body);
+    font-size: .82rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+    cursor: pointer; box-shadow: 0 10px 30px rgba(200,169,110,.35);
+    opacity: 0; animation: fadeUp .7s 2.15s ease both;
+    transition: transform .25s var(--ease), box-shadow .25s, background-color .25s;
+    /* larghezza fissa: la scritta cambia, il pulsante no */
+    width: 15.5rem; min-width: 15.5rem;
+  }
+  #ums-sostieni:hover{ transform: translateY(-3px); box-shadow: 0 16px 40px rgba(200,169,110,.45); background: var(--gold-lt); }
+  #ums-sostieni:active{ transform: translateY(-1px); }
+  #ums-sostieni .ums-cup{
+    width: 17px; height: 17px; flex-shrink: 0;
+    stroke: currentColor; fill: none; stroke-width: 1.8;
+    stroke-linecap: round; stroke-linejoin: round;
+  }
+  #ums-sostieni-label{
+    white-space: nowrap;
+    transition: opacity .35s ease, font-size .2s ease;
+    /* la dimensione la calcola il JS: la scritta non viene MAI tagliata */
+  }
+  #ums-sostieni-label.ums-fade{ opacity: 0; }
+  body.night-mode #ums-sostieni{ background: var(--gold); color: #2A2113; }
+  body.app-mode #hero-actions{ display: none; }
+
+  @media (max-width: 640px){
+    #hero-actions{ flex-direction: column; align-items: center; gap: 10px; }
+    #inizia{ width: 15.5rem; justify-content: center; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    #ums-sostieni{ animation: none; opacity: 1; }
+    #ums-sostieni-label{ transition: none; }
+  }
+
+  /* --- pop-up fasce: riusa il linguaggio del pop-up Accedi --- */
+  #ums-bmc-overlay{
+    display: none; position: fixed; inset: 0; z-index: 99999999;
+    background: rgba(15,17,23,.55);
+    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  #ums-bmc-overlay.show{ display: flex; }
+  .ums-bmc-card{
+    background: var(--ivory, #F7F4EF);
+    border-radius: 28px;
+    box-shadow: 0 12px 40px rgba(15,17,23,.2);
+    padding: 34px 26px 26px; max-width: 440px; width: 100%;
+    max-height: 88vh; overflow-y: auto; text-align: center; position: relative;
+    animation: umsLorenzoPop .35s ease both;
+    font-family: var(--font-body);
+  }
+  .ums-bmc-close{
+    position: absolute; top: 12px; right: 12px;
+    width: 34px; height: 34px; border-radius: 50%;
+    border: none; background: rgba(15,17,23,.06); color: var(--ink);
+    font-size: 1rem; cursor: pointer; display: grid; place-items: center;
+  }
+  .ums-bmc-close:hover{ background: rgba(15,17,23,.12); }
+  .ums-bmc-logo{
+    font-family: var(--font-display); font-weight: 700; line-height: 1.02;
+    margin: 4px 0 14px;
+  }
+  .ums-bmc-logo .l1, .ums-bmc-logo .l2{ display: block; font-size: 1.6rem; white-space: nowrap; }
+  .ums-bmc-logo .l1{ color: var(--ink); }
+  .ums-bmc-logo .l2{ color: var(--navy); font-style: italic; }
+  .ums-bmc-tag{
+    display: flex; align-items: center; justify-content: center; gap: 11px;
+    font-family: var(--font-body);
+    font-size: .6rem; font-weight: 700; letter-spacing: .28em; text-transform: uppercase;
+    color: var(--gold-dk); margin: 10px 0 20px;
+  }
+  .ums-bmc-tag::before, .ums-bmc-tag::after{
+    content: ''; display: block; width: 26px; height: 1px; background: var(--gold);
+  }
+  .ums-bmc-intro{
+    font-size: .86rem; line-height: 1.6; color: var(--sub);
+    margin: 0 0 20px; text-align: left;
+  }
+  .ums-bmc-intro b{ color: var(--ink); font-weight: 700; }
+
+  .ums-tier{
+    display: block; width: 100%; text-align: left;
+    background: #fff; border: 1.5px solid var(--dust);
+    border-radius: 16px; padding: 15px 16px; margin-bottom: 10px;
+    cursor: pointer; font-family: var(--font-body);
+    transition: border-color .2s, transform .15s, box-shadow .2s;
+    position: relative;
+  }
+  .ums-tier:hover{ border-color: var(--gold); transform: translateY(-2px); box-shadow: 0 10px 26px rgba(15,17,23,.09); }
+  .ums-tier-top{ display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+  .ums-tier-nome{ font-family: var(--font-display); font-size: 1.06rem; font-weight: 700; color: var(--ink); }
+  .ums-tier-prezzo{ font-size: .82rem; font-weight: 700; color: var(--gold-dk); white-space: nowrap; }
+  .ums-tier-desc{ font-size: .8rem; line-height: 1.5; color: var(--sub); margin-top: 5px; }
+  .ums-tier-desc b{ color: var(--ink); font-weight: 700; }
+  .ums-tier.consigliato{ border-color: var(--gold); box-shadow: 0 6px 20px rgba(200,169,110,.18); }
+  .ums-tier-badge{
+    position: absolute; top: -9px; left: 16px;
+    background: var(--gold); color: #2A2113;
+    font-size: .58rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+    padding: 3px 10px; border-radius: 999px;
+  }
+  .ums-bmc-nota{
+    font-size: .72rem; line-height: 1.5; color: var(--sub);
+    margin: 14px 0 0; font-style: italic;
+  }
+  /* NIGHT MODE — l'index non rimappa i token, quindi ogni colore che
+     usa --ink o --sub va riscritto a mano: prima i grassetti erano
+     nero su nero (invisibili). */
+  body.night-mode .ums-bmc-card{ background: #1C1F27; }
+  body.night-mode .ums-bmc-logo .l1{ color: #F2EFE8; }
+  body.night-mode .ums-bmc-logo .l2{ color: #8FB4E8; }
+  body.night-mode .ums-bmc-tag{ color: #D9BC85; }
+  body.night-mode .ums-bmc-intro{ color: #C7C4BC; }
+  body.night-mode .ums-bmc-intro b{ color: #F2EFE8; }
+  body.night-mode .ums-tier{ background: #262933; border-color: #383C48; }
+  body.night-mode .ums-tier.consigliato{ border-color: var(--gold); }
+  body.night-mode .ums-tier-nome{ color: #F2EFE8; }
+  body.night-mode .ums-tier-prezzo{ color: #D9BC85; }
+  body.night-mode .ums-tier-desc{ color: #B0ADA5; }
+  body.night-mode .ums-tier-desc b{ color: #F2EFE8; }
+  body.night-mode .ums-bmc-nota{ color: #918E86; }
+  body.night-mode .ums-bmc-close{ background: rgba(255,255,255,.08); color: #F2EFE8; }
+</style>
+
+<script id="ums-sostieni-script">
+(function () {
+  // ⚠️ CONTROLLA QUESTO: dev'essere il tuo indirizzo Buy Me a Coffee.
+  const BMC_UTENTE = 'unamanospensierata';
+  const BMC_MEMBERSHIP = 'https://buymeacoffee.com/' + BMC_UTENTE + '/membership';
+
+  // --- scritte a rotazione (il pulsante resta della stessa larghezza) ---
+  const SCRITTE = [
+    'Tienimi acceso',
+    'Una mano per Una Mano',
+    'Sostieni il progetto',
+    'Offrimi un caffè!',
+    'Fai studiare anche loro',
+    'Un caffè alla volta...',
+    'Finanzia il diritto allo studio',
+    '🎉🎉🎉'
+  ];
+  const btn = document.getElementById('ums-sostieni');
+  const label = document.getElementById('ums-sostieni-label');
+
+  // Il pulsante ha larghezza fissa: la scritta si adatta AL PULSANTE,
+  // rimpicciolendo il corpo del carattere quanto basta. Mai puntini,
+  // mai testo tagliato. Si ricalcola anche al ridimensionamento.
+  const FONT_MAX = 0.82, FONT_MIN = 0.60;   // in rem
+  function adattaScritta() {
+    if (!btn || !label) return;
+    const stile = getComputedStyle(btn);
+    const disponibile = btn.clientWidth
+      - parseFloat(stile.paddingLeft) - parseFloat(stile.paddingRight)
+      - 17 - 10 - 2;                        // icona + gap + margine di sicurezza
+    let fs = FONT_MAX;
+    label.style.fontSize = fs + 'rem';
+    // scendo a passi finché la scritta non entra (o tocco il minimo)
+    while (label.scrollWidth > disponibile && fs > FONT_MIN) {
+      fs = Math.round((fs - 0.01) * 100) / 100;
+      label.style.fontSize = fs + 'rem';
+    }
+    // la spaziatura larga costa spazio: sulle scritte lunghe la stringo
+    label.style.letterSpacing = (fs < 0.72) ? '.06em' : '.12em';
+  }
+
+  if (btn && label) {
+    let i = Math.floor(Math.random() * SCRITTE.length);
+    label.textContent = SCRITTE[i];
+    adattaScritta();
+    // i font web arrivano dopo: ricalcolo quando sono pronti
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(adattaScritta);
+    window.addEventListener('resize', adattaScritta);
+
+    setInterval(function () {
+      if (document.body.classList.contains('app-mode')) return; // fuori dallo splash: fermo
+      label.classList.add('ums-fade');
+      setTimeout(function () {
+        i = (i + 1) % SCRITTE.length;
+        label.textContent = SCRITTE[i];
+        adattaScritta();
+        label.classList.remove('ums-fade');
+      }, 350);
+    }, 4500);
+  }
+
+  // --- pop-up con le tre fasce ---
+  const ov = document.createElement('div');
+  ov.id = 'ums-bmc-overlay';
+  ov.setAttribute('role', 'dialog');
+  ov.setAttribute('aria-modal', 'true');
+  ov.setAttribute('aria-label', 'Sostieni Una Mano Spensierata');
+  ov.innerHTML =
+    '<div class="ums-bmc-card">' +
+      '<button class="ums-bmc-close" type="button" aria-label="Chiudi">&#10005;</button>' +
+      '<div class="ums-bmc-logo notranslate" translate="no">' +
+        '<span class="l1">Una Mano</span><span class="l2">Spensierata</span>' +
+      '</div>' +
+      '<div class="ums-bmc-tag"><span>Il tuo compagno di studi</span></div>' +
+      '<p class="ums-bmc-intro">Questo sito &egrave; <b>gratis</b>, e lo rester&agrave;: nessuna lezione dietro un abbonamento, niente riservato a chi paga. Chi sostiene <b>non compra un vantaggio</b> &mdash; tiene acceso il sito e, dalla seconda fascia in su, manda una parte della quota a <b>Still I Rise</b>, che apre scuole per bambini profughi <b>dove la scuola non c\'&egrave;</b>.</p>' +
+
+      '<button class="ums-tier" type="button" data-tier="1">' +
+        '<span class="ums-tier-top"><span class="ums-tier-nome">Un caff&egrave; al mese</span><span class="ums-tier-prezzo">1 &euro; / mese</span></span>' +
+        '<span class="ums-tier-desc">Copre le spese vive: dominio, server, le ore passate a scrivere lezioni e codice. Nulla di pi&ugrave;.</span>' +
+      '</button>' +
+
+      '<button class="ums-tier consigliato" type="button" data-tier="2">' +
+        '<span class="ums-tier-badge">Il pi&ugrave; scelto</span>' +
+        '<span class="ums-tier-top"><span class="ums-tier-nome">Sostenitore</span><span class="ums-tier-prezzo">5 &euro; / mese</span></span>' +
+        '<span class="ums-tier-desc">Il <b>30%</b> va a Still I Rise. Mentre studi tu, studia anche chi questo diritto non ce l\'ha. Il corrispettivo di una colazione al mese.</span>' +
+      '</button>' +
+
+      '<button class="ums-tier" type="button" data-tier="3">' +
+        '<span class="ums-tier-top"><span class="ums-tier-nome">Diritto allo studio</span><span class="ums-tier-prezzo">10 &euro; / mese</span></span>' +
+        '<span class="ums-tier-desc">Il <b>50%</b> va a Still I Rise. Non sblocchi niente: qui &egrave; gi&agrave; tutto gratis. <b>Sblocchi che lo sia anche altrove.</b></span>' +
+      '</button>' +
+
+      '<p class="ums-bmc-nota">Il pagamento avviene su Buy Me a Coffee, che si apre in una nuova scheda: il sito resta aperto qui. Puoi disdire quando vuoi, con un clic.</p>' +
+    '</div>';
+  document.body.appendChild(ov);
+
+  const chiudi = function () {
+    ov.classList.remove('show');
+    document.body.classList.remove('ums-noscroll');
+    document.removeEventListener('keydown', suEsc);
+    if (btn) btn.focus();
+  };
+  const suEsc = function (e) { if (e.key === 'Escape') chiudi(); };
+  const apri = function () {
+    ov.classList.add('show');
+    document.body.classList.add('ums-noscroll');
+    document.addEventListener('keydown', suEsc);
+    ov.querySelector('.ums-bmc-close').focus();
+  };
+
+  if (btn) btn.addEventListener('click', apri);
+  ov.querySelector('.ums-bmc-close').addEventListener('click', chiudi);
+  ov.addEventListener('click', function (e) { if (e.target === ov) chiudi(); });
+  ov.querySelectorAll('.ums-tier').forEach(function (t) {
+    t.addEventListener('click', function () {
+      window.open(BMC_MEMBERSHIP, '_blank', 'noopener');
+      chiudi();
+    });
+  });
+  // apribile da qualunque punto del sito: window.umsApriSostegno()
+  window.umsApriSostegno = apri;
+})();
+</script>
 </body>
 </html>
