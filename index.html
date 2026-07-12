@@ -10,6 +10,12 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='14'%20fill='%23F7F4EF'/%3E%3Ctext%20x='31'%20y='43'%20text-anchor='middle'%20font-family='Georgia,serif'%20font-weight='700'%20font-size='30'%20textLength='46'%20lengthAdjust='spacingAndGlyphs'%20fill='%231C1C22'%3EUM%3Ctspan%20fill='%2322365F'%20font-style='italic'%3ES%3C/tspan%3E%3C/text%3E%3Crect%20x='25'%20y='51'%20width='14'%20height='2'%20rx='1'%20fill='%23C8A96E'/%3E%3C/svg%3E">
 <meta name="theme-color" content="#F7F4EF">
 <meta name="theme-color" content="#14161C" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="UMS">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Una Mano Spensierata">
 <meta property="og:title" content="Una Mano Spensierata">
@@ -1463,9 +1469,59 @@ renderCourses();
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && rvOverlay.classList.contains('show')) rvCloseFn(); });
   umsAggiornaBadgeIndex();
 
-  // ---- PROMEMORIA RIPASSO — notifiche di sistema (fase 1: desktop;
-  //      su telefono arriveranno con la PWA) ----
-  const NOTIF_ICONA = 'https://res.cloudinary.com/dlppkpjqs/image/upload/f_auto,q_auto,w_192,h_192,c_fill/v1783528098/crea_wallpaper_stile_arte_giapponese_woodblock_rilassato_con_fiori_natura_paesaggio_lilnz8.png';
+  // ---- PROMEMORIA RIPASSO — v2: PWA + notifiche push (fasi 2/3) ----
+  if ('serviceWorker' in navigator) { try { navigator.serviceWorker.register('sw.js'); } catch (e) {} }
+  const PUSH_API = 'https://ums-push.unamanospensierata.workers.dev';
+  const VAPID_PUBLIC = 'BHjqsvdBP-RMbECYw0ZWApfxaEMECbjVmNUFmDSNoE3DYVXe8j1xnlrCBu8fIN8vI-YiBTm9YAhcJpe-pXVTaBg';
+  const NOTIF_ICONA = 'icons/icon-192.png';
+  function umsB64aArray(b64) {
+    const pad = '='.repeat((4 - b64.length % 4) % 4);
+    const raw = atob((b64 + pad).replace(/-/g, '+').replace(/_/g, '/'));
+    const arr = new Uint8Array(raw.length);
+    for (let i = 0; i < raw.length; i++) arr[i] = raw.charCodeAt(i);
+    return arr;
+  }
+  function umsProssimaScadenza() {
+    try {
+      const db = JSON.parse(localStorage.getItem('ums_sr') || '{}');
+      let min = null;
+      Object.keys(db).forEach(function (lk) {
+        const c = (db[lk] && db[lk].cards) || {};
+        Object.keys(c).forEach(function (f) {
+          const d = c[f].due;
+          if (d && (!min || d < min)) min = d;
+        });
+      });
+      return min;
+    } catch (e) { return null; }
+  }
+  function umsMostraNotifica(corpo) {
+    const opz = { body: corpo, icon: NOTIF_ICONA, tag: 'ums-ripasso' };
+    const ripiego = function () { try { new Notification('Una Mano Spensierata', opz); } catch (e) {} };
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistration().then(function (reg) {
+        if (reg && reg.showNotification) { reg.showNotification('Una Mano Spensierata', opz); }
+        else { ripiego(); }
+      }).catch(ripiego);
+    } else { ripiego(); }
+  }
+  function umsPushSync(sub) {
+    fetch(PUSH_API + '/aggiorna', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ endpoint: sub.endpoint, prossima: umsProssimaScadenza() })
+    }).catch(function () {});
+  }
+  function umsIscriviPush() {
+    if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
+    navigator.serviceWorker.ready.then(function (reg) {
+      return reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: umsB64aArray(VAPID_PUBLIC) });
+    }).then(function (sub) {
+      fetch(PUSH_API + '/iscrivi', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sub: sub.toJSON(), chiave: localStorage.getItem('ums_chiave') || '', prossima: umsProssimaScadenza() })
+      }).catch(function () {});
+    }).catch(function () { /* push non supportate qui: restano le notifiche all'apertura */ });
+  }
   function umsNotifRender() {
     const row = document.getElementById('ums-notif-row');
     if (!row) return;
@@ -1487,25 +1543,29 @@ renderCourses();
     if (n <= 0) return;
     const oggi = new Date().toDateString();
     try { if (!forza && localStorage.getItem('ums_notif_giorno') === oggi) return; } catch (e) {}
-    try {
-      const nt = new Notification('Una Mano Spensierata', {
-        body: n === 1 ? 'Hai 1 carta da ripassare oggi. Due minuti e sei a posto.'
-                      : 'Hai ' + n + ' carte da ripassare oggi. Due minuti e sei a posto.',
-        icon: NOTIF_ICONA, tag: 'ums-ripasso'
-      });
-      nt.onclick = function () { try { window.focus(); } catch (e) {} try { rvOpen(); } catch (e) {} };
-      try { localStorage.setItem('ums_notif_giorno', oggi); } catch (e) {}
-    } catch (e) { /* su Android il costruttore non esiste: serve la PWA (fase 2) */ }
+    umsMostraNotifica(n === 1 ? 'Hai 1 carta da ripassare oggi. Due minuti e sei a posto.'
+                              : 'Hai ' + n + ' carte da ripassare oggi. Due minuti e sei a posto.');
+    try { localStorage.setItem('ums_notif_giorno', oggi); } catch (e) {}
   }
   const notifBtn = document.getElementById('ums-notif-btn');
   if (notifBtn) notifBtn.addEventListener('click', function () {
     Notification.requestPermission().then(function () {
       umsNotifRender();
       umsNotificaDovute(true);
+      if (Notification.permission === 'granted') umsIscriviPush();
     });
   });
   if (fcBtnIndex) fcBtnIndex.addEventListener('click', umsNotifRender);
-  setTimeout(function () { umsNotificaDovute(false); }, 1500);
+  setTimeout(function () {
+    umsNotificaDovute(false);
+    // se i promemoria sono attivi, tieni aggiornato il server sulla prossima scadenza
+    if ('Notification' in window && Notification.permission === 'granted'
+        && 'serviceWorker' in navigator && 'PushManager' in window) {
+      navigator.serviceWorker.ready.then(function (reg) { return reg.pushManager.getSubscription(); })
+        .then(function (sub) { if (sub) umsPushSync(sub); else umsIscriviPush(); })
+        .catch(function () {});
+    }
+  }, 1500);
 
   const langSel  = document.getElementById('custom-lang-selector');
   const langSlot = document.getElementById('ums-inav-lang');
