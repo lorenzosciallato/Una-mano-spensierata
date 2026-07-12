@@ -480,6 +480,59 @@
         .section-banner:hover { opacity: 0.9; }
 
         /* ============================================================
+           KEN BURNS (variante VI — velo inchiostro)
+           Zoom lento 6s + velo che si approfondisce al passaggio
+           del mouse (o al tocco, via .kb-hover). Applicato a:
+           banner Riassuntone, immagine Assistente IA, flashcard
+           Dritti al Sodo. Rispetta prefers-reduced-motion.
+        ============================================================ */
+        .kb-frame {
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--r-md);
+            border: 1px solid var(--dust);
+            margin-bottom: 1.5rem;
+            cursor: pointer;
+        }
+        .kb-frame .section-banner {
+            margin-bottom: 0;
+            border: none;
+            border-radius: 0;
+        }
+        .kb-frame .section-banner:hover { opacity: 1; }
+        .kb-frame img {
+            transition: transform 6s cubic-bezier(.16,.84,.44,1);
+            will-change: transform;
+        }
+        .kb-frame::after {
+            content: '';
+            position: absolute; inset: 0;
+            background: linear-gradient(to top, rgba(13,17,26,.38), rgba(13,17,26,.08) 45%, transparent 68%);
+            opacity: .7;
+            transition: opacity .9s ease;
+            pointer-events: none;
+        }
+        .kb-frame:hover img,
+        .kb-frame.kb-hover img { transform: scale(1.06); }
+        .kb-frame:hover::after,
+        .kb-frame.kb-hover::after { opacity: 1; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .kb-frame img,
+            .kb-frame::after,
+            .ia-image-col img,
+            .ia-image-col::after,
+            .flashcard-front::before,
+            .flashcard-back::before { transition: none !important; }
+            .kb-frame:hover img,
+            .kb-frame.kb-hover img,
+            .ia-container:hover .ia-image-col img,
+            .ia-container.kb-hover .ia-image-col img,
+            .flashcard-wrapper:hover .flashcard-front::before { transform: none !important; }
+            .flashcard-wrapper:hover .flashcard-back::before { transform: scaleX(-1) !important; }
+        }
+
+        /* ============================================================
            OBIETTIVI BOX
         ============================================================ */
         .obj-box {
@@ -736,9 +789,18 @@
             display: flex; flex-direction: column;
             align-items: center; justify-content: center;
             border-radius: var(--r-lg); padding: 2rem;
+            background-color: #1a1a2e;
+            overflow: hidden;
+        }
+        /* KEN BURNS — l'immagine vive su un layer ::before che zooma lento */
+        .flashcard-front { transform: rotateY(0deg); } /* stacking context: il ::before a z-index -1 resta sopra lo sfondo */
+        .flashcard-front::before {
+            content: ""; position: absolute; inset: 0; border-radius: var(--r-lg);
             background-image: url('https://i.postimg.cc/tJSTPJPW/indiani-d-america-e-uova-sode-stile-bruno-munari-molto-movimentato-e-colorato.jpg');
             background-size: contain; background-repeat: no-repeat; background-position: center;
-            background-color: #1a1a2e;
+            z-index: -1;
+            transition: transform 6s cubic-bezier(.16,.84,.44,1);
+            will-change: transform;
         }
         .flashcard-back { transform: rotateY(180deg); }
         .flashcard-back::before {
@@ -746,7 +808,13 @@
             background-image: url('https://i.postimg.cc/tJSTPJPW/indiani-d-america-e-uova-sode-stile-bruno-munari-molto-movimentato-e-colorato.jpg');
             background-size: contain; background-repeat: no-repeat; background-position: center;
             transform: scaleX(-1); z-index: -1;
+            transition: transform 6s cubic-bezier(.16,.84,.44,1);
+            will-change: transform;
         }
+        .flashcard-wrapper:hover .flashcard-front::before,
+        .flashcard-wrapper.kb-hover .flashcard-front::before { transform: scale(1.06); }
+        .flashcard-wrapper:hover .flashcard-back::before,
+        .flashcard-wrapper.kb-hover .flashcard-back::before { transform: scaleX(-1) scale(1.06); }
         .flashcard-back p,
         .flashcard-front h2 {
             position: relative; z-index: 2;
@@ -967,10 +1035,25 @@
             align-items: stretch; min-height: 320px;
         }
         @media (max-width: 700px) { .ia-container { grid-template-columns: 1fr; } }
-        .ia-image-col { overflow: hidden; }
+        .ia-image-col { overflow: hidden; position: relative; }
         .ia-image-col img {
             width: 100%; height: 100%; object-fit: cover; display: block;
+            transition: transform 6s cubic-bezier(.16,.84,.44,1);
+            will-change: transform;
         }
+        /* KEN BURNS — velo che si approfondisce sull'immagine IA */
+        .ia-image-col::after {
+            content: '';
+            position: absolute; inset: 0;
+            background: linear-gradient(to top, rgba(13,17,26,.42), rgba(13,17,26,.08) 50%, transparent 70%);
+            opacity: .7;
+            transition: opacity .9s ease;
+            pointer-events: none;
+        }
+        .ia-container:hover .ia-image-col img,
+        .ia-container.kb-hover .ia-image-col img { transform: scale(1.06); }
+        .ia-container:hover .ia-image-col::after,
+        .ia-container.kb-hover .ia-image-col::after { opacity: 1; }
         .ia-text-col {
             padding: 2.5rem; display: flex; flex-direction: column;
             justify-content: center;
@@ -2228,11 +2311,11 @@
                                 <div>
                                     <!-- Wrapper per banner + lavagna -->
                                     <div class="wb-banner-wrap">
-                                        <img id="wb-section-banner"
-                                            src="https://i.postimg.cc/BbgFzJFJ/disegna-dei-pinguini-tutti-in-mucchio-come-fanno-in-natura-stile-del-disegno-corporate.jpg"
-                                            class="section-banner"
-                                            alt="Pinguini"
-                                            onclick="wbMaximize()">
+                                        <div id="wb-section-banner" class="kb-frame" data-kenburns onclick="wbMaximize()">
+                                            <img src="https://i.postimg.cc/BbgFzJFJ/disegna-dei-pinguini-tutti-in-mucchio-come-fanno-in-natura-stile-del-disegno-corporate.jpg"
+                                                class="section-banner"
+                                                alt="Pinguini">
+                                        </div>
                                         
                                         <div id="wb-badge" onclick="wbMaximize()"><svg class="ums-ic" aria-hidden="true"><use href="#ic-pen"/></svg> <span id="wb-badge-count">0</span> concetti</div>
 
@@ -2413,7 +2496,7 @@
                             <span class="ch-icon">+</span>
                         </button>
                         <div class="accordion-content">
-                            <div class="ia-container">
+                            <div class="ia-container" data-kenburns>
                                 <div class="ia-image-col">
                                     <img src="https://i.ibb.co/LXQ0RwkT/elimina-il-robot-cattivo.jpg" alt="Assistente IA">
                                 </div>
@@ -5939,9 +6022,25 @@ if (!fileDaCaricare) {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             border-radius: 20px; padding: 1.2rem; box-sizing: border-box;
             box-shadow: 0 10px 30px rgba(0,0,0,.18);
+            background-color: #1a1a2e;
+            overflow: hidden;
+            isolation: isolate; /* stacking context: l'immagine a z-index -1 non copre bottoni e testo */
+        }
+        /* KEN BURNS — anche il mini-mazzo di ripasso zooma lento */
+        .urv-face::before{
+            content: ""; position: absolute; inset: 0; border-radius: 20px;
             background-image: url('https://i.postimg.cc/tJSTPJPW/indiani-d-america-e-uova-sode-stile-bruno-munari-molto-movimentato-e-colorato.jpg');
             background-size: contain; background-repeat: no-repeat; background-position: center;
-            background-color: #1a1a2e;
+            z-index: -1;
+            transition: transform 6s cubic-bezier(.16,.84,.44,1);
+            will-change: transform;
+        }
+        .urv-wrapper:hover .urv-face::before,
+        .urv-wrapper.kb-hover .urv-face::before{ transform: scale(1.06); }
+        @media (prefers-reduced-motion: reduce){
+            .urv-face::before{ transition: none !important; }
+            .urv-wrapper:hover .urv-face::before,
+            .urv-wrapper.kb-hover .urv-face::before{ transform: none !important; }
         }
         .urv-face h2{
             position: relative; z-index: 2; background: rgba(255,255,255,0.96);
@@ -7571,6 +7670,17 @@ if (!fileDaCaricare) {
         document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape' && document.body.classList.contains('ums-game-open')) chiudi();
         });
+    })();
+    </script>
+    <script>
+    // KEN BURNS (variante VI) — su touch, il tocco attiva/disattiva
+    // lo zoom lento e il velo (equivalente dell'hover su desktop).
+    // Delega sull'intero documento: copre anche le card create dinamicamente.
+    (function () {
+        document.addEventListener('touchstart', function (e) {
+            var el = e.target.closest('[data-kenburns], .flashcard-wrapper, .urv-wrapper');
+            if (el) el.classList.toggle('kb-hover');
+        }, { passive: true });
     })();
     </script>
 </body>
