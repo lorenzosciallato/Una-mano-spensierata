@@ -1623,40 +1623,56 @@
         }
 
         /* ============================================================
-           UPGRADE — "LO SAPEVI?" (rubrica da quotidiano)
+           UPGRADE — "ACCADDE OGGI" (almanacco editoriale)
+           Filetto doppio da quotidiano, data del giorno in corsivo,
+           anno in grande Playfair oro, etichetta a pillola, voci
+           separate da filetti sottili.
         ============================================================ */
         .losapevi {
             margin-top: 2.2rem;
-            border-top: 1px solid var(--ink);
-            padding-top: 1.3rem;
+            border-top: 3px double var(--ink);
+            padding-top: 1.35rem;
+        }
+        .ls-head {
+            display: flex; align-items: baseline; justify-content: space-between;
+            gap: 12px; margin-bottom: 0.4rem;
+        }
+        .ls-head .ws-kicker { margin-bottom: 0; }
+        .ls-data {
+            font-family: var(--font-display); font-style: italic;
+            font-size: 0.98rem; color: var(--sub);
         }
         .ls-item {
-            position: relative; padding-left: 1.5rem;
-            margin-bottom: 0.85rem;
-            font-size: 0.92rem; line-height: 1.7; color: var(--body);
+            display: flex; align-items: flex-start; gap: 16px;
+            padding: 1.05rem 0; margin: 0;
+            border-bottom: 1px solid var(--dust);
         }
-        .ls-item::before {
-            content: '\2014';
-            position: absolute; left: 0;
-            color: var(--gold-dk); font-weight: 700;
+        #losapevi-list .ls-item:last-child { border-bottom: none; }
+        .ls-anno {
+            flex: 0 0 3.4rem;
+            font-family: var(--font-display); font-weight: 700;
+            font-size: 1.45rem; line-height: 1.15;
+            color: var(--gold-dk);
+            font-variant-numeric: lining-nums;
         }
-        .ls-btn {
-            background: transparent; color: var(--navy);
-            border: 1px solid var(--dust); border-radius: 50px;
-            padding: 7px 20px; font-family: var(--font-body);
-            font-weight: 700; font-size: 0.72rem; letter-spacing: 0.1em;
-            text-transform: uppercase; cursor: pointer; transition: all 0.2s;
-        }
-        .ls-btn:hover { border-color: var(--gold); color: var(--gold-dk); }
-        .night-mode .ls-btn { color: #8FB4E8; }
+        .ls-anno.ls-anno-vuoto { color: var(--gold); font-size: 1.2rem; }
+        .ls-corpo { flex: 1; min-width: 0; }
         .ls-label {
-            font-size: 0.62rem; font-weight: 700;
+            display: inline-block;
+            font-size: 0.58rem; font-weight: 700;
             letter-spacing: 0.16em; text-transform: uppercase;
-            color: var(--gold-dk); margin-right: 6px;
+            color: var(--sub);
+            border: 1px solid var(--dust); border-radius: 50px;
+            padding: 3px 10px; margin-bottom: 7px;
+        }
+        .ls-testo {
+            font-size: 0.92rem; line-height: 1.7; color: var(--body);
+            margin: 0;
         }
         .ls-more {
             background: none; border: none; padding: 0;
-            font-family: var(--font-body); font-size: 0.8rem; font-weight: 700;
+            margin-top: 7px; display: inline-block;
+            font-family: var(--font-body); font-size: 0.78rem; font-weight: 700;
             color: var(--navy); cursor: pointer;
             border-bottom: 1px solid var(--gold);
             transition: color 0.2s;
@@ -1664,6 +1680,23 @@
         }
         .ls-more:hover { color: var(--gold-dk); }
         .night-mode .ls-more { color: #8FB4E8; }
+        .ls-footer { text-align: center; margin-top: 1.15rem; }
+        .ls-btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: transparent; color: var(--navy);
+            border: 1px solid var(--dust); border-radius: 50px;
+            padding: 9px 22px; font-family: var(--font-body);
+            font-weight: 700; font-size: 0.72rem; letter-spacing: 0.1em;
+            text-transform: uppercase; cursor: pointer; transition: all 0.2s;
+        }
+        .ls-btn .ums-ic { width: 0.95em; height: 0.95em; }
+        .ls-btn:hover { border-color: var(--gold); color: var(--gold-dk); }
+        .night-mode .ls-btn { color: #8FB4E8; }
+        .night-mode .ls-anno { color: var(--gold); }
+        @media (max-width: 600px){
+            .ls-item { gap: 12px; }
+            .ls-anno { flex-basis: 2.9rem; font-size: 1.25rem; }
+        }
 
         /* BLINDATURA — errore sudoku in night mode: regola finale con specificità
            massima, così nessun altro stile può attenuarla */
@@ -1947,7 +1980,7 @@
         <div class="subtitle" id="dyn-subtitle"><span class="ums-skel ums-skel-sub" aria-hidden="true"></span></div>
 
 
-        <div id="translation-disclaimer"><svg class="ums-ic" aria-hidden="true"><use href="#ic-globe"/></svg> Nota: traduzione automatica via IA. Alta accuratezza, possibili sfumature perse.</div>
+        <div id="translation-disclaimer"><svg class="ums-ic" aria-hidden="true"><use href="#ic-globe"/></svg> Traduzione a cura dell'IA: possibili errori o imprecisioni.</div>
 
         <div class="badges-row">
             <a href="https://lorenzosciallato.github.io/Una-mano-spensierata/index.html" class="author-badge primary">
@@ -2217,7 +2250,6 @@
                                             </div>
                                             <!-- Footer con bottoni sempre visibili in basso -->
                                             <div class="wb-footer">
-                                                <button class="wb-btn" onclick="wbShare()"><svg class="ums-ic" aria-hidden="true"><use href="#ic-share"/></svg> Condividi</button>
                                                 <button class="wb-btn wb-btn-pdf" onclick="wbExportPDF()"><svg class="ums-ic" aria-hidden="true"><use href="#ic-printer"/></svg> Stampa / PDF</button>
                                             </div>
                                         </div>
@@ -2355,9 +2387,14 @@
 
                                 <!-- ACCADDE OGGI — rubrica dinamica (Wikipedia), tradotta insieme alla pagina -->
                                 <div class="losapevi" id="losapevi-box">
-                                    <div class="ws-kicker">Accadde Oggi</div>
+                                    <div class="ls-head">
+                                        <div class="ws-kicker">Accadde Oggi</div>
+                                        <div class="ls-data" id="ls-data"></div>
+                                    </div>
                                     <div id="losapevi-list"></div>
-                                    <button class="ls-btn" onclick="lsShuffle()">Altri fatti</button>
+                                    <div class="ls-footer">
+                                        <button class="ls-btn" onclick="lsShuffle()"><svg class="ums-ic" aria-hidden="true"><use href="#ic-rotate"/></svg> Altri fatti</button>
+                                    </div>
                                 </div>
                             </div>
 
@@ -2902,63 +2939,6 @@
             setTimeout(() => { document.body.removeChild(iframe); }, 10000);
         }
 
-        // CONDIVISIONE — genera un vero PDF e apre il pannello del sistema
-        // (WhatsApp, Telegram, mail...). La libreria si carica solo al primo
-        // uso, così non pesa sul caricamento della pagina.
-        let umsH2pPromise = null;
-        function umsCaricaH2p() {
-            if (window.html2pdf) return Promise.resolve();
-            if (!umsH2pPromise) umsH2pPromise = new Promise((ok, ko) => {
-                const sc = document.createElement('script');
-                sc.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
-                sc.onload = ok; sc.onerror = ko;
-                document.head.appendChild(sc);
-            });
-            return umsH2pPromise;
-        }
-        function wbShare() {
-            if (wbCount === 0) { showToast('Nessun concetto da condividere.', 'retry'); return; }
-            showToast('Preparo il PDF...', 'success');
-            const fontPronti = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
-            Promise.all([umsCaricaH2p(), fontPronti]).then(() => {
-                const host = document.createElement('div');
-                // ATTENZIONE: niente position:fixed fuori schermo — html2canvas
-                // lo cattura BIANCO. Il foglio va nel flusso, in cima al body,
-                // nascosto DIETRO la pagina con z-index negativo.
-                host.style.cssText = 'position:absolute;left:0;top:0;width:794px;background:#fff;z-index:-99999;pointer-events:none;';
-                host.innerHTML = wbSheetHTML();
-                const bg = host.querySelector('img');
-                if (bg) bg.remove(); // lo sfondo "fixed" non è gestito da html2canvas
-                document.body.appendChild(host);
-                const nome = 'lavagna-' + String(umsLessonKey || 'ums').replace(/[^a-z0-9]+/gi, '-') + '.pdf';
-                return html2pdf().set({
-                    margin: [10, 8],
-                    filename: nome,
-                    html2canvas: {
-                        scale: 2, useCORS: true, backgroundColor: '#ffffff',
-                        // senza questi, la cattura parte dalla posizione di scroll
-                        // corrente (si è in fondo pagina, sulla lavagna) = foglio vuoto
-                        scrollX: 0, scrollY: 0,
-                        windowWidth: 810
-                    },
-                    jsPDF: { unit: 'mm', format: 'a4' },
-                    pagebreak: { mode: ['css', 'legacy'] }
-                }).from(host).outputPdf('blob').then(blob => {
-                    document.body.removeChild(host);
-                    const file = new File([blob], nome, { type: 'application/pdf' });
-                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                        return navigator.share({ files: [file], title: 'Lavagna Concetti — Una Mano Spensierata' }).catch(() => {});
-                    }
-                    // Niente pannello di condivisione (tipico su PC): scarico il PDF
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url; a.download = nome;
-                    document.body.appendChild(a); a.click(); document.body.removeChild(a);
-                    setTimeout(() => URL.revokeObjectURL(url), 4000);
-                    showToast('PDF scaricato: condividilo da lì!', 'success');
-                });
-            }).catch(() => showToast('Non riesco a preparare il PDF, riprova.', 'retry'));
-        }
         // =========================================================================
         // FIX CAPOLETTERA — applicato SOLO alla prima vera lettera del primo
         // paragrafo: salta titoli (h1-h5) e caratteri non alfabetici, cosi' non
@@ -3773,6 +3753,10 @@ if (!fileDaCaricare) {
                 const card = activeCards[currentCardIndex];
                 document.getElementById('fc-mobile-body').innerHTML = card.back;
                 document.getElementById('fc-mobile-modal').style.display = 'flex';
+                // il pannello resta nel DOM tra un'apertura e l'altra e si
+                // ricordava lo scroll precedente: la risposta riparte dall'inizio
+                const box = document.querySelector('.fc-mobile-content');
+                if (box) box.scrollTop = 0;
             } else { toggleFlip(); }
         }
         function closeMobileAnswerPopup() { document.getElementById('fc-mobile-modal').style.display = 'none'; }
@@ -4763,6 +4747,9 @@ if (!fileDaCaricare) {
                 const mm = String(d.getMonth() + 1).padStart(2, '0');
                 const dd = String(d.getDate()).padStart(2, '0');
                 lsDataDiOggi = mm + '/' + dd;
+                // data nell'intestazione dell'almanacco ("12 luglio")
+                const dataEl = document.getElementById('ls-data');
+                if (dataEl) { try { dataEl.textContent = d.toLocaleDateString('it-IT', { day: 'numeric', month: 'long' }); } catch (e) {} }
                 // cache:no-store — niente risposte vecchie da cache o service worker:
                 // "Accadde Oggi" deve pescare OGGI, non il giorno del primo caricamento
                 const res = await fetch(`https://it.wikipedia.org/api/rest_v1/feed/onthisday/all/${mm}/${dd}`, { cache: 'no-store' });
@@ -4774,7 +4761,8 @@ if (!fileDaCaricare) {
                             const pg = (e.pages && e.pages[0]) || null;
                             lsItems.push({
                                 label: LS_LABELS[cat],
-                                text: (e.year ? e.year + ' \u2014 ' : '') + e.text,
+                                anno: e.year ? String(e.year) : '',
+                                text: e.text,
                                 title: pg ? ((pg.titles && (pg.titles.normalized || pg.titles.display)) || pg.title || '') : '',
                                 extract: pg ? (pg.extract || '') : '',
                                 thumb: (pg && pg.thumbnail) ? pg.thumbnail.source : '',
@@ -4826,25 +4814,36 @@ if (!fileDaCaricare) {
                 }
             } else {
                 lsShown = [...LS_CURATED].sort(() => 0.5 - Math.random()).slice(0, 3)
-                    .map(t => ({ label: 'Curiosita\u0300 dal mondo', text: t, url: '' }));
+                    .map(t => ({ label: 'Curiosita\u0300 dal mondo', anno: '', text: t, url: '' }));
             }
             lsShown.forEach((it, idx) => {
-                const p = document.createElement('p');
-                p.className = 'ls-item';
+                const art = document.createElement('article');
+                art.className = 'ls-item';
+                const anno = document.createElement('div');
+                anno.className = 'ls-anno' + (it.anno ? '' : ' ls-anno-vuoto');
+                anno.textContent = it.anno || '\u2727';
+                anno.setAttribute('aria-hidden', it.anno ? 'false' : 'true');
+                const corpo = document.createElement('div');
+                corpo.className = 'ls-corpo';
                 const lab = document.createElement('span');
                 lab.className = 'ls-label';
                 lab.textContent = it.label;
-                p.appendChild(lab);
-                p.appendChild(document.createTextNode(' ' + it.text + ' '));
+                const p = document.createElement('p');
+                p.className = 'ls-testo';
+                p.textContent = it.text;
+                corpo.appendChild(lab);
+                corpo.appendChild(p);
                 if (it.url) {
                     const btn = document.createElement('button');
                     btn.type = 'button';
                     btn.className = 'ls-more';
                     btn.textContent = 'Scopri di piu\u0300';
                     btn.addEventListener('click', () => lsOpenArticle(idx));
-                    p.appendChild(btn);
+                    corpo.appendChild(btn);
                 }
-                list.appendChild(p);
+                art.appendChild(anno);
+                art.appendChild(corpo);
+                list.appendChild(art);
             });
         }
 
