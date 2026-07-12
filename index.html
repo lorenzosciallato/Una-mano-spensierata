@@ -6,6 +6,17 @@
 <title>Una Mano Spensierata</title>
 <meta name="description" content="Flashcard, riassunti e videolezioni gratuite per preparare i tuoi esami universitari.">
 
+<!-- Identità browser: favicon UMS, colore cornice mobile, anteprima link condivisi -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='14'%20fill='%23F7F4EF'/%3E%3Ctext%20x='31'%20y='43'%20text-anchor='middle'%20font-family='Georgia,serif'%20font-weight='700'%20font-size='30'%20textLength='46'%20lengthAdjust='spacingAndGlyphs'%20fill='%231C1C22'%3EUM%3Ctspan%20fill='%2322365F'%20font-style='italic'%3ES%3C/tspan%3E%3C/text%3E%3Crect%20x='25'%20y='51'%20width='14'%20height='2'%20rx='1'%20fill='%23C8A96E'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#F7F4EF">
+<meta name="theme-color" content="#14161C" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Una Mano Spensierata">
+<meta property="og:title" content="Una Mano Spensierata">
+<meta property="og:description" content="Flashcard, riassunti e videolezioni gratuite per preparare i tuoi esami universitari.">
+<meta property="og:url" content="https://lorenzosciallato.github.io/Una-mano-spensierata/">
+<meta property="og:image" content="https://res.cloudinary.com/dlppkpjqs/image/upload/f_auto,q_auto:eco,w_1200/v1783528098/crea_wallpaper_stile_arte_giapponese_woodblock_rilassato_con_fiori_natura_paesaggio_lilnz8.png">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,600;1,700;1,900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700&display=swap" rel="stylesheet">
@@ -1353,7 +1364,15 @@ renderCourses();
   // del template: kind 'sr' con contenuto null = cancellazione logica, che il
   // pull salta — così il mazzo non "risorge" alla prossima sincronizzazione).
   function umsEliminaMateria(g) {
-    if (!confirm('Eliminare il ripasso di "' + g.nome + '"? Le carte non ti verranno più riproposte.')) return;
+    // via il confirm() nativo: pop-up brandizzato stile Accedi
+    umsConfirm({
+      title: 'Eliminare il ripasso di "' + g.nome + '"?',
+      message: 'Le carte non ti verranno più riproposte.',
+      okText: 'Elimina',
+      cancelText: 'Annulla',
+      danger: true
+    }).then(conferma => {
+    if (!conferma) return;
     const db = umsCaricaSR();
     g.lks.forEach(lk => { delete db[lk]; });
     try { localStorage.setItem('ums_sr', JSON.stringify(db)); } catch (e) {}
@@ -1367,6 +1386,7 @@ renderCourses();
     }
     rvRender();
     umsAggiornaBadgeIndex();
+    });
   }
 
   function umsAvviaRipasso(g, soloSbagliate) {
@@ -1585,5 +1605,73 @@ renderCourses();
 })();
 </script>
 
+    <!-- ================================================================
+         UMS CONFIRM — pop-up di conferma brandizzato (stile pop-up Accedi)
+         Sostituisce i confirm() nativi. API: umsConfirm({...}) -> Promise
+    ================================================================ -->
+    <style id="ums-confirm-style">
+        #ums-confirm-overlay{
+            display: none; position: fixed; inset: 0; z-index: 999999999;
+            background: rgba(15,17,23,.55);
+            -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+            align-items: center; justify-content: center; padding: 24px;
+        }
+        #ums-confirm-overlay.show{ display: flex; }
+        .ums-confirm-card{ max-width: 340px; }
+        .ums-confirm-card .ums-access-logo{ margin-bottom: 16px; }
+        .ums-confirm-card .ums-access-logo .ums-logo-l1,
+        .ums-confirm-card .ums-access-logo .ums-logo-l2{ font-size: 1.5rem; }
+        #ums-confirm-ok.danger{ background: #B4573E; border-color: #B4573E; color: #fff; }
+        #ums-confirm-ok.danger:hover{ background: #9C4934; }
+        .night-mode #ums-confirm-ok.danger{ background: #B4573E; border-color: #B4573E; color: #fff; }
+    </style>
+    <script id="ums-confirm-script">
+        (function () {
+            const ov = document.createElement('div');
+            ov.id = 'ums-confirm-overlay';
+            ov.setAttribute('role', 'alertdialog');
+            ov.setAttribute('aria-modal', 'true');
+            ov.innerHTML =
+                '<div class="ums-access-card ums-confirm-card">' +
+                    '<div class="ums-access-logo notranslate" translate="no">' +
+                        '<span class="ums-logo-l1">Una Mano</span>' +
+                        '<span class="ums-logo-l2">Spensierata</span>' +
+                    '</div>' +
+                    '<h3 class="ums-access-h" id="ums-confirm-title"></h3>' +
+                    '<p class="ums-access-p" id="ums-confirm-msg"></p>' +
+                    '<button class="ums-access-btn primary" id="ums-confirm-ok" type="button"></button>' +
+                    '<div style="height:10px"></div>' +
+                    '<button class="ums-access-btn" id="ums-confirm-cancel" type="button"></button>' +
+                '</div>';
+            document.body.appendChild(ov);
+            const t = document.getElementById('ums-confirm-title');
+            const m = document.getElementById('ums-confirm-msg');
+            const ok = document.getElementById('ums-confirm-ok');
+            const no = document.getElementById('ums-confirm-cancel');
+            let risolvi = null;
+            function chiudi(esito) {
+                ov.classList.remove('show');
+                document.removeEventListener('keydown', suEsc);
+                if (risolvi) { const r = risolvi; risolvi = null; r(esito); }
+            }
+            function suEsc(e) { if (e.key === 'Escape') chiudi(false); }
+            ok.addEventListener('click', () => chiudi(true));
+            no.addEventListener('click', () => chiudi(false));
+            ov.addEventListener('click', (e) => { if (e.target === ov) chiudi(false); });
+            window.umsConfirm = function (opz) {
+                opz = opz || {};
+                t.textContent = opz.title || 'Sei sicuro?';
+                m.textContent = opz.message || '';
+                m.style.display = opz.message ? '' : 'none';
+                ok.textContent = opz.okText || 'Conferma';
+                no.textContent = opz.cancelText || 'Annulla';
+                ok.classList.toggle('danger', !!opz.danger);
+                ov.classList.add('show');
+                document.addEventListener('keydown', suEsc);
+                try { no.focus(); } catch (e) {}
+                return new Promise(res => { risolvi = res; });
+            };
+        })();
+    </script>
 </body>
 </html>
