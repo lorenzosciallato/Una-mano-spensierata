@@ -1377,18 +1377,20 @@ renderCourses();
     const out = {}; // slug -> { slug, nome, dovute, totale, sbagliate, lkTop }
     Object.keys(db).forEach(lk => {
       const cards = db[lk].cards || {};
-      let dovute = 0, totale = 0, sbagliate = 0;
+      let dovute = 0, totale = 0, sbagliate = 0, prossima = null;
       Object.keys(cards).forEach(f => {
         totale++;
         if ((cards[f].due || '') <= ora) dovute++;
+        if (cards[f].due && (!prossima || cards[f].due < prossima)) prossima = cards[f].due;
         const bucket = cards[f].bucket || (cards[f].stato === 'unknown' ? 'sbagliate' : 'giuste');
         if (bucket === 'sbagliate') sbagliate++;
       });
       if (totale === 0) return;
       const slug = umsSlugMateria(lk);
       const nomeMat = materie[slug] || ((db[lk].titolo && db[lk].titolo !== lk) ? db[lk].titolo : slug);
-      const g = out[slug] = out[slug] || { slug, nome: nomeMat, dovute: 0, totale: 0, sbagliate: 0, lkTop: lk, _topDovute: -1, lks: [] };
+      const g = out[slug] = out[slug] || { slug, nome: nomeMat, dovute: 0, totale: 0, sbagliate: 0, prossima: null, lkTop: lk, _topDovute: -1, lks: [] };
       g.dovute += dovute; g.totale += totale; g.sbagliate += sbagliate;
+      if (prossima && (!g.prossima || prossima < g.prossima)) g.prossima = prossima;
       g.lks.push(lk);
       // La pagina che ospiterà il pop-up: la lezione della materia con più
       // carte in scadenza (il pop-up pesca comunque dal db, non dalla pagina).
@@ -1432,6 +1434,18 @@ renderCourses();
     window.location.href = TEMPLATE_URL + encodeURIComponent(g.lkTop);
   }
 
+  // Riga conteggio con countdown, come nel template ("tra N giorni", "domani")
+  function umsContaTesto(g) {
+    let t = g.dovute + ' da ripassare · ' + g.totale + ' totali';
+    if (g.dovute === 0 && g.prossima) {
+      const giorni = Math.ceil((new Date(g.prossima) - new Date()) / 86400000);
+      if (giorni <= 0) t += ' · prossimo ripasso a breve';
+      else if (giorni === 1) t += ' · prossimo ripasso domani';
+      else t += ' · prossimo ripasso tra ' + giorni + ' giorni';
+    }
+    return t;
+  }
+
   function rvRender() {
     const gruppi = Object.values(umsGruppiRipasso());
     rvList.innerHTML = '';
@@ -1449,7 +1463,7 @@ renderCourses();
         '<div class="ums-rv-lez-top">' +
           '<div>' +
             '<div class="ums-rv-lez-nome"></div>' +
-            '<div class="ums-rv-lez-conta">' + g.dovute + ' da ripassare · ' + g.totale + ' totali</div>' +
+            '<div class="ums-rv-lez-conta">' + umsContaTesto(g) + '</div>' +
           '</div>' +
           '<button class="ums-rv-del" type="button" title="Elimina questo mazzo" aria-label="Elimina questo mazzo">&#10005;</button>' +
         '</div>' +
@@ -1904,6 +1918,8 @@ renderCourses();
     margin: 0 0 20px; text-align: left;
   }
   .ums-bmc-intro b{ color: var(--ink); font-weight: 700; }
+  .ums-sir-link{ color: inherit; text-decoration: none; border-bottom: 2px solid var(--gold); }
+  .ums-sir-link:hover{ background: rgba(200,169,110,.15); }
 
   .ums-tier{
     display: block; width: 100%; text-align: left;
@@ -1939,6 +1955,7 @@ renderCourses();
   body.night-mode .ums-bmc-tag{ color: #D9BC85; }
   body.night-mode .ums-bmc-intro{ color: #C7C4BC; }
   body.night-mode .ums-bmc-intro b{ color: #F2EFE8; }
+  body.night-mode .ums-sir-link b{ color: #F2EFE8; }
   body.night-mode .ums-tier{ background: #262933; border-color: #383C48; }
   body.night-mode .ums-tier.consigliato{ border-color: var(--gold); }
   body.night-mode .ums-tier-nome{ color: #F2EFE8; }
@@ -1963,8 +1980,7 @@ renderCourses();
     'Offrimi un caffè!',
     'Fai studiare anche loro',
     'Un caffè alla volta...',
-    'Finanzia il diritto allo studio',
-    '🎉🎉🎉'
+    'Finanzia il diritto allo studio'
   ];
   const btn = document.getElementById('ums-sostieni');
   const label = document.getElementById('ums-sostieni-label');
@@ -1998,16 +2014,7 @@ renderCourses();
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(adattaScritta);
     window.addEventListener('resize', adattaScritta);
 
-    setInterval(function () {
-      if (document.body.classList.contains('app-mode')) return; // fuori dallo splash: fermo
-      label.classList.add('ums-fade');
-      setTimeout(function () {
-        i = (i + 1) % SCRITTE.length;
-        label.textContent = SCRITTE[i];
-        adattaScritta();
-        label.classList.remove('ums-fade');
-      }, 350);
-    }, 4500);
+    // Niente rotazione: una frase a caso per apertura, e resta quella.
   }
 
   // --- pop-up con le tre fasce ---
@@ -2023,7 +2030,7 @@ renderCourses();
         '<span class="l1">Una Mano</span><span class="l2">Spensierata</span>' +
       '</div>' +
       '<div class="ums-bmc-tag"><span>Il tuo compagno di studi</span></div>' +
-      '<p class="ums-bmc-intro">Questo sito &egrave; <b>gratis</b>, e lo rester&agrave;: nessuna lezione dietro un abbonamento, niente riservato a chi paga. Chi sostiene <b>non compra un vantaggio</b> &mdash; tiene acceso il sito e, dalla seconda fascia in su, manda una parte della quota a <b>Still I Rise</b>, che apre scuole per bambini profughi <b>dove la scuola non c\'&egrave;</b>.</p>' +
+      '<p class="ums-bmc-intro">Questo sito &egrave; <b>gratis</b>, e lo rester&agrave;: nessuna lezione dietro un abbonamento, niente riservato a chi paga. Chi sostiene <b>non compra un vantaggio</b> &mdash; tiene acceso il sito e, dalla seconda fascia in su, manda una parte della quota a <b>Still I Rise</b>, che apre scuole per bambini profughi <a class="ums-sir-link" href="https://www.stillirise.org/" target="_blank" rel="noopener"><b>dove la scuola non c\'&egrave;</b></a>.</p>' +
 
       '<button class="ums-tier" type="button" data-tier="1">' +
         '<span class="ums-tier-top"><span class="ums-tier-nome">Un caff&egrave; al mese</span><span class="ums-tier-prezzo">1 &euro; / mese</span></span>' +
