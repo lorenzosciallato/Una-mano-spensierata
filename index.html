@@ -1038,12 +1038,29 @@ renderCourses();
 
   /* ================= ACCESSO CON CHIAVE (login) ================= */
   .ums-fc-btn{ position: relative; }
+  /* Notifica stile Instagram: pallino rosso con "!" bianco */
   .ums-fc-badge{
     position: absolute; top: 4px; right: 8px;
-    min-width: 17px; height: 17px; padding: 0 4px; box-sizing: border-box;
-    background: #D14B3D; color: #fff; border-radius: 999px;
-    font-size: .6rem; font-weight: 700; line-height: 17px; text-align: center;
+    width: 18px; height: 18px; box-sizing: border-box;
+    background: #D14B3D; color: #fff; border-radius: 50%;
+    font-size: .78rem; font-weight: 800; line-height: 18px; text-align: center;
+    font-family: var(--font-body,'DM Sans',sans-serif);
+    box-shadow: 0 2px 6px rgba(209,75,61,.4);
+    animation: umsBadgePop .3s ease both;
   }
+  @keyframes umsBadgePop{ from{ transform: scale(0); } to{ transform: scale(1); } }
+  .ums-notif-row{ text-align: center; margin: -6px 0 16px; }
+  .ums-notif-btn{
+    display: inline-flex; align-items: center; gap: 8px;
+    background: transparent; border: 1.5px solid var(--gold,#C8A96E);
+    color: var(--gold-dk,#9A7A3F); border-radius: 999px;
+    padding: 8px 18px; font-family: var(--font-body,'DM Sans',sans-serif);
+    font-size: .76rem; font-weight: 700; letter-spacing: .03em; cursor: pointer;
+    transition: background .2s;
+  }
+  .ums-notif-btn:hover{ background: rgba(200,169,110,.12); }
+  .ums-notif-ok{ font-size: .74rem; color: var(--sub,#5f5c55); font-style: italic; }
+  body.night-mode .ums-notif-btn{ color: #D9BC85; }
   @media (min-width: 901px){ .ums-fc-badge{ top: 2px; right: 8px; } }
   body.ums-noscroll{ overflow: hidden; }
   #ums-rv-overlay{
@@ -1273,8 +1290,12 @@ renderCourses();
   function umsAggiornaBadgeIndex() {
     const badge = document.getElementById('ums-fc-badge'); if (!badge) return;
     const n = umsDueTotali();
-    if (n > 0) { badge.textContent = n > 99 ? '99+' : n; badge.hidden = false; }
-    else { badge.hidden = true; }
+    // Stile Instagram: "!" bianco su pallino rosso; il numero resta nel tooltip e nell'hub
+    if (n > 0) {
+      badge.textContent = '!';
+      badge.title = n + (n === 1 ? ' carta da ripassare' : ' carte da ripassare');
+      badge.hidden = false;
+    } else { badge.hidden = true; }
   }
   // Nomi leggibili delle materie dal catalogo corsi (COURSES), via slug del file
   function umsMappaMaterie() {
@@ -1324,6 +1345,10 @@ renderCourses();
       '<button class="ums-rv-close" type="button" aria-label="Chiudi">&#10005;</button>' +
       '<div class="ums-rv-title">Da ripassare</div>' +
       '<div class="ums-rv-sub" id="ums-rv-sub"></div>' +
+      '<div class="ums-notif-row" id="ums-notif-row" hidden>' +
+        '<button class="ums-notif-btn" id="ums-notif-btn" type="button"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg> Avvisami quando ho un ripasso</button>' +
+        '<span class="ums-notif-ok" id="ums-notif-msg" hidden></span>' +
+      '</div>' +
       '<div id="ums-rv-list"></div>' +
     '</div>';
   document.body.appendChild(rvOverlay);
@@ -1437,6 +1462,50 @@ renderCourses();
   rvOverlay.addEventListener('click', (e) => { if (e.target === rvOverlay) rvCloseFn(); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && rvOverlay.classList.contains('show')) rvCloseFn(); });
   umsAggiornaBadgeIndex();
+
+  // ---- PROMEMORIA RIPASSO — notifiche di sistema (fase 1: desktop;
+  //      su telefono arriveranno con la PWA) ----
+  const NOTIF_ICONA = 'https://res.cloudinary.com/dlppkpjqs/image/upload/f_auto,q_auto,w_192,h_192,c_fill/v1783528098/crea_wallpaper_stile_arte_giapponese_woodblock_rilassato_con_fiori_natura_paesaggio_lilnz8.png';
+  function umsNotifRender() {
+    const row = document.getElementById('ums-notif-row');
+    if (!row) return;
+    if (!('Notification' in window)) { row.hidden = true; return; }
+    const btn = document.getElementById('ums-notif-btn');
+    const msg = document.getElementById('ums-notif-msg');
+    row.hidden = false;
+    if (Notification.permission === 'granted') {
+      btn.hidden = true; msg.hidden = false;
+      msg.textContent = 'Promemoria attivi su questo dispositivo';
+    } else if (Notification.permission === 'denied') {
+      btn.hidden = true; msg.hidden = false;
+      msg.textContent = 'Notifiche bloccate: riattivale dalle impostazioni del sito';
+    } else { btn.hidden = false; msg.hidden = true; }
+  }
+  function umsNotificaDovute(forza) {
+    if (!('Notification' in window) || Notification.permission !== 'granted') return;
+    const n = umsDueTotali();
+    if (n <= 0) return;
+    const oggi = new Date().toDateString();
+    try { if (!forza && localStorage.getItem('ums_notif_giorno') === oggi) return; } catch (e) {}
+    try {
+      const nt = new Notification('Una Mano Spensierata', {
+        body: n === 1 ? 'Hai 1 carta da ripassare oggi. Due minuti e sei a posto.'
+                      : 'Hai ' + n + ' carte da ripassare oggi. Due minuti e sei a posto.',
+        icon: NOTIF_ICONA, tag: 'ums-ripasso'
+      });
+      nt.onclick = function () { try { window.focus(); } catch (e) {} try { rvOpen(); } catch (e) {} };
+      try { localStorage.setItem('ums_notif_giorno', oggi); } catch (e) {}
+    } catch (e) { /* su Android il costruttore non esiste: serve la PWA (fase 2) */ }
+  }
+  const notifBtn = document.getElementById('ums-notif-btn');
+  if (notifBtn) notifBtn.addEventListener('click', function () {
+    Notification.requestPermission().then(function () {
+      umsNotifRender();
+      umsNotificaDovute(true);
+    });
+  });
+  if (fcBtnIndex) fcBtnIndex.addEventListener('click', umsNotifRender);
+  setTimeout(function () { umsNotificaDovute(false); }, 1500);
 
   const langSel  = document.getElementById('custom-lang-selector');
   const langSlot = document.getElementById('ums-inav-lang');
