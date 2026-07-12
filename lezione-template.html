@@ -1899,6 +1899,7 @@
         <symbol id="ic-chevron-right" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
         <symbol id="ic-arrow-right" viewBox="0 0 24 24"><path d="M4 12h16"/><path d="m13 5 7 7-7 7"/></symbol>
         <symbol id="ic-rotate" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></symbol>
+        <symbol id="ic-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></symbol>
     </svg>
 
 
@@ -5715,12 +5716,29 @@ if (!fileDaCaricare) {
 
         /* ================= FLASHCARD / SPACED REPETITION ================= */
         .ums-fc-btn{ position: relative; }
+        /* Notifica stile Instagram: pallino rosso con "!" bianco */
         .ums-fc-badge{
             position: absolute; top: 4px; right: 8px;
-            min-width: 17px; height: 17px; padding: 0 4px; box-sizing: border-box;
-            background: #D14B3D; color: #fff; border-radius: 999px;
-            font-size: .6rem; font-weight: 700; line-height: 17px; text-align: center;
+            width: 18px; height: 18px; box-sizing: border-box;
+            background: #D14B3D; color: #fff; border-radius: 50%;
+            font-size: .78rem; font-weight: 800; line-height: 18px; text-align: center;
+            font-family: var(--font-body,'DM Sans',sans-serif);
+            box-shadow: 0 2px 6px rgba(209,75,61,.4);
+            animation: umsBadgePop .3s ease both;
         }
+        @keyframes umsBadgePop{ from{ transform: scale(0); } to{ transform: scale(1); } }
+        .ums-notif-row{ text-align: center; margin: -6px 0 16px; }
+        .ums-notif-btn{
+            display: inline-flex; align-items: center; gap: 8px;
+            background: transparent; border: 1.5px solid var(--gold,#C8A96E);
+            color: var(--gold-dk,#9A7A3F); border-radius: 999px;
+            padding: 8px 18px; font-family: var(--font-body,'DM Sans',sans-serif);
+            font-size: .76rem; font-weight: 700; letter-spacing: .03em; cursor: pointer;
+            transition: background .2s;
+        }
+        .ums-notif-btn:hover{ background: rgba(200,169,110,.12); }
+        .ums-notif-ok{ font-size: .74rem; color: var(--sub,#5f5c55); font-style: italic; }
+        body.night-mode .ums-notif-btn{ color: #D9BC85; border-color: var(--gold,#C8A96E); }
         @media (min-width: 901px){ .ums-fc-badge{ top: 2px; right: 8px; } }
 
         #ums-fc-overlay{
@@ -6122,6 +6140,10 @@ if (!fileDaCaricare) {
                     '<button class="ums-fc-close" type="button" aria-label="Chiudi">&#10005;</button>' +
                     '<div class="ums-fc-title">Da ripassare</div>' +
                     '<div class="ums-fc-sub" id="ums-fc-sub"></div>' +
+                    '<div class="ums-notif-row" id="ums-notif-row" hidden>' +
+                        '<button class="ums-notif-btn" id="ums-notif-btn" type="button"><svg class="ums-ic" aria-hidden="true"><use href="#ic-bell"/></svg> Avvisami quando ho un ripasso</button>' +
+                        '<span class="ums-notif-ok" id="ums-notif-msg" hidden></span>' +
+                    '</div>' +
                     
                     '<button class="ums-fc-how" id="ums-fc-how" type="button">Come funziona il ripasso?</button>' +
                     '<div class="ums-fc-howbox" id="ums-fc-howbox" hidden>' +
@@ -6167,9 +6189,58 @@ if (!fileDaCaricare) {
             window.srAggiornaBadge = function () {
                 if (typeof srConteggioDovute !== 'function') return;
                 const n = srConteggioDovute();
-                if (n > 0) { fcBadge.textContent = n > 99 ? '99+' : n; fcBadge.hidden = false; }
-                else { fcBadge.hidden = true; }
+                // Stile Instagram: "!" bianco su pallino rosso; il numero resta nel tooltip e nell'hub
+                if (n > 0) {
+                    fcBadge.textContent = '!';
+                    fcBadge.title = n + (n === 1 ? ' carta da ripassare' : ' carte da ripassare');
+                    fcBadge.hidden = false;
+                } else { fcBadge.hidden = true; }
             };
+
+            // ---- PROMEMORIA RIPASSO — notifiche di sistema (fase 1: desktop;
+            //      su telefono arriveranno con la PWA) ----
+            const NOTIF_ICONA = 'https://res.cloudinary.com/dlppkpjqs/image/upload/f_auto,q_auto,w_192,h_192,c_fill/v1783528098/crea_wallpaper_stile_arte_giapponese_woodblock_rilassato_con_fiori_natura_paesaggio_lilnz8.png';
+            function umsNotifRender() {
+                const row = document.getElementById('ums-notif-row');
+                if (!row) return;
+                if (!('Notification' in window)) { row.hidden = true; return; }
+                const btn = document.getElementById('ums-notif-btn');
+                const msg = document.getElementById('ums-notif-msg');
+                row.hidden = false;
+                if (Notification.permission === 'granted') {
+                    btn.hidden = true; msg.hidden = false;
+                    msg.textContent = 'Promemoria attivi su questo dispositivo';
+                } else if (Notification.permission === 'denied') {
+                    btn.hidden = true; msg.hidden = false;
+                    msg.textContent = 'Notifiche bloccate: riattivale dalle impostazioni del sito';
+                } else { btn.hidden = false; msg.hidden = true; }
+            }
+            function umsNotificaDovute(forza) {
+                if (!('Notification' in window) || Notification.permission !== 'granted') return;
+                if (typeof srConteggioDovute !== 'function') return;
+                const n = srConteggioDovute();
+                if (n <= 0) return;
+                const oggi = new Date().toDateString();
+                try { if (!forza && localStorage.getItem('ums_notif_giorno') === oggi) return; } catch (e) {}
+                try {
+                    const nt = new Notification('Una Mano Spensierata', {
+                        body: n === 1 ? 'Hai 1 carta da ripassare oggi. Due minuti e sei a posto.'
+                                      : 'Hai ' + n + ' carte da ripassare oggi. Due minuti e sei a posto.',
+                        icon: NOTIF_ICONA, tag: 'ums-ripasso'
+                    });
+                    nt.onclick = function () { try { window.focus(); } catch (e) {} try { fcBtn.click(); } catch (e) {} };
+                    try { localStorage.setItem('ums_notif_giorno', oggi); } catch (e) {}
+                } catch (e) { /* su Android il costruttore non esiste: serve la PWA (fase 2) */ }
+            }
+            const notifBtn = document.getElementById('ums-notif-btn');
+            if (notifBtn) notifBtn.addEventListener('click', function () {
+                Notification.requestPermission().then(function () {
+                    umsNotifRender();
+                    umsNotificaDovute(true);
+                });
+            });
+            if (fcBtn) fcBtn.addEventListener('click', umsNotifRender);
+            setTimeout(function () { umsNotificaDovute(false); }, 1500);
 
             function fcRenderHub() {
                 // Senza accesso la sezione non salva né sincronizza: cancello con invito
