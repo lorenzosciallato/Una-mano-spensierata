@@ -2253,7 +2253,7 @@
                         <button class="accordion-header">
                             <span class="ch-number">06</span>
                             <span class="ch-text">
-                                <span class="ch-eyebrow">Benessere</span>
+                                <span class="ch-eyebrow">Giochi</span>
                                 <span class="ch-title">Fai una Pausa</span>
                             </span>
                             <span class="ch-icon">+</span>
@@ -2276,6 +2276,7 @@
 
                                 <!-- GIOCO 1: Cerca le Parole (parole della lezione, tradotte con la pagina) -->
                                 <div id="ws-game">
+                                    <button class="ums-gioca-cta" type="button" onclick="umsGiocaApri('words')"><svg class="ums-ic" aria-hidden="true"><use href="#ic-search"/></svg> Gioca a Cerca le Parole</button>
                                     <div class="ws-layout">
                                         <div>
                                             <div class="ws-grid-wrap notranslate">
@@ -2294,6 +2295,7 @@
 
                                 <!-- GIOCO 2: Sudoku -->
                                 <div id="sd-game" style="display:none;">
+                                    <button class="ums-gioca-cta" type="button" onclick="umsGiocaApri('sudoku')"><svg class="ums-ic" aria-hidden="true"><use href="#ic-search"/></svg> Gioca a Sudoku</button>
                                     <div class="sd-diff-row">
                                         <button class="ws-lang-btn active" id="sd-btn-facile" onclick="sdSetDiff('facile')">Facile</button>
                                         <button class="ws-lang-btn" id="sd-btn-medio" onclick="sdSetDiff('medio')">Medio</button>
@@ -2313,6 +2315,7 @@
 
                                 <!-- GIOCO 3: Solitario (variante a seme unico) -->
                                 <div id="sol-game" style="display:none;">
+                                    <button class="ums-gioca-cta" type="button" onclick="umsGiocaApri('sol')"><svg class="ums-ic" aria-hidden="true"><use href="#ic-search"/></svg> Gioca a Solitario</button>
                                     <div class="sol-board notranslate" id="sol-board">
                                         <div class="sol-pile" id="sol-stock"></div>
                                         <div class="sol-pile" id="sol-waste"></div>
@@ -2906,9 +2909,13 @@
         function wbShare() {
             if (wbCount === 0) { showToast('Nessun concetto da condividere.', 'retry'); return; }
             showToast('Preparo il PDF...', 'success');
-            umsCaricaH2p().then(() => {
+            const fontPronti = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
+            Promise.all([umsCaricaH2p(), fontPronti]).then(() => {
                 const host = document.createElement('div');
-                host.style.cssText = 'position:fixed;left:-10000px;top:0;width:794px;background:#fff;';
+                // ATTENZIONE: niente position:fixed fuori schermo — html2canvas
+                // lo cattura BIANCO. Il foglio va nel flusso, in cima al body,
+                // nascosto DIETRO la pagina con z-index negativo.
+                host.style.cssText = 'position:absolute;left:0;top:0;width:794px;background:#fff;z-index:-99999;pointer-events:none;';
                 host.innerHTML = wbSheetHTML();
                 const bg = host.querySelector('img');
                 if (bg) bg.remove(); // lo sfondo "fixed" non è gestito da html2canvas
@@ -2917,7 +2924,13 @@
                 return html2pdf().set({
                     margin: [10, 8],
                     filename: nome,
-                    html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
+                    html2canvas: {
+                        scale: 2, useCORS: true, backgroundColor: '#ffffff',
+                        // senza questi, la cattura parte dalla posizione di scroll
+                        // corrente (si è in fondo pagina, sulla lavagna) = foglio vuoto
+                        scrollX: 0, scrollY: 0,
+                        windowWidth: 810
+                    },
                     jsPDF: { unit: 'mm', format: 'a4' },
                     pagebreak: { mode: ['css', 'legacy'] }
                 }).from(host).outputPdf('blob').then(blob => {
@@ -7096,6 +7109,10 @@ if (!fileDaCaricare) {
             display: flex; align-items: center; justify-content: center;
             gap: 12px; flex-wrap: nowrap;
         }
+        /* la pillola Inizia arriva con margin:0 auto !important (la centrava
+           quando era sola): in una riga flex quel margin auto assorbe tutto
+           lo spazio e SPINGE i due bottoni agli estremi. Qui si azzera. */
+        .ums-master-row .master-header{ margin: 0 !important; flex: 0 0 auto; }
         #ums-sostieni{
             display: inline-flex; align-items: center; justify-content: center; gap: 10px;
             background: var(--gold); color: #2A2113;
@@ -7162,6 +7179,8 @@ if (!fileDaCaricare) {
         .ums-bmc-tag::before, .ums-bmc-tag::after{ content: ''; display: block; width: 26px; height: 1px; background: var(--gold); }
         .ums-bmc-intro{ font-size: 0.86rem; line-height: 1.6; color: var(--sub); margin: 0 0 20px; text-align: left; }
         .ums-bmc-intro b{ color: var(--ink); font-weight: 700; }
+        .ums-sir-link{ color: inherit; text-decoration: none; border-bottom: 2px solid var(--gold); }
+        .ums-sir-link:hover{ background: rgba(200,169,110,0.15); }
         .ums-tier{
             display: block; width: 100%; text-align: left;
             background: #fff; border: 1.5px solid var(--dust);
@@ -7242,7 +7261,7 @@ if (!fileDaCaricare) {
                     '<span class="l1">Una Mano</span><span class="l2">Spensierata</span>' +
                 '</div>' +
                 '<div class="ums-bmc-tag"><span>Il tuo compagno di studi</span></div>' +
-                '<p class="ums-bmc-intro">Questo sito &egrave; <b>gratis</b>, e lo rester&agrave;: nessuna lezione dietro un abbonamento, niente riservato a chi paga. Chi sostiene <b>non compra un vantaggio</b> &mdash; tiene acceso il sito e, dalla seconda fascia in su, manda una parte della quota a <b>Still I Rise</b>, che apre scuole per bambini profughi <b>dove la scuola non c\'&egrave;</b>.</p>' +
+                '<p class="ums-bmc-intro">Questo sito &egrave; <b>gratis</b>, e lo rester&agrave;: nessuna lezione dietro un abbonamento, niente riservato a chi paga. Chi sostiene <b>non compra un vantaggio</b> &mdash; tiene acceso il sito e, dalla seconda fascia in su, manda una parte della quota a <b>Still I Rise</b>, che apre scuole per bambini profughi <a class="ums-sir-link" href="https://www.stillirise.org/" target="_blank" rel="noopener"><b>dove la scuola non c\'&egrave;</b></a>.</p>' +
                 '<button class="ums-tier" type="button">' +
                     '<span class="ums-tier-top"><span class="ums-tier-nome">Un caff&egrave; al mese</span><span class="ums-tier-prezzo">1 &euro; / mese</span></span>' +
                     '<span class="ums-tier-desc">Copre le spese vive: dominio, server, le ore passate a scrivere lezioni e codice. Nulla di pi&ugrave;.</span>' +
@@ -7315,19 +7334,72 @@ if (!fileDaCaricare) {
         #ums-wb-chip:hover{ background: var(--gold-lt); }
         @media (max-width: 600px){ #ums-wb-chip{ bottom: 88px; left: 14px; padding: 9px 15px; } }
 
-        /* 3) giochi Pausa su mobile: a tutta larghezza, celle e numeri più grandi */
-        @media (max-width: 600px){
-            .pausa-wordsearch{
-                margin-left: -1.5rem; margin-right: -1.5rem;
-                padding-left: 0.45rem; padding-right: 0.45rem;
+        /* 3) giochi Pausa su mobile: il gioco vive in un overlay a schermo
+              intero. In pagina resta solo il pulsante GIOCA. */
+        .ums-gioca-cta{ display: none; }
+        @media (max-width: 700px){
+            body:not(.ums-game-open) .ums-gioca-cta{
+                display: flex; align-items: center; justify-content: center; gap: 10px;
+                width: 100%; margin: 0.5rem 0 1rem;
+                background: var(--navy); color: #fff;
+                border: none; border-radius: 999px; padding: 15px 18px;
+                font-family: var(--font-body); font-size: 0.85rem; font-weight: 700;
+                letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer;
+                box-shadow: 0 8px 24px rgba(26,47,79,0.3);
             }
-            .ws-grid-wrap{ max-width: none; }
-            .ws-cell{ font-size: clamp(0.72rem, 3.6vw, 1.05rem); }
-            .ws-word-tag{ font-size: 0.74rem; padding: 5px 11px; }
-            .sd-wrap{ max-width: none; margin-left: -0.5rem; margin-right: -0.5rem; width: auto; }
-            .sd-cell{ font-size: clamp(1rem, 4.8vw, 1.4rem); }
-            .sd-pad button{ width: 46px; height: 46px; font-size: 1.1rem; }
+            /* in pagina, su telefono, il tavolo da gioco non si vede:
+               si gioca SOLO nell'overlay, alla giusta dimensione */
+            body:not(.ums-game-open) #ws-game > .ws-layout,
+            body:not(.ums-game-open) #ws-game .ws-status,
+            body:not(.ums-game-open) #ws-game .ws-win-msg,
+            body:not(.ums-game-open) #sd-game > .sd-diff-row,
+            body:not(.ums-game-open) #sd-game .sd-wrap,
+            body:not(.ums-game-open) #sd-game .sd-pad,
+            body:not(.ums-game-open) #sd-game .ws-status,
+            body:not(.ums-game-open) #sd-game .ws-win-msg,
+            body:not(.ums-game-open) #sol-game .sol-board{ display: none; }
         }
+
+        /* overlay di gioco a schermo intero */
+        #ums-game-overlay{
+            display: none; position: fixed; inset: 0; z-index: 99999998;
+            background: var(--ivory); flex-direction: column;
+        }
+        body.ums-game-open #ums-game-overlay{ display: flex; }
+        body.ums-game-open{ overflow: hidden; }
+        .ums-game-top{
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 12px 14px; flex-shrink: 0;
+            border-bottom: 1px solid var(--dust);
+        }
+        .ums-game-titolo{
+            font-family: var(--font-display); font-weight: 700;
+            font-size: 1.05rem; color: var(--ink);
+        }
+        .ums-game-close{
+            width: 38px; height: 38px; border-radius: 50%; border: none;
+            background: rgba(15,17,23,0.06); color: var(--ink);
+            font-size: 1rem; cursor: pointer; display: grid; place-items: center;
+        }
+        .night-mode .ums-game-close{ background: rgba(255,255,255,0.08); }
+        .ums-game-body{
+            flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch;
+            padding: 12px 10px 22px;
+        }
+        /* dimensioni da overlay: tutto a schermo, senza cercare niente */
+        .ums-game-body .ws-layout{ display: block; }
+        .ums-game-body .ws-grid-wrap{ width: min(96vw, 56vh); max-width: none; margin: 0 auto; }
+        .ums-game-body .ws-cell{ font-size: clamp(0.8rem, 4vw, 1.15rem); }
+        .ums-game-body .ws-word-list{
+            flex-direction: row; flex-wrap: wrap; justify-content: center;
+            gap: 6px; margin-top: 12px; min-width: 0;
+        }
+        .ums-game-body .ws-word-tag{ font-size: 0.72rem; padding: 5px 11px; }
+        .ums-game-body .sd-wrap{ width: min(96vw, 54vh); max-width: none; margin: 0 auto; }
+        .ums-game-body .sd-cell{ font-size: clamp(1.05rem, 5vw, 1.5rem); }
+        .ums-game-body .sd-pad button{ width: 48px; height: 48px; font-size: 1.15rem; }
+        .ums-game-body .sol-board{ max-width: 96vw; }
+        .ums-game-body .sd-howto{ display: none; }
 
         /* 4) splash: scroll bloccato davvero anche su iOS */
         @media (max-width: 900px){
@@ -7360,14 +7432,68 @@ if (!fileDaCaricare) {
             wb.scrollIntoView({ behavior: 'smooth', block: 'center' });
         });
         let inVista = false;
+        const pannello = wb.closest('.accordion-content');
         function aggiorna() {
-            chip.classList.toggle('show', wb.classList.contains('wb-visible') && !inVista);
+            const lezioneAperta = document.body.classList.contains('ums-master-open');
+            const sezioneAperta = pannello ? pannello.classList.contains('active') : false;
+            chip.classList.toggle('show',
+                lezioneAperta && sezioneAperta && wb.classList.contains('wb-visible') && !inVista);
         }
         new IntersectionObserver(function (voci) {
             inVista = voci[0].isIntersecting;
             aggiorna();
         }, { threshold: 0.05 }).observe(wb);
         new MutationObserver(aggiorna).observe(wb, { attributes: true, attributeFilter: ['class'] });
+        if (pannello) new MutationObserver(aggiorna).observe(pannello, { attributes: true, attributeFilter: ['class'] });
+        new MutationObserver(aggiorna).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    })();
+
+    // ---- GIOCA A SCHERMO INTERO (mobile) ----
+    // Il pannello del gioco viene SPOSTATO (non clonato) dentro l'overlay:
+    // listener, stato della partita e traduzioni restano vivi. Alla chiusura
+    // torna esattamente da dove è partito, con la partita in corso.
+    (function () {
+        const NOMI = { words: 'Cerca le Parole', sudoku: 'Sudoku', sol: 'Solitario' };
+        const PANNELLI = { words: 'ws-game', sudoku: 'sd-game', sol: 'sol-game' };
+        const T = function (x) { return (window.umsT ? window.umsT(x) : x); };
+
+        const ov = document.createElement('div');
+        ov.id = 'ums-game-overlay';
+        ov.innerHTML =
+            '<div class="ums-game-top">' +
+                '<span class="ums-game-titolo" id="ums-game-titolo"></span>' +
+                '<button class="ums-game-close" type="button" aria-label="Chiudi il gioco">&#10005;</button>' +
+            '</div>' +
+            '<div class="ums-game-body" id="ums-game-body"></div>';
+        document.body.appendChild(ov);
+        const corpo = document.getElementById('ums-game-body');
+        const titolo = document.getElementById('ums-game-titolo');
+        let segnaposto = null, pannelloAperto = null;
+
+        window.umsGiocaApri = function (gioco) {
+            const pannello = document.getElementById(PANNELLI[gioco]);
+            if (!pannello) return;
+            if (typeof pausaSetGame === 'function') pausaSetGame(gioco); // inizializza la partita se serve
+            segnaposto = document.createComment('ums-gioco');
+            pannello.parentNode.insertBefore(segnaposto, pannello);
+            corpo.appendChild(pannello);
+            pannelloAperto = pannello;
+            titolo.textContent = T(NOMI[gioco]);
+            document.body.classList.add('ums-game-open');
+            corpo.scrollTop = 0;
+        };
+        function chiudi() {
+            if (pannelloAperto && segnaposto && segnaposto.parentNode) {
+                segnaposto.parentNode.insertBefore(pannelloAperto, segnaposto);
+                segnaposto.remove();
+            }
+            pannelloAperto = null; segnaposto = null;
+            document.body.classList.remove('ums-game-open');
+        }
+        ov.querySelector('.ums-game-close').addEventListener('click', chiudi);
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && document.body.classList.contains('ums-game-open')) chiudi();
+        });
     })();
     </script>
 </body>
