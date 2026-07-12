@@ -7311,6 +7311,8 @@ if (!fileDaCaricare) {
          3) Giochi Pausa a tutta larghezza su mobile (celle più grandi)
          4) Splash mobile: blocco vero dello scroll (iOS ignorava
             overflow:hidden e il titolo fisso "seguiva" il dito)
+         5) Selettore giochi su mobile: carosello scorrevole, niente
+            pillole tagliate né testo a capo
     ================================================================ -->
     <style id="ums-ritocchi-style">
         /* 1) lavagna sempre grande */
@@ -7405,9 +7407,50 @@ if (!fileDaCaricare) {
         @media (max-width: 900px){
             body:not(.ums-master-open){ position: fixed; inset: 0; width: 100%; }
         }
+
+        /* 5) Selettore giochi su mobile: da riga centrata che sbordava
+              (pillole tagliate ai lati, testo a capo) a carosello che
+              scorre col dito. Le sfumature ai bordi suggeriscono che
+              c'è altro; gli spaziatori con margin:auto centrano il
+              contenuto quando invece ci sta tutto. */
+        @media (max-width: 700px){
+            .ws-lang-row{
+                justify-content: flex-start;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+                gap: 8px;
+                padding: 4px 0 10px;
+                scroll-snap-type: x proximity;
+                -webkit-mask-image: linear-gradient(to right, transparent, #000 22px, #000 calc(100% - 22px), transparent);
+                mask-image: linear-gradient(to right, transparent, #000 22px, #000 calc(100% - 22px), transparent);
+            }
+            .ws-lang-row::-webkit-scrollbar{ display: none; }
+            .ws-lang-row::before, .ws-lang-row::after{
+                content: ''; flex: 0 0 22px; margin: auto;
+            }
+            .ws-lang-row .ws-lang-btn{
+                flex: 0 0 auto;
+                white-space: nowrap;
+                scroll-snap-align: center;
+                padding: 9px 18px;
+            }
+        }
     </style>
 
     <script id="ums-ritocchi-script">
+    // 5) La pillola toccata nel selettore giochi scivola al centro:
+    //    così la scelta successiva è sempre già in vista.
+    (function () {
+        document.querySelectorAll('.ws-lang-row .ws-lang-btn').forEach(function (b) {
+            b.addEventListener('click', function () {
+                if (window.matchMedia('(max-width: 700px)').matches) {
+                    b.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+                }
+            });
+        });
+    })();
     (function () {
         // La lavagna si apre da sola alla prima sottolineatura
         const orig = window.wbAddEntry;
