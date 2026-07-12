@@ -151,6 +151,15 @@ body.app-mode .brand-tagline{opacity:0; max-height:0; margin-top:0; pointer-even
 }
 @keyframes fadeUp{from{opacity:0; transform:translateY(18px);} to{opacity:1; transform:translateY(0);}}
 
+/* ANTI-FLASH — gli stili completi di #ums-sostieni vivono in fondo alla
+   pagina: finché il browser non li ha letti, al refresh il pulsante
+   compariva per un attimo bianco e nudo, con la tazzina nera. Qui lo
+   teniamo invisibile dal primo paint; poi il suo fadeUp (in fondo) lo
+   fa entrare come INIZIA. Il media reduced-motion laggiù, venendo dopo,
+   continua a vincere e a mostrarlo subito. */
+#ums-sostieni{ opacity:0; }
+#ums-sostieni .ums-cup{ fill:none; stroke:currentColor; }
+
 /* i badge (riusati anche nel footer) */
 .author-badge{
   display:inline-flex;align-items:center;gap:10px;background:#fff;padding:6px 15px 6px 6px;
