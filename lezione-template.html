@@ -1287,6 +1287,16 @@
             .author-name { font-size: 0.78rem; }
             .ia-text-col { padding: 1.5rem; }
         }
+
+        /* ============================================================
+           ANTI-FLASH — gli stili veri di #ums-sostieni vivono in fondo
+           al file (blocco ums-sostieni-style): finché il browser non li
+           legge, al refresh il pulsante lampeggiava bianco e nudo con
+           la tazzina nera. Qui resta invisibile dal primo paint; il
+           blocco in fondo lo riaccende con opacity:1.
+        ============================================================ */
+        #ums-sostieni{ opacity: 0; }
+        #ums-sostieni .ums-cup{ fill: none; stroke: currentColor; }
     </style>
 
     <!-- ================================================================
@@ -2267,7 +2277,8 @@
                                     <h3>L'angolo dei Giochi <svg class="ums-ic" aria-hidden="true"><use href="#ic-search"/></svg></h3>
                                 </div>
 
-                                <!-- Selettore gioco -->
+                                <!-- Selettore gioco (su mobile: etichetta + pulsanti impilati) -->
+                                <div class="ws-select-label">Scegli il gioco</div>
                                 <div class="ws-lang-row">
                                     <button class="ws-lang-btn active" id="ws-btn-words" onclick="pausaSetGame('words')">Cerca le Parole</button>
                                     <button class="ws-lang-btn" id="ws-btn-sudoku" onclick="pausaSetGame('sudoku')">Sudoku</button>
@@ -7114,6 +7125,7 @@ if (!fileDaCaricare) {
            lo spazio e SPINGE i due bottoni agli estremi. Qui si azzera. */
         .ums-master-row .master-header{ margin: 0 !important; flex: 0 0 auto; }
         #ums-sostieni{
+            opacity: 1; /* riaccende l'anti-flash impostato nel CSS in testa */
             display: inline-flex; align-items: center; justify-content: center; gap: 10px;
             background: var(--gold); color: #2A2113;
             border: none; border-radius: 999px;
@@ -7311,8 +7323,8 @@ if (!fileDaCaricare) {
          3) Giochi Pausa a tutta larghezza su mobile (celle più grandi)
          4) Splash mobile: blocco vero dello scroll (iOS ignorava
             overflow:hidden e il titolo fisso "seguiva" il dito)
-         5) Selettore giochi su mobile: carosello scorrevole, niente
-            pillole tagliate né testo a capo
+         5) Selettore giochi su mobile: etichetta + tre pulsanti impilati,
+            il "Gioca a X" sotto segue la selezione
     ================================================================ -->
     <style id="ums-ritocchi-style">
         /* 1) lavagna sempre grande */
@@ -7408,49 +7420,31 @@ if (!fileDaCaricare) {
             body:not(.ums-master-open){ position: fixed; inset: 0; width: 100%; }
         }
 
-        /* 5) Selettore giochi su mobile: da riga centrata che sbordava
-              (pillole tagliate ai lati, testo a capo) a carosello che
-              scorre col dito. Le sfumature ai bordi suggeriscono che
-              c'è altro; gli spaziatori con margin:auto centrano il
-              contenuto quando invece ci sta tutto. */
+        /* 5) Selettore giochi su mobile: etichetta "Scegli il gioco" e
+              tre pulsanti impilati a tutta larghezza. Il "Gioca a X"
+              sotto cambia da solo: ogni gioco ha il suo, e si vede
+              solo quello del pannello selezionato. */
+        .ws-select-label{ display: none; }
         @media (max-width: 700px){
-            .ws-lang-row{
-                justify-content: flex-start;
-                flex-wrap: nowrap;
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-                scrollbar-width: none;
-                gap: 8px;
-                padding: 4px 0 10px;
-                scroll-snap-type: x proximity;
-                -webkit-mask-image: linear-gradient(to right, transparent, #000 22px, #000 calc(100% - 22px), transparent);
-                mask-image: linear-gradient(to right, transparent, #000 22px, #000 calc(100% - 22px), transparent);
+            .ws-select-label{
+                display: block; text-align: center;
+                font-family: var(--font-body); font-size: 0.68rem; font-weight: 700;
+                letter-spacing: 0.22em; text-transform: uppercase;
+                color: var(--gold-dk, #9A7A3F); margin-bottom: 0.7rem;
             }
-            .ws-lang-row::-webkit-scrollbar{ display: none; }
-            .ws-lang-row::before, .ws-lang-row::after{
-                content: ''; flex: 0 0 22px; margin: auto;
+            .night-mode .ws-select-label{ color: var(--gold); }
+            .ws-lang-row{
+                flex-direction: column; align-items: stretch;
+                gap: 9px; margin-bottom: 1.1rem;
             }
             .ws-lang-row .ws-lang-btn{
-                flex: 0 0 auto;
-                white-space: nowrap;
-                scroll-snap-align: center;
-                padding: 9px 18px;
+                width: 100%; white-space: nowrap;
+                padding: 13px 18px; font-size: 0.82rem;
             }
         }
     </style>
 
     <script id="ums-ritocchi-script">
-    // 5) La pillola toccata nel selettore giochi scivola al centro:
-    //    così la scelta successiva è sempre già in vista.
-    (function () {
-        document.querySelectorAll('.ws-lang-row .ws-lang-btn').forEach(function (b) {
-            b.addEventListener('click', function () {
-                if (window.matchMedia('(max-width: 700px)').matches) {
-                    b.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-                }
-            });
-        });
-    })();
     (function () {
         // La lavagna si apre da sola alla prima sottolineatura
         const orig = window.wbAddEntry;
