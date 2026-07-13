@@ -7054,7 +7054,10 @@ if (!fileDaCaricare) {
         }
 
         /* ---------- SPLASH (lezione chiusa) ---------- */
-        body:not(.ums-master-open){ overflow: hidden; height: 100vh; }
+        /* SPLASH BLOCCATO — come l'index: niente scroll finché la lezione
+           non è aperta. position:fixed è l'unico lock che iOS rispetta
+           davvero (overflow:hidden da solo viene ignorato al tocco). */
+        body:not(.ums-master-open){ overflow: hidden; height: 100vh; position: fixed; inset: 0; width: 100%; }
 
         /* INIZIA resta NEL flusso della card: è la card intera a scendere
            al 52% dello schermo via transform (compositor, fluido) */
@@ -7600,9 +7603,7 @@ if (!fileDaCaricare) {
         .ums-game-body .sd-howto{ display: none; }
 
         /* 4) splash: scroll bloccato davvero anche su iOS */
-        @media (max-width: 900px){
-            body:not(.ums-master-open){ position: fixed; inset: 0; width: 100%; }
-        }
+        
 
         /* 5) Selettore giochi su mobile: etichetta "Scegli il gioco" e
               tre pulsanti impilati a tutta larghezza. Il "Gioca a X"
