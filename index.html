@@ -1,0 +1,778 @@
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Una Mano Spensierata | Lezione Dinamica</title>
+    <meta name="ums-build" content="v10">
+
+    <!-- PUNTO 3 — identità browser: favicon (logo su due righe, come nella Home
+         e nel pop-up Accedi), colore della cornice mobile e anteprima link -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='14'%20fill='%23F7F4EF'/%3E%3Ctext%20x='31'%20y='43'%20text-anchor='middle'%20font-family='Georgia,serif'%20font-weight='700'%20font-size='30'%20textLength='46'%20lengthAdjust='spacingAndGlyphs'%20fill='%231C1C22'%3EUM%3Ctspan%20fill='%2322365F'%20font-style='italic'%3ES%3C/tspan%3E%3C/text%3E%3Crect%20x='25'%20y='51'%20width='14'%20height='2'%20rx='1'%20fill='%23C8A96E'/%3E%3C/svg%3E">
+    <meta name="theme-color" content="#F7F4EF">
+    <meta name="theme-color" content="#14161C" media="(prefers-color-scheme: dark)">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/icon-180.png">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="UMS">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Una Mano Spensierata">
+    <meta property="og:title" content="Una Mano Spensierata">
+    <meta property="og:description" content="Lezioni con podcast, riassuntoni, flashcard e giochi di ripasso: il tuo compagno di studi.">
+    <meta property="og:image" content="https://res.cloudinary.com/dlppkpjqs/image/upload/f_auto,q_auto:eco,w_1200/v1783528098/crea_wallpaper_stile_arte_giapponese_woodblock_rilassato_con_fiori_natura_paesaggio_lilnz8.png">
+
+    <!-- FIX 3 — rimosso html2pdf (caricato ma mai usato: wbExportPDF usa window.print) -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+
+
+    <!-- Filigrana: stesso asset ottimizzato della home, precaricato perché sia a schermo da subito -->
+    <link rel="preload" as="image" href="https://res.cloudinary.com/dlppkpjqs/image/upload/f_auto,q_auto:eco,w_1600/v1783528098/crea_wallpaper_stile_arte_giapponese_woodblock_rilassato_con_fiori_natura_paesaggio_lilnz8.png">
+
+    <!-- ================================================================
+         GUARDIA ANTI-FLASH — deve stare nel HEAD.
+         Le animazioni d'ingresso sono definite nel blocco additivo in
+         fondo al file: senza questa guardia il browser dipinge la pagina
+         completa per un istante prima di leggerle. Qui gli elementi
+         animati nascono già invisibili; le animazioni (fill: both) li
+         portano poi a visibili. Con motion ridotto restano visibili.
+    ================================================================ -->
+    <style id="ums-preload-guard">
+        .header-eyebrow, header h1, header .subtitle, header .badges-row,
+        #custom-lang-selector.loaded, .content-card, .disclaimer-card, .site-footer{
+            opacity: 0;
+        }
+        @media (prefers-reduced-motion: reduce){
+            .header-eyebrow, header h1, header .subtitle, header .badges-row,
+            #custom-lang-selector.loaded, .content-card, .disclaimer-card, .site-footer{
+                opacity: 1 !important;
+            }
+        }
+    </style>
+    <!-- Tutto il CSS del progetto vive in css/ums.css (vedi README).
+         DEVE stare DOPO la guardia anti-flash qui sopra: contiene le
+         regole che "riaccendono" gli elementi con opacity:1. -->
+    <link rel="stylesheet" href="css/ums.css">
+
+    <!-- ================================================================
+         NIGHT MODE — BLOCCO ADDITIVO (non modifica il CSS originale)
+         Nessun filtro/inversione sulle immagini: cambiano solo i token
+         colore e gli sfondi hardcoded. Le foto restano intatte.
+    ================================================================ -->
+
+    <!-- ================================================================
+         PUNTI 2/5/8/9 — RIFINITURA PREMIUM (blocco additivo)
+         2: skeleton + media lazy · 5: icone SVG coerenti
+         8: palette editoriale · 9: progress bar senza loop perenne
+         Sta dopo night-mode-style per vincere in cascata.
+    ================================================================ -->
+</head>
+<body>
+    <!-- NIGHT MODE — applica subito il tema salvato per evitare il "flash" chiaro -->
+    <script>try{if(localStorage.getItem('ums_night_mode')==='1'){document.body.classList.add('night-mode');}}catch(e){}</script>
+<!-- ================================================================
+     BOOT SCREEN (solo app installata) — il ponte premium:
+     la splash di sistema (fondo #14161C + icona fusa) passa il
+     testimone a QUESTO schermo identico, che poi sfuma sul sito.
+     Nel browser normale non compare mai (display-mode: standalone).
+================================================================ -->
+<div id="ums-boot" aria-hidden="true">
+  <div class="ums-boot-brand notranslate" translate="no">
+    <span class="b1">Una Mano</span>
+    <span class="b2">Spensierata</span>
+    <span class="btag">Il tuo compagno di studi</span>
+  </div>
+</div>
+<script>
+(function(){
+  var b = document.getElementById('ums-boot');
+  if (!b) return;
+  /* Il wordmark compare solo quando Playfair è caricato, così non "salta"
+     dalla riserva (Georgia, più piccola) al font vero. Se il font tarda
+     oltre 350ms, si mostra comunque: meglio la riserva del vuoto. */
+  var brand = b.querySelector('.ums-boot-brand');
+  function mostra(){ if (brand) brand.classList.add('pronta'); }
+  try {
+    if (document.fonts && document.fonts.check('900 1rem "Playfair Display"')) { mostra(); }
+    else if (document.fonts && document.fonts.ready) {
+      var tf = setTimeout(mostra, 350);
+      document.fonts.ready.then(function(){ clearTimeout(tf); mostra(); });
+    } else { mostra(); }
+  } catch(e) { mostra(); }
+  function via(){
+    if (!b) return;
+    b.classList.add('via');
+    setTimeout(function(){ if (b && b.parentNode) b.parentNode.removeChild(b); b = null; }, 520);
+  }
+  if (document.readyState === 'complete') { setTimeout(via, 200); }
+  else { window.addEventListener('load', function(){ setTimeout(via, 200); }); }
+  setTimeout(via, 2600); /* rete lenta: mai piu' di 2,6 s di attesa */
+})();
+</script>
+
+    <!-- Progress Bar -->
+    <div id="scroll-progress-container">
+        <div id="scroll-progress-bar"></div>
+    </div>
+
+    <!-- Background -->
+    <div class="giants-background">
+        <img class="main-background-image"
+            src="https://res.cloudinary.com/dlppkpjqs/image/upload/f_auto,q_auto:eco,w_1600/v1783528098/crea_wallpaper_stile_arte_giapponese_woodblock_rilassato_con_fiori_natura_paesaggio_lilnz8.png"
+            alt="">
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="notranslate"></div>
+
+    <!-- UPGRADE GRAFICA — sprite icone line-art (sostituiscono le emoji) -->
+    <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+        <symbol id="ic-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></symbol>
+        <symbol id="ic-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></symbol>
+        <symbol id="ic-pen" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></symbol>
+        <symbol id="ic-highlighter" viewBox="0 0 24 24"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4l8 8Z"/></symbol>
+        <symbol id="ic-printer" viewBox="0 0 24 24"><path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8" rx="1"/></symbol>
+        <symbol id="ic-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></symbol>
+        <symbol id="ic-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10Z"/></symbol>
+        <symbol id="ic-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></symbol>
+        <symbol id="ic-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+        <symbol id="ic-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+        <symbol id="ic-home" viewBox="0 0 24 24"><path d="m3 11 9-8 9 8"/><path d="M5 9.5V21h14V9.5"/><path d="M9 21v-6h6v6"/></symbol>
+        <symbol id="ic-login" viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/></symbol>
+        <symbol id="ic-cards" viewBox="0 0 24 24"><rect x="3" y="5" width="13" height="16" rx="2"/><path d="M8 5V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2h-1"/></symbol>
+        <symbol id="ic-wrench" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76Z"/></symbol>
+        <symbol id="ic-award" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.5 13 17 22l-5-3-5 3 1.5-9"/></symbol>
+        <symbol id="ic-chevron-up" viewBox="0 0 24 24"><path d="m6 15 6-6 6 6"/></symbol>
+        <symbol id="ic-chevron-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+        <symbol id="ic-chevron-left" viewBox="0 0 24 24"><path d="m15 6-6 6 6 6"/></symbol>
+        <symbol id="ic-chevron-right" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
+        <symbol id="ic-arrow-right" viewBox="0 0 24 24"><path d="M4 12h16"/><path d="m13 5 7 7-7 7"/></symbol>
+        <symbol id="ic-rotate" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></symbol>
+        <symbol id="ic-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></symbol>
+        <symbol id="ic-share" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></symbol>
+    </svg>
+
+    <!-- NIGHT MODE — pulsante on/off -->
+    <button id="night-toggle" type="button" aria-label="Attiva modalità notte" title="Modalità notte on/off"><svg class="ums-ic" aria-hidden="true"><use href="#ic-moon"/></svg></button>
+
+    <!-- Modali -->
+    <div id="factor-modal" onclick="closeModal(event)">
+        <div class="modal-paper" onclick="event.stopPropagation()">
+            <span class="close-modal" onclick="closeModalDirect()">&times;</span>
+            <div id="m-title"></div>
+            <div id="m-body"></div>
+        </div>
+    </div>
+
+    <div id="fc-mobile-modal" onclick="closeMobileAnswerPopup()">
+        <div class="fc-mobile-content" onclick="event.stopPropagation()">
+            <h3>Risposta</h3>
+            <div id="fc-mobile-body"></div>
+            <button class="fc-mobile-close" onclick="closeMobileAnswerPopup()">Ho capito, chiudi</button>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="header-eyebrow notranslate" translate="no">Una Mano Spensierata</div>
+        <h1 id="dyn-title"><span class="ums-skel ums-skel-l1" aria-hidden="true"></span><span class="ums-skel ums-skel-l2" aria-hidden="true"></span></h1>
+        <div class="subtitle" id="dyn-subtitle"><span class="ums-skel ums-skel-sub" aria-hidden="true"></span></div>
+
+        <div id="translation-disclaimer"><svg class="ums-ic" aria-hidden="true"><use href="#ic-globe"/></svg> Traduzione a cura dell'IA: possibili errori o imprecisioni.</div>
+
+        <div class="badges-row">
+            <a href="https://lorenzosciallato.github.io/Una-mano-spensierata/index.html" class="author-badge primary">
+                <span class="author-name" style="padding: 4px 6px;"><svg class="ums-ic" aria-hidden="true"><use href="#ic-home"/></svg> Torna alla Home</span>
+            </a>
+            <a href="https://www.instagram.com/sciallato_lorenzo/" target="_blank" class="author-badge">
+                <img src="https://files.catbox.moe/qvck5j.png" alt="Lorenzo Sciallato" class="author-img">
+                <span class="author-name">Creato da <strong>Lorenzo</strong> &copy; 2025</span>
+            </a>
+            <a href="https://chat.whatsapp.com/EaX5kr14XxHL9o3qxdDVEP?mode=gi_t" target="_blank" class="author-badge">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="Gruppo WhatsApp" class="author-img" style="padding:10px;">
+                <span class="author-name">Entra nel <strong>Gruppo</strong></span>
+            </a>
+        </div>
+
+        <div id="google_translate_element" style="display:none;"></div>
+        <div id="custom-lang-selector" class="notranslate">
+            <div id="lang-loading" style="display:none;">&hellip;</div>
+            <button id="lang-toggle-btn" onclick="toggleLangMenu()">
+                <span id="lang-label"><svg class="ums-ic" aria-hidden="true"><use href="#ic-globe"/></svg> Lingua</span> <small id="lang-arrow"><svg class="ums-ic" aria-hidden="true"><use href="#ic-chevron-down"/></svg></small>
+            </button>
+            <div class="lang-options" id="lang-options-menu">
+                <button onclick="triggerTranslation('it', this)" title="Italiano" class="active-lang">🇮🇹</button>
+                <button onclick="triggerTranslation('en', this)" title="English">🇬🇧</button>
+                <button onclick="triggerTranslation('fr', this)" title="Français">🇫🇷</button>
+                <button onclick="triggerTranslation('de', this)" title="Deutsch">🇩🇪</button>
+                <button onclick="triggerTranslation('es', this)" title="Español">🇪🇸</button>
+                <button onclick="triggerTranslation('bg', this)" title="Български">🇧🇬</button>
+                <button onclick="triggerTranslation('pl', this)" title="Polski">🇵🇱</button>
+                <button onclick="triggerTranslation('el', this)" title="Ελληνικά">🇬🇷</button>
+                <button onclick="triggerTranslation('lt', this)" title="Lietuvių">🇱🇹</button>
+                <button onclick="triggerTranslation('da', this)" title="Dansk">🇩🇰</button>
+                <button onclick="triggerTranslation('pt', this)" title="Português">🇵🇹</button>
+                <button onclick="triggerTranslation('zh-CN', this)" title="中文">🇨🇳</button>
+                <button onclick="triggerTranslation('ar', this)" title="العربية">🇸🇦</button>
+                <button onclick="triggerTranslation('hi', this)" title="हिन्दी">🇮🇳</button>
+                <button onclick="triggerTranslation('ru', this)" title="Русский">🇷🇺</button>
+                <button onclick="triggerTranslation('ja', this)" title="日本語">🇯🇵</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Card -->
+    <div class="content-card">
+
+        <div class="master-accordion-item">
+            <div class="ums-master-row">
+                <button class="master-header" id="master-toggle-btn" onclick="toggleMaster()" aria-expanded="false">
+                    <span>Inizia</span>
+                    <span class="mh-arrow"><svg class="ums-ic" aria-hidden="true"><use href="#ic-arrow-right"/></svg></span>
+                </button>
+                <button id="ums-sostieni" type="button" aria-haspopup="dialog" aria-label="Sostieni Una Mano Spensierata">
+                    <svg class="ums-cup" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V8Z"/><path d="M17 9h1.8a2.2 2.2 0 0 1 0 4.4H17"/><path d="M7 3.5c0 .8-.8 1.2-.8 2s.8 1.2.8 2"/><path d="M11 3.5c0 .8-.8 1.2-.8 2s.8 1.2.8 2"/></svg>
+                    <span id="ums-sostieni-label">Tienimi acceso</span>
+                </button>
+            </div>
+
+            <div class="master-content" id="master-content">
+                <div class="master-content-inner">
+
+                    <!-- 01. OBIETTIVI -->
+                    <div class="accordion-item">
+                        <button class="accordion-header">
+                            <span class="ch-number">01</span>
+                            <span class="ch-text">
+                                <span class="ch-eyebrow">Orientamento</span>
+                                <span class="ch-title">Obiettivi &amp; Punti Chiave</span>
+                            </span>
+                            <span class="ch-icon">+</span>
+                        </button>
+                        <div class="accordion-content">
+                            
+                            <!-- Box Obiettivi -->
+                            <div class="obj-box">
+                                <p><strong>Obiettivi della lezione</strong></p>
+                                <ul class="obj-list" id="dyn-obiettivi"></ul>
+                            </div>
+
+                            <!-- Box Concetto Fondamentale (Dinamico) -->
+                            <div id="dyn-concetto-fondamentale" style="display: none; background: var(--navy); color: #fff; padding: 1.5rem; border-radius: var(--r-md); margin-bottom: 2rem; line-height: 1.6;"></div>
+
+                            <!-- Punti Chiave -->
+                            <span class="factors-intro">Punti chiave — clicca per approfondire</span>
+                            <div class="factors-grid" id="dyn-punti-chiave"></div>
+
+                            <!-- Box Nota Extra (Dinamico) -->
+                            <div id="dyn-nota-extra" style="display: none; background: #FFFDF7; border: 1px solid var(--gold-lt); padding: 1.5rem; margin-top: 0.5rem; margin-bottom: 2rem; border-radius: var(--r-md); color: var(--body);"></div>
+
+                            <!-- Domande Autovalutazione (Dinamico) -->
+                            <div id="dyn-domande-container" style="display: none; margin-bottom: 2rem;">
+                                <p style="font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; color: var(--ink); margin-bottom: 0.8rem;">Domande per l'autovalutazione</p>
+                                <ul class="obj-list" id="dyn-domande"></ul>
+                            </div>
+
+                            <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione <svg class="ums-ic" aria-hidden="true"><use href="#ic-chevron-up"/></svg></button>
+                        </div>
+                    </div>
+
+                    <!-- 02. PODCAST -->
+                    <div class="accordion-item">
+                        <button class="accordion-header">
+                            <span class="ch-number">02</span>
+                            <span class="ch-text">
+                                <span class="ch-eyebrow">Ascolto</span>
+                                <span class="ch-title">Il Podcast</span>
+                            </span>
+                            <span class="ch-icon">+</span>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="media-notes-grid">
+                                <div>
+                                    <div class="video-container">
+                                        <iframe id="dyn-podcast-player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                    </div>
+                                    <p class="video-fallback-note" style="display:none;">Il contenuto non è disponibile per questa lezione.</p>
+                                    <a id="dyn-podcast-link" href="LINK_YOUTUBE_QUI" target="_blank" class="video-direct-link">YouTube fa i capricci? Apri direttamente ↗</a>
+                                </div>
+                                <div class="notes-widget">
+                                    <div class="notes-toolbar">
+                                        <span class="notes-label">Appunti</span>
+                                        <button class="tool-btn copy-btn">Copia</button>
+                                        <button class="tool-btn download-btn"><svg class="ums-ic" aria-hidden="true"><use href="#ic-download"/></svg> .txt</button>
+                                    </div>
+                                    <textarea class="notes-area" placeholder="Scrivi qui i tuoi appunti mentre ascolti…"></textarea>
+                                </div>
+                            </div>
+                            <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione <svg class="ums-ic" aria-hidden="true"><use href="#ic-chevron-up"/></svg></button>
+                        </div>
+                    </div>
+
+                    <!-- 03. VIDEO SINTESI -->
+                    <div class="accordion-item">
+                        <button class="accordion-header">
+                            <span class="ch-number">03</span>
+                            <span class="ch-text">
+                                <span class="ch-eyebrow">Visione</span>
+                                <span class="ch-title">Video Sintesi</span>
+                            </span>
+                            <span class="ch-icon">+</span>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="media-notes-grid">
+                                <div>
+                                    <div class="video-container">
+                                        <iframe id="dyn-video-player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                    </div>
+                                    <p class="video-fallback-note" style="display:none;">Il contenuto non è disponibile per questa lezione.</p>
+                                    <a id="dyn-video-link" href="LINK_YOUTUBE_QUI" target="_blank" class="video-direct-link">YouTube fa i capricci? Apri direttamente ↗</a>
+                                </div>
+                                <div class="notes-widget">
+                                    <div class="notes-toolbar">
+                                        <span class="notes-label">Appunti</span>
+                                        <button class="tool-btn copy-btn">Copia</button>
+                                        <button class="tool-btn download-btn"><svg class="ums-ic" aria-hidden="true"><use href="#ic-download"/></svg> .txt</button>
+                                    </div>
+                                    <textarea class="notes-area" placeholder="Scrivi qui i tuoi appunti mentre guardi…"></textarea>
+                                </div>
+                            </div>
+                            <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione <svg class="ums-ic" aria-hidden="true"><use href="#ic-chevron-up"/></svg></button>
+                        </div>
+                    </div>
+
+                    <!-- 04. FLASHCARDS -->
+                    <div class="accordion-item">
+                        <button class="accordion-header">
+                            <span class="ch-number">04</span>
+                            <span class="ch-text">
+                                <span class="ch-eyebrow">Ripasso Attivo</span>
+                                <span class="ch-title">Dritti al Sodo</span>
+                            </span>
+                            <span class="ch-icon">+</span>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="media-notes-grid">
+                                <div>
+                                    <div id="fc-start-screen" style="text-align:center; padding: 1rem 0;">
+                                        <div class="flashcard-wrapper" style="cursor:default;">
+                                            <div class="flashcard-inner">
+                                                <div class="flashcard-front"></div>
+                                            </div>
+                                        </div>
+                                        <button class="btn-pop btn-start" onclick="startFlashcards()">Inizia il Ripasso</button>
+                                    </div>
+
+                                    <div id="fc-game-screen" style="display:none;">
+                                        <div class="fc-counter" id="fc-counter"></div>
+                                        <div id="flashcard-deck" class="flashcard-wrapper" onclick="handleWrapperClick(event)">
+                                            <div class="flashcard-inner">
+                                                <div class="flashcard-front">
+                                                    <h2 id="fc-front-text">Caricamento…</h2>
+                                                    <button class="btn-flip-mobile" onclick="forceFlip(event)">GIRA <svg class="ums-ic" aria-hidden="true"><use href="#ic-rotate"/></svg></button>
+                                                </div>
+                                                <div class="flashcard-back">
+                                                    <p id="fc-back-text">Caricamento…</p>
+                                                    <button class="btn-flip-mobile" onclick="forceFlip(event)">GIRA <svg class="ums-ic" aria-hidden="true"><use href="#ic-rotate"/></svg></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="fc-controls" id="fc-controls-bar">
+                                            <button class="btn-pop btn-nav" onclick="navCard(-1)" aria-label="Carta precedente"><svg class="ums-ic" aria-hidden="true"><use href="#ic-chevron-left"/></svg></button>
+                                            <div class="fc-actions">
+                                                <button class="btn-pop btn-no" onclick="markUnknown()">Ripasso dopo :(</button>
+                                                <button class="btn-pop btn-yes" onclick="markKnown()">La so! :)</button>
+                                            </div>
+                                            <button class="btn-pop btn-nav" onclick="navCard(1)" aria-label="Carta successiva"><svg class="ums-ic" aria-hidden="true"><use href="#ic-chevron-right"/></svg></button>
+                                        </div>
+                                    </div>
+
+                                    <div id="win-screen">
+                                        <h2>Ma allora se le sai tutte io vado via!!</h2>
+                                        <p style="margin:20px 0; font-size:2.5rem; color:var(--gold-dk);"><svg class="ums-ic" aria-hidden="true"><use href="#ic-award"/></svg></p>
+                                        <button class="btn-pop btn-yes" onclick="resetDeck()">Ricomincia da capo</button>
+                                    </div>
+                                </div>
+
+                                <div class="notes-widget">
+                                    <div class="notes-toolbar">
+                                        <span class="notes-label">Appunti</span>
+                                        <button class="tool-btn copy-btn">Copia</button>
+                                        <button class="tool-btn download-btn"><svg class="ums-ic" aria-hidden="true"><use href="#ic-download"/></svg> .txt</button>
+                                    </div>
+                                    <textarea class="notes-area" placeholder="Annota quello che non ricordi…"></textarea>
+                                </div>
+                            </div>
+                            <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione <svg class="ums-ic" aria-hidden="true"><use href="#ic-chevron-up"/></svg></button>
+                        </div>
+                    </div>
+
+                    <!-- 05. RIASSUNTONE -->
+                    <div class="accordion-item">
+                        <button class="accordion-header">
+                            <span class="ch-number">05</span>
+                            <span class="ch-text">
+                                <span class="ch-eyebrow">Studio Approfondito</span>
+                                <span class="ch-title">Il Riassuntone</span>
+                            </span>
+                            <span class="ch-icon">+</span>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="media-notes-grid" id="riass-grid">
+
+                                <!-- BANNER PINGUINI + LAVAGNA — figli diretti della
+                                     griglia: su desktop occupano TUTTA la larghezza
+                                     (entrambe le colonne, vedi ums-riass-layout-style) -->
+                                    <div class="wb-banner-wrap">
+                                        <div id="wb-section-banner" class="kb-frame" data-kenburns onclick="wbMaximize()">
+                                            <img src="https://i.postimg.cc/BbgFzJFJ/disegna-dei-pinguini-tutti-in-mucchio-come-fanno-in-natura-stile-del-disegno-corporate.jpg"
+                                                class="section-banner"
+                                                alt="Pinguini">
+                                        </div>
+                                        
+                                        <div id="wb-badge" onclick="wbMaximize()"><svg class="ums-ic" aria-hidden="true"><use href="#ic-pen"/></svg> <span id="wb-badge-count">0</span> concetti</div>
+
+                                        <!-- Smart Whiteboard -->
+                                        <div id="smart-whiteboard">
+                                            <div class="wb-header">
+                                                <span class="wb-title"><svg class="ums-ic" aria-hidden="true"><use href="#ic-pen"/></svg> Lavagna Concetti</span>
+                                            </div>
+                                            <div class="wb-body-wrap">
+                                                <div class="wb-body" id="wb-body"></div>
+                                                <div class="wb-scroll-btns">
+                                                    <button class="wb-scroll-btn" onclick="wbScroll(-40)" aria-label="Scorri in su"><svg class="ums-ic" aria-hidden="true"><use href="#ic-chevron-up"/></svg></button>
+                                                    <button class="wb-scroll-btn" onclick="wbScroll(40)" aria-label="Scorri in giù"><svg class="ums-ic" aria-hidden="true"><use href="#ic-chevron-down"/></svg></button>
+                                                </div>
+                                            </div>
+                                            <!-- Footer con bottoni sempre visibili in basso -->
+                                            <div class="wb-footer">
+                                                <button class="wb-btn wb-btn-pdf" onclick="wbExportPDF()"><svg class="ums-ic" aria-hidden="true"><use href="#ic-printer"/></svg> Stampa / PDF</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Come funziona la sottolineatura (copy sotto il banner/lavagna) -->
+                                    <div class="wb-hint">
+                                        <span class="hl-copy-desktop"><svg class="ums-ic" aria-hidden="true"><use href="#ic-highlighter"/></svg> Seleziona una frase qui sotto col mouse e premi &laquo;Sottolinea&raquo;: il concetto appare qui sopra, sulla Lavagna. Quando hai finito, &laquo;Stampa / PDF&raquo; trasforma le tue sottolineature in un foglio di ripasso.</span>
+                                        <span class="hl-copy-mobile"><svg class="ums-ic" aria-hidden="true"><use href="#ic-highlighter"/></svg> Tieni premuto su una parola qui sotto, allarga la selezione coi cursori e tocca &laquo;Sottolinea&raquo;: il concetto appare qui sopra, sulla Lavagna. Con &laquo;Stampa / PDF&raquo; salvi il foglio di ripasso sul telefono.</span>
+                                        <div class="hl-palette-row">
+                                            <span class="hl-palette-micro">Tocca un colore per cambiare evidenziatore:</span>
+                                            <div class="hl-palette-swatches" id="hl-palette">
+                                                <div class="hl-swatch hl-swatch-active" data-color="#FFF176" style="background:#FFF176;" title="Giallo" onclick="hlSetColor(this)"></div>
+                                                <div class="hl-swatch" data-color="#A5D6A7" style="background:#A5D6A7;" title="Verde" onclick="hlSetColor(this)"></div>
+                                                <div class="hl-swatch" data-color="#F48FB1" style="background:#F48FB1;" title="Rosa" onclick="hlSetColor(this)"></div>
+                                                <div class="hl-swatch" data-color="#90CAF9" style="background:#90CAF9;" title="Azzurro" onclick="hlSetColor(this)"></div>
+                                                <div class="hl-swatch" data-color="#FFCC80" style="background:#FFCC80;" title="Arancione" onclick="hlSetColor(this)"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                <!-- ================== COLONNA SINISTRA ==================
+                                     Ora contiene SOLO il testo del riassuntone: il bloc
+                                     notes a destra parte alla sua stessa altezza -->
+                                <div>
+                                    <div id="dyn-riassuntone-container" class="text-content-box"></div>
+                                </div>
+
+                                <!-- ================== COLONNA DESTRA ================== -->
+                                <div class="notes-widget" id="riassuntone-notes-widget">
+                                    <div class="notes-toolbar">
+                                        <span class="notes-label">Appunti</span>
+                                        <button class="tool-btn copy-btn">Copia</button>
+                                        <button class="tool-btn download-btn"><svg class="ums-ic" aria-hidden="true"><use href="#ic-download"/></svg> .txt</button>
+                                    </div>
+                                    <textarea class="notes-area" placeholder="Annota concetti da ricordare…"></textarea>
+                                </div>
+
+                            </div>
+                            <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione <svg class="ums-ic" aria-hidden="true"><use href="#ic-chevron-up"/></svg></button>
+                        </div>
+                    </div>
+
+                    <!-- 06. PAUSA — MINI WORD SEARCH — TASK 1: notranslate -->
+                    <div class="accordion-item">
+                        <button class="accordion-header">
+                            <span class="ch-number">06</span>
+                            <span class="ch-text">
+                                <span class="ch-eyebrow">Giochi</span>
+                                <span class="ch-title">Fai una Pausa</span>
+                            </span>
+                            <span class="ch-icon">+</span>
+                        </button>
+                        <div class="accordion-content">
+
+                            <!-- TASK 1: aggiunta classe notranslate + rimosso il <p> ridondante -->
+                            <div class="pausa-wordsearch">
+                                <div class="pausa-ws-header">
+                                    <h3>I Giochi <svg class="ums-ic" aria-hidden="true"><use href="#ic-search"/></svg></h3>
+                                </div>
+
+                                <!-- Selettore gioco (su mobile: etichetta + pulsanti impilati) -->
+                                <div class="ws-select-label">Scegli il gioco</div>
+                                <div class="ws-lang-row">
+                                    <button class="ws-lang-btn active" id="ws-btn-words" onclick="pausaSetGame('words')">Cerca le Parole</button>
+                                    <button class="ws-lang-btn" id="ws-btn-sudoku" onclick="pausaSetGame('sudoku')">Sudoku</button>
+                                    <button class="ws-lang-btn" id="ws-btn-sol" onclick="pausaSetGame('sol')">Solitario</button>
+                                </div>
+
+                                <!-- GIOCO 1: Cerca le Parole (parole della lezione, tradotte con la pagina) -->
+                                <div id="ws-game">
+                                    <button class="ums-gioca-cta" type="button" onclick="umsGiocaApri('words')"><svg class="ums-ic" aria-hidden="true"><use href="#ic-search"/></svg> Gioca a Cerca le Parole</button>
+                                    <div class="ws-layout">
+                                        <div>
+                                            <div class="ws-grid-wrap notranslate">
+                                                <div class="ws-grid" id="ws-grid"></div>
+                                            </div>
+                                            <div class="ws-status notranslate" id="ws-status">Trascina o tocca per selezionare le lettere.</div>
+                                            <div class="ws-win-msg" id="ws-win-msg">
+                                                <p><svg class="ums-ic" aria-hidden="true"><use href="#ic-award"/></svg> Ammazza che bravo/a... complimentoni!</p>
+                                                <button class="ws-new-btn" onclick="wsNewGame()">Nuova partita</button>
+                                            </div>
+                                        </div>
+                                        <div class="ws-word-list notranslate" id="ws-word-list"></div>
+                                    </div>
+                                    <p class="sd-howto">Le parole nascoste sono i concetti chiave di questa lezione: trovarle è un piccolo ripasso travestito da pausa.</p>
+                                </div>
+
+                                <!-- GIOCO 2: Sudoku -->
+                                <div id="sd-game" style="display:none;">
+                                    <button class="ums-gioca-cta" type="button" onclick="umsGiocaApri('sudoku')"><svg class="ums-ic" aria-hidden="true"><use href="#ic-search"/></svg> Gioca a Sudoku</button>
+                                    <div class="ums-info-row"><button class="ums-info-btn" type="button" onclick="umsInfoApri('sudoku')" aria-label="Come si gioca a Sudoku">?</button></div>
+                                    <div class="sd-diff-row">
+                                        <button class="ws-lang-btn active" id="sd-btn-facile" onclick="sdSetDiff('facile')">Facile</button>
+                                        <button class="ws-lang-btn" id="sd-btn-medio" onclick="sdSetDiff('medio')">Medio</button>
+                                        <button class="ws-lang-btn" id="sd-btn-difficile" onclick="sdSetDiff('difficile')">Difficile</button>
+                                    </div>
+                                    <div class="sd-wrap notranslate">
+                                        <div class="sd-grid" id="sd-grid"></div>
+                                    </div>
+                                    <div class="sd-pad notranslate" id="sd-pad"></div>
+                                    <div class="ws-status notranslate" id="sd-status">Tocca una casella vuota e scegli un numero.</div>
+                                    <div class="ws-win-msg" id="sd-win-msg">
+                                        <p><svg class="ums-ic" aria-hidden="true"><use href="#ic-award"/></svg> Ammazza che bravo/a... complimentoni!</p>
+                                        <button class="ws-new-btn" onclick="sdNewGame()">Nuova partita</button>
+                                    </div>
+                                </div>
+
+                                <!-- GIOCO 3: Solitario (variante a seme unico) -->
+                                <div id="sol-game" style="display:none;">
+                                    <button class="ums-gioca-cta" type="button" onclick="umsGiocaApri('sol')"><svg class="ums-ic" aria-hidden="true"><use href="#ic-search"/></svg> Gioca a Solitario</button>
+                                    <div class="ums-info-row"><button class="ums-info-btn" type="button" onclick="umsInfoApri('sol')" aria-label="Come si gioca a Solitario">?</button></div>
+                                    <div class="sol-board notranslate" id="sol-board">
+                                        <div class="sol-pile" id="sol-stock"></div>
+                                        <div class="sol-pile" id="sol-waste"></div>
+                                        <div class="sol-spacer"></div>
+                                        <div class="sol-pile sol-found" id="sol-f0" data-suit="♥">♥</div>
+                                        <div class="sol-pile sol-found" id="sol-f1" data-suit="♦">♦</div>
+                                        <div class="sol-pile sol-found" id="sol-f2" data-suit="♣">♣</div>
+                                        <div class="sol-pile sol-found" id="sol-f3" data-suit="♠">♠</div>
+                                        <div class="sol-pile sol-tab" id="sol-t1"></div>
+                                        <div class="sol-pile sol-tab" id="sol-t2"></div>
+                                        <div class="sol-pile sol-tab" id="sol-t3"></div>
+                                        <div class="sol-pile sol-tab" id="sol-t4"></div>
+                                        <div class="sol-pile sol-tab" id="sol-t5"></div>
+                                        <div class="sol-pile sol-tab" id="sol-t6"></div>
+                                        <div class="sol-pile sol-tab" id="sol-t7"></div>
+                                    </div>
+                                    <div class="ws-status notranslate" id="sol-status">Tocca il mazzo per pescare, trascina le carte per spostarle.</div>
+                                    <div class="ws-win-msg" id="sol-win-msg">
+                                        <p><svg class="ums-ic" aria-hidden="true"><use href="#ic-award"/></svg> Ammazza che bravo/a... complimentoni!</p>
+                                        <button class="ws-new-btn" onclick="solNewGame()">Nuova partita</button>
+                                    </div>
+                                    <div style="text-align:center; margin-top:1.1rem;">
+                                        <button class="ls-btn" onclick="solNewGame()">Nuova partita</button>
+                                    </div>
+                                </div>
+
+                                <!-- ACCADDE OGGI — rubrica dinamica (Wikipedia), tradotta insieme alla pagina -->
+                                <div class="losapevi" id="losapevi-box">
+                                    <div class="ls-head">
+                                        <div class="ws-kicker">Accadde Oggi</div>
+                                        <div class="ls-data" id="ls-data"></div>
+                                    </div>
+                                    <div id="losapevi-list"></div>
+                                    <div class="ls-footer">
+                                        <button class="ls-btn" onclick="lsShuffle()"><svg class="ums-ic" aria-hidden="true"><use href="#ic-rotate"/></svg> Altri fatti</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione <svg class="ums-ic" aria-hidden="true"><use href="#ic-chevron-up"/></svg></button>
+                        </div>
+                    </div>
+
+                    <!-- 07. ASSISTENTE IA -->
+                    <div class="accordion-item">
+                        <button class="accordion-header">
+                            <span class="ch-number">07</span>
+                            <span class="ch-text">
+                                <span class="ch-eyebrow">Intelligenza Artificiale</span>
+                                <span class="ch-title" id="dyn-ia-tab-title">Assistente IA</span>
+                            </span>
+                            <span class="ch-icon">+</span>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="ia-container" data-kenburns>
+                                <div class="ia-image-col">
+                                    <img src="https://i.ibb.co/LXQ0RwkT/elimina-il-robot-cattivo.jpg" alt="Assistente IA">
+                                </div>
+                                <div class="ia-text-col">
+                                    <span class="ia-eyebrow">Il tuo tutor personale</span>
+                                    <div class="ia-name" id="dyn-ia-nome">Caricamento…</div>
+                                    <p class="ia-sub" id="dyn-ia-sottotesto"></p>
+                                    <a id="dyn-ia-url" href="#" target="_blank" class="btn-ia">Avvia Chat →</a>
+                                </div>
+                            </div>
+                            <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione <svg class="ums-ic" aria-hidden="true"><use href="#ic-chevron-up"/></svg></button>
+                        </div>
+                    </div>
+
+                    <!-- 08. IL SUPER QUIZ -->
+                    <div class="accordion-item">
+                        <button class="accordion-header">
+                            <span class="ch-number">08</span>
+                            <span class="ch-text">
+                                <span class="ch-eyebrow">Verifica Finale</span>
+                                <span class="ch-title">Il Super Quiz</span>
+                            </span>
+                            <span class="ch-icon">+</span>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="quiz-list" id="dyn-super-quiz"></div>
+                            <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione <svg class="ums-ic" aria-hidden="true"><use href="#ic-chevron-up"/></svg></button>
+                        </div>
+                    </div>
+
+                </div><!-- /master-content-inner -->
+            </div><!-- /master-content -->
+        </div><!-- /master-accordion-item -->
+
+    </div><!-- /content-card -->
+
+    <!-- Disclaimer -->
+    <div class="disclaimer-card">
+        <h3>Tutela del diritto d'autore e limitazione di responsabilità</h3>
+        <p>Tutti i materiali didattici presenti all'interno del portale <span class="notranslate" translate="no">Una Mano Spensierata</span> (inclusi, a titolo esemplificativo e non esaustivo: riassunti, schemi, mappe concettuali, flashcard e quiz) costituiscono una rielaborazione personale, critica e originale degli appunti universitari. Tali contenuti sono realizzati e condivisi esclusivamente per finalità didattiche, di studio e di mutuo soccorso accademico, ai sensi e nel pieno rispetto dell'Art. 70 della Legge 22 aprile 1941 n. 633 in materia di protezione del diritto d'autore. I materiali presenti sulla piattaforma hanno natura puramente integrativa e non intendono in alcun modo porsi come sostitutivi dei libri di testo ufficiali, delle dispense fornite dai docenti o della frequenza alle lezioni frontali. Si dichiara espressamente l'assenza di riproduzioni pedisseque, integrali o non autorizzate di opere intellettuali protette da copyright di terzi. L'utente fruitore solleva i gestori della piattaforma da qualsivoglia responsabilità derivante da un uso improprio del materiale fornito.</p>
+        <h3>Aiutami a tenere in ordine la piattaforma! <svg class="ums-ic" aria-hidden="true"><use href="#ic-wrench"/></svg></h3>
+        <p>Ciao! Come sai, costruisco, aggiorno e mantengo questo sito interamente da solo. Se incappi in un refuso, in un link che non funziona, o se ti accorgi che l'audio del podcast sta dicendo qualcosa di non coerente con il resto della lezione, per favore non ignorarlo. Scrivimi subito sul nostro gruppo WhatsApp specificando l'errore o la lezione incriminata. Così posso correggere il codice o il testo in tempo reale e tenere la piattaforma pulita e affidabile per tutti gli iscritti. Questo progetto cresce anche grazie alle vostre revisioni. Grazie per l'aiuto!</p>
+    </div>
+
+    <footer class="site-footer">
+        <strong class="notranslate" translate="no">Una Mano Spensierata</strong> &nbsp;·&nbsp; Tutti i diritti riservati &nbsp;·&nbsp; Lorenzo Sciallato &copy; 2025
+    </footer>
+
+    <!-- ================================================================
+         JAVASCRIPT
+    ================================================================ -->
+
+    <!-- Language JS -->
+
+    <!-- ================================================================
+         NIGHT MODE — SCRIPT ADDITIVO (toggle + persistenza)
+    ================================================================ -->
+
+    <!-- ================================================================
+         UMS APP ALIGN — BLOCCO ADDITIVO (allineamento al nuovo index)
+         Non modifica il CSS/JS originale: solo aggiunte e override.
+    ================================================================ -->
+
+    <!-- ================================================================
+         NAVIGAZIONE LEZIONI — BLOCCO ADDITIVO
+         Legge il ?file= dall'URL, ricava cartella + numero e costruisce
+         i link "precedente/successiva" sostituendo solo l'ultimo numero
+         prima di .json. Funziona sia con "storiaeducazione-lezione-N.json"
+         sia con "lezione-N.json". I corsi non in mappa (Ed. Musicale)
+         non mostrano alcun pulsante.
+    ================================================================ -->
+
+    <!-- ================================================================
+         INSTA-NAV — BLOCCO ADDITIVO
+         Barra di navigazione stile Instagram:
+         · Desktop: rail verticale fissa a sinistra
+         · Mobile:  barra fissa in basso
+         Ordine: Lingua (icona+testo) · Home · Lorenzo (avatar → popup
+         "© 2025, tutti i diritti riservati" → Instagram) · WhatsApp.
+         I vecchi badge nell'header vengono nascosti; il selettore
+         lingua originale viene SPOSTATO (non duplicato) dentro la
+         barra, così tutta la sua logica resta intatta.
+    ================================================================ -->
+
+    <!-- ================================================================
+         TITOLO STILE BRAND — BLOCCO ADDITIVO
+         Il nome della materia replica ESATTAMENTE il brand dell'index:
+         Playfair 900, clamp(3rem,10vw,6.4rem), line-height .92,
+         prima parola nel colore base, resto in corsivo blu navy
+         (azzurro #8FB4E8 in night mode), righe che entrano dai due lati.
+         Il data-binding originale riscrive il titolo con innerText dopo
+         il fetch: l'observer lo ri-spezza in due righe ogni volta.
+    ================================================================ -->
+
+    <!-- ================================================================
+         TITOLO MORPHING CENTRATO — BLOCCO ADDITIVO
+         Come il brand dell'index ma con destinazione in alto e SEMPRE
+         CENTRATA: il translate(-50%,-50%) resta identico nei due stati,
+         quindi transitano solo `top` (40% → centro barra) e `font-size`
+         (grande → piccolo). Il ricentraggio orizzontale durante il
+         rimpicciolimento è automatico. Niente script: solo CSS su
+         body.ums-master-open. Il titolo mini resta blindato nella
+         barra: una riga, larghezza vincolata, ellissi sui nomi lunghi.
+    ================================================================ -->
+
+    <!-- ================================================================
+         FIXUPS — BLOCCO ADDITIVO
+         1) Il disclaimer traduzione viene SPOSTATO fuori dall'header
+            (dentro, gonfiava l'header fisso al cambio lingua: il titolo
+            sforava sopra la barra e il disclaimer collassava su mobile).
+            Diventa una pillola fissa, centrata, con una ✕ per chiuderla.
+         2) La ✕ del modale (voci Wikipedia di Accadde Oggi) era absolute
+            in un contenitore scrollabile: scorrendo spariva e su mobile
+            si restava incastrati. Ora è sticky (sempre visibile) con
+            area di tocco da 40px, e il modale si chiude anche con Esc.
+    ================================================================ -->
+
+    <!-- ================================================================
+         UMS CONFIRM — pop-up di conferma brandizzato (stile pop-up Accedi)
+         Sostituisce i confirm() nativi. API: umsConfirm({...}) -> Promise
+    ================================================================ -->
+    <!-- ================================================================
+         SOSTEGNO — pulsante accanto a "Inizia" + pop-up con le tre fasce
+         Gemello di quello dell'index. La scelta della fascia avviene qui;
+         solo il pagamento apre Buy Me a Coffee in una nuova scheda.
+    ================================================================ -->
+
+    <!-- ================================================================
+         RITOCCHI — BLOCCO ADDITIVO
+         1) Lavagna: grande di default (via ingrandisci/riduci)
+         2) Chip fissa "Lavagna": indica dov'è e ci porta al click
+         3) Giochi Pausa a tutta larghezza su mobile (celle più grandi)
+         4) Splash mobile: blocco vero dello scroll (iOS ignorava
+            overflow:hidden e il titolo fisso "seguiva" il dito)
+         5) Selettore giochi su mobile: etichetta + tre pulsanti impilati,
+            il "Gioca a X" sotto segue la selezione
+    ================================================================ -->
+
+    <!-- RITOCCHI HUB & FLASHCARD — riga promemoria ordinata, controlli
+         flashcard da app vera su mobile, tap sulla topbar = torna in cima -->
+    <!-- ================================================================
+         RIASSUNTONE — LAVAGNA A TUTTA LARGHEZZA + APPUNTI AFFIANCATI
+         Bug risolto: sottolineando, la lavagna si apriva nella colonna
+         sinistra e spingeva giù il riassuntone, mentre il bloc notes
+         (sticky in alto a destra) restava su — testo e appunti si
+         allontanavano fino a non poter più leggere e scrivere insieme.
+         Ora: banner pinguini e lavagna occupano tutta la larghezza
+         della sezione; il bloc notes parte in corrispondenza della
+         prima riga del riassuntone ed è alto quanto lo schermo utile
+         (poi resta incollato mentre si scorre il testo).
+         Su mobile (colonna singola) non cambia nulla.
+    ================================================================ -->
+    <!-- Tutto il JavaScript del progetto vive in js/ums.js (vedi README).
+         Google Translate DEVE caricare dopo: la sua callback è definita lì. -->
+    <script src="js/ums.js"></script>
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
+</html>
