@@ -652,7 +652,7 @@
             border-radius: var(--r-lg);
             display: flex; flex-direction: column;
             align-self: start;
-            height: 60vh;
+            height: 66vh;
             position: sticky; top: 24px; z-index: 5;
             width: 100%; min-width: 0;
             box-shadow: var(--shadow-card);
@@ -2333,7 +2333,7 @@
                                                     <button class="btn-flip-mobile" onclick="forceFlip(event)">GIRA <svg class="ums-ic" aria-hidden="true"><use href="#ic-rotate"/></svg></button>
                                                 </div>
                                                 <div class="flashcard-back">
-                                                    <p id="fc-back-text" onclick="event.stopPropagation()">Caricamento…</p>
+                                                    <p id="fc-back-text">Caricamento…</p>
                                                     <button class="btn-flip-mobile" onclick="forceFlip(event)">GIRA <svg class="ums-ic" aria-hidden="true"><use href="#ic-rotate"/></svg></button>
                                                 </div>
                                             </div>
@@ -2483,7 +2483,7 @@
                                             </div>
                                             <div class="ws-status notranslate" id="ws-status">Trascina o tocca per selezionare le lettere.</div>
                                             <div class="ws-win-msg" id="ws-win-msg">
-                                                <p><svg class="ums-ic" aria-hidden="true"><use href="#ic-award"/></svg> Trovate tutte! Bravissimo/a!</p>
+                                                <p><svg class="ums-ic" aria-hidden="true"><use href="#ic-award"/></svg> Ammazza che bravo/a... complimentoni!</p>
                                                 <button class="ws-new-btn" onclick="wsNewGame()">Nuova partita</button>
                                             </div>
                                         </div>
@@ -2506,7 +2506,7 @@
                                     <div class="sd-pad notranslate" id="sd-pad"></div>
                                     <div class="ws-status notranslate" id="sd-status">Tocca una casella vuota e scegli un numero.</div>
                                     <div class="ws-win-msg" id="sd-win-msg">
-                                        <p><svg class="ums-ic" aria-hidden="true"><use href="#ic-award"/></svg> Sudoku completato! Mente riposata e allenata.</p>
+                                        <p><svg class="ums-ic" aria-hidden="true"><use href="#ic-award"/></svg> Ammazza che bravo/a... complimentoni!</p>
                                         <button class="ws-new-btn" onclick="sdNewGame()">Nuova partita</button>
                                     </div>
                                     <p class="sd-howto"><strong>Come si gioca:</strong> riempi la griglia in modo che ogni riga, ogni colonna e ogni riquadro 3&times;3 contengano tutti i numeri da 1 a 9, senza ripetizioni. I numeri in grassetto sono gli indizi fissi di partenza: tocca una casella vuota e scegli un numero dalla tastiera qui sopra (o dalla tastiera fisica). Durante la partita nessun aiuto: quando avrai riempito l'ultima casella, il gioco ti dir&agrave; se la soluzione &egrave; corretta oppure evidenzier&agrave; in terracotta le caselle in conflitto da correggere. Non serve indovinare: ogni schema ha una sola soluzione, raggiungibile con la logica.</p>
@@ -2533,7 +2533,7 @@
                                     </div>
                                     <div class="ws-status notranslate" id="sol-status">Tocca il mazzo per pescare, trascina le carte per spostarle.</div>
                                     <div class="ws-win-msg" id="sol-win-msg">
-                                        <p><svg class="ums-ic" aria-hidden="true"><use href="#ic-award"/></svg> Solitario completato!</p>
+                                        <p><svg class="ums-ic" aria-hidden="true"><use href="#ic-award"/></svg> Ammazza che bravo/a... complimentoni!</p>
                                         <button class="ws-new-btn" onclick="solNewGame()">Nuova partita</button>
                                     </div>
                                     <div style="text-align:center; margin-top:1.1rem;">
@@ -6425,6 +6425,8 @@ if (!fileDaCaricare) {
             fcOverlay.innerHTML =
                 '<div class="ums-fc-card">' +
                     '<button class="ums-fc-close" type="button" aria-label="Chiudi">&#10005;</button>' +
+                    '<div class="ums-bmc-logo notranslate" translate="no"><span class="l1">Una Mano</span><span class="l2">Spensierata</span></div>' +
+                    '<div class="ums-bmc-tag"><span>Il tuo compagno di studi</span></div>' +
                     '<div class="ums-fc-title">Da ripassare</div>' +
                     '<div class="ums-fc-sub" id="ums-fc-sub"></div>' +
                     '<div class="ums-notif-row" id="ums-notif-row" hidden>' +
@@ -7475,7 +7477,7 @@ if (!fileDaCaricare) {
                     '<span class="l1">Una Mano</span><span class="l2">Spensierata</span>' +
                 '</div>' +
                 '<div class="ums-bmc-tag"><span>Il tuo compagno di studi</span></div>' +
-                '<p class="ums-bmc-intro">Questo sito &egrave; <b>gratis</b>, e lo rester&agrave;: nessuna lezione dietro un abbonamento, niente riservato a chi paga. Chi sostiene <b>non compra un vantaggio</b> &mdash; tiene acceso il sito e, dalla seconda fascia in su, manda una parte della quota a <b>Still I Rise</b>, che apre scuole per bambini profughi <a class="ums-sir-link" href="https://www.stillirise.org/" target="_blank" rel="noopener"><b>dove la scuola non c\'&egrave;</b></a>.</p>' +
+                '<p class="ums-bmc-intro">Questo sito &egrave; <b>gratis</b>, e lo rester&agrave;: nessuna lezione dietro un abbonamento, niente riservato a chi paga. Chi sostiene <b>non compra un vantaggio</b> &mdash; tiene acceso il sito e, dalla seconda fascia in su, manda una parte della quota a <b>Still I Rise</b>, che apre scuole per bambini profughi e vulnerabili <a class="ums-sir-link" href="https://www.stillirise.org/" target="_blank" rel="noopener"><b>dove la scuola non c\'&egrave;</b></a>.</p>' +
                 '<button class="ums-tier" type="button">' +
                     '<span class="ums-tier-top"><span class="ums-tier-nome">Un caff&egrave; al mese</span><span class="ums-tier-prezzo">1 &euro; / mese</span></span>' +
                     '<span class="ums-tier-desc">Copre le spese vive: dominio, server, le ore passate a scrivere lezioni e codice. Nulla di pi&ugrave;.</span>' +
@@ -7756,6 +7758,35 @@ if (!fileDaCaricare) {
             var el = e.target.closest('[data-kenburns], .flashcard-wrapper, .urv-wrapper');
             if (el) el.classList.toggle('kb-hover');
         }, { passive: true });
+    })();
+    </script>
+    <!-- RITOCCHI HUB & FLASHCARD — riga promemoria ordinata, controlli
+         flashcard da app vera su mobile, tap sulla topbar = torna in cima -->
+    <style id="ums-hub-ritocchi-style">
+        .ums-notif-row{
+            display: flex; flex-direction: column; align-items: center;
+            gap: 8px; text-align: center;
+        }
+        @media (max-width: 700px){
+            /* [<] [Ripasso dopo] [La so!] [>] su UNA riga, senza andate a capo */
+            .fc-controls{ grid-template-columns: 44px 1fr 1fr 44px; gap: 8px; }
+            .fc-actions{ display: contents; }
+            .fc-actions .btn-pop{
+                white-space: nowrap; padding: 13px 6px;
+                font-size: 0.72rem; letter-spacing: 0.04em;
+            }
+            .btn-nav{ padding: 13px 0; min-width: 44px; }
+        }
+    </style>
+    <script id="ums-hub-ritocchi-script">
+    (function () {
+        // Tap sulla topbar della lezione = torna in cima (come nelle app iOS).
+        // Delegato sul documento: la topbar viene creata dopo, al primo scroll.
+        document.addEventListener('click', function (e) {
+            var tb = e.target.closest('#ums-topbar');
+            if (!tb || e.target.closest('button, a, input, select')) return;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
     })();
     </script>
 </body>
