@@ -476,7 +476,10 @@ body.instant #appview, body.instant #topbar, body.instant #top-controls{transiti
     text-align: center;
     font-family: 'Playfair Display', Georgia, serif;
     font-weight: 900; line-height: .96; letter-spacing: -0.02em;
+    /* invisibile finché Playfair non è pronto: niente salto di font */
+    opacity: 0; transition: opacity .25s ease;
   }
+  .ums-boot-brand.pronta{ opacity: 1; }
   .ums-boot-brand .b1, .ums-boot-brand .b2{ display: block; font-size: clamp(2.2rem, 9vw, 3.4rem); }
   .ums-boot-brand .b1{ color: #F2EFE8; }
   .ums-boot-brand .b2{ color: #8FB4E8; font-style: italic; }
@@ -504,6 +507,18 @@ body.instant #appview, body.instant #topbar, body.instant #top-controls{transiti
 (function(){
   var b = document.getElementById('ums-boot');
   if (!b) return;
+  /* Il wordmark compare solo quando Playfair è caricato, così non "salta"
+     dalla riserva (Georgia, più piccola) al font vero. Se il font tarda
+     oltre 350ms, si mostra comunque: meglio la riserva del vuoto. */
+  var brand = b.querySelector('.ums-boot-brand');
+  function mostra(){ if (brand) brand.classList.add('pronta'); }
+  try {
+    if (document.fonts && document.fonts.check('900 1rem "Playfair Display"')) { mostra(); }
+    else if (document.fonts && document.fonts.ready) {
+      var tf = setTimeout(mostra, 350);
+      document.fonts.ready.then(function(){ clearTimeout(tf); mostra(); });
+    } else { mostra(); }
+  } catch(e) { mostra(); }
   function via(){
     if (!b) return;
     b.classList.add('via');
