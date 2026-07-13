@@ -1284,12 +1284,16 @@
         /* Container per freccia + input testuale */
         .wb-note-container {
             flex: 1; display: flex; align-items: flex-start; gap: 6px;
+            /* min-width:0 = può restringersi: senza, la textarea impone la sua
+               larghezza minima, la riga sfora e la ✕ finisce fuori dal riquadro
+               (succedeva su mobile con sottolineature di più parole) */
+            min-width: 0;
         }
         .wb-note-arrow {
             color: var(--mist); font-weight: 700; font-size: 0.9rem; margin-top: 2px;
         }
         .wb-note-input {
-            flex: 1; border: none; outline: none; resize: none;
+            flex: 1; min-width: 0; border: none; outline: none; resize: none;
             font-family: var(--font-body); font-size: 0.82rem;
             color: var(--body); background: transparent;
             line-height: 1.5; padding: 2px 0; min-height: 24px;
@@ -2493,6 +2497,7 @@
                                 <!-- GIOCO 2: Sudoku -->
                                 <div id="sd-game" style="display:none;">
                                     <button class="ums-gioca-cta" type="button" onclick="umsGiocaApri('sudoku')"><svg class="ums-ic" aria-hidden="true"><use href="#ic-search"/></svg> Gioca a Sudoku</button>
+                                    <div class="ums-info-row"><button class="ums-info-btn" type="button" onclick="umsInfoApri('sudoku')" aria-label="Come si gioca a Sudoku">?</button></div>
                                     <div class="sd-diff-row">
                                         <button class="ws-lang-btn active" id="sd-btn-facile" onclick="sdSetDiff('facile')">Facile</button>
                                         <button class="ws-lang-btn" id="sd-btn-medio" onclick="sdSetDiff('medio')">Medio</button>
@@ -2507,12 +2512,12 @@
                                         <p><svg class="ums-ic" aria-hidden="true"><use href="#ic-award"/></svg> Ammazza che bravo/a... complimentoni!</p>
                                         <button class="ws-new-btn" onclick="sdNewGame()">Nuova partita</button>
                                     </div>
-                                    <p class="sd-howto"><strong>Come si gioca:</strong> riempi la griglia in modo che ogni riga, ogni colonna e ogni riquadro 3&times;3 contengano tutti i numeri da 1 a 9, senza ripetizioni. I numeri in grassetto sono gli indizi fissi di partenza: tocca una casella vuota e scegli un numero dalla tastiera qui sopra (o dalla tastiera fisica). Durante la partita nessun aiuto: quando avrai riempito l'ultima casella, il gioco ti dir&agrave; se la soluzione &egrave; corretta oppure evidenzier&agrave; in terracotta le caselle in conflitto da correggere. Non serve indovinare: ogni schema ha una sola soluzione, raggiungibile con la logica.</p>
                                 </div>
 
                                 <!-- GIOCO 3: Solitario (variante a seme unico) -->
                                 <div id="sol-game" style="display:none;">
                                     <button class="ums-gioca-cta" type="button" onclick="umsGiocaApri('sol')"><svg class="ums-ic" aria-hidden="true"><use href="#ic-search"/></svg> Gioca a Solitario</button>
+                                    <div class="ums-info-row"><button class="ums-info-btn" type="button" onclick="umsInfoApri('sol')" aria-label="Come si gioca a Solitario">?</button></div>
                                     <div class="sol-board notranslate" id="sol-board">
                                         <div class="sol-pile" id="sol-stock"></div>
                                         <div class="sol-pile" id="sol-waste"></div>
@@ -2537,7 +2542,6 @@
                                     <div style="text-align:center; margin-top:1.1rem;">
                                         <button class="ls-btn" onclick="solNewGame()">Nuova partita</button>
                                     </div>
-                                    <p class="sd-howto"><strong>Come si gioca:</strong> l'obiettivo &egrave; portare tutte le carte nelle quattro basi in alto, una per seme, in ordine crescente dall'Asso al Re. Sulle sette colonne del tavolo le carte si impilano in ordine decrescente e <strong>dello stesso seme</strong>; una colonna vuota accetta qualsiasi carta. Tocca il mazzo in alto a sinistra per pescare una carta; quando il mazzo finisce, un altro tocco lo rigira. Le carte coperte si scoprono da sole quando restano in cima alla loro colonna. Trascina una carta, o una pila gi&agrave; ordinata, sulla destinazione: se la mossa &egrave; valida, la casella si illumina d'oro.</p>
                                 </div>
 
                                 <!-- ACCADDE OGGI — rubrica dinamica (Wikipedia), tradotta insieme alla pagina -->
@@ -7356,13 +7360,13 @@ if (!fileDaCaricare) {
         @media (prefers-reduced-motion: reduce){ #ums-sostieni-label{ transition: none; } }
 
         /* --- pop-up fasce: stesso linguaggio del pop-up Accedi --- */
-        #ums-bmc-overlay{
+        #ums-bmc-overlay, #ums-info-overlay{
             display: none; position: fixed; inset: 0; z-index: 99999999;
             background: rgba(15,17,23,.55);
             -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
             align-items: center; justify-content: center; padding: 24px;
         }
-        #ums-bmc-overlay.show{ display: flex; }
+        #ums-bmc-overlay.show, #ums-info-overlay.show{ display: flex; }
         .ums-bmc-card{
             background: var(--ivory); border-radius: 28px;
             box-shadow: 0 12px 40px rgba(15,17,23,.2);
@@ -7758,6 +7762,26 @@ if (!fileDaCaricare) {
     <!-- RITOCCHI HUB & FLASHCARD — riga promemoria ordinata, controlli
          flashcard da app vera su mobile, tap sulla topbar = torna in cima -->
     <style id="ums-hub-ritocchi-style">
+        /* pulsantino "?" dei giochi e pop-up Come si gioca */
+        .ums-info-row{ text-align: right; margin: -2px 0 8px; }
+        .ums-game-body .ums-info-row{ margin-top: 6px; }
+        .ums-info-btn{
+            width: 30px; height: 30px; border-radius: 50%;
+            border: 1.5px solid var(--gold); background: transparent;
+            color: var(--gold-dk); font-family: var(--font-body);
+            font-size: .9rem; font-weight: 700; cursor: pointer;
+            transition: background-color .2s, color .2s;
+        }
+        .ums-info-btn:hover{ background: var(--gold); color: #2A2113; }
+        .night-mode .ums-info-btn{ color: #D9BC85; }
+        .ums-info-titolo{
+            font-family: var(--font-display); font-weight: 700;
+            font-size: 1.15rem; color: var(--ink); margin: 0 0 10px;
+        }
+        .night-mode .ums-info-titolo{ color: #F2EFE8; }
+        /* la topbar (e il titolo che le vive sopra) invitano al tap */
+        #ums-topbar{ cursor: pointer; }
+        body.ums-master-open header{ cursor: pointer; }
         /* il logo a due righe si centra da solo: l'hub, a differenza della
            card Sostieni, non ha text-align:center sul contenitore */
         .ums-bmc-logo, .ums-bmc-tag{ text-align: center; }
@@ -7778,13 +7802,57 @@ if (!fileDaCaricare) {
     </style>
     <script id="ums-hub-ritocchi-script">
     (function () {
-        // Tap sulla topbar della lezione = torna in cima (come nelle app iOS).
-        // Delegato sul documento: la topbar viene creata dopo, al primo scroll.
+        // Tap sulla topbar = torna in cima. Il titolo migrato è un elemento
+        // FISSO che sta sopra la barra: i click atterrano su di lui, non su
+        // #ums-topbar — quindi a lezione aperta ascoltiamo anche l'header.
         document.addEventListener('click', function (e) {
-            var tb = e.target.closest('#ums-topbar');
-            if (!tb || e.target.closest('button, a, input, select')) return;
+            var sopra = e.target.closest('#ums-topbar') ||
+                (document.body.classList.contains('ums-master-open') && e.target.closest('header'));
+            if (!sopra || e.target.closest('button, a, input, select')) return;
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
+
+        // ---- pop-up "Come si gioca" (brandizzato, logo centrato) ----
+        var T = function (x) { return (window.umsT ? window.umsT(x) : x); };
+        var INFO = {
+            sudoku: {
+                nome: 'Sudoku',
+                testo: "Riempi la griglia in modo che ogni riga, ogni colonna e ogni riquadro 3\u00d73 contengano tutti i numeri da 1 a 9, senza ripetizioni. I numeri in grassetto sono gli indizi fissi di partenza: tocca una casella vuota e scegli un numero dal tastierino (o dalla tastiera fisica). Durante la partita nessun aiuto: quando avrai riempito l'ultima casella, il gioco ti dir\u00e0 se la soluzione \u00e8 corretta oppure evidenzier\u00e0 in terracotta le caselle in conflitto da correggere. Non serve indovinare: ogni schema ha una sola soluzione, raggiungibile con la logica."
+            },
+            sol: {
+                nome: 'Solitario',
+                testo: "L'obiettivo \u00e8 portare tutte le carte nelle quattro basi in alto, una per seme, in ordine crescente dall'Asso al Re. Sulle sette colonne del tavolo le carte si impilano in ordine decrescente e dello stesso seme; una colonna vuota accetta qualsiasi carta. Tocca il mazzo in alto a sinistra per pescare una carta; quando il mazzo finisce, un altro tocco lo rigira. Le carte coperte si scoprono da sole quando restano in cima alla loro colonna. Trascina una carta, o una pila gi\u00e0 ordinata, sulla destinazione: se la mossa \u00e8 valida, la casella si illumina d'oro."
+            }
+        };
+        var ov = document.createElement('div');
+        ov.id = 'ums-info-overlay';
+        ov.setAttribute('role', 'dialog');
+        ov.setAttribute('aria-modal', 'true');
+        ov.innerHTML =
+            '<div class="ums-bmc-card">' +
+                '<button class="ums-bmc-close" type="button" aria-label="Chiudi">&#10005;</button>' +
+                '<div class="ums-bmc-logo notranslate" translate="no"><span class="l1">Una Mano</span><span class="l2">Spensierata</span></div>' +
+                '<div class="ums-bmc-tag"><span>Il tuo compagno di studi</span></div>' +
+                '<div class="ums-info-titolo" id="ums-info-titolo"></div>' +
+                '<p class="ums-bmc-intro" id="ums-info-testo"></p>' +
+            '</div>';
+        document.body.appendChild(ov);
+        var chiudi = function () {
+            ov.classList.remove('show');
+            document.removeEventListener('keydown', suEsc);
+        };
+        var suEsc = function (e) { if (e.key === 'Escape') chiudi(); };
+        window.umsInfoApri = function (gioco) {
+            var info = INFO[gioco];
+            if (!info) return;
+            document.getElementById('ums-info-titolo').textContent = T('Come si gioca') + ' \u2014 ' + T(info.nome);
+            document.getElementById('ums-info-testo').textContent = T(info.testo);
+            ov.classList.add('show');
+            document.addEventListener('keydown', suEsc);
+            ov.querySelector('.ums-bmc-close').focus();
+        };
+        ov.querySelector('.ums-bmc-close').addEventListener('click', chiudi);
+        ov.addEventListener('click', function (e) { if (e.target === ov) chiudi(); });
     })();
     </script>
 </body>
