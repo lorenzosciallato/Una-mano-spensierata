@@ -151,15 +151,6 @@ body.app-mode .brand-tagline{opacity:0; max-height:0; margin-top:0; pointer-even
 }
 @keyframes fadeUp{from{opacity:0; transform:translateY(18px);} to{opacity:1; transform:translateY(0);}}
 
-/* ANTI-FLASH — gli stili completi di #ums-sostieni vivono in fondo alla
-   pagina: finché il browser non li ha letti, al refresh il pulsante
-   compariva per un attimo bianco e nudo, con la tazzina nera. Qui lo
-   teniamo invisibile dal primo paint; poi il suo fadeUp (in fondo) lo
-   fa entrare come INIZIA. Il media reduced-motion laggiù, venendo dopo,
-   continua a vincere e a mostrarlo subito. */
-#ums-sostieni{ opacity:0; }
-#ums-sostieni .ums-cup{ fill:none; stroke:currentColor; }
-
 /* i badge (riusati anche nel footer) */
 .author-badge{
   display:inline-flex;align-items:center;gap:10px;background:#fff;padding:6px 15px 6px 6px;
@@ -308,8 +299,8 @@ body.app-mode #appview{opacity:1; transform:translateY(0); pointer-events:auto;}
 .subj-card:hover .subj-glyph{color:var(--gold); transform:rotate(15deg);}
 .subj-body{flex:1; min-width:0;}
 .subj-name{font-family:var(--font-display); font-weight:700; font-size:1.05rem;
-  color:var(--ink); line-height:1.25; display:block;}
-.subj-meta{font-size:.63rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--sub); margin-top:3px; display:block; white-space:nowrap;}
+  color:var(--ink); line-height:1.25;}
+.subj-meta{font-size:.63rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--sub); margin-top:1px;}
 .subj-chevron{color:var(--mist); flex-shrink:0; transition:transform .2s var(--ease), color .2s;}
 .subj-chevron svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
 .subj-card:hover .subj-chevron{color:var(--gold-dk); transform:translateX(3px);}
@@ -456,6 +447,65 @@ body.instant #appview, body.instant #topbar, body.instant #top-controls{transiti
 </style>
 </head>
 <body class="splash">
+<!-- ================================================================
+     BOOT SCREEN (solo app installata) — il ponte premium:
+     la splash di sistema (fondo #14161C + icona fusa) passa il
+     testimone a QUESTO schermo identico, che poi sfuma sul sito.
+     Nel browser normale non compare mai (display-mode: standalone).
+================================================================ -->
+<style id="ums-boot-style">
+#ums-boot{ display: none; }
+@media all and (display-mode: standalone){
+  #ums-boot{
+    display: flex; position: fixed; inset: 0; z-index: 2147483000;
+    background: #14161C;
+    align-items: center; justify-content: center;
+    transition: opacity .45s ease;
+  }
+  #ums-boot.via{ opacity: 0; pointer-events: none; }
+  .ums-boot-brand{
+    text-align: center;
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 900; line-height: .96; letter-spacing: -0.02em;
+  }
+  .ums-boot-brand .b1, .ums-boot-brand .b2{ display: block; font-size: clamp(2.2rem, 9vw, 3.4rem); }
+  .ums-boot-brand .b1{ color: #F2EFE8; }
+  .ums-boot-brand .b2{ color: #8FB4E8; font-style: italic; }
+  .ums-boot-brand .btag{
+    display: flex; align-items: center; justify-content: center; gap: 11px;
+    margin-top: 14px;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: .6rem; font-weight: 700; letter-spacing: .3em; text-transform: uppercase;
+    color: #D9BC85;
+  }
+  .ums-boot-brand .btag::before, .ums-boot-brand .btag::after{
+    content: ''; display: block; width: 26px; height: 1px; background: #C8A96E;
+  }
+  @media (prefers-reduced-motion: reduce){ #ums-boot{ transition: none; } }
+}
+</style>
+<div id="ums-boot" aria-hidden="true">
+  <div class="ums-boot-brand notranslate" translate="no">
+    <span class="b1">Una Mano</span>
+    <span class="b2">Spensierata</span>
+    <span class="btag">Il tuo compagno di studi</span>
+  </div>
+</div>
+<script>
+(function(){
+  var b = document.getElementById('ums-boot');
+  if (!b) return;
+  function via(){
+    if (!b) return;
+    b.classList.add('via');
+    setTimeout(function(){ if (b && b.parentNode) b.parentNode.removeChild(b); b = null; }, 520);
+  }
+  if (document.readyState === 'complete') { setTimeout(via, 200); }
+  else { window.addEventListener('load', function(){ setTimeout(via, 200); }); }
+  setTimeout(via, 2600); /* rete lenta: mai piu' di 2,6 s di attesa */
+})();
+</script>
+
 <script>try{
   if(localStorage.getItem('ums_night_mode')==='1'){document.body.classList.add('night-mode');}
 }catch(e){}</script>
@@ -530,7 +580,7 @@ body.instant #appview, body.instant #topbar, body.instant #top-controls{transiti
     </div>
   </div>
 </div>
-<div id="translation-disclaimer">🌐 Traduzione a cura dell'IA: possibili errori o imprecisioni.</div>
+<div id="translation-disclaimer">🌐 Traduzione automatica: possibili sfumature perse.</div>
 
 <!-- NIGHT -->
 <button id="night-toggle" type="button" aria-label="Attiva modalità notte" title="Modalità notte on/off">🌙</button>
@@ -574,7 +624,7 @@ body.instant #appview, body.instant #topbar, body.instant #top-controls{transiti
 
   <div class="disclaimer-card">
     <h3>Tutela del diritto d'autore e limitazione di responsabilità</h3>
-    <p>Tutti i materiali didattici presenti all'interno del portale <span class="notranslate" translate="no">Una Mano Spensierata</span> (inclusi, a titolo esemplificativo e non esaustivo: riassunti, schemi, mappe concettuali, flashcard e quiz) costituiscono una rielaborazione personale, critica e originale degli appunti universitari. Tali contenuti sono realizzati e condivisi esclusivamente per finalità didattiche, di studio e di mutuo soccorso accademico, ai sensi e nel pieno rispetto dell'Art. 70 della Legge 22 aprile 1941 n. 633 in materia di protezione del diritto d'autore. I materiali presenti sulla piattaforma hanno natura puramente integrativa e non intendono in alcun modo porsi come sostitutivi dei libri di testo ufficiali, delle dispense fornite dai docenti o della frequenza alle lezioni frontali. Si dichiara espressamente l'assenza di riproduzioni pedisseque, integrali o non autorizzate di opere intellettuali protette da copyright di terzi. L'utente fruitore solleva i gestori della piattaforma da qualsivoglia responsabilità derivante da un uso improprio del materiale fornito.</p>
+    <p>Tutti i materiali didattici presenti all'interno del portale Una Mano Spensierata (inclusi, a titolo esemplificativo e non esaustivo: riassunti, schemi, mappe concettuali, flashcard e quiz) costituiscono una rielaborazione personale, critica e originale degli appunti universitari. Tali contenuti sono realizzati e condivisi esclusivamente per finalità didattiche, di studio e di mutuo soccorso accademico, ai sensi e nel pieno rispetto dell'Art. 70 della Legge 22 aprile 1941 n. 633 in materia di protezione del diritto d'autore. I materiali presenti sulla piattaforma hanno natura puramente integrativa e non intendono in alcun modo porsi come sostitutivi dei libri di testo ufficiali, delle dispense fornite dai docenti o della frequenza alle lezioni frontali. Si dichiara espressamente l'assenza di riproduzioni pedisseque, integrali o non autorizzate di opere intellettuali protette da copyright di terzi. L'utente fruitore solleva i gestori della piattaforma da qualsivoglia responsabilità derivante da un uso improprio del materiale fornito.</p>
     <h3>Aiutami a tenere in ordine la piattaforma! 🛠️</h3>
     <p>Ciao! Come sai, costruisco, aggiorno e mantengo questo sito interamente da solo. Se incappi in un refuso, in un link che non funziona, o se ti accorgi che l'audio del podcast sta dicendo qualcosa di non coerente con il resto della lezione, per favore non ignorarlo. Scrivimi subito sul nostro gruppo WhatsApp specificando l'errore o la lezione incriminata. Così posso correggere il codice o il testo in tempo reale e tenere la piattaforma pulita e affidabile per tutti gli iscritti. Questo progetto cresce anche grazie alle vostre revisioni. Grazie per l'aiuto!</p>
   </div>
@@ -591,7 +641,7 @@ body.instant #appview, body.instant #topbar, body.instant #top-controls{transiti
   </div>
 
   <footer class="site-footer">
-    <p><strong class="notranslate" translate="no">Una Mano Spensierata</strong> &nbsp;&middot;&nbsp; Tutti i diritti riservati &nbsp;&middot;&nbsp; Lorenzo Sciallato &copy; 2025</p>
+    <p><strong>Una Mano Spensierata</strong> &nbsp;&middot;&nbsp; Tutti i diritti riservati &nbsp;&middot;&nbsp; Lorenzo Sciallato &copy; 2025</p>
   </footer>
 </main>
 
@@ -1620,7 +1670,7 @@ renderCourses();
       '</div>' +
       '<div id="ums-access-out">' +
                         '<h3 class="ums-access-h">Salva i tuoi progressi</h3>' +
-                        '<p class="ums-access-p">Con l\'accesso tutto ci&ograve; che fai su <span class="notranslate" translate="no">Una Mano Spensierata</span> resta tuo: le lezioni che segui, gli appunti che scrivi, le sottolineature e le flashcard che ripassi. Li ritrovi ogni volta che torni, anche da un altro dispositivo. Nessuna email, nessuna password, nessun dato personale: ti basta una chiave.</p>' +
+                        '<p class="ums-access-p">Con l\'accesso tutto ci&ograve; che fai su Una Mano Spensierata resta tuo: le lezioni che segui, gli appunti che scrivi, le sottolineature e le flashcard che ripassi. Li ritrovi ogni volta che torni, anche da un altro dispositivo. Nessuna email, nessuna password, nessun dato personale: ti basta una chiave.</p>' +
                         '<div class="ums-access-block" id="ums-choice">' +
                             '<button class="ums-access-btn primary" id="ums-scegli-ho" type="button">Ho gi&agrave; la mia chiave</button>' +
                             '<div style="height:10px"></div>' +
