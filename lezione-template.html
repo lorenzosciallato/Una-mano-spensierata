@@ -2953,7 +2953,12 @@
 
             // UPGRADE — la stampa ora ha lo stile editoriale di Una Mano Spensierata
             // (SEMPRE in versione giorno: la notturna consumerebbe troppo inchiostro)
-            const lessonTitle = (document.getElementById('dyn-title') || {}).textContent || 'Lezione Dinamica';
+            // Il titolo è su due <span> attaccati ("Sociologia"+"dell'Educazione"):
+            // textContent li incolla senza spazio. Unisco i pezzi a mano.
+            const tEl = document.getElementById('dyn-title');
+            const lessonTitle = tEl
+                ? Array.from(tEl.childNodes).map(n => (n.textContent || '').trim()).filter(Boolean).join(' ')
+                : 'Lezione Dinamica';
             const printDate = new Date().toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
 
             let printContents = `
@@ -7782,6 +7787,27 @@ if (!fileDaCaricare) {
         /* la topbar (e il titolo che le vive sopra) invitano al tap */
         #ums-topbar{ cursor: pointer; }
         body.ums-master-open header{ cursor: pointer; }
+
+        /* ================================================================
+           RIASSUNTONE + APPUNTI FIANCO A FIANCO (PC)
+           Con la lavagna aperta il riassuntone finiva sotto, fuori portata
+           degli appunti sticky. Ora, a lavagna aperta, il testo scorre
+           dentro la propria cornice: lavagna, testo e appunti convivono
+           nella stessa schermata, si legge e si scrive insieme.
+        ================================================================ */
+        @media (min-width: 900px){
+            .media-notes-grid:has(#smart-whiteboard.wb-visible) #dyn-riassuntone-container{
+                max-height: calc(100vh - 140px);
+                overflow-y: auto; padding-right: 16px;
+                border-bottom: 1px solid var(--dust);
+            }
+            /* la lavagna aperta si fa più bassa in questo capitolo: lascia
+               respiro al testo sotto, senza perdere la vista dei concetti */
+            .media-notes-grid #smart-whiteboard.wb-visible{ height: 340px; }
+            @media (max-height: 720px){
+                .media-notes-grid #smart-whiteboard.wb-visible{ height: 44vh; }
+            }
+        }
         /* il logo a due righe si centra da solo: l'hub, a differenza della
            card Sostieni, non ha text-align:center sul contenitore */
         .ums-bmc-logo, .ums-bmc-tag{ text-align: center; }
