@@ -2381,11 +2381,11 @@
                             <span class="ch-icon">+</span>
                         </button>
                         <div class="accordion-content">
-                            <div class="media-notes-grid">
-                                
-                                <!-- ================== COLONNA SINISTRA ================== -->
-                                <div>
-                                    <!-- Wrapper per banner + lavagna -->
+                            <div class="media-notes-grid" id="riass-grid">
+
+                                <!-- BANNER PINGUINI + LAVAGNA — figli diretti della
+                                     griglia: su desktop occupano TUTTA la larghezza
+                                     (entrambe le colonne, vedi ums-riass-layout-style) -->
                                     <div class="wb-banner-wrap">
                                         <div id="wb-section-banner" class="kb-frame" data-kenburns onclick="wbMaximize()">
                                             <img src="https://i.postimg.cc/BbgFzJFJ/disegna-dei-pinguini-tutti-in-mucchio-come-fanno-in-natura-stile-del-disegno-corporate.jpg"
@@ -2430,7 +2430,10 @@
                                         </div>
                                     </div>
 
-                                    <!-- Il contenitore testuale DEVE rimanere dentro la colonna di sinistra -->
+                                <!-- ================== COLONNA SINISTRA ==================
+                                     Ora contiene SOLO il testo del riassuntone: il bloc
+                                     notes a destra parte alla sua stessa altezza -->
+                                <div>
                                     <div id="dyn-riassuntone-container" class="text-content-box"></div>
                                 </div>
 
@@ -7881,5 +7884,51 @@ if (!fileDaCaricare) {
         ov.addEventListener('click', function (e) { if (e.target === ov) chiudi(); });
     })();
     </script>
+    <!-- ================================================================
+         RIASSUNTONE — LAVAGNA A TUTTA LARGHEZZA + APPUNTI AFFIANCATI
+         Bug risolto: sottolineando, la lavagna si apriva nella colonna
+         sinistra e spingeva giù il riassuntone, mentre il bloc notes
+         (sticky in alto a destra) restava su — testo e appunti si
+         allontanavano fino a non poter più leggere e scrivere insieme.
+         Ora: banner pinguini e lavagna occupano tutta la larghezza
+         della sezione; il bloc notes parte in corrispondenza della
+         prima riga del riassuntone ed è alto quanto lo schermo utile
+         (poi resta incollato mentre si scorre il testo).
+         Su mobile (colonna singola) non cambia nulla.
+    ================================================================ -->
+    <style id="ums-riass-layout-style">
+        @media (min-width: 901px){
+            /* banner, lavagna e istruzioni si stendono su entrambe le colonne */
+            #riass-grid > .wb-banner-wrap,
+            #riass-grid > .wb-hint{ grid-column: 1 / -1; }
+
+            /* gli spazi verticali li governano i margini, non il gap di griglia
+               (che altrimenti si sommerebbe tra banner, istruzioni e testo) */
+            #riass-grid{ row-gap: 0; }
+            #riass-grid > .wb-banner-wrap{ margin-bottom: 0.6rem; }
+            #riass-grid > .wb-hint{ margin-bottom: 1.8rem; }
+
+            /* il banner a tutta larghezza può respirare un po' più in alto */
+            #riass-grid .section-banner{ max-height: 240px; }
+
+            /* BLOC NOTES: nasce alla prima riga del riassuntone (inizio della
+               sua riga di griglia) e prende tutto lo schermo utile; mentre si
+               scorre resta agganciato appena sotto la topbar (62px) */
+            #riassuntone-notes-widget{
+                top: 78px;
+                height: calc(100vh - 98px);
+            }
+
+            /* la vecchia cornice a scroll interno del riassuntone (pensata per
+               tenerlo vicino agli appunti) non serve più: ora restano
+               affiancati per costruzione, il testo scorre con la pagina */
+            .media-notes-grid:has(#smart-whiteboard.wb-visible) #dyn-riassuntone-container{
+                max-height: none;
+                overflow-y: visible;
+                padding-right: 0;
+                border-bottom: none;
+            }
+        }
+    </style>
 </body>
 </html>
