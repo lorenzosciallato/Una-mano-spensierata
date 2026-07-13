@@ -652,7 +652,7 @@
             border-radius: var(--r-lg);
             display: flex; flex-direction: column;
             align-self: start;
-            height: 66vh;
+            height: 72vh;
             position: sticky; top: 24px; z-index: 5;
             width: 100%; min-width: 0;
             box-shadow: var(--shadow-card);
@@ -2316,9 +2316,7 @@
                                     <div id="fc-start-screen" style="text-align:center; padding: 1rem 0;">
                                         <div class="flashcard-wrapper" style="cursor:default;">
                                             <div class="flashcard-inner">
-                                                <div class="flashcard-front">
-                                                    <h2>Pronto a ripassare?</h2>
-                                                </div>
+                                                <div class="flashcard-front"></div>
                                             </div>
                                         </div>
                                         <button class="btn-pop btn-start" onclick="startFlashcards()">Inizia il Ripasso</button>
@@ -7559,23 +7557,18 @@ if (!fileDaCaricare) {
             body:not(.ums-game-open) .ums-gioca-cta{
                 display: flex; align-items: center; justify-content: center; gap: 10px;
                 width: 100%; margin: 0.5rem 0 1rem;
-                background: var(--navy); color: #fff;
+                background: var(--gold); color: #2A2113;
                 border: none; border-radius: 999px; padding: 15px 18px;
                 font-family: var(--font-body); font-size: 0.85rem; font-weight: 700;
                 letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer;
-                box-shadow: 0 8px 24px rgba(26,47,79,0.3);
+                box-shadow: 0 8px 24px rgba(200,169,110,0.35);
             }
-            /* in pagina, su telefono, il tavolo da gioco non si vede:
-               si gioca SOLO nell'overlay, alla giusta dimensione */
-            body:not(.ums-game-open) #ws-game > .ws-layout,
-            body:not(.ums-game-open) #ws-game .ws-status,
-            body:not(.ums-game-open) #ws-game .ws-win-msg,
-            body:not(.ums-game-open) #sd-game > .sd-diff-row,
-            body:not(.ums-game-open) #sd-game .sd-wrap,
-            body:not(.ums-game-open) #sd-game .sd-pad,
-            body:not(.ums-game-open) #sd-game .ws-status,
-            body:not(.ums-game-open) #sd-game .ws-win-msg,
-            body:not(.ums-game-open) #sol-game .sol-board{ display: none; }
+            /* in pagina, su telefono, del gioco si vede SOLO il pulsante
+               GIOCA: tavolo, istruzioni, "Nuova partita" e messaggi vivono
+               nell'overlay (dove il pannello viene spostato) */
+            body:not(.ums-game-open) #ws-game > *:not(.ums-gioca-cta),
+            body:not(.ums-game-open) #sd-game > *:not(.ums-gioca-cta),
+            body:not(.ums-game-open) #sol-game > *:not(.ums-gioca-cta){ display: none; }
         }
 
         /* overlay di gioco a schermo intero */
@@ -7652,10 +7645,12 @@ if (!fileDaCaricare) {
               - la carta di gioco su mobile scende un po' (il retro
                 scrolla già da solo)
               - i blocchi appunti si accorciano: la textarea scrolla */
-        #fc-start-screen .flashcard-wrapper{ height: 240px; }
+        /* La schermata iniziale usa la STESSA altezza della carta di gioco:
+           niente più salto piccolo→grande quando si preme Inizia. */
         .notes-widget{ height: 44vh; }
         @media (max-width: 900px){
-            #fc-game-screen .flashcard-wrapper{ height: 400px; }
+            #fc-game-screen .flashcard-wrapper,
+            #fc-start-screen .flashcard-wrapper{ height: 400px; }
             .notes-widget{ height: 280px; }
         }
     </style>
@@ -7763,6 +7758,9 @@ if (!fileDaCaricare) {
     <!-- RITOCCHI HUB & FLASHCARD — riga promemoria ordinata, controlli
          flashcard da app vera su mobile, tap sulla topbar = torna in cima -->
     <style id="ums-hub-ritocchi-style">
+        /* il logo a due righe si centra da solo: l'hub, a differenza della
+           card Sostieni, non ha text-align:center sul contenitore */
+        .ums-bmc-logo, .ums-bmc-tag{ text-align: center; }
         .ums-notif-row{
             display: flex; flex-direction: column; align-items: center;
             gap: 8px; text-align: center;
