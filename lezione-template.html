@@ -1992,6 +1992,65 @@
 <body>
     <!-- NIGHT MODE — applica subito il tema salvato per evitare il "flash" chiaro -->
     <script>try{if(localStorage.getItem('ums_night_mode')==='1'){document.body.classList.add('night-mode');}}catch(e){}</script>
+<!-- ================================================================
+     BOOT SCREEN (solo app installata) — il ponte premium:
+     la splash di sistema (fondo #14161C + icona fusa) passa il
+     testimone a QUESTO schermo identico, che poi sfuma sul sito.
+     Nel browser normale non compare mai (display-mode: standalone).
+================================================================ -->
+<style id="ums-boot-style">
+#ums-boot{ display: none; }
+@media all and (display-mode: standalone){
+  #ums-boot{
+    display: flex; position: fixed; inset: 0; z-index: 2147483000;
+    background: #14161C;
+    align-items: center; justify-content: center;
+    transition: opacity .45s ease;
+  }
+  #ums-boot.via{ opacity: 0; pointer-events: none; }
+  .ums-boot-brand{
+    text-align: center;
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 900; line-height: .96; letter-spacing: -0.02em;
+  }
+  .ums-boot-brand .b1, .ums-boot-brand .b2{ display: block; font-size: clamp(2.2rem, 9vw, 3.4rem); }
+  .ums-boot-brand .b1{ color: #F2EFE8; }
+  .ums-boot-brand .b2{ color: #8FB4E8; font-style: italic; }
+  .ums-boot-brand .btag{
+    display: flex; align-items: center; justify-content: center; gap: 11px;
+    margin-top: 14px;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: .6rem; font-weight: 700; letter-spacing: .3em; text-transform: uppercase;
+    color: #D9BC85;
+  }
+  .ums-boot-brand .btag::before, .ums-boot-brand .btag::after{
+    content: ''; display: block; width: 26px; height: 1px; background: #C8A96E;
+  }
+  @media (prefers-reduced-motion: reduce){ #ums-boot{ transition: none; } }
+}
+</style>
+<div id="ums-boot" aria-hidden="true">
+  <div class="ums-boot-brand notranslate" translate="no">
+    <span class="b1">Una Mano</span>
+    <span class="b2">Spensierata</span>
+    <span class="btag">Il tuo compagno di studi</span>
+  </div>
+</div>
+<script>
+(function(){
+  var b = document.getElementById('ums-boot');
+  if (!b) return;
+  function via(){
+    if (!b) return;
+    b.classList.add('via');
+    setTimeout(function(){ if (b && b.parentNode) b.parentNode.removeChild(b); b = null; }, 520);
+  }
+  if (document.readyState === 'complete') { setTimeout(via, 200); }
+  else { window.addEventListener('load', function(){ setTimeout(via, 200); }); }
+  setTimeout(via, 2600); /* rete lenta: mai piu' di 2,6 s di attesa */
+})();
+</script>
+
 
     <!-- Progress Bar -->
     <div id="scroll-progress-container">
