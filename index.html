@@ -1438,6 +1438,8 @@ renderCourses();
   rvOverlay.innerHTML =
     '<div class="ums-rv-card">' +
       '<button class="ums-rv-close" type="button" aria-label="Chiudi">&#10005;</button>' +
+      '<div class="ums-bmc-logo notranslate" translate="no"><span class="l1">Una Mano</span><span class="l2">Spensierata</span></div>' +
+      '<div class="ums-bmc-tag"><span>Il tuo compagno di studi</span></div>' +
       '<div class="ums-rv-title">Da ripassare</div>' +
       '<div class="ums-rv-sub" id="ums-rv-sub"></div>' +
       '<div class="ums-notif-row" id="ums-notif-row" hidden>' +
@@ -1530,6 +1532,21 @@ renderCourses();
   }
 
   function rvRender() {
+    // Senza accesso la sezione non salva né sincronizza: cancello con invito
+    if (!localStorage.getItem('ums_chiave')) {
+      rvSub.textContent = '';
+      const riga = document.getElementById('ums-notif-row');
+      if (riga) riga.hidden = true;
+      rvList.innerHTML =
+        '<div class="ums-rv-empty">Per usare il ripasso serve la tua chiave: accedendo, ogni flashcard che provi si salva e te la riproponiamo al momento giusto, su qualsiasi dispositivo. Bastano due tocchi, ed &egrave; gratis.</div>' +
+        '<div style="text-align:center;"><button class="ums-rv-accedi" type="button">Accedi ora</button></div>';
+      rvList.querySelector('.ums-rv-accedi').addEventListener('click', function () {
+        rvClose.click();
+        const acc = document.getElementById('ums-access-overlay');
+        if (acc) acc.classList.add('show');
+      });
+      return;
+    }
     const gruppi = Object.values(umsGruppiRipasso());
     rvList.innerHTML = '';
     if (gruppi.length === 0) {
@@ -2113,7 +2130,7 @@ renderCourses();
         '<span class="l1">Una Mano</span><span class="l2">Spensierata</span>' +
       '</div>' +
       '<div class="ums-bmc-tag"><span>Il tuo compagno di studi</span></div>' +
-      '<p class="ums-bmc-intro">Questo sito &egrave; <b>gratis</b>, e lo rester&agrave;: nessuna lezione dietro un abbonamento, niente riservato a chi paga. Chi sostiene <b>non compra un vantaggio</b> &mdash; tiene acceso il sito e, dalla seconda fascia in su, manda una parte della quota a <b>Still I Rise</b>, che apre scuole per bambini profughi <a class="ums-sir-link" href="https://www.stillirise.org/" target="_blank" rel="noopener"><b>dove la scuola non c\'&egrave;</b></a>.</p>' +
+      '<p class="ums-bmc-intro">Questo sito &egrave; <b>gratis</b>, e lo rester&agrave;: nessuna lezione dietro un abbonamento, niente riservato a chi paga. Chi sostiene <b>non compra un vantaggio</b> &mdash; tiene acceso il sito e, dalla seconda fascia in su, manda una parte della quota a <b>Still I Rise</b>, che apre scuole per bambini profughi e vulnerabili <a class="ums-sir-link" href="https://www.stillirise.org/" target="_blank" rel="noopener"><b>dove la scuola non c\'&egrave;</b></a>.</p>' +
 
       '<button class="ums-tier" type="button" data-tier="1">' +
         '<span class="ums-tier-top"><span class="ums-tier-nome">Un caff&egrave; al mese</span><span class="ums-tier-prezzo">1 &euro; / mese</span></span>' +
@@ -2162,5 +2179,24 @@ renderCourses();
   window.umsApriSostegno = apri;
 })();
 </script>
+<!-- RITOCCHI HUB — brand in testa, riga promemoria ordinata, cancello accesso -->
+<style id="ums-hub-ritocchi-style">
+  .ums-rv-card .ums-bmc-logo{ margin: 4px 0 0; }
+  .ums-rv-card .ums-bmc-tag{ margin: 10px 0 16px; }
+  .ums-notif-row{
+    display: flex; flex-direction: column; align-items: center;
+    gap: 8px; margin: -2px 0 18px; text-align: center;
+  }
+  .ums-rv-accedi{
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--gold); color: #2A2113;
+    border: none; border-radius: 999px; padding: 12px 22px;
+    font-family: var(--font-body); font-size: .8rem; font-weight: 700;
+    letter-spacing: .1em; text-transform: uppercase; cursor: pointer;
+    box-shadow: 0 8px 22px rgba(200,169,110,.3); margin-top: 4px;
+    transition: background-color .2s, transform .15s;
+  }
+  .ums-rv-accedi:hover{ background: var(--gold-lt); transform: translateY(-1px); }
+</style>
 </body>
 </html>
