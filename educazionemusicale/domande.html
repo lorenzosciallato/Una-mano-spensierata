@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Educazione Musicale | Indice Lezioni</title>
+    
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='14'%20fill='%23F7F4EF'/%3E%3Ctext%20x='31'%20y='43'%20text-anchor='middle'%20font-family='Georgia,serif'%20font-weight='700'%20font-size='30'%20textLength='46'%20lengthAdjust='spacingAndGlyphs'%20fill='%231C1C22'%3EUM%3Ctspan%20fill='%2322365F'%20font-style='italic'%3ES%3C/tspan%3E%3C/text%3E%3Crect%20x='25'%20y='51'%20width='14'%20height='2'%20rx='1'%20fill='%23C8A96E'/%3E%3C/svg%3E">
+    <meta name="theme-color" content="#F7F4EF">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Palette del nuovo sito (stessi NOMI di variabile del vecchio
+               file: tutte le regole esistenti si rivestono da sole) */
+            --bg-color: #F7F4EF;      /* ivory */
+            --paper-color: #ffffff;
+            --ink-color: #1C1C22;
+            --accent-color: #1A2F4F;  /* navy */
+            --pop-cyan: #C8A96E;      /* oro editoriale (toast successo) */
+            --pop-magenta: #B4573E;   /* terracotta (toast errore) */
+            --gold: #C8A96E;
+            --gold-lt: #E8D5AA;
+            --gold-dk: #9A7A3F;
+            --dust: #E8E4DC;
+            --sub: #7A7770;
+            --font-title: 'Playfair Display', Georgia, serif;
+            --font-body: 'DM Sans', system-ui, sans-serif;
+            --shadow-card: 0 4px 24px rgba(15,17,23,0.08), 0 1px 4px rgba(15,17,23,0.04);
+            --shadow-lift: 0 12px 40px rgba(15,17,23,0.14), 0 2px 8px rgba(15,17,23,0.06);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { height: 100%; width: 100%; }
+
+        body {
+            background-color: var(--bg-color);
+            font-family: var(--font-body);
+            color: var(--ink-color);
+            line-height: 1.6;
+            position: relative;
+            padding-bottom: 80px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* BACKGROUND IMMAGINE CON ZOOM */
+        .giants-background {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; pointer-events: none; overflow: hidden;
+            background: var(--bg-color);
+        }
+        .main-background-img {
+            width: 100%; height: 100%; object-fit: cover; opacity: 0.09;
+            /* stesso trattamento della home: nessun filtro, nessuno zoom */
+        }
+
+        header { text-align: center; margin-top: 4rem; margin-bottom: 2rem; padding: 0 1rem; }
+        h1 {
+            font-family: var(--font-title); font-weight: 900;
+            font-size: clamp(2.8rem, 8vw, 5.2rem);
+            margin: 0; line-height: 0.96; letter-spacing: -0.02em;
+            color: var(--ink-color);
+        }
+        h1 em { font-style: italic; color: var(--accent-color); }
+        .header-eyebrow {
+            display: inline-flex; align-items: center; gap: 10px;
+            font-family: var(--font-body);
+            font-size: 0.72rem; font-weight: 700; letter-spacing: 0.22em;
+            text-transform: uppercase; color: var(--gold-dk);
+            margin-bottom: 1.2rem;
+        }
+        .header-eyebrow::before, .header-eyebrow::after {
+            content: ''; display: block; width: 32px; height: 1px; background: var(--gold);
+        }
+        .subtitle { font-family: var(--font-body); font-size: 0.85rem; color: var(--sub); font-weight: 600; text-transform: uppercase; letter-spacing: 0.18em; margin-top: 15px; }
+
+        /* BADGE AUTORE */
+        .author-badge {
+            display: inline-flex; align-items: center; gap: 12px;
+            background: var(--paper-color); padding: 6px 18px 6px 6px;
+            border-radius: 50px; text-decoration: none; border: 1px solid var(--dust);
+            box-shadow: var(--shadow-card); transition: all 0.2s ease; margin-top: 1.5rem;
+        }
+        .author-badge:hover { 
+            transform: translateY(-2px); box-shadow: var(--shadow-lift); border-color: var(--gold);
+        }
+        .author-img { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; display: block; }
+        .author-name { font-size: 0.9rem; color: var(--ink-color); font-family: var(--font-body); }
+        @media (max-width: 600px) {
+            .author-img { width: 50px; height: 50px; }
+            .author-name { font-size: 0.8rem; }
+        }
+
+        /* CONTROLLI INIZIALI */
+        .btn-action {
+            display: inline-flex; align-items: center; justify-content: center; gap: 12px;
+            padding: 1.05rem 2.6rem; font-size: 0.82rem;
+            font-family: var(--font-body); font-weight: 700;
+            letter-spacing: 0.2em; text-transform: uppercase;
+            border: none; border-radius: 50px;
+            cursor: pointer; background: var(--accent-color); color: #fff;
+            box-shadow: 0 10px 30px rgba(26,47,79,0.28);
+            margin: 20px auto; display: block; width: fit-content;
+            transition: transform 0.25s cubic-bezier(.16,.84,.44,1), box-shadow 0.25s, background-color 0.25s;
+        }
+        .btn-action:hover { background: #2A4A72; transform: translateY(-3px); box-shadow: 0 16px 40px rgba(26,47,79,0.36); }
+        .btn-action:active { transform: translateY(-1px); }
+        .btn-close {
+            font-size: 0.75rem; padding: 12px 28px; margin-top: 40px;
+            background: transparent; color: var(--sub);
+            border: 1px solid var(--dust); box-shadow: none;
+        }
+        .btn-close:hover { background: rgba(26,47,79,0.04); color: var(--accent-color); border-color: var(--accent-color); transform: none; box-shadow: none; }
+
+        /* MENU CONTAINER */
+        #main-menu {
+            width: 95%; max-width: 1200px; margin: 0 auto;
+            display: none; flex-direction: column; gap: 1.5rem;
+            padding-bottom: 5rem; animation: fadeIn 0.5s ease-out forwards;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* CARDS / ACCORDION HEADER */
+        .accordion-item { margin-bottom: 1rem; }
+        .lesson-card {
+            background: var(--paper-color); border-radius: 16px; box-shadow: var(--shadow-card);
+            text-decoration: none; color: var(--ink-color); display: grid;
+            grid-template-columns: 100px 1fr auto; overflow: hidden; transition: 0.25s cubic-bezier(.16,.84,.44,1); border: 1px solid var(--dust);
+            width: 100%; text-align: left; cursor: pointer; padding: 0;
+        }
+        .lesson-card:hover { transform: translateY(-3px); border-color: var(--gold); box-shadow: var(--shadow-lift); }
+        .lesson-card.active { border-color: var(--dust); border-bottom-left-radius: 0; border-bottom-right-radius: 0; transform: none; box-shadow: none; }
+
+        .lesson-number { background: var(--accent-color); color: #fff; display: flex; flex-direction: column; justify-content: center; align-items: center; font-family: var(--font-title); padding: 1rem; height: 100%; }
+        .lesson-number span:first-child { font-size: 0.62rem; font-family: var(--font-body); font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; opacity: 0.75; }
+        .lesson-number span:last-child { font-size: 2.5rem; line-height: 1; }
+
+        .lesson-content { padding: 1.5rem 2rem; display: flex; align-items: center; }
+        .lesson-content h3 { font-family: var(--font-title); font-size: 1.15rem; font-weight: 700; margin: 0; color: var(--ink-color); line-height: 1.3; }
+        .lesson-arrow { padding-right: 2rem; font-size: 2rem; color: var(--accent-color); opacity: 0.5; display: flex; align-items: center; transition: transform 0.3s ease; }
+
+        @media (max-width: 600px) {
+            .lesson-card { grid-template-columns: 75px 1fr; }
+            .lesson-arrow { display: none; }
+            .lesson-number span:last-child { font-size: 2rem; }
+            .lesson-content { padding: 1.2rem; }
+        }
+
+        /* ACCORDION CONTENT */
+        .accordion-content {
+            max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out;
+            padding: 0 2rem; opacity: 0; display: flex; flex-direction: column;
+            background: var(--paper-color); border: 1px solid transparent; border-top: none;
+            border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;
+        }
+        .accordion-content.active {
+            max-height: 50000px; opacity: 1; padding-top: 2rem; padding-bottom: 2rem;
+            border-color: var(--dust); box-shadow: var(--shadow-card);
+        }
+
+        /* --- LAYOUT A SEZIONI SEPARATE --- */
+        .video-wrapper { max-width: 800px; margin: 0 auto 2rem auto; width: 100%; }
+        .media-notes-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; align-items: stretch; }
+        
+        @media (max-width: 900px) { 
+            .media-notes-grid { grid-template-columns: 1fr; gap: 0; } 
+            .notes-widget { display: none !important; } /* NASCONDE LA CASELLA APPUNTI SU MOBILE */
+        }
+
+        /* TEXT CONTENT & YOUTUBE FACADE */
+        .video-container { 
+            text-align: center; margin-bottom: 1.5rem; position: relative; width: 100%; 
+            padding-bottom: 56.25%; height: 0; background: #000; border-radius: 8px; 
+            overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+        }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+        
+        /* LAZY LOAD FACADE CSS */
+        .yt-facade {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            cursor: pointer; background: #000; display: flex; align-items: center; justify-content: center;
+        }
+        .yt-facade img {
+            width: 100%; height: 100%; object-fit: cover; opacity: 0.8; transition: opacity 0.3s;
+        }
+        .yt-facade:hover img { opacity: 1; }
+        .play-button {
+            position: absolute; width: 68px; height: 48px; background: rgba(33,33,33,0.8);
+            color: #fff; border-radius: 12px; display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; transition: background 0.3s, transform 0.2s;
+        }
+        .play-button::before {
+            content: "▶"; margin-left: 5px;
+        }
+        .yt-facade:hover .play-button { background: #ff0000; transform: scale(1.05); }
+
+        .btn-fallback {
+            display: inline-block; padding: 8px 20px; margin-top: 10px; background-color: var(--accent-color);
+            color: #fff; text-decoration: none; border-radius: 50px; font-weight: 700; font-size: 0.9rem; transition: background 0.3s;
+        }
+        .btn-fallback:hover { background-color: #2c4866; }
+
+        .text-content-box {
+            color: #3D3C3A; line-height: 1.85; font-size: 1.02rem; margin-bottom: 1.5rem;
+            padding: 1.8rem; background: #fff; border: 1px solid var(--dust); border-radius: 12px;
+        }
+        .text-content-box strong { font-family: var(--font-title); color: var(--ink-color); font-size: 1.08em; }
+        .text-content-box p { margin-bottom: 1rem; }
+
+        /* --- SCROLL DEL TESTO (SOLO DESKTOP) --- */
+        @media (min-width: 900px) {
+            .scrollable-text {
+                max-height: 550px; 
+                overflow-y: auto;
+                padding-right: 15px; 
+                border-bottom: 1px solid #eee; 
+            }
+            .scrollable-text::-webkit-scrollbar { width: 5px; }
+            .scrollable-text::-webkit-scrollbar-thumb { background-color: var(--dust); border-radius: 3px; }
+            .scrollable-text::-webkit-scrollbar-track { background-color: transparent; }
+        }
+
+        .btn-close-section {
+            width: 100%; text-align: center; margin-top: 20px; padding: 14px; background: transparent;
+            border: 1px solid var(--dust); border-radius: 12px; font-family: var(--font-body); font-weight: 600;
+            color: var(--sub); cursor: pointer; font-size: 0.78rem;
+            letter-spacing: 0.12em; text-transform: uppercase; transition: all 0.2s;
+        }
+        .btn-close-section:hover { border-color: var(--accent-color); color: var(--accent-color); background: rgba(26,47,79,0.03); }
+        
+        .cite { display: none; }
+
+        /* --- WIDGET APPUNTI ZEN --- */
+        .notes-widget {
+            background: var(--bg-color);
+            border: 1px solid var(--dust);
+            border-radius: 20px;
+            display: flex; 
+            flex-direction: column; 
+            align-self: start; 
+            height: 550px; /* Allineato all'altezza max del testo */
+            position: sticky; 
+            top: 20px; 
+            z-index: 5;
+            width: 100%; 
+            min-width: 0;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+
+        .notes-toolbar {
+            background: #fff; padding: 10px 12px; border-bottom: 1px solid var(--dust);
+            border-radius: 20px 20px 0 0; display: flex; justify-content: flex-end; gap: 8px;
+            flex-shrink: 0;
+        }
+        .tool-btn {
+            padding: 7px 14px; font-size: 0.75rem; cursor: pointer; border: 1px solid var(--dust);
+            background: var(--bg-color); border-radius: 50px; font-weight: 600;
+            font-family: var(--font-body); letter-spacing: 0.04em; color: #3D3C3A; transition: all 0.2s;
+        }
+        .tool-btn:hover { background: #fff; color: var(--accent-color); border-color: var(--accent-color); }
+        
+        .notes-area {
+            width: 100%; height: 100%; border: none; resize: none;
+            padding: 20px; padding-bottom: 50vh; overflow-y: auto;
+            -webkit-overflow-scrolling: touch; background: transparent;
+            font-family: 'Courier New', monospace; font-size: 0.95rem; 
+            line-height: 1.6; outline: none;
+        }
+        .notes-area::placeholder { color: #aaa; }
+
+        /* --- TOAST NOTIFICATIONS --- */
+        #toast-container { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 9999999; pointer-events: none; }
+        .toast {
+            background: rgba(0,0,0,0.9); color: white; padding: 15px 30px; border-radius: 50px;
+            margin-top: 10px; font-weight: bold; font-family: var(--font-body); text-align: center;
+            opacity: 0; transition: opacity 0.3s, transform 0.3s; transform: translateY(20px); border: 2px solid; pointer-events: auto;
+        }
+        .toast.show { opacity: 1; transform: translateY(0); }
+        .toast-success { border-color: var(--pop-cyan); box-shadow: 0 0 15px var(--pop-cyan); color: var(--pop-cyan); }
+        .toast-retry { border-color: var(--pop-magenta); box-shadow: 0 0 15px var(--pop-magenta); color: var(--pop-magenta); }
+
+        ::selection { background: var(--gold-lt); color: var(--ink-color); }
+    </style>
+</head>
+<body>
+
+    <div class="giants-background">
+        <img src="img/sfondo-giappone-1600.png" class="main-background-img" alt="">
+    </div>
+
+    <div id="toast-container"></div>
+
+    <header>
+        <div class="header-eyebrow notranslate" translate="no">Una Mano Spensierata</div>
+        <h1>Educazione <em>Musicale</em></h1>
+        <div style="text-align: center; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; padding: 0 10px;">
+            <a href="https://www.instagram.com/sciallato_lorenzo/" target="_blank" class="author-badge">
+                <img src="img/avatar-lorenzo.png" alt="Lorenzo Sciallato" class="author-img">
+                <span class="author-name">Creato da <strong>Lorenzo</strong> &copy; 2025</span>
+            </a>
+
+            <a href="https://chat.whatsapp.com/EaX5kr14XxHL9o3qxdDVEP?mode=gi_t" target="_blank" class="author-badge">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="Gruppo WhatsApp" class="author-img" style="padding: 12px;">
+                <span class="author-name">Entra nel <strong>Gruppo</strong></span>
+            </a>
+        </div>
+    </header>
+
+    <div id="start-wrapper">
+        <button class="btn-action" onclick="toggleMenu(true)">Esplora Indice</button>
+    </div>
+
+    <div id="main-menu">
+        
+        <div class="accordion-item">
+            <button class="lesson-card accordion-header">
+                <div class="lesson-number"><span>Dom.</span><span>01</span></div>
+                <div class="lesson-content"><h3>Cos'è la CNA</h3></div>
+                <div class="lesson-arrow"><span class="icon-plus">↓</span></div>
+            </button>
+            <div class="accordion-content">
+                
+                <div class="video-wrapper">
+                    <div class="video-container" data-video-id="01UrDW6sai4">
+                        <div class="yt-facade">
+                            <img src="https://img.youtube.com/vi/01UrDW6sai4/hqdefault.jpg" alt="Video Thumbnail">
+                            <div class="play-button"></div>
+                        </div>
+                    </div>
+                    <p style="text-align: center; margin-top: 15px; margin-bottom: 20px; font-size: 0.9rem; color: #666;">
+                        Il video non si apre?<br>
+                        <a href="https://youtu.be/01UrDW6sai4" target="_blank" class="btn-fallback">Clicca qui</a>
+                    </p>
+                </div>
+
+                <div class="media-notes-grid">
+                    <div class="text-content-box scrollable-text">
+                        <p>La CNA, o Codifica Neo-Auratica, è un concetto chiave della Teoria delle Musiche Audiotattili (TMA) che descrive l'impatto rivoluzionario della registrazione sonora su generi musicali come il jazz, il rock, il pop e la world music<span class="cite"></span>.</p>
+                        <p>Per capirla in modo semplice, possiamo pensare alla differenza tra una chiacchierata e un libro stampato<span class="cite"></span>.</p>
+                        <p>Nella musica classica (tradizione scritta), è lo spartito a "fissare" l'opera musicale in modo permanente<span class="cite"></span>.</p>
+                        <p>Nelle musiche audiotattili, invece, dove l'improvvisazione e la performance dal vivo sono centrali, è la tecnologia di registrazione a funzionare come una vera e propria "scrittura" del suono<span class="cite"></span>.</p>
+                        <p>Ecco i punti fondamentali per comprendere la Codifica Neo-Auratica in dettaglio<span class="cite"></span>:</p>
+                        <p><strong>1. Il ribaltamento della teoria dell'"Aura"</strong> Il termine "neo-auratica" si confronta direttamente con una famosa teoria del filosofo Walter Benjamin<span class="cite"></span>.</p>
+                        <p>Benjamin sosteneva che la riproduzione tecnica (come fare mille stampe di un quadro o replicare un disco) facesse perdere all'opera d'arte la sua "aura", ovvero il suo carattere di unicità, autenticità e irripetibilità<span class="cite"></span>.</p>
+                        <p>La CNA sostiene esattamente l'opposto per le musiche audiotattili: la registrazione non distrugge l'aura, ma ne crea una nuova (una nuova auraticità)<span class="cite"></span>.</p>
+                        <p>Fissando su un supporto tecnologico gli elementi unici e irripetibili di una performance dal vivo (il cosiddetto hic et nunc, "qui e ora"), la registrazione dona a quell'esecuzione una nuova identità permanente e autentica<span class="cite"></span>.</p>
+                        <p><strong>2. La creazione di un "testo" definitivo</strong> Registrando un brano, quella che era una performance passeggera e sfuggente (tipica delle culture orali) viene oggettivata e "cristallizzata"<span class="cite"></span>.</p>
+                        <p>Diventa un prodotto definitivo e ascoltabile infinite volte<span class="cite"></span>. Questo processo trasforma l'esecuzione in un testo strutturato di lunga durata, con una dignità pari a quella di una composizione classica scritta<span class="cite"></span>.</p>
+                        <p><strong>3. L'accesso allo status di vera "Opera d'Arte"</strong> Questo è forse l'effetto più importante: poiché la registrazione fissa la musica in modo permanente, essa permette a generi come il rock o il jazz di essere giudicati con gli stessi criteri estetici della musica colta occidentale<span class="cite"></span>.</p>
+                        <p>Grazie alla CNA, a queste musiche vengono riconosciute autorialità, originalità creativa e autonomia dell'opera<span class="cite"></span>.</p>
+                        <p>In sostanza, è il motivo per cui oggi consideriamo un album iconico del rock o del jazz come un capolavoro artistico a tutti gli effetti, e non solo come una semplice registrazione di intrattenimento<span class="cite"></span>.</p>
+                        <p><strong>4. La tecnologia come strumento creativo</strong> Infine, la CNA evidenzia che il microfono o lo studio di registrazione non sono mezzi neutri che si limitano a "fare una fotocopia" del suono, ma sono strumenti creativi attivi<span class="cite"></span>.</p>
+                        <p>Le tecniche di registrazione, il missaggio e la post-produzione contribuiscono in modo essenziale a creare l'impronta sonora unica di un brano<span class="cite"></span>.</p>
+                        <p>Il testo cita come esempi i leggendari produttori Phil Spector o Rudy Van Gelder, il cui lavoro in studio ha creato delle vere e proprie "aure" sonore inconfondibili<span class="cite"></span>.</p>
+                        <p>In sintesi, la CNA spiega come l'invenzione del disco e della registrazione abbia fatto fare un salto di livello a musiche basate sull'improvvisazione e sulla performance, trasformando esibizioni passeggere in opere d'arte permanenti, autoriali e culturalmente riconosciute<span class="cite"></span>.</p>
+                    </div>
+                    
+                    <div class="notes-widget">
+                        <div class="notes-toolbar">
+                            <button class="tool-btn copy-btn">Copia Appunti</button>
+                            <button class="tool-btn download-btn">⬇ Scarica .txt</button>
+                        </div>
+                        <textarea class="notes-area" placeholder="Seleziona il testo del riassuntone per evidenziarlo!&#10;&#10;Scrivi qui i tuoi appunti..."></textarea>
+                    </div>
+                </div>
+                <button class="btn-close-section">Chiudi ▲</button>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <button class="lesson-card accordion-header">
+                <div class="lesson-number"><span>Dom.</span><span>02</span></div>
+                <div class="lesson-content"><h3>Cos'è il principio audiotattile?</h3></div>
+                <div class="lesson-arrow"><span class="icon-plus">↓</span></div>
+            </button>
+            <div class="accordion-content">
+                
+                <div class="video-wrapper">
+                    <div class="video-container" data-video-id="6OnHAzsWxoU">
+                        <div class="yt-facade">
+                            <img src="https://img.youtube.com/vi/6OnHAzsWxoU/hqdefault.jpg" alt="Video Thumbnail">
+                            <div class="play-button"></div>
+                        </div>
+                    </div>
+                    <p style="text-align: center; margin-top: 15px; margin-bottom: 20px; font-size: 0.9rem; color: #666;">
+                        Il video non si apre?<br>
+                        <a href="https://youtu.be/6OnHAzsWxoU" target="_blank" class="btn-fallback">Clicca qui</a>
+                    </p>
+                </div>
+
+                <div class="media-notes-grid">
+                    <div class="text-content-box scrollable-text">
+                        <p>Il principio audiotattile (PAT) è il fondamento stesso della Teoria delle Musiche Audiotattili (TMA)<span class="cite"></span>.</p>
+                        <p>Se la musica classica (tradizione scritta) si basa sull'uso della vista e sulla decodifica di uno spartito, il principio audiotattile descrive un modo di conoscere, percepire e creare la musica basato profondamente sul corpo, sul movimento e sull'interazione nel momento presente<span class="cite"></span>.</p>
+                        <p>Ecco i punti chiave per comprenderlo in modo semplice e dettagliato<span class="cite"></span>:</p>
+                        <p><strong>1. Il legame intimo tra udito e tatto</strong> Il termine "audiotattile" si basa sulla constatazione fisica che l'udito è essenzialmente una forma derivata di tattilità<span class="cite"></span>.</p>
+                        <p>Il suono è una vibrazione fisico-meccanica che "tocca" e stimola fisicamente il nostro corpo (a partire dal timpano)<span class="cite"></span>.</p>
+                        <p>Di conseguenza, la musica governata da questo principio (come jazz, rock, pop o world music) non viene vissuta come un puro ragionamento intellettuale astratto, ma come un'esperienza intensamente psico-corporea, che richiede la partecipazione di tutta la nostra fisicità<span class="cite"></span>.</p>
+                        <p><strong>2. Unione indissolubile di mente e corpo (Plesso somato-psichico)</strong> Il PAT non agisce solo sul piano puramente fisico o solo su quello mentale, ma si esplica all'interno di un "plesso somato-psichico", ossia un sistema in cui mente e corpo sono un'entità unica<span class="cite"></span>.</p>
+                        <p>Attraverso questa connessione profonda, le regole del fare artistico non vengono calate dall'alto (da uno spartito o da una teoria preesistente), ma vengono indotte in modo naturale (olistico) dall'individuo, grazie alla mediazione del suo stesso corpo e alla continua interazione con l'ambiente e con gli altri musicisti<span class="cite"></span>.</p>
+                        <p><strong>3. La duplice valenza del PAT</strong> Per cogliere come questo principio operi nella pratica, bisogna considerare che esso svolge due funzioni simultanee e complementari<span class="cite"></span>:</p>
+                        <p>Come Modello Cognitivo (la "lente"): Il PAT funziona come uno schema mentale, un vero e proprio medium che condiziona in anticipo il modo in cui percepiamo e diamo senso al materiale sonoro<span class="cite"></span>.</p>
+                        <p>È ciò che, ad esempio, permette a un musicista o a un ascoltatore di comprendere concetti ritmici come lo swing e il groove, che sono impossibili da catturare in pieno tramite la scrittura musicale tradizionale<span class="cite"></span>.</p>
+                        <p>Come Energia (la "spinta creativa"): Oltre a essere una "lente", il PAT è un'energia vitale, definita come "intenzionalità formativa psico-corporea"<span class="cite"></span>.</p>
+                        <p>È l'impulso attivo che proietta l'individuo nel mondo reale per agire e creare musicalmente<span class="cite"></span>.</p>
+                        <p><strong>4. La creazione nel "qui e ora" (Messa in fase)</strong> Questa è forse la conseguenza più pratica e visibile del PAT<span class="cite"></span>.</p>
+                        <p>Mentre la composizione classica si basa sul "tempo differito" (il compositore scrive un brano oggi perché qualcun altro lo suoni domani), il principio audiotattile governa la cosiddetta "messa in fase", ovvero l'azione simultanea nel presente<span class="cite"></span>.</p>
+                        <p>È proprio questo istinto a operare nel qui e ora corporeo e sensoriale che rende possibili e naturali quei processi creativi istantanei di cui abbiamo parlato prima, ovvero l'estemporizzazione e l'improvvisazione<span class="cite"></span>.</p>
+                        <p>In sintesi, il principio audiotattile è il "motore" fisico e mentale che permette di vivere e generare la musica non come l'esecuzione di un documento scritto, ma come un'esperienza vitale, mossa dall'energia del corpo e profondamente radicata nella creatività dell'istante<span class="cite"></span>.</p>
+                    </div>
+
+                    <div class="notes-widget">
+                        <div class="notes-toolbar">
+                            <button class="tool-btn copy-btn">Copia Appunti</button>
+                            <button class="tool-btn download-btn">⬇ Scarica .txt</button>
+                        </div>
+                        <textarea class="notes-area" placeholder="Seleziona il testo del riassuntone per evidenziarlo!&#10;&#10;Scrivi qui i tuoi appunti..."></textarea>
+                    </div>
+                </div>
+                <button class="btn-close-section">Chiudi ▲</button>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <button class="lesson-card accordion-header">
+                <div class="lesson-number"><span>Dom.</span><span>03</span></div>
+                <div class="lesson-content"><h3>Cos'è l'improvvisazione e l'estemporizzazione</h3></div>
+                <div class="lesson-arrow"><span class="icon-plus">↓</span></div>
+            </button>
+            <div class="accordion-content">
+                
+                <div class="video-wrapper">
+                    <div class="video-container" data-video-id="2Vli18lkS6I">
+                        <div class="yt-facade">
+                            <img src="https://img.youtube.com/vi/2Vli18lkS6I/hqdefault.jpg" alt="Video Thumbnail">
+                            <div class="play-button"></div>
+                        </div>
+                    </div>
+                    <p style="text-align: center; margin-top: 15px; margin-bottom: 20px; font-size: 0.9rem; color: #666;">
+                        Il video non si apre?<br>
+                        <a href="https://youtu.be/2Vli18lkS6I" target="_blank" class="btn-fallback">Clicca qui</a>
+                    </p>
+                </div>
+
+                <div class="media-notes-grid">
+                    <div class="text-content-box scrollable-text">
+                        <p>Nella Teoria delle Musiche Audiotattili, estemporizzazione e improvvisazione sono definiti come due distinti processi creativi che avvengono in tempo reale<span class="cite"></span>.</p>
+                        <p>Pur svolgendosi entrambi nel momento stesso dell'esecuzione, agiscono su due livelli profondamente diversi<span class="cite"></span>.</p>
+                        <p>Ecco una spiegazione semplice e dettagliata delle due modalità<span class="cite"></span>:</p>
+                        <p><strong>1. L'Estemporizzazione (Creazione sul modello)</strong> L'estemporizzazione è considerata un'elaborazione creativa di primo livello<span class="cite"></span>.</p>
+                        <p>Cos'è: Si tratta di un processo in cui il musicista crea e interpreta in tempo reale, ma lo fa agendo su una traccia o uno schema musicale preesistente, chiamato "modello figurale"<span class="cite"></span>.</p>
+                        <p>Caratteristiche: L'artista applica una variazione e un filtro personale (ex tempore), ma il risultato finale (l'"enunciato reale") rimane sempre chiaramente identificabile e riconoscibile da parte di chi ascolta<span class="cite"></span>.</p>
+                        <p>La struttura di base del brano non viene stravolta<span class="cite"></span>.</p>
+                        <p>Esempi: Quando un musicista suona la melodia principale (il tema) di un brano pop o jazz variandone leggermente il ritmo o l'espressione, sta estemporizzando<span class="cite"></span>.</p>
+                        <p>Allo stesso modo, le esecuzioni di musiche tradizionali regolate da modelli rigidi, come il rāga indiano o le melodie delle launeddas in Sardegna, rientrano nell'estemporizzazione<span class="cite"></span>.</p>
+                        <p><strong>2. L'Improvvisazione (Creazione del modello)</strong> L'improvvisazione è considerata un'elaborazione creativa di secondo livello, successiva e più complessa rispetto all'estemporizzazione<span class="cite"></span>.</p>
+                        <p>Cos'è: In questo caso, il musicista non si limita a variare uno schema preesistente, ma introduce materiali musicali del tutto nuovi e inediti<span class="cite"></span>.</p>
+                        <p>È definita per questo una "creazione del modello" o creazione ex novo (da zero)<span class="cite"></span>.</p>
+                        <p>Caratteristiche: Oltre alla novità musicale, l'improvvisazione si distingue per il suo peso culturale ed estetico<span class="cite"></span>. Mentre estemporizza, il musicista interpreta; quando improvvisa, compie una consapevole affermazione artistica volta a creare un'opera dotata di originalità creativa e autonomia<span class="cite"></span>.</p>
+                        <p>In sintesi: La differenza chiave risiede nel grado di novità e nel rapporto con il modello di partenza<span class="cite"></span>.</p>
+                        <p>Se suoni un brano già esistente personalizzandolo dal vivo in modo che sia ancora riconoscibile, stai compiendo una "creazione sul modello" (estemporizzazione)<span class="cite"></span>.</p>
+                        <p>Se invece superi quel modello per inventare materiali completamente nuovi e creare un'opera autonoma sul momento, stai compiendo una "creazione del modello" (improvvisazione)<span class="cite"></span>.</p>
+                    </div>
+
+                    <div class="notes-widget">
+                        <div class="notes-toolbar">
+                            <button class="tool-btn copy-btn">Copia Appunti</button>
+                            <button class="tool-btn download-btn">⬇ Scarica .txt</button>
+                        </div>
+                        <textarea class="notes-area" placeholder="Seleziona il testo del riassuntone per evidenziarlo!&#10;&#10;Scrivi qui i tuoi appunti..."></textarea>
+                    </div>
+                </div>
+                <button class="btn-close-section">Chiudi ▲</button>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <button class="lesson-card accordion-header">
+                <div class="lesson-number"><span>Dom.</span><span>04</span></div>
+                <div class="lesson-content"><h3>Cos'è il medium?</h3></div>
+                <div class="lesson-arrow"><span class="icon-plus">↓</span></div>
+            </button>
+            <div class="accordion-content">
+                
+                <div class="video-wrapper">
+                    <div class="video-container" data-video-id="ET6IqUbvTmk">
+                        <div class="yt-facade">
+                            <img src="https://img.youtube.com/vi/ET6IqUbvTmk/hqdefault.jpg" alt="Video Thumbnail">
+                            <div class="play-button"></div>
+                        </div>
+                    </div>
+                    <p style="text-align: center; margin-top: 15px; margin-bottom: 20px; font-size: 0.9rem; color: #666;">
+                        Il video non si apre?<br>
+                        <a href="https://youtu.be/ET6IqUbvTmk" target="_blank" class="btn-fallback">Clicca qui</a>
+                    </p>
+                </div>
+
+                <div class="media-notes-grid">
+                    <div class="text-content-box scrollable-text">
+                        <p>Il medium (al plurale media) non è semplicemente lo strumento fisico o il canale che si usa per fare musica, ma è un vero e proprio "sistema operativo" mentale e cognitivo che modella in modo profondo come l'essere umano percepisce, pensa e crea la realtà<span class="cite"></span>.</p>
+                        <p>Per capire questo concetto fondamentale, possiamo dividerlo in quattro punti chiave<span class="cite"></span>:</p>
+                        <p><strong>1. Il medium non è un "tubo" neutro</strong> Normalmente, siamo abituati a pensare a un canale di comunicazione come a un veicolo neutro (come un tubo vuoto o un filo del telefono) che si limita a trasportare un'informazione da un punto A a un punto B<span class="cite"></span>.</p>
+                        <p>Nella Teoria delle Musiche Audiotattili (TMA), invece, il medium non è mai neutro: ha un potere "formativo" e "strutturante"<span class="cite"></span>.</p>
+                        <p>Esso partecipa attivamente alla creazione del messaggio<span class="cite"></span>.</p>
+                        <p>Esempio pratico: Quando diciamo che un certo brano musicale suona in modo "pianistico" o "chitarristico", stiamo notando come lo strumento (il medium) abbia imposto la sua forma, la sua struttura fisica e la sua logica alla musica stessa<span class="cite"></span>.</p>
+                        <p><strong>2. "Il medium è il messaggio" e il "Brainframe"</strong> Questo approccio si basa sulle intuizioni di grandi pensatori come Marshall McLuhan, famoso per la frase "il medium è il messaggio"<span class="cite"></span>.</p>
+                        <p>Questo significa che il vero impatto di uno strumento di comunicazione non risiede nel contenuto che trasmette, ma nella sua capacità di trasformare i nostri modelli mentali e percettivi in modo subliminale e inconscio<span class="cite"></span>.</p>
+                        <p>Il medium agisce come una cornice invisibile sovrapposta alla nostra mente — definita brainframe dallo studioso Derrick De Kerckhove — che condiziona il nostro modo di pensare senza che ce ne rendiamo conto<span class="cite"></span>.</p>
+                        <p><strong>3. Due "sistemi operativi" a confronto</strong> Ogni medium ha un proprio programma interno o logica di funzionamento che pre-costituisce il nostro modo di conoscere<span class="cite"></span>.</p>
+                        <p>Nella musica, possiamo vedere la differenza tra due media principali<span class="cite"></span>:</p>
+                        <p>Il medium notazionale (lo spartito): Immerso nella cultura visiva, funziona secondo principi di linearità, sequenzialità e divisione matematica<span class="cite"></span>.</p>
+                        <p>Tratta la musica come un codice "digitale", fatto di unità separate e distinte (le singole note scritte)<span class="cite"></span>.</p>
+                        <p>Il medium audiotattile (il corpo): Si basa su una logica pragmatica, corporea e gestuale<span class="cite"></span>.</p>
+                        <p>Non divide la musica in "mattoncini" isolati, ma la elabora in modo olistico e continuo (come un codice "analogico"), basandosi su blocchi inseparabili legati al gesto fisico e all'intuizione<span class="cite"></span>.</p>
+                        <p><strong>4. Un "formatore di esperienza"</strong> In sintesi, il medium non è solo un mezzo per comunicare in senso linguistico, ma è un "formatore di esperienza" a tutto tondo<span class="cite"></span>.</p>
+                        <p>I principi operativi di un medium (come la scrittura occidentale, la scrittura indiana o la pura gestualità corporea) si iscrivono a livello profondo nella nostra percezione<span class="cite"></span>.</p>
+                        <p>Il medium costruisce i significati con cui ci relazioniamo al mondo, orienta le nostre scelte estetiche e determina, di fatto, come viviamo e creiamo l'arte<span class="cite"></span>.</p>
+                    </div>
+
+                    <div class="notes-widget">
+                        <div class="notes-toolbar">
+                            <button class="tool-btn copy-btn">Copia Appunti</button>
+                            <button class="tool-btn download-btn">⬇ Scarica .txt</button>
+                        </div>
+                        <textarea class="notes-area" placeholder="Seleziona il testo del riassuntone per evidenziarlo!&#10;&#10;Scrivi qui i tuoi appunti..."></textarea>
+                    </div>
+                </div>
+                <button class="btn-close-section">Chiudi ▲</button>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <button class="lesson-card accordion-header">
+                <div class="lesson-number"><span>Dom.</span><span>05</span></div>
+                <div class="lesson-content"><h3>Come vengono inquadrate secondo la TMA le musiche di tradizione scritta occidentale?</h3></div>
+                <div class="lesson-arrow"><span class="icon-plus">↓</span></div>
+            </button>
+            <div class="accordion-content">
+                
+                <div class="video-wrapper">
+                    <div class="video-container" data-video-id="KvEGAL_z7U4">
+                        <div class="yt-facade">
+                            <img src="https://img.youtube.com/vi/KvEGAL_z7U4/hqdefault.jpg" alt="Video Thumbnail">
+                            <div class="play-button"></div>
+                        </div>
+                    </div>
+                    <p style="text-align: center; margin-top: 15px; margin-bottom: 20px; font-size: 0.9rem; color: #666;">
+                        Il video non si apre?<br>
+                        <a href="https://youtu.be/KvEGAL_z7U4" target="_blank" class="btn-fallback">Clicca qui</a>
+                    </p>
+                </div>
+
+                <div class="media-notes-grid">
+                    <div class="text-content-box scrollable-text">
+                        <p>Secondo la Teoria delle Musiche Audiotattili (TMA), la musica di tradizione scritta occidentale (in particolare quella dal Settecento fino a metà del Novecento) si posiziona all'esatto opposto rispetto alle musiche basate sull'improvvisazione e sul corpo<span class="cite"></span>.</p>
+                        <p>La TMA inquadra questa tradizione attraverso quella che definisce la "matrice cognitiva visiva"<span class="cite"></span>.</p>
+                        <p>In parole semplici, significa che tutto in questa musica è dominato dal senso della vista e, in particolare, dallo strumento usato per scriverla: lo spartito<span class="cite"></span>.</p>
+                        <p>Ecco nel dettaglio come viene descritta e inquadrata questa tradizione musicale<span class="cite"></span>:</p>
+                        <p><strong>1. Lo spartito come "Sistema Operativo"</strong> Proprio come abbiamo visto prima per il concetto di medium, la notazione musicale scritta non è solo uno strumento per "ricordare" la musica, ma diventa la logica interna (il sistema operativo) che forma e condiziona la mente dei compositori<span class="cite"></span>.</p>
+                        <p>Questo medium impone ai musicisti di pensare secondo principi di vista: linearità, segmentazione in parti e ripetibilità uniforme<span class="cite"></span>.</p>
+                        <p><strong>2. Una logica "a mattoncini" (Matematica e Unità Discrete)</strong> Mentre il principio audiotattile percepisce la musica in modo continuo e gestuale, la musica scritta occidentale funziona come un gioco di costruzioni<span class="cite"></span>.</p>
+                        <p>Scompone il suono in "unità discrete" (le singole note scritte), che vengono poi combinate assieme seguendo rigide regole matematiche e rapporti temporali precisi (come crome, semiminime, ecc.)<span class="cite"></span>.</p>
+                        <p>È un sistema in cui tutto è calcolabile, divisibile e governato da un ordine astratto<span class="cite"></span>.</p>
+                        <p><strong>3. Il distacco dal corpo (Regole "Exosomatiche")</strong> Mentre il jazz o il rock si basano su un'intelligenza "endosomatica" (che nasce da dentro il corpo, dall'intuito e dal gesto), la musica di tradizione scritta si basa su regole "exosomatiche" (esterne al corpo)<span class="cite"></span>.</p>
+                        <p>Essa svaluta l'esperienza fisica e concreta per favorire un approccio razionale, logico-combinatorio e astratto<span class="cite"></span>.</p>
+                        <p>Per usare una citazione filosofica presente nel testo, la musica teorizzata in questo modo diventa quasi un puro oggetto della mente trascendente, paragonabile a una "testa alata di angelo senza il corpo"<span class="cite"></span>.</p>
+                        <p><strong>4. Il divorzio tra Compositore ed Esecutore</strong> Un'altra conseguenza fondamentale di questa matrice visiva è la divisione netta del lavoro musicale<span class="cite"></span>.</p>
+                        <p>La scrittura fonda la primazia del testo sul gesto<span class="cite"></span>. Questo significa che il documento scritto diventa l'autorità assoluta, provocando una divisione funzionale: da una parte c'è il compositore (che inventa e scrive), dall'altra c'è l'interprete (che esegue)<span class="cite"></span>.</p>
+                        <p>In questo sistema, l'interprete non è chiamato a creare in tempo reale, ma deve aderire il più fedelmente possibile a ciò che è scritto sulla partitura, limitando enormemente le sue dinamiche di libertà creativa<span class="cite"></span>.</p>
+                        <p><strong>5. La musica come "Oggetto" staccato dalla realtà</strong> Infine, in questa tradizione la musica viene trasformata in un "oggetto" teorico, quantificato e matematicizzato<span class="cite"></span>.</p>
+                        <p>Per poterla studiare e comporre a tavolino, la teoria musicale occidentale ha dovuto separare il Soggetto (l'uomo che agisce) dall'Oggetto (l'opera musicale), in modo da poter osservare e calcolare quest'ultimo in modo "puro" e non perturbato dalle emozioni istantanee<span class="cite"></span>.</p>
+                        <p>In sintesi, la TMA inquadra la musica scritta occidentale come un sistema straordinario e complesso guidato dall'astrazione visiva, dalla scomposizione logico-matematica e dall'autorità indiscutibile del testo scritto, distaccandosi quasi del tutto dall'esperienza sensoriale e "qui e ora" che invece anima le musiche audiotattili<span class="cite"></span>.</p>
+                    </div>
+
+                    <div class="notes-widget">
+                        <div class="notes-toolbar">
+                            <button class="tool-btn copy-btn">Copia Appunti</button>
+                            <button class="tool-btn download-btn">⬇ Scarica .txt</button>
+                        </div>
+                        <textarea class="notes-area" placeholder="Seleziona il testo del riassuntone per evidenziarlo!&#10;&#10;Scrivi qui i tuoi appunti..."></textarea>
+                    </div>
+                </div>
+                <button class="btn-close-section">Chiudi ▲</button>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <button class="lesson-card accordion-header">
+                <div class="lesson-number"><span>Dom.</span><span>06</span></div>
+                <div class="lesson-content"><h3>Elenca le proprietà e le caratteristiche delle musiche di tradizione orale</h3></div>
+                <div class="lesson-arrow"><span class="icon-plus">↓</span></div>
+            </button>
+            <div class="accordion-content">
+                
+                <div class="video-wrapper">
+                    <div class="video-container" data-video-id="7H63JPKhsx4">
+                        <div class="yt-facade">
+                            <img src="https://img.youtube.com/vi/7H63JPKhsx4/hqdefault.jpg" alt="Video Thumbnail">
+                            <div class="play-button"></div>
+                        </div>
+                    </div>
+                    <p style="text-align: center; margin-top: 15px; margin-bottom: 20px; font-size: 0.9rem; color: #666;">
+                        Il video non si apre?<br>
+                        <a href="https://youtu.be/7H63JPKhsx4" target="_blank" class="btn-fallback">Clicca qui</a>
+                    </p>
+                </div>
+
+                <div class="media-notes-grid">
+                    <div class="text-content-box scrollable-text">
+                        <p>le musiche di tradizione orale (come quelle tipiche delle culture agro-pastorali preindustriali) si differenziano profondamente dalla musica di tradizione scritta, poiché sono governate e modellate dal Principio Audiotattile (PAT)<span class="cite"></span>.</p>
+                        <p>Invece di affidarsi alla vista e a un documento scritto (lo spartito), queste musiche si basano su un'esperienza profondamente fisica e relazionale<span class="cite"></span>.</p>
+                        <p>Ecco un elenco delle loro caratteristiche e proprietà, spiegate in modo semplice e dettagliato<span class="cite"></span>:</p>
+                        <p><strong>1. La musica è vissuta come un "evento", non come un "oggetto"</strong> Nella tradizione scritta, la musica viene cristallizzata su un foglio, diventando un "oggetto" autonomo e staccato da chi lo ha creato<span class="cite"></span>.</p>
+                        <p>Nelle culture orali, invece, domina quella che il testo chiama "un'ontologia dell'avvenimento"<span class="cite"></span>.</p>
+                        <p>Questo significa che il suono non è mai considerato una cosa astratta a sé stante, ma è sempre il risultato di un'azione concreta: la musica esiste solo nel processo, nel momento in cui viene generata e vissuta<span class="cite"></span>.</p>
+                        <p><strong>2. L'improvvisazione è spontanea e "non teorizzata"</strong> Mentre noi oggi facciamo una distinzione netta tra "composizione" e "improvvisazione", nelle culture tradizionali orali l'idea stessa di improvvisazione è "impensata e non tematizzata"<span class="cite"></span>.</p>
+                        <p>Non esiste cioè una vera e propria teoria che separi l'atto di inventare da quello di suonare: creare musica, variarla sul momento ed eseguirla sono un processo unico e naturale<span class="cite"></span>.</p>
+                        <p><strong>3. Flessibilità e "sfumature" del suono (Approccio melismatico/inflessivo)</strong> La musica scritta occidentale ha bisogno di note precise e matematiche (come i tasti di un pianoforte)<span class="cite"></span>.</p>
+                        <p>Le musiche orali, invece, prediligono suoni elastici e flessibili, definiti "melismatici" o "inflessivi"<span class="cite"></span>.</p>
+                        <p>Significa che il singolo suono non è visto come un punto rigido, ma come uno spazio dotato di un "alone" (unità di intorno): i musicisti giocano con le inflessioni, le sbavature e le oscillazioni del suono, valorizzando in particolare l'impatto e il momento dell'attacco sonoro (basti pensare all'importanza delle percussioni e del ritmo in queste tradizioni)<span class="cite"></span>.</p>
+                        <p><strong>4. L'uso di "codici mimetici e gestuali"</strong> Non essendoci una grammatica scritta a dettare le regole, la musica si trasmette e si struttura attraverso "codifiche analogico-mimetiche"<span class="cite"></span>.</p>
+                        <p>In parole povere, si impara imitando i gesti degli altri musicisti<span class="cite"></span>.</p>
+                        <p>La musica prende forma attraverso la riproduzione fisica ("dattilica") dei movimenti, come la posizione delle dita sullo strumento<span class="cite"></span>.</p>
+                        <p>L'apprendimento non avviene leggendo, ma attraverso l'empatia, l'imitazione e l'intuizione olistica<span class="cite"></span>.</p>
+                        <p><strong>5. Sono guidate da una "razionalità psico-corporea"</strong> Le musiche orali respingono l'intellettualismo astratto<span class="cite"></span>.</p>
+                        <p>Operano tramite un'intelligenza profondamente integrata col corpo (il plesso somato-psichico), in cui la mente e le mani lavorano insieme in risposta all'ambiente e agli stimoli del momento<span class="cite"></span>.</p>
+                        <p>Non seguono regole esterne e calate dall'alto, ma si affidano a un'esperienza sensoriale ed energetica vissuta in prima persona<span class="cite"></span>.</p>
+                        <p>In sintesi, le musiche di tradizione orale non sono affatto versioni "più semplici" o difettose della musica scritta, ma sono sistemi complessi che non usano l'astrazione visiva, sfruttando invece l'energia del corpo, l'imitazione gestuale e la forza creativa del momento presente<span class="cite"></span>.</p>
+                    </div>
+
+                    <div class="notes-widget">
+                        <div class="notes-toolbar">
+                            <button class="tool-btn copy-btn">Copia Appunti</button>
+                            <button class="tool-btn download-btn">⬇ Scarica .txt</button>
+                        </div>
+                        <textarea class="notes-area" placeholder="Seleziona il testo del riassuntone per evidenziarlo!&#10;&#10;Scrivi qui i tuoi appunti..."></textarea>
+                    </div>
+                </div>
+                <button class="btn-close-section">Chiudi ▲</button>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <button class="lesson-card accordion-header">
+                <div class="lesson-number"><span>Dom.</span><span>07</span></div>
+                <div class="lesson-content"><h3>A cosa serve la TMA?</h3></div>
+                <div class="lesson-arrow"><span class="icon-plus">↓</span></div>
+            </button>
+            <div class="accordion-content">
+                
+                <div class="video-wrapper">
+                    <div class="video-container" data-video-id="_HFAHsNKIbE">
+                        <div class="yt-facade">
+                            <img src="https://img.youtube.com/vi/_HFAHsNKIbE/hqdefault.jpg" alt="Video Thumbnail">
+                            <div class="play-button"></div>
+                        </div>
+                    </div>
+                    <p style="text-align: center; margin-top: 15px; margin-bottom: 20px; font-size: 0.9rem; color: #666;">
+                        Il video non si apre?<br>
+                        <a href="https://youtu.be/_HFAHsNKIbE" target="_blank" class="btn-fallback">Clicca qui</a>
+                    </p>
+                </div>
+
+                <div class="media-notes-grid">
+                    <div class="text-content-box scrollable-text">
+                        <p>La Teoria delle Musiche Audiotattili (TMA) ha un obiettivo principale ambizioso e rivoluzionario: unificare tutte le musiche del mondo in un'unica teoria globale e comparata<span class="cite"></span>.</p>
+                        <p>Invece di analizzare la musica in modo frammentato, la TMA fornisce un vero e proprio modello teorico e musicologico completo<span class="cite"></span>.</p>
+                        <p>Ecco, nel dettaglio e in modo semplice, a cosa serve<span class="cite"></span>:</p>
+                        <p><strong>1. Superare la confusione delle "etichette" di genere</strong> Prima della TMA, il mondo musicale era diviso in infinite etichette (rock, classica, pop, jazz) che spesso generavano una grande confusione, rendendo difficile capire, ad esempio, dove finisse il rock e iniziasse il jazz<span class="cite"></span>.</p>
+                        <p>La TMA risolve questo problema smettendo di usare queste categorie superficiali e raggruppando le musiche mondiali in un solo sistema coerente<span class="cite"></span>.</p>
+                        <p><strong>2. Capire la "radice" del fare musica</strong> Invece di limitarsi a studiare le strutture musicali in superficie, la TMA va alla radice: studia i processi cognitivi e metodologici attraverso i quali la musica viene pensata, creata e recepita (ascoltata) da chi ne fruisce<span class="cite"></span>.</p>
+                        <p>Questo permette di categorizzare non solo i brani musicali, ma anche le pratiche, i comportamenti, le forme e le sfere concettuali delle culture musicali di tutto il mondo<span class="cite"></span>.</p>
+                        <p><strong>3. Permettere confronti tra culture diverse</strong> Uscendo da una visione ristretta (il "nostro piccolo" modo di vedere le cose), la TMA mette a sistema l'intero panorama musicale globale<span class="cite"></span>.</p>
+                        <p>Grazie alle sue macro-categorie (musiche di tradizione scritta, di tradizione orale e audiotattili), permette di confrontare tradizioni diversissime tra loro in modo paritario, capendone le logiche profonde e inquadrando correttamente le scelte degli artisti<span class="cite"></span>.</p>
+                        <p><strong>4. Rivoluzionare la didattica (Come si insegna la musica a scuola)</strong> Un risvolto pratico fondamentale della TMA è la sua applicazione nell'educazione<span class="cite"></span>.</p>
+                        <p>La teoria permette di pensare a un modo nuovo e mirato di insegnare la musica, adattando il metodo alla natura specifica (il medium) di ogni genere<span class="cite"></span>:</p>
+                        <p>Per le musiche di tradizione scritta: l'insegnamento deve concentrarsi sulla decodifica dei segni grafici e sulla lettura della partitura, che è il cuore di questo sistema<span class="cite"></span>.</p>
+                        <p>Per le musiche di tradizione orale: non si studiano sui libri, ma si fanno vivere ai ragazzi attraverso la performance attiva, il corpo e la partecipazione ai contesti sociali ("riti", come le feste)<span class="cite"></span>.</p>
+                        <p>Per le musiche audiotattili (come pop o rock): si insegnano educando all'ascolto consapevole<span class="cite"></span>.</p>
+                        <p>L'obiettivo diventa creare un percorso di "apprezzamento estetico", aiutando gli studenti a ragionare sul proprio gusto (ad esempio capendo cosa trasmette loro una canzone dei Beatles o di Vasco Rossi) e a fruire della musica in modo profondo<span class="cite"></span>.</p>
+                        <p>In sintesi, la TMA serve a guardare la totalità dell'esperienza musicale umana non più come un insieme disordinato di stili, ma come un quadro unitario, in cui ogni pratica ha il suo senso, le sue regole mentali e il suo specifico metodo per essere compresa, analizzata e insegnata<span class="cite"></span>.</p>
+                    </div>
+
+                    <div class="notes-widget">
+                        <div class="notes-toolbar">
+                            <button class="tool-btn copy-btn">Copia Appunti</button>
+                            <button class="tool-btn download-btn">⬇ Scarica .txt</button>
+                        </div>
+                        <textarea class="notes-area" placeholder="Seleziona il testo del riassuntone per evidenziarlo!&#10;&#10;Scrivi qui i tuoi appunti..."></textarea>
+                    </div>
+                </div>
+                <button class="btn-close-section">Chiudi ▲</button>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <button class="lesson-card accordion-header">
+                <div class="lesson-number"><span>Dom.</span><span>08</span></div>
+                <div class="lesson-content"><h3>Cos'è il paradigma statico?</h3></div>
+                <div class="lesson-arrow"><span class="icon-plus">↓</span></div>
+            </button>
+            <div class="accordion-content">
+                
+                <div class="video-wrapper">
+                    <div class="video-container" data-video-id="VoC9SqSFDpk">
+                        <div class="yt-facade">
+                            <img src="https://img.youtube.com/vi/VoC9SqSFDpk/hqdefault.jpg" alt="Video Thumbnail">
+                            <div class="play-button"></div>
+                        </div>
+                    </div>
+                    <p style="text-align: center; margin-top: 15px; margin-bottom: 20px; font-size: 0.9rem; color: #666;">
+                        Il video non si apre?<br>
+                        <a href="https://youtu.be/VoC9SqSFDpk" target="_blank" class="btn-fallback">Clicca qui</a>
+                    </p>
+                </div>
+
+                <div class="media-notes-grid">
+                    <div class="text-content-box scrollable-text">
+                        <p>Il paradigma statico, descritto nella teoria pedagogica di Carlo Delfrati, è un modello educativo rigido e autoritario basato sull'obbedienza, sull'inserimento sociale e sul rispetto incondizionato dell'autorità<span class="cite"></span>.</p>
+                        <p>In questo sistema, l'obiettivo primario è la conservazione di ciò che esiste e il non-mutamento, motivo per cui viene definito "statico"<span class="cite"></span>.</p>
+                        <p>Ecco i concetti centrali spiegati in dettaglio<span class="cite"></span>:</p>
+                        <p><strong>Lo studente come "vaso vuoto":</strong> L'allievo è considerato privo di una propria cultura, di interessi o di bisogni<span class="cite"></span>.</p>
+                        <p>Viene visto come un'anfora completamente vuota o, metaforicamente, come un "primitivo" che non sa nulla e deve essere riempito di nozioni<span class="cite"></span>.</p>
+                        <p><strong>L'insegnante come detentore della verità:</strong> Il docente si colloca al vertice di una piramide morale e di conoscenza<span class="cite"></span>.</p>
+                        <p>Egli non si mette in discussione, ma applica la regola del "si è sempre fatto così", trasmettendo il sapere in modo unidirezionale e dogmatico<span class="cite"></span>.</p>
+                        <p><strong>Educazione alla dipendenza:</strong> Lo spazio lasciato all'iniziativa individuale o alla creatività dell'alunno è pari a zero<span class="cite"></span>.</p>
+                        <p>Il sistema mira a creare una personalità dipendente dall'autorità e sottomessa, scoraggiando duramente l'autonomia del soggetto<span class="cite"></span>.</p>
+                        <p>Per comprendere concretamente come agisce questo modello, ecco 4 esempi diversi riportati nei testi<span class="cite"></span>:</p>
+                        <p><strong>1. La metafora della "brocca vuota" (L'assimilazione passiva)</strong> Immagina un insegnante che si considera una brocca colma d'acqua (la conoscenza)<span class="cite"></span>.</p>
+                        <p>Egli vede i suoi studenti come esseri primitivi e ignoranti che devono semplicemente avvicinarsi a lui per "abbeverarsi" alla sua fonte di saggezza<span class="cite"></span>.</p>
+                        <p>Lo studente non contribuisce in alcun modo al percorso educativo: deve solo ricevere passivamente l'acqua versata dal maestro<span class="cite"></span>.</p>
+                        <p><strong>2. L'insegnante "colonizzatore" (La svalutazione dell'allievo)</strong> In ambito musicale, un bambino piccolo ha un suo modo naturale di "giocare con i suoni"<span class="cite"></span>.</p>
+                        <p>Un insegnante guidato dal paradigma statico giudica questo universo sonoro infantile come un "gravissimo errore" o una stortura frutto di ignoranza, da correggere il prima possibile<span class="cite"></span>.</p>
+                        <p>Agisce esattamente come un colonizzatore politico: considera l'allievo un indigeno inferiore da incivilire e da rivestire con regole adulte, senza alcun rispetto per la sua cultura di partenza<span class="cite"></span>.</p>
+                        <p><strong>3. Il maestro "domatore" (La repressione delle energie naturali)</strong> Come descritto in un passo dello scrittore Hermann Hesse, in questo paradigma la missione del maestro è quella di "domare e annientare le grezze energie naturali e i desideri dei ragazzi"<span class="cite"></span>.</p>
+                        <p>La natura spontanea e imprevedibile dell'alunno viene percepita come una "fiamma pericolosa" o una foresta selvaggia che va spezzata e soffocata a tutti i costi, per instillare ideali tranquilli, moderati e funzionali alla disciplina di stato<span class="cite"></span>.</p>
+                        <p><strong>4. L'autonomia "ritardata" in Conservatorio (Il divieto di iniziativa)</strong> Poiché l'autoritarismo teme l'indipendenza dell'alunno, la libertà viene concessa solo alla fine del percorso<span class="cite"></span>.</p>
+                        <p>Un esempio classico è quello del docente di strumento o composizione che per anni impone all'allievo di eseguire ciecamente ogni sua direttiva, bloccando ogni sua idea personale<span class="cite"></span>.</p>
+                        <p>La frase tipica di questo insegnante è: "Segui rigorosamente tutte le mie prescrizioni... e quando sarai uscito da questo Conservatorio potrai fare quello che vorrai (ancora una volta, a tuo rischio e pericolo!)"<span class="cite"></span>.</p>
+                    </div>
+
+                    <div class="notes-widget">
+                        <div class="notes-toolbar">
+                            <button class="tool-btn copy-btn">Copia Appunti</button>
+                            <button class="tool-btn download-btn">⬇ Scarica .txt</button>
+                        </div>
+                        <textarea class="notes-area" placeholder="Seleziona il testo del riassuntone per evidenziarlo!&#10;&#10;Scrivi qui i tuoi appunti..."></textarea>
+                    </div>
+                </div>
+                <button class="btn-close-section">Chiudi ▲</button>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <button class="lesson-card accordion-header">
+                <div class="lesson-number"><span>Dom.</span><span>09</span></div>
+                <div class="lesson-content"><h3>Cos'è il paradigma dinamico?</h3></div>
+                <div class="lesson-arrow"><span class="icon-plus">↓</span></div>
+            </button>
+            <div class="accordion-content">
+                
+                <div class="video-wrapper">
+                    <div class="video-container" data-video-id="ZYraipPPdq8">
+                        <div class="yt-facade">
+                            <img src="https://img.youtube.com/vi/ZYraipPPdq8/hqdefault.jpg" alt="Video Thumbnail">
+                            <div class="play-button"></div>
+                        </div>
+                    </div>
+                    <p style="text-align: center; margin-top: 15px; margin-bottom: 20px; font-size: 0.9rem; color: #666;">
+                        Il video non si apre?<br>
+                        <a href="https://youtu.be/ZYraipPPdq8" target="_blank" class="btn-fallback">Clicca qui</a>
+                    </p>
+                </div>
+
+                <div class="media-notes-grid">
+                    <div class="text-content-box scrollable-text">
+                        <p>Il paradigma dinamico, teorizzato nella pedagogia di Carlo Delfrati, è l'esatto opposto del paradigma statico: è un modello educativo flessibile, aperto al rinnovamento continuo e basato sulla valorizzazione profonda dell'allievo<span class="cite"></span>.</p>
+                        <p>Se il modello statico mira a conservare rigidamente il passato, quello dinamico punta a fornire allo studente i mezzi e la libertà per partecipare attivamente alla società e persino per metterne in discussione la cultura esistente<span class="cite"></span>.</p>
+                        <p>Ecco i pilastri fondamentali di questo approccio, spiegati in dettaglio<span class="cite"></span>:</p>
+                        <p><strong>1. Il riconoscimento della "cultura" dell'allievo</strong> Nel paradigma dinamico, lo studente non è mai considerato un "vaso vuoto" o un primitivo ignorante<span class="cite"></span>.</p>
+                        <p>L'insegnante prende atto che ogni individuo, fin dalla prima infanzia, possiede già una propria dotazione, delle risorse e una propria "cultura" di partenza<span class="cite"></span>.</p>
+                        <p>In ambito musicale, per esempio, un bambino piccolo possiede già una ricca cultura musicale formata dall'ambiente: inventa melodie giocando, usa la voce in modo espressivo, deforma i suoni o imita la sigla di un cartone animato<span class="cite"></span>.</p>
+                        <p>L'educatore dinamico rispetta profondamente questo bagaglio e lo usa come solido fondamento su cui costruire la crescita del ragazzo<span class="cite"></span>.</p>
+                        <p><strong>2. Personalizzazione e aggiornamento continuo</strong> L'educazione non viene intesa come la trasmissione unidirezionale di regole fisse ("si è sempre fatto così"), ma come un processo che valorizza l'individualizzazione e l'aggiornamento continuo<span class="cite"></span>.</p>
+                        <p>Il docente rifiuta il dogmatismo, adatta la sua proposta didattica e si confronta con il mutamento continuo della realtà (ad esempio, accettando di dialogare anche sui gusti musicali contemporanei dei giovani)<span class="cite"></span>.</p>
+                        <p><strong>3. La metafora della fontana e degli strumenti condivisi</strong> Per chiarire l'atteggiamento del docente dinamico, nel testo si utilizza una metafora<span class="cite"></span>.</p>
+                        <p>Mentre l'insegnante statico versa l'acqua della propria conoscenza in una brocca vuota (l'allievo), nel modello dinamico esiste una "grande fontana" condivisa, che rappresenta il sapere e la vita sociale<span class="cite"></span>.</p>
+                        <p>Il compito del professore non è travasare le nozioni, ma fornire a ogni studente lo strumento più adatto a lui (una coppetta, un secchio, a seconda delle sue specifiche esigenze) affinché l'allievo stesso possa attingere attivamente a questa conoscenza e portarla nella piazza comune<span class="cite"></span>.</p>
+                        <p>È un'educazione condivisa in cui anche il docente può imparare dai propri studenti<span class="cite"></span>.</p>
+                        <p><strong>4. L'obiettivo: l'Autonomia e la "Testa ben pensante"</strong> Lo scopo dell'educazione dinamica non è creare esecutori passivi e ubbidienti (la cosiddetta "testa piena" di nozioni, come il campione di un quiz televisivo), ma formare una "testa ben pensante", cioè una persona capace di senso critico, in grado di padroneggiare i mezzi per orientarsi nel mondo e prendere decisioni per se stessa<span class="cite"></span>.</p>
+                        <p>L'autonomia non è un traguardo o un premio da concedere solo alla fine degli studi, ma un valore da allenare fin dal primo giorno incoraggiando l'iniziativa e la sperimentazione<span class="cite"></span>.</p>
+                        <p>Un esempio citato è quello del grande violoncellista Pablo Casals: dopo aver insegnato a un allievo a copiare perfettamente una sua esecuzione di Bach, gli disse di dimenticare quella copia e di iniziare a suonare sperimentando soluzioni personali, educandolo così all'indipendenza interpretativa<span class="cite"></span>.</p>
+                        <p><strong>5. La centralità della Motivazione, dei Bisogni e degli Interessi</strong> Mentre il paradigma statico azzera i bisogni dell'alunno, il paradigma dinamico fa degli interessi e dei bisogni "la brace che alimenta il fuoco" dell'apprendimento<span class="cite"></span>.</p>
+                        <p>La motivazione è il fulcro di tutto il processo educativo<span class="cite"></span>.</p>
+                        <p>Se un ragazzo appare privo di interessi o distratto, la pedagogia dinamica non condanna l'alunno, ma vede in quell'apatia il sintomo di un fallimento del metodo scolastico, reo di aver inaridito la naturale curiosità e motivazione interiore dei giovani scollegando lo studio dalla realtà<span class="cite"></span>.</p>
+                        <p>In sintesi, il paradigma dinamico rifiuta l'imposizione dall'alto e mette al centro il processo, l'esperienza viva e lo sviluppo di una personalità libera e indipendente, facendo leva sulle motivazioni autentiche di chi apprende<span class="cite"></span>.</p>
+                    </div>
+
+                    <div class="notes-widget">
+                        <div class="notes-toolbar">
+                            <button class="tool-btn copy-btn">Copia Appunti</button>
+                            <button class="tool-btn download-btn">⬇ Scarica .txt</button>
+                        </div>
+                        <textarea class="notes-area" placeholder="Seleziona il testo del riassuntone per evidenziarlo!&#10;&#10;Scrivi qui i tuoi appunti..."></textarea>
+                    </div>
+                </div>
+                <button class="btn-close-section">Chiudi ▲</button>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <button class="lesson-card accordion-header">
+                <div class="lesson-number"><span>Dom.</span><span>10</span></div>
+                <div class="lesson-content"><h3>Come vengono a configurarsi gli interessi e i bisogni in rapporto al paradigma statico e dinamico nella teoria di Delfrati?</h3></div>
+                <div class="lesson-arrow"><span class="icon-plus">↓</span></div>
+            </button>
+            <div class="accordion-content">
+                
+                <div class="video-wrapper">
+                    <div class="video-container" data-video-id="6zpy6Uxbk0o">
+                        <div class="yt-facade">
+                            <img src="https://img.youtube.com/vi/6zpy6Uxbk0o/hqdefault.jpg" alt="Video Thumbnail">
+                            <div class="play-button"></div>
+                        </div>
+                    </div>
+                    <p style="text-align: center; margin-top: 15px; margin-bottom: 20px; font-size: 0.9rem; color: #666;">
+                        Il video non si apre?<br>
+                        <a href="https://youtu.be/6zpy6Uxbk0o" target="_blank" class="btn-fallback">Clicca qui</a>
+                    </p>
+                </div>
+
+                <div class="media-notes-grid">
+                    <div class="text-content-box scrollable-text">
+                        <p>Nella teoria pedagogica di Carlo Delfrati, il modo in cui vengono considerati gli interessi e i bisogni dell'allievo rappresenta una delle differenze più nette tra il paradigma statico e quello dinamico<span class="cite"></span>.</p>
+                        <p>Ecco come si configurano nei due modelli, spiegati in modo chiaro e dettagliato<span class="cite"></span>:</p>
+                        <p><strong>1. Il Paradigma Statico: L'assenza o la repressione di interessi e bisogni</strong> Nel modello statico, gli interessi e i bisogni personali dell'allievo semplicemente non esistono o vengono ignorati<span class="cite"></span>.</p>
+                        <p>Poiché lo studente è considerato come un'anfora vuota da riempire (o un "primitivo" da colonizzare), il sistema presume che egli non abbia alcuna preferenza o necessità individuale degna di nota<span class="cite"></span>.</p>
+                        <p>Anzi, meno interessi personali l'allievo dimostra di avere, più è facile modellarlo: l'unico vero bisogno che gli viene riconosciuto e imposto è quello di obbedire agli adulti e assimilare passivamente la verità del maestro<span class="cite"></span>.</p>
+                        <p><strong>2. Il Paradigma Dinamico: Gli interessi come motore dell'apprendimento</strong> Nel modello dinamico, al contrario, gli interessi sono considerati "la brace che alimenta il fuoco degli apprendimenti"<span class="cite"></span>.</p>
+                        <p>Se un ragazzo appare apatico o privo di interessi, l'insegnante dinamico non incolpa lo studente<span class="cite"></span>.</p>
+                        <p>Vede invece questa apatia come un "fallimento educativo" del sistema scolastico o familiare, reo di aver inaridito la naturale curiosità del giovane<span class="cite"></span>.</p>
+                        <p>La motivazione interiore è il fulcro di tutto<span class="cite"></span>. L'insegnante usa gli interessi dell'allievo come punto di partenza per accendere la sua voglia di imparare<span class="cite"></span>.</p>
+                        <p><strong>3. La distinzione fondamentale tra Interessi e Bisogni</strong> Un aspetto centrale e molto raffinato della teoria di Delfrati (nel paradigma dinamico) è che interessi e bisogni non sono la stessa cosa, e non sempre coincidono<span class="cite"></span>:</p>
+                        <p>L'Interesse: È qualcosa che il ragazzo desidera fare o conoscere in un determinato momento in modo consapevole<span class="cite"></span>.</p>
+                        <p>Tuttavia, gli interessi possono essere superficiali, occasionali o perfino "indotti" dall'esterno (ad esempio, una moda del momento o una pressione pubblicitaria)<span class="cite"></span>.</p>
+                        <p>Il Bisogno: È una necessità autentica, profonda ed essenziale per la crescita e lo sviluppo della persona, indipendente dal fatto che l'allievo ne sia cosciente o meno<span class="cite"></span>.</p>
+                        <p><strong>4. Il vero compito dell'insegnante dinamico</strong> Proprio per questa differenza, il compito dell'educatore dinamico non si ferma al semplice assecondare tutto ciò che piace all'alunno in quel momento (rischiando di cadere in un vuoto "ricreativo")<span class="cite"></span>.</p>
+                        <p>L'insegnante deve essere capace di fare leva sugli interessi superficiali o occasionali dello studente per riuscire a soddisfare i suoi veri bisogni profondi<span class="cite"></span>.</p>
+                        <p>In altre parole, l'interesse è l'esca, il gancio iniziale che serve per catturare l'attenzione dell'allievo e guidarlo verso una crescita autentica e strutturata<span class="cite"></span>.</p>
+                    </div>
+
+                    <div class="notes-widget">
+                        <div class="notes-toolbar">
+                            <button class="tool-btn copy-btn">Copia Appunti</button>
+                            <button class="tool-btn download-btn">⬇ Scarica .txt</button>
+                        </div>
+                        <textarea class="notes-area" placeholder="Seleziona il testo del riassuntone per evidenziarlo!&#10;&#10;Scrivi qui i tuoi appunti..."></textarea>
+                    </div>
+                </div>
+                <button class="btn-close-section">Chiudi ▲</button>
+            </div>
+        </div>
+
+        <button class="btn-action btn-close" onclick="toggleMenu(false)">Chiudi Indice</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Inizializza ACCORDION
+            const mainAccs = document.querySelectorAll('.accordion-header');
+            mainAccs.forEach(acc => {
+                acc.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    
+                    this.classList.toggle("active");
+                    const panel = this.nextElementSibling;
+                    const icon = this.querySelector('.icon-plus');
+                    
+                    if (panel.style.maxHeight || panel.classList.contains('active')) {
+                        // Chiudi
+                        panel.style.maxHeight = null;
+                        panel.classList.remove("active");
+                        if(icon) icon.textContent = "↓";
+                    } else {
+                        // Apri
+                        panel.classList.add("active");
+                        // Max-height generoso
+                        panel.style.maxHeight = panel.scrollHeight + 1000 + "px"; 
+                        if(icon) icon.textContent = "↑";
+                    }
+                });
+            });
+
+            // GESTIONE BOTTONI CHIUDI
+            document.querySelectorAll('.btn-close-section').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const content = this.closest('.accordion-content'); 
+                    if(content && content.previousElementSibling) {
+                        const header = content.previousElementSibling;
+                        header.click();
+                        header.scrollIntoView({behavior: "smooth", block: "start"});
+                    }
+                });
+            });
+
+            // Avvia moduli accessori
+            setupNotesWidget();
+            setupHighlighters();
+            setupYouTubeFacades();
+        });
+
+        // GESTIONE CAMBIO VISTA (START / MENU)
+        const startWrapper = document.getElementById('start-wrapper');
+        const mainMenu = document.getElementById('main-menu');
+
+        function toggleMenu(show) {
+            if (show) {
+                startWrapper.style.display = 'none';
+                mainMenu.style.display = 'flex';
+            } else {
+                startWrapper.style.display = 'block';
+                mainMenu.style.display = 'none';
+                window.scrollTo({top: 0, behavior: 'smooth'});
+            }
+        }
+
+        // --- SISTEMA TOAST NOTIFICATIONS ---
+        function showToast(message, type) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.innerText = message;
+            container.appendChild(toast);
+            
+            // Trigger reflow
+            void toast.offsetWidth; 
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 2000);
+        }
+
+        // --- LOGICA APPUNTI ZEN ---
+        function setupNotesWidget() {
+            const widgets = document.querySelectorAll('.notes-widget');
+            
+            widgets.forEach((widget, index) => {
+                const area = widget.querySelector('.notes-area');
+                const copyBtn = widget.querySelector('.copy-btn');
+                const downBtn = widget.querySelector('.download-btn');
+                
+                // Chiave unica per ogni domanda per salvare nel browser
+                const storageKey = 'educazione_musicale_appunti_' + index;
+
+                // Carica
+                const saved = localStorage.getItem(storageKey);
+                if (saved) area.value = saved;
+
+                // Salva automatico mentre scrivi
+                area.addEventListener('input', () => {
+                    localStorage.setItem(storageKey, area.value);
+                });
+
+                // Scroll su a capo
+                area.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        requestAnimationFrame(() => {
+                            this.scrollTop = this.scrollHeight;
+                        });
+                    }
+                });
+
+                // Copia
+                copyBtn.addEventListener('click', () => {
+                    const text = area.value;
+                    if(!text.trim()) { showToast('Scrivi prima qualcosa!', 'retry'); return; }
+                    navigator.clipboard.writeText(text)
+                        .then(() => showToast('Appunti copiati!', 'success'))
+                        .catch(() => showToast('Impossibile copiare.', 'retry'));
+                });
+
+                // Scarica .txt
+                downBtn.addEventListener('click', () => {
+                    const text = area.value;
+                    if(!text.trim()) { showToast('Scrivi prima qualcosa!', 'retry'); return; }
+                    
+                    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `Appunti_Educazione_Musicale_Domanda_${index + 1}.txt`;
+                    a.style.display = 'none';
+                    
+                    document.body.appendChild(a);
+                    a.click();
+                    
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    
+                    showToast('Appunti scaricati!', 'success');
+                });
+            });
+        }
+
+        // --- LOGICA EVIDENZIATORE INDIPENDENTE ---
+        function setupHighlighters() {
+            const textBoxes = document.querySelectorAll('.text-content-box');
+            
+            textBoxes.forEach((box, index) => {
+                // Genera una chiave unica per ogni text-content-box
+                const hlStorageKey = 'educazione_musicale_hl_' + index;
+
+                // 1. Carica evidenziature
+                const savedHTML = localStorage.getItem(hlStorageKey);
+                if (savedHTML) box.innerHTML = savedHTML;
+
+                // 2. Funzione per evidenziare localizzata
+                function toggleEvidenziatore() {
+                    const selezione = window.getSelection();
+                    if (!selezione.rangeCount || selezione.toString().trim() === "") return;
+                    
+                    // Assicurarsi che la selezione sia DENTRO questo specifico box
+                    if (!box.contains(selezione.anchorNode)) return;
+
+                    box.contentEditable = "true";
+                    let nodoPadre = selezione.anchorNode.nodeType === 3 ? selezione.anchorNode.parentNode : selezione.anchorNode;
+                    
+                    if (nodoPadre.style.backgroundColor === 'rgb(255, 255, 0)' || nodoPadre.style.backgroundColor === 'yellow') {
+                        document.execCommand('backColor', false, 'transparent');
+                    } else {
+                        document.execCommand('backColor', false, 'yellow');
+                    }
+                    
+                    box.contentEditable = "false";
+                    selezione.removeAllRanges();
+
+                    // Salva in locale l'HTML di QUESTO specifico box
+                    localStorage.setItem(hlStorageKey, box.innerHTML);
+                }
+
+                // Lega l'evento a questo box specifico
+                box.addEventListener('mouseup', toggleEvidenziatore);
+                box.addEventListener('touchend', toggleEvidenziatore);
+            });
+        }
+
+        // --- LOGICA LAZY LOAD YOUTUBE ---
+        function setupYouTubeFacades() {
+            document.querySelectorAll('.yt-facade').forEach(facade => {
+                facade.addEventListener('click', function() {
+                    const container = this.closest('.video-container');
+                    const videoId = container.dataset.videoId;
+                    const iframe = document.createElement('iframe');
+                    
+                    iframe.setAttribute('src', `https://www.youtube.com/embed/${videoId}?autoplay=1`);
+                    iframe.setAttribute('frameborder', '0');
+                    iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
+                    iframe.setAttribute('allowfullscreen', '');
+                    
+                    container.innerHTML = '';
+                    container.appendChild(iframe);
+                });
+            });
+        }
+    </script>
+</body>
+</html>
