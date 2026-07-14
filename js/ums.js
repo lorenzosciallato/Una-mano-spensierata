@@ -2607,7 +2607,7 @@ if (!fileDaCaricare) {
             bar.innerHTML = '<div class="ums-brandmark notranslate" translate="no" role="button" tabindex="0" aria-label="Torna a inizio pagina">Una Mano <em>Spensierata</em></div>';
             document.body.appendChild(bar);
 
-            const goHome = () => { window.location.href = 'https://lorenzosciallato.github.io/Una-mano-spensierata/index.html'; };
+            const goHome = () => { window.location.href = 'index.html'; };
             const mark = bar.firstElementChild;
             mark.setAttribute('aria-label', 'Torna alla Home');
             mark.addEventListener('click', goHome);
@@ -2725,7 +2725,7 @@ if (!fileDaCaricare) {
         (function () {
             const IG_URL = 'https://www.instagram.com/sciallato_lorenzo/';
             const WA_URL = 'https://chat.whatsapp.com/EaX5kr14XxHL9o3qxdDVEP?mode=gi_t';
-            const HOME_URL = 'https://lorenzosciallato.github.io/Una-mano-spensierata/index.html';
+            const HOME_URL = 'index.html';
             const AVATAR = 'https://files.catbox.moe/qvck5j.png';
             const API = 'https://ums-backend.unamanospensierata.workers.dev';
 
@@ -3859,5 +3859,3 @@ if (!fileDaCaricare) {
         ov.querySelector('.ums-bmc-close').addEventListener('click', chiudi);
         ov.addEventListener('click', function (e) { if (e.target === ov) chiudi(); });
     })();
-    
-
