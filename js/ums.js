@@ -331,7 +331,7 @@
             const printDate = new Date().toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
 
             let printContents = `
-                <img src="https://res.cloudinary.com/dlppkpjqs/image/upload/f_auto,q_auto:eco,w_1600/v1783528098/crea_wallpaper_stile_arte_giapponese_woodblock_rilassato_con_fiori_natura_paesaggio_lilnz8.png"
+                <img src="https://unamanospensierata.com/img/sfondo-giappone-1600.png"
                      alt="" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.06; z-index: -1;">
                 <div style="font-family: 'DM Sans', Arial, sans-serif; padding: 28px 24px; color: #1C1C22; max-width: 780px; margin: 0 auto; -webkit-print-color-adjust: exact; print-color-adjust: exact;">
 
@@ -2726,7 +2726,7 @@ if (!fileDaCaricare) {
             const IG_URL = 'https://www.instagram.com/sciallato_lorenzo/';
             const WA_URL = 'https://chat.whatsapp.com/EaX5kr14XxHL9o3qxdDVEP?mode=gi_t';
             const HOME_URL = 'index.html';
-            const AVATAR = 'https://files.catbox.moe/qvck5j.png';
+            const AVATAR = 'img/avatar-lorenzo.png';
             const API = 'https://ums-backend.unamanospensierata.workers.dev';
 
             const WA_SVG = '<svg class="ums-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.5 15.3L2 22l4.9-1.4A10 10 0 1 0 12 2Z"/><path d="M8.7 7.9c-.3 0-.6.1-.8.4-.8.9-.9 2.4.2 4 1.2 1.8 2.9 3.2 4.9 3.9 1.5.5 2.6.2 3.3-.6.2-.3.3-.7.2-1l-.3-.9c-.1-.3-.4-.4-.7-.4l-1.4.2c-.2 0-.5 0-.6-.2l-1-1c-.6-.6-1.1-1.3-1.4-2-.1-.2 0-.4.1-.6l.7-.9c.2-.2.2-.5.1-.8l-.5-1.2c-.1-.3-.4-.5-.8-.5h-.9Z"/></svg>';
