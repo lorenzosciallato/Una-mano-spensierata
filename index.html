@@ -20,7 +20,7 @@
 <meta property="og:site_name" content="Una Mano Spensierata">
 <meta property="og:title" content="Una Mano Spensierata">
 <meta property="og:description" content="Flashcard, riassunti e videolezioni gratuite per preparare i tuoi esami universitari.">
-<meta property="og:url" content="https://lorenzosciallato.github.io/Una-mano-spensierata/">
+<meta property="og:url" content="https://unamanospensierata.com/">
 <meta property="og:image" content="https://res.cloudinary.com/dlppkpjqs/image/upload/f_auto,q_auto:eco,w_1200/v1783528098/crea_wallpaper_stile_arte_giapponese_woodblock_rilassato_con_fiori_natura_paesaggio_lilnz8.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -674,13 +674,13 @@ body.instant #appview, body.instant #topbar, body.instant #top-controls{transiti
 // DATI CORSI
 // =========================================================================
 const courses = [
-  { name: "Sociologia dell'Educazione",  lezioni: { count: 12, urlTemplate: "https://lorenzosciallato.github.io/Una-mano-spensierata/lezione-template.html?file=sociologiaeducazione/lezione-{n}.json" } },
-  { name: "Psicologia dello Sviluppo",   lezioni: { count: 14, urlTemplate: "https://lorenzosciallato.github.io/Una-mano-spensierata/lezione-template.html?file=psicologiasviluppo/lezione-{n}.json" } },
-  { name: "Neuropsichiatria Infantile",  lezioni: { count: 11, urlTemplate: "https://lorenzosciallato.github.io/Una-mano-spensierata/lezione-template.html?file=neuropsichiatria/lezione-{n}.json" } },
+  { name: "Sociologia dell'Educazione",  lezioni: { count: 12, urlTemplate: "lezione-template.html?file=sociologiaeducazione/lezione-{n}.json" } },
+  { name: "Psicologia dello Sviluppo",   lezioni: { count: 14, urlTemplate: "lezione-template.html?file=psicologiasviluppo/lezione-{n}.json" } },
+  { name: "Neuropsichiatria Infantile",  lezioni: { count: 11, urlTemplate: "lezione-template.html?file=neuropsichiatria/lezione-{n}.json" } },
   { name: "Ed. Musicale",                url: "https://sites.google.com/view/una-mano-spensierata/ed-musicale?authuser=0" },
-  { name: "Didattica Generale",          lezioni: { count: 11, urlTemplate: "https://lorenzosciallato.github.io/Una-mano-spensierata/lezione-template.html?file=didattica/lezione-{n}.json" } },
-  { name: "Storia dell'Educazione",      lezioni: { count: 17, urlTemplate: "https://lorenzosciallato.github.io/Una-mano-spensierata/lezione-template.html?file=storiaeducazione/storiaeducazione-lezione-{n}.json" } },
-  { name: "Storia Contemporanea",        lezioni: { count: 15, urlTemplate: "https://lorenzosciallato.github.io/Una-mano-spensierata/lezione-template.html?file=storiacontemporanea/lezione-{n}.json" } }
+  { name: "Didattica Generale",          lezioni: { count: 11, urlTemplate: "lezione-template.html?file=didattica/lezione-{n}.json" } },
+  { name: "Storia dell'Educazione",      lezioni: { count: 17, urlTemplate: "lezione-template.html?file=storiaeducazione/storiaeducazione-lezione-{n}.json" } },
+  { name: "Storia Contemporanea",        lezioni: { count: 15, urlTemplate: "lezione-template.html?file=storiacontemporanea/lezione-{n}.json" } }
 ];
 
 const chevronSVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>';
@@ -1334,7 +1334,7 @@ renderCourses();
 (function () {
   const IG_URL   = 'https://www.instagram.com/sciallato_lorenzo/';
   const WA_URL   = 'https://chat.whatsapp.com/EaX5kr14XxHL9o3qxdDVEP?mode=gi_t';
-  const HOME_URL = 'https://lorenzosciallato.github.io/Una-mano-spensierata/index.html';
+  const HOME_URL = 'index.html';
   const AVATAR   = 'https://files.catbox.moe/qvck5j.png';
   const API      = 'https://ums-backend.unamanospensierata.workers.dev';
 
@@ -1366,7 +1366,7 @@ renderCourses();
   document.body.appendChild(nav);
 
   // ---- Pallino rosso flashcard (legge la stessa memoria del template) ----
-  const TEMPLATE_URL = 'https://lorenzosciallato.github.io/Una-mano-spensierata/lezione-template.html?file=';
+  const TEMPLATE_URL = 'lezione-template.html?file=';
   function umsCaricaSR() { try { return JSON.parse(localStorage.getItem('ums_sr') || '{}'); } catch (e) { return {}; } }
   function umsDueTotali() {
     const db = umsCaricaSR(); const ora = new Date().toISOString(); let n = 0;
