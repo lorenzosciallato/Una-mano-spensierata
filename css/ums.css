@@ -2863,7 +2863,7 @@
         /* ---------- STAGE: fisso, centrato, come brandStage ---------- */
         header{
             position: fixed;
-            left: 50%; top: 40%;
+            left: 50%; top: 40vh; top: 40svh; /* svh: immune al ritiro della barra browser */
             transform: translate(-50%, -50%); /* identico nei due stati */
             width: max-content;
             max-width: 94vw;
@@ -2884,7 +2884,14 @@
         /* SPLASH BLOCCATO — come l'index: niente scroll finché la lezione
            non è aperta. position:fixed è l'unico lock che iOS rispetta
            davvero (overflow:hidden da solo viene ignorato al tocco). */
-        body:not(.ums-master-open){ overflow: hidden; height: 100vh; position: fixed; inset: 0; width: 100%; }
+        /* SPLASH BLOCCATA DAVVERO (mobile) — oltre al lock di posizione,
+           touch-action:none impedisce che il gesto di scroll ritiri la barra
+           degli indirizzi: era quella che, allungando il viewport, faceva
+           "scendere" titolo e pulsanti (non era uno scroll vero). */
+        body:not(.ums-master-open){
+            overflow: hidden; height: 100vh; position: fixed; inset: 0; width: 100%;
+            touch-action: none; overscroll-behavior: none;
+        }
 
         /* INIZIA resta NEL flusso della card: è la card intera a scendere
            al 52% dello schermo via transform (compositor, fluido) */
@@ -2894,7 +2901,7 @@
                         background-color .4s ease, border-color .4s ease,
                         box-shadow .4s ease, padding .4s ease;
         }
-        body:not(.ums-master-open) .content-card{ transform: translateY(52vh); }
+        body:not(.ums-master-open) .content-card{ transform: translateY(52vh); transform: translateY(52svh); }
         body.ums-master-open .content-card{ transform: translateY(0); }
         @keyframes umsFadeOnly{ from{ opacity: 0; } to{ opacity: 1; } }
         .content-card{ animation-name: umsFadeOnly; }
