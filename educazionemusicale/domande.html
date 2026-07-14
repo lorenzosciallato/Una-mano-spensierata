@@ -76,21 +76,21 @@
         }
         .subtitle { font-family: var(--font-body); font-size: 0.85rem; color: var(--sub); font-weight: 600; text-transform: uppercase; letter-spacing: 0.18em; margin-top: 15px; }
 
-        /* BADGE AUTORE */
-        .author-badge {
-            display: inline-flex; align-items: center; gap: 12px;
-            background: var(--paper-color); padding: 6px 18px 6px 6px;
-            border-radius: 50px; text-decoration: none; border: 1px solid var(--dust);
-            box-shadow: var(--shadow-card); transition: all 0.2s ease; margin-top: 1.5rem;
+        /* PULSANTE TORNA ALLA HOME */
+        .btn-home {
+            position: fixed; top: 16px; left: 16px; z-index: 100;
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 10px 18px; border-radius: 50px;
+            background: rgba(247,244,239,0.88);
+            -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+            border: 1px solid var(--dust); color: var(--ink-color);
+            font-family: var(--font-body); font-size: 0.72rem; font-weight: 700;
+            letter-spacing: 0.14em; text-transform: uppercase; text-decoration: none;
+            box-shadow: var(--shadow-card); transition: all 0.2s;
         }
-        .author-badge:hover { 
-            transform: translateY(-2px); box-shadow: var(--shadow-lift); border-color: var(--gold);
-        }
-        .author-img { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; display: block; }
-        .author-name { font-size: 0.9rem; color: var(--ink-color); font-family: var(--font-body); }
-        @media (max-width: 600px) {
-            .author-img { width: 50px; height: 50px; }
-            .author-name { font-size: 0.8rem; }
+        .btn-home:hover {
+            border-color: var(--accent-color); color: var(--accent-color);
+            transform: translateY(-2px); box-shadow: var(--shadow-lift);
         }
 
         /* CONTROLLI INIZIALI */
@@ -291,22 +291,13 @@
         <img src="../img/sfondo-giappone-1600.png" class="main-background-img" alt="">
     </div>
 
+    <a href="../index.html" class="btn-home">&#8592; Home</a>
+
     <div id="toast-container"></div>
 
     <header>
         <div class="header-eyebrow notranslate" translate="no">Una Mano Spensierata</div>
         <h1>Educazione <em>Musicale</em></h1>
-        <div style="text-align: center; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; padding: 0 10px;">
-            <a href="https://www.instagram.com/sciallato_lorenzo/" target="_blank" class="author-badge">
-                <img src="../img/avatar-lorenzo.png" alt="Lorenzo Sciallato" class="author-img">
-                <span class="author-name">Creato da <strong>Lorenzo</strong> &copy; 2025</span>
-            </a>
-
-            <a href="https://chat.whatsapp.com/EaX5kr14XxHL9o3qxdDVEP?mode=gi_t" target="_blank" class="author-badge">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="Gruppo WhatsApp" class="author-img" style="padding: 12px;">
-                <span class="author-name">Entra nel <strong>Gruppo</strong></span>
-            </a>
-        </div>
     </header>
 
     <div id="start-wrapper">
