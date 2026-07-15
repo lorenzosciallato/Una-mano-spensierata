@@ -937,8 +937,8 @@ if (!fileDaCaricare) {
                 } else {
                     row.innerHTML =
                         '<span class="ums-fb-q">Questa parte è chiara?</span>' +
-                        '<button type="button" class="ums-fb-btn ums-fb-si">Chiara</button>' +
-                        '<button type="button" class="ums-fb-btn ums-fb-no">Non chiara</button>';
+                        '<button type="button" class="ums-fb-btn ums-fb-si">Sì</button>' +
+                        '<button type="button" class="ums-fb-btn ums-fb-no">No</button>';
                     const chiudi = () => {
                         row.innerHTML = '<span class="ums-fb-done">Grazie del riscontro ✓</span>';
                         umsFeedbackSegna(umsLessonKey, hash);
