@@ -909,11 +909,24 @@ if (!fileDaCaricare) {
         async function umsIniettaFeedbackSezioni() {
             const cont = document.getElementById('dyn-riassuntone-container');
             if (!cont) return;
-            const titoli = cont.querySelectorAll('h3');
-            for (const h3 of titoli) {
-                if (h3.nextElementSibling && h3.nextElementSibling.classList.contains('ums-fb-row')) continue;
+            const titoli = Array.from(cont.querySelectorAll('h3'));
+            for (let i = 0; i < titoli.length; i++) {
+                const h3 = titoli[i];
                 const hash = await umsHashSezione(h3.textContent || '');
                 if (!hash) continue;
+
+                // FINE SEZIONE: l'ultimo elemento prima del prossimo <h3>.
+                // Partendo dal titolo, avanzo tra i fratelli finché non trovo
+                // il titolo successivo; l'elemento prima di quello è la coda
+                // della sezione. Se una riga feedback è già lì, salto.
+                let ultimo = h3, gia = false;
+                let n = h3.nextElementSibling;
+                while (n && n.tagName !== 'H3') {
+                    if (n.classList && n.classList.contains('ums-fb-row')) { gia = true; break; }
+                    ultimo = n;
+                    n = n.nextElementSibling;
+                }
+                if (gia) continue;
 
                 const row = document.createElement('div');
                 row.className = 'ums-fb-row notranslate';
@@ -933,7 +946,8 @@ if (!fileDaCaricare) {
                     row.querySelector('.ums-fb-si').addEventListener('click', () => { umsInviaFeedback(hash, 'chiaro'); chiudi(); });
                     row.querySelector('.ums-fb-no').addEventListener('click', () => { umsInviaFeedback(hash, 'non_chiaro'); chiudi(); });
                 }
-                h3.insertAdjacentElement('afterend', row);
+                // in coda alla sezione, dopo l'ultimo elemento del blocco
+                ultimo.insertAdjacentElement('afterend', row);
             }
         }
 
