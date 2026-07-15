@@ -3347,3 +3347,36 @@
                 height: calc(100vh - var(--topbar-h) - var(--sticky-gap) - 20px);
             }
         }
+    
+
+
+/* ============================================================
+   FASE 4 (LXD) — Feedback "Chiara / Non chiara" per sezione
+   Riga discreta sotto ogni <h3> del Riassuntone. Palette del brand.
+============================================================ */
+.ums-fb-row{
+    display: flex; align-items: center; flex-wrap: wrap; gap: 8px;
+    margin: -2px 0 18px; padding: 8px 0;
+}
+.ums-fb-q{
+    font-size: .78rem; color: var(--sub, #7A7770);
+    font-style: italic; margin-right: 2px;
+}
+.ums-fb-btn{
+    background: transparent; border: 1px solid var(--dust, #E8E4DC);
+    color: var(--body, #3D3C3A); border-radius: 999px;
+    padding: 4px 14px; font-family: var(--font-body, 'DM Sans', sans-serif);
+    font-size: .74rem; font-weight: 700; cursor: pointer;
+    transition: border-color .18s, background-color .18s, color .18s;
+}
+.ums-fb-btn:hover{ border-color: var(--gold, #C8A96E); }
+.ums-fb-si:hover{ background: rgba(165,214,167,.18); border-color: #86C08A; color: #2E7D32; }
+.ums-fb-no:hover{ background: rgba(200,169,110,.14); border-color: var(--gold, #C8A96E); color: var(--gold-dk, #9A7A3F); }
+.ums-fb-done{
+    font-size: .76rem; color: var(--gold-dk, #9A7A3F);
+    font-weight: 600; font-style: italic;
+}
+body.night-mode .ums-fb-q{ color: #918E86; }
+body.night-mode .ums-fb-btn{ border-color: #2B2E38; color: #C7C4BC; }
+body.night-mode .ums-fb-btn:hover{ border-color: var(--gold, #C8A96E); }
+body.night-mode .ums-fb-done{ color: #D9BC85; }
