@@ -855,6 +855,9 @@ if (!fileDaCaricare) {
                 } catch (e) { console.error('Macro riassuntone saltato:', e); }
             });
 
+            // === FASE 4 (LXD): feedback "Chiaro / Non chiaro" per sezione ===
+            try { umsIniettaFeedbackSezioni(); } catch (e) { /* mai rompere la lezione */ }
+
             // --- ASSISTENTE IA ---
             try { // BLINDATURA
             // TASK 5 — fix: questi campi non venivano mai popolati, restando bloccati su "Caricamento…"
@@ -875,6 +878,65 @@ if (!fileDaCaricare) {
             // --- IL SUPER QUIZ ---
             try { renderSuperQuiz(data.il_super_quiz); } catch (e) { console.error('Quiz:', e); }
         }
+
+        // =========================================================================
+        // FASE 4 (LXD) — Feedback "Chiaro / Non chiaro" sotto ogni sezione (<h3>)
+        // del Riassuntone. Aggregato e anonimo: manda al worker solo lezione +
+        // hash del titolo di sezione + tipo. "Una volta per dispositivo" via
+        // localStorage. Non tocca il rendering: si aggancia a valle.
+        // =========================================================================
+        async function umsHashSezione(testo) {
+            try {
+                const dati = new TextEncoder().encode(String(testo));
+                const buf = await crypto.subtle.digest('SHA-256', dati);
+                return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('').slice(0, 16);
+            } catch (e) { return null; }
+        }
+        function umsFeedbackVotato(lk, h) {
+            try { return localStorage.getItem('ums_fb::' + lk + '::' + h) === '1'; } catch (e) { return false; }
+        }
+        function umsFeedbackSegna(lk, h) {
+            try { localStorage.setItem('ums_fb::' + lk + '::' + h, '1'); } catch (e) {}
+        }
+        async function umsInviaFeedback(sezioneHash, tipo) {
+            try {
+                await fetch(UMS_API + '/feedback', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ lezione: umsLessonKey, sezione: sezioneHash, tipo: tipo })
+                });
+            } catch (e) { /* offline: pazienza, è solo una statistica */ }
+        }
+        async function umsIniettaFeedbackSezioni() {
+            const cont = document.getElementById('dyn-riassuntone-container');
+            if (!cont) return;
+            const titoli = cont.querySelectorAll('h3');
+            for (const h3 of titoli) {
+                if (h3.nextElementSibling && h3.nextElementSibling.classList.contains('ums-fb-row')) continue;
+                const hash = await umsHashSezione(h3.textContent || '');
+                if (!hash) continue;
+
+                const row = document.createElement('div');
+                row.className = 'ums-fb-row notranslate';
+                const votato = umsFeedbackVotato(umsLessonKey, hash);
+
+                if (votato) {
+                    row.innerHTML = '<span class="ums-fb-done">Grazie del riscontro ✓</span>';
+                } else {
+                    row.innerHTML =
+                        '<span class="ums-fb-q">Questa parte è chiara?</span>' +
+                        '<button type="button" class="ums-fb-btn ums-fb-si">Chiara</button>' +
+                        '<button type="button" class="ums-fb-btn ums-fb-no">Non chiara</button>';
+                    const chiudi = () => {
+                        row.innerHTML = '<span class="ums-fb-done">Grazie del riscontro ✓</span>';
+                        umsFeedbackSegna(umsLessonKey, hash);
+                    };
+                    row.querySelector('.ums-fb-si').addEventListener('click', () => { umsInviaFeedback(hash, 'chiaro'); chiudi(); });
+                    row.querySelector('.ums-fb-no').addEventListener('click', () => { umsInviaFeedback(hash, 'non_chiaro'); chiudi(); });
+                }
+                h3.insertAdjacentElement('afterend', row);
+            }
+        }
+
         // =========================================================================
         // TASK 5 — IL SUPER QUIZ
         // =========================================================================
