@@ -3351,32 +3351,48 @@
 
 
 /* ============================================================
-   FASE 4 (LXD) — Feedback "Chiara / Non chiara" per sezione
-   Riga discreta sotto ogni <h3> del Riassuntone. Palette del brand.
+   FASE 4 (LXD) — Feedback "Chiara / Non chiara" a fine sezione
+   Pulsanti SEMPRE colorati (verde/rosso in palette), MAI a capo:
+   la riga sta su una linea sola su mobile e desktop.
 ============================================================ */
 .ums-fb-row{
-    display: flex; align-items: center; flex-wrap: wrap; gap: 8px;
-    margin: -2px 0 18px; padding: 8px 0;
+    display: flex; align-items: center; flex-wrap: nowrap; gap: 8px;
+    margin: 4px 0 22px; padding: 10px 0 2px;
+    border-top: 1px solid var(--dust, #E8E4DC);
+    padding-top: 12px;
 }
 .ums-fb-q{
-    font-size: .78rem; color: var(--sub, #7A7770);
-    font-style: italic; margin-right: 2px;
+    font-size: .76rem; color: var(--sub, #7A7770);
+    font-style: italic; margin-right: auto;   /* spinge i due pulsanti a destra */
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    min-width: 0;                               /* permette all'ellissi di agire senza far andare a capo i bottoni */
 }
 .ums-fb-btn{
-    background: transparent; border: 1px solid var(--dust, #E8E4DC);
-    color: var(--body, #3D3C3A); border-radius: 999px;
-    padding: 4px 14px; font-family: var(--font-body, 'DM Sans', sans-serif);
+    flex: 0 0 auto;                             /* i bottoni non si comprimono e non vanno a capo */
+    border-radius: 999px; padding: 6px 16px;
+    font-family: var(--font-body, 'DM Sans', sans-serif);
     font-size: .74rem; font-weight: 700; cursor: pointer;
-    transition: border-color .18s, background-color .18s, color .18s;
+    border: 1.5px solid transparent;
+    transition: filter .18s, transform .12s;
+    white-space: nowrap;
 }
-.ums-fb-btn:hover{ border-color: var(--gold, #C8A96E); }
-.ums-fb-si:hover{ background: rgba(165,214,167,.18); border-color: #86C08A; color: #2E7D32; }
-.ums-fb-no:hover{ background: rgba(200,169,110,.14); border-color: var(--gold, #C8A96E); color: var(--gold-dk, #9A7A3F); }
+.ums-fb-btn:active{ transform: scale(.95); }
+/* SEMPRE colorati, non solo in hover — verde e rosso della palette del sito */
+.ums-fb-si{ background: rgba(91,154,107,.16); border-color: #5B9A6B; color: #3B7A4B; }
+.ums-fb-no{ background: rgba(192,103,79,.14); border-color: #C0674F; color: #A24A34; }
+.ums-fb-si:hover{ filter: brightness(.96); }
+.ums-fb-no:hover{ filter: brightness(.96); }
 .ums-fb-done{
     font-size: .76rem; color: var(--gold-dk, #9A7A3F);
     font-weight: 600; font-style: italic;
 }
+/* Mobile stretto: riduco un filo il testo-domanda, mai i bottoni */
+@media (max-width: 420px){
+    .ums-fb-q{ font-size: .7rem; }
+    .ums-fb-btn{ padding: 6px 13px; font-size: .72rem; }
+}
+body.night-mode .ums-fb-row{ border-color: #2B2E38; }
 body.night-mode .ums-fb-q{ color: #918E86; }
-body.night-mode .ums-fb-btn{ border-color: #2B2E38; color: #C7C4BC; }
-body.night-mode .ums-fb-btn:hover{ border-color: var(--gold, #C8A96E); }
+body.night-mode .ums-fb-si{ background: rgba(91,154,107,.20); border-color: #5B9A6B; color: #8FC79E; }
+body.night-mode .ums-fb-no{ background: rgba(192,103,79,.20); border-color: #C0674F; color: #E0937E; }
 body.night-mode .ums-fb-done{ color: #D9BC85; }
