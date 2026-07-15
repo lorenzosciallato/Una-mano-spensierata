@@ -3369,9 +3369,10 @@
 }
 .ums-fb-btn{
     flex: 0 0 auto;                             /* i bottoni non si comprimono e non vanno a capo */
-    border-radius: 999px; padding: 6px 16px;
+    min-width: 76px;                            /* bersaglio comodo anche col testo corto "Sì"/"No" */
+    border-radius: 999px; padding: 9px 22px;
     font-family: var(--font-body, 'DM Sans', sans-serif);
-    font-size: .74rem; font-weight: 700; cursor: pointer;
+    font-size: .82rem; font-weight: 700; cursor: pointer;
     border: 1.5px solid transparent;
     transition: filter .18s, transform .12s;
     white-space: nowrap;
@@ -3389,7 +3390,7 @@
 /* Mobile stretto: riduco un filo il testo-domanda, mai i bottoni */
 @media (max-width: 420px){
     .ums-fb-q{ font-size: .7rem; }
-    .ums-fb-btn{ padding: 6px 13px; font-size: .72rem; }
+    .ums-fb-btn{ min-width: 68px; padding: 9px 18px; font-size: .8rem; }
 }
 body.night-mode .ums-fb-row{ border-color: #2B2E38; }
 body.night-mode .ums-fb-q{ color: #918E86; }
