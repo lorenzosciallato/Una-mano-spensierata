@@ -50,6 +50,8 @@
   .err{background:#FBEAE6; border:1px solid #E0B0A5; color:#8A3D2B; border-radius:12px; padding:1rem 1.3rem; font-size:.9rem;}
   .refresh{background:var(--navy); color:var(--bg); border:none; border-radius:50px; padding:10px 22px; font-family:var(--sans); font-weight:700; font-size:.8rem; letter-spacing:.05em; cursor:pointer; margin-top:1rem;}
   .refresh:hover{background:#24406b;}
+  .btn-traffico{display:inline-flex; align-items:center; gap:8px; background:var(--gold); color:#2A2113; text-decoration:none; border-radius:50px; padding:12px 24px; font-weight:700; font-size:.85rem; letter-spacing:.03em; transition:background-color .2s, transform .15s;}
+  .btn-traffico:hover{background:#D8BC82; transform:translateY(-2px);}
   .note{font-size:.78rem; color:var(--sub); margin-top:2rem; text-align:center; line-height:1.6;}
 </style>
 </head>
@@ -61,6 +63,12 @@
 
   <div id="stato" class="loading">Carico i dati…</div>
   <div id="dash" style="display:none;">
+
+    <div class="card card-traffico">
+      <h2>Traffico del sito</h2>
+      <p class="lxd">Quante persone <b>visitano</b> UMS, iscritte o no. Questo numero lo conta Cloudflare, che vede tutti i visitatori. <b>Il resto di questo cruscotto misura invece chi studia davvero</b> — cioè chi usa il sito con la chiave. Due domande diverse: quante persone entrano, e come imparano quelle che restano.</p>
+      <a class="btn-traffico" href="https://dash.cloudflare.com/?to=/:account/analytics/web" target="_blank" rel="noopener">Apri le statistiche di visita &#8594;</a>
+    </div>
 
     <div class="card">
       <h2>Il polso del sito</h2>
