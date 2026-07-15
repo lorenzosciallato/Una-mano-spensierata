@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>UMS · Cruscotto dati</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='14'%20fill='%23F7F4EF'/%3E%3Ctext%20x='31'%20y='43'%20text-anchor='middle'%20font-family='Georgia,serif'%20font-weight='700'%20font-size='30'%20fill='%231C1C22'%3EUM%3Ctspan%20fill='%2322365F'%20font-style='italic'%3ES%3C/tspan%3E%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@0,400;0,500;0,700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  :root{
+    --bg:#F7F4EF; --ink:#1C1C22; --navy:#1A2F4F; --gold:#C8A96E;
+    --gold-dk:#9A7A3F; --dust:#E8E4DC; --sub:#6E6B65; --body:#3D3C3A;
+    --green:#5B9A6B; --red:#C0674F;
+    --serif:'Playfair Display', Georgia, serif;
+    --sans:'DM Sans', system-ui, sans-serif;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{background:var(--bg); color:var(--body); font-family:var(--sans); line-height:1.65; padding:0 20px 80px;}
+  .wrap{max-width:900px; margin:0 auto; padding-top:48px;}
+
+  .eyebrow{font-size:.7rem; font-weight:700; letter-spacing:.22em; text-transform:uppercase; color:var(--gold-dk); margin-bottom:.8rem;}
+  h1{font-family:var(--serif); font-weight:900; font-size:clamp(2rem,5vw,2.8rem); color:var(--ink); line-height:1.05; margin-bottom:.5rem;}
+  h1 em{font-style:italic; color:var(--navy);}
+  .intro{font-size:.95rem; color:var(--sub); margin-bottom:2.5rem; max-width:640px;}
+
+  .card{background:#fff; border:1px solid var(--dust); border-radius:18px; padding:1.8rem; margin-bottom:1.5rem; box-shadow:0 4px 20px rgba(15,17,23,.05);}
+  .card h2{font-family:var(--serif); font-weight:700; font-size:1.4rem; color:var(--ink); margin-bottom:.3rem;}
+  .card .lxd{font-size:.85rem; color:var(--sub); font-style:italic; margin-bottom:1.3rem; padding-bottom:1rem; border-bottom:1px solid var(--dust);}
+  .card .lxd b{color:var(--gold-dk); font-style:normal;}
+
+  .kpi-row{display:flex; flex-wrap:wrap; gap:1rem; margin-bottom:1.2rem;}
+  .kpi{flex:1; min-width:130px; background:var(--bg); border-radius:12px; padding:1rem 1.2rem;}
+  .kpi .n{font-family:var(--serif); font-weight:900; font-size:2rem; color:var(--navy); line-height:1;}
+  .kpi .l{font-size:.72rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--sub); margin-top:6px;}
+
+  .chart-box{position:relative; height:280px;}
+  table{width:100%; border-collapse:collapse; font-size:.88rem;}
+  th{text-align:left; font-size:.68rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--sub); padding:8px 10px; border-bottom:2px solid var(--dust);}
+  td{padding:9px 10px; border-bottom:1px solid var(--dust);}
+  .bar-cell{display:flex; align-items:center; gap:8px;}
+  .bar{height:8px; border-radius:4px; background:var(--red); min-width:2px;}
+  .muted{color:var(--sub);}
+
+  .empty{text-align:center; padding:2.5rem 1rem; color:var(--sub); font-style:italic; font-family:var(--serif); font-size:1.05rem;}
+  .loading{text-align:center; padding:4rem 1rem; color:var(--sub);}
+  .err{background:#FBEAE6; border:1px solid #E0B0A5; color:#8A3D2B; border-radius:12px; padding:1rem 1.3rem; font-size:.9rem;}
+  .refresh{background:var(--navy); color:var(--bg); border:none; border-radius:50px; padding:10px 22px; font-family:var(--sans); font-weight:700; font-size:.8rem; letter-spacing:.05em; cursor:pointer; margin-top:1rem;}
+  .refresh:hover{background:#24406b;}
+  .note{font-size:.78rem; color:var(--sub); margin-top:2rem; text-align:center; line-height:1.6;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">Una Mano Spensierata</div>
+  <h1>Cruscotto <em>dati</em></h1>
+  <p class="intro">Come studiano davvero le persone su UMS. Tutti i dati sono aggregati e anonimi. Ogni riquadro spiega, in corsivo, cosa significa in ottica di design dell'apprendimento — così i numeri diventano decisioni.</p>
+
+  <div id="stato" class="loading">Carico i dati…</div>
+  <div id="dash" style="display:none;">
+
+    <div class="card">
+      <h2>Il polso del sito</h2>
+      <p class="lxd">Quanti ripassi e quante persone attive negli ultimi giorni. <b>Se questa linea non cresce, tutto il resto non conta: senza uso, non c'è nulla da misurare.</b></p>
+      <div class="kpi-row" id="kpi-attivita"></div>
+      <div class="chart-box"><canvas id="chart-attivita"></canvas></div>
+    </div>
+
+    <div class="card">
+      <h2>Retention — il metodo funziona?</h2>
+      <p class="lxd">Come sono distribuite le carte tra i "cassetti" del ripasso. Il box sale ogni volta che una carta viene saputa. <b>Box medio alto = le persone imparano e trattengono. È la prova che lo spaced repetition insegna davvero.</b></p>
+      <div class="kpi-row" id="kpi-retention"></div>
+      <div class="chart-box"><canvas id="chart-retention"></canvas></div>
+    </div>
+
+    <div class="card">
+      <h2>Aderenza — si ripassa in orario?</h2>
+      <p class="lxd">Di quanti giorni, in media, le persone ritardano rispetto a quando una carta andrebbe ripassata. <b>Vicino a zero = il ripasso è un'abitudine viva. Ritardo alto = la teoria non si traduce in pratica, e forse servono spinte (le notifiche).</b></p>
+      <div class="chart-box"><canvas id="chart-aderenza"></canvas></div>
+      <p class="muted" style="font-size:.8rem; margin-top:1rem;">Un valore negativo significa che si ripassa <em>in anticipo</em> sulla scadenza — ottimo segno.</p>
+    </div>
+
+    <div class="card">
+      <h2>Paragrafi da riscrivere</h2>
+      <p class="lxd">Le sezioni del Riassuntone che più persone hanno segnato come "non chiare". <b>Questa è la lista di lavoro più preziosa che hai: ogni riga è un punto preciso del contenuto da migliorare. Design iterativo puro.</b></p>
+      <div id="tabella-feedback"></div>
+    </div>
+
+    <button class="refresh" onclick="carica()">Aggiorna i dati</button>
+  </div>
+
+  <p class="note">Pagina privata, non indicizzata. I dati arrivano dal database in tempo reale.<br>Con pochi utenti i grafici sono ancora scarni: è normale, si riempiono man mano che la community studia.</p>
+</div>
+
+<script>
+// L'indirizzo del worker e il token: la pagina interroga /stats.
+const WORKER = 'https://ums-backend.unamanospensierata.workers.dev';
+const TOKEN  = '1b628c62d7e3';
+
+let charts = {};
+function distruggi(){ Object.values(charts).forEach(c => c && c.destroy()); charts = {}; }
+
+const GOLD='#C8A96E', NAVY='#1A2F4F', GREEN='#5B9A6B', RED='#C0674F', DUST='#E8E4DC', SUB='#6E6B65';
+
+async function carica(){
+  const stato = document.getElementById('stato');
+  const dash = document.getElementById('dash');
+  stato.className = 'loading'; stato.textContent = 'Carico i dati…'; stato.style.display='';
+  dash.style.display='none';
+  try{
+    const r = await fetch(WORKER + '/stats?k=' + encodeURIComponent(TOKEN));
+    if(r.status === 401){ stato.className='err'; stato.textContent='Accesso negato: token non valido.'; return; }
+    const j = await r.json();
+    if(!j.ok){ stato.className='err'; stato.textContent='Errore: ' + (j.errore||'sconosciuto'); return; }
+    disegna(j.dati);
+    stato.style.display='none';
+    dash.style.display='';
+  }catch(e){
+    stato.className='err';
+    stato.textContent='Non riesco a raggiungere il server. Controlla di aver messo online il worker aggiornato.';
+  }
+}
+
+function kpi(cont, coppie){
+  cont.innerHTML = coppie.map(([n,l]) => `<div class="kpi"><div class="n">${n}</div><div class="l">${l}</div></div>`).join('');
+}
+
+function disegna(d){
+  distruggi();
+
+  // ---- ATTIVITÀ ----
+  const att = (d.attivita||[]).slice().reverse(); // dal più vecchio al più recente
+  const totRipassi = att.reduce((s,x)=>s+(x.ripassi||0),0);
+  const maxUtenti = att.reduce((m,x)=>Math.max(m,x.utenti||0),0);
+  kpi(document.getElementById('kpi-attivita'), [
+    [totRipassi, 'ripassi totali (30gg)'],
+    [maxUtenti, 'picco utenti/giorno'],
+    [att.length, 'giorni con attività']
+  ]);
+  if(att.length){
+    charts.att = new Chart(document.getElementById('chart-attivita'), {
+      type:'line',
+      data:{ labels: att.map(x=>x.giorno.slice(5)), datasets:[
+        { label:'Ripassi', data: att.map(x=>x.ripassi), borderColor:NAVY, backgroundColor:'rgba(26,47,79,.08)', fill:true, tension:.3, borderWidth:2 },
+        { label:'Utenti', data: att.map(x=>x.utenti), borderColor:GOLD, backgroundColor:'transparent', tension:.3, borderWidth:2 }
+      ]},
+      options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{labels:{font:{family:'DM Sans'}}}}, scales:{y:{beginAtZero:true, ticks:{precision:0}}} }
+    });
+  }
+
+  // ---- RETENTION ----
+  const ret = d.retention||[];
+  const boxMedio = d.retention_media && d.retention_media.box_medio!=null ? Number(d.retention_media.box_medio).toFixed(2) : '—';
+  kpi(document.getElementById('kpi-retention'), [
+    [boxMedio, 'box medio (0–5)'],
+    [(d.retention_media&&d.retention_media.righe)||0, 'carte registrate']
+  ]);
+  // raggruppo per box, separo giuste/sbagliate
+  const boxes = [0,1,2,3,4,5];
+  const giuste = boxes.map(b => { const r=ret.find(x=>x.bucket==='giuste'&&x.box===b); return r?r.n:0; });
+  const sbagliate = boxes.map(b => { const r=ret.find(x=>x.bucket==='sbagliate'&&x.box===b); return r?r.n:0; });
+  if(ret.length){
+    charts.ret = new Chart(document.getElementById('chart-retention'), {
+      type:'bar',
+      data:{ labels: boxes.map(b=>'Box '+b), datasets:[
+        { label:'Sapute subito', data:giuste, backgroundColor:GREEN },
+        { label:'Faticate', data:sbagliate, backgroundColor:GOLD }
+      ]},
+      options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{labels:{font:{family:'DM Sans'}}}}, scales:{x:{stacked:true}, y:{stacked:true, beginAtZero:true, ticks:{precision:0}}} }
+    });
+  } else {
+    document.getElementById('chart-retention').parentElement.innerHTML = '<div class="empty">Ancora nessuna carta ripassata. Torna quando la community avrà studiato un po\'.</div>';
+  }
+
+  // ---- ADERENZA ----
+  const ad = (d.aderenza||[]).filter(x=>x.ritardo_medio_giorni!=null);
+  if(ad.length){
+    charts.ad = new Chart(document.getElementById('chart-aderenza'), {
+      type:'bar',
+      data:{ labels: ad.map(x=>x.materia), datasets:[
+        { label:'Ritardo medio (giorni)', data: ad.map(x=>Number(x.ritardo_medio_giorni).toFixed(1)),
+          backgroundColor: ad.map(x=> x.ritardo_medio_giorni>3 ? RED : x.ritardo_medio_giorni>0 ? GOLD : GREEN) }
+      ]},
+      options:{ indexAxis:'y', responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{x:{beginAtZero:true, title:{display:true, text:'giorni di ritardo (meno è meglio)'}}} }
+    });
+  } else {
+    document.getElementById('chart-aderenza').parentElement.innerHTML = '<div class="empty">Aderenza non ancora calcolabile: serve che qualche carta venga ripassata una seconda volta dopo la scadenza.</div>';
+  }
+
+  // ---- FEEDBACK ----
+  const fb = (d.feedback||[]).filter(x=>(x.non_chiaro||0)>0 || (x.chiaro||0)>0);
+  const cont = document.getElementById('tabella-feedback');
+  if(fb.length){
+    const maxNo = Math.max(...fb.map(x=>x.non_chiaro||0), 1);
+    let html = '<table><thead><tr><th>Lezione</th><th>Non chiara</th><th>Chiara</th><th>Segnale</th></tr></thead><tbody>';
+    fb.forEach(x=>{
+      const no = x.non_chiaro||0, si = x.chiaro||0;
+      const w = Math.round((no/maxNo)*100);
+      const lez = (x.lezione||'').replace('.json','').replace(/\//g,' · ');
+      html += `<tr><td>${lez}</td><td><b>${no}</b></td><td class="muted">${si}</td><td><div class="bar-cell"><div class="bar" style="width:${w}px"></div></div></td></tr>`;
+    });
+    html += '</tbody></table>';
+    cont.innerHTML = html;
+  } else {
+    cont.innerHTML = '<div class="empty">Nessun riscontro ancora. Quando le persone useranno i pulsanti "Chiara / Non chiara", qui vedrai cosa riscrivere.</div>';
+  }
+}
+
+carica();
+</script>
+</body>
+</html>
