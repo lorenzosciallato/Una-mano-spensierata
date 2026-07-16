@@ -3681,13 +3681,13 @@ if (!fileDaCaricare) {
         const T = function (x) { return (window.umsT ? window.umsT(x) : x); };
 
         const SCRITTE = [
-            'Tienimi acceso',
+            'Caffè sospeso?',
             'Una mano per Una Mano',
             'Sostieni il progetto',
             'Offrimi un caffè!',
-            'Fai studiare anche loro',
+            'Per me macchiato, grazie',
             'Un caffè alla volta...',
-            'Finanzia il diritto allo studio'
+            'Na tazzulella e cafè'
         ];
         const btn = document.getElementById('ums-sostieni');
         const label = document.getElementById('ums-sostieni-label');
