@@ -775,5 +775,97 @@
          Google Translate DEVE caricare dopo: la sua callback è definita lì. -->
     <script src="js/ums.js"></script>
     <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+    <!-- ================================================================
+         SLIDE NEL RIASSUNTONE — BLOCCO ADDITIVO
+         Se il JSON della lezione ha un campo "slide" (lista di URL immagine),
+         aggiunge in cima al Riassuntone un interruttore "Solo testo /
+         Testo + slide" e una galleria di miniature; clic = pop-up a schermo
+         intero (frecce + Esc). Il bloc notes resta di fianco.
+         Le lezioni SENZA "slide" (tutte quelle attuali) restano identiche.
+    ================================================================ -->
+    <style>
+      #ums-slide-block{margin:0 0 1.2rem}
+      .ums-slide-toggle{display:flex;gap:.4rem;margin:0 0 1rem;flex-wrap:wrap}
+      .ums-slide-toggle button{font-family:var(--font-sans,'DM Sans',sans-serif);
+        font-weight:600;font-size:.82rem;padding:.5rem .95rem;border-radius:999px;
+        border:1px solid var(--gold-lt,#e5d6bd);background:#fff;color:var(--sub,#6b6b73);cursor:pointer}
+      .ums-slide-toggle button.on{background:var(--navy,#22365f);color:#fff;border-color:var(--navy,#22365f)}
+      .ums-slide-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:.6rem;margin:0 0 1.2rem}
+      .ums-slide-gallery img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:10px;
+        border:1px solid var(--gold-lt,#e5d6bd);background:#faf7f1;cursor:zoom-in;
+        transition:transform .15s ease,box-shadow .15s ease}
+      .ums-slide-gallery img:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.15)}
+      .ums-slide-lb{position:fixed;inset:0;z-index:9999;background:rgba(10,10,14,.9);
+        display:none;align-items:center;justify-content:center;padding:2vh 2vw}
+      .ums-slide-lb.on{display:flex}
+      .ums-slide-lb img{max-width:96vw;max-height:92vh;border-radius:8px;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+      .ums-slide-lb .lb-x{position:absolute;top:12px;right:18px;font-size:2.2rem;color:#fff;background:none;border:none;cursor:pointer;line-height:1}
+      .ums-slide-lb .lb-nav{position:absolute;top:50%;transform:translateY(-50%);font-size:2.6rem;color:#fff;background:none;border:none;cursor:pointer;padding:0 14px;user-select:none}
+      .ums-slide-lb .lb-prev{left:4px}.ums-slide-lb .lb-next{right:4px}
+      body.night-mode .ums-slide-toggle button{background:#20232b;color:#c9c9d2;border-color:#3a3f4b}
+      body.night-mode .ums-slide-toggle button.on{background:#8FB4E8;color:#14161c;border-color:#8FB4E8}
+    </style>
+    <script>
+    (function(){
+      function param(k){ try{return new URLSearchParams(location.search).get(k);}catch(e){return null;} }
+      var file = param('file'); if(!file) return;
+      fetch(file).then(function(r){return r.json();}).then(function(d){
+        var slides = d && (d.slide || d.slides);
+        if(!Array.isArray(slides) || !slides.length) return;   // niente campo slide = lezione invariata
+        var tries=0;
+        (function attendi(){
+          var cont = document.getElementById('dyn-riassuntone-container');
+          if(!cont){ if(tries++<80){ setTimeout(attendi,200); } return; }
+          monta(cont, slides);
+        })();
+      }).catch(function(){});
+
+      function monta(cont, slides){
+        if(document.getElementById('ums-slide-block')) return;
+        var col = cont.parentElement;
+        var box = document.createElement('div'); box.id='ums-slide-block';
+
+        var tg = document.createElement('div'); tg.className='ums-slide-toggle';
+        var bText  = document.createElement('button'); bText.textContent='Solo testo';
+        var bSlide = document.createElement('button'); bSlide.textContent='Testo + slide'; bSlide.className='on';
+        tg.appendChild(bText); tg.appendChild(bSlide);
+
+        var gal = document.createElement('div'); gal.className='ums-slide-gallery';
+        slides.forEach(function(src,i){
+          var im=document.createElement('img'); im.src=src; im.alt='Slide '+(i+1); im.loading='lazy';
+          im.addEventListener('click', function(){ apri(i); });
+          gal.appendChild(im);
+        });
+
+        box.appendChild(tg); box.appendChild(gal);
+        col.insertBefore(box, cont);   // sopra il testo; il bloc notes resta nella colonna di destra
+
+        bText.addEventListener('click', function(){ bText.classList.add('on'); bSlide.classList.remove('on'); gal.style.display='none'; });
+        bSlide.addEventListener('click', function(){ bSlide.classList.add('on'); bText.classList.remove('on'); gal.style.display='grid'; });
+
+        var lb=document.createElement('div'); lb.className='ums-slide-lb';
+        lb.innerHTML='<button class="lb-x" aria-label="Chiudi">&times;</button>'+
+                     '<button class="lb-nav lb-prev" aria-label="Precedente">&#8249;</button>'+
+                     '<img alt="Slide">'+
+                     '<button class="lb-nav lb-next" aria-label="Successiva">&#8250;</button>';
+        document.body.appendChild(lb);
+        var lbImg=lb.querySelector('img'), cur=0;
+        function mostra(i){ cur=(i+slides.length)%slides.length; lbImg.src=slides[cur]; }
+        function apri(i){ mostra(i); lb.classList.add('on'); }
+        function chiudi(){ lb.classList.remove('on'); }
+        lb.querySelector('.lb-x').addEventListener('click', chiudi);
+        lb.querySelector('.lb-prev').addEventListener('click', function(e){ e.stopPropagation(); mostra(cur-1); });
+        lb.querySelector('.lb-next').addEventListener('click', function(e){ e.stopPropagation(); mostra(cur+1); });
+        lb.addEventListener('click', function(e){ if(e.target===lb) chiudi(); });
+        document.addEventListener('keydown', function(e){
+          if(!lb.classList.contains('on')) return;
+          if(e.key==='Escape') chiudi();
+          else if(e.key==='ArrowLeft') mostra(cur-1);
+          else if(e.key==='ArrowRight') mostra(cur+1);
+        });
+      }
+    })();
+    </script>
 </body>
 </html>
