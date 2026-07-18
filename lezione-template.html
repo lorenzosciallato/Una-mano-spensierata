@@ -867,5 +867,106 @@
       }
     })();
     </script>
+
+<!-- ================= UMS · BLOCCO MEDIA (mp3 / mp4 da Cloudflare R2) =================
+     Da incollare in fondo alla pagina, subito prima del tag di chiusura del body
+     Cosa fa: se podcast_url o video_sintesi_url puntano a un file (.mp3, .mp4 ...)
+     invece che a YouTube, nasconde l'iframe e mette un player nativo.
+     Retrocompatibile: con i link YouTube non fa assolutamente nulla.
+     ================================================================================= -->
+<style>
+  .ums-media-player{ width:100%; margin-top:4px; }
+  .ums-media-player audio{ width:100%; display:block; border-radius:12px; }
+  .ums-media-player video{ width:100%; display:block; border-radius:12px; background:#000; }
+  .ums-media-badge{
+    display:inline-flex; align-items:center; gap:6px; margin-top:8px;
+    font-size:.78rem; letter-spacing:.04em; text-transform:uppercase; opacity:.6;
+  }
+</style>
+<script>
+(function(){
+  var AUDIO = /\.(mp3|m4a|wav|ogg|aac)(\?.*)?$/i;
+  var VIDEO = /\.(mp4|webm|mov|m4v)(\?.*)?$/i;
+
+  function param(n){
+    return new URLSearchParams(window.location.search).get(n);
+  }
+
+  function monta(idIframe, idLink, url, tipo){
+    var iframe = document.getElementById(idIframe);
+    if(!iframe) return;
+    var box = iframe.closest('.video-container') || iframe.parentElement;
+    var colonna = box.parentElement;
+    if(colonna.querySelector('.ums-media-player')) return;   // già montato
+
+    // l'iframe resta nel DOM (così ums.js non si lamenta) ma sparisce dalla vista
+    box.style.display = 'none';
+    var nota = colonna.querySelector('.video-fallback-note');
+    if(nota) nota.style.display = 'none';
+
+    var wrap = document.createElement('div');
+    wrap.className = 'ums-media-player';
+
+    if(tipo === 'audio'){
+      var a = document.createElement('audio');
+      a.controls = true; a.preload = 'metadata'; a.src = url;
+      wrap.appendChild(a);
+    } else {
+      var v = document.createElement('video');
+      v.controls = true; v.preload = 'metadata'; v.playsInline = true; v.src = url;
+      wrap.appendChild(v);
+    }
+
+    var badge = document.createElement('span');
+    badge.className = 'ums-media-badge';
+    badge.textContent = (tipo === 'audio' ? '🎧 Audio della lezione' : '🎬 Video della lezione');
+    wrap.appendChild(badge);
+
+    box.insertAdjacentElement('afterend', wrap);
+
+    // il link "apri direttamente" punta al file vero
+    var link = document.getElementById(idLink);
+    if(link){
+      link.href = url;
+      link.textContent = (tipo === 'audio' ? 'Scarica / apri l\u2019audio \u2197'
+                                           : 'Scarica / apri il video \u2197');
+      link.style.display = '';
+    }
+  }
+
+  function applica(dati){
+    var p = (dati.podcast_url || '').trim();
+    var v = (dati.video_sintesi_url || '').trim();
+    if(AUDIO.test(p)) monta('dyn-podcast-player', 'dyn-podcast-link', p, 'audio');
+    else if(VIDEO.test(p)) monta('dyn-podcast-player', 'dyn-podcast-link', p, 'video');
+    if(VIDEO.test(v)) monta('dyn-video-player', 'dyn-video-link', v, 'video');
+    else if(AUDIO.test(v)) monta('dyn-video-player', 'dyn-video-link', v, 'audio');
+  }
+
+  function avvia(){
+    var f = param('file');
+    if(!f) return;
+    fetch(f, {cache:'no-store'})
+      .then(function(r){ return r.json(); })
+      .then(function(dati){
+        applica(dati);
+        // ums.js potrebbe ridisegnare dopo di noi: ripassiamo per qualche secondo
+        var n = 0;
+        var t = setInterval(function(){
+          applica(dati);
+          if(++n > 20) clearInterval(t);
+        }, 500);
+      })
+      .catch(function(){ /* nessun JSON, nessun problema */ });
+  }
+
+  if(document.readyState === 'loading')
+    document.addEventListener('DOMContentLoaded', avvia);
+  else
+    avvia();
+})();
+</script>
+<!-- =============== FINE BLOCCO MEDIA =============== -->
+
 </body>
 </html>
