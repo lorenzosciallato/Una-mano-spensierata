@@ -882,6 +882,17 @@
     display:inline-flex; align-items:center; gap:6px; margin-top:8px;
     font-size:.78rem; letter-spacing:.04em; text-transform:uppercase; opacity:.6;
   }
+  .ums-media-skip{ display:flex; gap:8px; align-items:center; margin-top:10px; flex-wrap:wrap; }
+  .ums-skip-btn{
+    display:inline-flex; align-items:center; gap:6px;
+    padding:7px 14px; border-radius:999px; cursor:pointer;
+    font-size:.85rem; font-weight:600; line-height:1;
+    color:inherit; background:rgba(127,127,127,.12);
+    border:1px solid rgba(127,127,127,.35);
+    transition:background .15s ease, transform .06s ease;
+  }
+  .ums-skip-btn:hover{ background:rgba(127,127,127,.22); }
+  .ums-skip-btn:active{ transform:scale(.96); }
 </style>
 <script>
 (function(){
@@ -892,6 +903,17 @@
     return new URLSearchParams(window.location.search).get(n);
   }
 
+  // Chrome, se un iframe punta a un mp3/mp4, apre il suo lettore interno e parte
+  // da solo: invisibile ma udibile. Quindi all'iframe togliamo proprio l'indirizzo.
+  function zittisci(iframe){
+    if(!iframe) return;
+    var src = iframe.getAttribute('src') || '';
+    if(src && src !== 'about:blank'){
+      iframe.removeAttribute('src');
+      iframe.setAttribute('src', 'about:blank');
+    }
+  }
+
   function monta(idIframe, idLink, url, tipo){
     var iframe = document.getElementById(idIframe);
     if(!iframe) return;
@@ -900,7 +922,9 @@
     if(colonna.querySelector('.ums-media-player')) return;   // già montato
 
     // l'iframe resta nel DOM (così ums.js non si lamenta) ma sparisce dalla vista
+    // e soprattutto resta MUTO: gli togliamo l'indirizzo del file
     box.style.display = 'none';
+    zittisci(iframe);
     var nota = colonna.querySelector('.video-fallback-note');
     if(nota) nota.style.display = 'none';
 
@@ -917,10 +941,34 @@
       wrap.appendChild(v);
     }
 
+    var media = wrap.querySelector('audio, video');
+
+    // pulsanti indietro/avanti di 10 secondi
+    var barra = document.createElement('div');
+    barra.className = 'ums-media-skip';
+
+    function salta(secondi, etichetta){
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'ums-skip-btn';
+      b.textContent = etichetta;
+      b.addEventListener('click', function(){
+        if(!media) return;
+        var durata = isFinite(media.duration) ? media.duration : Infinity;
+        var t = media.currentTime + secondi;
+        media.currentTime = Math.max(0, Math.min(t, durata));
+      });
+      return b;
+    }
+
+    barra.appendChild(salta(-10, '↺ 10s'));
+    barra.appendChild(salta(10,  '10s ↻'));
+
     var badge = document.createElement('span');
     badge.className = 'ums-media-badge';
     badge.textContent = (tipo === 'audio' ? '🎧 Audio della lezione' : '🎬 Video della lezione');
-    wrap.appendChild(badge);
+    barra.appendChild(badge);
+    wrap.appendChild(barra);
 
     box.insertAdjacentElement('afterend', wrap);
 
@@ -937,6 +985,9 @@
   function applica(dati){
     var p = (dati.podcast_url || '').trim();
     var v = (dati.video_sintesi_url || '').trim();
+    // ums.js può rimettere l'indirizzo nell'iframe: lo ri-svuotiamo ogni giro
+    if(AUDIO.test(p) || VIDEO.test(p)) zittisci(document.getElementById('dyn-podcast-player'));
+    if(AUDIO.test(v) || VIDEO.test(v)) zittisci(document.getElementById('dyn-video-player'));
     if(AUDIO.test(p)) monta('dyn-podcast-player', 'dyn-podcast-link', p, 'audio');
     else if(VIDEO.test(p)) monta('dyn-podcast-player', 'dyn-podcast-link', p, 'video');
     if(VIDEO.test(v)) monta('dyn-video-player', 'dyn-video-link', v, 'video');
@@ -954,7 +1005,7 @@
         var n = 0;
         var t = setInterval(function(){
           applica(dati);
-          if(++n > 20) clearInterval(t);
+          if(++n > 120) clearInterval(t);   // sorveglia per un minuto buono
         }, 500);
       })
       .catch(function(){ /* nessun JSON, nessun problema */ });
