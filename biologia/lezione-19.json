@@ -1,0 +1,379 @@
+{
+  "titolo_lezione": "I Sistemi Sensoriali nella Biologia Animale",
+  "sottotitolo": "Fisiologia, evoluzione e meccanismi di trasduzione degli stimoli fisici e chimici",
+  "orientamento": {
+    "obiettivi": [
+      "Comprendere l'evoluzione dei sistemi sensoriali a partire dai sensi chimici dei protisti.",
+      "Analizzare la struttura e la funzione dei meccanocettori nell'udito, nell'equilibrio e nella linea laterale.",
+      "Studiare la fisiologia dei sensi chimici umani, differenziando i cinque gusti fondamentali e l'olfatto.",
+      "Esplorare lo sviluppo evolutivo degli organi visivi dagli ocelli delle planarie agli occhi dei mammiferi."
+    ],
+    "concetto_fondamentale": "I sistemi sensoriali rappresentano sofisticati strumenti biologici in grado di convertire stimoli fisici e chimici in impulsi elettrochimici, consentendo agli organismi di interpretare l'ambiente e attuare risposte adattive regolate dal sistema nervoso.",
+    "nota_extra": "Per facilitare lo studio, si consiglia di mappare l'evoluzione di ciascun organo di senso partendo da modificazioni delle cellule ciliate ancestrali, riscontrabili sia nell'orecchio che nei fotorecettori.",
+    "domande_autovalutazione": [
+      "Come avviene il riconoscimento sessuale mediato da feromoni nei protisti ciliati?",
+      "In che modo la linea laterale dei pesci rileva i cambiamenti di direzione nel nuoto?",
+      "Qual è la differenza strutturale e funzionale tra un occhio diretto e un occhio inverso?",
+      "Come cooperano gli otoliti e i canali semicircolari nella gestione dell'equilibrio?",
+      "Qual è il meccanismo molecolare che permette ai bastoncelli di generare un impulso nervoso quando colpiti dalla luce?",
+      "Per quale motivo il glutammato di sodio altera la percezione della sazietà e stimola l'appetito?"
+    ]
+  },
+  "punti_chiave": [
+    {
+      "id": "sensi-chimici",
+      "titolo_breve": "1. I Sensi Chimici",
+      "sottotitolo": "La comunicazione chimica cellulare dai protisti ai multicellulari.",
+      "titolo_esteso": "1. Evoluzione dei Sensi Chimici",
+      "testo_modale": "<p>I sensi chimici rappresentano la forma più ancestrale di interazione con l'ambiente, nati insieme alle prime forme di comunicazione chimica cellulare. Nei protisti ciliati, recettori proteici di membrana rilevano i <strong>feromoni</strong> solubili, molecole fondamentali per distinguere il sesso di altre cellule della stessa specie. Se viene rilevato un feromone eterologo, le cellule avviano il processo sessuale di <strong>coniugazione</strong>, unendosi per 24-48 ore per scambiare materiale genetico senza incremento demografico. Nei multicellulari, questi sensi si specializzano in <strong>gusto</strong> e <strong>olfatto</strong>. Ad esempio, le mosche possiedono papille gustative sulle estremità boccali che funzionano solo su cibo umido, mentre i maschi di farfalla usano antenne piumate ricche di chemiocettori per seguire il gradiente dei feromoni femminili.</p>"
+    },
+    {
+      "id": "meccanocettori",
+      "titolo_breve": "2. La Meccanocettività",
+      "sottotitolo": "La percezione di stimoli fisici, movimento ed equilibrio spaziale.",
+      "titolo_esteso": "2. I Sistemi Meccanocettoriali",
+      "testo_modale": "<p>I <strong>meccanocettori</strong> sono specializzati nel rilevare stimoli fisici quali pressione, contatto e vibrazioni. Sulla pelle dei mammiferi, la radice di ogni pelo è connessa a terminazioni nervose, rendendoli recettori sensibilissimi allo sfioramento. Negli organismi acquatici come i pesci, la <strong>linea laterale</strong> è un canale sub-cutaneo contenente acqua e cellule ciliate: variazioni nella velocità dell'acqua tra il lato destro e sinistro permettono al cervello di percepire la direzione e la velocità di nuoto. Per l'orientamento gravitazionale, molti invertebrati utilizzano le <strong>statoctisti</strong>, vescicole contenenti particelle minerali (<em>statoliti</em>). Nelle planarie, la pressione dello statolite sulle cellule ciliate ventrali o dorsali indica se il corpo è orientato correttamente o ribaltato, inducendo una risposta motoria adattiva.</p>"
+    },
+    {
+      "id": "udito-equilibrio",
+      "titolo_breve": "3. Udito e Equilibrio",
+      "sottotitolo": "Il funzionamento dell'orecchio interno e il ruolo degli otoliti.",
+      "titolo_esteso": "3. La Fisiologia dell'Orecchio",
+      "testo_modale": "<p>L'orecchio dei mammiferi integra le funzioni dell'udito e dell'equilibrio grazie a meccanocettori specializzati. L'orecchio esterno convoglia le onde sonore al timpano, che trasmette le vibrazioni all'orecchio medio, dove tre ossicini (<em>martello, incudine, staffa</em>) le amplificano verso l'orecchio interno. Nella <strong>coclea</strong> (o chiocciola), le diverse frequenze sonore stimolano sezioni specifiche: i toni acuti la parte prossimale, quelli gravi la parte distale, flettendo le ciglia delle cellule sensoriali contro una membrana tectoriale. L'equilibrio è gestito nel labirinto attraverso tre canali semicircolari ortogonali colmi di fluido denso. Qui, piccoli granuli di carbonato di calcio chiamati <strong>otoliti</strong> si spostano per gravità sulle cellule ciliate durante i movimenti del capo. Un'infezione di quest'area causa la <strong>labirintite</strong>, ispessendo il liquido e provocando vertigini debilitanti.</p>"
+    },
+    {
+      "id": "fotorecettori",
+      "titolo_breve": "4. I Fotorecettori",
+      "sottotitolo": "Dalle macchie oculari della planaria alla complessità della retina umana.",
+      "titolo_esteso": "4. Evoluzione degli Organi Visivi",
+      "testo_modale": "<p>L'evoluzione visiva spazia dalle semplici macchie oculari (<strong>ocelli</strong>) delle planarie, che funzionano come fotocellule per rilevare la sola presenza di luce e sfuggire ai predatori, fino ai complessi occhi composti degli insetti, formati da centinaia di unità indipendenti chiamate <strong>ommatidi</strong> che generano un'immagine a mosaico a 360 gradi. Nei vertebrati, la retina contiene fotorecettori derivati da ciglia modificate: i <strong>bastoncelli</strong>, deputati alla visione notturna in bianco e nero grazie alla scissione del pigmento <strong>rodopsina</strong> (in opsina e retinale), e i <strong>coni</strong>, che richiedono più luce ma percepiscono i colori primari (rosso, verde, blu) tramite tre diverse opsine. Si distingue inoltre tra l'<em>occhio diretto</em> dei molluschi, dove la luce colpisce prima i fotorecettori, e l'<em>occhio inverso</em> dei mammiferi, in cui la luce attraversa le cellule nervose prima di raggiungere la retina.</p>"
+    }
+  ],
+  "podcast_url": "",
+  "video_sintesi_url": "",
+  "riassuntone": [
+    {
+      "titolo": "Origine ed evoluzione dei sensi chimici dai protisti agli insetti",
+      "testo": "La biologia dei sistemi sensoriali affonda le sue radici evolutive nei sensi chimici primordiali, nati in parallelo con i primi tentativi di comunicazione chimica cellulare e con l'evoluzione dei sistemi ormonali. Negli organismi unicellulari più semplici, privi di veri e propri organi di senso, la percezione ambientale viene mediata da recettori proteici situati sulla membrana citoplasmatica, capaci di riconoscere molecole specifiche. Un esempio classico si ritrova nei protisti ciliati, dove questi recettori di membrana sono deputati al riconoscimento dei feromoni, sostanze chimiche solubili disciolte nell'acqua circostante. I feromoni consentono a questi microrganismi di distinguere il tipo o il sesso delle cellule che incontrano nell'ambiente. Se un protista di un determinato tipo rileva esclusivamente feromoni omologhi (dello stesso sesso), non si attiva alcuna risposta riproduttiva sessuale; la cellula continua semplicemente a nutrirsi, accrescersi e moltiplicarsi per via asessuata mediante divisione mitotica. Al contrario, quando i recettori captano un feromone eterologo (prodotto da una cellula di sesso opposto), si attiva una cascata di segnali che induce le cellule ad accoppiarsi temporaneamente attraverso il processo della coniugazione. Questo fenomeno di scambio genetico può durare dalle ventiquattro alle quarantotto ore, o persino tre giorni, a seconda delle condizioni fisiche dell'ambiente. Durante la coniugazione, i due partner si scambiano materiale nucleare e successivamente si separano; è cruciale evidenziare che il processo non genera un aumento numerico della popolazione, poiché le due cellule di partenza rimangono due anche al termine dell'unione. Salendo nella scala evolutiva, i sensi chimici si complicano e si differenziano negli organismi multicellulari, dando origine al gusto e all'olfatto. Negli insetti come la mosca, l'apparato boccale è dotato di papille gustative esterne. Questo tipo di recettore chimico necessita di un ambiente umido o liquido per funzionare; la mosca deve appoggiare i propri sensori direttamente su una particella alimentare bagnata o su una gocciolina per dissolvere e identificare le sostanze chimiche presenti. Le informazioni gustative viaggiano poi verso il cervello dell'insetto, che decide se cibarsi o meno del materiale esplorato. Altri insetti, come le farfalle, utilizzano i sensi chimici per la localizzazione riproduttiva a grande distanza attraverso molecole disperse nell'aria. Le farfalle possiedono organi chemosensoriali sulle antenne. Si osserva un netto dimorfismo sessuale nella struttura di queste appendici: la femmina presenta antenne molto esili, mentre il maschio è dotato di antenne ampie e piumate, estremamente ricche di terminazioni sottili progettate per massimizzare la superficie di contatto con l'aria. Quando la femmina rilascia ormoni sessuali nell'atmosfera, il maschio capta queste molecole e orienta il proprio volo seguendo il gradiente di concentrazione, dirigendosi verso zone a intensità sempre maggiore fino a raggiungere la femmina per l'accoppiamento. Nelle zanzare, invece, la ricerca dell'ospite da cui trarre nutrimento ematico è guidata da chemiocettori sensibili agli odori corporei dei mammiferi, mentre l'individuazione del partner è affidata a meccanocettori che percepiscono la frequenza di vibrazione delle ali. Le femmine di zanzara battono le ali molto più rapidamente dei maschi; questi ultimi inseguono attivamente questa specifica frequenza acustica. Le femmine si accoppiano una sola volta nella vita e utilizzano gli spermatozoi immagazzinati per fecondare progressivamente centinaia di uova deposte nel corso del tempo.",
+      "check_points": [
+        {
+          "domanda": "Qual è il ruolo dei feromoni nei protisti ciliati?",
+          "risposta": "I feromoni sono molecole chimiche solubili prodotte e rilasciate nell'acqua dai protisti ciliati. Essi fungono da segnali di riconoscimento specifici per determinare il tipo sessuale delle altre cellule presenti nei paraggi. Quando una cellula rileva un feromone eterologo tramite i recettori di membrana, si attiva la coniugazione sessuale."
+        },
+        {
+          "domanda": "Come si differenzia la coniugazione dalla riproduzione asessuale?",
+          "risposta": "La coniugazione è un processo sessuale temporaneo che dura dalle 24 alle 72 ore durante il quale due cellule si uniscono per scambiare materiale genetico, senza che vi sia alcun incremento della popolazione complessiva. La riproduzione asessuale, invece, avviene continuamente in presenza di feromoni omologhi tramite divisione binaria mitotica, determinando l'accrescimento e l'aumento effettivo del numero di individui."
+        },
+        {
+          "domanda": "In che modo l'anatomia delle antenne delle farfalle è legata alla riproduzione?",
+          "risposta": "Le antenne delle farfalle mostrano un marcato dimorfismo sessuale funzionale all'accoppiamento. Le femmine possiedono antenne molto esili, mentre i maschi hanno antenne ampie e piumate con moltissime ramificazioni sottili. Questa struttura piumata massimizza l'area di contatto per captare anche singole molecole di feromone femminile disperse nell'aria, guidando il maschio lungo il gradiente di concentrazione fino alla femmina."
+        }
+      ]
+    },
+    {
+      "id": "macro-2",
+      "titolo": "I sensi chimici nell'uomo: fisiologia del gusto, dell'olfatto e l'inganno dell'umami",
+      "testo": "Nell'essere umano, la percezione chimica è suddivisa in maniera coordinata tra il senso del gusto e il senso dell'olfatto, i quali lavorano in stretta sinergia per interpretare la composizione chimica del cibo e dell'aria. Il gusto viene attivato quando i costituenti chimici degli alimenti si disciolgono nei liquidi della cavità orale (principalmente la saliva) e penetrano nei pori gustativi situati all'interno di migliaia di papille gustative distribuite sulla superficie della lingua. Da qui, i segnali vengono trasmessi tramite terminazioni nervose al cervello per l'elaborazione cosciente. La fisiologia umana riconosce cinque gusti fondamentali primari: il dolce, il salato, l'acido, l'amaro e l'umami. Il gusto umami, spesso descritto come saporito o carnoso, è strettamente correlato alla presenza di glutammato di sodio, un amminoacido che stimola specifici recettori linguali. Questo sapore è stato isolato e ampiamente riprodotto artificialmente per scopi commerciali. L'industria alimentare e le catene di fast food lo utilizzano in grandi quantità per esaltare artificialmente la sapidità di preparati alimentari come hamburger, patatine fritte e brodi pronti. Il glutammato di sodio agisce sulla memoria gustativa e stimola l'appetito in modo marcato: il consumo di alimenti ricchi di questa sostanza, anziché saziare, invia segnali neurochimici che aumentano il desiderio di cibo. Fisiologicamente, i recettori gustativi svolgono anche un ruolo cruciale di difesa biologica contro sostanze tossiche o dannose. L'introduzione in bocca di sostanze con eccessiva acidità, alcalinità o salinità innesca una reazione istintiva e immediata di repulsione e rigurgito, volta a proteggere l'organismo dall'ingestione di agenti irritanti prima che lo stimolo venga elaborato razionalmente dal sistema nervoso centrale. Questa risposta di repulsione immediata è conservata filogeneticamente ed è osservabile anche in invertebrati estremamente semplici come le planarie (vermi piatti). Quando una planaria ingerisce accidentalmente un protista che secerne sostanze chimiche fortemente irritanti dalla propria membrana, l'invertebrato lo rigurgita istantaneamente. Parallelamente al gusto, l'olfatto percepisce le sostanze chimiche volatili sospese nell'aria che respiriamo. L'aria, per raggiungere i polmoni, attraversa le cavità nasali lambendo l'epitelio olfattivo profondo situato nei turbinati superiori. Qui si trovano cellule olfattive neuronali dotate di prolungamenti simili a piume, ricchi di ripiegamenti e microfori in cui penetrano le molecole odorose. Sopra queste cellule si trova il bulbo olfattivo, che raccoglie e trasmette gli impulsi elettrochimici direttamente alle aree cerebrali superiori, traducendoli in percezioni di profumi gradevoli, odori sgradevoli o sostanze tossiche, guidando comportamenti immediati di avvicinamento o di fuga.",
+      "check_points": [
+        {
+          "domanda": "Quali sono i cinque gusti fondamentali e qual è il meccanismo dell'umami?",
+          "risposta": "I cinque gusti fondamentali rilevati dall'essere umano sono dolce, salato, acido, amaro e umami. Il gusto umami percepisce la sapidità ed è stimolato dal glutammato di sodio, un amminoacido che agisce sulla memoria gustativa e che viene usato artificialmente dall'industria alimentare per indurre appetito continuo."
+        },
+        {
+          "domanda": "Qual è il valore evolutivo delle risposte istintive di rigurgito e repulsione?",
+          "risposta": "Le risposte istintive di rigurgito o repulsione di fronte a sapori estremamente salati, acidi o irritanti proteggono l'organismo dall'ingestione di sostanze potenzialmente tossiche o letali. Questo meccanismo di difesa ancestrale è integrato a livello periferico prima di raggiungere il sistema nervoso centrale ed è osservabile persino nelle planarie, che espellono immediatamente le prede che secernono sostanze tossiche."
+        },
+        {
+          "domanda": "Come funziona l'epitelio olfattivo umano nella rilevazione degli odori?",
+          "risposta": "L'epitelio olfattivo è situato nella porzione più profonda delle narici, a livello dei turbinati nasali. Esso è composto da cellule recettoriali dotate di microscopici prolungamenti ciliati ricchi di fori e pieghe nei quali penetrano le particelle chimiche trasportate dall'aria inspirata. Il sovrastante bulbo olfattivo raccoglie questi stimoli e li trasmette direttamente al cervello."
+        }
+      ]
+    },
+    {
+      "id": "macro-3",
+      "titolo": "Meccanocettori, linea laterale dei pesci e il senso di gravità negli invertebrati",
+      "testo": "I meccanocettori sono recettori sensoriali deputati alla trasduzione di stimoli fisici e meccanici, come il tatto, la pressione superficiale, lo stiramento e le vibrazioni, in segnali elettrici interpretabili dal sistema nervoso. Nella cute dei mammiferi, i meccanocettori sono distribuiti a diverse profondità all'interno del derma e dell'epidermide. Molti di essi sono strutturalmente accoppiati ai peli corporei: la radice di ciascun pelo è circondata da una fitta rete di terminazioni nervose capaci di rilevare anche il minimo ripiegamento o movimento dello stelo pilifero, come avviene quando veniamo sfiorati delicatamente da una piuma, attivando istantaneamente una sensazione tattile riflessa. Negli organismi acquatici, la meccanocettività assume una conformazione anatomica e funzionale di fondamentale importanza per la navigazione e la sopravvivenza. I pesci (come merluzzi e trote) possiedono un organo sensoriale unico chiamato linea laterale, visibile come una linea longitudinale che corre lungo i fianchi del corpo. Questo sistema è costituito da un canale sub-epidermico colmo d'acqua, in diretta comunicazione con l'ambiente esterno, che ospita gruppi localizzati di cellule ciliate. Quando il pesce nuota o quando si verificano correnti nell'acqua circostante, il flusso idrico all'interno del canale si sposta e piega le ciglia sensoriali. Se il pesce procede in linea retta, l'acqua scorre alla stessa velocità e direzione nei canali del lato destro e sinistro, stimolando in modo simmetrico le cellule ciliate. Se l'animale vira o cambia improvvisamente rotta, la velocità e l'intensità del flusso idrico differiscono tra i due lati; questa asimmetria viene elaborata dal cervello del pesce, consentendogli di stimare con precisione l'entità della virata, la velocità di scorrimento e la propria posizione idrodinamica nell'acqua. Un altro stimolo meccanico universale è la forza di gravità, essenziale per determinare l'alto e il basso. Negli invertebrati, questo senso è mediato da strutture chiamate statoctisti, vescicole cave rivestite internamente da cellule ciliate e contenenti al loro interno corpi minerali densi e inerti chiamati statoliti, spesso formati da carbonato di calcio. La forza di gravità attira lo statolite verso il basso, facendolo premere contro le ciglia delle cellule sensoriali inferiori. Se l'animale cambia inclinazione, lo statolite rotola premendo su altre ciglia, informando il sistema nervoso. Nelle planarie, la statoctisti è collocata al centro del cervello anteriore: se il verme striscia correttamente sul fondo dello stagno, lo statolite preme ventralmente, mentre se si ribalta, preme dorsalmente, inducendo l'animale a raddrizzarsi per rimanere nascosto dai predatori. Nei crostacei come gamberi e aragoste, le statoctisti si trovano alla base delle antenne, mentre nelle meduse più grandi esse si localizzano sui margini del corpo all'interno dei ropali, strutture sensoriali complesse che integrano anche fotorecettori per consentire la corretta migrazione verticale verso la superficie marina.",
+      "check_points": [
+        {
+          "domanda": "Come rilevano gli stimoli meccanici i peli sulla cute dei mammiferi?",
+          "risposta": "Ogni singolo pelo presente sulla cute dei mammiferi possiede alla propria radice un collegamento diretto con una cellula nervosa sensoriale. Quando il pelo viene ripiegato o sfiorato anche minimamente da un oggetto esterno, come una piuma, la sollecitazione meccanica attiva la cellula nervosa alla base, inviando un impulso tattile immediato al cervello."
+        },
+        {
+          "domanda": "In che modo i pesci utilizzano la linea laterale per orientarsi?",
+          "risposta": "La linea laterale è un canale sub-cutaneo riempito d'acqua e provvisto di cellule ciliate lungo i fianchi del pesce. Durante il nuoto, lo scorrimento dell'acqua piega le ciglia sensoriali: se la velocità dell'acqua è identica in entrambi i lati del corpo, la traiettoria è rettilinea; se differisce, il cervello calcola l'angolo di virata e la velocità di spostamento."
+        },
+        {
+          "domanda": "Cos'è una statoctisti e come funziona nelle planarie?",
+          "risposta": "La statoctisti è una vescicola sensoriale sferica che racchiude un sassolino minerale chiamato statolite. Nelle planarie è localizzata nel cervello anteriore: quando l'animale striscia sul fondo, lo statolite preme sulle cellule ciliate ventrali confermando la corretta posizione, mentre se l'animale si ribalta, la pressione sulle ciglia dorsali segnala la necessità di raddrizzarsi."
+        }
+      ]
+    },
+    {
+      "id": "macro-4",
+      "titolo": "L'orecchio dei mammiferi: la meccanica dell'udito e i segreti dell'equilibrio",
+      "testo": "L'orecchio dei mammiferi rappresenta un capolavoro di ingegneria biologica basato sull'azione integrata di meccanocettori in grado di elaborare sia le onde pressorie dell'aria (udito) sia gli effetti della gravità e delle accelerazioni della testa (equilibrio). L'anatomia dell'orecchio si suddivide in tre porzioni: esterno, medio e interno. L'orecchio esterno è composto dal padiglione auricolare visibile e dal condotto uditivo esterno, che canalizza le onde sonore fino alla membrana timpanica. Questa sottile membrana vibra facilmente quando viene investita dalle onde acustiche. Le vibrazioni del timpano sollecitano la catena di tre ossicini situati nell'orecchio medio: il martello, l'incudine e la staffa. Questi ossicini funzionano come leve meccaniche che amplificano la forza delle vibrazioni e le trasmettono alla porzione più profonda, l'orecchio interno. Quest'ultimo è diviso nella coclea (o chiocciola), deputata all'udito, e nel sistema vestibolare del labirinto, deputato all'equilibrio. All'interno della coclea si trova il canale cocleare, dove risiede l'organo del Corti, costituito da cellule ciliate sormontate da una membrana tectoriale (denominata tettoia). La scomposizione delle frequenze acustiche avviene in modo tonotopico lungo la spirale della coclea: le frequenze sonore molto alte e acute stimolano elettivamente le cellule ciliate situate nella porzione prossimale e iniziale della chiocciola. Le frequenze medie attivano la zona intermedia, mentre i suoni molto gravi e a bassa frequenza propagano la loro energia fino alla porzione più distante e apicale della coclea. La flessione delle ciglia contro la membrana tectoriale converte lo stimolo fisico in impulsi nervosi inviati al nervo acustico. L'equilibrio è invece controllato nel labirinto, costituito da tre canali semicircolari perpendicolari tra loro e orientati nelle tre dimensioni dello spazio. Questi canali sono riempiti di un fluido endolinfatico denso e contengono cellule ciliate che, a differenza di quelle cocleari, non hanno una membrana tectoriale ma sono sormontate da otoliti, piccoli cristalli minerali solidi. Quando incliniamo o muoviamo la testa, la forza di gravità sposta gli otoliti che scivolano sopra le ciglia, flettendole nella direzione del movimento. Questo spostamento invia segnali immediati al cervello che, integrando le informazioni, comanda risposte motorie compensatorie per mantenere l'equilibrio corporeo (ad esempio, aumentando il tono muscolare degli arti destri quando il corpo si inclina a destra per evitare cadute). Se questo sistema viene colpito da un'infezione batterica o fungina, si sviluppa la labirintite. L'infiammazione rende il liquido dei canali estremamente denso e viscoso, ostacolando il corretto scorrimento degli otoliti e provocando vertigini severe e perdita di orientamento. Curare questa patologia richiede trattamenti antibiotici prolungati a causa della localizzazione ossea profonda, difficilmente accessibile dal flusso sanguigno.",
+      "check_points": [
+        {
+          "domanda": "Qual è la funzione della catena di ossicini dell'orecchio medio?",
+          "risposta": "La catena degli ossicini, composta da martello, incudine e staffa, si trova nell'orecchio medio e connette la membrana timpanica all'orecchio interno. La sua funzione principale è quella di amplificare meccanicamente le vibrazioni generate dalle onde sonore sul timpano e di trasmetterle in modo efficiente alla coclea per l'elaborazione acustica."
+        },
+        {
+          "domanda": "Come avviene la discriminazione delle frequenze sonore nella coclea?",
+          "risposta": "La scomposizione delle frequenze avviene in modo tonotopico all'interno della coclea. Le onde sonore ad alta frequenza (suoni acuti) stimolano la porzione iniziale e più vicina della chiocciola; le frequenze medie attivano le zone intermedie; le basse frequenze (suoni gravi) viaggiano fino all'estremità distale. Questo movimento flette selettivamente le ciglia delle cellule sensoriali contro la membrana tectoriale."
+        },
+        {
+          "domanda": "Come cooperano i canali semicircolari e gli otoliti nell'equilibrio?",
+          "risposta": "I canali semicircolari contengono un fluido denso e cellule ciliate sormontate da piccoli cristalli di carbonato di calcio detti otoliti. Nei movimenti o inclinazioni della testa, la gravità sposta gli otoliti che scivolano sulle ciglia flettendole; questo stimolo meccanico invia segnali al cervello, che regola la forza muscolare compensatoria per evitare la caduta del corpo."
+        }
+      ]
+    },
+    {
+      "id": "macro-5",
+      "titolo": "Fotorecettori ed evoluzione degli organi visivi dal protista all'occhio dei mammiferi",
+      "testo": "L'evoluzione degli organi visivi e della fotorecezione evidenzia un percorso affascinante che parte da semplici pigmenti fotosensibili intracellulari fino a giungere a complessi organi in grado di formare immagini dettagliate. Persino in alcuni protisti privi di strutture oculari si riscontrano molecole che reagiscono alla luce per scopi di sopravvivenza; ad esempio, un protista che abita stabilmente in grotte buie produce un pigmento rosso che, se colpito dalla luce solare diretta, si ossida diventando blu e trasformandosi in una sostanza tossica e letale. Questo meccanismo chimico costringe l'organismo a rimanere confinato nel buio, proteggendolo al contempo dall'identificazione da parte dei predatori. Nelle planarie si osserva un organo visivo primordiale costituito da un paio di ocelli o macchie oculari. Strutturalmente, questi ocelli sono formati da una coppetta di cellule pigmentate riflettenti che focalizzano la luce su cellule nervose sensoriali. Gli ocelli non formano immagini, ma funzionano come fotocellule: segnalano semplicemente all'animale se si trova in una zona illuminata o in ombra. Poiché la luce rappresenta un grave pericolo di predazione, la planaria, non appena percepisce la luminosità, inverte la rotta per tornare a nascondersi nell'oscurità del fondo. Un paradosso evolutivo è rappresentato dalle piccolissime cubomeduse (vespe di mare), che possiedono veri e propri occhi complessi provvisti di cornea, cristallino e retina simili a quelli dei vertebrati, nonostante l'animale sia privo di un cervello in grado di elaborare le immagini prodotte. Negli artropodi, la visione è dominata dagli occhi composti, strutture formate da centinaia di unità visive indipendenti chiamate ommatidi. Ogni ommatidio possiede la propria cornea, un cono cristallino e cellule retiniche basali. L'immagine finale viene ricostruita dal cervello dell'insetto come una somma a mosaico delle singole porzioni catturate da ciascun ommatidio, offrendo una visione grandangolare a trecentosessanta gradi ed una sensibilità eccezionale ai minimi movimenti. Nei mammiferi e in alcuni molluschi (come polpi e seppie) si sviluppano occhi singoli globosi dotati di cristallino deformabile per la messa a fuoco. Si distinguono due modelli: l'occhio diretto dei molluschi, dove la luce colpisce immediatamente le cellule retiniche posizionate in superficie, e l'occhio inverso dei mammiferi, in cui i fotorecettori (coni e bastoncelli) si trovano nello strato più profondo della retina, costringendo la luce ad attraversare prima lo strato di fibre nervose. La retina contiene bastoncelli, che costituiscono oltre il novanta percento delle cellule e sono altamente sensibili alla luce debole (deputati alla visione notturna acromatica) grazie alla scissione del pigmento rodopsina in opsina e retinale, e coni, responsabili della visione diurna dei colori grazie a tre differenti opsine sensibili al rosso, al verde e al blu. I segnali visivi viaggiano lungo i nervi ottici, si incrociano a livello del chiasma ottico e vengono integrati nella corteccia occipitale.",
+      "check_points": [
+        {
+          "domanda": "Qual è la differenza biologica tra occhio diretto e occhio inverso?",
+          "risposta": "La distinzione risiede nella disposizione degli strati cellulari rispetto alla luce. Nell'occhio diretto, tipico dei molluschi cefalopodi, l'immagine prodotta dal cristallino colpisce immediatamente le cellule retiniche in superficie. Nell'occhio inverso, tipico dei mammiferi, la luce deve invece attraversare lo strato di cellule nervose prima di raggiungere i fotorecettori posti in profondità."
+        },
+        {
+          "domanda": "Quali sono le differenze funzionali tra coni e bastoncelli?",
+          "risposta": "I bastoncelli costituiscono oltre il 90% delle cellule retiniche, sono estremamente sensibili alla luce debole e gestiscono la visione notturna acromatica (in bianco e nero). I coni richiedono una forte intensità luminosa per attivarsi e sono responsabili della visione dei colori grazie a tre varianti di opsine sensibili alle lunghezze d'onda del rosso, del verde e del blu."
+        },
+        {
+          "domanda": "In che modo la luce innesca l'impulso nervoso all'interno di un bastoncello?",
+          "risposta": "All'interno del bastoncello è presente la rodopsina, un pigmento fotosensibile. Quando un fotone colpisce la cellula, la rodopsina si scinde in due molecole più piccole, l'opsina e il retinale. Questa rottura molecolare modifica la polarizzazione di membrana della cellula ciliata modificata, generando un impulso elettrochimico che viene inviato al nervo ottico."
+        }
+      ]
+    }
+  ],
+  "flashcards": [
+    {
+      "front": "Come avviene il processo di coniugazione nei protisti ciliati e quale ruolo hanno i feromoni?",
+      "back": "I protisti ciliati, pur essendo organismi unicellulari privi di veri e propri organi di senso, possiedono recettori proteici di membrana altamente specializzati per riconoscere molecole solubili rilasciate nell'ambiente, note come feromoni. Quando una cellula di un determinato tipo sessuale rileva feromoni emessi da una cellula di tipo differente (feromone eterologo), si attiva una specifica risposta cellulare che porta all'unione temporanea dei due organismi. Questo processo, chiamato coniugazione o processo sessuale, dura tipicamente dalle ventiquattro alle quarantotto ore, o persino tre giorni a seconda delle condizioni ambientali esterne. Al termine della coniugazione, le due cellule si separano nuovamente. È importante sottolineare che questo scambio genetico non comporta alcun incremento numerico della popolazione, poiché i due partner iniziali rimangono esattamente due alla fine del processo, a differenza della riproduzione asessuale per divisione binaria."
+    },
+    {
+      "front": "In che modo le zanzare utilizzano i sistemi sensoriali per accoppiarsi e nutrirsi?",
+      "back": "Le zanzare utilizzano modalità sensoriali nettamente distinte per l'accoppiamento e per la nutrizione. Per quanto riguarda la riproduzione, la comunicazione non è mediata da segnali chimici come nelle farfalle, bensì da organi meccanocettori sensibili alle vibrazioni dell'aria e ai suoni. I maschi rilevano la frequenza di vibrazione del volo delle femmine, le quali battono le ali molto più rapidamente dei maschi. Quando un maschio avverte questa elevata frequenza acustica, insegue attivamente il suono per accoppiarsi. Le femmine si accoppiano una sola volta nella vita, dopodiché chiudono le aperture genitali e usano la riserva di spermatozoi per fecondare periodicamente centinaia di uova. Per la nutrizione, invece, le zanzare si affidano a chemiocettori situati sulle antenne per localizzare i mammiferi, rilevando gli odori corporei specifici degli ospiti da cui succhiare il sangue necessario alla loro sopravvivenza."
+    },
+    {
+      "front": "Cos'è il gusto umami e come viene sfruttato nell'industria alimentare?",
+      "back": "Il gusto umami è il quinto sapore fondamentale percepito dai recettori della lingua umana, affiancandosi a dolce, salato, acido e amaro. Questo sapore è strettamente associato alla presenza di glutammato di sodio, una sostanza chimica che agisce come esaltatore di sapidità. L'industria alimentare, in particolare i fast food e i produttori di cibi pronti (come i dadi da brodo), utilizza ampiamente il glutammato di sodio per rendere artificialmente la carne, gli hamburger e le patatine estremamente appetitosi e saporiti. Il gusto umami stimola in modo potente la memoria gustativa e, a differenza di un pasto preparato in modo semplice a casa, induce un aumento fittizio dell'appetito, spingendo il consumatore a desiderare e consumare quantità maggiori di cibo. Nonostante gli ingredienti utilizzati nei fast food possano essere qualitativamente inferiori o conservati a lungo, l'aggiunta di questa sostanza garantisce una risposta sensoriale di forte gradimento e attrazione psicologica."
+    },
+    {
+      "front": "Come funziona il meccanismo di percezione delle diverse frequenze acustiche nella coclea?",
+      "back": "La coclea, o chiocciola, situata nell'orecchio interno dei mammiferi, è la struttura deputata alla separazione e alla scomposizione fisica delle diverse frequenze dei suoni percepiti dall'orecchio esterno. Al suo interno è presente il canale cocleare, che ospita le cellule ciliate sormontate da una membrana tectoriale, o tettoia. Le vibrazioni meccaniche, amplificate dagli ossicini dell'orecchio medio (martello, incudine e staffa), si propagano all'interno del liquido cocleare stimolando specifiche porzioni della chiocciola in base alla frequenza dell'onda sonora. Le frequenze molto elevate e acute stimolano la porzione iniziale e più vicina della coclea. Al contrario, le frequenze medie attivano le zone intermedie, mentre le frequenze acustiche più basse e gravi viaggiano fino all'estremità distale e più lontana della struttura. Questa mappa tonotopica permette alle cellule ciliate delle rispettive aree di vibrare selettivamente, trasmettendo impulsi differenziati al nervo acustico e quindi all'encefalo."
+    },
+    {
+      "front": "Che cos'è la labirintite e quali sono le sue conseguenze fisiologiche?",
+      "back": "La labirintite è un'affezione patologica, di origine prevalentemente batterica o fungina, che colpisce il labirinto e i tre canali semicircolari dell'orecchio interno. In condizioni normali, questi canali contengono un liquido fluido in cui galleggiano gli otoliti, piccoli corpuscoli minerali che si spostano per gravità stimolando le cellule ciliate e informando il cervello sulla posizione della testa. Quando si sviluppa un'infezione, il liquido endolinfatico diventa estremamente denso e viscoso. Di conseguenza, il movimento degli otoliti risulta rallentato o impedito durante i movimenti del capo, causando un disallineamento nei segnali inviati al sistema nervoso centrale. Il soggetto colpito avverte forti vertigini, instabilità e la sensazione che la testa stia girando, rendendo difficile persino il mantenimento della stazione eretta. La terapia richiede un trattamento antibiotico prolungato nel tempo, poiché l'orecchio interno è una struttura ossea profonda e difficilmente raggiungibile dai farmaci veicolati dal sangue."
+    },
+    {
+      "front": "Come funziona la linea laterale dei pesci e a quale scopo serve?",
+      "back": "La linea laterale è un organo sensoriale specializzato presente nei pesci, visibile esternamente come una sottile striscia lungo i fianchi del corpo. Fisiologicamente, essa consiste in un canaletto sub-epidermico che scorre sotto la cute e comunica con l'esterno, riempiendosi della stessa acqua in cui l'animale nuota. All'interno del canale si trovano piccoli gruppi di cellule ciliate. Quando l'acqua scorre nel canale a causa del movimento del pesce o di correnti esterne, piega le ciglia dei recettori generando impulsi nervosi. Se l'acqua scorre alla medesima velocità nei canali del lato destro e sinistro, il cervello del pesce comprende che la traiettoria è rettilinea. Se invece il pesce effettua una virata, la velocità di scorrimento differisce tra i due lati, permettendo al sistema nervoso di valutare con precisione l'angolo e l'intensità del cambio di direzione, nonché di percepire la velocità di nuoto complessiva."
+    },
+    {
+      "front": "Qual è il ruolo delle statoctisti e degli statoliti negli invertebrati?",
+      "back": "Le statoctisti sono piccoli organi di senso preposti alla percezione della gravità, diffusi in moltissimi organismi invertebrati, tra cui meduse, planarie e crostacei. Strutturalmente si presentano come vescicole sferiche cave, rivestite internamente da cellule sensoriali ciliate e contenenti al proprio interno uno o più granelli minerali densi, solitamente composti da carbonato di calcio, chiamati statoliti o stato-liti. Sotto l'effetto della forza di gravità, lo statolite tende costantemente a cadere verso il basso, andando a premere e stimolare le ciglia delle cellule sensoriali situate nella porzione inferiore della vescicola. Quando l'animale cambia inclinazione o si ribalta, lo statolite si sposta colpendo altre porzioni ciliati e inviando impulsi immediati al sistema nervoso. Questo meccanismo consente all'organismo di riconoscere l'orientamento spaziale rispetto al centro della terra, permettendogli di riposizionarsi correttamente per sfuggire ai predatori o mantenere la postura ideale."
+    },
+    {
+      "front": "Quale paradosso evolutivo presentano gli organi visivi di alcune meduse?",
+      "back": "Alcune specie di meduse di dimensioni estremamente ridotte, note come vespe di mare o cubomeduse, presentano un affascinante paradosso biologico legato alla complessità dei loro organi visivi. Pur avendo un corpo di appena cinque o sei millimetri e una struttura anatomica complessivamente molto semplice, questi cnidari sono equipaggiati con occhi eccezionalmente sofisticati, completi di strutture analoghe a quelle dei vertebrati come la cornea, il cristallino e la retina, capaci di proiettare immagini nitide del mondo esterno. Tuttavia, le meduse sono organismi totalmente privi di un cervello o di un sistema nervoso centrale centralizzato in grado di elaborare ed interpretare tali immagini complesse. Dal tappeto retinico non partono nervi diretti a un centro di coordinamento cerebrale, rendendo misterioso il motivo per cui l'evoluzione abbia selezionato e conservato strutture oculari così avanzate in assenza della capacità cognitiva e neurologica necessaria per poterne effettivamente usufruire."
+    },
+    {
+      "front": "Come si differenzia la visione degli insetti tramite l'occhio composto?",
+      "back": "Gli insetti e molti altri artropodi possiedono un sistema visivo unico basato sugli occhi composti, strutture globose e sporgenti formate dalla giustapposizione di centinaia o migliaia di piccoli occhi semplici chiamati ommatidi. Ciascun ommatidio è un'unità indipendente dotata di una cornea superficiale, di un cono cristallino che funge da lente per la messa a fuoco e di un gruppo di cellule retiniche basali. La visione complessiva dell'insetto non è un'immagine singola e continua come la nostra, bensì una visione composita generata dalla sovrapposizione a mosaico delle singole immagini raccolte da ciascun ommatidio. Questo sistema consente all'insetto di avere un campo visivo straordinario, che può estendersi fino a trecentosessanta gradi, permettendogli di rilevare istantaneamente minacce o prede in ogni direzione. Inoltre, l'occhio composto è estremamente sensibile ai più piccoli e rapidi movimenti nell'ambiente, garantendo tempi di reazione motoria incredibilmente veloci."
+    },
+    {
+      "front": "Qual è la differenza strutturale e funzionale tra coni e bastoncelli nella retina umana?",
+      "back": "I coni e i bastoncelli sono i due fotorecettori altamente specializzati presenti sulla retina dei mammiferi, derivati evolutivamente da ciglia modificate che hanno incorporato pigmenti visivi. I bastoncelli costituiscono oltre il novanta percento della popolazione cellulare retinica e sono estremamente sensibili alla luce; possono attivarsi anche in condizioni di illuminazione debolissima, consentendo la visione notturna, ma non sono in grado di percepire i colori, traducendo le immagini in bianco e nero. Al loro interno contengono la rodopsina, un pigmento fotosensibile che si scinde in opsina e retinale quando viene colpito dalla luce, innescando l'impulso nervoso. I coni, invece, richiedono un'intensità luminosa molto più elevata per attivarsi e sono responsabili della visione dei colori. Esistono tre tipi di coni contenenti opsine differenti, sensibili rispettivamente alle frequenze del rosso, del verde e del blu. La combinazione delle loro stimolazioni percentuali permette al cervello di percepire l'intero spettro visibile."
+    }
+  ],
+  "il_super_quiz": [
+    {
+      "domanda": "Cosa accade quando un protista ciliato percepisce nell'acqua circostante un feromone eterologo, cioè prodotto da una cellula di sesso diverso?",
+      "opzioni": [
+        {
+          "testo": "Le cellule continuano a moltiplicarsi in modo esclusivamente asessuale per divisione mitotica.",
+          "corretta": false
+        },
+        {
+          "testo": "Le cellule si uniscono temporaneamente avviando un processo sessuale di coniugazione per scambiare materiale genetico.",
+          "corretta": true
+        },
+        {
+          "testo": "Le cellule secernono immediatamente sostanze tossiche per allontanare il competitore.",
+          "corretta": false
+        }
+      ],
+      "spiegazione": "Secondo quanto spiegato nella lezione, la rilevazione di un feromone eterologo attiva una risposta cellulare che spinge i protisti a unirsi temporaneamente (da 24 ore fino a tre giorni) nel processo sessuale di coniugazione."
+    },
+    {
+      "domanda": "Quale condizione è necessaria affinché l'apparato boccale della mosca possa percepire correttamente i sapori?",
+      "opzioni": [
+        {
+          "testo": "La particella di cibo o la gocciolina esplorata deve essere umida.",
+          "corretta": true
+        },
+        {
+          "testo": "Il cibo deve trovarsi ad una temperatura superiore a quella corporea dell'insetto.",
+          "corretta": false
+        },
+        {
+          "testo": "Il cibo deve essere interamente solido e asciutto per attivare i meccano-recettori.",
+          "corretta": false
+        }
+      ],
+      "spiegazione": "La lezione specifica che le papille gustative della mosca funzionano come recettori chimici solo se la particella di cibo è umida o se si tratta di una gocciolina liquida."
+    },
+    {
+      "domanda": "Quale caratteristica morfologica differenzia le antenne del maschio di farfalla da quelle della femmina per la ricerca del partner?",
+      "opzioni": [
+        {
+          "testo": "Le antenne del maschio sono molto corte e rigide rispetto a quelle flessibili della femmina.",
+          "corretta": false
+        },
+        {
+          "testo": "Le antenne del maschio presentano ampie ramificazioni piumate ricche di prolungamenti sottili.",
+          "corretta": true
+        },
+        {
+          "testo": "Le antenne del maschio sono prive di chemiocettori e percepiscono solo stimoli acustici.",
+          "corretta": false
+        }
+      ],
+      "spiegazione": "La lezione descrive le antenne del maschio come strutture molto ricche di estremità sottili simili a piume, progettate per massimizzare la percezione degli ormoni sessuali rilasciati nell'aria dalle femmine."
+    },
+    {
+      "domanda": "Come avviene il riconoscimento del partner riproduttivo nel caso delle zanzare?",
+      "opzioni": [
+        {
+          "testo": "I maschi individuano le femmine captando la specifica e rapida frequenza di vibrazione delle loro ali.",
+          "corretta": true
+        },
+        {
+          "testo": "Le femmine rilasciano ormoni sessuali volatili che il maschio segue lungo un gradiente di concentrazione.",
+          "corretta": false
+        },
+        {
+          "testo": "I maschi si basano esclusivamente sulla vista grazie a grandi occhi composti notturni.",
+          "corretta": false
+        }
+      ],
+      "spiegazione": "A differenza delle farfalle, nelle zanzare l'accoppiamento è mediato da meccano-recettori: i maschi percepiscono i suoni e le vibrazioni dell'aria generati dall'elevata frequenza del battito d'ali delle femmine."
+    },
+    {
+      "domanda": "Nello studio del gusto nell'essere umano, cos'è il sapore 'umami' e da quale molecola è stimolato?",
+      "opzioni": [
+        {
+          "testo": "È il sapore aspro e pungente tipico degli alimenti acidi, stimolato dall'acido citrico.",
+          "corretta": false
+        },
+        {
+          "testo": "È un gusto saporito associato alla memoria gustativa, stimolato dal glutammato di sodio.",
+          "corretta": true
+        },
+        {
+          "testo": "È il sapore amaro e repulsivo causato dall'ingestione accidentale di sali minerali tossici.",
+          "corretta": false
+        }
+      ],
+      "spiegazione": "Il gusto umami è il sapore saporito tipico del dado da cucina o dei preparati dei fast food, ed è causato dal glutammato di sodio, una sostanza che stimola la memoria gustativa e accresce l'appetito."
+    },
+    {
+      "domanda": "Come funziona la scomposizione delle frequenze acustiche all'interno della coclea?",
+      "opzioni": [
+        {
+          "testo": "Tutte le frequenze stimolano contemporaneamente l'intero canale a causa della densità del liquido.",
+          "corretta": false
+        },
+        {
+          "testo": "Le frequenze acute stimolano la porzione iniziale della coclea, mentre le frequenze gravi si propagano fino alla porzione più distante.",
+          "corretta": true
+        },
+        {
+          "testo": "I toni gravi stimolano l'orecchio medio, mentre i toni acuti vengono indirizzati direttamente al labirinto vestibolare.",
+          "corretta": false
+        }
+      ],
+      "spiegazione": "La scomposizione dei suoni nella coclea avviene in base alla frequenza: i toni acuti (frequenze elevate) stimolano la parte prossimale e iniziale della chiocciola, mentre i toni gravi (frequenze basse) stimolano la porzione apicale e più distale."
+    },
+    {
+      "domanda": "In che modo l'infiammazione tipica della labirintite compromette il senso dell'equilibrio?",
+      "opzioni": [
+        {
+          "testo": "Provoca la calcificazione permanente degli ossicini impedendo la trasmissione delle onde sonore.",
+          "corretta": false
+        },
+        {
+          "testo": "Interrompe il collegamento nervoso diretto tra la retina e il chiasma ottico dell'encefalo.",
+          "corretta": false
+        },
+        {
+          "testo": "Rende il liquido interno molto denso, ostacolando il corretto e rapido scivolamento degli otoliti sulle ciglia sensoriali.",
+          "corretta": true
+        }
+      ],
+      "spiegazione": "La labirintite è un'infezione dei canali semicircolari che rende il liquido interno estremamente denso, impedendo il normale scivolamento degli otoliti (le pietruzze solide) sulle cellule ciliate e alterando la percezione della gravità."
+    },
+    {
+      "domanda": "Come permette la linea laterale dei pesci di comprendere se l'animale sta effettuando una virata?",
+      "opzioni": [
+        {
+          "testo": "Attraverso la variazione asimmetrica della velocità di scorrimento dell'acqua tra il canale destro e quello sinistro.",
+          "corretta": true
+        },
+        {
+          "testo": "Rilevando l'improvviso innalzamento della temperatura dell'acqua sul lato della virata.",
+          "corretta": false
+        },
+        {
+          "testo": "Analizzando la quantità di ossigeno disciolto che penetra attraverso i pori della cute laterale.",
+          "corretta": false
+        }
+      ],
+      "spiegazione": "La linea laterale contiene canali colmi d'acqua con cellule ciliate. Se il pesce procede dritto, l'acqua scorre alla stessa velocità su entrambi i lati; se gira, la velocità differisce tra lato destro e sinistro, informando il cervello della virata."
+    },
+    {
+      "domanda": "Nelle planarie, come funziona la statoctisti situata al centro del cervello anteriore?",
+      "opzioni": [
+        {
+          "testo": "È un organo visivo che si attiva solo in presenza di luce solare diretta per guidare la fuga dell'animale.",
+          "corretta": false
+        },
+        {
+          "testo": "Contiene uno statolite che preme sulla porzione ventrale se l'animale striscia dritto, o sulla porzione dorsale se è ribaltato.",
+          "corretta": true
+        },
+        {
+          "testo": "Rileva la pressione sanguigna modificando la contrazione del sistema digerente durante l'alimentazione.",
+          "corretta": false
+        }
+      ],
+      "spiegazione": "La statoctisti della planaria racchiude un sassolino (statolite) sensibile alla gravità. Se l'animale si capovolge, il sassolino preme sulla parte dorsale anziché ventrale, segnalando la necessità di riposizionarsi."
+    },
+    {
+      "domanda": "Qual è la differenza fondamentale tra l'occhio diretto dei molluschi e l'occhio inverso dei mammiferi?",
+      "opzioni": [
+        {
+          "testo": "Nell'occhio diretto la luce colpisce subito le cellule retiniche, mentre nell'occhio inverso attraversa prima uno strato di cellule nervose.",
+          "corretta": true
+        },
+        {
+          "testo": "L'occhio diretto è composto da centinaia di ommatidi, mentre l'occhio inverso presenta un solo cristallino grande.",
+          "corretta": false
+        },
+        {
+          "testo": "L'occhio diretto non possiede un corpo vitreo o liquidi interni per la rifrazione della luce.",
+          "corretta": false
+        }
+      ],
+      "spiegazione": "La distinzione risiede nel percorso della luce: nell'occhio diretto dei molluschi (come polpi e seppie) la luce incontra immediatamente i fotorecettori della retina, mentre nell'occhio inverso (come quello umano) la luce attraversa le cellule nervose prima di arrivare ai coni e ai bastoncelli posti in profondità."
+    }
+  ],
+  "assistente_ia": {
+    "nome": "Assistente IA",
+    "sottotesto": "Chatta con l'intera lezione",
+    "url": "https://notebooklm.google.com/notebook/96ba007b-30e3-413d-a1a4-04e0eb392d8e"
+  }
+}
