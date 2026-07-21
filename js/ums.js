@@ -648,8 +648,16 @@ if (!fileDaCaricare) {
 
                         const card = document.querySelector('.content-card') || document.body;
                         card.appendChild(box);
-                        // apri la card: senza, lo splash resta bloccato e il box non si vede
-                        document.body.classList.add('ums-master-open');
+                        // Sblocca lo splash SENZA 'ums-master-open' (che sposta la
+                        // card con translateY e causava l'autoscroll verso il basso):
+                        // libero solo lo scroll e riporto la vista in cima.
+                        try {
+                            document.body.style.position = 'static';
+                            document.body.style.overflow = 'auto';
+                            document.body.style.height = 'auto';
+                            document.body.style.touchAction = 'auto';
+                            box.scrollIntoView({ block: 'center', behavior: 'auto' });
+                        } catch (eScroll) {}
                     } catch (e2) {}
                 } else {
                     // DIAGNOSTICA IN PAGINA — errori veri (non un 404)
