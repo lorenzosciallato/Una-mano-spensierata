@@ -996,6 +996,188 @@
     })();
     </script>
 
+    <!-- ================= UMS · STAMPA / SALVA PDF =================
+         Pulsante nel riassuntone → pop-up brandizzato con due contenuti
+         (Solo testo / Testo + slide) e una spunta per le evidenziazioni.
+         Genera il PDF con la stampa del browser (iframe nascosto, come
+         wbExportPDF). Testo prima, tutte le slide dopo. -->
+    <style>
+      #ums-print-btn{display:inline-flex;align-items:center;gap:.5rem;
+        font-family:var(--font-sans,'DM Sans',sans-serif);font-weight:600;font-size:.82rem;
+        padding:.5rem .95rem;border-radius:999px;border:1px solid var(--gold-lt,#e5d6bd);
+        background:#fff;color:var(--navy,#22365f);cursor:pointer;margin-left:.4rem;
+        transition:background .15s ease,box-shadow .15s ease}
+      #ums-print-btn:hover{background:var(--ivory-2,#efebe2);box-shadow:0 3px 12px rgba(0,0,0,.08)}
+      #ums-print-btn svg{width:1.05em;height:1.05em}
+      body.night-mode #ums-print-btn{background:#20232b;color:#c9c9d2;border-color:#3a3f4b}
+
+      #ums-pdf-overlay{display:none;position:fixed;inset:0;z-index:99999999;
+        background:rgba(15,17,23,.55);align-items:center;justify-content:center;padding:5vw}
+      #ums-pdf-overlay.show{display:flex}
+      .ums-pdf-card{background:var(--ivory,#f7f4ef);border-radius:22px;max-width:440px;width:100%;
+        padding:2rem 1.8rem;box-shadow:0 24px 70px rgba(0,0,0,.35);position:relative;
+        font-family:var(--font-sans,'DM Sans',sans-serif)}
+      body.night-mode .ums-pdf-card{background:#1b1e25;color:#e8e8ee}
+      .ums-pdf-card h3{font-family:var(--font-display,'Playfair Display',serif);
+        font-size:1.5rem;color:var(--navy,#22365f);margin:0 0 .3rem}
+      body.night-mode .ums-pdf-card h3{color:#8FB4E8}
+      .ums-pdf-card .ums-pdf-sub{color:var(--sub,#7a7770);font-size:.9rem;margin:0 0 1.4rem}
+      .ums-pdf-opt{display:flex;gap:.9rem;align-items:flex-start;width:100%;text-align:left;
+        border:1.5px solid var(--gold-lt,#e5d6bd);border-radius:14px;padding:1rem;
+        background:#fff;cursor:pointer;margin-bottom:.8rem;transition:border-color .15s,box-shadow .15s}
+      .ums-pdf-opt:hover{border-color:var(--gold,#c8a96e);box-shadow:0 4px 16px rgba(200,169,110,.2)}
+      body.night-mode .ums-pdf-opt{background:#23262e;border-color:#3a3f4b}
+      .ums-pdf-opt .ic{flex:0 0 auto;width:34px;height:34px;color:var(--navy,#22365f)}
+      body.night-mode .ums-pdf-opt .ic{color:#8FB4E8}
+      .ums-pdf-opt .tt{font-weight:700;color:var(--ink,#1c1c22);display:block;margin-bottom:.15rem}
+      body.night-mode .ums-pdf-opt .tt{color:#e8e8ee}
+      .ums-pdf-opt .ds{font-size:.82rem;color:var(--sub,#7a7770);line-height:1.4}
+      .ums-pdf-evid{display:flex;align-items:center;gap:.6rem;margin:.4rem 0 1.2rem;
+        font-size:.86rem;color:var(--body,#3d3c3a);cursor:pointer}
+      body.night-mode .ums-pdf-evid{color:#c9c9d2}
+      .ums-pdf-evid input{width:18px;height:18px;accent-color:var(--gold,#c8a96e);cursor:pointer}
+      .ums-pdf-x{position:absolute;top:14px;right:16px;width:34px;height:34px;border:none;
+        background:transparent;font-size:1.6rem;color:var(--sub,#7a7770);cursor:pointer;line-height:1;border-radius:50%}
+      .ums-pdf-x:hover{background:rgba(0,0,0,.06)}
+    </style>
+    <script>
+    (function(){
+      function param(k){ try{return new URLSearchParams(location.search).get(k);}catch(e){return null;} }
+      var file = param('file'); if(!file) return;
+      var datiLezione = null;
+      fetch(file).then(function(r){return r.json();}).then(function(d){ datiLezione = d; }).catch(function(){});
+
+      // aspetta che il riassuntone sia montato, poi aggancia il pulsante
+      var tries=0;
+      (function attendi(){
+        var barra = document.getElementById('ums-slide-toggle-box');
+        var cont  = document.getElementById('dyn-riassuntone-container');
+        if(!cont){ if(tries++<100){ setTimeout(attendi,200); } return; }
+        montaPulsante(barra, cont);
+      })();
+
+      function montaPulsante(barra, cont){
+        if(document.getElementById('ums-print-btn')) return;
+        var btn = document.createElement('button');
+        btn.id='ums-print-btn'; btn.type='button';
+        btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg> Stampa / PDF';
+        btn.addEventListener('click', apriPopup);
+        // se c'è la barra dei toggle slide, ci metto il pulsante accanto;
+        // altrimenti (lezione senza slide) creo una mini-barra sopra il testo.
+        if(barra){ barra.querySelector('.ums-slide-toggle').appendChild(btn); }
+        else {
+          var mini=document.createElement('div'); mini.id='ums-slide-toggle-box';
+          mini.style.cssText='margin:0 0 1.2rem';
+          mini.appendChild(btn); cont.parentElement.insertBefore(mini, cont);
+        }
+      }
+
+      function apriPopup(){
+        var ov = document.getElementById('ums-pdf-overlay');
+        if(!ov){
+          ov = document.createElement('div'); ov.id='ums-pdf-overlay';
+          ov.innerHTML =
+            '<div class="ums-pdf-card">'+
+              '<button class="ums-pdf-x" aria-label="Chiudi">&times;</button>'+
+              '<h3>Salva la lezione</h3>'+
+              '<p class="ums-pdf-sub">Scegli cosa mettere nel PDF. Poi dal menu di stampa scegli \u201CSalva come PDF\u201D.</p>'+
+              '<button class="ums-pdf-opt" data-modo="testo">'+
+                '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>'+
+                '<span><span class="tt">Solo testo</span><span class="ds">Il riassuntone completo con i Check Point, senza immagini.</span></span>'+
+              '</button>'+
+              '<button class="ums-pdf-opt" data-modo="slide">'+
+                '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H4z"/><path d="M4 20h16M9 9l2 2 4-4"/></svg>'+
+                '<span><span class="tt">Testo + slide</span><span class="ds">Prima tutto il testo, poi tutte le slide in fondo.</span></span>'+
+              '</button>'+
+              '<label class="ums-pdf-evid"><input type="checkbox" id="ums-pdf-evid-chk"> Mantieni le mie evidenziazioni</label>'+
+            '</div>';
+          document.body.appendChild(ov);
+          ov.querySelector('.ums-pdf-x').addEventListener('click', function(){ ov.classList.remove('show'); });
+          ov.addEventListener('click', function(e){ if(e.target===ov) ov.classList.remove('show'); });
+          ov.querySelectorAll('.ums-pdf-opt').forEach(function(b){
+            b.addEventListener('click', function(){
+              var evid = document.getElementById('ums-pdf-evid-chk').checked;
+              ov.classList.remove('show');
+              stampa(b.getAttribute('data-modo'), evid);
+            });
+          });
+        }
+        ov.classList.add('show');
+      }
+
+      function titoloLezione(){
+        var t = document.getElementById('dyn-title');
+        return t ? (t.textContent||'Lezione').trim() : 'Lezione';
+      }
+
+      function stampa(modo, conEvidenziazioni){
+        var cont = document.getElementById('dyn-riassuntone-container');
+        if(!cont) return;
+        // clono il testo per non toccare la pagina viva
+        var clone = cont.cloneNode(true);
+        // via le figure flottanti dal testo (le slide vanno in fondo, non nel mezzo)
+        clone.querySelectorAll('figure.ums-slide-fig').forEach(function(f){ f.remove(); });
+        // evidenziazioni: se non richieste, scarto i <mark>
+        if(!conEvidenziazioni){
+          clone.querySelectorAll('mark, .highlighted-text').forEach(function(m){
+            var t=document.createTextNode(m.textContent); m.parentNode.replaceChild(t, m);
+          });
+        }
+        var testoHTML = clone.innerHTML;
+
+        // slide in fondo (solo modo "slide"), dal JSON
+        var slideHTML = '';
+        if(modo==='slide' && datiLezione){
+          var raw = datiLezione.slide || datiLezione.slides || [];
+          var urls = raw.map(function(s){ return typeof s==='string' ? s : (s&&s.url); }).filter(Boolean);
+          if(urls.length){
+            slideHTML = '<h2 class="ums-pdf-slide-title">Slide della lezione</h2>' +
+              urls.map(function(u){ return '<img class="ums-pdf-slide" src="'+u+'">'; }).join('');
+          }
+        }
+
+        var titolo = titoloLezione();
+        var css =
+          '@page{margin:16mm 14mm}'+
+          '*{box-sizing:border-box}'+
+          'body{margin:0;font-family:\'DM Sans\',system-ui,sans-serif;color:#1c1c22;line-height:1.6}'+
+          '.pdf-head{border-bottom:2px solid #c8a96e;padding-bottom:10px;margin-bottom:22px}'+
+          '.pdf-head .brand{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:#9a7a3f;font-weight:700}'+
+          '.pdf-head h1{font-family:\'Playfair Display\',Georgia,serif;font-size:1.7rem;color:#1a2f4f;margin:.2rem 0 0}'+
+          'h3{font-family:\'Playfair Display\',Georgia,serif;color:#1a2f4f;font-size:1.25rem;margin:1.4rem 0 .5rem;'+
+            'break-after:avoid;page-break-after:avoid}'+
+          'p{margin:0 0 .7rem;text-align:justify}'+
+          'mark,.highlighted-text{background:#fff2ac;padding:0 .1em}'+
+          '.cornell-box{border:1px solid #e5d6bd;border-radius:10px;padding:.8rem 1rem;margin:1rem 0;'+
+            'background:#faf7f1;break-inside:avoid;page-break-inside:avoid}'+
+          '.cp-label{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:#9a7a3f;font-weight:700}'+
+          '.cornell-question{font-weight:700;margin:.5rem 0 .2rem}'+
+          '.ums-pdf-slide-title{font-family:\'Playfair Display\',Georgia,serif;color:#1a2f4f;'+
+            'border-top:2px solid #c8a96e;padding-top:14px;margin:26px 0 14px;break-before:page;page-break-before:always}'+
+          '.ums-pdf-slide{width:100%;border:1px solid #e5d6bd;border-radius:8px;margin:0 0 14px;'+
+            'break-inside:avoid;page-break-inside:avoid}';
+
+        var html =
+          '<html><head><title>'+titolo+' \u2014 Una Mano Spensierata</title>'+
+          '<link rel="preconnect" href="https://fonts.googleapis.com">'+
+          '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'+
+          '<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">'+
+          '<style>'+css+'</style></head><body>'+
+          '<div class="pdf-head"><div class="brand">Una Mano Spensierata</div><h1>'+titolo+'</h1></div>'+
+          testoHTML + slideHTML +
+          '<scr'+'ipt>window.onload=function(){setTimeout(function(){window.print();},600);};</scr'+'ipt>'+
+          '</body></html>';
+
+        var ifr = document.createElement('iframe');
+        ifr.style.cssText='position:fixed;right:0;bottom:0;width:0;height:0;border:none';
+        document.body.appendChild(ifr);
+        var doc = ifr.contentWindow.document;
+        doc.open(); doc.write(html); doc.close();
+        setTimeout(function(){ try{ document.body.removeChild(ifr); }catch(e){} }, 20000);
+      }
+    })();
+    </script>
+
 <!-- ================= UMS · BLOCCO MEDIA (mp3 / mp4 da Cloudflare R2) =================
      Da incollare in fondo alla pagina, subito prima del tag di chiusura del body
      Cosa fa: se podcast_url o video_sintesi_url puntano a un file (.mp3, .mp4 ...)
