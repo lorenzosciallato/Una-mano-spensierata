@@ -1016,6 +1016,20 @@
             sez.usate++;
           }
 
+          // RAMO PRIORITARIO — abbinamento semantico deciso dall'IA in pipeline:
+          // se le slide portano l'indice "macro", ogni slide va in quella sezione,
+          // sparsa dx/sx nel testo (niente più matching per parole). Il tetto qui
+          // NON si applica: il macro giusto vince sempre.
+          var conMacro = slides.filter(function(s){ return typeof s.macro === 'number'; }).length;
+          if(conMacro >= Math.ceil(slides.length/2)){
+            slides.forEach(function(slide,i){
+              var mi = (typeof slide.macro === 'number') ? slide.macro : 0;
+              if(mi < 0 || mi >= sezioni.length) mi = Math.min(sezioni.length-1, mi < 0 ? 0 : sezioni.length-1);
+              piazzaInSezione(sezioni[mi], slide, i, null);
+            });
+            return;
+          }
+
           if(conTitolo >= Math.ceil(slides.length/2)){
             slides.forEach(function(slide,i){
               var tw = parole(slide.titolo);
