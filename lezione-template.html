@@ -1002,17 +1002,14 @@
          Genera il PDF con la stampa del browser (iframe nascosto, come
          wbExportPDF). Testo prima, tutte le slide dopo. -->
     <style>
-      #ums-print-btn{display:inline-flex;align-items:center;gap:.55rem;
-        font-family:var(--font-sans,'DM Sans',sans-serif);font-weight:700;font-size:.82rem;
-        letter-spacing:.08em;text-transform:uppercase;
-        padding:.7rem 1.4rem;border-radius:999px;border:none;
-        background:var(--gold,#c8a96e);color:#2a2113;cursor:pointer;
-        box-shadow:0 8px 24px rgba(200,169,110,.35);
-        transition:transform .2s cubic-bezier(.2,.8,.2,1),box-shadow .2s,background-color .2s}
-      #ums-print-btn:hover{transform:translateY(-2px);background:var(--gold-lt,#e8d5aa);
-        box-shadow:0 14px 34px rgba(200,169,110,.45)}
-      #ums-print-btn svg{width:1.15em;height:1.15em}
-      body.night-mode #ums-print-btn{background:var(--gold,#c8a96e);color:#2a2113}
+      #ums-print-btn{display:inline-flex;align-items:center;gap:.5rem;
+        font-family:var(--font-sans,'DM Sans',sans-serif);font-weight:600;font-size:.82rem;
+        padding:.5rem .95rem;border-radius:999px;border:1px solid var(--gold-lt,#e5d6bd);
+        background:#fff;color:var(--navy,#22365f);cursor:pointer;
+        transition:background .15s ease,box-shadow .15s ease}
+      #ums-print-btn:hover{background:var(--ivory-2,#efebe2);box-shadow:0 3px 12px rgba(0,0,0,.08)}
+      #ums-print-btn svg{width:1.05em;height:1.05em}
+      body.night-mode #ums-print-btn{background:#20232b;color:#c9c9d2;border-color:#3a3f4b}
       /* la barra del riassuntone: toggle a sinistra, stampa spinto a destra */
       #ums-slide-toggle-box .ums-slide-toggle{align-items:center}
       #ums-slide-toggle-box #ums-print-btn{margin-left:auto}
@@ -1072,7 +1069,7 @@
         if(document.getElementById('ums-print-btn')) return;
         var btn = document.createElement('button');
         btn.id='ums-print-btn'; btn.type='button';
-        btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg> Stampa / PDF';
+        btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg> Stampa il riassuntone';
         btn.addEventListener('click', apriPopup);
         // se c'è la barra dei toggle slide, ci metto il pulsante accanto (spinto
         // a destra dal CSS); altrimenti creo una mini-barra sopra il testo.
@@ -1165,9 +1162,14 @@
           '@page{margin:16mm 14mm}'+
           '*{box-sizing:border-box}'+
           'body{margin:0;font-family:\'DM Sans\',system-ui,sans-serif;color:#1c1c22;line-height:1.6}'+
-          '.pdf-head{border-bottom:2px solid #c8a96e;padding-bottom:10px;margin-bottom:22px}'+
-          '.pdf-head .brand{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:#9a7a3f;font-weight:700}'+
-          '.pdf-head h1{font-family:\'Playfair Display\',Georgia,serif;font-size:1.7rem;color:#1a2f4f;margin:.2rem 0 0}'+
+          '.pdf-brand{text-align:center;margin:0 0 4px}'+
+          '.pdf-brand .wm{font-family:\'Playfair Display\',Georgia,serif;font-weight:900;'+
+            'font-size:1.15rem;letter-spacing:-.02em;color:#1c1c22}'+
+          '.pdf-brand .wm em{font-style:italic;color:#1a2f4f}'+
+          '.pdf-brand .dom{font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;'+
+            'color:#9a7a3f;font-weight:700;margin-top:2px}'+
+          '.pdf-head{border-bottom:2px solid #c8a96e;padding-bottom:12px;margin-bottom:22px;text-align:center}'+
+          '.pdf-head h1{font-family:\'Playfair Display\',Georgia,serif;font-size:1.7rem;color:#1a2f4f;margin:14px 0 0}'+
           'h3{font-family:\'Playfair Display\',Georgia,serif;color:#1a2f4f;font-size:1.25rem;margin:1.4rem 0 .5rem;'+
             'break-after:avoid;page-break-after:avoid}'+
           'p{margin:0 0 .7rem;text-align:justify}'+
@@ -1185,9 +1187,12 @@
           '<html><head><title>'+titolo+' \u2014 Una Mano Spensierata</title>'+
           '<link rel="preconnect" href="https://fonts.googleapis.com">'+
           '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'+
-          '<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">'+
+          '<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=DM+Sans:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">'+
           '<style>'+css+'</style></head><body>'+
-          '<div class="pdf-head"><div class="brand">Una Mano Spensierata</div><h1>'+titolo+'</h1></div>'+
+          '<div class="pdf-head">'+
+            '<div class="pdf-brand"><div class="wm">Una Mano <em>Spensierata</em></div>'+
+            '<div class="dom">unamanospensierata.com</div></div>'+
+            '<h1>'+titolo+'</h1></div>'+
           testoHTML + slideHTML +
           '<scr'+'ipt>window.onload=function(){setTimeout(function(){window.print();},600);};</scr'+'ipt>'+
           '</body></html>';
