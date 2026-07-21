@@ -958,56 +958,79 @@
           return fig;
         }
 
-        // DISTRIBUZIONE v2 — abbinamento per contenuto migliorato:
-        // (a) oltre alle parole del paragrafo peso anche il titolo <h3> della
-        //     sezione a cui appartiene (aiuta quando il paragrafo non ripete
-        //     le parole del titolo-slide);
-        // (b) se una slide non matcha NIENTE va in posizione PROPORZIONALE
-        //     (slide 5 di 10 -> meta' testo), non piu' in cima al documento.
+        // DISTRIBUZIONE v3 — per MACROARGOMENTO: ogni slide viene assegnata
+        // alla SEZIONE (h3) piu' affine, con un tetto per sezione calcolato per
+        // coprirle tutte (niente sezioni nude in fondo). Dentro la sezione, la
+        // slide va accanto al paragrafo che le somiglia di piu'.
+        // Pesi: titolo sezione x3, paragrafo x2 (prima il capitolo giusto, poi
+        // il punto giusto nel capitolo).
         function distribuisci(){
-          var paragrafi = [];
-          var sezione = '';
+          // sezioni in ordine, ognuna coi suoi paragrafi
+          var sezioni = [];
+          var corrente = null;
           Array.prototype.forEach.call(cont.children, function(el){
-            if(el.tagName === 'H3'){ sezione = el.textContent || ''; }
-            else if(el.tagName === 'P' && !el.closest('.cornell-box')){
-              paragrafi.push({ el: el, sezione: sezione });
+            if(el.tagName === 'H3'){
+              corrente = { titolo: el.textContent||'', paragrafi: [], usate: 0 };
+              sezioni.push(corrente);
+            } else if(el.tagName === 'P' && !el.closest('.cornell-box')){
+              if(!corrente){ corrente = { titolo:'', paragrafi: [], usate: 0 }; sezioni.push(corrente); }
+              corrente.paragrafi.push({ el: el, occupato: false });
             }
           });
-          if(!paragrafi.length){ return; }
+          sezioni = sezioni.filter(function(s){ return s.paragrafi.length; });
+          if(!sezioni.length){ return; }
+
+          var tetto = Math.max(1, Math.ceil(slides.length / sezioni.length));
           var conTitolo = slides.filter(function(s){ return s.titolo; }).length;
 
-          function slotProporzionale(i, occupati){
-            var idx = slides.length>1
-              ? Math.round(i * (paragrafi.length-1) / (slides.length-1))
-              : 0;
-            for(var d=0; d<paragrafi.length; d++){
-              if(idx-d>=0 && !occupati[idx-d]) return idx-d;
-              if(idx+d<paragrafi.length && !occupati[idx+d]) return idx+d;
+          function piazzaInSezione(sez, slide, i, parPreferito){
+            var target = null;
+            if(parPreferito && !parPreferito.occupato){ target = parPreferito; }
+            else {
+              for(var k=0;k<sez.paragrafi.length;k++){
+                if(!sez.paragrafi[k].occupato){ target = sez.paragrafi[k]; break; }
+              }
             }
-            return -1;
+            if(!target){ target = sez.paragrafi[sez.paragrafi.length-1]; }
+            else { target.occupato = true; }
+            target.el.parentNode.insertBefore(creaFigura(slide,i), target.el);
+            sez.usate++;
           }
 
           if(conTitolo >= Math.ceil(slides.length/2)){
-            var occupati = {};
             slides.forEach(function(slide,i){
               var tw = parole(slide.titolo);
-              var best=-1, bestScore=0;
-              paragrafi.forEach(function(p,idx){
-                if(occupati[idx]) return;
-                var s = punteggio(tw, p.el.textContent)*2 + punteggio(tw, p.sezione);
-                if(s>bestScore){ bestScore=s; best=idx; }
+              var bestSez=-1, bestScore=0, bestPar=null;
+              sezioni.forEach(function(sez, si){
+                if(sez.usate >= tetto) return;   // sezione piena: tocca alle altre
+                var sTit = punteggio(tw, sez.titolo);
+                var mPar = 0, pEl = null;
+                sez.paragrafi.forEach(function(p){
+                  var s = punteggio(tw, p.el.textContent);
+                  if(s > mPar){ mPar = s; pEl = p; }
+                });
+                var tot = sTit*3 + mPar*2;
+                if(tot > bestScore){ bestScore = tot; bestSez = si; bestPar = pEl; }
               });
-              if(bestScore===0){ best = slotProporzionale(i, occupati); }
-              if(best<0){ cont.appendChild(creaFigura(slide,i)); return; }
-              occupati[best]=true;
-              paragrafi[best].el.parentNode.insertBefore(creaFigura(slide,i), paragrafi[best].el);
+              if(bestScore === 0){
+                // nessun aggancio: sezione col minor numero di slide (equilibrio)
+                var minU = Infinity;
+                sezioni.forEach(function(sez, si){
+                  if(sez.usate < minU && sez.usate < tetto){ minU = sez.usate; bestSez = si; }
+                });
+                bestPar = null;
+              }
+              if(bestSez < 0){ cont.appendChild(creaFigura(slide,i)); return; }
+              piazzaInSezione(sezioni[bestSez], slide, i, bestPar);
             });
           } else {
-            var passo = Math.max(2, Math.floor(paragrafi.length / slides.length) || 2);
+            // senza titoli OCR: giro round-robin sulle sezioni, in ordine
             slides.forEach(function(slide,i){
-              var idx=i*passo;
-              if(idx<paragrafi.length) paragrafi[idx].el.parentNode.insertBefore(creaFigura(slide,i), paragrafi[idx].el);
-              else cont.appendChild(creaFigura(slide,i));
+              var si = Math.min(sezioni.length-1, Math.floor(i * sezioni.length / slides.length));
+              // se la sezione ideale e' piena, avanti alla prossima con posto
+              var giri = 0;
+              while(sezioni[si].usate >= tetto && giri < sezioni.length){ si=(si+1)%sezioni.length; giri++; }
+              piazzaInSezione(sezioni[si], slide, i, null);
             });
           }
         }
