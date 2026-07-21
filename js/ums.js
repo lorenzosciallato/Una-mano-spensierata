@@ -800,9 +800,9 @@ if (!fileDaCaricare) {
             document.getElementById('dyn-title').innerText =
                 umsInfo.nome || data.titolo_lezione || "";
             document.getElementById('dyn-subtitle').innerText =
-                (umsInfo.n ? 'Lezione ' + umsInfo.n + ' \u00B7 ' : '') +
-                (umsArgomento || data.sottotitolo || "");
-
+                (data.sottotitolo && data.sottotitolo.trim())
+                    ? data.sottotitolo
+                    : (umsInfo.n ? 'Lezione ' + umsInfo.n + ' \u00B7 ' : '') + umsArgomento;
             // --- SEZIONE 01: ORIENTAMENTO (Gestione Annidata) ---
             try { // BLINDATURA
             if (data.orientamento) {
