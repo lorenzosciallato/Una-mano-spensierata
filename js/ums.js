@@ -547,7 +547,11 @@ if (!fileDaCaricare) {
                 // decodeURIComponent gestisce correttamente gli slash e gli spazi nel percorso
                 const response = await fetch(decodeURIComponent(fileDaCaricare));
                 
-                if (!response.ok) throw new Error("File lezione non trovato al percorso: " + fileDaCaricare);
+                if (!response.ok) {
+                    const err404 = new Error("File lezione non trovato al percorso: " + fileDaCaricare);
+                    err404.umsMancante = (response.status === 404);
+                    throw err404;
+                }
                 
                 const data = await response.json();
                 
@@ -582,18 +586,53 @@ if (!fileDaCaricare) {
                     setupDownloadButtons();
                 } catch (e) { console.error('Setup interfaccia:', e); }
             } catch (error) {
-                // DIAGNOSTICA IN PAGINA — niente più errori muti: il messaggio
-                // reale e la build in esecuzione compaiono sotto il titolo.
                 console.error("Errore nel caricamento:", error);
-                document.getElementById('dyn-title').innerText = "Lezione non disponibile";
-                document.getElementById('dyn-subtitle').textContent = ''; // PUNTO 2 — via lo skeleton
-                try {
-                    const diag = document.createElement('div');
-                    diag.style.cssText = 'max-width:640px;margin:0.8rem auto 0;padding:10px 16px;border:1px solid #B4573E;border-radius:8px;font-family:monospace;font-size:0.72rem;line-height:1.6;color:#B4573E;background:rgba(180,87,62,0.06);text-align:left;word-break:break-word;';
-                    diag.textContent = '[build v10] ' + (error && error.stack ? error.stack.split('\n').slice(0, 2).join(' \u2014 ') : String(error));
-                    const st = document.getElementById('dyn-subtitle');
-                    if (st && st.parentNode) st.parentNode.insertBefore(diag, st.nextSibling);
-                } catch (e2) {}
+
+                // LEZIONE MANCANTE (404) — copy "Mannaggia!" + invito al gruppo
+                // WhatsApp. Ogni ALTRO errore (JSON rotto, rete, ecc.) tiene la
+                // diagnostica tecnica: sono casi diversi e vanno detti diversi.
+                if (error && error.umsMancante) {
+                    const umsM = umsInfoDaUrl();
+                    document.getElementById('dyn-title').innerText =
+                        umsM.nome || "Lezione in arrivo";
+                    document.getElementById('dyn-subtitle').innerText =
+                        umsM.n ? 'Lezione ' + umsM.n : '';
+                    try {
+                        const WA = 'https://chat.whatsapp.com/EaX5kr14XxHL9o3qxdDVEP?mode=gi_t';
+                        const box = document.createElement('div');
+                        box.style.cssText = 'max-width:560px;margin:2.2rem auto 0;padding:2rem 1.8rem;' +
+                            'border:1px solid var(--dust,#E8E4DC);border-radius:20px;background:#fff;' +
+                            'box-shadow:0 4px 20px rgba(15,17,23,0.06);text-align:center;';
+                        box.innerHTML =
+                            '<div style="font-size:2.4rem;line-height:1;margin-bottom:.6rem">\uD83D\uDE45</div>' +
+                            '<p style="font-family:var(--font-display,Georgia,serif);font-size:1.4rem;' +
+                            'color:var(--ink,#1C1C22);margin:0 0 .8rem">Mannaggia!</p>' +
+                            '<p style="color:var(--body,#3D3C3A);line-height:1.6;margin:0 0 1.4rem">' +
+                            'Non ho il materiale di questa lezione, quindi non sono ancora riuscito a ' +
+                            'spensierizzarla. Se invece tu ce l\u2019hai, scrivimi: la aggiungiamo insieme!</p>' +
+                            '<a href="' + WA + '" target="_blank" rel="noopener" ' +
+                            'style="display:inline-flex;align-items:center;gap:10px;background:var(--gold,#C8A96E);' +
+                            'color:#2A2113;text-decoration:none;font-family:var(--font-body,sans-serif);' +
+                            'font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:.82rem;' +
+                            'padding:.95rem 1.6rem;border-radius:999px;box-shadow:0 10px 30px rgba(200,169,110,.35)">' +
+                            'Scrivimi sul gruppo WhatsApp</a>';
+                        const card = document.querySelector('.content-card') || document.body;
+                        card.appendChild(box);
+                        // apri la card: senza, lo splash resta bloccato e il box non si vede
+                        document.body.classList.add('ums-master-open');
+                    } catch (e2) {}
+                } else {
+                    // DIAGNOSTICA IN PAGINA — errori veri (non un 404)
+                    document.getElementById('dyn-title').innerText = "Lezione non disponibile";
+                    document.getElementById('dyn-subtitle').textContent = '';
+                    try {
+                        const diag = document.createElement('div');
+                        diag.style.cssText = 'max-width:640px;margin:0.8rem auto 0;padding:10px 16px;border:1px solid #B4573E;border-radius:8px;font-family:monospace;font-size:0.72rem;line-height:1.6;color:#B4573E;background:rgba(180,87,62,0.06);text-align:left;word-break:break-word;';
+                        diag.textContent = '[build v10] ' + (error && error.stack ? error.stack.split('\n').slice(0, 2).join(' \u2014 ') : String(error));
+                        const st = document.getElementById('dyn-subtitle');
+                        if (st && st.parentNode) st.parentNode.insertBefore(diag, st.nextSibling);
+                    } catch (e2) {}
+                }
             }
 
             // ... (il resto del tuo codice init rimane invariato)
@@ -800,9 +839,9 @@ if (!fileDaCaricare) {
             document.getElementById('dyn-title').innerText =
                 umsInfo.nome || data.titolo_lezione || "";
             document.getElementById('dyn-subtitle').innerText =
-                (data.sottotitolo && data.sottotitolo.trim())
-                    ? data.sottotitolo
-                    : (umsInfo.n ? 'Lezione ' + umsInfo.n + ' \u00B7 ' : '') + umsArgomento;
+                (umsInfo.n ? 'Lezione ' + umsInfo.n + ' \u00B7 ' : '') +
+                (umsArgomento || data.sottotitolo || "");
+
             // --- SEZIONE 01: ORIENTAMENTO (Gestione Annidata) ---
             try { // BLINDATURA
             if (data.orientamento) {
