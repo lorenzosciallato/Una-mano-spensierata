@@ -3397,3 +3397,14 @@ body.night-mode .ums-fb-q{ color: #918E86; }
 body.night-mode .ums-fb-si{ background: rgba(91,154,107,.20); border-color: #5B9A6B; color: #8FC79E; }
 body.night-mode .ums-fb-no{ background: rgba(192,103,79,.20); border-color: #C0674F; color: #E0937E; }
 body.night-mode .ums-fb-done{ color: #D9BC85; }
+/* ====================================================================
+   FIX PULSANTI MORTI (Blocco 4) — l'header è fisso, centrato a 40svh
+   e con z-index 999997: con titoli/sottotitoli lunghi il suo box si
+   allungava fino a coprire la riga INIZIA/Sostieni e mangiava i click.
+   Il testo dell'header ora è trasparente ai click; restano cliccabili
+   solo gli elementi davvero interattivi (badge, selettore lingua).
+   ==================================================================== */
+header{ pointer-events: none; }
+header a,
+header button,
+header #custom-lang-selector{ pointer-events: auto; }
