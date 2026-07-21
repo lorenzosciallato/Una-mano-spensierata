@@ -1002,14 +1002,20 @@
          Genera il PDF con la stampa del browser (iframe nascosto, come
          wbExportPDF). Testo prima, tutte le slide dopo. -->
     <style>
-      #ums-print-btn{display:inline-flex;align-items:center;gap:.5rem;
-        font-family:var(--font-sans,'DM Sans',sans-serif);font-weight:600;font-size:.82rem;
-        padding:.5rem .95rem;border-radius:999px;border:1px solid var(--gold-lt,#e5d6bd);
-        background:#fff;color:var(--navy,#22365f);cursor:pointer;margin-left:.4rem;
-        transition:background .15s ease,box-shadow .15s ease}
-      #ums-print-btn:hover{background:var(--ivory-2,#efebe2);box-shadow:0 3px 12px rgba(0,0,0,.08)}
-      #ums-print-btn svg{width:1.05em;height:1.05em}
-      body.night-mode #ums-print-btn{background:#20232b;color:#c9c9d2;border-color:#3a3f4b}
+      #ums-print-btn{display:inline-flex;align-items:center;gap:.55rem;
+        font-family:var(--font-sans,'DM Sans',sans-serif);font-weight:700;font-size:.82rem;
+        letter-spacing:.08em;text-transform:uppercase;
+        padding:.7rem 1.4rem;border-radius:999px;border:none;
+        background:var(--gold,#c8a96e);color:#2a2113;cursor:pointer;
+        box-shadow:0 8px 24px rgba(200,169,110,.35);
+        transition:transform .2s cubic-bezier(.2,.8,.2,1),box-shadow .2s,background-color .2s}
+      #ums-print-btn:hover{transform:translateY(-2px);background:var(--gold-lt,#e8d5aa);
+        box-shadow:0 14px 34px rgba(200,169,110,.45)}
+      #ums-print-btn svg{width:1.15em;height:1.15em}
+      body.night-mode #ums-print-btn{background:var(--gold,#c8a96e);color:#2a2113}
+      /* la barra del riassuntone: toggle a sinistra, stampa spinto a destra */
+      #ums-slide-toggle-box .ums-slide-toggle{align-items:center}
+      #ums-slide-toggle-box #ums-print-btn{margin-left:auto}
 
       #ums-pdf-overlay{display:none;position:fixed;inset:0;z-index:99999999;
         background:rgba(15,17,23,.55);align-items:center;justify-content:center;padding:5vw}
@@ -1047,12 +1053,18 @@
       var datiLezione = null;
       fetch(file).then(function(r){return r.json();}).then(function(d){ datiLezione = d; }).catch(function(){});
 
-      // aspetta che il riassuntone sia montato, poi aggancia il pulsante
+      // aspetta che il riassuntone sia montato, poi aggancia il pulsante.
+      // Se la lezione HA slide, aspetto anche la barra dei toggle (montata dal
+      // blocco slide) per non creare una barra doppia; se NON ha slide, dopo un
+      // po' rinuncio ad aspettarla e metto il pulsante da solo.
       var tries=0;
       (function attendi(){
-        var barra = document.getElementById('ums-slide-toggle-box');
-        var cont  = document.getElementById('dyn-riassuntone-container');
+        var cont = document.getElementById('dyn-riassuntone-container');
         if(!cont){ if(tries++<100){ setTimeout(attendi,200); } return; }
+        var haSlide = datiLezione && (Array.isArray(datiLezione.slide) && datiLezione.slide.length ||
+                                      Array.isArray(datiLezione.slides) && datiLezione.slides.length);
+        var barra = document.getElementById('ums-slide-toggle-box');
+        if(haSlide && !barra && tries++<100){ setTimeout(attendi,200); return; } // aspetto la barra slide
         montaPulsante(barra, cont);
       })();
 
@@ -1062,13 +1074,25 @@
         btn.id='ums-print-btn'; btn.type='button';
         btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg> Stampa / PDF';
         btn.addEventListener('click', apriPopup);
-        // se c'è la barra dei toggle slide, ci metto il pulsante accanto;
-        // altrimenti (lezione senza slide) creo una mini-barra sopra il testo.
-        if(barra){ barra.querySelector('.ums-slide-toggle').appendChild(btn); }
-        else {
-          var mini=document.createElement('div'); mini.id='ums-slide-toggle-box';
-          mini.style.cssText='margin:0 0 1.2rem';
+        // se c'è la barra dei toggle slide, ci metto il pulsante accanto (spinto
+        // a destra dal CSS); altrimenti creo una mini-barra sopra il testo.
+        if(barra && barra.querySelector('.ums-slide-toggle')){
+          barra.querySelector('.ums-slide-toggle').appendChild(btn);
+        } else {
+          var mini=document.createElement('div'); mini.id='ums-print-bar';
+          mini.style.cssText='margin:0 0 1.2rem;display:flex';
           mini.appendChild(btn); cont.parentElement.insertBefore(mini, cont);
+          // se la barra dei toggle slide compare più tardi, ci sposto dentro il
+          // pulsante e rimuovo la mini-barra (niente doppia riga).
+          var att=0;
+          var iv=setInterval(function(){
+            var b=document.getElementById('ums-slide-toggle-box');
+            if(b && b.querySelector('.ums-slide-toggle')){
+              b.querySelector('.ums-slide-toggle').appendChild(btn);
+              if(mini.parentNode) mini.parentNode.removeChild(mini);
+              clearInterval(iv);
+            } else if(att++>50){ clearInterval(iv); }
+          },200);
         }
       }
 
