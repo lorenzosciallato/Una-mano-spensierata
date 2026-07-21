@@ -796,7 +796,7 @@
          stile pagina enciclopedica: il testo le scorre attorno. Si alterna
          destra/sinistra tramite le classi .flo-dx / .flo-sx. */
       figure.ums-slide-fig{
-        margin:.35rem 0 1rem; width:min(300px,42%);
+        margin:.35rem 0 1rem; width:min(360px,48%);
         background:#faf7f1;border:1px solid var(--gold-lt,#e5d6bd);
         border-radius:12px;padding:.5rem;cursor:zoom-in;
         transition:transform .15s ease,box-shadow .15s ease;
@@ -814,13 +814,22 @@
       }
       /* modalità "solo testo": le figure spariscono, il testo si ricompatta */
       .ums-riass-solotesto figure.ums-slide-fig{display:none}
+      /* modalità "solo slide": sparisce il testo, le figure diventano una
+         griglia ordinata (il float non ha senso senza testo attorno) */
+      .ums-riass-soloslide > :not(figure.ums-slide-fig){display:none}
+      .ums-riass-soloslide{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem}
+      .ums-riass-soloslide figure.ums-slide-fig{float:none !important;width:100%;margin:0}
 
-      /* lightbox a schermo intero (invariato) */
+      /* lightbox a schermo intero */
       .ums-slide-lb{position:fixed;inset:0;z-index:9999;background:rgba(10,10,14,.9);
         display:none;align-items:center;justify-content:center;padding:2vh 2vw}
       .ums-slide-lb.on{display:flex}
       .ums-slide-lb img{max-width:96vw;max-height:92vh;border-radius:8px;box-shadow:0 10px 40px rgba(0,0,0,.5)}
-      .ums-slide-lb .lb-x{position:absolute;top:12px;right:18px;font-size:2.2rem;color:#fff;background:none;border:none;cursor:pointer;line-height:1}
+      .ums-slide-lb .lb-x{position:absolute;top:16px;right:18px;width:44px;height:44px;
+        font-size:1.8rem;color:#fff;background:rgba(0,0,0,.55);border:1.5px solid rgba(255,255,255,.7);
+        border-radius:50%;cursor:pointer;line-height:1;display:flex;align-items:center;justify-content:center;
+        transition:background .15s ease,transform .15s ease}
+      .ums-slide-lb .lb-x:hover{background:rgba(0,0,0,.85);transform:scale(1.08)}
       .ums-slide-lb .lb-nav{position:absolute;top:50%;transform:translateY(-50%);font-size:2.6rem;color:#fff;background:none;border:none;cursor:pointer;padding:0 14px;user-select:none}
       .ums-slide-lb .lb-prev{left:4px}.ums-slide-lb .lb-next{right:4px}
       body.night-mode .ums-slide-toggle button{background:#20232b;color:#c9c9d2;border-color:#3a3f4b}
@@ -845,12 +854,13 @@
       function monta(cont, slides){
         if(document.getElementById('ums-slide-toggle-box')) return;
 
-        // Interruttore Solo testo / Testo + slide (sopra il riassuntone).
+        // Interruttore Solo testo / Testo + slide / Solo slide.
         var box = document.createElement('div'); box.id='ums-slide-toggle-box';
         var tg = document.createElement('div'); tg.className='ums-slide-toggle';
         var bText  = document.createElement('button'); bText.textContent='Solo testo';
         var bSlide = document.createElement('button'); bSlide.textContent='Testo + slide'; bSlide.className='on';
-        tg.appendChild(bText); tg.appendChild(bSlide);
+        var bOnly  = document.createElement('button'); bOnly.textContent='Solo slide';
+        tg.appendChild(bText); tg.appendChild(bSlide); tg.appendChild(bOnly);
         box.appendChild(tg);
         cont.parentElement.insertBefore(box, cont);
 
@@ -878,13 +888,13 @@
 
         // DISTRIBUZIONE FLOTTANTE — le slide vengono infilate come <figure>
         // prima di alcuni <p> del riassuntone, alternando destra/sinistra.
-        // Passo calcolato per spargerle su tutto il testo; se i paragrafi
-        // sono meno delle slide, le rimanenti vanno in coda a piena riga.
+        // I paragrafi dentro i box Check Point (.cornell-box) sono ESCLUSI:
+        // quella sezione resta pulita, senza immagini.
         function distribuisci(){
-          var paragrafi = Array.from(cont.querySelectorAll('p'));
+          var paragrafi = Array.from(cont.querySelectorAll('p'))
+            .filter(function(p){ return !p.closest('.cornell-box'); });
           if(!paragrafi.length){ return false; }
           var passo = Math.max(2, Math.floor(paragrafi.length / slides.length) || 2);
-          var usati = 0;
           slides.forEach(function(src,i){
             var fig=document.createElement('figure');
             fig.className='ums-slide-fig '+(i%2===0?'flo-dx':'flo-sx');
@@ -895,7 +905,6 @@
             var idx = i*passo;
             if(idx < paragrafi.length){
               paragrafi[idx].parentNode.insertBefore(fig, paragrafi[idx]);
-              usati++;
             } else {
               cont.appendChild(fig);
             }
@@ -904,15 +913,17 @@
         }
         distribuisci();
 
-        // Toggle: la classe sul container fa sparire/riapparire le figure.
-        bText.addEventListener('click', function(){
-          bText.classList.add('on'); bSlide.classList.remove('on');
-          cont.classList.add('ums-riass-solotesto');
-        });
-        bSlide.addEventListener('click', function(){
-          bSlide.classList.add('on'); bText.classList.remove('on');
-          cont.classList.remove('ums-riass-solotesto');
-        });
+        // Toggle a tre stati: classi sul container decidono cosa si vede.
+        function modo(quale){
+          cont.classList.remove('ums-riass-solotesto','ums-riass-soloslide');
+          bText.classList.remove('on'); bSlide.classList.remove('on'); bOnly.classList.remove('on');
+          if(quale==='testo'){ cont.classList.add('ums-riass-solotesto'); bText.classList.add('on'); }
+          else if(quale==='slide'){ cont.classList.add('ums-riass-soloslide'); bOnly.classList.add('on'); }
+          else { bSlide.classList.add('on'); }
+        }
+        bText.addEventListener('click', function(){ modo('testo'); });
+        bSlide.addEventListener('click', function(){ modo('misto'); });
+        bOnly.addEventListener('click', function(){ modo('slide'); });
       }
     })();
     </script>
