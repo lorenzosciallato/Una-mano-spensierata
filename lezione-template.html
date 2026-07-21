@@ -803,12 +803,16 @@
       }
       figure.ums-slide-fig.flo-dx{float:right;margin-left:1.4rem;clear:right}
       figure.ums-slide-fig.flo-sx{float:left; margin-right:1.4rem;clear:left}
+      /* GRANDE — ogni 4ª slide, a piena colonna (effetto libro di testo):
+         non flottante, centrata, larga; il testo NON le scorre attorno. */
+      figure.ums-slide-fig.flo-full{float:none;clear:both;width:100%;max-width:100%;
+        margin:1.4rem auto;display:block}
       figure.ums-slide-fig:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(0,0,0,.14)}
       figure.ums-slide-fig img{width:100%;display:block;border-radius:8px;aspect-ratio:16/9;object-fit:cover}
       /* SHIMMER — placeholder animato finché l'immagine non ha finito di
          caricare (le slide arrivano da R2 e possono metterci un attimo). */
-      figure.ums-slide-fig.caricando{position:relative;min-height:120px}
-      figure.ums-slide-fig.caricando img{opacity:0}
+      figure.ums-slide-fig.caricando{position:relative}
+      figure.ums-slide-fig.caricando img{opacity:0;aspect-ratio:16/9;min-height:150px}
       figure.ums-slide-fig.caricando::after{
         content:"";position:absolute;inset:.5rem;border-radius:8px;pointer-events:none;
         background:linear-gradient(100deg,#ece7dd 30%,#f6f2ea 50%,#ece7dd 70%);
@@ -926,20 +930,21 @@
 
         function creaFigura(slide, i){
           var fig=document.createElement('figure');
-          fig.className='ums-slide-fig caricando '+(i%2===0?'flo-dx':'flo-sx');
+          // ogni 4ª slide (la 4ª, l'8ª...) diventa GRANDE a piena colonna,
+          // effetto libro di testo; le altre restano flottanti alternate dx/sx.
+          var cls;
+          if((i+1) % 4 === 0){ cls='flo-full'; }
+          else { cls = (i%2===0 ? 'flo-dx' : 'flo-sx'); }
+          fig.className='ums-slide-fig caricando '+cls;
           var im=document.createElement('img'); im.src=slide.url;
-          im.alt=slide.titolo||('Slide '+(i+1)); im.loading='lazy';
-          // Tolgo lo shimmer quando l'immagine è pronta (o se fallisce, per
-          // non lasciare il placeholder che pulsa all'infinito).
+          im.alt=slide.titolo||('Slide '+(i+1));
+          // NIENTE lazy: le slide devono iniziare a caricare subito, così lo
+          // shimmer è un vero "sta arrivando" e non un buco che sembra rotto.
+          // Lo shimmer resta finché l'immagine non è DAVVERO pronta (load) o
+          // fallisce (error) — nessun timeout che lo spenga lasciando il vuoto.
           function pronto(){ fig.classList.remove('caricando'); }
           if(im.complete && im.naturalWidth>0){ pronto(); }
-          else {
-            im.addEventListener('load', pronto); im.addEventListener('error', pronto);
-            // rete di sicurezza: col lazy-load l'evento 'load' può non scattare
-            // finché la figura non entra nel viewport → tolgo lo shimmer dopo 4s
-            // comunque, così il velo non resta mai sopra a mangiare i click.
-            setTimeout(pronto, 4000);
-          }
+          else { im.addEventListener('load', pronto); im.addEventListener('error', pronto); }
           fig.appendChild(im);
           // Nessuna didascalia visibile: il titolo OCR serve SOLO ad abbinare
           // la slide al paragrafo giusto (l'OCR del testo piccolo è inaffidabile
