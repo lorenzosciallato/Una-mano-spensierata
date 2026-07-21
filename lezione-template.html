@@ -958,16 +958,34 @@
           return fig;
         }
 
-        // DISTRIBUZIONE — se le slide hanno un titolo OCR, ABBINO ogni slide al
-        // paragrafo del riassuntone che condivide più parole col titolo (i box
-        // Check Point restano esclusi). Senza titoli, ripiego sul passo fisso
-        // di prima. Un paragrafo ospita al massimo una slide: se il migliore è
-        // già preso, scalo al successivo libero.
+        // DISTRIBUZIONE v2 — abbinamento per contenuto migliorato:
+        // (a) oltre alle parole del paragrafo peso anche il titolo <h3> della
+        //     sezione a cui appartiene (aiuta quando il paragrafo non ripete
+        //     le parole del titolo-slide);
+        // (b) se una slide non matcha NIENTE va in posizione PROPORZIONALE
+        //     (slide 5 di 10 -> meta' testo), non piu' in cima al documento.
         function distribuisci(){
-          var paragrafi = Array.from(cont.querySelectorAll('p'))
-            .filter(function(p){ return !p.closest('.cornell-box'); });
+          var paragrafi = [];
+          var sezione = '';
+          Array.prototype.forEach.call(cont.children, function(el){
+            if(el.tagName === 'H3'){ sezione = el.textContent || ''; }
+            else if(el.tagName === 'P' && !el.closest('.cornell-box')){
+              paragrafi.push({ el: el, sezione: sezione });
+            }
+          });
           if(!paragrafi.length){ return; }
           var conTitolo = slides.filter(function(s){ return s.titolo; }).length;
+
+          function slotProporzionale(i, occupati){
+            var idx = slides.length>1
+              ? Math.round(i * (paragrafi.length-1) / (slides.length-1))
+              : 0;
+            for(var d=0; d<paragrafi.length; d++){
+              if(idx-d>=0 && !occupati[idx-d]) return idx-d;
+              if(idx+d<paragrafi.length && !occupati[idx+d]) return idx+d;
+            }
+            return -1;
+          }
 
           if(conTitolo >= Math.ceil(slides.length/2)){
             var occupati = {};
@@ -976,21 +994,19 @@
               var best=-1, bestScore=0;
               paragrafi.forEach(function(p,idx){
                 if(occupati[idx]) return;
-                var s = punteggio(tw, p.textContent);
+                var s = punteggio(tw, p.el.textContent)*2 + punteggio(tw, p.sezione);
                 if(s>bestScore){ bestScore=s; best=idx; }
               });
-              if(best<0){ // nessuna parola in comune: primo paragrafo libero
-                for(var j=0;j<paragrafi.length;j++){ if(!occupati[j]){ best=j; break; } }
-              }
+              if(bestScore===0){ best = slotProporzionale(i, occupati); }
               if(best<0){ cont.appendChild(creaFigura(slide,i)); return; }
               occupati[best]=true;
-              paragrafi[best].parentNode.insertBefore(creaFigura(slide,i), paragrafi[best]);
+              paragrafi[best].el.parentNode.insertBefore(creaFigura(slide,i), paragrafi[best].el);
             });
           } else {
             var passo = Math.max(2, Math.floor(paragrafi.length / slides.length) || 2);
             slides.forEach(function(slide,i){
               var idx=i*passo;
-              if(idx<paragrafi.length) paragrafi[idx].parentNode.insertBefore(creaFigura(slide,i), paragrafi[idx]);
+              if(idx<paragrafi.length) paragrafi[idx].el.parentNode.insertBefore(creaFigura(slide,i), paragrafi[idx].el);
               else cont.appendChild(creaFigura(slide,i));
             });
           }
