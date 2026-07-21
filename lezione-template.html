@@ -869,7 +869,12 @@
         var tries=0;
         (function attendi(){
           var cont = document.getElementById('dyn-riassuntone-container');
-          if(!cont){ if(tries++<80){ setTimeout(attendi,200); } return; }
+          // il contenitore esiste VUOTO fin dal primo istante: aspettare solo
+          // lui era una lotteria (se questo script batteva ums.js, trovava zero
+          // paragrafi e usciva senza montare nulla). Si aspetta il TESTO.
+          if(!cont || !cont.querySelector('p')){
+            if(tries++<200){ setTimeout(attendi,150); } return;
+          }
           monta(cont, slides);
         })();
       }).catch(function(){});
