@@ -825,11 +825,11 @@
         display:none;align-items:center;justify-content:center;padding:2vh 2vw}
       .ums-slide-lb.on{display:flex}
       .ums-slide-lb img{max-width:96vw;max-height:92vh;border-radius:8px;box-shadow:0 10px 40px rgba(0,0,0,.5)}
-      .ums-slide-lb .lb-x{position:absolute;top:16px;right:18px;width:44px;height:44px;
-        font-size:1.8rem;color:#fff;background:rgba(0,0,0,.55);border:1.5px solid rgba(255,255,255,.7);
+      .ums-slide-lb .lb-x{position:absolute;top:16px;right:18px;z-index:10001;width:48px;height:48px;
+        font-size:2rem;color:#fff;background:rgba(0,0,0,.6);border:2px solid #fff;
         border-radius:50%;cursor:pointer;line-height:1;display:flex;align-items:center;justify-content:center;
-        transition:background .15s ease,transform .15s ease}
-      .ums-slide-lb .lb-x:hover{background:rgba(0,0,0,.85);transform:scale(1.08)}
+        transition:background .15s ease,transform .15s ease;box-shadow:0 2px 12px rgba(0,0,0,.5)}
+      .ums-slide-lb .lb-x:hover{background:#c0392b;transform:scale(1.08)}
       .ums-slide-lb .lb-nav{position:absolute;top:50%;transform:translateY(-50%);font-size:2.6rem;color:#fff;background:none;border:none;cursor:pointer;padding:0 14px;user-select:none}
       .ums-slide-lb .lb-prev{left:4px}.ums-slide-lb .lb-next{right:4px}
       body.night-mode .ums-slide-toggle button{background:#20232b;color:#c9c9d2;border-color:#3a3f4b}
@@ -841,8 +841,16 @@
       function param(k){ try{return new URLSearchParams(location.search).get(k);}catch(e){return null;} }
       var file = param('file'); if(!file) return;
       fetch(file).then(function(r){return r.json();}).then(function(d){
-        var slides = d && (d.slide || d.slides);
-        if(!Array.isArray(slides) || !slides.length) return;   // niente campo slide = lezione invariata
+        var grezze = d && (d.slide || d.slides);
+        if(!Array.isArray(grezze) || !grezze.length) return;   // niente campo slide = lezione invariata
+        // NORMALIZZAZIONE: due formati convivono.
+        //  - vecchio: "https://.../slide-1.jpg"           (stringa, senza titolo)
+        //  - nuovo:   {url:"...", titolo:"La Parola ..."}  (con titolo OCR)
+        var slides = grezze.map(function(s){
+          if(typeof s === 'string') return { url:s, titolo:'' };
+          return { url:(s && s.url) || '', titolo:(s && s.titolo) || '' };
+        }).filter(function(s){ return s.url; });
+        if(!slides.length) return;
         var tries=0;
         (function attendi(){
           var cont = document.getElementById('dyn-riassuntone-container');
@@ -850,6 +858,25 @@
           monta(cont, slides);
         })();
       }).catch(function(){});
+
+      // ---- utilità per l'abbinamento titolo-slide ↔ paragrafo ----
+      var STOP = {'di':1,'a':1,'da':1,'in':1,'con':1,'su':1,'per':1,'tra':1,'fra':1,
+        'il':1,'lo':1,'la':1,'i':1,'gli':1,'le':1,'un':1,'uno':1,'una':1,'e':1,'ed':1,
+        'o':1,'che':1,'come':1,'del':1,'dello':1,'della':1,'dei':1,'degli':1,'delle':1,
+        'al':1,'allo':1,'alla':1,'nel':1,'nella':1,'sul':1,'sulla':1,'si':1,'non':1,'è':1};
+      function parole(t){
+        return (t||'').toLowerCase()
+          .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+          .replace(/[^a-z0-9\s]/g,' ').split(/\s+/)
+          .filter(function(w){ return w.length>2 && !STOP[w]; });
+      }
+      function punteggio(titoloWords, paragrafo){
+        if(!titoloWords.length) return 0;
+        var testo = ' ' + parole(paragrafo).join(' ') + ' ';
+        var n=0;
+        titoloWords.forEach(function(w){ if(testo.indexOf(' '+w+' ')>=0) n++; });
+        return n;
+      }
 
       function monta(cont, slides){
         if(document.getElementById('ums-slide-toggle-box')) return;
@@ -872,7 +899,7 @@
                      '<button class="lb-nav lb-next" aria-label="Successiva">&#8250;</button>';
         document.body.appendChild(lb);
         var lbImg=lb.querySelector('img'), cur=0;
-        function mostra(i){ cur=(i+slides.length)%slides.length; lbImg.src=slides[cur]; }
+        function mostra(i){ cur=(i+slides.length)%slides.length; lbImg.src=slides[cur].url; }
         function apri(i){ mostra(i); lb.classList.add('on'); }
         function chiudi(){ lb.classList.remove('on'); }
         lb.querySelector('.lb-x').addEventListener('click', chiudi);
@@ -886,30 +913,57 @@
           else if(e.key==='ArrowRight') mostra(cur+1);
         });
 
-        // DISTRIBUZIONE FLOTTANTE — le slide vengono infilate come <figure>
-        // prima di alcuni <p> del riassuntone, alternando destra/sinistra.
-        // I paragrafi dentro i box Check Point (.cornell-box) sono ESCLUSI:
-        // quella sezione resta pulita, senza immagini.
+        function creaFigura(slide, i){
+          var fig=document.createElement('figure');
+          fig.className='ums-slide-fig '+(i%2===0?'flo-dx':'flo-sx');
+          var im=document.createElement('img'); im.src=slide.url;
+          im.alt=slide.titolo||('Slide '+(i+1)); im.loading='lazy';
+          fig.appendChild(im);
+          // didascalia SOLO se c'è un titolo OCR; niente più "Slide N".
+          if(slide.titolo){
+            var cap=document.createElement('figcaption'); cap.textContent=slide.titolo;
+            fig.appendChild(cap);
+          }
+          fig.addEventListener('click', function(){ apri(i); });
+          return fig;
+        }
+
+        // DISTRIBUZIONE — se le slide hanno un titolo OCR, ABBINO ogni slide al
+        // paragrafo del riassuntone che condivide più parole col titolo (i box
+        // Check Point restano esclusi). Senza titoli, ripiego sul passo fisso
+        // di prima. Un paragrafo ospita al massimo una slide: se il migliore è
+        // già preso, scalo al successivo libero.
         function distribuisci(){
           var paragrafi = Array.from(cont.querySelectorAll('p'))
             .filter(function(p){ return !p.closest('.cornell-box'); });
-          if(!paragrafi.length){ return false; }
-          var passo = Math.max(2, Math.floor(paragrafi.length / slides.length) || 2);
-          slides.forEach(function(src,i){
-            var fig=document.createElement('figure');
-            fig.className='ums-slide-fig '+(i%2===0?'flo-dx':'flo-sx');
-            var im=document.createElement('img'); im.src=src; im.alt='Slide '+(i+1); im.loading='lazy';
-            var cap=document.createElement('figcaption'); cap.textContent='Slide '+(i+1);
-            fig.appendChild(im); fig.appendChild(cap);
-            fig.addEventListener('click', function(){ apri(i); });
-            var idx = i*passo;
-            if(idx < paragrafi.length){
-              paragrafi[idx].parentNode.insertBefore(fig, paragrafi[idx]);
-            } else {
-              cont.appendChild(fig);
-            }
-          });
-          return true;
+          if(!paragrafi.length){ return; }
+          var conTitolo = slides.filter(function(s){ return s.titolo; }).length;
+
+          if(conTitolo >= Math.ceil(slides.length/2)){
+            var occupati = {};
+            slides.forEach(function(slide,i){
+              var tw = parole(slide.titolo);
+              var best=-1, bestScore=0;
+              paragrafi.forEach(function(p,idx){
+                if(occupati[idx]) return;
+                var s = punteggio(tw, p.textContent);
+                if(s>bestScore){ bestScore=s; best=idx; }
+              });
+              if(best<0){ // nessuna parola in comune: primo paragrafo libero
+                for(var j=0;j<paragrafi.length;j++){ if(!occupati[j]){ best=j; break; } }
+              }
+              if(best<0){ cont.appendChild(creaFigura(slide,i)); return; }
+              occupati[best]=true;
+              paragrafi[best].parentNode.insertBefore(creaFigura(slide,i), paragrafi[best]);
+            });
+          } else {
+            var passo = Math.max(2, Math.floor(paragrafi.length / slides.length) || 2);
+            slides.forEach(function(slide,i){
+              var idx=i*passo;
+              if(idx<paragrafi.length) paragrafi[idx].parentNode.insertBefore(creaFigura(slide,i), paragrafi[idx]);
+              else cont.appendChild(creaFigura(slide,i));
+            });
+          }
         }
         distribuisci();
 
