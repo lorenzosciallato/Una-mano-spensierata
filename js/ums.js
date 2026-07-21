@@ -608,13 +608,44 @@ if (!fileDaCaricare) {
                             '<p style="font-family:var(--font-display,Georgia,serif);font-size:1.4rem;' +
                             'color:var(--ink,#1C1C22);margin:0 0 .8rem">Mannaggia!</p>' +
                             '<p style="color:var(--body,#3D3C3A);line-height:1.6;margin:0 0 1.4rem">' +
-                            'Non ho il materiale di questa lezione! Se invece tu ce l\u2019hai, scrivimi: la aggiungiamo insieme!</p>' +
+                            'Non ho il materiale di questa lezione! Se invece tu ce l\u2019hai, ' +
+                            'scrivimi: la aggiungiamo insieme!</p>' +
                             '<a href="' + WA + '" target="_blank" rel="noopener" ' +
                             'style="display:inline-flex;align-items:center;gap:10px;background:var(--gold,#C8A96E);' +
                             'color:#2A2113;text-decoration:none;font-family:var(--font-body,sans-serif);' +
                             'font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:.82rem;' +
                             'padding:.95rem 1.6rem;border-radius:999px;box-shadow:0 10px 30px rgba(200,169,110,.35)">' +
                             'Scrivimi sul gruppo WhatsApp</a>';
+
+                        // Frecce prev/succ: senza, la lezione mancante è un
+                        // vicolo cieco. Costruisco gli URL vicini dallo stesso
+                        // ?file= e mostro solo le lezioni >= 1.
+                        try {
+                            const p = new URLSearchParams(location.search).get('file') || '';
+                            const dec = decodeURIComponent(p);
+                            const mm = dec.match(/(\d+)(\.json)$/i);
+                            if (mm) {
+                                const curN = parseInt(mm[1], 10);
+                                const urlN = (nn) => location.pathname + '?file=' +
+                                    encodeURIComponent(dec.replace(/(\d+)(\.json)$/i, nn + '$2'));
+                                const nav = document.createElement('div');
+                                nav.style.cssText = 'display:flex;gap:12px;justify-content:center;margin:1.6rem 0 0;flex-wrap:wrap;';
+                                if (curN > 1) {
+                                    const a = document.createElement('a');
+                                    a.href = urlN(curN - 1);
+                                    a.textContent = '\u2039 Lezione ' + (curN - 1);
+                                    a.style.cssText = 'text-decoration:none;color:var(--navy,#1A2F4F);font-weight:600;padding:.6rem 1rem;border:1px solid var(--dust,#E8E4DC);border-radius:999px;';
+                                    nav.appendChild(a);
+                                }
+                                const a2 = document.createElement('a');
+                                a2.href = urlN(curN + 1);
+                                a2.textContent = 'Lezione ' + (curN + 1) + ' \u203A';
+                                a2.style.cssText = 'text-decoration:none;color:var(--navy,#1A2F4F);font-weight:600;padding:.6rem 1rem;border:1px solid var(--dust,#E8E4DC);border-radius:999px;';
+                                nav.appendChild(a2);
+                                box.appendChild(nav);
+                            }
+                        } catch (eNav) {}
+
                         const card = document.querySelector('.content-card') || document.body;
                         card.appendChild(box);
                         // apri la card: senza, lo splash resta bloccato e il box non si vede
