@@ -825,10 +825,10 @@
         display:none;align-items:center;justify-content:center;padding:2vh 2vw}
       .ums-slide-lb.on{display:flex}
       .ums-slide-lb img{max-width:96vw;max-height:92vh;border-radius:8px;box-shadow:0 10px 40px rgba(0,0,0,.5)}
-      .ums-slide-lb .lb-x{position:absolute;top:16px;right:18px;z-index:10001;width:48px;height:48px;
-        font-size:2rem;color:#fff;background:rgba(0,0,0,.6);border:2px solid #fff;
+      .ums-slide-lb .lb-x{position:fixed;top:20px;right:24px;z-index:10001;width:52px;height:52px;
+        font-size:2.1rem;color:#fff;background:rgba(20,20,26,.85);border:2px solid #fff;
         border-radius:50%;cursor:pointer;line-height:1;display:flex;align-items:center;justify-content:center;
-        transition:background .15s ease,transform .15s ease;box-shadow:0 2px 12px rgba(0,0,0,.5)}
+        transition:background .15s ease,transform .15s ease;box-shadow:0 3px 16px rgba(0,0,0,.6)}
       .ums-slide-lb .lb-x:hover{background:#c0392b;transform:scale(1.08)}
       .ums-slide-lb .lb-nav{position:absolute;top:50%;transform:translateY(-50%);font-size:2.6rem;color:#fff;background:none;border:none;cursor:pointer;padding:0 14px;user-select:none}
       .ums-slide-lb .lb-prev{left:4px}.ums-slide-lb .lb-next{right:4px}
@@ -919,11 +919,9 @@
           var im=document.createElement('img'); im.src=slide.url;
           im.alt=slide.titolo||('Slide '+(i+1)); im.loading='lazy';
           fig.appendChild(im);
-          // didascalia SOLO se c'è un titolo OCR; niente più "Slide N".
-          if(slide.titolo){
-            var cap=document.createElement('figcaption'); cap.textContent=slide.titolo;
-            fig.appendChild(cap);
-          }
+          // Nessuna didascalia visibile: il titolo OCR serve SOLO ad abbinare
+          // la slide al paragrafo giusto (l'OCR del testo piccolo è inaffidabile
+          // e produceva didascalie troncate tipo "nte non è un recettore...").
           fig.addEventListener('click', function(){ apri(i); });
           return fig;
         }
