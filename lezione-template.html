@@ -1113,6 +1113,15 @@
         font-size:1.5rem;color:var(--navy,#22365f);margin:0 0 .3rem}
       body.night-mode .ums-pdf-card h3{color:#8FB4E8}
       .ums-pdf-card .ums-pdf-sub{color:var(--sub,#7a7770);font-size:.9rem;margin:0 0 1.4rem}
+      .ums-pdf-opt.sel{border-color:var(--gold,#c8a96e);border-width:2px;box-shadow:0 4px 16px rgba(200,169,110,.25)}
+      .ums-pdf-actions{display:flex;gap:.7rem;margin-top:.4rem}
+      .ums-pdf-actions button{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+        font-family:var(--font-sans,'DM Sans',sans-serif);font-weight:700;font-size:.85rem;
+        padding:.8rem 1rem;border-radius:12px;cursor:pointer;border:none;transition:transform .15s,box-shadow .15s}
+      .ums-pdf-actions .act-print{background:var(--navy,#22365f);color:#fff}
+      .ums-pdf-actions .act-dl{background:var(--gold,#c8a96e);color:#2a2113}
+      .ums-pdf-actions button:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(0,0,0,.15)}
+      .ums-pdf-actions button svg{width:1.1em;height:1.1em}
       .ums-pdf-opt{display:flex;gap:.9rem;align-items:flex-start;width:100%;text-align:left;
         border:1.5px solid var(--gold-lt,#e5d6bd);border-radius:14px;padding:1rem;
         background:#fff;cursor:pointer;margin-bottom:.8rem;transition:border-color .15s,box-shadow .15s}
@@ -1188,27 +1197,53 @@
           ov.innerHTML =
             '<div class="ums-pdf-card">'+
               '<button class="ums-pdf-x" aria-label="Chiudi">&times;</button>'+
-              '<h3>Salva la lezione</h3>'+
-              '<p class="ums-pdf-sub">Scegli cosa mettere nel PDF. Poi dal menu di stampa scegli \u201CSalva come PDF\u201D.</p>'+
+              '<h3>Stampa o salva</h3>'+
+              '<p class="ums-pdf-sub">Scegli cosa includere, poi stampa o scarica in PDF.</p>'+
+              '<button class="ums-pdf-opt" data-modo="completo">'+
+                '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H4z"/><path d="M4 20h16M8 9h8M8 13h5"/></svg>'+
+                '<span><span class="tt">Tutto</span><span class="ds">Riassuntone, slide e mappa mentale, in un unico documento.</span></span>'+
+              '</button>'+
               '<button class="ums-pdf-opt" data-modo="testo">'+
                 '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>'+
                 '<span><span class="tt">Solo testo</span><span class="ds">Il riassuntone completo con i Check Point, senza immagini.</span></span>'+
               '</button>'+
               '<button class="ums-pdf-opt" data-modo="slide">'+
                 '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H4z"/><path d="M4 20h16M9 9l2 2 4-4"/></svg>'+
-                '<span><span class="tt">Testo + slide</span><span class="ds">Prima tutto il testo, poi tutte le slide in fondo.</span></span>'+
+                '<span><span class="tt">Solo slide</span><span class="ds">Tutte le slide della lezione, una dopo l\u2019altra.</span></span>'+
+              '</button>'+
+              '<button class="ums-pdf-opt" data-modo="mappa">'+
+                '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="2"/><circle cx="19" cy="6" r="2"/><circle cx="19" cy="18" r="2"/><path d="M7 12h4M11 12l6-6M11 12l6 6"/></svg>'+
+                '<span><span class="tt">Solo mappa mentale</span><span class="ds">Il diagramma dei concetti della lezione.</span></span>'+
               '</button>'+
               '<label class="ums-pdf-evid"><input type="checkbox" id="ums-pdf-evid-chk"> Mantieni le mie evidenziazioni</label>'+
+              '<div class="ums-pdf-actions">'+
+                '<button class="act-print" type="button">'+
+                  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg> Stampa</button>'+
+                '<button class="act-dl" type="button">'+
+                  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg> Scarica PDF</button>'+
+              '</div>'+
             '</div>';
           document.body.appendChild(ov);
           ov.querySelector('.ums-pdf-x').addEventListener('click', function(){ ov.classList.remove('show'); });
           ov.addEventListener('click', function(e){ if(e.target===ov) ov.classList.remove('show'); });
-          ov.querySelectorAll('.ums-pdf-opt').forEach(function(b){
+          var modoSel = 'completo';
+          ov.querySelectorAll('.ums-pdf-opt').forEach(function(b, idx){
+            if(idx===0) b.classList.add('sel');   // "Tutto" preselezionato
             b.addEventListener('click', function(){
-              var evid = document.getElementById('ums-pdf-evid-chk').checked;
-              ov.classList.remove('show');
-              stampa(b.getAttribute('data-modo'), evid);
+              ov.querySelectorAll('.ums-pdf-opt').forEach(function(x){ x.classList.remove('sel'); });
+              b.classList.add('sel');
+              modoSel = b.getAttribute('data-modo');
             });
+          });
+          ov.querySelector('.act-print').addEventListener('click', function(){
+            var evid = document.getElementById('ums-pdf-evid-chk').checked;
+            ov.classList.remove('show');
+            stampa(modoSel, evid, false);
+          });
+          ov.querySelector('.act-dl').addEventListener('click', function(){
+            var evid = document.getElementById('ums-pdf-evid-chk').checked;
+            ov.classList.remove('show');
+            stampa(modoSel, evid, true);
           });
         }
         ov.classList.add('show');
@@ -1219,7 +1254,7 @@
         return t ? (t.textContent||'Lezione').trim() : 'Lezione';
       }
 
-      function stampa(modo, conEvidenziazioni){
+      function stampa(modo, conEvidenziazioni, scarica){
         var cont = document.getElementById('dyn-riassuntone-container');
         if(!cont) return;
         // clono il testo per non toccare la pagina viva
@@ -1232,11 +1267,19 @@
             var t=document.createTextNode(m.textContent); m.parentNode.replaceChild(t, m);
           });
         }
+        // via anche il contenitore mappa dal clone (lo aggiungo a parte se serve)
+        var wrapM = clone.querySelector('#ums-mappa-wrap'); if(wrapM) wrapM.remove();
         var testoHTML = clone.innerHTML;
 
-        // slide in fondo (solo modo "slide"), dal JSON
+        // decido cosa includere in base al modo scelto:
+        //  completo = testo + slide + mappa ; testo = solo riassuntone ;
+        //  slide = solo slide ; mappa = solo mappa mentale
+        var vuoiTesto = (modo==='completo' || modo==='testo');
+        var vuoiSlide = (modo==='completo' || modo==='slide');
+        var vuoiMappa = (modo==='completo' || modo==='mappa');
+
         var slideHTML = '';
-        if(modo==='slide' && datiLezione){
+        if(vuoiSlide && datiLezione){
           var raw = datiLezione.slide || datiLezione.slides || [];
           var urls = raw.map(function(s){ return typeof s==='string' ? s : (s&&s.url); }).filter(Boolean);
           if(urls.length){
@@ -1244,6 +1287,14 @@
               urls.map(function(u){ return '<img class="ums-pdf-slide" src="'+u+'">'; }).join('');
           }
         }
+
+        var mappaHTML = '';
+        if(vuoiMappa && window.__umsMappaSVG){
+          mappaHTML = '<h2 class="ums-pdf-slide-title">Mappa mentale</h2>' +
+            '<div class="ums-pdf-mappa">' + window.__umsMappaSVG + '</div>';
+        }
+
+        if(!vuoiTesto) testoHTML = '';
 
         var titolo = titoloLezione();
         var css =
@@ -1269,7 +1320,9 @@
           '.ums-pdf-slide-title{font-family:\'Playfair Display\',Georgia,serif;color:#1a2f4f;'+
             'border-top:2px solid #c8a96e;padding-top:14px;margin:26px 0 14px;break-before:page;page-break-before:always}'+
           '.ums-pdf-slide{width:100%;border:1px solid #e5d6bd;border-radius:8px;margin:0 0 14px;'+
-            'break-inside:avoid;page-break-inside:avoid}';
+            'break-inside:avoid;page-break-inside:avoid}'+
+          '.ums-pdf-mappa{width:100%;overflow:visible}'+
+          '.ums-pdf-mappa svg{width:100%;height:auto}';
 
         var html =
           '<html><head><title>'+titolo+' \u2014 Una Mano Spensierata</title>'+
@@ -1281,7 +1334,7 @@
             '<div class="pdf-brand"><div class="wm">Una Mano <em>Spensierata</em></div>'+
             '<div class="dom">unamanospensierata.com</div></div>'+
             '<h1>'+titolo+'</h1></div>'+
-          testoHTML + slideHTML +
+          testoHTML + slideHTML + mappaHTML +
           '<scr'+'ipt>window.onload=function(){setTimeout(function(){window.print();},600);};</scr'+'ipt>'+
           '</body></html>';
 
@@ -1295,37 +1348,27 @@
     })();
     </script>
 
-    <!-- ================= UMS · MAPPA MENTALE =================
+    <!-- ================= UMS · MAPPA MENTALE (SVG nativo) =================
          Quarto stato del toggle del riassuntone: nasconde il testo e mostra
-         una mappa mentale cliccabile (rami che si espandono/collassano),
-         costruita dai macroargomenti del riassuntone. Sopra, la stessa
-         lavagna appunti del resto della lezione. -->
+         una mappa mentale a diagramma (rami + linee curve), disegnata in SVG
+         senza librerie esterne. Radice = titolo lezione, rami = macroargomenti,
+         foglie = domande dei check point. Rami sempre aperti. Stampabile. -->
     <style>
       .ums-mappa-wrap{display:none; margin:0 0 1rem;}
       .ums-riass-mappa .ums-mappa-wrap{display:block;}
       .ums-riass-mappa #dyn-riassuntone-container > :not(.ums-mappa-wrap){display:none;}
-      .ums-mappa-appunti{background:#faf7f1; border:1px solid var(--gold-lt,#e5d6bd);
-        border-radius:12px; padding:.7rem .9rem; margin:0 0 .8rem;}
-      .ums-mappa-appunti textarea{width:100%; min-height:70px; resize:vertical; border:none;
-        background:transparent; font-family:var(--font-sans,'DM Sans',sans-serif); font-size:.92rem;
-        color:var(--ink,#1c1c22); outline:none; line-height:1.55;}
-      .ums-mappa-appunti .lab{font-family:var(--font-sans,'DM Sans',sans-serif); font-size:.7rem;
-        letter-spacing:.14em; text-transform:uppercase; color:var(--gold-dk,#9a7a3f); font-weight:700;
-        display:flex; align-items:center; gap:8px; margin-bottom:.4rem;}
-      .ums-mappa-svg-box{position:relative; width:100%; height:60vh; min-height:380px;
-        background:#fffdf8; border:1px solid var(--gold-lt,#e5d6bd); border-radius:12px; overflow:hidden;}
-      .ums-mappa-svg-box svg{width:100%; height:100%;}
+      .ums-mappa-svg-box{position:relative; width:100%; overflow:auto;
+        background:#fffdf8; border:1px solid var(--gold-lt,#e5d6bd); border-radius:12px; padding:8px;}
+      .ums-mappa-svg-box svg{display:block; width:100%; height:auto;}
       .ums-mappa-hint{font-family:var(--font-sans,'DM Sans',sans-serif); font-size:.75rem;
         color:var(--sub,#7a7770); margin:.5rem 0 0; text-align:center;}
-      body.night-mode .ums-mappa-appunti{background:#20232b; border-color:#3a3f4b;}
-      body.night-mode .ums-mappa-appunti textarea{color:#e8e8ee;}
       body.night-mode .ums-mappa-svg-box{background:#181b21; border-color:#3a3f4b;}
     </style>
     <script>
     (function(){
       function param(k){ try{return new URLSearchParams(location.search).get(k);}catch(e){return null;} }
       var file = param('file'); if(!file) return;
-      var mm = null, mmReady = false, datiMappa = null;
+      var datiMappa = null;
 
       fetch(file).then(function(r){return r.json();}).then(function(d){ datiMappa = d; prova(); }).catch(function(){});
 
@@ -1338,110 +1381,141 @@
         montaMappa(cont, datiMappa);
       }
 
-      // markdown per markmap: titolo lezione = radice, macroargomenti = rami,
-      // domande dei check point = foglie (concetti chiave, cliccabili).
-      function costruisciMarkdown(d){
-        var righe = [];
-        var titolo = (d.titolo_lezione || 'Lezione').replace(/[#\n]/g,' ').trim();
-        righe.push('# ' + titolo);
-        (d.riassuntone || []).forEach(function(m){
-          var t = (m.titolo || '').replace(/[#\n]/g,' ').trim();
-          if(!t) return;
-          righe.push('## ' + t);
-          (m.check_points || []).forEach(function(cp){
-            var q = (cp.domanda || '').replace(/[#\n]/g,' ').trim();
-            if(q) righe.push('### ' + q);
+      // struttura ad albero dai dati: radice → macroargomenti → domande check point
+      function alberoDa(d){
+        var rami = (d.riassuntone || []).map(function(m){
+          return {
+            testo: (m.titolo || '').replace(/\s+/g,' ').trim(),
+            figli: (m.check_points || []).map(function(cp){
+              return { testo: (cp.domanda || '').replace(/\s+/g,' ').trim(), figli: [] };
+            })
+          };
+        }).filter(function(r){ return r.testo; });
+        return { testo: (d.titolo_lezione || 'Lezione').replace(/\s+/g,' ').trim(), figli: rami };
+      }
+
+      // spezza un testo in righe da ~max caratteri (per le etichette SVG)
+      function aCapo(t, max){
+        var parole = t.split(' '), righe = [], cur = '';
+        parole.forEach(function(p){
+          if((cur + ' ' + p).trim().length > max){ if(cur) righe.push(cur); cur = p; }
+          else { cur = (cur ? cur + ' ' : '') + p; }
+        });
+        if(cur) righe.push(cur);
+        return righe.slice(0, 3); // max 3 righe per nodo
+      }
+
+      // Genera l'SVG della mappa. Layout orizzontale: radice a sinistra,
+      // macroargomenti in colonna al centro, foglie a destra del loro ramo.
+      function generaSVG(albero){
+        var COLW = [230, 300, 320];      // larghezza colonne (radice, macro, foglie)
+        var X = [30, 30+COLW[0]+70, 30+COLW[0]+70+COLW[1]+60];
+        var PADY = 14, LH = 17, NODEPADY = 10;
+        var navy = '#1A2F4F', gold = '#C8A96E', goldDk = '#9A7A3F', ink = '#1c1c22', sub='#5f5e5a';
+
+        // pre-calcolo l'altezza di ogni nodo foglia e macro
+        function altezzaNodo(txt, colw){
+          var righe = aCapo(txt, colw > 260 ? 44 : 34);
+          return Math.max(1, righe.length) * LH + NODEPADY*2;
+        }
+
+        // posiziono le foglie e i macro, accumulando Y
+        var y = PADY, macroPos = [];
+        albero.figli.forEach(function(macro){
+          var foglie = macro.figli.filter(function(f){ return f.testo; });
+          var yStartFoglie = y, posFoglie = [];
+          if(foglie.length){
+            foglie.forEach(function(f){
+              var h = altezzaNodo(f.testo, COLW[2]);
+              posFoglie.push({ nodo:f, y:y, h:h });
+              y += h + 10;
+            });
+          } else {
+            y += altezzaNodo(macro.testo, COLW[1]);
+          }
+          var yEndFoglie = y;
+          var hMacro = altezzaNodo(macro.testo, COLW[1]);
+          var yMacro = foglie.length ? (yStartFoglie + (yEndFoglie - yStartFoglie - 10)/2 - hMacro/2) : (y - hMacro);
+          macroPos.push({ nodo:macro, y:Math.max(PADY, yMacro), h:hMacro, foglie:posFoglie });
+          y += 16;
+        });
+        var totH = Math.max(y, 200);
+        // radice centrata verticalmente
+        var hRadice = altezzaNodo(albero.testo, COLW[0]);
+        var yRadice = totH/2 - hRadice/2;
+        var totW = X[2] + COLW[2] + 30;
+
+        function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+        function nodo(x, ny, w, h, txt, opts){
+          opts = opts || {};
+          var righe = aCapo(txt, w > 260 ? 44 : 34);
+          var fill = opts.fill || '#fff', stroke = opts.stroke || gold;
+          var tcol = opts.tcol || ink, fw = opts.bold ? '700' : '600', fs = opts.fs || 13;
+          var s = '<rect x="'+x+'" y="'+ny+'" width="'+w+'" height="'+h+'" rx="10" ry="10" fill="'+fill+'" stroke="'+stroke+'" stroke-width="'+(opts.sw||1.5)+'"/>';
+          var ty = ny + NODEPADY + fs;
+          righe.forEach(function(r){
+            s += '<text x="'+(x+14)+'" y="'+ty+'" font-family="Georgia, serif" font-size="'+fs+'" font-weight="'+fw+'" fill="'+tcol+'">'+esc(r)+'</text>';
+            ty += LH;
+          });
+          return s;
+        }
+        function curva(x1,y1,x2,y2,col){
+          var mx = (x1+x2)/2;
+          return '<path d="M '+x1+' '+y1+' C '+mx+' '+y1+', '+mx+' '+y2+', '+x2+' '+y2+'" fill="none" stroke="'+(col||gold)+'" stroke-width="1.6"/>';
+        }
+
+        var svg = '<svg viewBox="0 0 '+totW+' '+totH+'" xmlns="http://www.w3.org/2000/svg" font-family="Georgia, serif">';
+        // linee radice → macro
+        var xR2 = X[0]+COLW[0], yR = yRadice + hRadice/2;
+        macroPos.forEach(function(mp){
+          svg += curva(xR2, yR, X[1], mp.y + mp.h/2, gold);
+        });
+        // linee macro → foglie
+        macroPos.forEach(function(mp){
+          var xM2 = X[1]+COLW[1], yM = mp.y + mp.h/2;
+          mp.foglie.forEach(function(fp){
+            svg += curva(xM2, yM, X[2], fp.y + fp.h/2, '#d9c9a3');
           });
         });
-        return righe.join('\n');
+        // nodi foglie
+        macroPos.forEach(function(mp){
+          mp.foglie.forEach(function(fp){
+            svg += nodo(X[2], fp.y, COLW[2], fp.h, fp.nodo.testo, {fill:'#fbf8f1', stroke:'#e5d6bd', tcol:sub, fs:12, sw:1});
+          });
+        });
+        // nodi macro
+        macroPos.forEach(function(mp){
+          svg += nodo(X[1], mp.y, COLW[1], mp.h, mp.nodo.testo, {fill:'#f7f1e6', stroke:gold, tcol:navy, bold:true, fs:13});
+        });
+        // radice
+        svg += nodo(X[0], yRadice, COLW[0], hRadice, albero.testo, {fill:navy, stroke:navy, tcol:'#fff', bold:true, fs:15});
+        svg += '</svg>';
+        return { svg:svg, w:totW, h:totH };
       }
 
       function montaMappa(cont, d){
         if(document.getElementById('ums-mappa-wrap')) return;
-        if(!(d.riassuntone && d.riassuntone.length)) return;   // niente riassuntone, niente mappa
+        if(!(d.riassuntone && d.riassuntone.length)) return;
 
-        // contenitore mappa (nascosto finché non si sceglie lo stato "mappa")
+        var albero = alberoDa(d);
+        var out = generaSVG(albero);
+
         var wrap = document.createElement('div');
         wrap.id = 'ums-mappa-wrap'; wrap.className = 'ums-mappa-wrap';
         wrap.innerHTML =
-          '<div class="ums-mappa-appunti">' +
-            '<div class="lab"><svg class="ums-ic" aria-hidden="true" style="width:1em;height:1em"><use href="#ic-pen"/></svg> I miei appunti sulla mappa</div>' +
-            '<textarea id="ums-mappa-note" placeholder="Prendi appunti mentre esplori la mappa\u2026"></textarea>' +
-          '</div>' +
-          '<div class="ums-mappa-svg-box"><svg id="ums-mappa-svg"></svg></div>' +
-          '<p class="ums-mappa-hint">Tocca un nodo per espandere o richiudere i rami \u00b7 trascina per spostarti \u00b7 usa la rotella per lo zoom</p>';
+          '<div class="ums-mappa-svg-box">' + out.svg + '</div>' +
+          '<p class="ums-mappa-hint">Mappa dei concetti della lezione \u00b7 puoi stamparla dal pulsante \u00abStampa\u00bb</p>';
         cont.appendChild(wrap);
+        // espongo l'SVG al modulo di stampa
+        window.__umsMappaSVG = out.svg;
 
-        // appunti: salvati per lezione nel backend se disponibile, con fallback
-        // in memoria (niente localStorage negli artefatti; qui è pagina vera).
-        var ta = wrap.querySelector('#ums-mappa-note');
-        try {
-          var chiave = 'ums_mappa_note_' + (param('file')||'').replace(/[^a-z0-9]/gi,'_');
-          var salvato = localStorage.getItem(chiave);
-          if(salvato) ta.value = salvato;
-          ta.addEventListener('input', function(){ try{ localStorage.setItem(chiave, ta.value); }catch(e){} });
-        } catch(e){}
-
-        var md = costruisciMarkdown(d);
-
-        function render(){
-          if(mmReady) return;
-          try {
-            var lib = window.markmap;
-            var t = new lib.Transformer();
-            var res = t.transform(md);
-            mm = lib.Markmap.create('#ums-mappa-svg', {
-              autoFit: true, duration: 300,
-              paddingX: 16, spacingVertical: 8, spacingHorizontal: 90,
-              initialExpandLevel: 1, color: function(){ return '#1A2F4F'; }
-            }, res.root);
-            mmReady = true;
-          } catch(e){
-            var box = document.querySelector('.ums-mappa-svg-box');
-            if(box) box.innerHTML = '<p style="padding:2rem;text-align:center;color:#7a7770;' +
-              'font-family:sans-serif">Non riesco a caricare la mappa in questo momento. ' +
-              'Ricarica la pagina e riprova.</p>';
-          }
-        }
-
-        // Caricamento markmap via autoloader UFFICIALE (jsdelivr): scarica da
-        // solo d3 + markmap-view + markmap-lib e li espone tutti su
-        // window.markmap. Più robusto del caricamento manuale dei singoli file.
-        function assicuraLib(cb){
-          if(window.markmap && window.markmap.Markmap && window.markmap.Transformer){ cb(); return; }
-          if(window.__umsMarkmapLoading){
-            var iv = setInterval(function(){
-              if(window.markmap && window.markmap.Markmap && window.markmap.Transformer){
-                clearInterval(iv); cb();
-              }
-            }, 150);
-            return;
-          }
-          window.__umsMarkmapLoading = true;
-          var s = document.createElement('script');
-          s.src = 'https://cdn.jsdelivr.net/npm/markmap-autoloader@0.18.10/dist/index.js';
-          s.onload = function(){
-            // l'autoloader carica le dipendenze in modo asincrono: attendo che
-            // i global siano davvero pronti prima di renderizzare.
-            var att = 0;
-            var iv = setInterval(function(){
-              if(window.markmap && window.markmap.Markmap && window.markmap.Transformer){
-                clearInterval(iv); cb();
-              } else if(att++ > 80){ clearInterval(iv); cb(new Error('markmap timeout')); }
-            }, 150);
-          };
-          s.onerror = function(){ cb(new Error('autoloader fail')); };
-          document.head.appendChild(s);
-        }
-
-        // aggancio il pulsante "Mappa" alla barra dei toggle (se c'è) o ne creo una
+        // aggancio il pulsante "Mappa mentale" alla barra dei toggle (o la creo)
         var tries2 = 0;
         (function agganciaBottone(){
           var barra = document.getElementById('ums-slide-toggle-box');
           var tg = barra && barra.querySelector('.ums-slide-toggle');
           if(!tg){
             if(tries2++ < 60){ setTimeout(agganciaBottone, 150); return; }
-            // nessuna barra (lezione senza slide): ne creo una solo per la mappa
             var box = document.createElement('div'); box.id='ums-slide-toggle-box';
             tg = document.createElement('div'); tg.className='ums-slide-toggle';
             box.appendChild(tg); cont.parentElement.insertBefore(box, cont);
@@ -1450,17 +1524,12 @@
           var bMap = document.createElement('button');
           bMap.id='ums-btn-mappa'; bMap.type='button'; bMap.textContent='Mappa mentale';
           tg.appendChild(bMap);
-
           bMap.addEventListener('click', function(){
-            // spengo gli altri stati e accendo la mappa
             cont.classList.remove('ums-riass-solotesto','ums-riass-soloslide');
             cont.classList.add('ums-riass-mappa');
             tg.querySelectorAll('button').forEach(function(b){ b.classList.remove('on'); });
             bMap.classList.add('on');
-            assicuraLib(function(){ render(); if(mm){ setTimeout(function(){ try{ mm.fit(); }catch(e){} }, 350); } });
           });
-
-          // se l'utente torna a un altro stato, spengo la mappa
           tg.querySelectorAll('button').forEach(function(b){
             if(b === bMap) return;
             b.addEventListener('click', function(){
