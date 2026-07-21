@@ -801,8 +801,8 @@
         border-radius:12px;padding:.5rem;cursor:zoom-in;
         transition:transform .15s ease,box-shadow .15s ease;
       }
-      figure.ums-slide-fig.flo-dx{float:right;margin-left:1.4rem;clear:right}
-      figure.ums-slide-fig.flo-sx{float:left; margin-right:1.4rem;clear:left}
+      figure.ums-slide-fig.flo-dx{float:right;margin-left:1.4rem;clear:both}
+      figure.ums-slide-fig.flo-sx{float:left; margin-right:1.4rem;clear:both}
       /* GRANDE — ogni 4ª slide, a piena colonna (effetto libro di testo):
          non flottante, centrata, larga; il testo NON le scorre attorno. */
       figure.ums-slide-fig.flo-full{float:none;clear:both;width:100%;max-width:100%;
@@ -979,20 +979,39 @@
           });
           sezioni = sezioni.filter(function(s){ return s.paragrafi.length; });
           if(!sezioni.length){ return; }
+          // indicizzo i paragrafi dentro ogni sezione (serve al buffer di distanza)
+          sezioni.forEach(function(sez){ sez.paragrafi.forEach(function(p,idx){ p.idx = idx; }); });
 
           var tetto = Math.max(1, Math.ceil(slides.length / sezioni.length));
           var conTitolo = slides.filter(function(s){ return s.titolo; }).length;
+          var GAP = 1; // almeno 1 paragrafo di stacco tra due slide della stessa sezione
+
+          function liberoConGap(sez, p){
+            if(p.occupato) return false;
+            // niente slide se una figura è già ancorata entro GAP paragrafi
+            for(var d=1; d<=GAP; d++){
+              var a = sez.paragrafi[p.idx-d], b = sez.paragrafi[p.idx+d];
+              if((a && a.haSlide) || (b && b.haSlide)) return false;
+            }
+            return true;
+          }
 
           function piazzaInSezione(sez, slide, i, parPreferito){
             var target = null;
-            if(parPreferito && !parPreferito.occupato){ target = parPreferito; }
+            if(parPreferito && liberoConGap(sez, parPreferito)){ target = parPreferito; }
             else {
               for(var k=0;k<sez.paragrafi.length;k++){
-                if(!sez.paragrafi[k].occupato){ target = sez.paragrafi[k]; break; }
+                if(liberoConGap(sez, sez.paragrafi[k])){ target = sez.paragrafi[k]; break; }
+              }
+            }
+            // se il gap non lascia posti liberi, ripiego sul primo non occupato
+            if(!target){
+              for(var k2=0;k2<sez.paragrafi.length;k2++){
+                if(!sez.paragrafi[k2].occupato){ target = sez.paragrafi[k2]; break; }
               }
             }
             if(!target){ target = sez.paragrafi[sez.paragrafi.length-1]; }
-            else { target.occupato = true; }
+            else { target.occupato = true; target.haSlide = true; }
             target.el.parentNode.insertBefore(creaFigura(slide,i), target.el);
             sez.usate++;
           }
