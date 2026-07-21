@@ -554,7 +554,10 @@ if (!fileDaCaricare) {
                 popolaInterfaccia(data);
 
                 // Aggiorna il titolo della scheda del browser
-                document.title = data.titolo_lezione || "Una Mano Spensierata";
+                const umsTab = umsInfoDaUrl();
+                document.title = umsTab.nome
+                    ? umsTab.nome + (umsTab.n ? ' \u2014 Lezione ' + umsTab.n : '')
+                    : (data.titolo_lezione || "Una Mano Spensierata");
 
                 // BLINDATURA GENERALE — da qui in poi sono rifiniture: se una
                 // qualsiasi fallisce, la lezione resta comunque leggibile.
@@ -756,9 +759,49 @@ if (!fileDaCaricare) {
             }
         }
 
+        // ------------------------------------------------------------------
+        // TITOLO = MATERIA (Blocco 4) — i titoli-lezione lunghi allungavano
+        // l'header fisso fino a coprire i pulsanti. Ora: titolo = nome della
+        // materia (stabile e corto), sottotitolo = "Lezione N · argomento".
+        // Il nome si ricava dalla cartella nell'URL; la mappa copre le
+        // cartelle storiche, le nuove vanno in Title Case da sole (stessa
+        // regola del nome.txt della pipeline).
+        // ------------------------------------------------------------------
+        const UMS_NOMI_MATERIE = {
+            'sociologiaeducazione': "Sociologia dell'Educazione",
+            'psicologiasviluppo': 'Psicologia dello Sviluppo',
+            'neuropsichiatria': 'Neuropsichiatria Infantile',
+            'didattica': 'Didattica Generale',
+            'storiaeducazione': "Storia dell'Educazione",
+            'storiacontemporanea': 'Storia Contemporanea',
+            'biologia': 'Biologia Generale',
+            'letteratura-per-l-infanzia': "Letteratura per l'Infanzia",
+            'pedagogia-e-didattica-speciale-modulo-uno': 'Pedagogia e Didattica Speciale · Modulo Uno',
+            'pedagogia-e-didattica-speciale-modulo-due': 'Pedagogia e Didattica Speciale · Modulo Due',
+            'psicologia-dell-educazione': "Psicologia dell'Educazione"
+        };
+        function umsInfoDaUrl() {
+            try {
+                const f = new URLSearchParams(location.search).get('file') || '';
+                const m = f.match(/(?:^|\/)([^\/]+)\/[^\/]*lezione-(\d+)\.json/i) ||
+                          f.match(/^([^\/]+)\/[^\/]*lezione-(\d+)\.json/i);
+                const cartella = m ? m[1] : '';
+                const n = m ? parseInt(m[2], 10) : null;
+                const nome = UMS_NOMI_MATERIE[cartella] ||
+                    cartella.split('-').map(w => w ? w.charAt(0).toUpperCase() + w.slice(1) : w).join(' ');
+                return { cartella: cartella, n: n, nome: nome };
+            } catch (e) { return { cartella: '', n: null, nome: '' }; }
+        }
+
         function popolaInterfaccia(data) {
-            document.getElementById('dyn-title').innerText = data.titolo_lezione || "";
-            document.getElementById('dyn-subtitle').innerText = data.sottotitolo || "";
+            const umsInfo = umsInfoDaUrl();
+            const umsArgomento = (data.titolo_lezione || '')
+                .replace(/^\s*lezione\s*\d+\s*[:.\-\u2013\u2014]?\s*/i, '').trim();
+            document.getElementById('dyn-title').innerText =
+                umsInfo.nome || data.titolo_lezione || "";
+            document.getElementById('dyn-subtitle').innerText =
+                (umsInfo.n ? 'Lezione ' + umsInfo.n + ' \u00B7 ' : '') +
+                (umsArgomento || data.sottotitolo || "");
 
             // --- SEZIONE 01: ORIENTAMENTO (Gestione Annidata) ---
             try { // BLINDATURA
