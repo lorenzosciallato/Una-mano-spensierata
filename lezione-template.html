@@ -785,17 +785,37 @@
          Le lezioni SENZA "slide" (tutte quelle attuali) restano identiche.
     ================================================================ -->
     <style>
-      #ums-slide-block{margin:0 0 1.2rem}
-      .ums-slide-toggle{display:flex;gap:.4rem;margin:0 0 1rem;flex-wrap:wrap}
+      /* toggle Solo testo / Testo + slide (invariato) */
+      .ums-slide-toggle{display:flex;gap:.4rem;margin:0 0 1.2rem;flex-wrap:wrap}
       .ums-slide-toggle button{font-family:var(--font-sans,'DM Sans',sans-serif);
         font-weight:600;font-size:.82rem;padding:.5rem .95rem;border-radius:999px;
         border:1px solid var(--gold-lt,#e5d6bd);background:#fff;color:var(--sub,#6b6b73);cursor:pointer}
       .ums-slide-toggle button.on{background:var(--navy,#22365f);color:#fff;border-color:var(--navy,#22365f)}
-      .ums-slide-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:.6rem;margin:0 0 1.2rem}
-      .ums-slide-gallery img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:10px;
-        border:1px solid var(--gold-lt,#e5d6bd);background:#faf7f1;cursor:zoom-in;
-        transition:transform .15s ease,box-shadow .15s ease}
-      .ums-slide-gallery img:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.15)}
+
+      /* FIGURA FLOTTANTE — la slide vive DENTRO il testo del riassuntone,
+         stile pagina enciclopedica: il testo le scorre attorno. Si alterna
+         destra/sinistra tramite le classi .flo-dx / .flo-sx. */
+      figure.ums-slide-fig{
+        margin:.35rem 0 1rem; width:min(300px,42%);
+        background:#faf7f1;border:1px solid var(--gold-lt,#e5d6bd);
+        border-radius:12px;padding:.5rem;cursor:zoom-in;
+        transition:transform .15s ease,box-shadow .15s ease;
+      }
+      figure.ums-slide-fig.flo-dx{float:right;margin-left:1.4rem;clear:right}
+      figure.ums-slide-fig.flo-sx{float:left; margin-right:1.4rem;clear:left}
+      figure.ums-slide-fig:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(0,0,0,.14)}
+      figure.ums-slide-fig img{width:100%;display:block;border-radius:8px;aspect-ratio:16/9;object-fit:cover}
+      figure.ums-slide-fig figcaption{
+        font-family:var(--font-sans,'DM Sans',sans-serif);font-size:.72rem;
+        color:var(--sub,#6b6b73);text-align:center;margin-top:.4rem;letter-spacing:.02em}
+      /* su schermi stretti niente float: la figura va a piena larghezza */
+      @media (max-width:640px){
+        figure.ums-slide-fig{float:none !important;width:100%;margin:.6rem 0 1.2rem}
+      }
+      /* modalità "solo testo": le figure spariscono, il testo si ricompatta */
+      .ums-riass-solotesto figure.ums-slide-fig{display:none}
+
+      /* lightbox a schermo intero (invariato) */
       .ums-slide-lb{position:fixed;inset:0;z-index:9999;background:rgba(10,10,14,.9);
         display:none;align-items:center;justify-content:center;padding:2vh 2vw}
       .ums-slide-lb.on{display:flex}
@@ -805,6 +825,7 @@
       .ums-slide-lb .lb-prev{left:4px}.ums-slide-lb .lb-next{right:4px}
       body.night-mode .ums-slide-toggle button{background:#20232b;color:#c9c9d2;border-color:#3a3f4b}
       body.night-mode .ums-slide-toggle button.on{background:#8FB4E8;color:#14161c;border-color:#8FB4E8}
+      body.night-mode figure.ums-slide-fig{background:#20232b;border-color:#3a3f4b}
     </style>
     <script>
     (function(){
@@ -822,28 +843,18 @@
       }).catch(function(){});
 
       function monta(cont, slides){
-        if(document.getElementById('ums-slide-block')) return;
-        var col = cont.parentElement;
-        var box = document.createElement('div'); box.id='ums-slide-block';
+        if(document.getElementById('ums-slide-toggle-box')) return;
 
+        // Interruttore Solo testo / Testo + slide (sopra il riassuntone).
+        var box = document.createElement('div'); box.id='ums-slide-toggle-box';
         var tg = document.createElement('div'); tg.className='ums-slide-toggle';
         var bText  = document.createElement('button'); bText.textContent='Solo testo';
         var bSlide = document.createElement('button'); bSlide.textContent='Testo + slide'; bSlide.className='on';
         tg.appendChild(bText); tg.appendChild(bSlide);
+        box.appendChild(tg);
+        cont.parentElement.insertBefore(box, cont);
 
-        var gal = document.createElement('div'); gal.className='ums-slide-gallery';
-        slides.forEach(function(src,i){
-          var im=document.createElement('img'); im.src=src; im.alt='Slide '+(i+1); im.loading='lazy';
-          im.addEventListener('click', function(){ apri(i); });
-          gal.appendChild(im);
-        });
-
-        box.appendChild(tg); box.appendChild(gal);
-        col.insertBefore(box, cont);   // sopra il testo; il bloc notes resta nella colonna di destra
-
-        bText.addEventListener('click', function(){ bText.classList.add('on'); bSlide.classList.remove('on'); gal.style.display='none'; });
-        bSlide.addEventListener('click', function(){ bSlide.classList.add('on'); bText.classList.remove('on'); gal.style.display='grid'; });
-
+        // Lightbox condiviso.
         var lb=document.createElement('div'); lb.className='ums-slide-lb';
         lb.innerHTML='<button class="lb-x" aria-label="Chiudi">&times;</button>'+
                      '<button class="lb-nav lb-prev" aria-label="Precedente">&#8249;</button>'+
@@ -863,6 +874,44 @@
           if(e.key==='Escape') chiudi();
           else if(e.key==='ArrowLeft') mostra(cur-1);
           else if(e.key==='ArrowRight') mostra(cur+1);
+        });
+
+        // DISTRIBUZIONE FLOTTANTE — le slide vengono infilate come <figure>
+        // prima di alcuni <p> del riassuntone, alternando destra/sinistra.
+        // Passo calcolato per spargerle su tutto il testo; se i paragrafi
+        // sono meno delle slide, le rimanenti vanno in coda a piena riga.
+        function distribuisci(){
+          var paragrafi = Array.from(cont.querySelectorAll('p'));
+          if(!paragrafi.length){ return false; }
+          var passo = Math.max(2, Math.floor(paragrafi.length / slides.length) || 2);
+          var usati = 0;
+          slides.forEach(function(src,i){
+            var fig=document.createElement('figure');
+            fig.className='ums-slide-fig '+(i%2===0?'flo-dx':'flo-sx');
+            var im=document.createElement('img'); im.src=src; im.alt='Slide '+(i+1); im.loading='lazy';
+            var cap=document.createElement('figcaption'); cap.textContent='Slide '+(i+1);
+            fig.appendChild(im); fig.appendChild(cap);
+            fig.addEventListener('click', function(){ apri(i); });
+            var idx = i*passo;
+            if(idx < paragrafi.length){
+              paragrafi[idx].parentNode.insertBefore(fig, paragrafi[idx]);
+              usati++;
+            } else {
+              cont.appendChild(fig);
+            }
+          });
+          return true;
+        }
+        distribuisci();
+
+        // Toggle: la classe sul container fa sparire/riapparire le figure.
+        bText.addEventListener('click', function(){
+          bText.classList.add('on'); bSlide.classList.remove('on');
+          cont.classList.add('ums-riass-solotesto');
+        });
+        bSlide.addEventListener('click', function(){
+          bSlide.classList.add('on'); bText.classList.remove('on');
+          cont.classList.remove('ums-riass-solotesto');
         });
       }
     })();
