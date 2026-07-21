@@ -608,8 +608,7 @@ if (!fileDaCaricare) {
                             '<p style="font-family:var(--font-display,Georgia,serif);font-size:1.4rem;' +
                             'color:var(--ink,#1C1C22);margin:0 0 .8rem">Mannaggia!</p>' +
                             '<p style="color:var(--body,#3D3C3A);line-height:1.6;margin:0 0 1.4rem">' +
-                            'Non ho il materiale di questa lezione, quindi non sono ancora riuscito a ' +
-                            'spensierizzarla. Se invece tu ce l\u2019hai, scrivimi: la aggiungiamo insieme!</p>' +
+                            'Non ho il materiale di questa lezione! Se invece tu ce l\u2019hai, scrivimi: la aggiungiamo insieme!</p>' +
                             '<a href="' + WA + '" target="_blank" rel="noopener" ' +
                             'style="display:inline-flex;align-items:center;gap:10px;background:var(--gold,#C8A96E);' +
                             'color:#2A2113;text-decoration:none;font-family:var(--font-body,sans-serif);' +
