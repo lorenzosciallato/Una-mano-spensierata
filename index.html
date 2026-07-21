@@ -290,6 +290,24 @@ body.app-mode #appview{opacity:1; transform:translateY(0); pointer-events:auto;}
 .subj-grid{display:grid; grid-template-columns:1fr; gap:10px;}
 @media(min-width:720px){.subj-grid{grid-template-columns:1fr 1fr; gap:12px;}}
 
+/* Intestazione d'anno — editoriale: numero grande a lato, titolo Playfair,
+   sottotitolo anno accademico. Occupa l'intera riga della griglia. */
+.year-head{grid-column:1/-1; display:flex; align-items:center; gap:18px;
+  margin:30px 0 8px; padding-bottom:14px; border-bottom:1px solid var(--gold-lt);}
+.year-head:first-child{margin-top:4px;}
+.year-head .yh-num{font-family:var(--font-display,'Playfair Display',Georgia,serif);
+  font-size:3.4rem; line-height:.8; font-weight:800; color:var(--gold); flex:0 0 auto;}
+.year-head .yh-text{flex:1; min-width:0;}
+.year-head .yh-title{display:block; font-family:var(--font-display,'Playfair Display',Georgia,serif);
+  font-size:1.7rem; font-weight:800; color:var(--navy,#1A2F4F); letter-spacing:-.01em; line-height:1.05;}
+.year-head .yh-sub{display:block; font-size:.66rem; font-weight:600; letter-spacing:.18em;
+  text-transform:uppercase; color:var(--gold-dk); margin-top:6px;}
+.year-head .yh-count{flex:0 0 auto; align-self:flex-end; font-size:.8rem;
+  color:var(--sub,#7a7770); white-space:nowrap;}
+body.night-mode .year-head .yh-title{color:#f0e9e2;}
+body.night-mode .year-head{border-bottom-color:#3a332c;}
+@media(max-width:520px){.year-head .yh-num{font-size:2.6rem;} .year-head .yh-title{font-size:1.4rem;}}
+
 .subj-card{
   display:flex; align-items:center; gap:0.9rem; width:100%; text-align:left;
   background:#fff; border:1px solid var(--dust); border-radius:var(--r-md);
@@ -694,7 +712,7 @@ const courses = [
   { name: "Pedagogia E Didattica Speciale Modulo Due", lezioni: { count: 4, urlTemplate: "lezione-template.html?file=pedagogia-e-didattica-speciale-modulo-due/lezione-{n}.json" } },
   { name: "Grammatica Italiana", lezioni: { count: 8, urlTemplate: "lezione-template.html?file=grammatica-italiana/lezione-{n}.json" } },
   { name: "Psicologia Dell Educazione", lezioni: { count: 14, urlTemplate: "lezione-template.html?file=psicologia-dell-educazione/lezione-{n}.json" } },
-  { name: "Prova", lezioni: { count: 5, urlTemplate: "lezione-template.html?file=prova/lezione-{n}.json" } }
+  { name: "Prova", lezioni: { count: 3, urlTemplate: "lezione-template.html?file=prova/lezione-{n}.json" } }
 ];
 
 const chevronSVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>';
@@ -713,24 +731,81 @@ const GLYPHS = [
 
 function normalizza(s){ return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
 
+// =========================================================================
+// ANNI DEL CORSO — la lista `courses` sopra resta INTATTA (la pipeline la
+// aggiorna). Qui una mappa separata cartella->anno raggruppa le materie al
+// rendering. Tutte etichettate anno accademico 25/26. Una materia senza voce
+// qui finisce in "Altro" in fondo (cosi non sparisce mai).
+// =========================================================================
+const ANNO_ACCADEMICO = '25/26';
+const ANNO_MATERIE = {
+  1: ['sociologiaeducazione','storiaeducazione','didattica','educazione-motoria',
+      'educazionemusicale','pedagogia-generale','psicologiasviluppo','prova'],
+  2: ['biologia','linguistica-italiana','neuropsichiatria','diritto-pubblico',
+      'didattica-della-fisica'],
+  3: ['grammatica-italiana'],
+  4: ['educazione-ambientale','pedagogia-e-didattica-speciale-modulo-uno',
+      'pedagogia-e-didattica-speciale-modulo-due','letteratura-per-l-infanzia',
+      'psicologia-dell-educazione'],
+  5: ['storiacontemporanea']
+};
+const ORDINALE = {1:'Primo',2:'Secondo',3:'Terzo',4:'Quarto',5:'Quinto'};
+
+function cartellaDi(c){
+  if(c.lezioni){ const m = c.lezioni.urlTemplate.match(/file=([^/]+)\//); return m ? m[1] : ''; }
+  if(c.url){ const m = c.url.match(/^([^/]+)\//); return m ? m[1] : ''; }
+  return '';
+}
+function annoDi(cartella){
+  for(const a of [1,2,3,4,5]){ if(ANNO_MATERIE[a].includes(cartella)) return a; }
+  return 0;
+}
+
+function cardCorso(c, i){
+  const hasLezioni = !!c.lezioni;
+  const el = document.createElement(hasLezioni ? 'button' : 'a');
+  el.className = 'subj-card';
+  el.dataset.search = normalizza(c.name);
+  if (hasLezioni){ el.type = 'button'; el.addEventListener('click', () => openCourse(c)); }
+  else { el.href = c.url; el.target = '_blank'; el.rel = 'noopener'; }
+  const glyph = GLYPHS[i % GLYPHS.length];
+  el.innerHTML = `
+    <span class="subj-glyph" aria-hidden="true"><svg viewBox="0 0 40 40">${glyph}</svg></span>
+    <span class="subj-body">
+      <span class="subj-name">${c.name}</span>
+      <span class="subj-meta">${hasLezioni ? c.lezioni.count + ' lezioni' : 'Sito esterno \u2197'}</span>
+    </span>
+    <span class="subj-chevron" aria-hidden="true">${chevronSVG}</span>`;
+  return el;
+}
+
 function renderCourses(){
   const grid = document.getElementById('course-grid');
-  courses.forEach((c, i) => {
-    const hasLezioni = !!c.lezioni;
-    const el = document.createElement(hasLezioni ? 'button' : 'a');
-    el.className = 'subj-card';
-    el.dataset.search = normalizza(c.name);
-    if (hasLezioni){ el.type = 'button'; el.addEventListener('click', () => openCourse(c)); }
-    else { el.href = c.url; el.target = '_blank'; el.rel = 'noopener'; }
-    const glyph = GLYPHS[i % GLYPHS.length];
-    el.innerHTML = `
-      <span class="subj-glyph" aria-hidden="true"><svg viewBox="0 0 40 40">${glyph}</svg></span>
-      <span class="subj-body">
-        <span class="subj-name">${c.name}</span>
-        <span class="subj-meta">${hasLezioni ? c.lezioni.count + ' lezioni' : 'Sito esterno \u2197'}</span>
-      </span>
-      <span class="subj-chevron" aria-hidden="true">${chevronSVG}</span>`;
-    grid.appendChild(el);
+  grid.innerHTML = '';
+  const perAnno = {1:[],2:[],3:[],4:[],5:[],0:[]};
+  courses.forEach((c,i) => { perAnno[annoDi(cartellaDi(c))].push(i); });
+  [1,2,3,4,5,0].forEach(anno => {
+    const indici = perAnno[anno];
+    if(!indici.length) return;
+    const head = document.createElement('div');
+    head.className = 'year-head';
+    head.dataset.year = anno;
+    const titolo = anno === 0 ? 'Altro' : ORDINALE[anno] + ' Anno';
+    const nMaterie = indici.length + (indici.length === 1 ? ' materia' : ' materie');
+    if(anno === 0){
+      head.innerHTML = `<span class="yh-text"><span class="yh-title">Altro</span></span>` +
+        `<span class="yh-count">${nMaterie}</span>`;
+    } else {
+      head.innerHTML =
+        `<span class="yh-num">${anno}</span>` +
+        `<span class="yh-text">` +
+          `<span class="yh-title">${titolo}</span>` +
+          `<span class="yh-sub">Anno Accademico ${ANNO_ACCADEMICO}</span>` +
+        `</span>` +
+        `<span class="yh-count">${nMaterie}</span>`;
+    }
+    grid.appendChild(head);
+    indici.forEach(i => grid.appendChild(cardCorso(courses[i], i)));
   });
   aggiornaConteggio(courses.length);
 }
@@ -742,8 +817,17 @@ function filtraMaterie(){
   let visibili = 0;
   document.querySelectorAll('.subj-card').forEach(card => {
     const match = q === '' || card.dataset.search.includes(q);
-    card.style.display = match ? '' : 'flex';
-    if(!match) card.style.display = 'none'; else visibili++;
+    card.style.display = match ? '' : 'none';
+    if(match) visibili++;
+  });
+  // nascondo l'intestazione di un anno se tutte le sue materie sono filtrate
+  document.querySelectorAll('.year-head').forEach(head => {
+    let vis = 0, el = head.nextElementSibling;
+    while(el && el.classList.contains('subj-card')){
+      if(el.style.display !== 'none') vis++;
+      el = el.nextElementSibling;
+    }
+    head.style.display = vis === 0 ? 'none' : '';
   });
   document.getElementById('subj-empty').classList.toggle('visible', visibili === 0);
   document.getElementById('search-clear').classList.toggle('visible', q !== '');
