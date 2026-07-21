@@ -1289,9 +1289,16 @@
         }
 
         var mappaHTML = '';
-        if(vuoiMappa && window.__umsMappaSVG){
-          mappaHTML = '<h2 class="ums-pdf-slide-title">Mappa mentale</h2>' +
-            '<div class="ums-pdf-mappa">' + window.__umsMappaSVG + '</div>';
+        if(vuoiMappa){
+          var svgMappa = window.__umsMappaSVG;
+          if(!svgMappa){
+            var elM = document.querySelector('#ums-mappa-wrap svg');
+            if(elM) svgMappa = elM.outerHTML;
+          }
+          if(svgMappa){
+            mappaHTML = '<h2 class="ums-pdf-slide-title">Mappa mentale</h2>' +
+              '<div class="ums-pdf-mappa">' + svgMappa + '</div>';
+          }
         }
 
         if(!vuoiTesto) testoHTML = '';
@@ -1355,11 +1362,11 @@
          foglie = domande dei check point. Rami sempre aperti. Stampabile. -->
     <style>
       .ums-mappa-wrap{display:none; margin:0 0 1rem;}
-      .ums-riass-mappa .ums-mappa-wrap{display:block;}
-      .ums-riass-mappa #dyn-riassuntone-container > :not(.ums-mappa-wrap){display:none;}
+      #dyn-riassuntone-container.ums-riass-mappa .ums-mappa-wrap{display:block;}
+      #dyn-riassuntone-container.ums-riass-mappa > :not(.ums-mappa-wrap){display:none;}
       .ums-mappa-svg-box{position:relative; width:100%; overflow:auto;
         background:#fffdf8; border:1px solid var(--gold-lt,#e5d6bd); border-radius:12px; padding:8px;}
-      .ums-mappa-svg-box svg{display:block; width:100%; height:auto;}
+      .ums-mappa-svg-box svg{display:block; max-width:100%; width:100%; height:auto;}
       .ums-mappa-hint{font-family:var(--font-sans,'DM Sans',sans-serif); font-size:.75rem;
         color:var(--sub,#7a7770); margin:.5rem 0 0; text-align:center;}
       body.night-mode .ums-mappa-svg-box{background:#181b21; border-color:#3a3f4b;}
@@ -1464,7 +1471,7 @@
           return '<path d="M '+x1+' '+y1+' C '+mx+' '+y1+', '+mx+' '+y2+', '+x2+' '+y2+'" fill="none" stroke="'+(col||gold)+'" stroke-width="1.6"/>';
         }
 
-        var svg = '<svg viewBox="0 0 '+totW+' '+totH+'" xmlns="http://www.w3.org/2000/svg" font-family="Georgia, serif">';
+        var svg = '<svg viewBox="0 0 '+totW+' '+totH+'" width="'+totW+'" height="'+totH+'" xmlns="http://www.w3.org/2000/svg" font-family="Georgia, serif">';
         // linee radice → macro
         var xR2 = X[0]+COLW[0], yR = yRadice + hRadice/2;
         macroPos.forEach(function(mp){
@@ -1505,7 +1512,7 @@
         wrap.innerHTML =
           '<div class="ums-mappa-svg-box">' + out.svg + '</div>' +
           '<p class="ums-mappa-hint">Mappa dei concetti della lezione \u00b7 puoi stamparla dal pulsante \u00abStampa\u00bb</p>';
-        cont.appendChild(wrap);
+        cont.insertBefore(wrap, cont.firstChild);
         // espongo l'SVG al modulo di stampa
         window.__umsMappaSVG = out.svg;
 
