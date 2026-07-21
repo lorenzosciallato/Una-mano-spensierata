@@ -1300,7 +1300,6 @@
          una mappa mentale cliccabile (rami che si espandono/collassano),
          costruita dai macroargomenti del riassuntone. Sopra, la stessa
          lavagna appunti del resto della lezione. -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/markmap-toolbar/0.18.10/style.css">
     <style>
       .ums-mappa-wrap{display:none; margin:0 0 1rem;}
       .ums-riass-mappa .ums-mappa-wrap{display:block;}
@@ -1388,36 +1387,51 @@
         function render(){
           if(mmReady) return;
           try {
-            var Transformer = window.markmap.Transformer;
-            var Markmap = window.markmap.Markmap;
-            var t = new Transformer();
+            var lib = window.markmap;
+            var t = new lib.Transformer();
             var res = t.transform(md);
-            mm = Markmap.create('#ums-mappa-svg', {
+            mm = lib.Markmap.create('#ums-mappa-svg', {
               autoFit: true, duration: 300,
               paddingX: 16, spacingVertical: 8, spacingHorizontal: 90,
               initialExpandLevel: 1, color: function(){ return '#1A2F4F'; }
             }, res.root);
             mmReady = true;
-          } catch(e){}
+          } catch(e){
+            var box = document.querySelector('.ums-mappa-svg-box');
+            if(box) box.innerHTML = '<p style="padding:2rem;text-align:center;color:#7a7770;' +
+              'font-family:sans-serif">Non riesco a caricare la mappa in questo momento. ' +
+              'Ricarica la pagina e riprova.</p>';
+          }
         }
 
-        // carico markmap da CDN solo alla prima apertura della mappa
+        // Caricamento markmap via autoloader UFFICIALE (jsdelivr): scarica da
+        // solo d3 + markmap-view + markmap-lib e li espone tutti su
+        // window.markmap. Più robusto del caricamento manuale dei singoli file.
         function assicuraLib(cb){
-          if(window.markmap && window.markmap.Markmap){ cb(); return; }
-          var s1 = document.createElement('script');
-          s1.src = 'https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js';
-          s1.onload = function(){
-            var s2 = document.createElement('script');
-            s2.src = 'https://cdnjs.cloudflare.com/ajax/libs/markmap-view/0.18.10/browser/index.js';
-            s2.onload = function(){
-              var s3 = document.createElement('script');
-              s3.src = 'https://cdnjs.cloudflare.com/ajax/libs/markmap-lib/0.18.10/browser/index.js';
-              s3.onload = cb;
-              document.head.appendChild(s3);
-            };
-            document.head.appendChild(s2);
+          if(window.markmap && window.markmap.Markmap && window.markmap.Transformer){ cb(); return; }
+          if(window.__umsMarkmapLoading){
+            var iv = setInterval(function(){
+              if(window.markmap && window.markmap.Markmap && window.markmap.Transformer){
+                clearInterval(iv); cb();
+              }
+            }, 150);
+            return;
+          }
+          window.__umsMarkmapLoading = true;
+          var s = document.createElement('script');
+          s.src = 'https://cdn.jsdelivr.net/npm/markmap-autoloader@0.18.10/dist/index.js';
+          s.onload = function(){
+            // l'autoloader carica le dipendenze in modo asincrono: attendo che
+            // i global siano davvero pronti prima di renderizzare.
+            var att = 0;
+            var iv = setInterval(function(){
+              if(window.markmap && window.markmap.Markmap && window.markmap.Transformer){
+                clearInterval(iv); cb();
+              } else if(att++ > 80){ clearInterval(iv); cb(new Error('markmap timeout')); }
+            }, 150);
           };
-          document.head.appendChild(s1);
+          s.onerror = function(){ cb(new Error('autoloader fail')); };
+          document.head.appendChild(s);
         }
 
         // aggancio il pulsante "Mappa" alla barra dei toggle (se c'è) o ne creo una
