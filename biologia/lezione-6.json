@@ -440,5 +440,61 @@
       "titolo": "L’Analisi Scientifica degli Effetti Avversi",
       "macro": 3
     }
-  ]
+  ],
+  "mappa": {
+    "titolo": "Virus, Batteri e l'Evoluzione dei Vaccini",
+    "rami": [
+      {
+        "tema": "Caratteristiche generali dei virus",
+        "sotto": [
+          "Particelle viventi e parassiti obbligati [1, 2]",
+          "Incapaci di riprodursi senza cellula ospite [1, 3]",
+          "Origine antica condivisa con i batteri",
+          "Privi di organuli cellulari o nucleo"
+        ]
+      },
+      {
+        "tema": "Evoluzione e strategia dei virus",
+        "sotto": [
+          "Adattamento genetico continuo all'ospite [6, 7]",
+          "Riduzione progressiva dell'aggressività nel tempo [7, 8]",
+          "Sopravvivenza dell'ospite per la propagazione [9, 10]"
+        ]
+      },
+      {
+        "tema": "Struttura del SARS-CoV-2",
+        "sotto": [
+          "Forma sferica con protuberanze superficiali [11, 12]",
+          "Proteina Spike per agganciarsi alle cellule [12, 13]",
+          "Involucro proteico con genoma a RNA [5, 14]"
+        ]
+      },
+      {
+        "tema": "Meccanismi di replicazione",
+        "sotto": [
+          "Adesione e penetrazione nella membrana cellulare",
+          "Sfruttamento dell'energia e metabolismo dell'ospite [1, 16]",
+          "Assemblaggio di nuovi virus e lisi cellulare [17, 18]"
+        ]
+      },
+      {
+        "tema": "Tipologie di vaccini",
+        "sotto": [
+          "Metodo classico con virus intero disattivato [19, 20]",
+          "Vaccini innovativi a RNA messaggero sintetico [21, 22]",
+          "Vettori adenovirali per inserire il DNA [23, 24]",
+          "Iniezione diretta della sola proteina Spike"
+        ]
+      },
+      {
+        "tema": "Risposta del sistema immunitario",
+        "sotto": [
+          "Attivazione di macrofagi e cellule T",
+          "Produzione iniziale di immunoglobuline IgM aspecifiche",
+          "Risposta rapida con immunoglobuline specifiche IgG [28, 29]",
+          "Creazione della memoria immunitaria nel sangue"
+        ]
+      }
+    ]
+  }
 }
