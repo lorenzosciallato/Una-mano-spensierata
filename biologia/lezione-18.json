@@ -170,184 +170,184 @@
   ],
   "il_super_quiz": [
     {
-      "domanda": "Quale caratteristica anatomica del lombrico (anellide) consente la gestione autonoma di risposte motorie locali a livello dei singoli segmenti corporei?",
+      "domanda": "Un automobilista ritira improvvisamente il piede dal pedale dell'acceleratore quando vede un ostacolo, ma in un altro momento ritira la mano da una tazza bollente senza nemmeno rendersene conto. Quale descrizione spiega correttamente la differenza neurologica tra queste due risposte?",
       "opzioni": [
         {
-          "testo": "Un anello nervoso che circonda interamente il canale alimentare.",
+          "testo": "La reazione al calore è attivata dal sistema parasimpatico per rilassare i muscoli del braccio, mentre l'evitamento dell'ostacolo dipende dal sistema simpatico di emergenza.",
           "corretta": false
         },
         {
-          "testo": "Un ingrossamento gangliare del cordone ventrale in corrispondenza di ciascun metamero.",
+          "testo": "La risposta all'ostacolo coinvolge l'elaborazione della corteccia cerebrale, mentre la reazione al calore è gestita autonomamente da un ganglio spinale senza l'intervento iniziale del cervello.",
           "corretta": true
         },
         {
-          "testo": "Una rete nervosa diffusa priva di qualsiasi centro coordinatore.",
+          "testo": "Entrambe le reazioni sono coordinate dal midollo spinale, ma nel caso dell'ostacolo il segnale viaggia più velocemente lungo assoni privi di guaina mielinica.",
           "corretta": false
         }
       ],
-      "spiegazione": "La lezione spiega che il lombrico presenta ingrossamenti gangliari lungo il cordone ventrale in corrispondenza di ciascun metamero (segmento), permettendo a queste strutture di gestire e risolvere risposte a stimoli locali autonomamente, senza dover inviare l'informazione al cervello centrale."
+      "spiegazione": "La risposta corretta spiega che i riflessi involontari e rapidi, come ritirare la mano dal calore, sono gestiti localmente dai gangli del midollo spinale senza richiedere un controllo cosciente. L'opzione incentrata sui sistemi simpatico e parasimpatico è particolarmente insidiosa perché questi sistemi regolano effettivamente le risposte involontarie autonome, ma non sono i diretti responsabili degli archi riflessi somatici motori. Inoltre, il sistema parasimpatico è associato a stati di riposo e non a reazioni rapide di allontanamento da stimoli dolorosi."
     },
     {
-      "domanda": "A quale velocità massima può viaggiare l'impulso nervoso nel corpo umano grazie alla guaina mielinica, a confronto con la velocità lineare degli invertebrati privi di mielina?",
+      "domanda": "Se confrontiamo la reazione di una medusa (cnidario) e quella di una stella di mare quando vengono stimolate, quale differenza cruciale emerge nel modo in cui i loro rispettivi sistemi nervosi elaborano le informazioni?",
       "opzioni": [
         {
-          "testo": "Fino a 100 metri al secondo, contro un solo metro al secondo degli invertebrati.",
+          "testo": "La medusa reagisce in modo identico qualunque sia il punto stimolato a causa di una rete priva di centro coordinatore, mentre la stella di mare possiede un anello neurale che funge da centro di elaborazione rudimentale.",
           "corretta": true
         },
         {
-          "testo": "Circa 10 metri al secondo, contro i 100 metri al secondo degli invertebrati.",
+          "testo": "La medusa possiede un doppio cordone nervoso ventrale che centralizza lo stimolo, mentre la stella di mare si affida a una rete diffusa in cui ogni singolo punto decide in autonomia come contrarsi.",
           "corretta": false
         },
         {
-          "testo": "Esattamente un metro al secondo per entrambi, poiché la velocità elettrica non subisce variazioni.",
+          "testo": "Entrambi gli animali mancano di un vero cervello, ma la medusa coordina i tentacoli grazie a piccoli gangli segmentali, mentre la stella di mare invia tutti gli stimoli a un cervello cefalico.",
           "corretta": false
         }
       ],
-      "spiegazione": "La presenza della guaina mielinica e della conduzione saltatoria permette all'impulso nervoso di effettuare un salto di qualità logaritmico, portando la velocità da circa 1 metro al secondo (tipico degli invertebrati senza mielina) fino a 100 metri al secondo nel sistema nervoso umano."
+      "spiegazione": "La medusa presenta una rete nervosa diffusa e priva di centri di comando, per cui qualsiasi stimolo locale genera una risposta di contrazione uniforme di tutto il corpo. Al contrario, la stella di mare possiede un anello nervoso centrale che, pur essendo rudimentale, consente di coordinare i movimenti delle braccia e prendere decisioni elementari. L'opzione incentrata sul doppio cordone ventrale è ingannevole perché attribuisce erroneamente alla medusa strutture tipiche di invertebrati più evoluti come i platelminti."
     },
     {
-      "domanda": "Cosa si verifica a livello ionico sulla membrana dell'assone durante la generazione di un potenziale d'azione?",
+      "domanda": "In un esperimento di laboratorio, un ricercatore tratta un assone neuronale con una sostanza chimica che blocca selettivamente l'apertura dei canali del sodio. Cosa si osserva quando si applica uno stimolo alla cellula?",
       "opzioni": [
         {
-          "testo": "I canali della mielina si aprono facendo fuoriuscire il potassio e bloccando la pompa sodio-potassio.",
+          "testo": "La pompa sodio-potassio lavora a velocità raddoppiata per compensare il blocco, ripristinando immediatamente lo stato di riposo della membrana.",
           "corretta": false
         },
         {
-          "testo": "Si aprono i canali del sodio, permettendo l'ingresso rapido di ioni Na+ che inverte temporaneamente la polarità elettrica della membrana.",
+          "testo": "Il potenziale d'azione viene trasmesso in modo continuo anziché saltatorio, riducendo drasticamente la velocità di propagazione dell'impulso.",
+          "corretta": false
+        },
+        {
+          "testo": "La cellula non riesce a invertire la propria polarizzazione elettrica, impedendo l'avvio e la propagazione del potenziale d'azione lungo l'assone.",
           "corretta": true
-        },
-        {
-          "testo": "Gli ioni calcio invertono la carica elettrica esterna legandosi stabilmente all'acetilcolina.",
-          "corretta": false
         }
       ],
-      "spiegazione": "Durante il potenziale d'azione, l'arrivo dello stimolo provoca l'apertura dei canali del sodio. L'ingresso rapido e massiccio di ioni sodio (Na+) carichi positivamente all'interno del citoplasma inverte la polarità originaria dell'assone."
+      "spiegazione": "L'apertura dei canali del sodio è indispensabile affinché gli ioni sodio entrino rapidamente nella cellula, rovesciando la polarizzazione elettrica di riposo e innescando il potenziale d'azione. Se questi canali sono bloccati, la depolarizzazione non può avvenire e lo stimolo non si propaga. L'opzione relativa alla pompa sodio-potassio è insidiosa perché la pompa agisce effettivamente sul trasporto di questi ioni, ma interviene solo successivamente per ripristinare lo stato di riposo e non può compensare il blocco iniziale dell'impulso."
     },
     {
-      "domanda": "Quale malattia autoimmune cronica del sistema nervoso centrale colpisce le cellule di Schwann e la mielina, provocando interferenze elettriche e posture impacciate?",
+      "domanda": "Un medico spiega a un paziente che la perdita di coordinazione motoria causata dalla sclerosi multipla è legata a un problema di 'isolamento' dei circuiti neuronali. Qual è l'esatto meccanismo biologico alla base di questa disfunzione?",
       "opzioni": [
         {
-          "testo": "La sclerosi multipla.",
+          "testo": "Gli autoanticorpi distruggono le cellule gliali che producono la mielina, esponendo tratti di assone e provocando interferenze elettriche tra cellule adiacenti.",
           "corretta": true
         },
         {
-          "testo": "Il diabete mellito di tipo uno.",
+          "testo": "Il sistema immunitario attacca direttamente i recettori dei neurotrasmettitori nello spazio sinaptico, impedendo all'assone di rilasciare l'acetilcolina.",
           "corretta": false
         },
         {
-          "testo": "La necrosi da alcol dei microcapillari.",
+          "testo": "La mielina viene prodotta in eccesso dalle cellule di Schwann, creando una barriera fisica che blocca l'ingresso degli ioni sodio e potassio nell'assone.",
           "corretta": false
         }
       ],
-      "spiegazione": "La sclerosi multipla è una patologia autoimmune mediata da autoanticorpi anomali che danneggiano e rimuovono la mielina protettiva degli assoni, causando dispersioni e interferenze elettriche che compromettono la coordinazione motoria degli arti e la camminata."
+      "spiegazione": "La sclerosi multipla è una malattia autoimmune in cui il sistema immunitario attacca la guaina mielinica prodotta dalle cellule gliali, portando alla perdita dell'isolamento elettrico degli assoni e a conseguenti interferenze che alterano la coordinazione dei movimenti. L'opzione relativa ai recettori sinaptici è un distruttore insidioso poiché ipotizza un danno autoimmune biologicamente coerente, ma descrive una disfunzione sinaptica che non corrisponde al reale meccanismo patologico della sclerosi multipla, focalizzato invece sulla demielinizzazione."
     },
     {
-      "domanda": "In quale porzione dell'encefalo vengono inizialmente convogliati e sovrapposti gli impulsi visivi provenienti dall'occhio destro e sinistro prima di raggiungere la corteccia cerebrale?",
+      "domanda": "Qual è la differenza funzionale fondamentale tra la stimolazione operata dal sistema nervoso autonomo simpatico e quella operata dal sistema parasimpatico sugli stessi organi bersaglio?",
       "opzioni": [
         {
-          "testo": "Nel midollo allungato del romboencefalo.",
+          "testo": "Il simpatico regola esclusivamente le funzioni motorie volontarie degli arti inferiori, mentre il parasimpatico controlla le reazioni vegetative involontarie e i riflessi viscerali.",
           "corretta": false
         },
         {
-          "testo": "Nel talamo profondo del mesencefalo.",
-          "corretta": false
-        },
-        {
-          "testo": "Nel cervelletto.",
+          "testo": "Il simpatico prepara l'organismo all'azione e alla gestione di pericoli imminenti attivando risposte eccitatorie, mentre il parasimpatico favorisce il rilassamento e il recupero interno.",
           "corretta": true
+        },
+        {
+          "testo": "Il simpatico trasmette i segnali attraverso potenziali d'azione puramente chimici, mentre il parasimpatico utilizza impulsi elettrici saltatori ad altissima velocità.",
+          "corretta": false
         }
       ],
-      "spiegazione": "La lezione specifica che i nostri occhi inviano gli impulsi visivi direttamente al cervelletto, il quale sovrappone le immagini dell'occhio destro e dell'occhio sinistro prima di indirizzarle alla zona superiore per il riconoscimento intelligente."
+      "spiegazione": "Il sistema autonomo simpatico prepara il corpo alle emergenze aumentando la frequenza cardiaca e respiratoria, mentre il parasimpatico ha l'effetto opposto, promuovendo il rilassamento. L'opzione che attribuisce al simpatico il controllo motorio volontario è ingannevole perché confonde il sistema nervoso autonomo (che controlla solo funzioni involontarie) con il sistema somatico, facendo leva sul fatto che il simpatico prepara all'azione fisica."
     },
     {
-      "domanda": "In quale gruppo di organismi dotati di veri tessuti si riscontra per la prima volta un sistema nervoso rudimentale organizzato come rete diffusa priva di cervello o gangli?",
+      "domanda": "Un automobilista che ha assunto bevande alcoliche dichiara di sentirsi perfettamente lucido e in grado di guidare in sicurezza. Dal punto di vista neurologico, perché la sua autovalutazione è errata e pericolosa?",
       "opzioni": [
         {
-          "testo": "Negli cnidari, come le meduse e le attinie.",
+          "testo": "L'alcol agisce come anestetico e riduce la pressione sanguigna, rallentando la velocità con cui il sistema nervoso centrale risponde agli stimoli esterni e alterando la percezione.",
           "corretta": true
         },
         {
-          "testo": "Nei poriferi, come le spugne di mare.",
+          "testo": "L'alcol blocca selettivamente i recettori della dopamina nell'ipotalamo, inducendo un'attivazione motoria incontrollata e tremori che impediscono la frenata.",
           "corretta": false
         },
         {
-          "testo": "Nei platelminti, come le planarie.",
+          "testo": "Le molecole di alcol accelerano la pompa sodio-potassio impedendo l'apertura dei canali del potassio, bloccando così la trasmissione sinaptica a livello muscolare.",
           "corretta": false
         }
       ],
-      "spiegazione": "I sistemi nervosi si osservano per la prima volta negli organismi dotati di tessuti (quindi non nelle spugne). L'esempio più semplice è rappresentato dagli cnidari (meduse e attinie), dotati di una rete nervosa diffusa priva di gangli o cervello coordinatore."
+      "spiegazione": "L'alcol deprime le funzioni del sistema nervoso centrale inducendo vasodilatazione e agendo come anestetico locale, il che rallenta la reattività neuronale e le risposte motorie necessarie alla guida. L'opzione che menziona il blocco dei recettori della dopamina è insidiosa perché cita strutture e meccanismi biologici reali presentati nella lezione, ma li attribuisce erroneamente all'alcol anziché alla cocaina."
     },
     {
-      "domanda": "Quale neurotrasmettitore viene bloccato a livello cerebrale dalla nicotina, mascherando in modo illusorio lo stato di stanchezza fisica e sonnolenza?",
+      "domanda": "Un'analisi comparativa mostra che il piccolo toporagno ha un rapporto tra peso del cervello e peso corporeo del 10%, mentre l'essere umano si attesta al 2%. Come va interpretato correttamente questo dato biologico?",
       "opzioni": [
         {
-          "testo": "La dopamina.",
+          "testo": "Il toporagno possiede capacità di calcolo logico e pianificazione superiori a quelle umane, ma limitate dalla mancanza di organi effettori complessi como le mani.",
           "corretta": false
         },
         {
-          "testo": "L'acetilcolina.",
+          "testo": "La balena, avendo un rapporto dello 0,01%, dimostra che la selezione naturale tende a eliminare progressivamente il tessuto nervoso negli organismi di grandi dimensioni.",
+          "corretta": false
+        },
+        {
+          "testo": "Il semplice rapporto percentuale tra massa cerebrale e corporea non misura direttamente le capacità cognitive superiori, le quali dipendono invece dallo sviluppo della corteccia cerebrale.",
           "corretta": true
-        },
-        {
-          "testo": "La noradrenalina.",
-          "corretta": false
         }
       ],
-      "spiegazione": "La nicotina agisce legandosi e bloccando i recettori dell'acetilcolina a livello cerebrale, i quali sono preposti a segnalare la fatica, la stanchezza e la sonnolenza all'organismo, mascherando temporaneamente questi stati fisici reali."
+      "spiegazione": "L'intelligenza e le funzioni cognitive superiori non sono correlate al semplice rapporto percentuale della massa cerebrale rispetto al corpo, ma allo sviluppo evolutivo della corteccia cerebrale. L'opzione sul toporagno è un classico distruttore logico che asseconda l'idea errata che una percentuale maggiore indichi direttamente un intelletto superiore, attribuendo falsamente all'animale abilità cognitive umane."
     },
     {
-      "domanda": "Quali compiti cognitivi e comportamenti sono principalmente coordinati dall'attività dell'emisfero sinistro del cervello?",
+      "domanda": "Cosa accadrebbe in una sinapsi chimica se una sostanza prevenisse la fusione delle vescicole sinaptiche con la membrana del neurone presinaptico?",
       "opzioni": [
         {
-          "testo": "La creatività artistica, l'immaginazione, il disegno, la musica e la sfera emotiva.",
+          "testo": "Il potenziale d'azione invertirebbe la propria direzione risalendo lungo l'assone fino al corpo cellulare del primo neurone.",
           "corretta": false
         },
         {
-          "testo": "Il controllo involontario del battito cardiaco e l'attivazione dei riflessi del midollo spinale.",
-          "corretta": false
-        },
-        {
-          "testo": "Il ragionamento freddo, logico, razionale, il calcolo matematico, l'analisi dei dettagli e la parola fluida.",
+          "testo": "I neurotrasmettitori non verrebbero rilasciati nello spazio sinaptico, impedendo l'attivazione dei recettori sulla cellula bersaglio e bloccando il messaggio.",
           "corretta": true
+        },
+        {
+          "testo": "I neurotrasmettitori rimarrebbero legati in modo permanente ai recettori della cellula postsinaptica, provocando una stimolazione continua.",
+          "corretta": false
         }
       ],
-      "spiegazione": "L'emisfero sinistro è deputato al ragionamento freddo, razionale, logico e non emotivo, permettendo di pianificare, misurare, analizzare i dettagli ed elaborare la parola e il calcolo matematico."
+      "spiegazione": "Il passaggio del messaggio nervoso attraverso lo spazio sinaptico richiede necessariamente il rilascio dei neurotrasmettitori per esocitosi delle vescicole. Se la fusione è bloccata, il segnale chimico non viene emesso e la trasmissione si interrompe. L'opzione della stimolazione continua è ingannevole perché descrive l'effetto opposto, che si verificherebbe se venisse bloccata la rimozione del neurotrasmettitore già rilasciato, e non il blocco del suo rilascio originario."
     },
     {
-      "domanda": "Quale porzione del cervello dei vertebrati ha conosciuto un enorme e massiccio sviluppo evolutivo nei mammiferi rispetto a tutti gli altri gruppi?",
+      "domanda": "Un paziente mostra improvvisamente un comportamento estremamente impulsivo, irritabilità costante e una perdita quasi totale delle espressioni facciali legate alle emozioni. Quale spiegazione neurologica è più coerente con questi sintomi?",
       "opzioni": [
         {
-          "testo": "Il prosencefalo.",
+          "testo": "Il paziente ha subito una lesione all'emisfero destro, che regola la sfera emotiva, l'immaginazione e la mimica facciale correlata alle sensazioni.",
           "corretta": true
         },
         {
-          "testo": "Il mesencefalo.",
+          "testo": "L'emisfero sinistro è stato danneggiato, compromettendo la capacità di calcolo logico e inducendo un collasso delle risposte motorie involontarie.",
           "corretta": false
         },
         {
-          "testo": "Il romboencefalo.",
+          "testo": "L'area di Broca nell'emisfero sinistro è lesionata, provocando balbuzie e bloccando i segnali diretti ai muscoli mimici di entrambe le guance.",
           "corretta": false
         }
       ],
-      "spiegazione": "La filogenesi del cervello dei vertebrati evidenzia che, nel passaggio evolutivo dai vertebrati primitivi ai mammiferi, si assiste a un enorme accrescimento volumetrico e funzionale del prosencefalo, mentre le altre porzioni rimangono in proporzioni ridotte."
+      "spiegazione": "La coordinazione delle emozioni, l'impulsività e l'espressività facciale mimica sono regolate prevalentemente dall'emisfero destro, e i danni a questa porzione cerebrale generano proprio la sintomatologia descritta. L'opzione relativa all'area di Broca è insidiosa perché cita un'area reale dell'emisfero sinistro collegata all'espressione, ma che si occupa esclusivamente della fluidità del linguaggio parlato e non della mimica emotiva generale."
     },
     {
-      "domanda": "In quale specifica area della corteccia grigia cerebrale giungono sia le percezioni sensoriali esterne che le sensazioni di dolore interno (come mal di stomaco o mal di fegato)?",
+      "domanda": "Il lombrico di terra presenta un ingrossamento gangliare del cordone nervoso ventrale in corrispondenza di ciascun metamero. Qual è il vantaggio evolutivo di questa specifica organizzazione?",
       "opzioni": [
         {
-          "testo": "Nell'area somato-sensitiva.",
+          "testo": "Permette di pompare ormoni e neurotrasmettitori direttamente nei vasi sanguigni di ciascun metamero per velocizzare la digestione segmentale.",
+          "corretta": false
+        },
+        {
+          "testo": "Sostituisce completamente la funzione del cervello cefalico, rendendo l'animale del tutto immune a danni provocati nella regione anteriore del corpo.",
+          "corretta": false
+        },
+        {
+          "testo": "Consente di gestire risposte e riflessi a stimoli locali direttamente all'interno del segmento interessato, senza dover attendere l'elaborazione del cervello.",
           "corretta": true
-        },
-        {
-          "testo": "Nell'area di Broca.",
-          "corretta": false
-        },
-        {
-          "testo": "Nell'area premotoria.",
-          "corretta": false
         }
       ],
-      "spiegazione": "L'area somato-sensitiva della corteccia grigia è il distretto a cui arrivano sia gli stimoli sensoriali esterni ambientali, sia tutte le stimolazioni dolorose o di malessere provenienti dall'interno del corpo (come il mal di stomaco o il mal di fegato)."
+      "spiegazione": "La presenza di gangli metamerici consente al lombrico di rispondere a stimoli ambientali locali in modo immediato e autonomo direttamente nel segmento interessato, riducendo il tempo di trasmissione al cervello. L'opzione sul pompaggio di ormoni è fuorviante poiché confonde l'attivazione motoria rapida del sistema nervoso con la regolazione endocrina della digestione."
     }
   ],
   "assistente_ia": {
