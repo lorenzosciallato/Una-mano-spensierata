@@ -168,184 +168,184 @@
   ],
   "il_super_quiz": [
     {
-      "domanda": "Secondo la legge di Boyle, qual è la relazione tra il volume e la pressione di un gas a temperatura costante?",
+      "domanda": "In un laboratorio didattico, uno studente scrive nella sua relazione: 'Osservo che l'aria entra nel palloncino e lo gonfia'. Come deve essere valutata questa affermazione secondo le indicazioni metodologiche della lezione?",
       "opzioni": [
         {
-          "testo": "Sono direttamente proporzionali, quindi all'aumentare del volume aumenta anche la pressione interna.",
+          "testo": "Si tratta di un'osservazione pura e oggettiva, in quanto descrive fedelmente l'effetto finale del movimento del gas all'interno del sistema.",
           "corretta": false
         },
         {
-          "testo": "Sono inversamente proporzionali, poiché a volume minore le particelle hanno meno spazio e aumentano gli urti, accrescendo la pressione.",
+          "testo": "Contiene sia un'osservazione che una deduzione, poiché l'azione del rigonfiamento è visibile mentre il passaggio dell'aria invisibile viene dedotto.",
           "corretta": true
         },
         {
-          "testo": "Sono grandezze indipendenti, in quanto la variazione di volume influenza solo l'energia cinetica ma non la pressione sulle pareti.",
+          "testo": "Costituisce una spiegazione teorica preliminare, in quanto associa l'evento osservato a un principio fisico appreso durante la lezione.",
           "corretta": false
         }
       ],
-      "spiegazione": "La legge di Boyle stabilisce che volume e pressione sono inversamente proporzionali: quando il volume si rimpicciolisce, la pressione aumenta perché aumentano gli urti delle particelle contro le pareti."
+      "spiegazione": "La risposta corretta è la seconda perché distinguere tra ciò che è direttamente osservabile con i sensi (il rigonfiamento del palloncino) e ciò che è dedotto tramite un modello mentale (il flusso invisibile dell'aria) è fondamentale nella didattica scientifica. Il primo distrattore è particolarmente insidioso perché a livello intuitivo tendiamo a considerare l'intero processo come un'osservazione diretta, dimenticando che l'aria stessa non è visibile. Questa distinzione metodologica serve proprio ad allenare gli studenti a separare i dati empirici dalle spiegazioni deduttive che formulano."
     },
     {
-      "domanda": "Come percepiscono la presenza dell'aria negli spazi chiusi (come un barattolo con il tappo) i bambini più piccoli della scuola dell'infanzia?",
+      "domanda": "Durante un esperimento con una bottiglia d'acqua e un palloncino, comprimendo la bottiglia l'acqua sale e il palloncino si gonfia in tutte le direzioni. Quale differenza concettuale permette di distinguere il ruolo della legge di Boyle da quello del principio di Pascal in questo fenomeno?",
       "opzioni": [
         {
-          "testo": "Riconoscono subito che l'aria riempie il barattolo e che circola continuamente con l'esterno.",
+          "testo": "La legge di Boyle si applica ai liquidi incomprimibili presenti nella bottiglia, mentre il principio di Pascal descrive il comportamento elastico della membrana del palloncino.",
           "corretta": false
         },
         {
-          "testo": "Associano l'aria solo al movimento (vento, andare in bicicletta), ritenendo che nel barattolo chiuso non ci sia nulla e che l'aria entri solo se viene aperto.",
+          "testo": "La legge di Boyle descrive la conservazione della massa d'aria all'interno del contenitore, mentre il principio di Pascal riguarda la velocità con cui l'acqua trasmette la forza al palloncino.",
+          "corretta": false
+        },
+        {
+          "testo": "La legge di Boyle spiega la variazione di volume del gas dovuta al cambiamento di pressione, mentre il principio di Pascal spiega come la pressione esercitata sull'acqua si trasmetta in ogni punto del sistema.",
           "corretta": true
-        },
-        {
-          "testo": "Pensano che l'aria sia un liquido invisibile che esercita una forza peso verso il basso solo se il barattolo viene capovolto.",
-          "corretta": false
         }
       ],
-      "spiegazione": "Per i bambini piccoli l'aria non esiste negli spazi chiusi e statici. La percepiscono solo all'aperto sotto forma di vento o movimento, ritenendo che il barattolo chiuso sia vuoto."
+      "spiegazione": "La risposta corretta è la terza, poiché evidenzia come il principio di Pascal spieghi la trasmissione uniforme della pressione attraverso il liquido (l'acqua), mentre la legge di Boyle descrive l'effetto di compressione e variazione volumetrica subito dall'aria. Il secondo distrattore è insidioso perché menziona la conservazione della massa, ma la associa erroneamente al principio di Pascal come se fosse la sua definizione. Questo permette di verificare se gli studenti sanno discernere il campo di applicazione di ciascuna legge all'interno di un sistema misto."
     },
     {
-      "domanda": "Nell'esperimento dei palloncini appesi alla bilancia, perché i bambini di 5 anni affermano che il palloncino gonfio andrà verso il basso?",
+      "domanda": "Un insegnante propone l'esperimento dei due palloncini identici gonfiati in equilibrio su una bilancia, sgonfiandone successivamente uno. Uno studente di otto anni osserva che il braccio con il palloncino gonfio si abbassa, ma sostiene che ciò avvenga semplicemente perché il palloncino gonfio è più grande dell'altro. Quale ostacolo cognitivo si manifesta in questa spiegazione?",
       "opzioni": [
         {
-          "testo": "Perché è visivamente più grande, senza fare alcun riferimento al peso dell'aria contenuta al suo interno.",
+          "testo": "La tendenza ad attribuire un'intenzionalità agli oggetti inanimati, pensando che il palloncino più grande desideri scendere verso il basso.",
+          "corretta": false
+        },
+        {
+          "testo": "La difficoltà nel dissociare il concetto di peso e di massa dalle dimensioni visibili dell'oggetto, non riconoscendo l'aria come sostanza dotata di peso.",
           "corretta": true
         },
         {
-          "testo": "Perché hanno già compreso che l'aria possiede una propria massa e subisce l'attrazione gravitazionale.",
-          "corretta": false
-        },
-        {
-          "testo": "Perché credono che l'aria interna venga compressa dalla pressione atmosferica esterna.",
+          "testo": "L'incapacità di comprendere l'effetto della pressione atmosferica esterna che agisce in modo sbilanciato sui due palloncini.",
           "corretta": false
         }
       ],
-      "spiegazione": "I bambini di cinque anni indicano correttamente che il palloncino più gonfio scende, ma giustificano questa previsione solo basandosi sulla dimensione dell'oggetto ('è più grande') e non sul peso dell'aria."
+      "spiegazione": "La risposta corretta è la seconda, in quanto i bambini di otto anni possiedono spesso una concezione del peso legata esclusivamente alle dimensioni degli oggetti, faticando a concepire l'aria come materia pesante. Il terzo distrattore è insidioso perché introduce il concetto reale di pressione atmosferica, ma lo applica a una situazione di squilibrio inesistente. Questa domanda mette in luce come gli ostacoli cognitivi infantili siano spesso guidati dall'evidenza visiva immediata rispetto ai concetti scientifici invisibili."
     },
     {
-      "domanda": "Quale concezione sul peso dell'aria manifestano frequentemente i bambini di circa 8 anni?",
+      "domanda": "Uno studente spiega che quando si beve da una cannuccia, il liquido sale in bocca perché 'la bocca aspira e tira l'acqua verso l'alto, esercitando una forza di risucchio diretta sul liquido'. Quale descrizione scientifica corregge questa concezione comune?",
       "opzioni": [
         {
-          "testo": "Ritengono che l'aria sia priva di peso, o che possieda un peso negativo che tende a spingere gli oggetti verso l'alto.",
+          "testo": "Il liquido viene sollevato dalla forza di coesione interna dell'acqua, che risponde alla forza meccanica impressa dalle labbra sulla cannuccia.",
+          "corretta": false
+        },
+        {
+          "testo": "Il liquido si sposta verso l'alto a causa del principio di Pascal, che trasmette la forza esercitata dai polmoni in ogni punto della cannuccia.",
+          "corretta": false
+        },
+        {
+          "testo": "Il liquido sale perché la riduzione della pressione dell'aria all'interno della bocca permette alla pressione atmosferica esterna di spingere l'acqua su per la cannuccia.",
           "corretta": true
-        },
-        {
-          "testo": "Sanno calcolare con precisione il peso di un litro d'aria usando la legge di Stevino.",
-          "corretta": false
-        },
-        {
-          "testo": "Pensano che l'aria pesi solo se si trova all'interno di un contenitore capovolto e immerso in acqua.",
-          "corretta": false
         }
       ],
-      "spiegazione": "A otto anni emerge l'idea che l'aria non pesi nulla o che abbia un peso negativo (che fa volare le cose), ricollegandosi alla mancata conservazione del peso già osservata con la frammentazione del polistirolo."
+      "spiegazione": "La risposta corretta è la terza, in quanto spiega scientificamente che l'atto del risucchiare diminuisce solo la pressione interna alla bocca, lasciando che sia la pressione atmosferica esterna a spingere il liquido. Il secondo distrattore è molto insidioso perché rispecchia la spiegazione intuitiva degli studenti, che tendono ad attribuire all'aria una forza di trazione attiva (trazione anziché spinta). Comprendere questo meccanismo permette di superare l'ostacolo cognitivo del risucchio a favore del concetto di pressione esterna."
     },
     {
-      "domanda": "Quale forza è approssimativamente richiesta per comprimere completamente il pistone di una siringa sigillata con sezione di un centimetro quadrato?",
+      "domanda": "Durante una dimostrazione con un bicchiere pieno d'acqua coperto da un cartoncino e capovolto, l'acqua non cade. Uno studente ipotizza che l'acqua sia trattenuta perché il cartoncino si è incollato al bordo del bicchiere a causa dell'umidità. Come si può confutare questa spiegazione proponendo una variazione dell'esperimento?",
       "opzioni": [
         {
-          "testo": "Circa 10 Newton, che equivalgono alla forza necessaria per sollevare una massa di un chilogrammo.",
+          "testo": "Utilizzando un bicchiere vuoto per dimostrare che il cartoncino si attacca solo in presenza di acqua, confermando l'effetto della tensione superficiale del liquido.",
+          "corretta": false
+        },
+        {
+          "testo": "Sostituendo il cartoncino con una sottile lastra di plastica rigida e asciutta, mostrando che l'acqua non cade grazie alla spinta verso l'alto della pressione atmosferica.",
           "corretta": true
         },
         {
-          "testo": "Circa 100 Newton, che corrispondono alla pressione esercitata da una colonna d'acqua di un metro.",
-          "corretta": false
-        },
-        {
-          "testo": "Una forza trascurabile, poiché l'aria interna oppone resistenza solo se riscaldata.",
+          "testo": "Utilizzando un contenitore molto più largo per dimostrare che la forza di gravità dell'acqua supera la resistenza offerta dal cartoncino umido.",
           "corretta": false
         }
       ],
-      "spiegazione": "La forza richiesta per vincere la pressione dell'aria compressa in una siringa con sezione di un centimetro quadrato equivale a circa dieci Newton, assimilabile allo sforzo per sollevare un chilogrammo."
+      "spiegazione": "La risposta corretta è la seconda perché l'uso di una lastra rigida e asciutta esclude l'effetto collante dell'umidità e focalizza l'attenzione sulla forza esercitata dalla pressione atmosferica. Il primo distrattore è insidioso poiché fa appello alla tensione superficiale, un concetto reale ma non sufficiente a spiegare l'equilibrio del sistema. Modificare l'esperimento isolando le variabili è la chiave metodologica per confutare le spiegazioni parziali o errate degli studenti."
     },
     {
-      "domanda": "Come interpretano i bambini di 8 anni la risalita dell'acqua in una cannuccia e qual è il falso mito collegato?",
+      "domanda": "Nel progettare un'attività didattica sui fluidi, l'insegnante propone l'esperimento della bottiglia forata a diverse altezze (zampilli d'acqua) e quello della bottiglia chiusa schiacciata. Quale differenza concettuale si vuole far emergere tra questi due esperimenti?",
       "opzioni": [
         {
-          "testo": "Riconoscono che la pressione atmosferica esterna spinge il liquido verso l'alto.",
-          "corretta": false
-        },
-        {
-          "testo": "Sostengono che l'aria nella cannuccia o nella bocca tiri attivamente l'acqua, alimentando il falso mito del risucchio.",
+          "testo": "L'esperimento degli zampilli illustra come la pressione aumenti con la profondità, mentre lo schiacciamento della bottiglia mostra come la pressione si trasmetta in ogni direzione.",
           "corretta": true
         },
         {
-          "testo": "Attribuissero il movimento esclusivamente alla forza di gravità che agisce sul bicchiere.",
+          "testo": "L'esperimento degli zampilli mostra l'incomprimibilità dei liquidi, mentre lo schiacciamento della bottiglia evidenzia la comprimibilità dei gas presenti nel sistema.",
+          "corretta": false
+        },
+        {
+          "testo": "L'esperimento degli zampilli descrive l'effetto della spinta di Archimede, mentre lo schiacciamento della bottiglia si basa sulla legge di Boyle.",
           "corretta": false
         }
       ],
-      "spiegazione": "I bambini di otto anni superano l'idea dell'azione corporea diretta ma credono che sia l'aria a tirare attivamente l'acqua verso l'alto. Questo evidenzia l'ostacolo cognitivo legato all'idea di 'risucchio'."
+      "spiegazione": "La risposta corretta è la prima, poiché confronta direttamente la legge di Stevino (la pressione dipende dalla profondità, visibile nei diversi zampilli) con il principio di Pascal (la pressione applicata si propaga in tutte le direzioni, visibile comprimendo la bottiglia). Il secondo distrattore è insidioso perché cita concetti fisicamente corretti come l'incomprimibilità dei liquidi, ma li associa in modo errato ai due esperimenti proposti. Questo confronto aiuta a strutturare i nodi concettuali relativi al comportamento dei fluidi statici e sotto pressione."
     },
     {
-      "domanda": "Fino a quale altezza teorica la pressione atmosferica è in grado di sostenere una colonna d'acqua?",
+      "domanda": "Se immergiamo verticalmente un barattolo trasparente capovolto in una bacinella d'acqua, si osserva che l'acqua entra solo parzialmente nel barattolo. Quale spiegazione scientifica descrive correttamente questo comportamento?",
       "opzioni": [
         {
-          "testo": "Fino a 76 centimetri, come dimostrato dall'esperimento con il mercurio.",
+          "testo": "L'acqua non sale nel barattolo perché la pressione atmosferica esterna preme sulla bacinella impedendo all'acqua di muoversi verso l'alto.",
           "corretta": false
         },
         {
-          "testo": "Fino a 10,3 metri, come evidenziato storicamente dal limite delle pompe aspiranti.",
+          "testo": "L'acqua non entra del tutto perché l'aria all'interno viene compressa dall'acqua che sale, aumentando la propria pressione fino a equilibrare la spinta idrostatica.",
           "corretta": true
         },
         {
-          "testo": "Fino a un'altezza infinita, purché il diametro del contenitore sia microscopico.",
+          "testo": "L'acqua non entra perché l'aria e l'acqua sono sostanze con la stessa densità, il che impedisce la compenetrazione reciproca dei due fluidi.",
           "corretta": false
         }
       ],
-      "spiegazione": "La pressione atmosferica esercitata sulla superficie libera del liquido è in grado di trattenere e sostenere una colonna d'acqua alta fino a un limite massimo di 10,3 metri."
+      "spiegazione": "La risposta corretta è la seconda, poiché l'aria intrappolata nel barattolo si comprime all'aumentare della spinta dell'acqua, riducendo il proprio volume in accordo con la legge di Boyle fino al raggiungimento di un equilibrio pressorio. Il primo distrattore è insidioso perché attribuisce il blocco alla sola pressione atmosferica esterna sulla bacinella, ignorando la compressione del gas all'interno dello spazio chiuso. Questa distinzione evidenzia la natura materiale dell'aria e la sua comprimibilità rispetto ai liquidi."
     },
     {
-      "domanda": "Nell'esperimento del bicchiere d'acqua capovolto estratto parzialmente da una bacinella, quale spiegazione del fenomeno non viene mai formulata spontaneamente dai bambini?",
+      "domanda": "Tappando ermeticamente il foro di una siringa e provando a tirare lo stantuffo all'indietro per aumentare il volume interno, si avverte una forte resistenza. Da cosa è causata questa resistenza dal punto di vista fisico?",
       "opzioni": [
         {
-          "testo": "Che l'acqua sia tenuta nel bicchiere dall'aria presente sulla superficie esterna dell'acqua nella bacinella.",
+          "testo": "Dall'attrito meccanico tra le pareti della siringa e lo stantuffo, che aumenta proporzionalmente alla velocità del movimento.",
+          "corretta": false
+        },
+        {
+          "testo": "Dall'aumento dell'energia cinetica delle particelle d'aria intrappolate, che esercitano una forza attrattiva sullo stantuffo.",
+          "corretta": false
+        },
+        {
+          "testo": "Dalla diminuzione della pressione interna che crea una differenza rispetto alla pressione atmosferica esterna, la quale spinge lo stantuffo nella direzione opposta.",
           "corretta": true
-        },
-        {
-          "testo": "Che l'acqua sia trattenuta dall'acqua stessa presente all'interno della bacinella.",
-          "corretta": false
-        },
-        {
-          "testo": "Che l'acqua sia sostenuta dall'aria situata nella parte superiore (in cima) del bicchiere.",
-          "corretta": false
         }
       ],
-      "spiegazione": "I bambini formulano varie ipotesi (l'acqua della bacinella trattiene quella nel bicchiere, o l'aria in cima lo fa), ma nessuno ipotizza spontaneamente l'azione dell'aria che prema sulla superficie libera del liquido circostante."
+      "spiegazione": "La risposta corretta è la terza perché, tirando lo stantuffo di una siringa sigillata, si espande l'aria interna riducendone la pressione ben al di sotto di quella atmosferica esterna, che quindi si oppone al movimento. Il primo distrattore è molto insidioso poiché un'analisi superficiale potrebbe attribuire la resistenza a un mero attrito fisico dello stantuffo, soprattutto in siringhe di grandi dimensioni. Comprendere questo fenomeno permette di quantificare l'intensità delle forze generate dalle differenze di pressione."
     },
     {
-      "domanda": "Per quale motivo la pressione atmosferica risulta così difficile da comprendere per i bambini?",
+      "domanda": "Nel diagramma di Gowin, l'insegnante sottolinea l'importanza di formulare una 'domanda investigabile' al centro dello schema. Quale tra le seguenti proposte rappresenta una corretta domanda investigabile per un'attività didattica?",
       "opzioni": [
         {
-          "testo": "Perché varia continuamente in base alle stagioni e alle coordinate geografiche del laboratorio.",
+          "testo": "Per quale motivo la natura si comporta in modo insolito quando manipoliamo i fluidi?",
           "corretta": false
         },
         {
-          "testo": "Perché agisce in modo uniforme su tutti i punti del nostro corpo annullandosi, impedendo di averne una consapevolezza sensoriale diretta.",
+          "testo": "Che cosa succede all'interno di una bottiglia d'acqua se proviamo a riscaldarla?",
+          "corretta": false
+        },
+        {
+          "testo": "Il palloncino si gonfia allo stesso modo se schiacciamo la bottiglia senza l'acqua al suo interno?",
           "corretta": true
-        },
-        {
-          "testo": "Perché i bambini non riescono a comprendere che l'acqua sia più densa e pesante dell'aria.",
-          "corretta": false
         }
       ],
-      "spiegazione": "La pressione atmosferica è controintuitiva perché agisce in tutte le direzioni e si equilibra perfettamente, rendendola invisibile e impercettibile ai nostri sensi nella vita quotidiana."
+      "spiegazione": "La risposta corretta è la terza, poiché una domanda investigabile deve poter guidare un esperimento concreto con variabili precise e portare a una risposta confrontabile (sì/no o un valore misurabile). Il secondo distrattore è insidioso perché sembra scientifico, ma è formulato in modo troppo generico ('che cosa succede') per poter strutturare un protocollo sperimentale rigoroso. Saper formulare domande focalizzate è uno dei pilastri metodologici del diagramma di Gowin presentati a lezione."
     },
     {
-      "domanda": "Quale distinzione fondamentale deve compiere uno studente quando redige una relazione di laboratorio?",
+      "domanda": "Durante un'attività con bambini della scuola dell'infanzia, molti rispondono che un barattolo chiuso e vuoto non contiene nulla e che 'l'aria c'è solo fuori, quando corriamo o quando c'è vento'. Quale percorso didattico è più efficace per superare questa concezione?",
       "opzioni": [
         {
-          "testo": "Deve separare l'osservazione (ciò che rileva con strumenti o sensi, come il palloncino che si gonfia) dalla deduzione e dalla spiegazione scientifica.",
+          "testo": "Proporre attività sensoriali e motorie che collegano l'aria agli oggetti e al proprio corpo, mostrando che essa esercita forze anche in assenza di vento.",
           "corretta": true
         },
         {
-          "testo": "Deve limitarsi a copiare le formule teoriche di Boyle e Pascal senza descrivere l'esperimento pratico.",
+          "testo": "Spiegare teoricamente la composizione chimica dell'aria, evidenziando le percentuali di azoto e ossigeno presenti nella stanza.",
           "corretta": false
         },
         {
-          "testo": "Deve descrivere l'azione umana escludendo qualsiasi riferimento alle variabili fisiche come pressione o volume.",
+          "testo": "Mostrare l'esperimento del barometro di Torricelli per far misurare ai bambini il valore numerico della pressione atmosferica.",
           "corretta": false
         }
       ],
-      "spiegazione": "La didattica di laboratorio richiede di discriminare rigorosamente l'osservazione (fatti percepibili o misurabili come il rigonfiamento del palloncino) dalle deduzioni interpretative e dalle spiegazioni teoriche finali."
+      "spiegazione": "La risposta corretta è la prima, poiché la didattica per l'infanzia deve basarsi su esperienze corporee concrete (come correre con un cartone o usare paracadute giocattolo) per svincolare l'esistenza dell'aria dal solo movimento naturale. Il secondo distrattore è insidioso perché propone un approccio formale e teorico che, pur essendo corretto, è inadeguato all'età dei bambini e non favorisce il superamento dell'ostacolo cognitivo. Il passaggio concettuale avviene infatti associando l'aria alla sua presenza invisibile ma rilevabile dentro e fuori dagli oggetti."
     }
   ],
   "assistente_ia": {
