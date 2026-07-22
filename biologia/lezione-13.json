@@ -187,184 +187,184 @@
   ],
   "il_super_quiz": [
     {
-      "domanda": "Quale delle seguenti caratteristiche definisce un organismo come pianta secondo la moderna tassonomia biologica?",
+      "domanda": "Uno studente osserva al microscopio delle cellule vegetali in attiva divisione mitotica prelevate da un organismo aploide. Basandosi sul ciclo vitale delle piante descritto nella lezione, quale struttura si sta sviluppando da queste divisioni?",
       "opzioni": [
         {
-          "testo": "Essere un organismo fotosintetico sia unicellulare che pluricellulare.",
+          "testo": "Lo sporofito, che rappresenta la generazione diploide prevalente nelle piante terrestri.",
           "corretta": false
         },
         {
-          "testo": "Essere un organismo eucariota pluricellulare, escludendo gli organismi fotosintetici unicellulari che sono solitamente protisti.",
+          "testo": "Il gametofito, poiché nelle piante anche le spore aploidi possono dividersi per mitosi.",
           "corretta": true
         },
         {
-          "testo": "Essere un organismo procariota autotrofo in grado di vivere esclusivamente in ambiente terrestre.",
+          "testo": "Lo zigote, che deve compiere mitosi per ripristinare il corredo cromosomico della pianta adulta.",
           "corretta": false
         }
       ],
-      "spiegazione": "Secondo la lezione, le piante sono organismi eucarioti pluricellulari. Gli organismi fotosintetici unicellulari sono in realtà classificati come protisti."
+      "spiegazione": "Nelle piante, a differenza degli animali, sia lo zigote diploide sia le spore aploidi possono dividersi per mitosi. Di conseguenza, le divisioni mitotiche di cellule aploidi portano allo sviluppo del gametofito, che è una struttura interamente aploide. Il distruttore riguardante lo zigote è insidioso perché negli animali è solo lo zigote diploide a fare mitosi, inducendo gli studenti a ritenere erroneamente che le cellule aploidi non possano dividersi per mitosi nel regno vegetale."
     },
     {
-      "domanda": "Nel ciclo vitale di una pianta, qual è la differenza funzionale fondamentale tra la spora prodotta dallo sporofito e il gamete prodotto dal gametofito?",
+      "domanda": "Un botanico esegue un incrocio di 'bella di notte': impollina un fiore di un ramo completamente bianco (privo di cloroplasti funzionali) con il polline proveniente da un ramo verde. Quale fenotipo mostreranno le piante nate da questo incrocio e per quale motivo?",
       "opzioni": [
         {
-          "testo": "La spora può generare un nuovo organismo autonomamente senza unirsi ad altre cellule, mentre i gameti devono fondersi tra loro per dare origine a un nuovo organismo.",
+          "testo": "Saranno di colore verde, poiché il carattere della presenza di clorofilla ereditato dal polline paterno è dominante.",
+          "corretta": false
+        },
+        {
+          "testo": "Mostreranno foglie variegate, a causa della ricombinazione casuale dei geni nucleari durante la fecondazione.",
+          "corretta": false
+        },
+        {
+          "testo": "Saranno di colore bianco, perché i cloroplasti e il loro DNA vengono ereditati tramite il citoplasma materno.",
           "corretta": true
-        },
-        {
-          "testo": "La spora necessita di essere fecondata da una spora di sesso opposto, mentre i gameti si dividono autonomamente per mitosi.",
-          "corretta": false
-        },
-        {
-          "testo": "La spora è sempre una cellula diploide, mentre i gameti sono cellule prive di nucleo e di materiale genetico.",
-          "corretta": false
         }
       ],
-      "spiegazione": "Come spiegato nella lezione, lo sporofito produce spore che possono generare un altro organismo senza unirsi ad altre cellule, mentre i gameti prodotti dal gametofito devono unirsi a un'altra cellula (fecondazione) per dare origine a un nuovo organismo."
+      "spiegazione": "La colorazione delle foglie nella bella di notte dipende dal DNA dei cloroplasti, organuli che mostrano un'eredità citoplasmatica (o materna) poiché lo zigote eredita il citoplasma quasi esclusivamente dalla cellula uovo. Il distruttore basato sulla dominanza del carattere verde è molto ingannevole perché applica le classiche leggi di Mendel sui geni nucleari, ignorando che i geni dei cloroplasti non risiedono nel nucleo cellulare e non seguono l'eredità mendeliana. Di conseguenza, il fenotipo della prima generazione replicherà sempre fedelmente la colorazione della pianta madre."
     },
     {
-      "domanda": "Quale caratteristica mitotica distingue in modo fondamentale la riproduzione delle piante da quella degli animali?",
+      "domanda": "Qual è la differenza fondamentale, a livello di classificazione biologica, tra un'alga unicellulare fotosintetica e una pianta terrestre secondo la moderna sistematica presentata a lezione?",
       "opzioni": [
         {
-          "testo": "Negli animali sia la spora che lo zigote fanno mitosi, mentre nelle piante solo lo zigote diploide può dividersi.",
-          "corretta": false
-        },
-        {
-          "testo": "Nelle piante sia la spora aploide sia lo zigote diploide possono fare mitosi, mentre negli animali la mitosi inizia solo dopo la formazione dello zigote diploide.",
+          "testo": "L'alga unicellulare appartiene al regno dei protisti in quanto organismo fotosintetico non pluricellulare, mentre le piante sono rigorosamente eucarioti pluricellulari.",
           "corretta": true
         },
         {
-          "testo": "Nelle piante la mitosi avviene esclusivamente nei gameti aploidi, impedendo allo zigote di accrescersi in un embrione.",
+          "testo": "L'alga unicellulare non possiede una parete cellulare di cellulosa, struttura che si sviluppa specificamente con l'adattamento delle piante all'ambiente terrestre.",
+          "corretta": false
+        },
+        {
+          "testo": "L'alga unicellulare compie una fotosintesi priva della fase oscura, che si è evoluta successivamente nelle piante per resistere alla siccità.",
           "corretta": false
         }
       ],
-      "spiegazione": "La lezione evidenzia che, a differenza degli animali (in cui solo lo zigote diploide fa la mitosi che darà origine all'adulto), nelle piante sia la spora aploide sia lo zigote diploide hanno la capacità di dividersi per mitosi."
+      "spiegazione": "La classificazione scientifica moderna riserva il regno delle piante esclusivamente agli organismi eucarioti pluricellulari, ricollocando gli organismi fotosintetici unicellulari nel regno dei protisti. Il distruttore sulla parete cellulare trae in inganno lo studente inducendolo a confondere una caratteristica citologica con il principale criterio tassonomico della pluricellularità. Inoltre, la fotosintesi biochimica, inclusa la fase oscura, è condivisa sia dai protisti autotrofici sia dalle piante."
     },
     {
-      "domanda": "Nelle piante gimnosperme (come le conifere), dove si sviluppa e si trova il seme?",
+      "domanda": "In laboratorio, una classe vuole osservare le pareti cellulari vegetali al microscopio senza utilizzare coloranti chimici aggiuntivi. Quale campione è più indicato prelevare per ottenere una visione chiara e definita delle cellule?",
       "opzioni": [
         {
-          "testo": "All'interno di un frutto carnoso zuccherino che serve a nutrirlo.",
+          "testo": "Una foglia verde brillante, poiché l'abbondanza di cloroplasti rende i contorni delle cellule immediatamente visibili.",
           "corretta": false
         },
         {
-          "testo": "Attaccato alle lamelle dei coni (pigne), senza alcun rivestimento protettivo esterno.",
+          "testo": "Le radichette trasparenti di una cipolla, in quanto la mancanza di pigmenti colorati permette di distinguere chiaramente la parete cellulare poligonale.",
           "corretta": true
         },
         {
-          "testo": "Sulla superficie della radichetta primaria all'interno di una coltura idroponica.",
+          "testo": "Una sezione di fusto vascolarizzato, dato che i tubicini dello xilema e del floema rifrangono la luce naturale evidenziando i confini cellulari.",
           "corretta": false
         }
       ],
-      "spiegazione": "Le gimnosperme hanno semi nudi ('gimnosperme' significa seme nudo). I semi si sviluppano attaccati alle lamelle di coni legnosi (come le pigne femminili) e non sono rivestiti da un frutto."
+      "spiegazione": "Le radichette di cipolla, essendo trasparenti, consentono di distinguere chiaramente la parete cellulare e la sua tipica forma poligonale al microscopio anche in assenza di coloranti. Il distruttore relativo alla foglia verde è particolarmente insidioso perché l'intuito suggerirebbe di usare una foglia verde; tuttavia, l'alta densità di cloroplasti e la sovrapposizione cellulare rendono difficile individuare i singoli contorni senza una colorazione specifica. Il fusto vascolarizzato, pur strutturato, richiede preparazioni complesse non adatte a un'osservazione elementare."
     },
     {
-      "domanda": "Perché per osservare le cellule vegetali a scuola si preferisce utilizzare le radichette delle cipolle al posto delle foglie verdi?",
+      "domanda": "Quale affermazione descrive correttamente la relazione temporale e biochimica tra la fase luminosa e la fase oscura della fotosintesi clorofilliana?",
       "opzioni": [
         {
-          "testo": "Perché le radichette sono trasparenti e permettono di vedere bene la parete cellulare poligonale (soprattutto se colorate), mentre le foglie sono troppo fitte e sature di cloroplasti opachi.",
+          "testo": "La fase luminosa avviene di giorno per produrre ossigeno, mentre la fase oscura si attiva in modo specifico di notte per consumare l'anidride carbonica.",
+          "corretta": false
+        },
+        {
+          "testo": "La fase oscura si svolge indipendentemente di notte perché l'enzima che fissa l'anidride carbonica viene disattivato dalla luce solare.",
+          "corretta": false
+        },
+        {
+          "testo": "Entrambe le fasi avvengono contemporaneamente durante il giorno, poiché la fase oscura necessita dei prodotti energetici generati dalla fase luminosa.",
           "corretta": true
-        },
-        {
-          "testo": "Perché le foglie verdi non possiedono una parete cellulare di cellulosa, che si trova invece solo nelle cipolle.",
-          "corretta": false
-        },
-        {
-          "testo": "Perché le cellule delle foglie si muovono continuamente con movimenti a S, rendendo impossibile la messa a fuoco al microscopio.",
-          "corretta": false
         }
       ],
-      "spiegazione": "La cipolla è trasparente e permette di visualizzare bene la parete cellulare al microscopio (specialmente con coloranti come il blu di metilene). Le cellule delle foglie sono invece molto attaccate e ricche di cloroplasti verdi opachi, rendendo difficile distinguere le singole strutture."
+      "spiegazione": "Durante il giorno avvengono entrambe le fasi della fotosintesi, poiché la fase oscura necessita dell'energia sotto forma di ATP e dell'idrogeno (trasportato dal NADPH2) generati direttamente nella fase luminosa grazie alla luce solare. Il primo distruttore rappresenta la tipica concezione errata, smentita a lezione, che separa rigidamente le due fasi tra giorno e notte. Il secondo distruttore tenta di giustificare biochimicamente questa falsa separazione temporale, traendo in inganno chi non ricorda il legame di dipendenza della fase oscura dall'ATP."
     },
     {
-      "domanda": "In che modo viene trasmessa la colorazione variegata delle foglie nella pianta bella di notte (Mirabilis jalapa)?",
+      "domanda": "Un agricoltore decide di irrigare costantemente un campo di monocoltura estensiva utilizzando acqua ricca di sali minerali per accelerare la crescita delle piante. Sul lungo periodo, quale conseguenza ecologica subirà il terreno?",
       "opzioni": [
         {
-          "testo": "Seguendo le leggi classiche di Mendel, mostrando una dominanza assoluta del colore bianco sul verde.",
-          "corretta": false
-        },
-        {
-          "testo": "In base al fenotipo del genitore maschio attraverso il DNA presente nel nucleo.",
-          "corretta": false
-        },
-        {
-          "testo": "Tramite un'eredità citoplasmatica di linea materna, poiché i geni si trovano nel DNA dei cloroplasti ereditati col citoplasma dell'uovo.",
+          "testo": "Un processo di desertificazione causato dall'evaporazione dell'acqua che lascia i sali nel terreno, rendendolo sterile.",
           "corretta": true
+        },
+        {
+          "testo": "Una rapida rigenerazione dello strato umico grazie all'azione dei sali che imitano l'effetto della pioggia naturale.",
+          "corretta": false
+        },
+        {
+          "testo": "Un aumento della biodiversità del suolo dovuto all'accumulo di nutrienti inorganici che attirano decompositori.",
+          "corretta": false
         }
       ],
-      "spiegazione": "I geni per la colorazione si trovano nel DNA dei cloroplasti (eredità citoplasmatica). Poiché gli organuli citoplasmatici (cloroplasti e mitocondri) dello zigote provengono quasi interamente dal citoplasma della cellula uovo materna, la progenie erediterà sempre il fenotipo del genitore femminile."
+      "spiegazione": "L'irrigazione artificiale continuativa introduce sali minerali nel terreno che non evaporano insieme all'acqua, determinandone un accumulo progressivo che porta alla desertificazione e alla perdita di fertilità. Il distruttore sulla pioggia naturale è molto ingannevole perché confonde l'acqua piovana, che è acqua distillata e priva di sali, con l'acqua di irrigazione. Il distruttore sulla biodiversità ignora sia gli effetti chimici deleteri della salinizzazione sia il fatto che le monocolture deprimono la varietà ecologica del suolo."
     },
     {
-      "domanda": "Secondo la lezione, cosa accadrebbe se sulla Terra venissero eliminati tutti i protisti autotrofi unicellulari e le alghe acquatiche, lasciando solo le piante terrestri?",
+      "domanda": "Se si confronta un cono femminile di una pineta (gimnosperma) con un frutto di una pianta di mele (angiosperma), qual è la differenza fondamentale riguardante la protezione del seme?",
       "opzioni": [
         {
-          "testo": "Gli animali e l'essere umano sopravviverebbero senza problemi grazie all'ossigeno prodotto dalle foreste terrestri.",
-          "corretta": false
-        },
-        {
-          "testo": "L'intera civiltà animale e umana sopravviverebbe per circa una settimana con l'ossigeno residuo prodotto dalle piante terrestri.",
+          "testo": "Nelle gimnosperme il seme è esposto sulle lamelle del cono senza un rivestimento protettivo esterno, mentre nelle angiosperme il seme è racchiuso e protetto all'interno del frutto.",
           "corretta": true
         },
         {
-          "testo": "L'atmosfera si riempirebbe immediatamente di acido fosforico, distruggendo i mitocondri.",
+          "testo": "Il cono femminile protegge il seme attraverso i cotiledoni carnosi che lo circondano, mentre nel frutto il seme rimane privo di rivestimento e quiescente.",
+          "corretta": false
+        },
+        {
+          "testo": "Nelle gimnosperme il seme si sviluppa dopo che il cono si è trasformato in frutto secco, mentre nelle angiosperme il frutto si forma dal fiore senza passare dal seme.",
           "corretta": false
         }
       ],
-      "spiegazione": "I protisti autotrofi unicellulari e le alghe acquatiche producono più dell'80% dell'ossigeno sul pianeta. Senza di essi, mantenendo solo le piante terrestri, gli animali e gli esseri umani sopravviverebbero solo per circa una settimana."
+      "spiegazione": "Le gimnosperme presentano un seme nudo, ovvero non racchiuso in un vero frutto ma semplicemente appoggiato sulle scaglie del cono (come la pigna), mentre le angiosperme proteggono il seme avvolgendolo nel frutto carnoso o secco. Il distruttore basato sui cotiledoni confonde lo studente che ricorda l'esistenza di queste strutture fogliari ma ne inverte la funzione e la collocazione anatomica. Il terzo distruttore ipotizza invece una fantasiosa evoluzione del cono in frutto, confondendo le tappe di sviluppo biologico delle due classi di piante."
     },
     {
-      "domanda": "Riguardo all'andamento temporale della fotosintesi, quando avvengono la fase luminosa e la fase oscura?",
+      "domanda": "In un esperimento sulla fotosintesi, viene fornita a una pianta dell'acqua contenente un isotopo marcato dell'ossigeno, mentre l'anidride carbonica fornita contiene ossigeno normale. Dove si ritroverà l'ossigeno marcato al termine del processo e perché?",
       "opzioni": [
         {
-          "testo": "La fase luminosa avviene esclusivamente di giorno perché necessita di luce, mentre la fase oscura avviene sia di giorno sia di notte.",
+          "testo": "Nel glucosio prodotto durante la fase oscura, in quanto l'acqua viene incorporata direttamente nella sintesi degli zuccheri nello stroma.",
+          "corretta": false
+        },
+        {
+          "testo": "Nelle molecole di ATP prodote nei tilacoidi, poiché l'ossigeno dell'acqua serve come trasportatore di energia fosforica.",
+          "corretta": false
+        },
+        {
+          "testo": "Nell'ossigeno molecolare liberato nell'aria, poiché la scissione dell'acqua avviene nella fase luminosa liberando l'ossigeno come sottoprodotto.",
           "corretta": true
-        },
-        {
-          "testo": "La fase luminosa avviene di giorno e la fase oscura avviene rigorosamente ed esclusivamente di notte.",
-          "corretta": false
-        },
-        {
-          "testo": "Entrambe le fasi avvengono esclusivamente durante la notte sfruttando l'energia accumulata dai mitocondri materni.",
-          "corretta": false
         }
       ],
-      "spiegazione": "La fase luminosa richiede luce, quindi avviene solo di giorno. La fase oscura (ciclo di Calvin) non ha bisogno di luce, ma usa l'energia (ATP) e l'idrogeno prodotti di giorno dalla fase luminosa, quindi avviene sia di giorno sia di notte."
+      "spiegazione": "Durante la fase luminosa nei tilacoidi, la clorofilla eccitata scinde la molecola d'acqua in idrogeno e ossigeno. Quest'ultimo, non essendo utile alle immediate necessità energetiche della pianta, viene rilasciato all'esterno sotto forma di ossigeno molecolare gassoso. Il distruttore sul glucosio è altamente insidioso perché si tende a pensare intuitivamente che tutti gli atomi dei reagenti finiscano nel prodotto principale (il glucosio), mentre l'ossigeno del glucosio deriva interamente dall'anidride carbonica ridotta nel ciclo di Calvin."
     },
     {
-      "domanda": "Per quale motivo scientifico la teoria omeopatica della \"memoria dell'acqua\" viene smentita nella lezione?",
+      "domanda": "Immagina che in un ecosistema forestale vengano completamente eliminati tutti gli organismi decompositori (funghi e protisti saprofiti). Quale impatto si osserverebbe sul ciclo biologico della foresta?",
       "opzioni": [
         {
-          "testo": "Perché l'acqua distillata della pioggia innesca la desertificazione delle monocolture.",
+          "testo": "Le piante crescerebbero più rapidamente a causa della minore competizione per i sali minerali rilasciati dalle foglie cadute.",
           "corretta": false
         },
         {
-          "testo": "Perché se l'acqua avesse memoria, l'acqua di depurazione potabile ricorderebbe le feci umane e animali delle fogne da cui proviene.",
+          "testo": "Si accumulerebbe una quantità insostenibile di materia organica morta, impedendo il riciclo dei nutrienti essenziali nel terreno per le nuove piante.",
           "corretta": true
         },
         {
-          "testo": "Perché l'acqua piovana contiene solo molecole giganti di acido cloridrico insensibili alla memoria.",
+          "testo": "La produzione di ossigeno atmosferico aumenterebbe, poiché i decompositori smetterebbero di consumare l'ossigeno prodotto dalle piante terrestri.",
           "corretta": false
         }
       ],
-      "spiegazione": "L'omeopatia sostiene che l'acqua mantenga memoria di sostanze disciolte anche dopo diluizioni estreme. La lezione confuta questa teoria facendo notare che se la memoria dell'acqua esistesse, l'acqua depurata dalle fogne ricorderebbe le feci umane e animali."
+      "spiegazione": "I decompositori svolgono il ruolo indispensabile di degradare la materia organica morta, restituendo al suolo i nutrienti inorganici necessari alla sopravvivenza e alla crescita di nuove generazioni di piante. Il distruttore sulla competizione è ingannevole perché ribalta il ruolo cooperativo dei decompositori, dipingendoli falsamente come competitori diretti delle radici delle piante. Il distruttore sull'ossigeno, pur contenendo una parziale verità biochimica sulla respirazione, ignora che senza decomposizione l'intero ecosistema collasserebbe rapidamente per esaurimento dei nutrienti minerali."
     },
     {
-      "domanda": "Perché l'irrigazione continua dei campi coltivati a monocoltura estensiva può portare alla desertificazione del terreno?",
+      "domanda": "Se ipoteticamente dovessimo eliminare tutte le piante terrestri del pianeta mantenendo intatte le piante acquatiche e i protisti fotosintetici marini, quale sarebbe la conseguenza immediata sulla sopravvivenza degli animali terrestri?",
       "opzioni": [
         {
-          "testo": "Perché l'acqua di bonifica non è distillata ma contiene sali che, evaporando l'acqua sotto il sole, rimangono e si accumulano nel terreno salinizzandolo.",
+          "testo": "Gli animali terrestri potrebbero continuare a respirare con molta fatica, poiché gli organismi fotosintetici marini producono la maggior parte dell'ossigeno del pianeta.",
           "corretta": true
         },
         {
-          "testo": "Perché l'acqua piovana porta via tutti i cloroplasti presenti nella parete cellulare delle piante.",
+          "testo": "Gli animali si estinguerebbero rapidamente, poiché le piante terrestri generano la quasi totalità dell'ossigeno atmosferico globale.",
           "corretta": false
         },
         {
-          "testo": "Perché l'uso di pesticidi elimina i decompositori naturali come i funghi.",
+          "testo": "Non ci sarebbe alcuna variazione nei livelli di ossigeno, in quanto le piante terrestri consumano tanto ossigeno quanto ne producono attraverso la respirazione cellulare.",
           "corretta": false
         }
       ],
-      "spiegazione": "L'acqua usata per irrigare i campi contiene piccoli quantitativi di sali solubili. Quando l'acqua evapora sotto il sole, il sale resta nel terreno. Accumulandosi ogni anno, rende il terreno sterile e inutile per le piante (processo di salinizzazione e desertificazione). La pioggia, essendo acqua distillata, non produce questo effetto."
+      "spiegazione": "Gli organismi autotrofi marini (alghe pluricellulari e soprattutto protisti fotosintetici unicellulari) sono responsabili di oltre l'80% della produzione globale di ossigeno, garantendo la respirazione animale anche in assenza di vegetazione terrestre. Il distruttore sulla rapida estinzione è insidioso perché fa leva sull'errata percezione comune che le foreste terrestri siano la fonte primaria assoluta di ossigeno atmosferico. Il terzo distruttore confonde il bilancio netto della fotosintesi, ipotizzando falsamente che le piante abbiano un consumo respiratorio pari alla loro immensa produzione fotosintetica."
     }
   ],
   "assistente_ia": {
