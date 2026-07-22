@@ -188,184 +188,184 @@
   ],
   "il_super_quiz": [
     {
-      "domanda": "Un tecnico effettua un'ispezione con termocamera a infrarossi su un condominio degli anni '70 in pieno inverno. Sullo schermo appaiono ampie strisce di colore rosso e giallo acceso in corrispondenza delle travi di collegamento tra i solai e intorno alle finestre, mentre le pareti centrali mostrano tonalità bluastre. Come deve essere interpretata questa mappa termica sulla base dei principi costruttivi trattati?",
+      "domanda": "Un progettista deve decidere se installare pannelli solari termici o fotovoltaici sul tetto di un nuovo condominio per soddisfare la richiesta di riscaldamento dell'acqua e degli ambienti. Quale decisione risulta più efficiente dal punto di vista termodinamico secondo la lezione?",
       "opzioni": [
         {
-          "testo": "Le aree rosse e gialle indicano i punti in cui il calore interno sta fuggendo verso l'esterno a causa di un isolamento insufficiente o materiali scadenti.",
+          "testo": "Installare pannelli solari termici, poiché consentono di accumulare calore direttamente in un fluido che lo trasferisce a grandi serbatoi con perdite minime, superando l'efficienza della conversione intermedia della luce in elettricità [1-3].",
           "corretta": true
         },
         {
-          "testo": "Le tonalità calde evidenziano i pannelli termici attivi integrati nelle pareti che stanno accumulando l'energia solare diurna.",
+          "testo": "Installare pannelli fotovoltaici accoppiati a batterie di accumulo, in modo da convertire la luce in elettricità e accumularla per far funzionare scaldabagni elettrici sia di giorno che di notte [4, 5].",
           "corretta": false
         },
         {
-          "testo": "Il rosso indica che i caloriferi interni sono posizionati correttamente sotto i solai per massimizzare la convezione naturale dell'aria.",
+          "testo": "Costruire pareti termiche attive integrate nell'intonaco per riscaldare direttamente gli appartamenti di giorno, escludendo l'uso di serbatoi di accumulo sotterranei per evitare ingombri inutili [6, 7].",
           "corretta": false
         }
       ],
-      "spiegazione": "La risposta corretta è fondata sul principio termografico per cui i colori caldi mostrano i punti in cui il calore viene dissipato verso l'esterno per inefficienza dei materiali o infissi non isolati. Il distrattore più insidioso è quello relativo alle pareti termiche attive, che confonde l'ispezione passiva di un edificio vecchio degli anni '70 con i moderni sistemi integrati visibili ad esempio nel complesso autonomo di Bolzano. Lo strumento rileva semplicemente l'emissione infrarossa dovuta alle dispersioni fisiche dell'edificio."
+      "spiegazione": "I pannelli solari termici raccolgono direttamente l'energia termica del sole con un rendimento del novanta percento, convogliandola in grandi serbatoi d'acqua che trattengono il calore come un thermos [1-3]. Al contrario, i pannelli fotovoltaici convertono la luce in elettricità, la quale subisce perdite significative se viene riconvertita in calore tramite riscaldatori elettrici tradizionali [4, 5, 8]. Il sistema di accumulo termico diretto evita la degradazione di qualità dell'energia tipica dei processi elettrici [9, 10]. Pertanto, per il solo scopo del riscaldamento, l'impianto termico è termodinamicamente molto più efficiente [1, 2]."
     },
     {
-      "domanda": "Quale differenza fisica e applicativa distingue i pannelli solari termici, tipicamente installati sui tetti delle abitazioni moderne, dai pannelli fotovoltaici?",
+      "domanda": "Qual è la differenza fondamentale, sotto il profilo dell'impatto ambientale globale, tra un'auto elettrica ricaricata tramite la rete elettrica standard e un'auto ibrida classica che consuma benzina?",
       "opzioni": [
         {
-          "testo": "I pannelli termici funzionano grazie all'effetto serra passivo delle vetrate esposte a sud, mentre i fotovoltaici accumulano calore chimico mediante celle in silicio.",
+          "testo": "L'auto elettrica azzera l'inquinamento complessivo perché converte il cento per cento dell'elettricità in movimento, mentre l'auto ibrida disperde calore a causa dell'attrito meccanico del motore termico [11, 12].",
           "corretta": false
         },
         {
-          "testo": "I pannelli termici riscaldano un fluido termovettore che accumula calore in un serbatoio isolato in cantina, mentre i fotovoltaici convertono la radiazione in corrente elettrica.",
+          "testo": "L'auto elettrica ricaricata dalla rete convenzionale può risultare persino più inquinante dell'auto termica o ibrida, poiché l'elettricità di rete è prodotta in centrali termoelettriche che disperdono circa il sessanta percento del combustibile alla fonte e subiscono perdite durante il trasporto [13-15].",
           "corretta": true
         },
         {
-          "testo": "I pannelli termici producono vapore ad alta pressione per azionare micro-turbine domestiche, mentre i fotovoltaici catturano l'umidità per produrre idrogeno.",
+          "testo": "L'auto ibrida ha un impatto inferiore in quanto rigenera energia durante la frenata senza richiedere carburante per il motore termico, mentre l'auto elettrica disperde la maggior parte dell'energia immagazzinata a causa del peso eccessivo del pacco batterie [12, 16, 17].",
           "corretta": false
         }
       ],
-      "spiegazione": "I pannelli termici catturano il calore riscaldando un fluido ad alta temperatura destinato a un capiente serbatoio thermos per l'acqua sanitaria, mentre i fotovoltaici catturano la luce per generare corrente elettrica. Il distrattore che menziona la produzione di vapore a livello domestico per azionare micro-turbine è errato perché la generazione di vapore da specchi concentratori è una tecnologia su scala industriale e non domestica. Inoltre, il fotovoltaico non ha alcuna relazione fisica con la cattura dell'umidità."
+      "spiegazione": "La ricarica di un'auto elettrica tramite la rete convenzionale sposta l'impatto ambientale alle centrali termoelettriche, che disperdono circa il sessanta percento del combustibile bruciato alla fonte [13, 14]. Durante il trasferimento dell'elettricità in città e la ricarica del pacco batterie si verificano ulteriori perdite di energia, rendendo il veicolo complessivamente più inquinante di un'auto termica o ibrida [15, 18]. L'ibrido classico recupera energia durante la frenata ma consuma comunque carburante, mentre l'elettrico puro è verde solo se alimentato da un impianto fotovoltaico domestico autonomo [16-18]. Di conseguenza, l'auto elettrica di rete convenzionale non risolve ma peggiora il problema ambientale globale ."
     },
     {
-      "domanda": "Una flotta aziendale decide di sostituire i propri furgoni a metano con veicoli elettrici a batteria, ricaricandoli esclusivamente tramite le colonnine collegate alla rete elettrica nazionale per ridurre le emissioni complessive dell'impresa. Sulla base delle valutazioni termodinamiche espresse nella lezione, per quale motivo questa scelta rischia di rivelarsi una falsa soluzione ecologica?",
+      "domanda": "Uno studente nota che in una casa con pareti spesse in balle di paglia e legno la temperatura interna rimane stabile sia d'estate che d'inverno senza l'uso di condizionatori. Quale principio costruttivo spiega scientificamente questo fenomeno secondo la lezione?",
       "opzioni": [
         {
-          "testo": "La ricarica notturna dalla rete comune innesca repentine fluttuazioni di tensione che riducono drasticamente l'efficienza dei motori elettrici a monte.",
+          "testo": "I mattoni di paglia generano autonomamente calore d'inverno grazie alla lenta fermentazione naturale delle fibre vegetali pressate e rilasciano umidità fresca d'estate attraverso l'intonaco [19, 20].",
           "corretta": false
         },
         {
-          "testo": "I furgoni elettrici generano un ronzio acustico ad alta frequenza che provoca inquinamento elettromagnetico nei centri urbani.",
+          "testo": "Le pareti in legno e paglia assorbono la radiazione solare diurna e la trasformano in energia meccanica che fa flettere la struttura, impedendo la trasmissione del calore esterno verso le stanze .",
           "corretta": false
         },
         {
-          "testo": "L'elettricità di rete è prodotta in gran parte da centrali fossili con bassa efficienza, le cui perdite cumulative di generazione, trasporto e ricarica superano lo spreco di un motore a metano diretto.",
+          "testo": "La paglia compressa agisce come un isolante simile al polistirolo, limitando il passaggio del calore e trattenendo all'interno la temperatura esistente, riducendo al minimo la necessità di apporti energetici esterni [5, 22].",
           "corretta": true
         }
       ],
-      "spiegazione": "Il veicolo elettrico alimentato da rete comune sposta solo l'inquinamento fuori dalla città poiché l'elettricità deriva da centrali termoelettriche che bruciano idrocarburi con rendimenti alla fonte di appena il quaranta per cento. Il distrattore relativo alle fluttuazioni di tensione è insidioso perché propone una causa elettrica apparentemente coerente che però non trova alcun riscontro scientifico né testuale nella lezione. L'inefficienza globale è invece dovuta alle perdite termodinamiche cumulative lungo la filiera."
+      "spiegazione": "La paglia compressa in balle spesse agisce come isolante termico naturale in modo analogo al polistirolo, trattenendo la temperatura interna stabile con un apporto energetico esterno minimo [5, 22]. La fermentazione biologica è invece un processo chimico sfruttato negli impianti per produrre biogas dalle biomasse e non avviene nelle pareti asciutte delle abitazioni . Inoltre, l'elasticità del legno e della paglia protegge l'edificio dai crolli sismici, ma non è responsabile della stabilità termica delle stanze . Questa sinergia di materiali biocompatibili riduce drasticamente i consumi energetici complessivi dell'edificio [5, 23]."
     },
     {
-      "domanda": "Quale distinzione strutturale e di gestione del territorio caratterizza un impianto agri-fotovoltaico sostenibile rispetto alle centrali solari diffuse a terra tradizionali?",
+      "domanda": "Un agricoltore decide di convertire il suo campo in un impianto agrifotovoltaico installando i pannelli solari a un'altezza di circa tre metri da terra invece che a livello del suolo. Quale duplice beneficio ottiene da questa specifica configurazione?",
       "opzioni": [
         {
-          "testo": "I pannelli agri-fotovoltaici sono montati su strutture metalliche rialzate che permettono le coltivazioni e il pascolo sottostanti, fungendo anche da scudo contro le intemperie.",
+          "testo": "Preserva il terreno per la coltivazione o il pascolo e protegge le piante sottostanti da eventi meteo avversi come le grandinate, grazie anche all'inclinazione dei pannelli che attenua la forza d'impatto del ghiaccio [24-26].",
           "corretta": true
         },
         {
-          "testo": "Gli impianti agri-fotovoltaici sono galleggianti e sfruttano il raffreddamento termico dell'acqua calma degli invasi, lasciando i terreni agricoli liberi.",
+          "testo": "Aumenta la produzione elettrica complessiva poiché i pannelli alti catturano venti freddi che ne migliorano il rendimento e raddoppia lo spazio utile per l'installazione di turbine eoliche cilindriche [27, 28].",
           "corretta": false
         },
         {
-          "testo": "I pannelli agri-fotovoltaici ruotano chimicamente per assorbire l'azoto rilasciato dalle piante, aumentando la resa elettrica delle celle di silicio.",
+          "testo": "Evita il surriscaldamento del terreno agricolo che altrimenti inaridirebbe a causa del riflesso degli specchi e permette di raccogliere l'acqua piovana direttamente nei serbatoi interrati per riscaldare la casa [3, 29].",
           "corretta": false
         }
       ],
-      "spiegazione": "L'agri-fotovoltaico solleva i pannelli a due o tre metri da terra per garantire il duplice utilizzo agrario ed energetico del suolo, proteggendo inoltre le coltivazioni sottostanti dalle intemperie grazie all'inclinazione strategica dei moduli. Il distrattore sul galleggiamento negli invasi descrive correttamente la tecnologia fotovoltaica galleggiante, ma la attribuisce erroneamente all'agri-fotovoltaico che opera esclusivamente a terra. I due concetti vicini vengono così opportunamente distinti a tutela della corretta pianificazione del territorio."
+      "spiegazione": "L'agrifotovoltaico posiziona i pannelli a due o tre metri di altezza per consentire la coltivazione agricola o il pascolo sullo stesso suolo . I pannelli sollevati e inclinati offrono alle piante sottostanti una barriera protettiva contro grandinate o forti intemperie, riducendo anche l'energia d'impatto del ghiaccio sul silicio [25, 26]. Al contrario, le centrali solari diffuse a terra escludono qualsiasi uso alternativo del suolo agricolo, rendendolo insostenibile [30, 31]. L'altezza elevata risponde quindi alla necessità di coesistenza spaziale e protezione fisica, non a dinamiche eoliche o idriche domestiche [24, 32]."
     },
     {
-      "domanda": "Durante un seminario sulla bioedilizia, un costruttore propone l'edificazione di un complesso residenziale utilizzando blocchi di paglia pressata e strutture portanti in legno. Alcuni clienti esprimono timori sul fatto che una pioggia prolungata possa far marcire le pareti o disintegrare la struttura. In che modo la bioedilizia risolve questo problema strutturale mantenendo al contempo le proprietà isolanti della paglia?",
+      "domanda": "Sia le centrali solari a camino (effetto camino) sia le centrali solari a torre con specchi utilizzano turbine per generare elettricità. Qual è la differenza principale nel modo in cui mettono in moto tali turbine?",
       "opzioni": [
         {
-          "testo": "La paglia viene preventivamente mescolata con cemento liquido e resine sintetiche impermeabili che ne annullano la porosità naturale.",
+          "testo": "La centrale a camino sfrutta la combustione di aria calda miscelata a biogas sotterraneo, mentre la centrale a torre utilizza specchi per concentrare la luce e bruciare direttamente un combustibile liquido ad alta temperatura [20, 33, 34].",
           "corretta": false
         },
         {
-          "testo": "Le pareti in balle di paglia vengono completamente rivestite con intonaci biocompatibili protettivi che le isolano dall'umidità esterna facendole apparire come case tradizionali.",
+          "testo": "La centrale a camino sfrutta l'ascesa naturale dell'aria riscaldata dal sole alla base della struttura per creare un flusso di vento interno, mentre la centrale a torre concentra la luce solare per scaldare un fluido, generare vapore ad alta pressione e azionare le turbine [29, 33-35].",
           "corretta": true
         },
         {
-          "testo": "Il riscaldamento geotermico passivo mantiene le pareti a una temperatura interna costante di oltre cento gradi, asciugando istantaneamente l'umidità.",
+          "testo": "La centrale a camino accumula l'energia termica in batterie chimiche poste all'interno del camino per muovere la turbina di notte, mentre la centrale a torre converte la luce direttamente in impulsi elettromagnetici mediante celle a base di silicio [5, 36].",
           "corretta": false
         }
       ],
-      "spiegazione": "La paglia pressata è protetta dagli agenti atmosferici e dall'umidità mediante l'applicazione esterna di intonaci biocompatibili isolanti che mantengono intatta la struttura per decenni. Il distrattore che ipotizza una miscelazione con resine sintetiche e cemento è scorretto poiché annullerebbe la biocompatibilità ed ecocompatibilità naturale di una casa in paglia e legno. Il rivestimento esterno protegge la porosità naturale senza alterare la biodegradabilità del nucleo."
+      "spiegazione": "La centrale solare a camino sfrutta l'effetto di galleggiamento dell'aria calda riscaldata dal sole alla base della struttura, che sale velocemente lungo il camino attivando le turbine interne [33, 35]. La centrale solare a torre utilizza invece specchi puntati verso un unico ricevitore per surriscaldare un fluido fino ad oltre duecento gradi, generando vapore che aziona turbine meccaniche [29, 34]. Entrambi i sistemi sono cicli termodinamici solari puri e non prevedono alcuna combustione di biogas o altri carburanti fossili [33, 34]. Il distractor della combustione è errato perché confonde la generazione di vapore solare con i processi di combustione tradizionali [34, 37]."
     },
     {
-      "domanda": "Un'amministrazione comunale deve pianificare il sistema di riscaldamento per un nuovo distretto scolastico. Confrontando l'efficienza termodinamica complessiva delle diverse opzioni descritte, quale scelta garantisce il massimo rendimento netto con il minor impatto ambientale?",
+      "domanda": "Durante una torrida giornata estiva, un impianto di climatizzazione geotermico passivo rinfresca un appartamento senza consumare energia per far funzionare un compressore refrigerante. Come avviene lo scambio termico che consente questo risultato?",
       "opzioni": [
         {
-          "testo": "Un impianto termoelettrico alimentato a stufe a pellet di ultima generazione ad alta concentrazione di fumi.",
+          "testo": "L'aria calda dell'appartamento viene spinta direttamente nel sottosuolo a venti metri di profondità dove si condensa, rilasciando calore alle rocce umide prima di essere reimmessa fresca nelle stanze [38, 39].",
           "corretta": false
         },
         {
-          "testo": "Una pompa di calore alimentata da energia elettrica proveniente da una centrale nucleare dedicata con rendimento netto del quartodici per cento.",
-          "corretta": false
-        },
-        {
-          "testo": "Un sistema solare termico integrato, che riscalda direttamente gli ambienti e l'acqua con un rendimento energetico netto che raggiunge il novanta per cento.",
+          "testo": "L'acqua scorre in tubi interrati a notevole profondità dove la terra ha una temperatura costante di circa dieci-dodici gradi, si raffredda, risale in casa e sottrae calore all'ambiente quando l'aria interna viene ventilata attraverso serpentine fresche [38-40].",
           "corretta": true
+        },
+        {
+          "testo": "La radiazione solare estiva attiva pannelli fotovoltaici che invertono la polarità termica dei muri esterni, respingendo l'aria calda e convogliando il vapore fresco del sottosuolo direttamente nelle condutture idriche domestiche [5, 7].",
+          "corretta": false
         }
       ],
-      "spiegazione": "La tecnologia solare termica vanta un rendimento termodinamico netto del novanta per cento se utilizzata direttamente per riscaldare gli edifici, superando di gran lunga le altre fonti. Il distrattore nucleare è ingannevole perché propone un'alternativa ad alta tecnologia che tuttavia registra un rendimento finale reale di appena il quattordici per cento a causa dell'immensa inefficienza di conversione. La lezione dimostra che riscaldare con l'elettricità nucleare è energeticamente svantaggioso."
+      "spiegazione": "La climatizzazione geotermica passiva sfrutta la temperatura costante del sottosuolo, che tra i venti e i trenta metri di profondità rimane sempre stabile intorno ai dieci-dodici gradi . L'acqua circola in un circuito chiuso di tubi interrati dove si rinfresca, risale nell'edificio e raffredda l'aria interna facendola scorrere attraverso serpentine ventilate [39, 40]. L'aria domestica non viene mai inviata nel sottosuolo, poiché lo scambio termico avviene interamente tramite il fluido vettore [38, 39]. Questo sistema consente un raffrescamento estivo continuo senza ricorrere a compressori elettrici energivori [39, 40]."
     },
     {
-      "domanda": "In estate, un utente sperimenta un forte disagio termico nella propria abitazione a causa dell'eccessivo calore. Un ingegnere propone di installare un sistema geotermico passivo anziché un climatizzatore commerciale ad alto consumo. Qual è il principio termodinamico su cui poggia il funzionamento del sistema proposto per rinfrescare l'aria interna?",
+      "domanda": "Se analizziamo l'evoluzione delle lampadine dalle vecchie a incandescenza fino ai moderni LED, qual è il significato pratico di un aumento del rendimento netto dal cinque percento a oltre il settanta percento?",
       "opzioni": [
         {
-          "testo": "L'acqua viene fatta scorrere in tubi interrati a venti metri di profondità per assumere la temperatura costante del sottosuolo, per poi circolare in serpentine domestiche.",
+          "testo": "Significa che i LED producono una luce settanta volte più intensa che permette di illuminare spazi molto più ampi rispetto al passato a parità di calore disperso nell'ambiente circostante [41, 42].",
+          "corretta": false
+        },
+        {
+          "testo": "Significa che la lampadina LED accumula energia elettrica residua nel filamento interno per continuare a emettere luce fluorescente anche dopo lo spegnimento dell'interruttore domestico [41, 42].",
+          "corretta": false
+        },
+        {
+          "testo": "Significa che la frazione di energia elettrica sprecata in calore si riduce drasticamente, consentendo di ottenere la stessa quantità di luce consumando una frazione minima di energia rispetto alle vecchie lampadine [41, 42].",
           "corretta": true
-        },
-        {
-          "testo": "Il calore della casa viene catturato da speciali tegole fotovoltaiche e convertito in energia elettrica per alimentare compressori ad aria refrigerata.",
-          "corretta": false
-        },
-        {
-          "testo": "Il sistema immette fumi freddi di fermentazione provenienti dalle cisterne sotterranee dell'umido all'interno dei condotti di climatizzazione.",
-          "corretta": false
         }
       ],
-      "spiegazione": "Il raffrescamento geotermico passivo sfrutta la temperatura stabile di dieci o dodici gradi presente nel sottosuolo a venti o trenta metri di profondità tramite tubazioni contenenti acqua fredda che risale negli split. Il distrattore relativo alle tegole fotovoltaiche confonde il raffrescamento passivo con la generazione attiva di elettricità che alimenta tradizionali compressori ad alto consumo. Il sistema passivo opera a costo energetico e inquinamento quasi pari a zero."
+      "spiegazione": "Il rendimento indica la percentuale di energia elettrica consumata che si trasforma efficacemente nel lavoro utile richiesto, in questo caso la luce [41, 43]. Nelle vecchie lampadine a incandescenza solo il cinque percento dell'energia si trasformava in luce, mentre il novantacinque percento veniva sprecato in calore . Con i LED il rendimento sale fino a superare il settanta percento, riducendo drasticamente la dispersione termica a parità di illuminazione . Il distractor sulla luminosità settanta volte superiore è errato perché confonde l'efficienza di conversione energetica con l'intensità assoluta del flusso luminoso [41, 42]."
     },
     {
-      "domanda": "Uno studente osserva che sia le automobili elettriche a batteria sia quelle a idrogeno con celle a combustibile utilizzano un motore elettrico per muovere le ruote. Quale differenza fondamentale risiede nella gestione dell'energia e dei componenti a bordo tra queste due tipologie di mobilità sostenibile?",
+      "domanda": "Un'automobile elettrica a idrogeno con celle a combustibile emette dal tubo di scappamento esclusivamente vapore acqueo. Quale processo chimico-fisico avviene all'interno del veicolo per generare la corrente che alimenta il motore?",
       "opzioni": [
         {
-          "testo": "Le auto a batteria richiedono un motore termico ausiliario a gasolio per i regimi di velocità elevati, mentre le auto a idrogeno funzionano prevalentemente a basse andature.",
-          "corretta": false
-        },
-        {
-          "testo": "Le auto a batteria accumulano tutta l'energia in pesanti accumulatori ricaricati da fonti esterne, mentre le auto a idrogeno generano elettricità a bordo combinando idrogeno e ossigeno.",
+          "testo": "L'idrogeno prelevato dal serbatoio viene combinato lentamente con l'ossigeno estratto dall'aria esterna all'interno della cella a combustibile, producendo elettricità e rilasciando acqua come unico sottoprodotto della reazione [44-46].",
           "corretta": true
         },
         {
-          "testo": "Le auto a batteria producono vapore acqueo come scarto durante la marcia, mentre le auto a idrogeno immagazzinano fumi bollenti in grandi thermos metallici.",
+          "testo": "L'acqua distillata inserita nel serbatoio viene riscaldata dal calore del motore fino a produrre vapore ad alta pressione che fa ruotare micro-turbine elettriche collegate alle ruote motrici [47, 48].",
+          "corretta": false
+        },
+        {
+          "testo": "L'idrogeno subisce una combustione esplosiva all'interno di un motore termico a pistoni, sprigionando calore che viene poi convertito in elettricità tramite accumulatori di calore posizionati nel bagagliaio [11, 49].",
           "corretta": false
         }
       ],
-      "spiegazione": "I veicoli elettrici convenzionali immagazzinano l'energia caricandola dall'esterno in pesanti batterie, mentre le auto a idrogeno producono autonomamente l'elettricità a bordo tramite celle a combustibile combinando idrogeno e ossigeno. Il distrattore sull'uso del motore a gasolio per le velocità elevate confonde l'architettura elettrica a idrogeno con quella di un veicolo ibrido. Nelle auto a idrogeno la batteria serve solo per l'avviamento e non per la trazione primaria."
+      "spiegazione": "All'interno della cella a combustibile, gli atomi di idrogeno del serbatoio si combinano lentamente con l'ossigeno atmosferico per generare direttamente elettricità e acqua [44-46]. Questo processo elettrochimico fornisce l'energia necessaria al motore elettrico rilasciando solo vapore acqueo dal tubo di scarico [46, 48]. Il distractor del motore a vapore è errato perché il veicolo utilizza un motore elettrico e non la pressione di vapore prodotta da una caldaia [45, 48]. L'idrogeno non viene bruciato tramite combustione interna nei pistoni, escludendo così emissioni nocive e perdite termiche elevate [11, 44]."
     },
     {
-      "domanda": "In una centrale termoelettrica convenzionale a gas, la maggior parte del potenziale energetico del combustibile viene dissipato attraverso i fumi caldi espulsi dalle ciminiere. In che modo un sistema di cogenerazione industriale modifica questo processo per elevare l'efficienza complessiva dell'impianto?",
+      "domanda": "In un grande bacino idrico calmo viene installato un impianto fotovoltaico galleggiante. Oltre a non sottrarre terreno all'agricoltura, per quale motivo tecnico questa installazione produce più energia rispetto a un impianto identico sulla terraferma?",
       "opzioni": [
         {
-          "testo": "Facendo reagire i gas di scarico con acqua distillata per produrre idrogeno verde da reimmettere immediatamente nelle caldaie di combustione.",
+          "testo": "L'acqua circostante funge da specchio naturale che raddoppia l'intensità dei raggi solari riflessi sulla superficie sensibile dei pannelli a qualsiasi ora del giorno [27, 32].",
           "corretta": false
         },
         {
-          "testo": "Convogliando i fumi caldi verso grandi turbine eoliche cilindriche posizionate sulla sommità della ciminiera per produrre energia meccanica.",
-          "corretta": false
-        },
-        {
-          "testo": "Installando nelle ciminiere serpentine riempite d'acqua fredda che assorbono il calore dei fumi, riscaldandosi per alimentare le reti di teleriscaldamento urbano.",
+          "testo": "Il contatto con l'acqua raffredda costantemente i pannelli solari, impedendo il surriscaldamento che ne ridurrebbe l'efficienza di conversione energetica durante il funzionamento .",
           "corretta": true
+        },
+        {
+          "testo": "Le correnti d'acqua generano micro-vibrazioni costanti che puliscono la superficie dei pannelli dal pulviscolo ed eliminano l'attrito dell'aria calda ascendente [32, 50].",
+          "corretta": false
         }
       ],
-      "spiegazione": "La cogenerazione consiste nell'avvolgere i condotti delle ciminiere con serpentine d'acqua fredda per catturare il calore residuo dei fumi bollenti, innalzando l'efficienza complessiva dell'impianto oltre l'ottanta per cento. Il distrattore sulla reazione chimica per produrre idrogeno verde è insidioso perché menziona l'acqua distillata e l'idrogeno verde che sono concetti chiave della lezione, ma li inserisce in modo errato nella dinamica della cogenerazione. Il recupero energetico avviene esclusivamente per via termica."
+      "spiegazione": "I pannelli fotovoltaici subiscono un calo di efficienza energetica man mano che la loro temperatura d'esercizio aumenta durante l'esposizione solare . Posizionare i pannelli a contatto diretto con l'acqua tranquilla di un bacino artificiale permette di raffreddarli continuamente, mantenendone elevato il rendimento [27, 32]. Il riflesso dell'acqua, sebbene presente, non è il fattore tecnico che spiega il surplus di rendimento energetico evidenziato nella lezione . Pertanto, il raffreddamento termico passivo è la chiave ingegneristica di questo sistema galleggiante ."
     },
     {
-      "domanda": "Un proprietario di casa valuta di sostituire la propria caldaia a gas metano con una moderna stufa a pellet di legno, ritenendola una scelta più economica ed ecologica per riscaldare la propria abitazione. Alla luce dell'analisi economica e ambientale presentata nella lezione, quale valutazione smentisce questa convinzione?",
+      "domanda": "Quale confronto energetico ed economico emerge dalla lezione riguardo all'uso dei combustibili domestici come il pellet (biomassa) rispetto al gas metano?",
       "opzioni": [
         {
-          "testo": "Il pellet ha un potere calorifero inferiore rispetto al metano, costa di più a parità di calore prodotto e genera emissioni inquinanti di ceneri e ossidi tossici.",
+          "testo": "Il pellet è preferibile per il riscaldamento poiché ha un rendimento termodinamico superiore rispetto alla combustione diretta del metano e non rilascia polveri sottili nell'atmosfera domestica [37, 51, 52].",
+          "corretta": false
+        },
+        {
+          "testo": "Il gas metano deve essere impiegato solo in impianti di cogenerazione condominiali poiché la sua combustione in caldaie singole disperde circa l'ottanta percento dell'energia elettrica trasportata dai cavi esterni [15, 53].",
+          "corretta": false
+        },
+        {
+          "testo": "Il pellet ha un potere calorifico inferiore e costi di gestione più elevati rispetto al metano a parità di calore prodotto, risultando meno economico e maggiormente inquinante per l'ambiente domestico [51, 52].",
           "corretta": true
-        },
-        {
-          "testo": "La combustione del pellet richiede l'allacciamento a sonde geotermiche profonde oltre venti metri per poter innescare la reazione termica.",
-          "corretta": false
-        },
-        {
-          "testo": "Il legno pressato rilascia idrogeno gassoso altamente infiammabile che rischia di danneggiare le condutture della ciminiera solare della casa.",
-          "corretta": false
         }
       ],
-      "spiegazione": "La combustione delle biomasse legnose come il pellet genera fumi tossici contenenti ossidi di azoto, zolfo e particolato fine, risultando più inquinante ed economicamente svantaggiosa rispetto all'uso del metano a causa del minor potere calorifico. Il distrattore che collega il pellet alle sonde geotermiche profonde è volutamente errato per saggiare la capacità dello studente di distinguere la combustione attiva dai sistemi geotermici passivi. Il pellet ha un costo elevato che non giustifica il suo impiego per fini ecologici."
+      "spiegazione": "La lezione evidenzia che il pellet ha un potere calorifico inferiore rispetto al metano e comporta costi di acquisto e gestione domestica più elevati . Inoltre, la combustione delle biomasse solide come il pellet o la legna è fortemente inquinante per l'ambiente a causa del rilascio di fumi e polveri [37, 51]. Il metano risulta quindi più economico, efficiente e meno impattante a parità di calore prodotto in ambito residenziale . I distratori confondono l'efficienza termica del metano con la cogenerazione industriale o attribuiscono erroneamente al pellet qualità ecologiche superiori [51-53]."
     }
   ],
   "assistente_ia": {
