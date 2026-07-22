@@ -1287,12 +1287,16 @@
         var vuoiSlide = (modo==='completo' || modo==='slide');
         var vuoiMappa = (modo==='completo' || modo==='mappa');
 
+        // classe intestazione sezione: col salto pagina SOLO se prima c'è
+        // altro contenuto — altrimenti la prima pagina esce quasi vuota e la
+        // sezione finisce "invisibile" a pagina 2 (il bug della mappa bianca)
         var slideHTML = '';
         if(vuoiSlide && datiLezione){
           var raw = datiLezione.slide || datiLezione.slides || [];
           var urls = raw.map(function(s){ return typeof s==='string' ? s : (s&&s.url); }).filter(Boolean);
           if(urls.length){
-            slideHTML = '<h2 class="ums-pdf-slide-title">Slide della lezione</h2>' +
+            var clsS = vuoiTesto ? 'ums-pdf-slide-title' : 'ums-pdf-sec-title';
+            slideHTML = '<h2 class="'+clsS+'">Slide della lezione</h2>' +
               urls.map(function(u){ return '<img class="ums-pdf-slide" src="'+u+'">'; }).join('');
           }
         }
@@ -1301,7 +1305,8 @@
         if(vuoiMappa){
           var svgMappa = (window.__umsMappaGen && window.__umsMappaGen()) || window.__umsMappaSVG || '';
           if(svgMappa){
-            mappaHTML = '<h2 class="ums-pdf-slide-title">Mappa mentale</h2>' +
+            var clsM = (vuoiTesto || slideHTML) ? 'ums-pdf-slide-title' : 'ums-pdf-sec-title';
+            mappaHTML = '<h2 class="'+clsM+'">Mappa mentale</h2>' +
               '<div class="ums-pdf-mappa">' + svgMappa + '</div>';
           }
         }
@@ -1310,7 +1315,8 @@
 
         var titolo = titoloLezione();
         var css =
-          '@page{margin:16mm 14mm}'+
+          '@page{'+(modo==='mappa' ? 'size:A4 landscape;margin:10mm' : 'margin:16mm 14mm')+'}'+
+          (modo!=='mappa' ? '@page mappa{size:A4 landscape;margin:10mm}' : '')+
           '*{box-sizing:border-box}'+
           'body{margin:0;font-family:\'DM Sans\',system-ui,sans-serif;color:#1c1c22;line-height:1.6}'+
           '.pdf-brand{text-align:center;margin:0 0 4px}'+
@@ -1333,8 +1339,10 @@
             'border-top:2px solid #c8a96e;padding-top:14px;margin:26px 0 14px;break-before:page;page-break-before:always}'+
           '.ums-pdf-slide{width:100%;border:1px solid #e5d6bd;border-radius:8px;margin:0 0 14px;'+
             'break-inside:avoid;page-break-inside:avoid}'+
-          '.ums-pdf-mappa{width:100%;overflow:visible}'+
-          '.ums-pdf-mappa svg{width:100%;height:auto}';
+          '.ums-pdf-sec-title{font-family:\'Playfair Display\',Georgia,serif;color:#1a2f4f;'+
+            'border-top:2px solid #c8a96e;padding-top:14px;margin:10px 0 14px}'+
+          '.ums-pdf-mappa{'+(modo!=='mappa' ? 'page:mappa;' : '')+'width:100%;overflow:visible}'+
+          '.ums-pdf-mappa svg{width:100%;height:auto;max-height:175mm}';
 
         var html =
           '<html><head><title>'+titolo+' \u2014 Una Mano Spensierata</title>'+
