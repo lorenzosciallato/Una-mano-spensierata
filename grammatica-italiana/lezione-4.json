@@ -206,184 +206,184 @@
   ],
   "il_super_quiz": [
     {
-      "domanda": "Uno studente vuole verificare se la sequenza di parole 'la giovane donna' nella frase 'La giovane donna mangia una mela' costituisce un sintagma coerente. Sostituisce l'intero blocco con il pronome 'lei' ottenendo 'Lei mangia una mela'. Quale test di costituenza ha applicato lo studente e qual è la logica teorica dietro questa operazione?",
+      "domanda": "Uno studente analizza la frase 'Il vecchio marinaio guarda il mare' e vuole verificare se 'Il vecchio marinaio' costituisce un sintagma a sé stante tramite il test di sostituzione. Quale procedura deve seguire?",
       "opzioni": [
         {
-          "testo": "Ha applicato il test del movimento, il quale dimostra la compattezza sintattica isolando l'argomento verbale all'inizio della proposizione.",
+          "testo": "Sposta il gruppo verbale all'inizio per verificare se la struttura sintattica complessiva mantiene la medesima coerenza semantica ed espressiva.",
           "corretta": false
         },
         {
-          "testo": "Ha applicato il test della sostituzione pronominale, che prova l'esistenza di un costituente mostrando come un intero gruppo nominale possa essere rimpiazzato da una forma debole equivalente.",
+          "testo": "Sostituisce l'intero gruppo con il pronome 'Lui', ottenendo 'Lui guarda il mare', confermando che si tratta di un costituente.",
           "corretta": true
         },
         {
-          "testo": "Ha applicato il test della coordinabilità, verificando la corrispondenza morfologica tra sintagmi nominali e verbali all'interno della struttura ad albero.",
+          "testo": "Sostituisce il sostantivo principale con un sinonimo equivalente per verificare se la testa nominale può variare senza alterare la struttura.",
           "corretta": false
         }
       ],
-      "spiegazione": "La risposta corretta è la B perché descrive esattamente il test della sostituzione pronominale, che permette di isolare e confermare i costituenti sintattici rimpiazzandoli con forme equivalenti di tipo pronominale. Il distrattore A è insidioso perché confonde la sostituzione con il test del movimento, il quale invece non altera la forma delle parole ma ne verifica la compattezza spostandole fisicamente (es. 'mangia una mela la giovane donna'). Lo studente ha correttamente individuato il sintagma nominale di sinistra."
+      "spiegazione": "Il test di sostituzione prevede che se un intero gruppo di parole può essere sostituito da una singola parola vuota, come un pronome, allora quel gruppo costituisce un costituente [1, 2]. Sostituire la sequenza nominale con il pronome 'Lui' dimostra la coesione sintattica del blocco . L'opzione che propone di variare una singola parola verifica solo la testa del sintagma e non il costituente nel suo insieme [3, 4]. Lo spostamento del gruppo verbale fa invece riferimento al test di movimento, ma lo applica in modo confuso rispetto alla richiesta iniziale ."
     },
     {
-      "domanda": "In una verifica scritta, un alunno analizza le frasi 'Luca è in cucina' e 'Luca è felice', classificando in entrambi i casi il verbo essere come copula. Come si valuta l'analisi svolta dall'alunno alla luce delle regole sul predicato verbale e nominale?",
+      "domanda": "Qual è la differenza fondamentale nel comportamento del verbo 'essere' quando funge da copula in un predicato nominale rispetto a quando costituisce un predicato verbale?",
       "opzioni": [
         {
-          "testo": "L'analisi è corretta a metà poiché nella prima frase il verbo essere concorda nel genere con il complemento di luogo, mentre nella seconda assume la funzione di predicato verbale puro.",
-          "corretta": false
-        },
-        {
-          "testo": "L'alunno ha commesso un errore in entrambe le frasi poiché l'aggettivo felice indica un'azione compiuta dal soggetto, trasformando l'intero blocco in un predicato verbale.",
-          "corretta": false
-        },
-        {
-          "testo": "L'alunno ha commesso un errore nella prima frase, poiché il verbo essere significa 'trovarsi' e costituisce un predicato verbale, mentre nella seconda funge da copula nel predicato nominale.",
+          "testo": "Nel predicato nominale il verbo essere si svuota del suo significato proprio e richiede la concordanza in genere e numero con il soggetto, mentre nel predicato verbale mantiene un significato autonomo como esistere o trovarsi.",
           "corretta": true
+        },
+        {
+          "testo": "Nel predicato nominale il verbo essere si limita a richiedere la presenza esclusiva di un aggettivo qualificativo, mentre nel predicato verbale deve essere obbligatoriamente accompagnato da un complemento di luogo.",
+          "corretta": false
+        },
+        {
+          "testo": "Nel predicato nominale il verbo essere descrive attivamente un'azione compiuta dal soggetto grammaticale, mentre nel predicato verbale rappresenta uno stato d'animo o una condizione fittizia del soggetto stesso.",
+          "corretta": false
         }
       ],
-      "spiegazione": "La risposta corretta è la C perché il verbo essere esprime stato in luogo o esistenza in 'Luca è in cucina' (si trova), agendo come predicato verbale, mentre in 'Luca è felice' si limita a collegare il soggetto a un aggettivo in funzione di copula. Il distrattore A è insidioso perché ipotizza una concordanza inesistente col luogo e inverte le definizioni di copula e predicato verbale. L'alunno deve prestare attenzione al valore semantico del verbo essere per distinguere le due funzioni grammaticali."
+      "spiegazione": "Il verbo essere funge da copula nel predicato nominale quando è semanticamente vuoto e serve unicamente a collegare il soggetto a un nome o un aggettivo . In questo caso, la struttura richiede la concordanza di genere e numero con il soggetto . Se invece assume il valore di esistere o trovarsi, come in 'essere sul tavolo', costituisce un predicato verbale autonomo . Il distruttore che descrive un'azione o una condizione fittizia confonde la natura predicativa e attribuisce erroneamente una dinamicità inesistente alla copula [6, 9]."
     },
     {
-      "domanda": "Qual è la reale differenza logica nel definire il soggetto tra la grammatica tradizionale e la prospettiva scientifica della teoria delle valenze?",
+      "domanda": "Durante una discussione in classe, un alunno esamina le frasi 'Domani danno un bel film in TV' e 'Finalmente si parte per le vacanze' e si chiede come classificare il soggetto. Qual è la corretta spiegazione grammaticale?",
       "opzioni": [
         {
-          "testo": "La grammatica tradizionale associa il soggetto all'intonazione e all'enfasi espressa nel parlato, mentre la teoria delle valenze lo identifica con l'argomento facoltativo che si colloca alla periferia della frase.",
+          "testo": "In entrambe le frasi il soggetto grammaticale è considerato assente perché l'azione non viene ricondotta a una persona specifica o definibile chiaramente all'interno del discorso.",
           "corretta": false
         },
         {
-          "testo": "La grammatica tradizionale si basa su criteri semantici identificando il soggetto con chi compie l'azione, mentre la teoria delle valenze lo definisce strutturalmente come il primo argomento obbligatorio per completare il significato del verbo.",
+          "testo": "Nella prima frase il soggetto è semplicemente sottinteso e coincide con il pronome di terza persona plurale, mentre nella seconda frase il soggetto fittizio è espresso dalla particella 'si'.",
+          "corretta": false
+        },
+        {
+          "testo": "Nella prima frase il soggetto è fittizio perché espresso da un elemento generico di appoggio, mentre nella seconda il soggetto è completamente assente a causa del 'si' impersonale.",
           "corretta": true
-        },
-        {
-          "testo": "La grammatica tradizionale limita il soggetto ai soli sostantivi maschili e femminili, mentre la teoria delle valenze consente di attribuire questa funzione sintattica unicamente alle costruzioni impersonali con il 'si' passivante.",
-          "corretta": false
         }
       ],
-      "spiegazione": "La risposta corretta è la B perché distingue i due criteri d'analisi: quello semantico tradizionale, spesso insufficiente (es. nelle frasi passive), e quello sintattico della teoria delle valenze, dove il soggetto è l'argomento primario obbligatorio per saturare il verbo. Il distrattore A è insidioso perché definisce erroneamente il soggetto come argomento facoltativo della periferia della frase, mentre esso fa parte del nucleo ed è indispensabile. La prospettiva valenziale chiarisce i rapporti logici interni in modo sistematico."
+      "spiegazione": "Nelle costruzioni con soggetto fittizio, come 'domani danno un film', il soggetto plurale funge solo da elemento di appoggio sintattico . Al contrario, l'uso della costruzione con il 'si' impersonale determina la totale assenza del soggetto grammaticale . Il distruttore che considera il soggetto assente in entrambi i casi ignora che nella prima frase l'appoggio di terza persona plurale mantiene una funzione fittizia . La seconda opzione errata attribuisce erroneamente al pronome 'si' il ruolo di soggetto fittizio, mentre esso è l'indicatore dell'assenza del soggetto ."
     },
     {
-      "domanda": "Durante la correzione di un esercizio sulla frase 'Mi piace dormire', un alunno sostiene che l'unico predicato sia 'piace' e che non vi sia alcun soggetto espresso poiché 'dormire' è un verbo all'infinito. Come dovrebbe rispondere l'insegnante per guidare l'alunno alla corretta comprensione sintattica?",
+      "domanda": "Si consideri la frase: 'Mi piace dormire nel pomeriggio'. Qual è il ruolo sintattico svolto dall'infinito 'dormire' in questa specifica struttura?",
       "opzioni": [
         {
-          "testo": "Dovrebbe spiegare che l'infinito 'dormire' subisce un processo di sostantivazione e svolge a tutti gli effetti il ruolo di soggetto della frase, indicando ciò che piace.",
+          "testo": "Funge da complemento oggetto del verbo principale, in quanto risponde alla classica domanda 'che cosa?' posta subito dopo l'azione espressa dal predicato.",
+          "corretta": false
+        },
+        {
+          "testo": "Funge da soggetto del verbo 'piace', poiché l'infinito si sostantiva e rappresenta l'argomento obbligatorio che completa il significato del predicato.",
           "corretta": true
         },
         {
-          "testo": "Dovrebbe confermare l'analisi dell'alunno spiegando che la presenza del pronome debole esclude la necessità di rintracciare un argomento nominale o verbale con funzione di soggetto.",
-          "corretta": false
-        },
-        {
-          "testo": "Dovrebbe suggerire di classificare 'dormire' come un complemento predicativo dell'oggetto, in quanto completa il significato del verbo espresso in forma debole.",
+          "testo": "Funge da predicato verbale secondario all'interno di una frase subordinata implicita che dipende strettamente dalla proposizione reggente principale.",
           "corretta": false
         }
       ],
-      "spiegazione": "La risposta corretta è la A poiché illustra come un verbo all'infinito possa assumere la funzione di soggetto sostantivato ('il dormire piace a me'). Il distrattore C è insidioso perché propone di classificarlo come complemento predicativo dell'oggetto, un errore che confonde il ruolo dell'infinito con un complemento nucleare associato ad altre classi verbali (es. 'eletto deputato'). L'insegnante deve mostrare come la morfologia ricca consenta di occupare posizioni sintattiche nominali."
+      "spiegazione": "Nella frase proposta, l'infinito sostantivato 'dormire' svolge il ruolo sintattico di soggetto del verbo 'piace' . In questo tipo di costrutto, un verbo assume pienamente la funzione di soggetto, costituendo il primo elemento di completamento del significato del predicato [8, 11]. Molti studenti cadono nell'errore di considerarlo un complemento oggetto a causa dell'ordine lineare insolito della frase italiana [11, 12]. Il distruttore che parla di subordinata implicita confonde la semplice sostantivazione di un singolo elemento con una frase dipendente complessa [11, 13]."
     },
     {
-      "domanda": "Quale criterio logico-sintattico consente di distinguere in modo netto un complemento nucleare (argomentale) da uno circostanziale (aggiunto)?",
+      "domanda": "Qual è la differenza fondamentale di significato e di analisi logica tra le frasi 'Studio per il successo' e 'Esco per il sole'?",
       "opzioni": [
         {
-          "testo": "I complementi nucleari si formano unicamente tramite avverbi di modo modificando il verbo, mentre i circostanziali si legano alle congiunzioni coordinanti all'inizio della proposizione.",
-          "corretta": false
-        },
-        {
-          "testo": "I circostanziali indicano il destinatario dell'azione verbale completando la valenza del nucleo, mentre i nucleari si collocano alla periferia fornendo dettagli di sfondo.",
-          "corretta": false
-        },
-        {
-          "testo": "I nucleari sono elementi obbligatori richiesti dal verbo per saturare la sua valenza e formare una frase minima, mentre i circostanziali aggiungono informazioni facoltative di sfondo.",
+          "testo": "Nella prima frase si esprime il fine o lo scopo futuro dell'azione, mentre nella seconda si indica la causa preesistente che determina l'evento.",
           "corretta": true
+        },
+        {
+          "testo": "Entrambe le frasi esprimono un complemento di causa, ma la prima si riferisce a un motivo puramente astratto e la seconda a una causa naturale.",
+          "corretta": false
+        },
+        {
+          "testo": "La prima frase presenta una subordinata finale implicita, mentre la seconda costituisce un complemento di mezzo o strumento dell'azione principale.",
+          "corretta": false
         }
       ],
-      "spiegazione": "La risposta corretta è la C perché distingue gli elementi nucleari (indispensabili per la grammaticalità, come l'oggetto o il termine) dai circostanziali (opzionali ed extranucleari, come tempo o luogo). Il distrattore B è insidioso perché inverte specularmente le definizioni, attribuendo ai circostanziali la funzione di completamento della valenza verbale minima. Comprendere questa distinzione evita classificazioni meccaniche e favorisce lo studio della sintassi basata sul nucleo."
+      "spiegazione": "Il complemento di fine indica lo scopo o l'obiettivo futuro verso cui tende l'azione, come nell'espressione 'per il successo' . Il complemento di causa, invece, esprime il motivo preesistente o l'evento scatenante dell'azione, come in 'per il sole' . La confusione sorge poiché entrambi rispondono alla medesima domanda logica 'perché?' . Per distinguerli, si può verificare se l'elemento introdotto da 'per' può essere riformulato indicando una finalità tramite il termine 'affinché' [14, 16]. L'opzione che li considera entrambi di causa ignora questa distinzione, mentre l'altra qualifica erroneamente la causa come un mezzo strumentale ."
     },
     {
-      "domanda": "Analizzando la frase 'Viaggio in treno', uno studente classifica 'in treno' come complemento di stato in luogo, basandosi sulla presenza della preposizione 'in'. Quale spiegazione logico-semantica dimostra l'inesattezza di questa classificazione?",
+      "domanda": "Uno studente analizza la frase 'In treno leggo un libro' e classifica 'In treno' come complemento di stato in luogo. Perché questa classificazione è scorretta dal punto di vista logico-sintattico?",
       "opzioni": [
         {
-          "testo": "Il nesso indica un complemento di moto da luogo figurato, poiché descrive lo spostamento fisico del soggetto attraverso una superficie delimitata.",
+          "testo": "Perché il treno è fisicamente un oggetto mobile, di conseguenza la presenza del movimento richiede di classificare l'elemento come un complemento di moto a luogo.",
           "corretta": false
         },
         {
-          "testo": "Il nesso indica lo strumento o il veicolo utilizzato per compiere l'azione del viaggiare, configurandosi come un complemento di mezzo e non di luogo.",
+          "testo": "Perché l'uso della preposizione 'in' posta davanti a un qualsiasi mezzo di trasporto ha la funzione logica di introdurre una proposizione subordinata temporale implicita.",
+          "corretta": false
+        },
+        {
+          "testo": "Perché 'in treno' indica il mezzo o lo strumento attraverso cui si realizza l'azione del viaggiare e dello spostarsi, non semplicemente lo spazio fisico statico.",
           "corretta": true
-        },
-        {
-          "testo": "Il nesso rappresenta un complemento predicativo del soggetto, poiché descrive una qualità transitoria riferita al soggetto durante lo svolgimento dell'azione.",
-          "corretta": false
         }
       ],
-      "spiegazione": "La risposta corretta è la B perché indica che 'in treno' esprime il mezzo di trasporto con cui si compie il viaggio, non il luogo fisico in cui ci si trova. Il distrattore A è insidioso perché confonde la preposizione spaziale con un moto da luogo figurato, che però descrive la provenienza semantica (es. 'cadere dalle nuvole') e non lo strumento. Lo studente deve guardare oltre la preposizione superficiale per cogliere il rapporto logico reale."
+      "spiegazione": "Nell'espressione 'in treno' associata ad azioni di movimento o viaggio, l'elemento indica lo strumento o il mezzo logico con cui si compie l'azione . Anche se il veicolo rappresenta uno spazio fisico, la sua funzione prevalente in questo costrutto non è di tipo locativo statico . Il distruttore incentrato sul moto a luogo confonde la natura fisica dello spostamento con la classificazione del complemento di luogo . L'altro distruttore propone una interpretazione di subordinata temporale che non trova alcun riscontro nelle regole della sintassi [13, 19]."
     },
     {
-      "domanda": "Per evitare di confondere il complemento di causa con il complemento di fine, quale test di riformulazione sintattica si rivela estremamente efficace?",
+      "domanda": "Qual è la differenza fondamentale nella marcatura sintattica e ortografica tra un'interrogativa diretta e un'interrogativa indiretta in italiano?",
       "opzioni": [
         {
-          "testo": "Provare a riformulare la frase utilizzando la congiunzione 'affinché' seguita dal congiuntivo: se la struttura mantiene il suo valore logico, si tratta di un complemento di fine.",
+          "testo": "L'interrogativa diretta richiede un'inversione sintattica tra soggetto e verbo, mentre l'interrogativa indiretta mantiene l'ordine lineare della frase.",
+          "corretta": false
+        },
+        {
+          "testo": "L'interrogativa diretta si affida all'intonazione o al punto interrogativo, mentre l'interrogativa indiretta è introdotta da una frase reggente e non richiede il punto interrogativo.",
           "corretta": true
         },
         {
-          "testo": "Provare a sostituire il sintagma con una preposizione articolata genitiva, verificando se l'azione si colloca temporalmente prima dell'enunciazione verbale.",
-          "corretta": false
-        },
-        {
-          "testo": "Sostituire il sintagma con un avverbio di modo terminante in '-mente', osservando se descrive la maniera fisica in cui si realizza l'azione del soggetto.",
+          "testo": "L'interrogativa diretta ammette soltanto risposte chiuse basate su una scelta binaria, mentre l'interrogativa indiretta consente formulazioni ampie, aperte e discorsive.",
           "corretta": false
         }
       ],
-      "spiegazione": "La risposta corretta è la A perché illustra il test dell'affinché per isolare lo scopo futuro (fine, es. 'studio per il successo' -> 'affinché io abbia successo') distinguendolo dal motivo pregresso (causa, es. 'esco per il sole'). Il distrattore C è scorretto poiché la sostituzione con avverbi in '-mente' serve a identificare i complementi di modo, non a risolvere l'ambiguità tra causa e fine. Questa riformulazione esplicita l'intenzionalità dello scopo."
+      "spiegazione": "L'italiano non possiede marche sintattiche o inversioni per segnalare le domande dirette, affidandosi all'intonazione o al punto interrogativo [20, 21]. Le interrogative indirette sono invece introdotte da una proposizione reggente anteposta e terminano ortograficamente con il punto fermo [21, 22]. La confusione consiste nell'inserire il punto interrogativo anche al termine delle forme indirette . Il distruttore riguardante l'inversione sintattica descrive una caratteristica tipica di altre lingue straniere, ma assente nella grammatica italiana ."
     },
     {
-      "domanda": "Si confrontino le frasi 'È Francesca che mi ha detto questo' e 'Quello che stiamo guardando è un capolavoro'. Quale distinzione formale consente di classificarle rispettivamente come frase scissa e frase pseudo-scissa?",
+      "domanda": "Si consideri la frase: 'La torta l'ha preparata Marco'. Come si distingue questo costrutto da una dislocazione a destra?",
       "opzioni": [
         {
-          "testo": "La prima spezza una frase lineare aprendosi con il verbo essere che focalizza il rema, mentre la seconda è introdotta da un pronome dimostrativo che regge una frase relativa.",
+          "testo": "Nella dislocazione a sinistra la frase inizia direttamente con il sintagma nominale focalizzato, mentre in quella a destra la frase comincia con il pronome clitico di ripresa.",
           "corretta": true
         },
         {
-          "testo": "La prima presenta una coordinazione copulativa incentrata sulla congiunzione, mentre la seconda ricorre a un'interrogativa indiretta introdotta da verbi di opinione.",
+          "testo": "Nella dislocazione a sinistra il pronome clitico si trova tipicamente collocato dopo il verbo principale, mentre nella dislocazione a destra precede sia il soggetto sia l'oggetto.",
           "corretta": false
         },
         {
-          "testo": "La prima si apre con un pronome relativo che regge un verbo copulativo, mentre la seconda si caratterizza per l'uso dell'anacoluto con il tema sospeso a sinistra.",
+          "testo": "Nella dislocazione a sinistra il soggetto della frase compie l'azione espressa in modo passivo, mentre nella dislocazione a destra l'azione viene presentata come riflessiva o passiva.",
           "corretta": false
         }
       ],
-      "spiegazione": "La risposta corretta è la A perché descrive le differenti strutture di apertura dei due costrutti di sintassi marcata: la frase scissa si apre con il verbo essere per evidenziare il rema, mentre la pseudo-scissa inizia con un pronome dimostrativo ('quello che') o relativo ('chi'). Il distrattore C è insidioso perché inverte i ruoli attribuendo alla scissa l'apertura col pronome relativo e introduce a sproposito l'anacoluto. Entrambe le forme deviano dall'ordine SVO non marcato."
+      "spiegazione": "Nella dislocazione a sinistra, il complemento oggetto viene posto all'inizio della frase e successivamente ripreso da un pronome clitico . Nella dislocazione a destra, l'elemento tematizzato viene spostato fuori dalla frase, a destra, e la frase inizia con il pronome clitico di anticipazione [24, 25]. Un metodo pratico per distinguerle consiste nel verificare se l'enunciato si apre con una ripresa pronominale . L'opzione che descrive il posizionamento del clitico dopo il verbo è errata, poiché i clitici precedono le forme verbali finite in entrambi i costrutti [23, 24]."
     },
     {
-      "domanda": "Un'insegnante scrive sulla lavagna due frasi: 'La mela la mangio io' e 'La mangio io, la mela', chiedendo alla classe di indicare un criterio rapido per distinguerle sintatticamente. Quale spiegazione basata sui meccanismi della dislocazione consente di risolvere il quesito?",
+      "domanda": "Qual è l'elemento chiave che differenzia un tema sospeso (anacoluto) da una regolare dislocazione a sinistra?",
       "opzioni": [
         {
-          "testo": "La prima si caratterizza per l'uso di una congiunzione coordinante avversativa, mentre la seconda si apre con un infinito sostantivato che funge da soggetto fittizio.",
+          "testo": "Nel tema sospeso l'elemento iniziale viene abitualmente omesso nel parlato quotidiano, mentre nella dislocazione a sinistra l'elemento focalizzato deve essere ripetuto due volte per ragioni espressive.",
           "corretta": false
         },
         {
-          "testo": "La dislocazione a sinistra comincia direttamente con il sintagma nominale, mentre la dislocazione a destra si riconosce perché la frase comincia con un pronome clitico.",
+          "testo": "Nel tema sospeso manca un raccordo grammaticale e preposizionale tra l'elemento iniziale e il resto della frase, mentre nella dislocazione il legame sintattico è preservato.",
           "corretta": true
         },
         {
-          "testo": "Nella prima frase la negazione totale investe il complemento oggetto dislocato, mentre nella seconda si osserva un anacoluto grammaticale privo di ripresa clitica.",
+          "testo": "Il tema sospeso si incontra esclusivamente nei testi letterari della tradizione antica, mentre la dislocazione a sinistra appartiene unicamente al parlato colloquiale e informale.",
           "corretta": false
         }
       ],
-      "spiegazione": "La risposta corretta è la B perché indica come identificare l'apertura delle due dislocazioni: la sinistra inizia con l'elemento nominale tematizzato ('La mela...'), mentre la destra si apre con il pronome clitico anticipatore ('La mangio...'). Il distrattore C è insidioso perché mescola concetti estranei come la negazione totale e l'anacoluto, che non c'entrano con la struttura delle due dislocazioni. Questa distinzione morfologica facilita il riconoscimento dei costrutti."
+      "spiegazione": "Il tema sospeso, o anacoluto, si caratterizza per una rottura sintattica in cui l'elemento iniziale rimane privo di collegamento grammaticale o di preposizione reggente con il resto del periodo [26, 27]. Nelles regolari dislocazioni a sinistra, l'elemento spostato mantiene il proprio legame sintattico e preposizionale con il verbo [23, 28]. Il distruttore che sostiene l'omissione dell'elemento iniziale è errato, poiché il tema sospeso si basa proprio sulla presenza di tale elemento in apertura [26, 27]. L'altro distruttore propone una divisione rigida tra lingua scritta e parlata che non corrisponde alla realtà d'uso [27, 29]."
     },
     {
-      "domanda": "Nella lezione si discute l'errore commesso da una studentessa nella scrittura di un'e-mail scolastica: 'Vorrei sapere quando si svolgerà l'esame?'. Qual è la causa strutturale e ortografica di questo errore comune?",
+      "domanda": "Un docente mostra alla classe la frase: 'Quello che mi serve è un po' di riposo'. Come deve essere correttamente classificata questa struttura rispetto a 'È un po' di riposo che mi serve'?",
       "opzioni": [
         {
-          "testo": "La studentessa ha applicato una dislocazione a sinistra del complemento di termine introducendo un pleonasmo inaccettabile nello scritto formale.",
+          "testo": "Entrambe sono frasi scisse, ma la prima presenta una focalizzazione del soggetto grammaticale, mentre la seconda focalizza un complemento indiretto della frase.",
           "corretta": false
         },
         {
-          "testo": "La studentessa ha inserito erroneamente il punto interrogativo alla fine di un'interrogativa indiretta, la quale è una subordinata che non richiede questo segno grafico.",
+          "testo": "La prima è una frase presentativa con un evidente valore attualizzante, mentre la seconda costituisce una frase scissa che inverte la causa con l'effetto dell'azione.",
+          "corretta": false
+        },
+        {
+          "testo": "La prima è una frase pseudo-scissa perché introdotta da un pronome dimostrativo seguito da relativa, mentre la seconda è una frase scissa classica con verbo essere e 'che' pseudo-relativo.",
           "corretta": true
-        },
-        {
-          "testo": "La studentessa ha confuso l'apodosi con la protasi all'interno di un periodo ipotetico della realtà, omettendo la congiunzione causale necessaria.",
-          "corretta": false
         }
       ],
-      "spiegazione": "La risposta corretta è la B perché individua l'errore nell'uso del punto interrogativo con la subordinata interrogativa indiretta, che nello scritto richiede sempre il punto fermo. Il distrattore A è insidioso perché evoca l'errore pleonastico ('a me mi piace') trattato nella lezione, ma non pertinente a questo specifico caso ortografico. Le interrogative indirette, pur esprimendo un quesito, non vogliono il punto interrogativo."
+      "spiegazione": "La frase pseudo-scissa è caratterizzata dall'apertura tramite un pronome relativo o dimostrativo seguito da una proposizione relativa, che poi si collega al resto tramite il verbo essere . La frase scissa classica, invece, spezza l'enunciato lineare introducendo in prima posizione il verbo essere seguito dall'elemento focalizzato e da un 'che' pseudo-relativo [31, 32]. Il distruttore che le confonde nega la differenza strutturale tra queste due costruzioni [30, 31]. La seconda opzione errata fa riferimento alla frase presentativa, la quale richiede l'uso del 'ci' attualizzante accostato al verbo essere [26, 33]."
     }
   ],
   "assistente_ia": {
