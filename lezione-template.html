@@ -1342,7 +1342,7 @@
           '.ums-pdf-sec-title{font-family:\'Playfair Display\',Georgia,serif;color:#1a2f4f;'+
             'border-top:2px solid #c8a96e;padding-top:14px;margin:10px 0 14px}'+
           '.ums-pdf-mappa{'+(modo!=='mappa' ? 'page:mappa;' : '')+'width:100%;overflow:visible}'+
-          '.ums-pdf-mappa svg{width:100%;height:auto;max-height:175mm}';
+          '.ums-pdf-mappa svg{width:100%;height:auto}';
 
         var html =
           '<html><head><title>'+titolo+' \u2014 Una Mano Spensierata</title>'+
@@ -1439,50 +1439,71 @@
       }
 
       function generaSVG(albero){
-        var COLW = [230, 300, 320];
-        var X = [30, 30+COLW[0]+70, 30+COLW[0]+70+COLW[1]+60];
-        var PADY = 14, LH = 17, NODEPADY = 10;
-        var navy = '#1A2F4F', gold = '#C8A96E', ink = '#1c1c22', sub='#5f5e5a';
+        // MAPPA CENTRATA: radice al centro, temi divisi meta' a destra e
+        // meta' a sinistra (bilanciati sul numero di foglie) -> la forma
+        // combacia con un foglio A4 orizzontale invece del "pettine" alto
+        // e stretto che stampava piccolo.
+        var LW=230, MW=190, RW=180, G1=36, G2=36;      // larghezze e spazi
+        var PADY=12, LH=16, NPY=9;
+        var navy='#1A2F4F', gold='#C8A96E', ink='#1c1c22', sub='#5f5e5a';
+        var MAXC_F=28, MAXC_M=20, MAXC_R=18;           // caratteri per riga
 
-        function altezzaNodo(txt, colw){
-          var righe = aCapo(txt, colw > 260 ? 44 : 34);
-          return Math.max(1, righe.length) * LH + NODEPADY*2;
+        function hNodo(txt, maxc){
+          var r = aCapo(txt, maxc);
+          return Math.max(1, r.length)*LH + NPY*2;
         }
 
-        var y = PADY, macroPos = [];
-        albero.figli.forEach(function(macro){
-          var foglie = macro.figli.filter(function(f){ return f.testo; });
-          var yStartFoglie = y, posFoglie = [];
-          if(foglie.length){
-            foglie.forEach(function(f){
-              var h = altezzaNodo(f.testo, COLW[2]);
-              posFoglie.push({ nodo:f, y:y, h:h });
-              y += h + 10;
-            });
-          } else {
-            y += altezzaNodo(macro.testo, COLW[1]);
-          }
-          var yEndFoglie = y;
-          var hMacro = altezzaNodo(macro.testo, COLW[1]);
-          var yMacro = foglie.length ? (yStartFoglie + (yEndFoglie - yStartFoglie - 10)/2 - hMacro/2) : (y - hMacro);
-          macroPos.push({ nodo:macro, y:Math.max(PADY, yMacro), h:hMacro, foglie:posFoglie });
-          y += 16;
-        });
-        var totH = Math.max(y, 200);
-        var hRadice = altezzaNodo(albero.testo, COLW[0]);
-        var yRadice = totH/2 - hRadice/2;
-        var totW = X[2] + COLW[2] + 30;
+        // divido i temi nei due lati, bilanciando il "peso" (1 + n foglie)
+        var temi = albero.figli;
+        var pesi = temi.map(function(t){ return 1 + (t.figli ? t.figli.length : 0); });
+        var tot = pesi.reduce(function(a,b){ return a+b; }, 0);
+        // scelgo il punto di taglio che rende i due lati piu' SIMILI possibile
+        var acc = 0, taglio = 1, migliore = Infinity;
+        for(var i=0;i<temi.length-1;i++){
+          acc += pesi[i];
+          var sq = Math.abs(acc - (tot - acc));
+          if(sq < migliore){ migliore = sq; taglio = i+1; }
+        }
+        if(temi.length === 1) taglio = 1;
+        var destra = temi.slice(0, taglio), sinistra = temi.slice(taglio);
+
+        function layoutLato(lista){
+          var y = PADY, out = [];
+          lista.forEach(function(macro){
+            var foglie = (macro.figli || []).filter(function(f){ return f.testo; });
+            var y0 = y, pf = [];
+            if(foglie.length){
+              foglie.forEach(function(f){
+                var h = hNodo(f.testo, MAXC_F);
+                pf.push({ nodo:f, y:y, h:h }); y += h + 8;
+              });
+            } else { y += hNodo(macro.testo, MAXC_M); }
+            var hM = hNodo(macro.testo, MAXC_M);
+            var yM = foglie.length ? (y0 + (y-8-y0)/2 - hM/2) : (y - hM);
+            out.push({ nodo:macro, y:Math.max(PADY,yM), h:hM, foglie:pf });
+            y += 14;
+          });
+          return { pos:out, h:y };
+        }
+        var latoD = layoutLato(destra), latoS = layoutLato(sinistra);
+        var totH = Math.max(latoD.h, latoS.h, 160);
+        var hR = hNodo(albero.testo, MAXC_R);
+        var yR = totH/2 - hR/2;
+
+        // colonne: [foglie sx][macro sx][radice][macro dx][foglie dx]
+        var xFS=16, xMS=xFS+LW+G1, xR=xMS+MW+G2, xMD=xR+RW+G2, xFD=xMD+MW+G1;
+        var totW = xFD + LW + 16;
 
         function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-        function nodo(x, ny, w, h, txt, opts){
+        function nodo(x, ny, w, h, txt, maxc, opts){
           opts = opts || {};
-          var righe = aCapo(txt, w > 260 ? 44 : 34);
+          var righe = aCapo(txt, maxc);
           var fill = opts.fill || '#fff', stroke = opts.stroke || gold;
           var tcol = opts.tcol || ink, fw = opts.bold ? '700' : '600', fs = opts.fs || 13;
           var s = '<rect x="'+x+'" y="'+ny+'" width="'+w+'" height="'+h+'" rx="10" ry="10" fill="'+fill+'" stroke="'+stroke+'" stroke-width="'+(opts.sw||1.5)+'"/>';
-          var ty = ny + NODEPADY + fs;
+          var ty = ny + NPY + fs;
           righe.forEach(function(r){
-            s += '<text x="'+(x+14)+'" y="'+ty+'" font-family="Georgia, serif" font-size="'+fs+'" font-weight="'+fw+'" fill="'+tcol+'">'+esc(r)+'</text>';
+            s += '<text x="'+(x+12)+'" y="'+ty+'" font-family="Georgia, serif" font-size="'+fs+'" font-weight="'+fw+'" fill="'+tcol+'">'+esc(r)+'</text>';
             ty += LH;
           });
           return s;
@@ -1493,21 +1514,36 @@
         }
 
         var svg = '<svg viewBox="0 0 '+totW+' '+totH+'" width="'+totW+'" height="'+totH+'" xmlns="http://www.w3.org/2000/svg" font-family="Georgia, serif">';
-        var xR2 = X[0]+COLW[0], yR = yRadice + hRadice/2;
-        macroPos.forEach(function(mp){ svg += curva(xR2, yR, X[1], mp.y + mp.h/2, gold); });
-        macroPos.forEach(function(mp){
-          var xM2 = X[1]+COLW[1], yM = mp.y + mp.h/2;
-          mp.foglie.forEach(function(fp){ svg += curva(xM2, yM, X[2], fp.y + fp.h/2, '#d9c9a3'); });
+        // curve radice -> macro
+        latoD.pos.forEach(function(mp){ svg += curva(xR+RW, yR+hR/2, xMD, mp.y+mp.h/2, gold); });
+        latoS.pos.forEach(function(mp){ svg += curva(xR, yR+hR/2, xMS+MW, mp.y+mp.h/2, gold); });
+        // curve macro -> foglie
+        latoD.pos.forEach(function(mp){
+          mp.foglie.forEach(function(fp){ svg += curva(xMD+MW, mp.y+mp.h/2, xFD, fp.y+fp.h/2, '#d9c9a3'); });
         });
-        macroPos.forEach(function(mp){
+        latoS.pos.forEach(function(mp){
+          mp.foglie.forEach(function(fp){ svg += curva(xMS, mp.y+mp.h/2, xFS+LW, fp.y+fp.h/2, '#d9c9a3'); });
+        });
+        // foglie
+        latoD.pos.forEach(function(mp){
           mp.foglie.forEach(function(fp){
-            svg += nodo(X[2], fp.y, COLW[2], fp.h, fp.nodo.testo, {fill:'#fbf8f1', stroke:'#e5d6bd', tcol:sub, fs:12, sw:1});
+            svg += nodo(xFD, fp.y, LW, fp.h, fp.nodo.testo, MAXC_F, {fill:'#fbf8f1', stroke:'#e5d6bd', tcol:sub, fs:12.5, sw:1});
           });
         });
-        macroPos.forEach(function(mp){
-          svg += nodo(X[1], mp.y, COLW[1], mp.h, mp.nodo.testo, {fill:'#f7f1e6', stroke:gold, tcol:navy, bold:true, fs:13});
+        latoS.pos.forEach(function(mp){
+          mp.foglie.forEach(function(fp){
+            svg += nodo(xFS, fp.y, LW, fp.h, fp.nodo.testo, MAXC_F, {fill:'#fbf8f1', stroke:'#e5d6bd', tcol:sub, fs:12.5, sw:1});
+          });
         });
-        svg += nodo(X[0], yRadice, COLW[0], hRadice, albero.testo, {fill:navy, stroke:navy, tcol:'#fff', bold:true, fs:15});
+        // macro
+        latoD.pos.forEach(function(mp){
+          svg += nodo(xMD, mp.y, MW, mp.h, mp.nodo.testo, MAXC_M, {fill:'#f7f1e6', stroke:gold, tcol:navy, bold:true, fs:13.5});
+        });
+        latoS.pos.forEach(function(mp){
+          svg += nodo(xMS, mp.y, MW, mp.h, mp.nodo.testo, MAXC_M, {fill:'#f7f1e6', stroke:gold, tcol:navy, bold:true, fs:13.5});
+        });
+        // radice al centro
+        svg += nodo(xR, yR, RW, hR, albero.testo, MAXC_R, {fill:navy, stroke:navy, tcol:'#fff', bold:true, fs:15});
         svg += '</svg>';
         return svg;
       }
