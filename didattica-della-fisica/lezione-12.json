@@ -187,184 +187,184 @@
   ],
   "il_super_quiz": [
     {
-      "domanda": "Cos'è la temperatura dal punto di vista microscopico secondo la lezione?",
+      "domanda": "Uno studente osserva che, toccando un banco di metallo e una sedia di legno situati nella stessa stanza, il metallo sembra molto più freddo al tatto. Quale spiegazione fisica permette di superare questo inganno dei sensi?",
       "opzioni": [
         {
-          "testo": "È la somma totale di tutte le energie chimiche e nucleari racchiuse nei legami interni delle particelle.",
+          "testo": "Il metallo si trova a una temperatura inferiore rispetto al legno perché assorbe e trattiene spontaneamente il freddo dall'ambiente circostante.",
           "corretta": false
         },
         {
-          "testo": "È una grandezza macroscopica che riflette la media delle energie cinetiche delle singole particelle che compongono il sistema.",
+          "testo": "Entrambi gli oggetti sono alla stessa temperatura dell'ambiente, ma il metallo sottrae calore alla mano molto più rapidamente del legno grazie alla sua conducibilità.",
           "corretta": true
         },
         {
-          "testo": "È la velocità assoluta con cui il calore fluisce tra due corpi a contatto simultaneo.",
+          "testo": "Il metallo ha una capacità termica estremamente ridotta rispetto al legno, perciò basta il minimo contatto per farne crollare la temperatura superficiale.",
           "corretta": false
         }
       ],
-      "spiegazione": "La temperatura è definita come una grandezza macroscopica che esprime la media delle energie cinetiche (legate al movimento e alla vibrazione) delle singole particelle microscopiche che costituiscono un sistema."
+      "spiegazione": "La risposta corretta è la B poiché gli oggetti esposti allo stesso ambiente raggiungono l'equilibrio termico e quindi la medesima temperatura. La sensazione di freddo deriva dalla rapidità con cui il metallo (buon conduttore) sottrae calore al nostro corpo rispetto al legno (isolante). Il distrattore A è insidioso perché convalida l'idea errata infantile che il freddo sia una sostanza reale che penetra negli oggetti o che i materiali abbiano temperature intrinseche diverse."
     },
     {
-      "domanda": "Perché non è scientificamente corretto sovrapporre e confondere il concetto di temperatura con quello di energia interna?",
+      "domanda": "Qual è la differenza fondamentale tra il \"calore specifico\" di una sostanza e la sua \"capacità termica\"?",
       "opzioni": [
         {
-          "testo": "Perché l'energia interna include tutte le energie presenti nel sistema (come l'energia chimica dei legami), mentre la temperatura misura specificamente solo l'agitazione cinetica delle particelle.",
+          "testo": "Il calore specifico misura l'energia necessaria per far cambiare di stato un chilogrammo di sostanza, mentre la capacità termica riguarda solo il riscaldamento senza transizioni di fase.",
+          "corretta": false
+        },
+        {
+          "testo": "Il calore specifico indica la velocità con cui un corpo scambia calore con l'esterno, mentre la capacità termica misura la quantità massima di calore che il corpo può accumulare prima di iniziare a sciogliersi.",
+          "corretta": false
+        },
+        {
+          "testo": "Il calore specifico dipende esclusivamente dalla natura del materiale ed è una proprietà intensiva, mentre la capacità termica tiene conto anche della massa totale del corpo ed è estensiva.",
           "corretta": true
-        },
-        {
-          "testo": "Perché l'energia interna si applica solo alle singole particelle isolate, mentre la temperatura si riferisce esclusivamente a un intero sistema chiuso.",
-          "corretta": false
-        },
-        {
-          "testo": "Perché la temperatura varia in base al percorso seguito dalla reazione, mentre l'energia interna dipende solo dallo stato finale.",
-          "corretta": false
         }
       ],
-      "spiegazione": "L'energia interna è un concetto più ampio che comprende tutte le energie del sistema, inclusi i legami chimici e le interazioni reciproche delle particelle, mentre la temperatura misura unicamente l'energia cinetica legata alla loro agitazione termica."
+      "spiegazione": "La risposta corretta è la C perché il calore specifico è una grandezza intensiva propria della sostanza, mentre la capacità termica dipende anche dalla quantità di massa ed è una grandezza estensiva. Il distrattore B è il più insidioso perché confonde la conducibilità (velocità di scambio) con la capacità termica, deformando quest'ultima come un limite massimo di accumulo di calore prima di un cambiamento di fase. Questa confusione è frequente negli studenti che assimilano la capacità termica a un contenitore fisico."
     },
     {
-      "domanda": "Che vantaggio offre l'uso delle 'grandezze di stato' (come la temperatura o l'energia interna) nello studio del metabolismo umano?",
+      "domanda": "Durante un'escursione in montagna, uno studente afferma che indossare un maglione di lana \"produce calore\" per riscaldare il corpo. Come si può correggere questa idea alla luce delle leggi fisiche della termodinamica?",
       "opzioni": [
         {
-          "testo": "Consente di misurare l'energia cinetica di una singola particella isolata senza dover analizzare l'intero sistema biologico.",
-          "corretta": false
-        },
-        {
-          "testo": "Permette di eliminare completamente gli attriti e gli sprechi di calore all'interno dei processi cellulari della respirazione.",
-          "corretta": false
-        },
-        {
-          "testo": "Poiché non dipendono dal percorso seguito ma solo dallo stato finale e iniziale, permettono di studiare una reazione (come la combustione dello zucchero) in laboratorio sapendo che nel corpo produrrà la stessa quantità di energia.",
+          "testo": "Il maglione di lana non genera calore, ma agisce da isolante termico che rallenta la dispersione del calore naturalmente prodotto e ceduto dal nostro corpo.",
           "corretta": true
+        },
+        {
+          "testo": "La lana non produce calore direttamente, ma accelera il passaggio di calore dall'aria esterna verso la pelle creando una barriera protettiva termoregolatrice.",
+          "corretta": false
+        },
+        {
+          "testo": "Il maglione riscalda perché converte l'umidità della pelle in energia termica attraverso un processo di micro-condensazione spontanea del tessuto.",
+          "corretta": false
         }
       ],
-      "spiegazione": "Le grandezze di stato dipendono solo dallo stato iniziale e finale del sistema e non dal percorso. Di conseguenza, l'energia liberata bruciando un grammo di zucchero su una fiamma in laboratorio è identica a quella prodotta dallo stesso grammo metabolizzato dal corpo attraverso 50 reazioni biochimiche complesse."
+      "spiegazione": "La risposta corretta è la A poiché un maglione di lana non è una sorgente termica attiva, bensì un mezzo isolante che riduce la velocità con cui il calore corporeo viene ceduto all'ambiente esterno. Il distrattore B è particolarmente ingannevole perché inverte la causa e l'effetto del flusso termico, suggerendo che il calore fluisca dall'esterno freddo verso l'interno. Questa spiegazione pseudoscientifica inganna facilmente chi non ha ben chiaro che il calore transita spontaneamente solo da un corpo caldo a uno più freddo."
     },
     {
-      "domanda": "Qual è la definizione scientifica di 'calore' presentata nella lezione?",
+      "domanda": "Perché i fisici considerano la temperatura una \"grandezza di stato\" e in che modo questa proprietà si rivela utile nello studio dei sistemi biologici?",
       "opzioni": [
         {
-          "testo": "È una forma di energia in transito che passa spontaneamente da un corpo più caldo a uno più freddo.",
+          "testo": "Perché varia esclusivamente in presenza di un lavoro meccanico esterno, consentendo di calcolare l'efficienza termica del corpo umano senza misurare le reazioni chimiche interne.",
+          "corretta": false
+        },
+        {
+          "testo": "Perché dipende solo dalle condizioni iniziali e finali del sistema e non dal percorso seguito, permettendo di studiare in laboratorio l'energia scambiata anche se nel corpo avviene tramite passaggi complessi.",
           "corretta": true
         },
         {
-          "testo": "È una sostanza fluida e invisibile accumulata stabilmente all'interno dei corpi caldi.",
-          "corretta": false
-        },
-        {
-          "testo": "È una proprietà intrinseca della materia che dipende esclusivamente dalla densità del mezzo considerato.",
+          "testo": "Perché misura direttamente la quantità totale di calore immagazzinato nel sistema, garantendo che l'energia interna rimanga costante indipendentemente dal tipo di reazione metabolica effettuata.",
           "corretta": false
         }
       ],
-      "spiegazione": "Il calore viene definito come energia in transito, una forma di trasferimento energetico che avviene spontaneamente esclusivamente tra due sistemi a temperature differenti, muovendosi dal corpo più caldo a quello più freddo."
+      "spiegazione": "La risposta corretta è la B perché le grandezze di stato dipendono solo dallo stato iniziale e finale e non dal percorso, permettendo di calcolare l'energia termica in laboratorio indipendentemente dai complessi passaggi metabolici del corpo. Il distrattore C è insidioso poiché confonde la temperatura con il calore totale immagazzinato o con l'energia interna del sistema, due concetti ben distinti nella lezione. Gli studenti spesso sovrappongono queste grandezze pensando che la temperatura misuri direttamente tutto il calore presente in un corpo."
     },
     {
-      "domanda": "Cosa misura effettivamente un termometro quando viene messo a contatto con un corpo?",
+      "domanda": "Una cuoca osserva che l'acqua in una pentola a pressione cuoce i cibi molto più velocemente rispetto a una pentola comune aperta sul fuoco. Qual è la corretta spiegazione fisica di questo fenomeno?",
       "opzioni": [
         {
-          "testo": "La quantità totale di calore che il corpo esterno ha accumulato dall'ambiente circostante.",
+          "testo": "L'elevata pressione all'interno della pentola sigillata costringe le molecole d'acqua a muoversi più velocemente, provocando l'ebollizione a una temperatura molto più bassa e abbreviando i tempi.",
           "corretta": false
         },
         {
-          "testo": "La propria temperatura, misurata dalla sostanza termometrica interna una volta raggiunto l'equilibrio termico con il corpo esterno.",
+          "testo": "La chiusura ermetica impedisce al calore di disperdersi nell'aria, accumulando una quantità di energia termica superiore che raddoppia la capacità termica dell'acqua stessa.",
+          "corretta": false
+        },
+        {
+          "testo": "L'aumento di pressione interna innalza la temperatura di ebollizione dell'acqua, permettendo al liquido di raggiungere temperature superiori a 100 °C prima di bollire e cuocendo così i cibi più rapidamente.",
           "corretta": true
-        },
-        {
-          "testo": "La conducibilità termica dei materiali espressa su scala centigrada.",
-          "corretta": false
         }
       ],
-      "spiegazione": "Il termometro misura sempre la temperatura della sostanza termometrica che abita al suo interno (come l'alcol o il mercurio). Posto a contatto con un corpo esterno, lo strumento scambia calore fino a raggiungere l'equilibrio termico con esso, mostrando così la temperatura comune."
+      "spiegazione": "La risposta corretta è la C perché l'ebollizione dell'acqua avviene quando la tensione di vapore eguaglia la pressione esterna; aumentando quest'ultima, l'acqua bolle a temperature superiori a 100 °C, accelerando la cottura dei cibi. Il distrattore A è estremamente insidioso perché inverte l'effetto fisico, sostenendo erroneamente che l'ebollizione avvenga a una temperatura inferiore. Questo errore è comune in chi confonde la pentola a pressione con il fenomeno opposto dell'alta quota, dove la minore pressione abbassa il punto di ebollizione."
     },
     {
-      "domanda": "Cos'è lo 'zero assoluto' nella scala Kelvin e come è stato stabilito dai fisici?",
+      "domanda": "Uno studente in spiaggia ad agosto nota che durante il giorno la sabbia scotta moltissimo mentre l'acqua del mare è fresca, ma la sera la situazione si inverte: la sabbia è fredda e l'acqua è tiepida. Quale principio spiega questa differenza?",
       "opzioni": [
         {
-          "testo": "È la temperatura (-273,15 °C) in cui le particelle di un sistema sono teoricamente immobili ed è un concetto astratto ricavato tramite relazioni matematiche.",
+          "testo": "L'acqua ha un calore specifico molto più alto della sabbia, quindi richiede molta più energia per riscaldarsi di un grado e, allo stesso modo, impiega molto più tempo a raffreddarsi.",
           "corretta": true
         },
         {
-          "testo": "È il punto empirico di congelamento di una miscela frigorifera di acqua, ghiaccio e cloruro di ammonio.",
+          "testo": "La sabbia ha una conducibilità termica talmente bassa da trattenere il calore solo sulla superficie durante il giorno, disperdendolo completamente non appena il sole tramonta.",
           "corretta": false
         },
         {
-          "testo": "È lo stato termodinamico in cui l'acqua si trova contemporaneamente sotto forma di vapore, liquido e solido.",
+          "testo": "Il mare, avendo una massa enorme, accumula calore esclusivamente per irraggiamento solare diretto, mentre la sabbia si riscalda per conduzione dall'aria calda circostante.",
           "corretta": false
         }
       ],
-      "spiegazione": "Lo zero assoluto (zero Kelvin, pari a -273,15 °C) corrisponde allo stato ideale in cui non vi è alcuna agitazione termica e le particelle sono immobili. Trattandosi di una condizione non osservabile direttamente, è un concetto astratto ricavato tramite relazioni e grafici matematici."
+      "spiegazione": "La risposta corretta è la A perché l'acqua ha un calore specifico molto elevato (4186 J) rispetto alla sabbia, richiedendo molta più energia per variare la propria temperatura di un grado e trattenendo il calore più a lungo. Il distrattore B è insidioso perché propone una descrizione apparentemente corretta del comportamento superficiale della sabbia, ma attribuisce erroneamente il fenomeno della variazione termica globale alla sola conducibilità termica. Gli studenti meno attenti tendono a confondere la conducibilità termica con la capacità della massa di immagazzinare calore."
     },
     {
-      "domanda": "Cosa afferma il 'Principio Zero' della termodinamica e quale strumento di misura legittima?",
+      "domanda": "I primi strumenti di misura termica, come il termoscopio ad aria di Galileo, presentavano un grave limite operativo rispetto ai termometri sigillati sviluppati successivamente dall'Accademia del Cimento. Qual era questo limite?",
       "opzioni": [
         {
-          "testo": "Afferma che l'energia si conserva sempre durante un lavoro, legittimando l'uso del calorimetro.",
+          "testo": "Il termoscopio di Galileo non utilizzava una scala centigrada, rendendo impossibile confrontare le misurazioni effettuate in luoghi diversi della stessa città.",
           "corretta": false
         },
         {
-          "testo": "Afferma che se due sistemi sono in equilibrio termico con un terzo sistema, allora sono in equilibrio termico tra loro, legittimando l'uso del termometro.",
+          "testo": "Essendo aperto all'ambiente, il termoscopio risentiva fortemente delle variazioni della pressione atmosferica oltre che della temperatura, falsando le letture.",
           "corretta": true
         },
         {
-          "testo": "Afferma che il calore fluisce spontaneamente dal freddo al caldo, legittimando il funzionamento dei frigoriferi.",
+          "testo": "L'aria all'interno dello strumento tendeva a scaldarsi troppo rapidamente, esaurendo in pochi minuti la riserva di calore e bloccando il movimento del liquido.",
           "corretta": false
         }
       ],
-      "spiegazione": "Il Principio Zero stabilisce la proprietà transitiva dell'equilibrio termico: se il sistema A è in equilibrio con C, e B è in equilibrio con C, allora A e B sono in equilibrio tra loro. Questo principio permette di usare un terzo sistema (il termometro C) per confrontare la temperatura di corpi diversi."
+      "spiegazione": "La risposta corretta è la B poiché nei primi termoscopi ad aria il bulbo era collegato a un tubo aperto sul liquido, risentendo inevitabilmente della pressione dell'atmosfera circostante oltre che della temperatura. Il distrattore A è insidioso perché riporta un fatto storico vero, ossia l'assenza originaria di una scala centigrada standardizzata, ma non coglie il difetto strutturale di funzionamento descritto nella lezione. Un termometro non sigillato non poteva fornire misure stabili a causa dell'interferenza continua della pressione atmosferica."
     },
     {
-      "domanda": "Perché l'acqua ha un ruolo 'magico' e cruciale nella regolazione del clima e della vita biologica?",
+      "domanda": "Qual è la differenza sostanziale tra i concetti di \"temperatura\" e \"calore\" secondo la termodinamica classica?",
       "opzioni": [
         {
-          "testo": "Perché possiede un calore specifico eccezionalmente elevato che le permette di scaldarsi e raffreddarsi molto lentamente, fungendo da stabilizzatore termico.",
+          "testo": "Il calore rappresenta l'energia cinetica totale racchiusa all'interno dei legami chimici di un corpo, mentre la temperatura misura la velocità con cui questo calore viene scambiato con l'ambiente.",
+          "corretta": false
+        },
+        {
+          "testo": "La temperatura misura l'espansione volumetrica della sostanza termometrica interna al corpo, mentre il calore è la forza invisibile che provoca lo spostamento delle particelle verso le zone fredde.",
+          "corretta": false
+        },
+        {
+          "testo": "La temperatura è un parametro macroscopico che misura l'agitazione termica media delle particelle del sistema, mentre il calore è l'energia termica in transito tra corpi a temperature differenti.",
           "corretta": true
-        },
-        {
-          "testo": "Perché ha una conducibilità termica istantanea che impedisce la dispersione di calore negli oceani.",
-          "corretta": false
-        },
-        {
-          "testo": "Perché il suo calore specifico è estremamente basso, consentendole di ghiacciare rapidamente anche a temperature estive.",
-          "corretta": false
         }
       ],
-      "spiegazione": "L'acqua ha un calore specifico elevatissimo (4186 Joule per scaldare un chilogrammo di acqua di un grado), molto superiore a quello dei metalli o della sabbia. Questa proprietà fa sì che l'acqua impieghi molto tempo a riscaldarsi e a raffreddarsi, mitigando il clima marino e proteggendo gli organismi viventi da shock termici letali."
+      "spiegazione": "La risposta corretta è la C perché la temperatura descrive macroscopicamente l'energia cinetica media delle singole particelle del sistema, mentre il calore è l'energia termica che transita a causa di una differenza di temperatura. Il distrattore A è insidioso perché confonde il calore con l'energia interna, definendolo erroneamente come energia cinetica totale accumulata stabilmente all'interno dei legami chimici. In realtà, il calore esiste solo come trasferimento attivo e non può essere immagazzinato in modo statico da un sistema."
     },
     {
-      "domanda": "Perché toccando un blocco di metallo e uno di legno nella stessa stanza il metallo sembra più freddo al tatto?",
+      "domanda": "Un bambino unisce un bicchiere di acqua a 20 °C con un bicchiere di acqua a 15 °C. Secondo le concezioni spontanee infantili analizzate nella didattica della fisica, quale sarà la temperatura finale della miscela secondo il bambino, e qual è invece il comportamento reale del sistema?",
       "opzioni": [
         {
-          "testo": "Perché il metallo si trova a una temperatura oggettivamente inferiore rispetto al legno presente nella stanza.",
+          "testo": "Il bambino si aspetta una temperatura di 5 °C per sottrazione, mentre in realtà l'acqua raggiungerà rapidamente il punto di congelamento a causa dell'annullamento reciproco delle due energie.",
           "corretta": false
         },
         {
-          "testo": "Perché l'aria fredda della stanza si deposita unicamente sui materiali ferrosi a causa del loro peso specifico.",
-          "corretta": false
-        },
-        {
-          "testo": "Perché il metallo ha una conducibilità termica maggiore e sottrae calore alla nostra mano (che è a 36 °C) molto più rapidamente del legno, ingannando il cervello.",
+          "testo": "Il bambino prevede che la temperatura finale sia di 35 °C eseguendo una semplice somma delle temperature, mentre nella realtà fisica si raggiungerà una temperatura intermedia di equilibrio termico.",
           "corretta": true
+        },
+        {
+          "testo": "Il bambino pensa che l'acqua diventerà tiepida per una reazione chimica spontanea, mentre la fisica dimostra che l'acqua più fredda assorbirà tutto il calore azzerando la temperatura del sistema.",
+          "corretta": false
         }
       ],
-      "spiegazione": "Essendo nella stessa stanza da molto tempo, entrambi gli oggetti si trovano alla stessa temperatura di equilibrio termico. Il metallo sembra più freddo solo perché, essendo un ottimo conduttore termico, scambia calore con la nostra mano molto più velocemente rispetto al legno, che è invece un isolante."
+      "spiegazione": "La risposta corretta è la B poiché l'applicazione di schemi additivi o sottrattivi alle grandezze intensive è un tipico errore del pensiero infantile, che ignora il concetto di equilibrio termico. Mescolando due liquidi a temperature diverse si ottiene sempre una temperatura intermedia di equilibrio, non la somma algebrica delle due. Il distrattore A è insidioso perché cita il concetto di sottrazione (un'altra operazione errata che i bambini provano a fare), ma lo associa a una conclusione fisica assurda e irrealistica."
     },
     {
-      "domanda": "Quale operazione mentale compiono tipicamente i bambini quando si chiede loro di ipotizzare la temperatura finale mescolando acqua a 20 °C con acqua a 15 °C?",
+      "domanda": "Quando sentiamo molto freddo, il nostro corpo inizia a tremare involontariamente (i brividi). Dal punto di vista delle trasformazioni energetiche della termodinamica, qual è lo scopo biologico e fisico di questo meccanismo?",
       "opzioni": [
         {
-          "testo": "Calcolano correttamente la media ponderata delle due temperature in base alla densità.",
-          "corretta": false
-        },
-        {
-          "testo": "Applicano semplici operazioni additive o sottrattive, prevedendo ad esempio che la temperatura finale sarà di 35 °C.",
+          "testo": "Il brivido è un lavoro meccanico dei muscoli che consuma energia interna per produrre calore come effetto secondario, aiutando a ripristinare la temperatura corporea ottimale.",
           "corretta": true
         },
         {
-          "testo": "Sostengono che la temperatura rimanga invariata poiché l'acqua calda evapora istantaneamente durante il contatto.",
+          "testo": "Il tremore serve a bloccare la considerazione del flusso sanguigno periferico, impedendo al calore esterno freddo di penetrare all'interno degli organi vitali attraverso i pori della pelle.",
+          "corretta": false
+        },
+        {
+          "testo": "Il movimento rapido dei muscoli genera una forza d'attrito superficiale con l'aria che innalza istantaneamente la capacità termica del corpo, riducendo il fabbisogno di calore specifico.",
           "corretta": false
         }
       ],
-      "spiegazione": "Nel pensiero infantile manca l'idea di equilibrio termico. I bambini tendono a concepire il calore come una proprietà intrinseca dell'oggetto e applicano alle temperature delle semplici somme o sottrazioni, aspettandosi che l'unione dei due liquidi dia come risultato 35 °C."
+      "spiegazione": "La risposta corretta è la A perché il corpo umano compie un lavoro meccanico involontario tramite le contrazioni muscolari dei brividi, dissipando l'energia consumata sotto forma di calore per riscaldarsi. Il distrattore B è il più insidioso poiché combina una nozione biologica parzialmente corretta (la regolazione del flusso sanguigno) con la concezione infantile errata che il freddo sia una sostanza esterna attiva in grado di penetrare attraverso i pori della pelle. Questo errore rispecchia la difficoltà degli studenti nel concepire il raffreddamento come sottrazione di calore e non come penetrazione di freddo."
     }
   ],
   "assistente_ia": {
