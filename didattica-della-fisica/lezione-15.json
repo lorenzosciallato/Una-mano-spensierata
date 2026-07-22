@@ -170,184 +170,184 @@
   ],
   "il_super_quiz": [
     {
-      "domanda": "Quale domanda viene proposta all'inizio dell'attività per introdurre il concetto agli studenti?",
+      "domanda": "Durante un'attività con l'ecosistema in bottiglia, uno studente nota che dopo 24 ore si sono formate delle goccioline d'acqua sulla parete interna del barattolo sigillato. Come si spiega questo fenomeno dal punto di vista fisico mantenendo l'idea di un sistema chiuso?",
       "opzioni": [
         {
-          "testo": "Che cos'è la fisica dei fluidi?",
+          "testo": "L'umidità esterna penetra attraverso le micro-fessure del barattolo e si deposita sulle pareti a causa della differenza di temperatura.",
           "corretta": false
         },
         {
-          "testo": "Che cos'è un ecosistema?",
+          "testo": "L'acqua presente nel terriccio evapora e successivamente condensa sulla superficie fredda del vetro, rientrando nel ciclo.",
           "corretta": true
         },
         {
-          "testo": "Come si misura la temperatura del suolo?",
+          "testo": "Le piante producono nuova acqua attraverso la fotosintesi che viene espulsa e si accumula sul vetro sotto forma di liquido.",
           "corretta": false
         }
       ],
-      "spiegazione": "L'attività si apre ponendo direttamente la domanda 'Che cos'è un ecosistema?', facendo leva sul lavoro già svolto in precedenza sul concetto di 'sistema'."
+      "spiegazione": "L'acqua inserita inizialmente nel barattolo compie un ciclo continuo di evaporazione dal terreno e successiva condensazione sulle pareti di vetro fredde [1, 2]. Il distrattore dell'umidità esterna è insidioso perché molti studenti faticano a concepire l'impermeabilità totale di un sigillo ermetico, pensando erroneamente che l'ambiente esterno debba rifornire il sistema [2, 3]. Questo errore impedisce loro di apprezzare il reale funzionamento del ciclo dell'acqua chiuso."
     },
     {
-      "domanda": "Quale componente biologico mancava inizialmente nell'immagine dell'ecosistema proposta per l'osservazione?",
+      "domanda": "Qual è la differenza fondamentale, discussa nella costruzione dell'ecosistema, tra lo strato di carbone e lo strato di terriccio sovrastante?",
       "opzioni": [
         {
-          "testo": "Le piante",
-          "corretta": false
-        },
-        {
-          "testo": "L'acqua",
-          "corretta": false
-        },
-        {
-          "testo": "Gli animali",
+          "testo": "Il carbone fornisce una fonte chimica di carbonio essenziale per l'ecosistema, mentre il terriccio funge da supporto fisico e nutrimento per le radici.",
           "corretta": true
+        },
+        {
+          "testo": "Il carbone serve a filtrare l'acqua che scende sul fondo, mentre il terriccio serve a produrre i gas necessari alla respirazione.",
+          "corretta": false
+        },
+        {
+          "testo": "Il carbone viene utilizzato per generare calore all'interno del barattolo, mentre il terriccio isola le radici dagli sbalzi termici esterni.",
+          "corretta": false
         }
       ],
-      "spiegazione": "Nell'immagine utilizzata all'inizio per stimolare l'osservazione mancavano gli animali, che devono invece essere integrati in quanto elementi costitutivi di un ecosistema."
+      "spiegazione": "La lezione evidenzia che il carbone, in particolare quello di carbonella, agisce come una fonte fondamentale di carbonio per il sistema chiuso . Il terriccio, invece, serve per ospitare le piantine e i rametti . Lo studente distratto tende a confondere il ruolo chimico del carbone con la sua funzione comune di filtro idrico o di combustibile per generare calore . Comprendere la distinzione aiuta a chiarire i diversi flussi di materia dell'ecosistema."
     },
     {
-      "domanda": "Quale contenitore viene suggerito per l'assemblaggio manuale del micro-ecosistema?",
+      "domanda": "Una persona osserva un ecosistema in bottiglia chiuso da cinque anni e nota che, pur essendo bruttino, è ancora vivo senza essere mai stato aperto. Presa dal dubbio, vorrebbe aprirlo per annaffiare le piante. Quale sarebbe la conseguenza fisica immediata di questa azione?",
       "opzioni": [
         {
-          "testo": "Un vaso di terracotta aperto",
+          "testo": "L'apertura permette l'ingresso di nutrienti gassosi extra dal terreno esterno che velocizzano la crescita delle piante.",
           "corretta": false
         },
         {
-          "testo": "Un barattolo di vetro capiente, come quello delle olive",
+          "testo": "L'aria fresca in entrata accelera immediatamente la fotosintesi riducendo il fabbisogno di acqua delle felci.",
+          "corretta": false
+        },
+        {
+          "testo": "L'ecosistema perde la sua condizione di isolamento della materia, alterando l'equilibrio idrico e chimico stabilizzato nel tempo.",
           "corretta": true
-        },
-        {
-          "testo": "Una bottiglia di plastica scura",
-          "corretta": false
         }
       ],
-      "spiegazione": "Per la costruzione viene preferito un barattolo di vetro trasparente e piuttosto grande, indicando come esempio pratico i contenitori delle olive utilizzati nelle rosticcerie."
+      "spiegazione": "L'apertura del barattolo distrugge l'equilibrio del sistema che è rimasto autonomo per ben cinque anni grazie al riciclo interno di materia [2, 3]. Molti studenti sono tratti in inganno dall'idea comune che le piante abbiano un bisogno continuo di interventi di annaffiatura esterni, ignorando che l'acqua viene conservata e riutilizzata all'infinito nel barattolo sigillato . Questa credenza errata ostacola la comprensione dell'autosufficienza ecologica e dei sistemi termodinamici chiusi."
     },
     {
-      "domanda": "Qual è la funzione del carbone o della carbonella inserita nel barattolo?",
+      "domanda": "Durante l'assemblaggio del barattolo, uno studente propone di non inserire lo strato di tulle o calza di nylon tra i sassolini e il terriccio, ritenendolo superfluo. Quale problema si verificherebbe nel lungo periodo?",
       "opzioni": [
         {
-          "testo": "Fungere da fonte di carbonio",
+          "testo": "L'acqua non riuscirebbe a evaporare dal fondo, bloccando la formazione di condensa sulle pareti del barattolo.",
+          "corretta": false
+        },
+        {
+          "testo": "Il terriccio franerebbe tra i sassolini sul fondo del barattolo, compromettendo la separazione fisica e la funzionalità dei diversi strati.",
           "corretta": true
         },
         {
-          "testo": "Riscaldare la base del terreno",
-          "corretta": false
-        },
-        {
-          "testo": "Filtrare esclusivamente la luce solare",
+          "testo": "Le radici delle piante non troverebbero una barriera fisica e crescerebbero rapidamente rompendo il vetro del barattolo.",
           "corretta": false
         }
       ],
-      "spiegazione": "Il carbone o la carbonella inseriti sopra i sassolini svolgono la funzione specifica di riserva e fonte di carbonio per il sistema."
+      "spiegazione": "La funzione del tulle o della calza è squisitamente meccanica: mantenere separato e isolato il terriccio dagli strati inferiori di carbone e sassolini [1, 4]. Il distrattore dell'evaporazione è ingannevole perché gli studenti spesso associano ogni barriera fisica a un ostacolo per i passaggi di stato dell'acqua, non comprendendo che il vapore può passare liberamente attraverso le maglie del tessuto . Senza questa separazione fisica, il fango sul fondo comprometterebbe l'efficacia del carbone e del drenaggio."
     },
     {
-      "domanda": "Per quale motivo si inserisce uno strato di tulle o una porzione di calza collant?",
+      "domanda": "Qual è la differenza fondamentale tra l'ecosistema in bottiglia proposto e l'ambiente naturale esterno in termini di scambi con l'ambiente?",
       "opzioni": [
         {
-          "testo": "Per abbellire esteticamente la base del barattolo",
-          "corretta": false
-        },
-        {
-          "testo": "Per impedire al terreno di scivolare e mantenere lo strato isolato",
+          "testo": "L'ecosistema in bottiglia è un sistema chiuso che scambia solo energia con l'esterno, mentre l'ambiente naturale è un sistema aperto che scambia sia materia sia energia.",
           "corretta": true
         },
         {
-          "testo": "Per assorbire l'anidride carbonica in eccesso",
+          "testo": "L'ecosistema in bottiglia è un sistema isolato che non scambia materia o energia, mentre l'ambiente esterno scambia unicamente materia.",
+          "corretta": false
+        },
+        {
+          "testo": "L'ecosistema in bottiglia scambia materia ma non energia con l'ambiente circostante, mentre la Terra scambia unicamente energia radiante.",
           "corretta": false
         }
       ],
-      "spiegazione": "Il tulle o il collant agiscono come divisore fisico, impedendo al terriccio di depositarsi sul fondo e garantendo che lo strato basale rimanga isolato nel tempo."
+      "spiegazione": "Il barattolo chiuso ermeticamente scambia energia (luce e calore) ma impedisce lo scambio di materia con l'esterno, configurandosi come un sistema chiuso [2, 3]. Gli studenti confondono frequentemente il concetto di sistema chiuso con quello di sistema isolato (che non scambia nulla), ritenendo erroneamente che il vetro blocchi anche i flussi energetici indispensabili per la vita [2, 5]. Questa distinzione è fondamentale per comprendere le interazioni tra la Terra e l'universo."
     },
     {
-      "domanda": "Quali specie vegetali sono considerate più idonee per popolare l'ecosistema?",
+      "domanda": "Un gruppo di alunni deve scegliere le piante da inserire nel barattolo. Uno di loro propone di utilizzare delle piantine grasse abituate ad ambienti aridi, pensando che richiedano meno cure. Perché questa scelta si rivelerà fallimentare nel nostro ecosistema chiuso?",
       "opzioni": [
         {
-          "testo": "Piante che vivono in ambienti umidi, come felci e muschio",
+          "testo": "Le piante grasse consumano tanto carbonio costringendo lo strato di carbone a esaurirsi nei primi giorni di vita.",
+          "corretta": false
+        },
+        {
+          "testo": "Le foglie delle piante grasse assorbono la luce solare intensamente surriscaldando l'aria interna.",
+          "corretta": false
+        },
+        {
+          "testo": "Le piante grasse non tollerano l'elevato tasso di umidità che si stabilisce inevitabilmente nel barattolo chiuso, marcendo in breve tempo.",
           "corretta": true
-        },
-        {
-          "testo": "Piante grasse, cactus e piccoli arbusti secchi",
-          "corretta": false
-        },
-        {
-          "testo": "Fiori da balcone che richiedono molta luce diretta",
-          "corretta": false
         }
       ],
-      "spiegazione": "Le piante migliori sono quelle abituate agli ambienti molto umidi, come le felci e il muschio che si raccolgono comunemente nei boschi o vicino ai fiumi."
+      "spiegazione": "Le piante migliori per questo tipo di attività sono felci e muschi, tipici di ambienti umidi, poiché il barattolo chiuso satura rapidamente l'aria di vapore acqueo [1, 2]. Gli studenti tendono a scegliere piante resistenti alla siccità basandosi sull'idea ingenua che siano più 'forti', senza considerare che l'eccesso di umidità stagnante è letale per specie adattate ad ambienti desertici . Questo evidenzia la necessità di far incontrare le caratteristiche dell'organismo con i parametri fisici dell'ambiente di vita."
     },
     {
-      "domanda": "Per quanti anni sono riusciti a resistere i barattoli sigillati preparati durante l'esperienza scolastica?",
+      "domanda": "Nella prima fase dell'attività, la docente mostra un'immagine di un ecosistema e chiede agli studenti di individuare tutti gli elementi presenti. Qual è lo scopo didattico principale di questo approccio iniziale basato sull'osservazione?",
       "opzioni": [
         {
-          "testo": "Circa una settimana",
+          "testo": "Valutare la conoscenza pregressa degli alunni sui nomi scientifici delle singole specie vegetali e animali mostrate.",
           "corretta": false
         },
         {
-          "testo": "Cinque anni",
+          "testo": "Verificare se gli studenti sanno calcolare la biomassa totale del sistema prima di iniziare la spiegazione fisica.",
+          "corretta": false
+        },
+        {
+          "testo": "Potenziare le capacità di osservazione degli studenti e introdurre il concetto di sistema identificando le relazioni tra le sue componenti.",
           "corretta": true
-        },
-        {
-          "testo": "Esattamente dieci anni",
-          "corretta": false
         }
       ],
-      "spiegazione": "Mentre gli studenti ipotizzavano una sopravvivenza di pochi giorni o di una settimana, gli ecosistemi sigillati resistono da ben cinque anni."
+      "spiegazione": "L'analisi visiva guidata serve a sviluppare l'osservazione scientifica e a gettare le basi del concetto di 'sistema', esplorando come i vari elementi interagiscono tra loro . Chi ha una visione tradizionale dell'insegnamento potrebbe confondere questo momento con una verifica nozionistica o di memorizzazione di termini biologici, perdendo di vista l'obiettivo della scomposizione fenomenologica [5, 6]. Invece, partire dall'osservazione attiva stimola domande autentiche e significative nei bambini."
     },
     {
-      "domanda": "Quale fenomeno visivo si manifesta sulle pareti del barattolo dopo 24 ore dalla sigillatura?",
+      "domanda": "Se posizioniamo l'ecosistema in bottiglia in una stanza completamente buia per diverse settimane, quale processo subirà l'arresto immediato determinando il collasso del sistema?",
       "opzioni": [
         {
-          "testo": "La comparsa di muffa bianca sul vetro",
+          "testo": "L'evaporazione dell'acqua dal terreno dovuta alla differenza di pressione atmosferica all'esterno del barattolo.",
           "corretta": false
         },
         {
-          "testo": "La formazione di goccioline di condensa",
+          "testo": "La fotosintesi clorofilliana che richiede energia luminosa, bloccando la produzione di ossigeno e il ciclo del carbonio.",
           "corretta": true
         },
         {
-          "testo": "L'annerimento completo delle pareti trasparenti",
+          "testo": "Il passaggio di calore attraverso il vetro che impedisce al carbone di rilasciare le particelle di tulle necessarie alle piante.",
           "corretta": false
         }
       ],
-      "spiegazione": "Entro le prime ventiquattro ore si osserva la formazione di goccioline d'acqua condensate sul vetro, segno del ciclo idrico interno, mentre le piante restano vigorose."
+      "spiegazione": "La luce solare è l'input energetico fondamentale che permette alle piante di compiere la fotosintesi all'interno del sistema chiuso [2, 6]. Senza luce, i cicli biologici e chimici si interrompono rapidamente provocando la morte degli organismi. Il distrattore sul calore e il tulle fa leva sulla confusione tra i ruoli meccanici e termici dei componenti fisici del barattolo, inducendo in errore chi non ha compreso il ruolo cardine dell'energia radiante [1, 4]."
     },
     {
-      "domanda": "In quale fase della programmazione scolastica viene introdotto questo esperimento?",
+      "domanda": "La lezione mette in relazione l'attività dell'ecosistema in bottiglia con i futuri moduli di scienze della terra. In che modo lo studio del barattolo chiuso supporta la comprensione dei fenomeni su scala planetaria?",
       "opzioni": [
         {
-          "testo": "All'inizio dei due moduli sulle scienze della Terra",
+          "testo": "Il barattolo funge da modello in miniatura della Terra, consentendo di studiare l'interazione tra atmosfera, idrosfera e biosfera como sistema chiuso.",
           "corretta": true
         },
         {
-          "testo": "Al termine delle lezioni di elettromagnetismo",
+          "testo": "Il barattolo permette di riprodurre la pressione tettonica che genera il movimento dei continenti e i terremoti sulla superficie terrestre.",
           "corretta": false
         },
         {
-          "testo": "Durante i laboratori dedicati esclusivamente all'ottica",
+          "testo": "Il barattolo dimostra che le risorse idriche del pianeta aumentano grazie all'accumulo di materia proveniente dallo spazio.",
           "corretta": false
         }
       ],
-      "spiegazione": "L'attività viene proposta all'avvio dei due moduli didattici incentrati sulle scienze della Terra, per introdurre i sistemi naturali."
+      "spiegazione": "L'ecosistema in bottiglia è un modello ideale per introdurre le scienze della terra, poiché simula in piccola scala il comportamento della Terra come sistema chiuso che ricicla le proprie risorse [2, 7]. Gli studenti faticano spesso ad astrarre il concetto di modello e potrebbero confondere l'analogia sistemica con la riproduzione diretta di fenomeni geologici interni come la tettonica . Usare questo modello permette invece di visualizzare processi globali altrimenti invisibili a occhio nudo."
     },
     {
-      "domanda": "Quale comportamento scorretto viene citato nell'aneddoto su una parente di nome Norina?",
+      "domanda": "Un'insegnante nota che, dopo qualche anno, le foglie secche e i rametti inseriti sopra il terriccio dell'ecosistema chiuso sono parzialmente decomposti, ma il sistema continua a sopravvivere. Quale ruolo svolgono questi elementi organici secchi all'interno del barattolo?",
       "opzioni": [
         {
-          "testo": "Il tentativo di annaffiare costantemente il barattolo chiuso",
+          "testo": "Garantiscono la stabilità termica impedendo alla luce solare di riscaldare il terriccio sottostante.",
+          "corretta": false
+        },
+        {
+          "testo": "Assorbono l'acqua in eccesso impedendo alla pressione interna del barattolo di salire oltre i limiti di sicurezza.",
+          "corretta": false
+        },
+        {
+          "testo": "Forniscono materia organica che, decomponendosi, ricicla nutrienti e anidride carbonica indispensabili per la vita delle piante.",
           "corretta": true
-        },
-        {
-          "testo": "La rottura accidentale del vetro con dei sassi",
-          "corretta": false
-        },
-        {
-          "testo": "L'esposizione dell'ecosistema al buio totale",
-          "corretta": false
         }
       ],
-      "spiegazione": "Norina tenta istintivamente di annaffiare le piante del barattolo, ignorando che l'ecosistema deve invece rimanere rigorosamente sigillato per funzionare e crescere autonomamente."
+      "spiegazione": "Le foglioline e i rametti secchi costituiscono la riserva di materia organica che, grazie alla decomposizione, garantisce il riciclo del carbonio e dei nutrienti necessari alla sopravvivenza prolungata delle piante [1, 4]. Molti studenti vedono questi elementi come semplici scarti o protezioni fisiche contro il calore o l'acqua, non cogliendo l'importanza cruciale del riciclo chimico della materia in un sistema chiuso . Questo passaggio è essenziale per comprendere il ciclo del carbonio a livello ecosistemico."
     }
   ],
   "assistente_ia": {
