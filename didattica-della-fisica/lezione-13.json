@@ -169,184 +169,184 @@
   ],
   "il_super_quiz": [
     {
-      "domanda": "Quale oggetto di uso quotidiano viene suggerito per appendere la pallina e svolgere le prove con il pendolino elettrostatico?",
+      "domanda": "Uno studente avvicina un palloncino caricato per strofinio a un sottile filo d'acqua che scende da un rubinetto, senza toccarlo. Nota che il flusso d'acqua si piega verso il palloncino. Qual è la causa fisica di questo comportamento?",
       "opzioni": [
         {
-          "testo": "Un cucchiaio di legno.",
+          "testo": "L'acqua è un buon conduttore elettrico, quindi le cariche si trasferiscono rapidamente dal palloncino all'acqua durante l'avvicinamento.",
+          "corretta": false
+        },
+        {
+          "testo": "Le molecole d'acqua subiscono una polarizzazione, orientando le loro cariche parziali in modo da essere attratte dal palloncino.",
           "corretta": true
         },
         {
-          "testo": "Un righello metallico.",
-          "corretta": false
-        },
-        {
-          "testo": "Una cannuccia di plastica.",
+          "testo": "Il palloncino riscalda l'aria circostante creando una differenza di pressione che spinge l'acqua a deviare la sua traiettoria rettilinea.",
           "corretta": false
         }
       ],
-      "spiegazione": "La lezione suggerisce esplicitamente l'impiego di un cucchiaio di legno (o un cucchiaio piccolo) per allestire e sorreggere il pendolino durante le prove pratiche."
+      "spiegazione": "La risposta corretta è la seconda perché la molecola d'acqua è un dipolo permanente; l'avvicinamento del corpo carico la orienta per attrazione elettrostatica, un fenomeno noto come polarizzazione. Il primo distrattore è particolarmente insidioso perché confonde la polarizzazione con la conduzione elettrica. Sebbene l'acqua possa contenere ioni liberi che conducono elettricità, la deviazione del flusso avviene a distanza e senza contatto, quindi non c'è trasferimento di cariche tra il palloncino e l'acqua."
     },
     {
-      "domanda": "Quale materiale viene indicato per rivestire la pallina del pendolino e condurre esperimenti con il palloncino?",
+      "domanda": "Qual è la differenza fondamentale nel comportamento delle cariche elettriche quando carichiamo per contatto l'estremità di una bacchetta metallica (conduttore) rispetto a una di plastica (isolante)?",
       "opzioni": [
         {
-          "testo": "La carta stagnola.",
+          "testo": "Nel metallo le cariche elettriche vengono create dal contatto, mentre nella plastica le cariche preesistenti cambiano semplicemente la loro disposizione spaziale.",
+          "corretta": false
+        },
+        {
+          "testo": "Il metallo acquista cariche di segno positivo, mentre la plastica può accumulare soltanto cariche negative a causa della sua struttura molecolare.",
+          "corretta": false
+        },
+        {
+          "testo": "Nel metallo le cariche si distribuiscono rapidamente su tutta la superficie disponibile, mentre nella plastica rimangono localizzate nella zona del contatto.",
           "corretta": true
-        },
-        {
-          "testo": "La pellicola trasparente.",
-          "corretta": false
-        },
-        {
-          "testo": "Il nastro isolante.",
-          "corretta": false
         }
       ],
-      "spiegazione": "Per trasformare la pallina e svolgere le diverse prove sperimentali con il palloncino, viene indicato l'uso della carta stagnola."
+      "spiegazione": "La risposta corretta è la terza poiché nei materiali conduttori, come i metalli, le cariche elettriche sono libere di muoversi e si distribuiscono sull'intera superficie per minimizzare la repulsione reciproca. Al contrario, negli isolanti come la plastica, le cariche restano confinate nella zona in cui sono state introdotte. Il secondo distrattore è ingannevole perché suggerisce erroneamente che il segno della carica accumulata dipenda strettamente dal tipo di materiale (conduttore o isolante), mentre entrambi i materiali possono caricarsi sia positivamente che negativamente a seconda dell'interazione."
     },
     {
-      "domanda": "Quale fenomeno divertente e d'impatto visivo viene descritto parlando dell'interazione tra capelli e palloncino?",
+      "domanda": "Durante un esperimento con un pendolino elettrico (una pallina di polistirolo appesa a un filo), una studentessa avvicina una bacchetta carica. La pallina viene inizialmente attratta dalla bacchetta, ma dopo averla toccata viene respinta bruscamente. Come si spiega questo cambiamento?",
       "opzioni": [
         {
-          "testo": "Il fatto che i capelli vengano attirati e si sollevino quando ci si allontana col palloncino.",
+          "testo": "Con il contatto, la pallina acquista parte della carica della bacchetta e, avendo ora lo stesso segno, subisce una forza repulsiva.",
           "corretta": true
         },
         {
-          "testo": "La variazione istantanea del colore dei capelli per effetto termico.",
+          "testo": "L'avvicinamento della bacchetta induce una carica permanente di segno opposto nella pallina, che permane anche dopo il contatto fisico.",
           "corretta": false
         },
         {
-          "testo": "La repulsione immediata che fa allontanare il palloncino prima di toccare i capelli.",
+          "testo": "Il contatto ravvicinato neutralizza completamente le cariche elettriche di entrambi i corpi, facendo prevalere la forza di gravità.",
           "corretta": false
         }
       ],
-      "spiegazione": "La lezione fa riferimento all'attrazione visibile dei capelli quando si sposta un palloncino precedentemente caricato, un fenomeno semplice che suscita divertimento."
+      "spiegazione": "La risposta corretta è la prima perché la pallina del pendolo, inizialmente neutra, viene attratta per induzione; una volta avvenuto il contatto fisico, acquista per conduzione parte della carica dello stesso segno della bacchetta, provocando la repulsione immediata. Il secondo distrattore è molto insidioso perché attribuisce la repulsione a un'induzione elettrostatica permanente. Tuttavia, l'induzione elettrostatica non comporta un passaggio netto di cariche e cessa o cambia configurazione non appena i corpi si toccano o si allontanano."
     },
     {
-      "domanda": "A quale periodo storico viene associato l'inizio degli studi sulle proprietà elettriche della materia?",
+      "domanda": "Se strofiniamo vigorosamente un palloncino di plastica con un panno di lana, entrambi i materiali si caricano elettricamente. Cosa possiamo affermare sulla quantità di carica totale del sistema costituito da palloncino e panno?",
       "opzioni": [
         {
-          "testo": "Intorno al 1700.",
+          "testo": "Il sistema aumenta la sua carica totale complessiva poiché lo strofinio genera nuove cariche elettriche che prima non esistevano.",
+          "corretta": false
+        },
+        {
+          "testo": "La carica totale rimane nulla perché il numero di elettroni ceduti da un corpo equivale esattamente a quello acquistato dall'altro.",
           "corretta": true
         },
         {
-          "testo": "A partire dal 1500.",
-          "corretta": false
-        },
-        {
-          "testo": "Agli inizi del 1900.",
+          "testo": "Entrambi i corpi acquisiscono una carica dello stesso segno a causa del calore generato dall'attrito meccanico tra le superfici.",
           "corretta": false
         }
       ],
-      "spiegazione": "La lezione evidenzia che fu intorno al 1700 che si cominciò a parlare e a studiare in modo sistematico il comportamento della materia rispetto all'elettricità."
+      "spiegazione": "La risposta corretta è la seconda, che riflette il principio di conservazione della carica elettrica: le cariche non si creano dal nulla, ma si trasferiscono semplicemente da un corpo all'altro sotto forma di elettroni. Il primo distrattore è errato ma insidioso poiché molti studenti confondono l'attivazione elettrica microscopica dovuta allo strofinio con una vera e propria generazione ex-novo di cariche. L'attrito meccanico fornisce solo l'energia necessaria a vincere il legame degli elettroni, permettendo il loro passaggio da un materiale all'altro senza alterare la carica netta complessiva del sistema."
     },
     {
-      "domanda": "Quale sito internet universitario viene esplicitamente consigliato per accedere a simulazioni e misure interattive?",
+      "domanda": "Uno studente nota che piccoli pezzetti di carta (materiale isolante) vengono attratti da una penna di plastica precedentemente strofinata sui capelli, anche se la carta è perfettamente neutra. Quale fenomeno microscopico permette questa attrazione?",
       "opzioni": [
         {
-          "testo": "Il sito di Harvard.",
+          "testo": "Le cariche libere della carta migrano verso l'estremità opposta del foglio, trasformando la carta in un conduttore temporaneo.",
           "corretta": false
         },
         {
-          "testo": "Il sito di Colorado.",
+          "testo": "L'aria umida attorno alla penna trasferisce cariche elettriche per conduzione prima ancora che avvenga il contatto diretto.",
+          "corretta": false
+        },
+        {
+          "testo": "Le molecole della carta subiscono uno spostamento limitato di cariche al loro interno, creando un dipolo elettrico attratto dalla penna.",
           "corretta": true
-        },
-        {
-          "testo": "Il sito del MIT.",
-          "corretta": false
         }
       ],
-      "spiegazione": "Si raccomanda di visitare il sito web di Colorado (PhET Colorado) per visualizzare e interagire con le simulazioni e le leggi fisiche esaminate."
+      "spiegazione": "La risposta corretta è la terza poiché la carta, essendo un isolante, non possiede cariche libere in grado di spostarsi macroscopicamente, ma subisce una polarizzazione molecolare che crea piccoli dipoli orientati verso la penna carica. Il primo distrattore trae in inganno perché ipotizza una migrazione macroscopica di cariche libere, comportamento che è tipico dei materiali conduttori e non degli isolanti come la carta. La forza attrattiva si manifesta proprio perché la distanza tra le cariche di segno opposto della carta (più vicine alla penna) è inferiore rispetto a quella delle cariche dello stesso segno."
     },
     {
-      "domanda": "Quale attività sperimentale viene proposta per dimostrare l'interazione a distanza su un liquido?",
+      "domanda": "Qual è la differenza principale tra il fenomeno della polarizzazione elettrica in un isolante e l'induzione elettrostatica in un conduttore?",
       "opzioni": [
         {
-          "testo": "Far scorrere un flusso d'acqua e deviarne la traiettoria senza toccarlo.",
+          "testo": "Nella polarizzazione le cariche compiono solo piccolissimi spostamenti atomici, mentre nell'induzione le cariche libere si muovono lungo l'intero corpo.",
           "corretta": true
         },
         {
-          "testo": "Riscaldare rapidamente l'acqua distillata per induzione magnetica.",
+          "testo": "La polarizzazione richiede necessariamente il contatto fisico diretto con un corpo carico, mentre l'induzione avviene esclusivamente a distanza.",
           "corretta": false
         },
         {
-          "testo": "Mescolare acqua e olio sfruttando la forza elettrostatica del polistirolo.",
+          "testo": "L'induzione elettrostatica modifica in modo permanente la struttura chimica del materiale, mentre la polarizzazione è un effetto di natura puramente magnetica.",
           "corretta": false
         }
       ],
-      "spiegazione": "Viene descritto l'esperimento in cui si fa scorrere l'acqua e, avvicinando un corpo carico senza toccarlo, si osserva la sua deviazione."
+      "spiegazione": "La risposta corretta è la prima: l'induzione elettrostatica coinvolge lo spostamento macroscopico di elettroni liberi all'interno di un conduttore, mentre la polarizzazione riguarda lo spostamento infinitesimo o l'orientamento di cariche legate all'interno delle molecole di un isolante. Il secondo distrattore è ingannevole perché afferma che la polarizzazione richiede il contatto fisico. Al contrario, sia la polarizzazione che l'induzione sono fenomeni che avvengono a distanza, indotti dall'avvicinamento di un campo elettrico esterno senza necessità di contatto diretto."
     },
     {
-      "domanda": "Di quale materiale devono essere fatte le palline da appendere per la costruzione del pendolino elettrostatico a scuola?",
+      "domanda": "Una pallina di metallo carica negativamente è appesa a un filo isolante. Uno studente tocca la pallina con un dito e nota che essa perde immediatamente la sua carica elettrica, tornando neutra. Che cosa è successo durante il contatto con il dito?",
       "opzioni": [
         {
-          "testo": "Sughero leggero.",
+          "testo": "Le cariche positive del corpo dello studente si sono trasferite sulla pallina neutralizzando gli elettroni in eccesso.",
           "corretta": false
         },
         {
-          "testo": "Polistirolo.",
+          "testo": "Gli elettroni in eccesso presenti sulla pallina sono fluiti attraverso il corpo dello studente verso la terra.",
           "corretta": true
         },
         {
-          "testo": "Vetro soffiato.",
+          "testo": "Il contatto fisico ha bloccato il movimento oscillatorio degli atomi del metallo, arrestando la produzione di forza elettrica.",
           "corretta": false
         }
       ],
-      "spiegazione": "Per la realizzazione dell'attività laboratoriale del pendolino elettrostatico viene richiesto l'uso di palline di polistirolo da appendere a un filo."
+      "spiegazione": "La risposta corretta è la seconda perché il corpo umano si comporta come un conduttore che permette il passaggio degli elettroni in eccesso dalla pallina verso terra, neutralizzandola. Il primo distrattore è un classico errore concettuale, in quanto ipotizza lo spostamento di cariche positive (protoni). Nei solidi metallici e nel corpo umano, sono gli elettroni a muoversi liberamente, mentre i protoni rimangono saldamente vincolati all'interno dei nuclei atomici."
     },
     {
-      "domanda": "Come viene descritta l'interazione reciproca delle forze elettriche nel testo della lezione?",
+      "domanda": "Se un corpo inizialmente neutro acquista una carica elettrica netta positiva, quale processo fisico è effettivamente avvenuto a livello microscopico?",
       "opzioni": [
         {
-          "testo": "Funziona come una forza elettrica uno contro uno.",
+          "testo": "Il corpo ha catturato protoni liberi dall'aria circostante tramite l'azione meccanica dello strofinio o del contatto.",
+          "corretta": false
+        },
+        {
+          "testo": "Gli elettroni interni si sono trasformati in protoni a causa della forte sollecitazione energetica subita durante l'interazione.",
+          "corretta": false
+        },
+        {
+          "testo": "Il corpo ha perso una frazione dei suoi elettroni, lasciando un eccesso di cariche positive nei nuclei atomici.",
           "corretta": true
-        },
-        {
-          "testo": "Agisce sempre in modo asimmetrico e proporzionale alla massa gravitazionale.",
-          "corretta": false
-        },
-        {
-          "testo": "Si manifesta unicamente in presenza di campi magnetici artificiali.",
-          "corretta": false
         }
       ],
-      "spiegazione": "Il testo specifica che l'interazione legata alla produzione e al comportamento delle cariche funziona come una forza elettrica uno contro uno."
+      "spiegazione": "La risposta corretta è la terza perché la carica positiva netta in un corpo solido è sempre dovuta a un deficit di elettroni rispetto al numero di protoni presenti nei nuclei. Il primo distrattore rappresenta una concezione errata molto comune, secondo cui l'elettrizzazione positiva sia causata dall'acquisizione fisica di protoni. Nella fisica classica e nella materia ordinaria, i protoni non vengono trasferiti tramite strofinio o contatto, poiché ciò richiederebbe la rottura dei nuclei atomici."
     },
     {
-      "domanda": "Quale termine storpiato (riferito alla polarizzazione) compare nella trascrizione in relazione al comportamento delle cariche?",
+      "domanda": "Due palline leggere cariche con lo stesso segno sono appese a due fili vicini e si respingono. Se la distanza tra i loro punti di sospensione viene ridotta, cosa accade alla forza repulsiva che si esercita tra di esse?",
       "opzioni": [
         {
-          "testo": "Popolarizzazione.",
+          "testo": "La forza repulsiva rimane costante in quanto l'entità della carica presente su ciascuna pallina non ha subito alcuna variazione.",
+          "corretta": false
+        },
+        {
+          "testo": "La forza repulsiva aumenta d'intensità poiché l'interazione elettrostatica diventa più forte al diminuire della distanza tra le cariche.",
           "corretta": true
         },
         {
-          "testo": "Scolarizzazione.",
-          "corretta": false
-        },
-        {
-          "testo": "Globalizzazione.",
+          "testo": "La forza repulsiva diminuisce perché lo spazio ridotto limita la capacità delle cariche di diffondere il proprio campo elettrico.",
           "corretta": false
         }
       ],
-      "spiegazione": "Nel testo della lezione, per spiegare il comportamento delle cariche d'acqua e del palloncino, viene usata la parola storpiata 'popolarizzazione'."
+      "spiegazione": "La risposta corretta è la seconda perché la forza di interazione elettrostatica tra due cariche è inversamente proporzionale al quadrato della loro distanza, quindi avvicinando i punti di sospensione la repulsione aumenta. Il terzo distrattore è insidioso perché si basa su un'affermazione vera (la carica delle palline non cambia), ma trae una conclusione errata sull'intensità della forza. La forza elettrostatica dipende sia dal valore delle cariche sia dalla loro distanza reciproca, non solo dalle cariche isolate."
     },
     {
-      "domanda": "Quale molecola viene descritta come parzialmente reattiva o influenzabile dalle cariche elettriche esterne?",
+      "domanda": "Quale caratteristica fondamentale distingue la forza elettrica tra due corpi carichi dalla forza di gravità che si esercita tra i medesimi corpi?",
       "opzioni": [
         {
-          "testo": "La molecola dell'aria.",
-          "corretta": false
-        },
-        {
-          "testo": "La molecola dell'acqua.",
+          "testo": "La forza elettrica può essere sia attrattiva sia repulsiva a seconda del segno delle cariche, mentre quella gravitazionale è unicamente attrattiva.",
           "corretta": true
         },
         {
-          "testo": "La molecola del polistirolo.",
+          "testo": "La forza elettrica agisce solo quando i corpi sono in contatto diretto, mentre la forza gravitazionale si propaga anche attraverso il vuoto.",
+          "corretta": false
+        },
+        {
+          "testo": "La forza elettrica diminuisce con il quadrato della distanza, mentre la forza gravitazionale cresce linearmente all'aumentare della separazione.",
           "corretta": false
         }
       ],
-      "spiegazione": "La lezione menziona la molecola dell'acqua evidenziando come essa si comporti in modo parziale rispetto alle sollecitazioni elettriche e alla polarizzazione."
+      "spiegazione": "La risposta corretta è la prima perché, mentre la massa genera solo una forza gravitazionale sempre attrattiva, le cariche elettriche possono avere segno concorde (repulsione) o discorde (attrazione). Il secondo distrattore è un errore comune che nega l'azione a distanza della forza elettrica, la quale invece si propaga perfettamente anche nel vuoto senza richiedere alcun contatto. Entrambe le forze obbediscono alla legge dell'inverso del quadrato della distanza, rendendo il terzo distrattore scientificamente falso."
     }
   ],
   "assistente_ia": {
