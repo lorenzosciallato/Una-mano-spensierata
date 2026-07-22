@@ -168,184 +168,184 @@
   ],
   "il_super_quiz": [
     {
-      "domanda": "Uno studente deve dividere in sillabe la parola \"veicoli\" e nota che la sequenza \"ei\" contiene una vocale debole (\"i\") e una forte (\"e\"). Applicando la regola dei nessi vocalici spiegata nella lezione, come deve comportarsi lo studente per stabilire se si tratta di un dittongo o di uno iato?",
+      "domanda": "Uno studente deve dividere in sillabe le parole \"paura\" e \"pneumatico\". Osserva la coppia di vocali in ciascuna parola e deve decidere se si tratta di iato o dittongo per non sbagliare la sillabazione.",
       "opzioni": [
         {
-          "testo": "Deve verificare se sulla vocale debole cade l'accento tonico: poiché l'accento cade sulla \"i\", si tratta di uno iato e le due vocali vanno divise.",
+          "testo": "In \"paura\" c'è un dittongo perché le vocali sono contigue, mentre in \"pneumatico\" c'è uno iato poiché la vocale \"u\" si trova in una posizione iniziale di sillaba.",
+          "corretta": false
+        },
+        {
+          "testo": "In \"paura\" si ha uno iato poiché la \"u\" porta l'accento tonico, mentre in \"pneumatico\" c'è un dittongo discendente dato che la \"u\" non è accentata ed è in seconda posizione.",
           "corretta": true
         },
         {
-          "testo": "Deve guardare la posizione della vocale debole: poiché la \"i\" si trova in seconda posizione, si tratta di un dittongo discendente e le vocali restano unite.",
-          "corretta": false
-        },
-        {
-          "testo": "Deve considerare che nei gruppi composti da due vocali diverse la pronuncia richiede la fusione dei suoni, configurando un dittongo ascendente.",
+          "testo": "In entrambe le parole si ha uno iato poiché la presenza di una vocale forte come la \"a\" o la \"e\" impedisce la fusione delle due vocali in un'unica sillaba.",
           "corretta": false
         }
       ],
-      "spiegazione": "La risposta corretta è la A perché per distinguere i nessi vocalici la prima cosa da fare è verificare se l'accento cade sulla vocale debole. Poiché in \"veicoli\" la \"i\" è accentata, si tratta di uno iato e non di un dittongo. Il secondo distrattore (B) è insidioso perché applica correttamente la regola della posizione solo a livello meccanico, saltando però il controllo prioritario dell'accento tonico."
+      "spiegazione": "La risposta corretta è la B perché in \"paura\" l'accento cade sulla \"u\", determinando una separazione sillabica (iato). Al contrario, in \"pneumatico\" la coppia \"eu\" non è accentata sulla \"u\", che si trova in seconda posizione, configurando un dittongo discendente. Il distrattore C è insidioso perché fa leva sull'idea errata che la combinazione di vocali forti generi di per sé uno iato, ignorando il ruolo fondamentale dell'accento tonico nella distinzione."
     },
     {
-      "domanda": "In un testo accademico, uno scrittore si trova a dover usare l'espressione \"se stesso\". Secondo le indicazioni della grammatica contemporanea e la logica scientifica illustrate nella lezione, quale scelta ortografica deve compiere?",
+      "domanda": "Mettendo a confronto l'articolo partitivo e la preposizione articolata, che condividono la stessa forma grafica (ad esempio \"del\" o \"dei\"), qual è la differenza sostanziale per riconoscerli correttamente nel testo?",
       "opzioni": [
         {
-          "testo": "Scrivere \"se stesso\" senza accento, in quanto la vicinanza dell'aggettivo esclude ogni ambiguità con la congiunzione ipotetica.",
-          "corretta": false
-        },
-        {
-          "testo": "Scrivere \"sé stesso\" con l'accento acuto, poiché si tratta di un pronome tonico che mantiene la sua natura indipendentemente dalla parola che segue.",
+          "testo": "L'articolo partitivo introduce una quantità indeterminata e si può sostituire con \"alcuni\" o \"un po' di\", mentre la preposizione articolata collega due elementi introducendo un complemento indiretto.",
           "corretta": true
         },
         {
-          "testo": "Scrivere \"sè stesso\" con l'accento grave, per conformarsi alla regola generale dei monosillabi che non ammettono distinzioni fonetiche.",
+          "testo": "L'articolo partitivo si trova davanti a nomi collettivi per indicare una porzione della materia, mentre la preposizione articolata introduce complementi di specificazione legati a un possesso.",
+          "corretta": false
+        },
+        {
+          "testo": "L'articolo partitivo modifica direttamente il significato del verbo a cui si appoggia, mentre la preposizione articolata serve a precisare il genere e il numero del sostantivo che la segue nella frase.",
           "corretta": false
         }
       ],
-      "spiegazione": "La risposta corretta è la B perché la linguistica contemporanea ha stabilito che il pronome tonico \"sé\" mantiene l'accento acuto indipendentemente dalle parole che lo seguono. Il distrattore più insidioso è la A, che riporta una vecchia regola prescrittiva scolastica priva di basi fonetiche reali e ormai superata. L'opzione C confonde lo studente sul tipo di accento da applicare, che deve essere acuto e non grave."
+      "spiegazione": "La risposta corretta è la A poiché l'articolo partitivo equivale a un indefinito (\"un po' di\", \"alcuni\") e non ha valore di collegamento, a differenza della preposizione articolata che è richiesta dalla struttura sintattica per introdurre un complemento indiretto. Il distrattore B è molto insidioso perché associa la distinzione a una restrizione legata solo al possesso. In realtà, la preposizione articolata può introdurre molti altri tipi di complementi e l'articolo partitivo si usa comunemente anche al sgolare con nomi di massa."
     },
     {
-      "domanda": "Durante un'analisi sintattica della frase \"Non mi piace nuotare\", uno studente è indeciso nell'individuare la funzione grammaticale del verbo all'infinito \"nuotare\". Qual è la corretta interpretazione logica del ruolo svolto da \"nuotare\" in questo contesto?",
+      "domanda": "Durante un esercizio di analisi logica, uno studente deve individuare il soggetto della frase \"Non mi piace nuotare\". Quale ragionamento permette di arrivare alla risposta corretta?",
       "opzioni": [
         {
-          "testo": "Svolge la funzione di complemento oggetto interno, in quanto completa la carica valenziale del predicato \"piace\".",
+          "testo": "Il soggetto della frase è il pronome \"mi\" (che corrisponde a \"a me\"), poiché rappresenta la persona che sperimenta l'effetto del verbo principale.",
           "corretta": false
         },
         {
-          "testo": "Funge da predicato verbale sottinteso, coordinato alla particella pronominale che esprime il termine dell'azione.",
+          "testo": "La frase presenta un soggetto sottinteso identificabile con la prima persona singolare \"io\", ricavabile dal pronome di termine che esprime il gradimento.",
           "corretta": false
         },
         {
-          "testo": "Svolge la funzione di soggetto della frase, come si nota facilmente riordinando gli elementi nella struttura \"nuotare piace a me\".",
+          "testo": "Il soggetto è l'infinito \"nuotare\", in quanto l'azione del nuoto costituisce l'elemento che esercita l'attrazione del gradimento espressa dal verbo \"piace\".",
           "corretta": true
         }
       ],
-      "spiegazione": "La risposta corretta è la C perché, riformulando la frase secondo la sequenza logica lineare \"nuotare piace a me\", emerge chiaramente che l'infinito verbale svolge il ruolo sintattico di soggetto. Il distrattore A è insidioso perché induce a credere che la particella \"mi\" possa fungere da soggetto logico e \"nuotare\" da complemento oggetto. L'opzione B propone una classificazione inutilmente complessa ma priva di riscontro nell'analisi sintattica dei verbi valenziali."
+      "spiegazione": "La risposta corretta è la C perché, riformulando la frase in modo lineare (\"nuotare piace a me\"), emerge chiaramente che l'infinito sostantivato \"nuotare\" compie l'azione di piacere. Il distrattore A è l'errore più comune e insidioso, in quanto lo studente confonde il soggetto grammaticale con il soggetto logico o beneficiario dell'azione espresso dal complemento di termine \"mi\". Ristrutturare la frase rimuovendo le inversioni aiuta a evitare questo classico abbaglio sintattico."
     },
     {
-      "domanda": "Un'insegnante di quarta primaria intende progettare un'attività didattica basata sul lessico per stimolare il confronto critico e la scoperta dei registri linguistici. Coerentemente con la progressione didattica e le attività illustrate nella lezione, quale proposta è più adatta per questa specifica classe?",
+      "domanda": "In un testo scritto che imita la lingua parlata, uno studente incontra la frase: \"La organizzo io la festa\". Come si spiega questa specifica struttura sintattica?",
       "opzioni": [
         {
-          "testo": "Mettere a confronto due dizionari diversi per analizzare come cambiano le definizioni e la struttura delle voci.",
+          "testo": "Si tratta di una dislocazione a sinistra, in quanto l'elemento \"la festa\" viene anticipato all'inizio della frase tramite il pronome \"la\" per focalizzare l'attenzione.",
+          "corretta": false
+        },
+        {
+          "testo": "Si tratta di una dislocazione a destra, poiché il complemento oggetto (\"la festa\") si trova in fondo alla frase ed è anticipato dal pronome \"la\" collegato al verbo.",
           "corretta": true
         },
         {
-          "testo": "Avviare la ricerca dei lemmi sul dizionario basandosi sul riconoscimento dell'ordine alfabetico e della pronuncia.",
-          "corretta": false
-        },
-        {
-          "testo": "Utilizzare il dizionario dell'uso in modo applicato per arricchire e riscrivere i testi scritti prodotti dagli alunni.",
+          "testo": "Si tratta di una frase scissa, in quanto il verbo viene spezzato e posto all'inizio per enfatizzare l'identità del soggetto che compie l'azione organizzativa.",
           "corretta": false
         }
       ],
-      "spiegazione": "La risposta corretta è la A poiché, secondo la progressione didattica illustrata nella lezione, la classe quarta primaria è deputata al confronto critico tra strumenti lessicografici diversi. Il distrattore B è errato in quanto fa riferimento ad attività più semplici di ricognizione formale proprie della terza classe. L'opzione C, invece, descrive obiettivi di scrittura applicata e arricchimento lessicale che la progressione riserva alla classe quinta."
+      "spiegazione": "La risposta corretta è la B perché l'oggetto (\"la festa\") è posizionato alla fine e preceduto da un pronome clitico (\"la\") con funzione di anticipazione, tipico del parlato. Il distrattore A rappresenta una confusione classica tra sinistra e destra: lo studente vede il pronome all'inizio della frase e pensa erroneamente a una dislocazione a sinistra, dimenticando che è la posizione dell'elemento nominale pieno a determinare la direzione. La frase scissa del distrattore C, invece, richiederebbe una struttura completamente diversa introdotta dal verbo essere."
     },
     {
-      "domanda": "Quale differenza fondamentale distingue un dittongo ascendente da uno discendente nella pronuncia di una parola?",
+      "domanda": "Qual è la differenza principale tra il meccanismo della \"mozione di genere\" e il fenomeno degli \"eteronimi\" nella formazione del maschile e del femminile in italiano?",
       "opzioni": [
         {
-          "testo": "Il dittongo ascendente unisce una vocale debole e una forte, mentre il dittongo discendente è composto dall'unione di due vocali forti.",
+          "testo": "La mozione di genere è una tendenza legata alla lingua parlata contemporanea, mentre gli eteronimi costituiscono una classificazione puramente teorica e ormai priva di riscontri reali.",
           "corretta": false
         },
         {
-          "testo": "Nel dittongo ascendente l'accento tonico cade sulla vocale debole, mentre nel discendente l'accento cade sulla vocale forte.",
+          "testo": "La mozione di genere si applica ai nomi di animali per cambiarne la desinenza, mentre gli eteronimi definiscono le professioni che mantengono una forma grammaticale fissa.",
           "corretta": false
         },
         {
-          "testo": "Nel dittongo ascendente la semivocale si trova in prima posizione determinando una salita della voce, mentre nel discendente si trova in seconda posizione.",
+          "testo": "La mozione di genere modifica la desinenza o il suffisso di una stessa radice (es. gatto/gatta), mentre gli eteronimi utilizzano parole con radici etimologiche completamente differenti (es. uomo/donna).",
           "corretta": true
         }
       ],
-      "spiegazione": "La risposta corretta è la C poiché la distinzione tra dittongo ascendente e discendente si basa sulla posizione occupata dalla semivocale (la vocale debole \"i\" o \"u\") all'interno della coppia. Il distrattore B è errato perché l'unione di due vocali forti genera sistematicamente uno iato e non un dittongo. Il secondo distrattore (B) confonde anche le regole dello iato con quelle del nesso sillabico, poiché se l'accento cade sulla debole si ha uno iato."
+      "spiegazione": "La risposta corretta è la C. La mozione di genere è il passaggio da un genere all'altro tramite la modifica morfologica della desinenza o del suffisso, mentre l'eteronimia comporta l'uso di vocaboli diversi alla radice per il maschile e il femminile. Il distrattore B tenta lo studente con una falsa distinzione basata sull'ambito d'uso (animali vs professioni), un errore comune per chi ricorda solo parzialmente gli esempi della lezione senza aver compreso la regola morfologica sottostante."
     },
     {
-      "domanda": "Nel contesto della lessicografia scientifica, qual è la differenza che conta tra i termini \"dizionario\" e \"vocabolario\"?",
+      "domanda": "Uno studente deve scrivere un saggio e inserire la frase \"pensa solo a se stesso\". Ricordando la spiegazione della lezione sulla norma contemporanea e sull'apporto di Serianni, come deve comportarsi con l'accento di \"se\"?",
       "opzioni": [
         {
-          "testo": "Il dizionario raccoglie i termini scientifici e settoriali dotati di monoreferenzialità, mentre il vocabolario comprende le parole del lessico comune.",
-          "corretta": false
-        },
-        {
-          "testo": "Il dizionario si riferisce all'opera editoriale fisica o digitale, mentre il vocabolario può indicare anche il patrimonio lessicale individuale di un parlante.",
+          "testo": "Deve scrivere \"sé stesso\" con l'accento, poiché la regola che ne imponeva l'eliminazione davanti a \"stesso\" o \"medesimo\" è considerata priva di fondamento scientifico.",
           "corretta": true
         },
         {
-          "testo": "Il dizionario ordina le parole secondo un criterio storico-etimologico, mentre il vocabolario adotta l'ordine alfabetico.",
+          "testo": "Deve evitare l'accento scrivendo \"se stesso\", poiché la presenza dell'aggettivo \"stesso\" elimina il rischio di ambiguità con la congiunzione ipotetica nel testo.",
+          "corretta": false
+        },
+        {
+          "testo": "Deve usare l'accento se la parola è posta alla fine della frase, mentre all'interno della frase la distinzione grafica viene affidata al contesto sintattico del periodo.",
           "corretta": false
         }
       ],
-      "spiegazione": "La risposta corretta è la B poiché nella lessicografia scientifica il \"dizionario\" indica specificamente l'oggetto di consultazione, mentre il \"vocabolario\" definisce anche la competenza lessicale di un parlante o di un settore. Il distrattore A è insidioso perché applica erroneamente a questi concetti la distinzione tra \"parola\" e \"termine\" (monoreferenziale). L'opzione C introduce una distinzione metodologica falsa, dato che entrambi gli strumenti possono adottare criteri alfabetici o tematici."
+      "spiegazione": "La risposta corretta è la A. Come spiegato nella lezione, la vecchia regola scolastica che eliminava l'accento su \"sé\" davanti a \"stesso\" e \"medesimo\" non ha fondamento ed è stata superata nella norma contemporanea. Il distrattore B è estremamente insidioso perché rappresenta proprio quella norma tradizionale che molti studenti applicano per abitudine, ignorando che la lezione ne ha decretato l'infondatezza grammaticale."
     },
     {
-      "domanda": "Si consideri la frase: \"La decisione del comitato, come previsto, ha scontentato alcuni membri.\" Perché la presenza delle virgole è sintatticamente corretta in questo caso?",
+      "domanda": "In un testo complesso che descrive una ricetta, si trova questo passaggio: \"mettere a bollire l'acqua; poi soffriggere la cipolla, facendo attenzione a non bruciarla; infine calare la pasta\". Perché in questo caso l'uso del punto e virgola è preferibile a quello della semplice virgola?",
       "opzioni": [
         {
-          "testo": "Perché la virgola singola separa il soggetto \"la decisione del comitato\" dal suo predicato \"ha scontentato\".",
+          "testo": "Perché il punto e virgola segnala una pausa respiratoria più lunga rispetto alla virgola, necessaria quando si descrivono azioni che richiedono una sequenza temporale lenta.",
           "corretta": false
         },
         {
-          "testo": "Perché le due virgole isolano un elemento parentetico interposto, preservando la coesione sintattica tra il soggetto e il verbo.",
+          "testo": "Perché in italiano le congiunzioni temporali come \"poi\" e \"infine\" richiedono per norma grammaticale di essere precedute da un segno di punteggiatura forte come questo.",
+          "corretta": false
+        },
+        {
+          "testo": "Perché permette di segmentare la frase a un livello gerarchico superiore rispetto alle virgole interne, agendo come una parentesi matematica per fare ordine tra passaggi complessi.",
           "corretta": true
-        },
-        {
-          "testo": "Perché la punteggiatura serve a segnalare una pausa fisiologica per la respirazione durante la lettura ad alta voce.",
-          "corretta": false
         }
       ],
-      "spiegazione": "La risposta corretta è la B perché le due virgole racchiudono un inciso (o elemento parentetico) e preservano l'unità tra soggetto e predicato. Il distrattore A è errato poiché una singola virgola posta tra soggetto e verbo costituisce un grave errore di segmentazione sintattica. L'opzione C fa leva su una concezione scolastica tradizionale e non scientifica della punteggiatura, basata sul respiro anziché sulla struttura logica della frase."
+      "spiegazione": "La risposta corretta è la C. Il punto e virgola ha una funzione logico-sintattica di segmentazione maggiore che organizza il periodo quando al suo interno ci sono già delle virgole. Il distrattore A è l'errore più tipico degli studenti, che tendono a interpretare i segni di punteggiatura in base a criteri puramente fonetici (le pause per respirare), anziché in base alla struttura logica della frase. Il distrattore B, d'altro canto, inventa un obbligo grammaticale inesistente legato alle congiunzioni."
     },
     {
-      "domanda": "In quale di queste frasi l'elemento \"dei\" funziona come articolo partitivo e non come preposizione articolata?",
+      "domanda": "Uno studente sta svolgendo una ricerca sull'evoluzione della parola \"stella\" e vuole scoprire in quale momento storico della letteratura italiana ha iniziato ad assumere il significato figurato di \"persona celebre dello spettacolo\". Quale strumento della tipologia presentata a lezione è più indicato consultare?",
       "opzioni": [
         {
-          "testo": "Lo studente ha risposto ad alcune domande dei professori durante la simulazione.",
+          "testo": "Un dizionario etimologico come il DELI, che si concentra specificamente sul tracciare la radice originaria e i primi mutamenti fonetici subiti dalla parola nel passaggio dal latino.",
           "corretta": false
         },
         {
-          "testo": "Il successo dei ragazzi della scuola primaria è stato celebrato nell'orto didattico.",
-          "corretta": false
-        },
-        {
-          "testo": "Per preparare la torte, la nonna ha chiesto dei mirtilli freschi raccolti nel bosco.",
+          "testo": "Un dizionario storico come il Grande dizionario della lingua italiana di Battaglia, che documenta l'evoluzione diacronica dei significati attraverso un ampio corpus di testi letterari nel tempo.",
           "corretta": true
+        },
+        {
+          "testo": "Un dizionario di base come quello di De Mauro, poiché organizza i lemmi partendo dai significati concreti per arrivare a quelli figurati basandosi sulla frequenza d'uso contemporanea.",
+          "corretta": false
         }
       ],
-      "spiegazione": "La risposta corretta è la C perché in questo contesto \"dei\" può essere sostituito da \"alcuni\" (\"alcuni mirtilli\") senza alterare la struttura sintattica, funzionando da plurale dell'articolo indeterminativo. Nei distrattori A e B, l'elemento \"dei\" funge invece da preposizione articolata che introduce un complemento di specificazione retta dal nome precedente. Lo studente distratto potrebbe confonderli a causa dell'omografia delle due forme grammaticali."
+      "spiegazione": "La risposta corretta è la B. Il dizionario storico traccia la vita di una parola e l'evoluzione dei suoi significati attraverso citazioni di testi letterari da secoli diversi. Il distrattore A è insidioso perché lo studente potrebbe pensare che l'origine dei significati complessi sia di competenza del dizionario etimologico, il quale invece si occupa principalmente dell'etimo e della storia dei mutamenti di forma. Il dizionario di base della risposta C, invece, ha scopi puramente didattici legati alla semplificazione del lessico per i ragazzi."
     },
     {
-      "domanda": "Nella frase \"Sarà che sono stanco, ma stasera preferisco rimanere a casa\", quale valore assume l'uso del futuro semplice?",
+      "domanda": "Durante un esercizio di ortografia e fonetica, uno studente si chiede perché nella parola \"cielo\" si mantenga la lettera \"i\" scritta, sebbene dal punto di vista della pronuncia la consonante \"c\" risulti già dolce grazie alla presenza della vocale \"e\". Quale spiegazione è scientificamente corretta?",
       "opzioni": [
         {
-          "testo": "Svolge una funzione epistemica, indicando una supposizione o un'ipotesi formulata dal parlante nel momento presente.",
+          "testo": "In \"cielo\" la \"i\" ha una funzione diacritica necessaria per evitare che la consonante venga pronunciata con suono duro, proprio come avviene per la lettera \"i\" presente all'interno di \"giro\".",
+          "corretta": false
+        },
+        {
+          "testo": "In \"cielo\" la \"i\" ha un valore puramente storico ed etimologico, poiché se venisse tolta la parola verrebbe pronunciata nello stesso modo, a differenza di \"giro\" dove la \"i\" ha un valore pienamente fonetico.",
           "corretta": true
         },
         {
-          "testo": "Esprime un'azione collocata nel futuro temporale che dipende causalmente dalla condizione di stanchezza del parlante.",
-          "corretta": false
-        },
-        {
-          "testo": "Assume una modalità deontica, imponendo un obbligo morale al parlante rispetto alla scelta di non uscire.",
+          "testo": "In \"cielo\" la \"i\" ha un valore fonetico che determina la creazione di una sillaba autonoma nella pronuncia, mentre in \"giro\" serve come segno grafico per addolcire la consonante precedente.",
           "corretta": false
         }
       ],
-      "spiegazione": "La risposta corretta è la A perché il futuro assume qui un valore epistemico, servendo a formulare una supposizione nel presente piuttosto che a indicare una collocazione temporale futura. Il distrattore B è insidioso perché confonde la dimensione temporale standard con l'uso pragmatico-modale dei tempi verbali. L'opzione C fa confusione con la modalità deontica, la quale esprime invece un dovere o un obbligo ed è tipica del modo imperativo."
+      "spiegazione": "La risposta corretta è la B. In \"cielo\" la \"i\" non serve a indicare la pronuncia della consonante \"c\" (che davanti a \"e\" è già dolce) né costituisce una sillaba a sé, possedendo un valore storico ed etimologico. In \"giro\", invece, la \"i\" è una vocale piena con valore fonetico. Il distrattore A è insidioso perché confonde la funzione diacritica (che serve in parole come \"ciao\" o \"Giada\" prima di \"a\", \"o\", \"u\") con la situazione di \"cielo\" e di \"giro\", dove la \"i\" non ha affatto quel ruolo grafico di addolcimento."
     },
     {
-      "domanda": "Si consideri l'enunciato: \"La organizzo io la festa di compleanno\". Quale caratteristica strutturale permette di identificare questo caso come una dislocazione a destra?",
+      "domanda": "Confrontando il lessico fondamentale dell'italiano con i linguaggi specialistici e settoriali (come quello della medicina o della linguistica), quale differenza emerge riguardo al rapporto tra parole e significati?",
       "opzioni": [
         {
-          "testo": "Lo spostamento del soggetto grammaticale in prima posizione a sinistra, seguito da un pronome.",
-          "corretta": false
-        },
-        {
-          "testo": "La presenza del pronome clitico di ripresa anticipata \"la\" e lo spostamento dell'oggetto a destra, dopo il soggetto e il verbo.",
+          "testo": "Il lessico fondamentale è naturalmente polisemico, ricco di parole antiche che hanno accumulato più significati, mentre i linguaggi specialistici richiedono la monoreferenzialità per evitare ambiguità.",
           "corretta": true
         },
         {
-          "testo": "Il fatto che la frase possa essere letta con una piana intonazione della voce rispetto alla struttura standard.",
+          "testo": "Il lessico fondamentale si caratterizza per la monoreferenzialità per garantire una comunicazione rapida, mentre i linguaggi specialistici sfruttano la polisemia per moltiplicare i significati delle parole antiche.",
+          "corretta": false
+        },
+        {
+          "testo": "Il lessico fondamentale si basa su una corrispondenza rigida tra una singola parola e un solo concetto, mentre i linguaggi specialistici si evolvono introducendo sinonimi sfumati adatti a contesti diversi.",
           "corretta": false
         }
       ],
-      "spiegazione": "La risposta corretta è la B perché la dislocazione a destra prevede lo spostamento dell'elemento oggetto alla fine della frase e la sua anticipazione tramite un pronome clitico (\"la\"). Il distrattore A descrive erroneamente una dislocazione a sinistra, confondendo l'ordine dei pronomi e degli elementi spostati. L'opzione C fallisce nell'individuare le caratteristiche di marcatezza sintattica e intonativa che caratterizzano questo costrutto tipico della lingua parlata."
+      "spiegazione": "La risposta corretta è la A. Il lessico comune e fondamentale (più antico) tende alla polisemia, ossia la presenza di più significati per una parola chiariti dal contesto, mentre i linguaggi settoriali richiedono precisione univoca, definita monoreferenzialità. Il distrattore B è insidioso perché inverte esattamente le definizioni dei due ambiti, ingannando lo studente che non ricorda a quale tipo di linguaggio sia associata la necessità scientifica di precisione rispetto alla ricchezza naturale della lingua comune."
     }
   ],
   "assistente_ia": {
