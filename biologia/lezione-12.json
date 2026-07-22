@@ -492,5 +492,62 @@
       "titolo": "| Sistema Immunitario: La vitale sorveglianza cellulare",
       "macro": 5
     }
-  ]
+  ],
+  "mappa": {
+    "titolo": "Evoluzione dei Sistemi di Trasporto nei Viventi",
+    "rami": [
+      {
+        "tema": "Sostanze e necessità del trasporto",
+        "sotto": [
+          "Nutrienti, gas e scarti da distribuire",
+          "Raggiungere la membrana di ogni cellula",
+          "Trasporto intracellulare negli organismi unicellulari"
+        ]
+      },
+      {
+        "tema": "Trasporto negli invertebrati semplici",
+        "sotto": [
+          "Poriferi: corrente d'acqua per pressione idrostatica",
+          "Cnidari: ricambio d'acqua attraverso la bocca",
+          "Platelminti: diffusione gassosa e intestino ramificato",
+          "Nematodi: pseudo-circolazione tramite liquido tissutale"
+        ]
+      },
+      {
+        "tema": "Sistemi circolatori aperti e chiusi",
+        "sotto": [
+          "Aperto: il sangue bagna direttamente i tessuti",
+          "Chiuso: il sangue non bagna i tessuti",
+          "Scambi gassosi e nutritivi tramite capillari sottili"
+        ]
+      },
+      {
+        "tema": "Evoluzione del cuore nei vertebrati",
+        "sotto": [
+          "Pesci: cuore semplice a due camere",
+          "Anfibi e rettili: cuore a tre camere",
+          "Mammiferi: quattro camere e circolazione doppia",
+          "Doppia circolazione: polmonare e sistemica"
+        ]
+      },
+      {
+        "tema": "Anatomia e controllo del cuore umano",
+        "sotto": [
+          "Controllo autonomo dal nodo seno-atriale",
+          "Arterie robuste e vene con pareti deboli",
+          "Valvole antiritorno e pompa muscolare negli arti",
+          "Capillari delicati sensibili ad accumuli di colesterolo"
+        ]
+      },
+      {
+        "tema": "Sangue e sistema linfatico",
+        "sotto": [
+          "Sangue: tessuto connettivo liquido con cellule",
+          "Globuli rossi: trasporto di ossigeno e anidride",
+          "Globuli bianchi e piastrine: difesa e riparazione",
+          "Sistema linfatico: assorbimento grassi e linfonodi immunitari"
+        ]
+      }
+    ]
+  }
 }
