@@ -170,184 +170,184 @@
   ],
   "il_super_quiz": [
     {
-      "domanda": "Nella fisica delle onde solari, come sono legate tra loro la frequenza e la lunghezza d'onda?",
+      "domanda": "Uno studente decide di costruire un ecosistema in bottiglia usando un contenitore trasparente. Nota che, quando esposto alla luce solare, l'interno si riscalda notevolmente. Quale processo fisico spiega correttamente questo aumento di temperatura?",
       "opzioni": [
         {
-          "testo": "Sono direttamente proporzionali, quindi a una lunghezza d'onda maggiore corrisponde una frequenza maggiore.",
+          "testo": "I raggi infrarossi provenienti direttamente dal Sole, caratterizzati da un'elevata frequenza e un'alta energia penetrante, riescono ad attraversare la parete del barattolo e si accumulano all'interno senza poter più uscire.",
           "corretta": false
         },
         {
-          "testo": "Sono inversamente proporzionali, per cui a una lunghezza d'onda piccola corrisponde un'alta frequenza.",
+          "testo": "La radiazione solare a onda corta, altamente energetica, penetra facilmente nel barattolo, ma una volta assorbita viene restituita sotto forma di raggi infrarossi a onda lunga che, avendo poca energia, non riescono a fuoriuscire riscaldando l'ambiente.",
           "corretta": true
         },
         {
-          "testo": "Non hanno alcuna relazione matematica e variano in modo indipendente.",
+          "testo": "La luce solare visibile viene in gran parte riflessa dalle foglie interne e questa continua riflessione contro le pareti di vetro converte l'energia luminosa in calore attraverso l'adesione molecolare.",
           "corretta": false
         }
       ],
-      "spiegazione": "La frequenza indica il numero di onde nell'unità di tempo, mentre la lunghezza d'onda è la distanza tra due creste. Esse sono inversamente proporzionali: ad esempio, i raggi gamma hanno un'alta frequenza e una lunghezza d'onda piccola."
+      "spiegazione": "La risposta corretta evidenzia il meccanismo dell'effetto serra: la radiazione a onda corta, ricca di energia, entra facilmente nel barattolo, ma viene riemessa come radiazione infrarossa (onda lunga, a bassa energia) che rimane intrappolata. Il distrattore riguardante i raggi infrarossi solari ad alta frequenza è insidioso perché confonde la sorgente e le caratteristiche fisiche, dato che l'infrarosso ha in realtà una frequenza minore e meno energia rispetto all'onda corta. Questo errore confonde la natura penetrante delle onde corte con il calore associato all'infrarosso."
     },
     {
-      "domanda": "Quale fenomeno fisico spiega perché il calore rimane intrappolato all'interno dell'ecosistema in bottiglia?",
+      "domanda": "Durante una discussione sulla luce, si analizza il comportamento dei raggi quando colpiscono uno specchio d'acqua calmo rispetto a quando colpiscono un foglio di carta da disegno. Qual è la differenza fondamentale tra la riflessione e la diffusione della luce?",
       "opzioni": [
         {
-          "testo": "Il vetro blocca l'ingresso delle onde corte solari costringendole a riflettersi all'esterno.",
+          "testo": "Nella riflessione la luce attraversa parzialmente il corpo trasparente subendo una deviazione, mentre nella diffusione i raggi colpiscono un corpo opaco e vengono respinti in un'unica direzione ordinata.",
           "corretta": false
         },
         {
-          "testo": "Le radiazioni a onda corta penetrano il vetro, vengono assorbite e poi riemesse come raggi infrarossi a onda lunga, che faticano a uscire.",
+          "testo": "La riflessione si manifesta quando la sorgente luminosa invia raggi paralleli da grande distanza, mentre la diffusione si verifica con sorgenti vicine che emettono luce in tutte le direzioni.",
+          "corretta": false
+        },
+        {
+          "testo": "Entrambi i fenomeni descrivono il rimbalzo della luce su una superficie opaca, ma la riflessione si verifica su superfici perfettamente levigate, mentre la diffusione avviene quando la superficie presenta irregolarità che disperdono la luce.",
           "corretta": true
-        },
-        {
-          "testo": "Le radiazioni infrarosse penetrano ad altissima energia e distruggono lo strato di carbone sottostante.",
-          "corretta": false
         }
       ],
-      "spiegazione": "Le onde corte penetrano facilmente il vetro trasparente del barattolo perché molto energetiche. Una volta assorbite dagli elementi interni, vengono riemesse come raggi infrarossi (onda lunga e a bassa energia), che non riescono a fuoriuscire facilmente dal vetro, riscaldando l'ambiente."
+      "spiegazione": "La risposta corretta distingue chiaramente i due fenomeni ottici basandosi sulla natura della superficie: levigata per la riflessione ordinata e irregolare per la diffusione. Il distrattore che collega la riflessione alla sorgente distante è particolarmente insidioso perché mescola erroneamente la geometria dei raggi incidenti (paralleli dal Sole) con la fisica dell'interazione con la superficie. Studiare superficialmente potrebbe indurre a pensare che solo i raggi paralleli possano riflettersi in modo regolare, il che è falso."
     },
     {
-      "domanda": "Qual è un tipico pensiero ingenuo o misconcezione dei bambini riguardo alla natura dell'energia e della luce?",
+      "domanda": "In un ecosistema in bottiglia sigillato, gli studenti notano che molte goccioline d'acqua rimangono saldamente attaccate alle pareti verticali di vetro anziché scivolare subito sul fondo. Come si spiega questo fenomeno basandosi sulle proprietà microscopiche dei materiali?",
       "opzioni": [
         {
-          "testo": "Pensano che l'energia e la luce siano entità immateriali prive di peso.",
-          "corretta": false
-        },
-        {
-          "testo": "Ritengono che i raggi solari arrivino sempre in modo perfettamente parallelo indipendentemente dalla sorgente.",
-          "corretta": false
-        },
-        {
-          "testo": "Considerano l'energia e i raggi luminosi come se fossero una sostanza materiale.",
+          "testo": "Le molecole d'acqua sono polari e mostrano una forte attrazione verso il vetro, che è una sostanza dipolare, permettendo così un'adesione efficace che contrasta temporaneamente la gravità.",
           "corretta": true
+        },
+        {
+          "testo": "L'evaporazione dell'acqua all'interno del barattolo aumenta la pressione dei fluidi verso l'alto, spingendo le gocce contro il vetro e bloccandole attraverso la forza di capillarità delle radici.",
+          "corretta": false
+        },
+        {
+          "testo": "Il calore accumulato per effetto serra modifica lo stato particellare del vetro, rendendolo temporaneamente poroso e capace di assorbire l'umidità interna mediante coesione molecolare.",
+          "corretta": false
         }
       ],
-      "spiegazione": "I bambini mostrano spesso una misconcezione diffusa (pensiero ingenuo) considerando l'energia e i raggi luminosi como una vera e propria sostanza concreta o materiale."
+      "spiegazione": "La risposta corretta unisce la natura polare delle molecole d'acqua alla proprietà dipolare del vetro, spiegando l'adesione che permette alle gocce di restare attaccate alla parete. Il distrattore basato sull'evaporazione e la capillarità è molto ingannevole perché cita concetti reali della lezione (capillarità, evaporazione, pressione dei fluidi) collegandoli però in modo errato a livello causale. La capillarità agisce all'interno dei piccoli vasi radicali, non sul vetro libero del barattolo."
     },
     {
-      "domanda": "Quale risultato sperimentale smentisce la misconcezione dei bambini secondo cui i semi necessitano sempre della luce per germinare?",
+      "domanda": "Per affrontare il pensiero ingenuo secondo cui i semi hanno bisogno della luce solare per germogliare, un'insegnante progetta un'attività sperimentale. Quale impostazione rispetta la metodologia di indagine scientifica per scoperta (IBSE)?",
       "opzioni": [
         {
-          "testo": "I semi posti al buio all'interno di un armadietto germinano esattamente come quelli esposti alla luce.",
+          "testo": "Spiegare chiaramente alla classe che il seme contiene già il nutrimento necessario, mostrare uno schema del processo di germinazione e infine far seminare due piantine per verificare quanto spiegato.",
+          "corretta": false
+        },
+        {
+          "testo": "Porre la domanda investigabile sulla necessità della luce, far formulare le ipotesi agli studenti, far collocare un seme al buio nell'armadio e uno alla luce, e infine discutere i risultati osservati.",
           "corretta": true
         },
         {
-          "testo": "Solo i semi posti sotto una lampada a infrarossi riescono a completare la germinazione.",
-          "corretta": false
-        },
-        {
-          "testo": "I semi non germogliano in nessun caso se non vengono annaffiati con alcol vegetale.",
+          "testo": "Far seminare i semi direttamente in giardino all'ombra e al sole, spiegando che le piante adulte effettuano la fotosintesi clorofilliana mentre i semi respirano soltanto.",
           "corretta": false
         }
       ],
-      "spiegazione": "Per stimolare un conflitto cognitivo, si può posizionare un seme al buio in un armadietto e uno alla luce. L'osservazione che entrambi germinano smentisce l'idea comune che la luce sia indispensabile per la germinazione dei semi."
+      "spiegazione": "La risposta corretta applica appieno la metodologia scientifica IBSE (o IPSE), stimolando gli studenti a formulare ipotesi ed eseguire un esperimento controllato (luce vs buio) prima di ricevere spiegazioni teoriche. Il distrattore incentrato sull'approccio tradizionale è insidioso perché rappresenta il tipico metodo scolastico trasmissivo, in cui l'esperimento viene usato solo come banale verifica a posteriori di una nozione già fornita. La lezione sottolinea invece che si deve passare prima per l'esplorazione in laboratorio e poi per la spiegazione formale dei concetti."
     },
     {
-      "domanda": "Qual è la funzione principale dello strato di sassolini e ghiaia posizionato sul fondo dell'ecosistema in bottiglia?",
+      "domanda": "Per studiare le ombre e la propagazione della luce, gli studenti confrontano i raggi provenienti dal Sole con quelli emessi da una lampadina da tavolo in classe. Quale differenza essenziale devono cogliere per comprendere questi due modelli di sorgente?",
       "opzioni": [
         {
-          "testo": "Garantire un drenaggio ottimale per raccogliere l'acqua in eccesso ed evitare il ristagno idrico.",
+          "testo": "I raggi del Sole trasportano radiazioni elettromagnetiche a onde lunghe molto penetranti, mentre la lampadina emette onde corte dello spettro visibile che non subiscono rifrazione.",
+          "corretta": false
+        },
+        {
+          "testo": "La luce solare colpisce i corpi opachi generando fenomeni di diffusione ordinata, mentre la lampadina produce rifrazione a causa della limitata energia dello spettro elettromagnetico.",
+          "corretta": false
+        },
+        {
+          "testo": "I raggi solari giungono a noi praticamente paralleli a causa dell'enorme distanza della sorgente, mentre i raggi della lampadina si propagano in tutte le direzioni divergendo dal punto di emissione.",
           "corretta": true
-        },
-        {
-          "testo": "Rilasciare anidride carbonica gassosa utile per la fotosintesi delle felci.",
-          "corretta": false
-        },
-        {
-          "testo": "Riscaldare le radici delle piantine trattenendo la luce solare ad onda corta.",
-          "corretta": false
         }
       ],
-      "spiegazione": "I sassi e la ghiaia sul fondo ricreano la roccia madre del suolo e servono a raccogliere l'acqua in eccesso, garantendo un drenaggio ideale che impedisce il marciume radicale delle piante."
+      "spiegazione": "I raggi solari arrivano paralleli a causa della distanza immensa della sorgente, mentre una lampadina vicina produce raggi divergenti. Il distrattore basato sulla diffusione ordinata indotta dalla luce solare confonde lo stato della superficie colpita con il tipo di sorgente luminosa. Chi non ha compreso a fondo potrebbe associare erroneamente la qualità della sorgente (Sole) alla capacità intrinseca di generare solo un tipo di interazione ottica ordinata."
     },
     {
-      "domanda": "Cosa significa in greco la parola 'stoma', che fa riferimento alle microscopiche aperture sulle foglie?",
+      "domanda": "Durante un laboratorio sul suolo, gli studenti inseriscono in un barattolo d'acqua i componenti usati per l'ecosistema (ghiaia, carbone, terriccio, bastoncini), mescolano vigorosamente e lasciano riposare. Cosa permette di spiegare la stratificazione dei materiali che si osserva dopo qualche tempo?",
       "opzioni": [
         {
-          "testo": "Foglia.",
-          "corretta": false
-        },
-        {
-          "testo": "Bocca.",
+          "testo": "I materiali si stratificano a seconda della loro densità, portando i sassi e la ghiaia sul fondo e i residui organici meno densi a galleggiare o a posizionarsi nei livelli superiori.",
           "corretta": true
         },
         {
-          "testo": "Radice.",
+          "testo": "I componenti si dispongono in base al loro volume complessivo, poiché le particelle più grandi occupano più spazio e risalgono spontaneamente per capillarità.",
+          "corretta": false
+        },
+        {
+          "testo": "La pressione idrostatica esercitata dall'acqua spinge il carbone e il terriccio verso le pareti del barattolo a causa dell'adesione dipolare delle molecole d'acqua.",
           "corretta": false
         }
       ],
-      "spiegazione": "La parola 'stoma' deriva dal greco e significa letteralmente 'bocca', indicando le piccole aperture fogliari da cui fuoriesce il vapore acqueo durante la traspirazione."
+      "spiegazione": "La stratificazione nel barattolo d'acqua avviene in base alla densità dei materiali, facendo affondare quelli più densi (sassi e ghiaia) e lasciando galleggiare la materia organica meno densa. Il distrattore sul volume e la capillarità è insidioso perché sfrutta il pensiero ingenuo secondo cui l'altezza di un oggetto o la sua dimensione determinino la sua posizione di galleggiamento. Inoltre, associa erroneamente la risalita spontanea per capillarità a particelle macroscopiche solide anziché a liquidi in canali microscopici."
     },
     {
-      "domanda": "In che modo la traspirazione delle piante favorisce la risalita dell'acqua dalle radici alle foglie?",
+      "domanda": "Un'insegnante riempie un barattolo fino all'orlo con sassi e ghiaia e chiede alla classe se sia completamente pieno. Molti bambini rispondono di sì. Versando dell'acqua, si osserva la formazione di numerose bollicine che salgono in superficie. Quale interpretazione fisica di questa esperienza aiuta a superare l'ostacolo cognitivo dei bambini?",
       "opzioni": [
         {
-          "testo": "La liberazione di acqua dagli stomi genera una diminuzione di pressione che aspira l'acqua verso l'alto.",
+          "testo": "L'acqua versata reagisce chimicamente con la ghiaia liberando carbonio sotto forma di anidride carbonica, dimostrando che il suolo contiene nutrimento biologico.",
+          "corretta": false
+        },
+        {
+          "testo": "Il volume dei sassi si contrae a contatto con il liquido freddo, liberando lo spazio occupato in precedenza che viene subito riempito dalle molecole polari dell'acqua.",
+          "corretta": false
+        },
+        {
+          "testo": "Le bollicine dimostrano la presenza di aria che occupava gli spazi vuoti tra i sassi; misurando l'acqua versata è possibile quantificare il volume d'aria precedentemente invisibile ai bambini.",
           "corretta": true
-        },
-        {
-          "testo": "Il vapore acqueo spinge meccanicamente i fluidi verso il basso aumentando la gravità.",
-          "corretta": false
-        },
-        {
-          "testo": "La fotosintesi clorofilliana produce zuccheri pesanti che bloccano del tutto la capillarità.",
-          "corretta": false
         }
       ],
-      "spiegazione": "Quando l'acqua viene liberata sotto forma di vapore dagli stomi fogliari (traspirazione), si crea una diminuzione di pressione interna che agisce come una forza aspirante (legata alla pressione dei fluidi), richiamando nuova acqua dalle radici verso le foglie."
+      "spiegazione": "La presenza di bollicine d'aria dimostra che gli spazi apparentemente vuoti tra i sassi sono in realtà occupati da materia gassosa (aria), aiutando i bambini a superare il limite percettivo dei gas. Il distrattore sulla reazione chimica e il rilascio di carbonio è insidioso perché richiama argomenti vicini della lezione, come il carbone nel suolo come fonte di nutrimento, ma li applica a una situazione puramente fisica. Non c'è alcuna reazione chimica tra acqua e ghiaia che genera gas."
     },
     {
-      "domanda": "Perché le goccioline d'acqua del ciclo interno riescono a rimanere adese alla parete di vetro del barattolo?",
+      "domanda": "Nel ciclo dell'acqua all'interno dell'ecosistema, come cooperano la capillarità e la pressione dei fluidi per permettere all'acqua di risalire dalle radici fino alle foglie più alte di una pianta?",
       "opzioni": [
         {
-          "testo": "Perché il vetro si scioglie parzialmente a contatto con l'acqua gassosa.",
+          "testo": "La capillarità spinge l'acqua verso l'alto grazie alla fotosintesi clorofilliana che consuma ossigeno, mentre la pressione dei fluidi spinge le molecole d'acqua attraverso i pori del terreno.",
           "corretta": false
         },
         {
-          "testo": "Perché le molecole d'acqua sono polari e mostrano forte adesione con il vetro, che è una sostanza dipolare.",
+          "testo": "La capillarità permette all'acqua di risalire lungo i sottili canali interni della pianta, mentre l'evaporazione dell'acqua dagli stomi genera una diminuzione di pressione che richiama ulteriore liquido verso l'alto.",
           "corretta": true
         },
         {
-          "testo": "Perché la resina rilasciata dalle foglie di felce funge da collante naturale permanente.",
+          "testo": "La pressione atmosferica schiaccia le radici favorendo l'assorbimento idrico, mentre la capillarità agisce sulle pareti esterne delle foglie attirando le goccioline d'acqua condensate.",
           "corretta": false
         }
       ],
-      "spiegazione": "Le molecole d'acqua sono polari e, a contatto con il vetro (che è una sostanza dipolare), mostrano una forte attrazione fisica e adesione, rimanendo appese alla parete interna sotto forma di goccioline."
+      "spiegazione": "La risalita dell'acqua è guidata dalla capillarità nei vasi microscopici e supportata dalla differenza di pressione generata dall'evaporazione (traspirazione) degli stomi fogliari. Il distrattore che menziona la fotosintesi che consuma ossigeno è ingannevole poiché unisce una nozione biologica scorretta (la fotosintesi consuma anidride carbonica e produce ossigeno, non il contrario) a una spiegazione errata del movimento dei fluidi. Questo permette di testare se lo studente comprende la reale causa fisica della pressione e della capillarità."
     },
     {
-      "domanda": "Durante l'attività didattica sul suolo, come si può misurare sperimentalmente il volume d'aria nascosto nel terriccio?",
+      "domanda": "Analizzando lo spettro visibile e i colori delle piante nell'ecosistema, per quale motivo le foglie delle felci ci appaiono di colore verde?",
       "opzioni": [
         {
-          "testo": "Pesando il barattolo prima e dopo l'esposizione diretta ai raggi ultravioletti.",
-          "corretta": false
-        },
-        {
-          "testo": "Versando acqua nel barattolo pieno di terra e misurando la quantità di liquido necessaria a riempire gli spazi, evidenziata dalle bollicine d'aria che salgono.",
+          "testo": "Le foglie contengono pigmenti che assorbono gran parte delle lunghezze d'onda della luce solare ma riflettono la radiazione corrispondente al verde, che giunge così ai nostri occhi.",
           "corretta": true
         },
         {
-          "testo": "Utilizzando un prisma trasparente per rifrangere la luce solare all'interno dei pori della terra.",
+          "testo": "I cloroplasti assorbono la radiazione verde per attivare la fotosintesi, riemettendola poi amplificata sotto forma di raggi infrarossi a onda corta.",
+          "corretta": false
+        },
+        {
+          "testo": "La luce bianca del sole viene rifratta dal vetro del barattolo come in un prisma, separando la lunghezza d'onda del verde che si deposita sulla superficie fogliare.",
           "corretta": false
         }
       ],
-      "spiegazione": "Poiché i bambini spesso non hanno la percezione dell'aria contenuta nel suolo, versando acqua in un barattolo pieno di terra si vedranno salire delle bollicine (l'aria che esce). Misurando quanta acqua è stata versata, si determina il volume d'aria interstiziale precedentemente occupato dal gas."
+      "spiegazione": "Le foglie appaiono verdi perché riflettono la luce verde e assorbono le altre lunghezze d'onda dello spettro visibile. Il distrattore che afferma che i cloroplasti assorbono la luce verde è un classico errore di inversione concettuale: gli studenti spesso confondono il colore visibile di un oggetto con la luce che esso assorbe per funzionare. In realtà, la luce assorbita per la fotosintesi è proprio quella non verde."
     },
     {
-      "domanda": "Come si può realizzare un esperimento di cromatografia per svelare i diversi pigmenti contenuti in una foglia verde?",
+      "domanda": "Durante la fotosintesi clorofilliana nell'ecosistema, come viene descritto il ruolo dell'energia dal punto di vista fisico rispetto ai legami chimici?",
       "opzioni": [
         {
-          "testo": "Triturando la foglia con alcol e inserendovi un cartoncino per osservare la separazione delle bande di colore.",
+          "testo": "L'energia chimica già presente nello zucchero viene consumata per produrre energia luminosa a onda corta, che la pianta rilascia nell'ambiente sotto forma di calore attraverso gli stomi.",
+          "corretta": false
+        },
+        {
+          "testo": "L'energia solare si converte in calore particellare che rompe i legami dello zucchero, permettendo la risalita dell'acqua per capillarità e la successiva traspirazione.",
+          "corretta": false
+        },
+        {
+          "testo": "L'energia solare viene assorbita e utilizzata dalle foglie per formare i legami chimici tra le particelle di acqua e carbonio, trasformandosi così in energia chimica immagazzinata nello zucchero.",
           "corretta": true
-        },
-        {
-          "testo": "Bruciando la foglia secca sopra lo strato di carbone attivo per raccogliere i fumi colorati.",
-          "corretta": false
-        },
-        {
-          "testo": "Mescolando la foglia con sassolini bagnati fino a ottenere una stratificazione spontanea basata sulla densità.",
-          "corretta": false
         }
       ],
-      "spiegazione": "L'esperimento della cromatografia si esegue triturando la foglia con dell'alcol per estrarne i pigmenti e inserendo poi un cartoncino (o carta assorbente); l'alcol risale trascinando i pigmenti che si separano in bande di colore differenti in base alle loro proprietà fisiche."
+      "spiegazione": "Durante la fotosintesi, l'energia solare catturata viene immagazzinata sotto forma di energia chimica nei legami delle molecole di zucchero sintetizzate. Il distrattore basato sulla scomposizione dello zucchero tramite calore solare per favorire la capillarità confonde grossolanamente il ruolo metabolico dell'energia con un meccanismo termico distruttivo. Questo serve a verificare se lo studente distingue la trasformazione energetica biologica dal semplice riscaldamento fisico."
     }
   ],
   "assistente_ia": {
