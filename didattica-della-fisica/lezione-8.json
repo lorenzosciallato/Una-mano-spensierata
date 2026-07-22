@@ -187,184 +187,184 @@
   ],
   "il_super_quiz": [
     {
-      "domanda": "Cos'è la densità dal punto di vista fisico secondo la lezione?",
+      "domanda": "Uno scienziato porta un blocco di ferro sigillato dalla Terra alla Luna, dove l'accelerazione di gravità è circa un sesto di quella terrestre. Quale affermazione descrive correttamente la variazione delle proprietà fisiche del blocco?",
       "opzioni": [
         {
-          "testo": "Il rapporto tra la massa e il volume di un corpo",
+          "testo": "La densità del blocco diminuisce proporzionalmente alla gravità, mentre la massa rimane costante.",
+          "corretta": false
+        },
+        {
+          "testo": "Il peso specifico del blocco diminuisce, mentre la sua densità si mantiene del tutto invariata.",
           "corretta": true
         },
         {
-          "testo": "La quantità di forza esercitata dalla gravità su un oggetto",
-          "corretta": false
-        },
-        {
-          "testo": "La misura dello spazio occupato da un corpo solido",
+          "testo": "Sia la densità che il peso specifico del blocco rimangono costanti perché la quantità di materia non varia.",
           "corretta": false
         }
       ],
-      "spiegazione": "La densità è definita fisicamente come il rapporto tra la massa e il volume di un corpo, ossia la massa di una porzione unitaria di sostanza."
+      "spiegazione": "Sulla Luna la gravità è ridotta, quindi la forza peso esercitata sul corpo diminuisce, riducendo di conseguenza il suo peso specifico che dipende direttamente da g. La densità, invece, dipende esclusivamente dalla massa e dal volume del corpo, due quantità che non cambiano nel trasferimento spaziale. Il distrattore che ipotizza una variazione della densità confonde quest'ultima con il peso specifico, dimenticando che la densità è una proprietà intensiva indipendente dall'accelerazione di gravità."
     },
     {
-      "domanda": "Perché la densità è classificata come una grandezza intensiva?",
+      "domanda": "Qual è la differenza concettuale che conta maggiormente tra la densità e il peso specifico di una sostanza?",
       "opzioni": [
         {
-          "testo": "Perché raddoppia quando si raddoppia il volume della sostanza",
+          "testo": "La densità descrive la quantità di materia in un certo volume, mentre il peso specifico misura lo spazio totale occupato da quella stessa materia.",
           "corretta": false
         },
         {
-          "testo": "Perché non dipende dalla quantità di materia, restando identica sia per un grammo sia per un chilogrammo di sostanza",
+          "testo": "La densità è una proprietà intensiva caratteristica di ciascun materiale, mentre il peso specifico è una proprietà estensiva che varia con la massa del campione.",
+          "corretta": false
+        },
+        {
+          "testo": "La densità mette in relazione la massa con il volume, mentre il peso specifico esprime l'effetto della forza di gravità sulla massa contenuta in quel volume.",
           "corretta": true
-        },
-        {
-          "testo": "Perché può essere misurata solo confrontandola direttamente con il pH dell'acqua",
-          "corretta": false
         }
       ],
-      "spiegazione": "Una grandezza è intensiva quando non dipende dalla quantità di sostanza considerata; la densità dell'acqua, ad esempio, è sempre pari a un grammo su millilitro indipendentemente dal volume totale."
+      "spiegazione": "La densità è il rapporto tra massa e volume, mentre il peso specifico considera la forza peso per unità di volume, incorporando l'accelerazione di gravità. Entrambe sono proprietà intensive, quindi l'opzione che definisce il peso specifico come estensivo rappresenta un errore concettuale. Chi confonde il peso specifico con il volume semplice trascura il fatto che si tratta di un rapporto che esprime l'azione della gravità su una porzione unitaria di materia."
     },
     {
-      "domanda": "Se si trasporta un corpo dalla Terra alla Luna, cosa accade alla sua densità e al suo peso specifico?",
+      "domanda": "Uno studente modella un pezzo di pongo a forma di pallina compatta e lo mette in acqua, osservando che affonda. Successivamente, prende lo stesso pezzo di pongo e lo modella a forma di barchetta cava, notando che ora galleggia. Come si spiega questa differenza?",
       "opzioni": [
         {
-          "testo": "La densità e il peso specifico rimangono invariati poiché il corpo non perde materia",
+          "testo": "Modellando il pongo a forma di barchetta si riduce la sua densità intrinseca rispetto a quella dell'acqua.",
           "corretta": false
         },
         {
-          "testo": "La densità diminuisce a causa della minore attrazione gravitazionale, mentre il peso specifico resta costante",
-          "corretta": false
-        },
-        {
-          "testo": "La densità rimane costante perché la massa e il volume non variano, mentre il peso specifico cambia a causa della riduzione di gravità",
+          "testo": "La forma a barchetta sposta un volume di acqua maggiore rispetto alla pallina, generando una spinta idrostatica sufficiente a bilanciare il peso.",
           "corretta": true
+        },
+        {
+          "testo": "La forma cava della barchetta distribuisce la forza peso su una superficie maggiore dell'acqua, impedendo l'affondamento.",
+          "corretta": false
         }
       ],
-      "spiegazione": "La densità dipende solo da massa e volume, che restano costanti nel viaggio spaziale. Il peso specifico invece cambia perché dipende dall'accelerazione di gravità locale, che sulla Luna è circa un sesto di quella terrestre."
+      "spiegazione": "La forza peso del pongo rimane identica in entrambi i casi perché la massa non è cambiata. Tuttavia, la forma a barchetta racchiude dell'aria e sposta un volume di acqua molto maggiore rispetto alla pallina compatta, generando una spinta di Archimede più grande in grado di equilibrare il peso. Il distrattore sulla distribuzione della forza peso sulla superficie si basa su una tipica confusione con il concetto di pressione, ignorando che il galleggiamento dipende dal volume di fluido rimosso e non dalla superficie di contatto."
     },
     {
-      "domanda": "Perché un blocchetto di pongo affonda nell'acqua, mentre lo stesso pongo modellato a forma di barchetta galleggia?",
+      "domanda": "Nella lezione si evidenzia che la densità (proprietà intensiva) deriva dal rapporto tra massa e volume (proprietà estensive). Quale affermazione esprime correttamente la differenza tra queste proprietà?",
       "opzioni": [
         {
-          "testo": "Perché la forma a barchetta riduce permanentemente la densità intrinseca del pongo",
-          "corretta": false
-        },
-        {
-          "testo": "Perché la forma concava racchiude aria e aumenta il volume totale, spostando più acqua e generando una spinta di Archimede maggiore",
+          "testo": "Le proprietà estensive sono additive e dipendono dalla quantità di materia considerata, mentre la proprietà intensiva risultante rimane costante per quella sostanza.",
           "corretta": true
         },
         {
-          "testo": "Perché la forma sagomata annulla la forza di attrazione della Terra sul pongo",
+          "testo": "Le proprietà estensive possono essere misurate sperimentalmente, mentre la densità è una qualità intuitiva non quantificabile direttamente.",
+          "corretta": false
+        },
+        {
+          "testo": "Le proprietà intensive variano proporzionalmente all'aumentare delle dimensioni del corpo, mentre quelle estensive rimangono stabili.",
           "corretta": false
         }
       ],
-      "spiegazione": "Il pongo mantiene la stessa densità, ma la barchetta racchiude aria e occupa un volume maggiore, spostando più acqua e aumentando così la spinta idrostatica verso l'alto fino a bilanciare la forza peso."
+      "spiegazione": "Le grandezze estensive come massa e volume si sommano quando uniamo due campioni dello stesso materiale, ma il loro rapporto (la densità) rimane costante ed è caratteristico della sostanza, definendo così una proprietà intensiva. L'affermazione che descrive la densità come puramente intuitiva confonde la definizione scientifica con le concezioni infantili analizzate da Piaget. L'opzione che inverte il comportamento delle proprietà intensive ed estensive rappresenta un errore di definizione basilare ma comune in chi studia superficialmente."
     },
     {
-      "domanda": "Nella didattica scolastica delle forze, come viene suggerito di etichettare la forza peso e la spinta di Archimede per far comprendere l'idea di interazione?",
+      "domanda": "Durante un'attività didattica nella scuola primaria, l'insegnante chiede di ordinare una pietra pomice grande, una pietra pomice piccola, un sasso grande e un sasso piccolo prima in base al peso (usando una bilancia) e poi in base alla pesantezza del materiale. Qual è lo scopo pedagogico principale di questa specifica sequenza prima dell'immersione?",
       "opzioni": [
         {
-          "testo": "Forza terra-oggetto e forza acqua-oggetto",
+          "testo": "Dimostrare che gli oggetti piccoli e leggeri tendono a galleggiare più facilmente rispetto a quelli grandi e pesanti.",
+          "corretta": false
+        },
+        {
+          "testo": "Insegnare ai bambini l'uso corretto degli strumenti di misura come la bilancia a due bracci e il dinamometro.",
+          "corretta": false
+        },
+        {
+          "testo": "Aiutare i bambini a separare il concetto di peso assoluto di un oggetto da quello di densità del materiale.",
           "corretta": true
-        },
-        {
-          "testo": "Forza gravitazionale e forza idrostatica",
-          "corretta": false
-        },
-        {
-          "testo": "Forza verso il basso e forza verso l'alto",
-          "corretta": false
         }
       ],
-      "spiegazione": "Chiamare la forza peso 'forza terra-oggetto' e la spinta di Archimede 'forza acqua-oggetto' aiuta i bambini a visualizzare la forza come un'interazione continua che coinvolge sempre due corpi."
+      "spiegazione": "L'attività serve a scardinare l'idea errata che il galleggiamento dipenda esclusivamente dal peso assoluto del corpo. I bambini vedono che la pomice grande (più pesante del sasso piccolo) galleggia, mentre il sasso piccolo (più leggero della pomice grande) affonda, permettendo di distinguere il peso dalla densità del materiale. Il distrattore focalizzato sugli strumenti di misura descrive un'azione reale svolta in classe ma secondaria rispetto al reale nodo concettuale dell'esperimento."
     },
     {
-      "domanda": "Secondo Piaget, a quale causa attribuiscono solitamente il galleggiamento delle barche i bambini fino a 5 anni?",
+      "domanda": "Un docente propone l'esperimento di un'arancia immersa in acqua: con la buccia l'arancia galleggia, mentre senza buccia affonda. Quale spiegazione scientifica giustifica questa osservazione apparentemente controintuitiva?",
       "opzioni": [
         {
-          "testo": "All'aria presente dentro e sotto lo scafo",
-          "corretta": false
-        },
-        {
-          "testo": "A ragioni animistiche o morali, ritenendo che galleggino perché devono farlo o perché sono forti e pesanti",
+          "testo": "La buccia contiene aria e aumenta significativamente il volume totale dell'arancia, abbassandone la densità media complessiva sotto quella dell'acqua.",
           "corretta": true
         },
         {
-          "testo": "Alla grande quantità di acqua presente nel mare rispetto a quella di una vasca",
+          "testo": "La buccia è impermeabile e impedisce all'acqua di penetrare all'interno dell'arancia aumentandone il peso specifico.",
+          "corretta": false
+        },
+        {
+          "testo": "Rimuovendo la buccia si riduce la massa dell'arancia, e questo calo di materia riduce anche la spinta idrostatica che riceveva.",
           "corretta": false
         }
       ],
-      "spiegazione": "Al primo stadio (fino a 5 anni), i bambini usano spiegazioni morali o animistiche: pensano che le barche galleggino perché sono costruite appositamente per farlo, o perché sono pesanti e forti e quindi riescono a vincere lo scontro con l'acqua."
+      "spiegazione": "La buccia dell'arancia è spugnosa e piena d'aria, il che aumenta notevolmente il volume del frutto a fronte di un piccolo incremento di massa, riducendo la densità complessiva del sistema sotto quella dell'acqua. Quando la buccia viene rimossa, il volume cala drasticamente e la polpa, densa e ricca d'acqua, affonda. Il distrattore sull'impermeabilità rappresenta un tipico errore intuitivo, che attribuisce il galleggiamento alla penetrazione dell'acqua anziché al rapporto complessivo tra massa e volume."
     },
     {
-      "domanda": "Nell'esperimento dell'immersione di un sassolino, cosa pensano i bambini fino a 7-8 anni riguardo alla causa dell'innalzamento del livello dell'acqua?",
+      "domanda": "In un esperimento si inserisce un sassolino in un contenitore riempito d'acqua per tre quarti. I bambini sotto gli 8 anni spiegano l'innalzamento del livello dell'acqua dicendo che 'sale a causa del peso'. Come evolve questa concezione intorno agli 11 anni secondo gli studi piagetiani?",
       "opzioni": [
         {
-          "testo": "Pensano che l'acqua salga a causa dello spazio geometrico occupato dal sasso",
+          "testo": "I bambini spiegano che l'acqua sale perché il corpo immerso galleggia grazie alla spinta dell'aria in esso contenuta.",
           "corretta": false
         },
         {
-          "testo": "Pensano che l'acqua salga a causa della forma appuntita del sasso",
-          "corretta": false
-        },
-        {
-          "testo": "Pensano che l'acqua salga a causa del peso del corpo immerso, inteso come forza che spinge l'acqua",
+          "testo": "I bambini collegano l'innalzamento dell'acqua esclusivamente al volume del corpo immerso, avendo differenziato massa e volume.",
           "corretta": true
+        },
+        {
+          "testo": "I bambini abbandonano la spiegazione legata alla materia e attribuiscono l'effetto alla forma geometrica del sasso.",
+          "corretta": false
         }
       ],
-      "spiegazione": "Fino a 7-8 anni, i bambini attribuiscono la salita dell'acqua alla forza peso del sasso che spinge il liquido verso l'alto. Solo verso i 10-11 anni comprendono che l'acqua sale a causa del volume (dello spazio occupato) del corpo."
+      "spiegazione": "Verso i 10-11 anni, i bambini acquisiscono la capacità di discriminare la massa dal volume e comprendono che l'acqua sale perché il corpo occupa uno spazio fisico che prima era a disposizione del liquido. Prima di questa età, i bambini attribuiscono l'effetto al peso, inteso intuitivamente come una forza attiva che spinge l'acqua verso l'alto. Il distrattore sulla forma geometrica confonde lo sviluppo cognitivo legato alla conservazione del volume con gli studi sul galleggiamento delle barche."
     },
     {
-      "domanda": "Cosa dimostra l'esperimento mentale della frammentazione del polistirolo nei bambini sotto i dieci anni?",
+      "domanda": "Se si chiede a un bambino di età inferiore ai 10 anni se una singola lenticchia o un frammento piccolissimo di polistirolo pesi qualcosa, la risposta tipica è che 'non pesa nulla'. Quale limite nel pensiero infantile spiega questa risposta?",
       "opzioni": [
         {
-          "testo": "Che i bambini non percepiscono il peso come una proprietà estensiva, ritenendo che un frammento piccolissimo non pesi nulla",
+          "testo": "L'incapacità di percepire visivamente oggetti così piccoli se non sono raggruppati in grandi quantità.",
+          "corretta": false
+        },
+        {
+          "testo": "La convinzione che la densità di un oggetto dipenda in larga parte dal suo volume complessivo.",
+          "corretta": false
+        },
+        {
+          "testo": "La mancata concezione del peso come proprietà estensiva e additiva della materia.",
           "corretta": true
-        },
-        {
-          "testo": "Che i bambini comprendono spontaneamente la teoria atomica della materia",
-          "corretta": false
-        },
-        {
-          "testo": "Che i bambini sanno calcolare matematicamente la densità delle particelle microscopiche",
-          "corretta": false
         }
       ],
-      "spiegazione": "I bambini credono che tagliando il polistirolo in pezzetti piccolissimi si arrivi a un frammento che pesa zero, poiché non esercita una pressione sensoriale. Questo mostra che non vedono il peso come una proprietà estensiva e additiva."
+      "spiegazione": "Sotto i 10 anni, i bambini tendono a non considerare il peso come una proprietà estensiva, ossia come la somma dei pesi delle singole parti microscopiche. Per loro il peso è legato alla sensazione di sforzo muscolare; se un oggetto è troppo leggero per essere percepito sensibilmente, dicono che non pesa nulla. Il distrattore visivo è errato poiché i bambini vedono chiaramente il frammento, ma negano l'esistenza del peso a causa di un limite concettuale di tipo additivo e non sensoriale."
     },
     {
-      "domanda": "Qual è lo scopo dell'attività didattica in cui si chiede di ordinare e poi immergere due pietre pomici e due sassi di dimensioni diverse?",
+      "domanda": "Perché nella didattica delle scienze, introducendo concetti astratti come la densità, si raccomanda l'uso dello scaffolding (domande guidate, schede strutturate) rispetto a un'esplorazione del tutto libera?",
       "opzioni": [
         {
-          "testo": "Insegnare ai bambini come misurare il volume dei liquidi con una siringa graduata",
-          "corretta": false
-        },
-        {
-          "testo": "Escludere il peso complessivo come fattore che determina l'affondamento, separando la pesantezza del materiale dal peso dell'oggetto",
+          "testo": "Per prevenire l'ansia e la frustrazione derivanti da un concetto complesso, che potrebbero spingere gli studenti a rispondere a caso.",
           "corretta": true
         },
         {
-          "testo": "Dimostrare che gli oggetti grandi affondano sempre più velocemente di quelli piccoli",
+          "testo": "Per evitare che i bambini formulino ipotesi errate o non scientifiche prima di aver appreso la regola corretta.",
+          "corretta": false
+        },
+        {
+          "testo": "Per accelerare i tempi della lezione garantendo che i diversi gruppi arrivino alla stessa conclusione teorica contemporaneamente.",
           "corretta": false
         }
       ],
-      "spiegazione": "L'esperimento dimostra che entrambe le pietre pomici galleggiano e i due sassi affondano indipendentemente dal loro peso complessivo. Questo aiuta i bambini a staccare il concetto intuitivo di pesantezza del materiale (densità) dal peso dell'oggetto."
+      "spiegazione": "Il concetto di densità è estremamente astratto e la mancata discriminazione tra peso e volume può generare una forte confusione negli studenti. Lo scaffolding fornisce un supporto temporaneo che guida il ragionamento senza imporre soluzioni preconfezionate, riducendo lo stress cognitivo e l'ansia da prestazione. Il distrattore che propone di evitare la formulazione di ipotesi errate contraddice i principi della didattica attiva, che vede nell'errore una tappa fondamentale dell'apprendimento."
     },
     {
-      "domanda": "Secondo la metodologia dell'inquiry (IPSE/IBSE), come deve essere formulata una domanda affinché sia considerata 'investigabile'?",
+      "domanda": "Durante una lezione sul galleggiamento, un insegnante vuole impostare un'attività sperimentale seguendo il metodo dell'indagine scientifica. Quale delle seguenti domande rappresenta una vera 'domanda investigabile' mediante esperimento?",
       "opzioni": [
         {
-          "testo": "Deve permettere di fare un esperimento controllato in cui si fa variare un solo parametro alla volta per ricevere un sì o un no dalla natura",
+          "testo": "Per quale motivo la densità è una proprietà fondamentale che determina se un materiale affonda o galleggia?",
+          "corretta": false
+        },
+        {
+          "testo": "Il comportamento di galleggiamento di un oggetto cambia se variamo solo la quantità di acqua all'interno dello stesso contenitore?",
           "corretta": true
         },
         {
-          "testo": "Deve essere una domanda astratta sul perché profondo delle leggi fisiche della natura",
-          "corretta": false
-        },
-        {
-          "testo": "Deve essere una domanda teorica a cui si può rispondere memorizzando le formule del libro",
+          "testo": "Qual è la forza invisibile che permette a una nave di acciaio di non affondare nell'oceano?",
           "corretta": false
         }
       ],
-      "spiegazione": "Una domanda investigabile è una domanda pratica a cui la natura può rispondere con un chiaro sì o no tramite un esperimento in cui si controllano le variabili, cambiandone solo una alla volta."
+      "spiegazione": "Una domanda investigabile deve consentire di progettare un esperimento controllato in cui si varia un solo fattore alla volta per ottenere una risposta osservabile o misurabile. Chiedere se la quantità d'acqua influenzi il galleggiamento permette di fare un test diretto tenendo costanti l'oggetto e il contenitore e variando solo il livello dell'acqua. I distrattori sono classiche domande basate sul perché teorico, utili per far emergere le idee pregresse o per stimolare la discussione, ma non adatte a guidare direttamente un'indagine sperimentale controllata."
     }
   ],
   "assistente_ia": {
