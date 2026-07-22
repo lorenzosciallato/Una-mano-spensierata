@@ -205,184 +205,184 @@
   ],
   "il_super_quiz": [
     {
-      "domanda": "Cosa sostiene il paradosso del fisico Richard Feynman del 1963 riguardo alla natura dell'energia?",
+      "domanda": "Durante un'attività in classe, un bambino afferma che una singola biglia ferma sul tavolo possiede in se stessa una quantità definita di energia gravitazionale, proprio come possiede il suo peso. Come dovrebbe intervenire l'insegnante per correggere questa idea in base alla fisica del concetto?",
       "opzioni": [
         {
-          "testo": "Che l'energia è un fluido materiale reale simile al calore che si accumula nei corpi caldi.",
-          "corretta": false
-        },
-        {
-          "testo": "Che noi non abbiamo cognizione di cosa sia l'energia in sé, non essendo la descrizione di un meccanismo o fenomeno concreto ma una quantità matematica astratta.",
+          "testo": "Spiegando che l'energia non è una proprietà intrinseca di un singolo oggetto isolato, ma è una grandezza associata a un sistema di corpi, in questo caso il sistema biglia-Terra.",
           "corretta": true
         },
         {
-          "testo": "Che l'energia coincide esattamente con la forza applicata perpendicolarmente a una superficie di contatto.",
+          "testo": "Ricordando che il peso della biglia è la somma delle forze sulle singole particelle, mentre l'energia della biglia si manifesta solo se la biglia viene messa in movimento orizzontale.",
+          "corretta": false
+        },
+        {
+          "testo": "Facendo notare che l'energia è una sostanza invisibile immagazzinata all'interno della biglia che si consuma non appena l'oggetto inizia a muoversi.",
           "corretta": false
         }
       ],
-      "spiegazione": "Feynman evidenziò come l'energia sia una grandezza puramente matematica e astratta che rimane costante dopo i mutamenti della natura, e non la descrizione di un meccanismo o di un fenomeno concreto."
+      "spiegazione": "La risposta corretta è corretta perché l'energia non è una proprietà intrinseca del singolo corpo ma è una grandezza associata a un sistema di corpi interagenti. Il distrattore basato sulle singole particelle è insidioso perché confonde la scomposizione della forza peso discussa a lezione con la definizione stessa di energia. Uno studente distratto potrebbe ricordare la spiegazione sulla forza peso agente sulle singole particelle e applicarla erroneamente all'energia."
     },
     {
-      "domanda": "Qual è la differenza fondamentale tra l'applicazione della forza peso e il concetto di energia rispetto a un corpo?",
+      "domanda": "Qual è la differenza fondamentale tra i concetti di forza e di energia quando vengono applicati per descrivere il funzionamento di un dispositivo come una fionda?",
       "opzioni": [
         {
-          "testo": "La forza peso è associata alle singole particelle e può essere pensata per una di esse, mentre l'energia è una grandezza che non esiste autonomamente e ha senso solo se riferita a un sistema (insieme di particelle).",
+          "testo": "La forza misura l'energia muscolare effettivamente consumata nel tendere l'elastico, mentre l'energia rappresenta lo sforzo muscolare istantaneo percepito dal bambino.",
+          "corretta": false
+        },
+        {
+          "testo": "La forza è l'interazione diretta e simultanea tra i componenti come dito ed elastico, mentre l'energia rappresenta la capacità potenziale di produrre un cambiamento accumulandosi durante l'allungamento.",
           "corretta": true
         },
         {
-          "testo": "La forza peso si applica solo ai sistemi isolati, mentre l'energia descrive unicamente le singole particelle prive di massa.",
-          "corretta": false
-        },
-        {
-          "testo": "La forza peso dipende dallo stato iniziale e finale del corpo, mentre l'energia dipende esclusivamente dal tipo di interazione meccanica simultanea.",
+          "testo": "La forza agisce in modo continuo durante ogni fase del lancio, mentre l'energia si attiva unicamente nel momento esatto in cui la pallina si stacca dall'elastico.",
           "corretta": false
         }
       ],
-      "spiegazione": "Mentre la forza peso può essere pensata come la somma delle forze agenti sulle singole particelle, l'energia non gode di esistenza autonoma e può essere definita solo in relazione a un sistema complesso formato da un insieme di particelle."
+      "spiegazione": "La forza descrive un'azione o interazione diretta e simultanea tra corpi, come dito ed elastico, mentre l'energia elastica accumulata rappresenta una capacità potenziale di produrre un cambiamento, ovvero il lancio. Il distrattore relativo allo sforzo muscolare è molto insidioso poiché fa leva sulla percezione corporea immediata del bambino, che a lezione viene indicata come il primo ostacolo cognitivo da superare per distinguere i due concetti fisici. Questa confusione è tipica di chi non ha ancora compreso la distinzione formale tra sensazione e grandezza fisica."
     },
     {
-      "domanda": "Per quale motivo i fisici definiscono l'energia come una variabile (o funzione) di stato?",
+      "domanda": "Un insegnante vuole spiegare perché in fisica l'energia è definita come una variabile di stato e propone un'analogia con lo spostamento di un oggetto tra due posizioni A e B. Quale delle seguenti affermazioni descrive correttamente questa proprietà energetica?",
       "opzioni": [
         {
-          "testo": "Perché il suo valore complessivo dipende strettamente dal percorso termodinamico o dal meccanismo seguito durante la trasformazione.",
+          "testo": "L'energia totale di un sistema aumenta in modo continuo a ogni passaggio di stato, accumulandosi come in una riserva fissa che dipende dal tempo impiegato per il percorso.",
           "corretta": false
         },
         {
-          "testo": "Perché è impossibile misurarne il valore assoluto in un sistema, costringendo a calcolare solo la sua variazione tra lo stato iniziale e lo stato finale.",
+          "testo": "La variazione di energia dipende in modo determinante dal tipo di percorso e dal meccanismo specifico utilizzato per transitare dallo stato A allo stato B.",
+          "corretta": false
+        },
+        {
+          "testo": "Non è possibile misurare il valore assoluto dell'energia racchiusa nel sistema, ma si calcola solo la variazione tra lo stato iniziale e finale, indipendentemente dal percorso.",
           "corretta": true
-        },
-        {
-          "testo": "Perché varia continuamente a seconda della forma geometrica del contenitore o del volume di fluido immagazzinato.",
-          "corretta": false
         }
       ],
-      "spiegazione": "Poiché misurare l'energia assoluta di un sistema è impossibile, i fisici utilizzano le variabili di stato, le quali dipendono unicamente dalle condizioni iniziali e finali del sistema, ignorando il percorso intermedio della trasformazione."
+      "spiegazione": "L'energia è una variabile di stato perché la sua variazione dipende solo dallo stato iniziale e finale del sistema, rendendo irrilevante il percorso specifico seguito. Il distrattore che fa dipendere la variazione dal percorso è particolarmente insidioso perché asseconda l'intuizione comune secondo cui il modo in cui avviene un cambiamento debba influenzare il bilancio energetico finale. Capire che il percorso non conta è il nucleo del concetto di funzione di stato in termodinamica."
     },
     {
-      "domanda": "Nelle attività didattiche finalizzate a discriminare tra forza ed energia, quali strumenti di rappresentazione grafica vengono proposti?",
+      "domanda": "Durante l'esperimento del calorimetro di Joule, un gruppo di studenti nota che l'aumento di temperatura dell'acqua è leggermente inferiore a quanto calcolato teoricamente a partire dalla caduta dei pesetti. Qual è la spiegazione scientificamente corretta di questo fenomeno secondo i principi della termodinamica discussi a lezione?",
       "opzioni": [
         {
-          "testo": "Le frecce per indicare le forze (agenti simultaneamente tra due corpi) e i post-it mobili per indicare l'energia (qualcosa che si trasferisce).",
+          "testo": "Parte dell'energia meccanica si è dissipata nell'ambiente circostante sotto forma di calore o rumore, poiché il pianeta Terra non è un sistema isolato.",
           "corretta": true
         },
         {
-          "testo": "I vettori geometrici per la forza peso e i grafici a torta per quantificare l'energia cinetica delle particelle.",
+          "testo": "L'energia potenziale dei pesetti è stata parzialmente distrutta a causa dell'attrito delle palette, riducendo l'energia totale dell'universo.",
           "corretta": false
         },
         {
-          "testo": "I dinamometri per misurare le forze elastiche e le termocamere per visualizzare lo spostamento dell'energia potenziale.",
+          "testo": "L'acqua ha consumato una frazione di energia interna per stabilizzare la propria temperatura prima di potersi riscaldare.",
           "corretta": false
         }
       ],
-      "spiegazione": "Per aiutare i bambini a non confondere i due concetti, la didattica suggerisce l'uso visivo di frecce per le forze (interazione simultanea tra corpi) e di post-it mobili per l'energia (che si sposta e si trasferisce)."
+      "spiegazione": "La Terra e il calorimetro reale sono sistemi non isolati in cui parte dell'energia si dissipa inevitabilmente nell'ambiente come calore, pur conservandosi a livello universale. Il distrattore sulla distruzione dell'energia è insidioso perché rispecchia la misconsezione comune secondo cui l'energia possa essere consumata o svanire nel nulla quando non produce più il lavoro desiderato. La fisica insegna invece che l'energia si conserva e viene solo dissipata in forme meno organizzate."
     },
     {
-      "domanda": "Perché James Prescott Joule non riuscì a dimostrare la perfetta conservazione dell'energia (assenza di perdite) nel suo celebre esperimento con il calorimetro?",
+      "domanda": "Nella lezione si distingue tra trasformazione e trasferimento dell'energia. Qual è la differenza concettuale che conta tra questi due processi?",
       "opzioni": [
         {
-          "testo": "Perché nei sistemi reali una parte dell'energia viene inevitabilmente dissipata nell'ambiente circostante, solitamente sotto forma di calore.",
+          "testo": "Il trasferimento avviene in presenza di uno scambio di materia tra sistemi chiusi, mentre la trasformazione riguarda la dissipazione di calore verso l'ambiente esterno.",
+          "corretta": false
+        },
+        {
+          "testo": "Il trasferimento comporta il passaggio di energia da un sistema a un altro, mentre la trasformazione comporta il cambiamento della forma in cui l'energia si manifesta all'interno del sistema.",
           "corretta": true
         },
         {
-          "testo": "Perché la forza peso dei pesetti variava in modo anomalo a causa della rotazione delle carrucole.",
-          "corretta": false
-        },
-        {
-          "testo": "Perché lo strumento a palette modificava la massa molecolare dell'acqua durante l'agitazione.",
+          "testo": "Il trasferimento genera una riduzione di energia utilizzabile dal sistema, mentre la trasformazione mantiene inalterata la quantità di forza che i corpi esercitano.",
           "corretta": false
         }
       ],
-      "spiegazione": "Nei sistemi reali, a causa degli attriti e delle interazioni termiche, una quota di energia viene sempre dissipata nell'ambiente sotto forma di calore diffuso e non utile, impedendo una conversione meccanica perfetta al 100%."
+      "spiegazione": "Il trasferimento implica il passaggio di energia tra sistemi differenti (come il calore scambiato o il lavoro compiuto), mentre la trasformazione ne muta solo la forma (ad esempio da chimica a cinetica) entro i confini dello stesso sistema. Il distrattore incentrato sui sistemi chiusi confonde i limiti dello scambio di materia con i meccanismi di interazione energetica. Uno studente che ha memorizzato le definizioni in modo confuso tenderà ad associare erroneamente questi termini tecnici."
     },
     {
-      "domanda": "In termodinamica, come vengono classificati il sistema Terra e l'universo rispetto allo scambio di materia ed energia?",
+      "domanda": "Un docente brucia un cucchiaino di zucchero direttamente su una fiamma per mostrare la combustione rapida, poi chiede alla classe di confrontare questa reazione con l'utilizzo dello zucchero nel corpo umano. Quale concetto fondamentale sul metabolismo cellulare viene evidenziato da questo confronto?",
       "opzioni": [
         {
-          "testo": "La Terra è un sistema isolato che conserva sia la massa che l'energia, mentre l'universo è un sistema aperto che scambia materia.",
+          "testo": "Il glucosio bruciato sulla fiamma si trasforma in calore, mentre all'interno del corpo viene convertito in energia cinetica senza alcuna produzione di calore o dissipazione.",
           "corretta": false
         },
         {
-          "testo": "La Terra è un sistema aperto a tutti gli scambi spaziali, mentre l'universo si comporta come un sistema chiuso e non additivo.",
+          "testo": "La reazione sulla fiamma richiede ossigeno per liberare calore, mentre la respirazione cellulare è un processo meccanico che non coinvolge i legami chimici.",
           "corretta": false
         },
         {
-          "testo": "La Terra è un sistema chiuso (consente solo lo scambio di energia ma non di materia), mentre l'universo è un sistema isolato (conserva sia la massa sia l'energia).",
+          "testo": "La cellula smonta il glucosio in decine di reazioni graduali per estrarre l'energia in piccoli incrementi immagazzinandola nell'ATP, evitando che il rilascio termico improvviso la danneggi.",
           "corretta": true
         }
       ],
-      "spiegazione": "La Terra scambia energia con lo spazio ma mantiene la materia confinata al suo interno (sistema chiuso), mentre l'universo, non avendo un ambiente esterno, rappresenta un sistema isolato in cui massa ed energia si conservano."
+      "spiegazione": "La cellula biologica ottimizza il rendimento energetico dividendo il glucosio attraverso una complessa catena di circa cinquanta reazioni metaboliche, immagazzinando l'energia nell'ATP ed evitando picchi termici distruttivi. Il distrattore che esclude la produzione di calore corporeo è insidioso perché separa in modo errato la biologia dalla fisica termodinamica. In realtà, una parte dell'energia viene sempre dissipata sotto forma di calore anche nei processi metabolici."
     },
     {
-      "domanda": "Nell'esperimento della siringa a pistone mobile contenente HCl e sodio, cosa accade all'energia interna se il pistone viene mantenuto bloccato?",
+      "domanda": "Nella progettazione di un percorso didattico sull'energia per la scuola primaria, un maestro decide di iniziare introducendo subito la legge di conservazione dell'energia e formule matematiche semplificate. Perché questo approccio didattico è sconsigliato dalle ricerche analizzate a lezione?",
       "opzioni": [
         {
-          "testo": "L'energia dei legami chimici si conserva sotto forma di energia potenziale elastica del cilindro di plastica.",
+          "testo": "Perché la legge di conservazione dell'energia si applica unicamente ai sistemi biologici complessi, che non possono essere analizzati prima della scuola secondaria.",
           "corretta": false
         },
         {
-          "testo": "La quota di energia interna liberata dai legami chimici che avrebbe dovuto compiere il lavoro di sollevamento si trasforma interamente in calore.",
+          "testo": "Perché la conservazione si comprende solo dopo aver imparato a quantificare e riconoscere le diverse forme di energia, mentre le formule precoci ostacolano la costruzione di un modello intuitivo.",
           "corretta": true
         },
         {
-          "testo": "L'energia interna del gas idrogeno si annulla per ripristinare la pressione atmosferica standard.",
+          "testo": "Perché i bambini non hanno ancora sviluppato la coordinazione motoria necessaria per effettuare misure fisiche sul movimento e sulle batterie.",
           "corretta": false
         }
       ],
-      "spiegazione": "Se il pistone è bloccato, lo spostamento è nullo e il sistema non compie lavoro meccanico. Di conseguenza, tutta la variazione di energia interna derivante dalla reazione chimica si trasforma in calore disperso."
+      "spiegazione": "La didattica moderna sconsiglia di partire dalle formule e dal principio di conservazione, poiché i bambini devono prima familiarizzare con la quantificazione qualitativa e i trasferimenti concreti. Il distrattore che limita la conservazione ai sistemi biologici è insidioso perché i bambini associano facilmente la conservazione a modelli vivi come la fotosintesi, scambiandola per una regola esclusiva di quel campo. L'insegnante deve invece favorire una visione universale e unitaria dell'energia."
     },
     {
-      "domanda": "Perché la cellula vivente decompone la molecola di glucosio attraverso una sequenza di circa 50 reazioni chimiche (metabolismo)?",
+      "domanda": "Un bambino afferma che la pila dà la forza al trenino giocattolo per farlo muovere, e quando la pila si scarica la forza scompare. Quale misconcetto tipico del pensiero infantile emerge da questa affermazione?",
       "opzioni": [
         {
-          "testo": "Per evitare l'autocombustione letale che avverrebbe se tutta l'energia dei legami venisse rilasciata istantaneamente in un'unica reazione violenta.",
+          "testo": "La sovrapposizione tra i concetti di forza e di energia, interpretando quest'ultima come un agente causale o un fluido attivo racchiuso negli oggetti che si consuma con l'azione.",
           "corretta": true
         },
         {
-          "testo": "Per aumentare il numero di atomi di carbonio disponibili per la fotosintesi all'interno dei cloroplasti.",
+          "testo": "La convinzione che gli oggetti inanimati come i giocattoli possiedano un'energia biologica intrinseca che si rigenera nel tempo.",
           "corretta": false
         },
         {
-          "testo": "Perché la reazione chimica singola richiederebbe l'attivazione di un condensatore ad altissimo voltaggio.",
+          "testo": "La supposizione che il movimento del trenino sia causato da forze di attrazione gravitazionale tra la pila e le ruote.",
           "corretta": false
         }
       ],
-      "spiegazione": "Se la cellula bruciasse il glucosio in un colpo solo, libererebbe l'energia termica troppo velocemente, distruggendo la cellula stessa. Attraverso il metabolismo, l'energia viene estratta gradualmente e immagazzinata nell'ATP."
+      "spiegazione": "L'idea che un oggetto contenga una forza o un fluido attivo che si consuma è un classico misconcetto infantile che sovrappone forza ed energia. Il distrattore sull'energia biologica è insidioso perché descrive correttamente un'altra credenza infantile (l'energia come proprietà esclusiva dei viventi), ma la applica in modo non pertinente al trenino elettrico. Lo studente deve saper distinguere quale specifico misconcetto sia attivo nella spiegazione del giocattolo."
     },
     {
-      "domanda": "Quale tra le seguenti rappresenta una tipica concezione spontanea dei bambini sull'energia rilevata dalle ricerche psicopedagogiche?",
+      "domanda": "Durante l'attività con la fionda in classe, un alunno dice di fare molta forza perché sente i muscoli del braccio molto tesi e stanchi mentre tiene l'elastico tirato. Come deve guidare l'insegnante la riflessione del bambino per distinguere lo sforzo corporeo dalla forza fisica?",
       "opzioni": [
         {
-          "testo": "Ritengono che l'energia sia associata unicamente ad esseri viventi o oggetti in movimento attivo, e che svanisca del tutto una volta che l'azione si è interrotta.",
+          "testo": "Spiegando che la forza muscolare e l'energia elastica sono la stessa grandezza fisica, misurabile in Joule direttamente sulla pelle del bambino.",
+          "corretta": false
+        },
+        {
+          "testo": "Dimostrando che se l'elastico non viene rilasciato per lanciare la pallina, la fionda non sta applicando alcuna forza reale sul sistema.",
+          "corretta": false
+        },
+        {
+          "testo": "Aiutandolo a comprendere che lo sforzo è una sensazione muscolare soggettiva, mentre la forza fisica è un'interazione misurabile tra corpi che produce un allungamento dell'elastico.",
           "corretta": true
-        },
-        {
-          "testo": "Associano immediatamente il cibo a un serbatoio di energia chimica potenziale conservata nei legami molecolari.",
-          "corretta": false
-        },
-        {
-          "testo": "Comprendono spontaneamente che l'energia di un sistema isolato si conserva intatta anche dopo urti o attriti.",
-          "corretta": false
         }
       ],
-      "spiegazione": "Nel pensiero infantile l'energia è vista come un agente causale legato alla vita o al movimento macroscopico (come Superman o una trottola) e sussiste l'idea errata che essa scompaia del tutto una volta terminato il movimento."
+      "spiegazione": "Lo sforzo muscolare è una percezione interna e soggettiva di fatica, mentre la forza è un'interazione fisica misurabile tra corpi esterni. Il distrattore sull'assenza di forza se non c'è lancio è insidioso perché confonde la forza statica con il lavoro meccanico, il quale richiede uno spostamento reale per essere diverso da zero. Questa distinzione è cruciale per evitare che gli studenti ritengano nullo lo sforzo in assenza di movimento."
     },
     {
-      "domanda": "Perché per i primi esperimenti didattici sull'energia si raccomanda di lavorare esclusivamente su piani orizzontali?",
+      "domanda": "In un'attività di Inquiry (IBSE), un gruppo di alunni osserva che una siringa con un gas si espande sollevando un piccolo peso quando viene scaldata e scrive nel report: il gas ha deciso di riscaldarsi perché voleva sollevare il peso. Quale abilità fondamentale del processo di indagine scientifica deve essere potenziata dall'insegnante?",
       "opzioni": [
         {
-          "testo": "Per escludere la complessità dell'energia potenziale gravitazionale, che i bambini tendono ad associare all'oggetto singolo e non alla relazione di sistema con la Terra.",
+          "testo": "La distinzione tra l'osservazione di un'evidenza sperimentale (il gas si espande e il peso si solleva) e la formulazione di spiegazioni causali rigorose, evitando attribuzioni antropomorfiche.",
           "corretta": true
         },
         {
-          "testo": "Perché sui piani orizzontali la spinta idrostatica dell'aria e la legge di Boyle si annullano a vicenda.",
+          "testo": "La capacità di memorizzare le formule termodinamiche del lavoro dei gas per calcolare la variazione di entropia del sistema.",
           "corretta": false
         },
         {
-          "testo": "Per consentire all'elastico della fionda di deformarsi accumulando una quantità di lavoro pari a zero.",
+          "testo": "La tecnica di progettazione di un sistema isolato in grado di azzerare la dissipazione di calore verso l'esterno.",
           "corretta": false
         }
       ],
-      "spiegazione": "I piani inclinati introducono la gravità. I bambini faticano a comprendere l'altezza come proprietà relazionale del sistema (oggetto-Terra) e tendono a considerarla un attributo intrinseco dell'oggetto; per questo si consiglia di iniziare sui piani orizzontali."
+      "spiegazione": "L'Inquiry richiede che gli studenti imparino a raccogliere evidenze oggettive e a formulare spiegazioni basate su fatti, separandole da interpretazioni soggettive o antropomorfiche. Il distrattore incentrato sulla memorizzazione di formule complesse è insidioso perché simula un rigore scientifico accademico che però tradisce lo spirito dell'Inquiry, basato sulla comprensione critica e non sull'apprendimento mnemonico. L'insegnante deve guidare la classe verso l'argomentazione basata su prove reali."
     }
   ],
   "assistente_ia": {
