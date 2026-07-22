@@ -187,184 +187,184 @@
   ],
   "il_super_quiz": [
     {
-      "domanda": "Secondo la prassi scientifica descritta nella lezione, per quanti anni dovrebbe essere sperimentato un nuovo vaccino prima di essere somministrato alla popolazione?",
+      "domanda": "Un paziente accusa i sintomi di un'infezione virale e vorrebbe assumere un antibiotico per accelerare la guarigione. Basandosi sulla spiegazione del docente, quale spiegazione descrive la corretta linea d'azione?",
       "opzioni": [
         {
-          "testo": "Almeno un anno, monitorando gli effetti collaterali a breve termine.",
+          "testo": "L'antibiotico va assunto subito poiché, sebbene non elimini il virus direttamente, stimola chimicamente le cellule immunitarie a produrre anticorpi specifici.",
           "corretta": false
         },
         {
-          "testo": "Almeno cinque anni, testandolo su specie diverse di animali e su volontari.",
+          "testo": "L'uso dell'antibiotico è inutile perché non esistono farmaci in grado di distruggere chimicamente la maggior parte dei virus; la risoluzione dell'infezione dipende dall'azione autonoma del sistema immunitario.",
           "corretta": true
         },
         {
-          "testo": "Almeno dieci anni, esclusivamente su cellule coltivate in vitro.",
+          "testo": "È preferibile evitare l'antibiotico e assumere integratori alimentari mirati, in quanto aumentano la lattoferrina e attivano i macrofagi in assenza di antivirali.",
           "corretta": false
         }
       ],
-      "spiegazione": "Nella lezione viene specificato che per prassi un vaccino andrebbe sperimentato per almeno cinque anni su diverse specie animali ed eventualmente su volontari umani per poterne garantire l'assoluta sicurezza."
+      "spiegazione": "La risposta corretta è corretta perché la lezione specifica che non disponiamo di antibiotici contro i virus e che gli integratori non hanno un'efficacia scientificamente provata per 'distruggerli chimicamente'; solo il nostro sistema immunitario è in grado di rispondere autonomamente alla maggior parte delle infezioni virali. Il distrattore degli integratori è particolarmente insidioso perché riflette una credenza commerciale molto diffusa che il docente smentisce esplicitamente durante la spiegazione."
     },
     {
-      "domanda": "Qual è la percentuale di serotonina corporea che viene prodotta dai batteri del microbiota intestinale?",
+      "domanda": "In un esperimento di laboratorio, viene interrotto chirurgicamente il nervo vago in un modello animale. Quale conseguenza è prevedibile osservare riguardo alla comunicazione tra intestino e cervello descritta nella lezione?",
       "opzioni": [
         {
-          "testo": "Circa il 10%, prodotta in risposta a stimoli alimentari.",
+          "testo": "La produzione di serotonina da parte dei batteri intestinali si azzera, poiché manca lo stimolo nervoso cerebrale che ne pilota la sintesi nel lume intestinale.",
           "corretta": false
         },
         {
-          "testo": "Circa il 50%, utilizzata poi nel sistema nervoso centrale.",
+          "testo": "Le funzioni cognitive dell'animale rimarranno inalterate perché la serotonina intestinale viene trasportata al cervello principalmente attraverso la circolazione sanguigna generale.",
+          "corretta": false
+        },
+        {
+          "testo": "Il microbiota intestinale continuerà a produrre serotonina, ma questa non potrà più raggiungere e influenzare direttamente il sistema nervoso centrale tramite le terminazioni nervose.",
           "corretta": true
-        },
-        {
-          "testo": "Circa l'80%, immagazzinata esclusivamente nelle pareti dell'addome.",
-          "corretta": false
         }
       ],
-      "spiegazione": "La fonte indica esplicitamente che il 50% della serotonina, un neurotrasmettitore fondamentale usato nel sistema nervoso centrale, è prodotta nell'intestino da particolari specie batteriche che compongono il microbiota."
+      "spiegazione": "La risposta corretta evidenzia come la serotonina prodotta dal microbiota nell'intestino raggiunga il cervello attraverso le micro-terminazioni del nervo vago che si irradiano nelle pareti intestinali. Il distrattore che prevede l'azzeramento della serotonina è insidioso perché confonde la direzione del segnale e la fonte di sintesi: la produzione di serotonina è un'attività autonoma del microbiota intestinale, non guidata dal sistema nervoso centrale."
     },
     {
-      "domanda": "In che modo i neurotrasmettitori prodotti a livello intestinale dal microbiota riescono a raggiungere il cervello?",
+      "domanda": "Qual è la differenza fondamentale, cruciale per le scelte terapeutiche, tra un'infezione causata da un comune batterio intestinale (come Escherichia coli) e una causata da una rickettsia?",
       "opzioni": [
         {
-          "testo": "Attraverso le micro-terminazioni del nervo vago, che si irradia dal tronco encefalico a tutto l'addome.",
+          "testo": "I batteri comuni possono essere eliminati con normali antibiotici, mentre le rickettsie, moltiplicandosi solo all'interno delle cellule ospiti come i virus, richiedono trattamenti complessi e antibiotici altamente tossici.",
           "corretta": true
         },
         {
-          "testo": "Attraverso il flusso sanguigno, superando la barriera ematoencefalica per diffusione semplice.",
+          "testo": "I batteri comuni possiedono mitocondri per la respirazione cellulare, mentre le rickettsie utilizzano solo enzimi localizzati sulla membrana plasmatica.",
           "corretta": false
         },
         {
-          "testo": "Attraverso il midollo spinale, risalendo le fibre sensitive somatiche.",
+          "testo": "I batteri comuni hanno una parete cellulare che protegge il cromosoma circolare, mentre le rickettsie sono prive di parete e contengono DNA lineare sensibile ai disinfettanti.",
           "corretta": false
         }
       ],
-      "spiegazione": "La lezione spiega che i neurotrasmettitori come la serotonina giungono al cervello dall'intestino passando per le terminazioni del nervo vago, un grande nervo che parte dal tronco encefalico e si dirama capillarmente nell'addome."
+      "spiegazione": "La risposta corretta descrive accuratamente la rickettsia come un microrganismo con comportamento intermedio (si riproduce solo in cellule ospiti come i virus), rendendo le infezioni complesse da trattare e non curabili con i normali antibiotici. Il distrattore sui mitocondri confonde la biologia cellulare, in quanto né i batteri né le rickettsie possiedono mitocondri, effettuando la respirazione tramite enzimi di membrana."
     },
     {
-      "domanda": "Per quale motivo biologico le rickettsie sono considerate microrganismi intermedi tra virus e batteri?",
+      "domanda": "Uno studente osserva al microscopio un paramecio che ha appena fagocitato dei lieviti colorati con un indicatore di pH neutro (rosso). Dopo alcuni minuti, nota che i vacuoli digestivi cambiano colore diventando verdi e poi giallo-arancioni. Come si spiega scientificamente questa transizione cromatica?",
       "opzioni": [
         {
-          "testo": "Perché possiedono una parete di silicio ma sono prive di un cromosoma circolare.",
+          "testo": "I vacuoli digestivi fondono il loro contenuto con i cloroplasti del paramecio, i quali avviano la fotosintesi clorofilliana sul lievito ingerito.",
           "corretta": false
         },
         {
-          "testo": "Perché, pur avendo dimensioni e caratteristiche dei batteri, si riproducono solo all'interno di cellule ospiti come i virus.",
+          "testo": "Il paramecio digerisce il cibo prima in un ambiente fortemente acido, che colora di verde il vacuolo, e successivamente in un ambiente basico che ne altera nuovamente il colore.",
           "corretta": true
         },
         {
-          "testo": "Perché non respirano ossigeno e si muovono esclusivamente tramite pseudopodi.",
+          "testo": "La variazione di colore è dovuta all'esplosione degli estrosomi che rilasciano enzimi digestivi proteici direttamente nel citoplasma del paramecio.",
           "corretta": false
         }
       ],
-      "spiegazione": "Le rickettsie sono considerate una forma di transizione perché possiedono dimensioni e caratteristiche affini ai batteri, ma sono parassiti intracellulari obbligati, cioè capaci di moltiplicarsi solo dentro le cellule ospiti proprio come i virus."
+      "spiegazione": "La corretta descrive l'andamento della digestione intracellulare, che prevede una prima fase acida (evidenziata dal viraggio al verde) e una successiva fase basica. Il distrattore degli estrosomi è ingannevole perché cita strutture realmente presenti sotto la pellicola del paramecio, ma queste servono all'estrusione di sostanze di difesa o tossine all'esterno, non alla digestione interna del vacuolo."
     },
     {
-      "domanda": "Quali proteine e fonti energetiche coordinano la flessione e il movimento delle ciglia cellulari nei protisti?",
+      "domanda": "Mettendo a confronto i meccanismi di locomozione dei protisti, qual è la differenza funzionale fondamentale tra il movimento tramite pseudopodi (ameboide) e quello tramite ciglia o flagelli?",
       "opzioni": [
         {
-          "testo": "Actina e miosina in presenza di radicali liberi dell'ossigeno.",
+          "testo": "Il movimento tramite ciglia e flagelli consuma ATP grazie all'interazione tra dineina e tubulina, mentre il movimento ameboide avviene in modo passivo e non richiede energia cellulare.",
           "corretta": false
         },
         {
-          "testo": "Dineina e tubulina, che cambiano conformazione e scivolano l'una sull'altra consumando ATP.",
+          "testo": "Le ciglia e i flagelli sono organi composti da cellule specializzate che si flettono all'esterno, mentre gli pseudopodi sono organuli interni che non modificano la superficie cellulare.",
+          "corretta": false
+        },
+        {
+          "testo": "Il movimento ameboide deforma l'intero corpo cellulare proiettando flussi di citoplasma senza l'ausilio di organuli motori specializzati, a differenza del battito di ciglia e flagelli guidato da specifiche proteine strutturali.",
           "corretta": true
-        },
-        {
-          "testo": "Polifenoli e carboidrati solubili accumulati all'esterno del pericapside.",
-          "corretta": false
         }
       ],
-      "spiegazione": "Il meccanismo di flessione ciliare si basa sull'interazione tra la dineina e la tubulina: la dineina cambia conformazione in presenza di ATP e 'cammina' sulla tubulina, costringendo il ciglio a piegarsi e a generare movimento."
+      "spiegazione": "La risposta corretta coglie la distinzione tra la deformazione globale del citoplasma (movimento ameboide) e l'uso di strutture motorie altamente specializzate e conservate (ciglia e flagelli). Il secondo distrattore è insidioso perché confonde i termini biologici fondamentali: ciglia e flagelli sono definiti rigorosamente come 'organuli' cellulari, non come 'organi' (che sono strutture pluricellulari), concetto su cui il docente insiste particolarmente a lezione."
     },
     {
-      "domanda": "Come si è conservata evolutivamente la struttura delle ciglia sensoriali nei pesci?",
+      "domanda": "Considerando l'evoluzione delle strutture biologiche descritta nella lezione, in quale modo il sistema sensoriale dei pesci (linea laterale) e l'orecchio interno dei mammiferi sfruttano la stessa 'invenzione' dei protisti ciliati?",
       "opzioni": [
         {
-          "testo": "Si trova all'interno di un canale lungo la linea laterale e serve a misurare la velocità di scorrimento dell'acqua per l'orientamento.",
+          "testo": "Entrambi sfruttano cellule dotate di ciglia sensoriali che, piegandosi passivamente sotto la spinta del movimento di un liquido, inviano segnali sulla postura o sulle vibrazioni al cervello.",
           "corretta": true
         },
         {
-          "testo": "Si trova sulle squame esterne per respingere l'attacco dei parassiti e delle zecche.",
+          "testo": "Entrambi utilizzano il battito attivo di cellule ciliate per spingere i fluidi interni ed espellere i residui di muco e le particelle estranee.",
           "corretta": false
         },
         {
-          "testo": "Si trova nella vescica natatoria per regolare la produzione interna di ossigeno.",
+          "testo": "Entrambi si affidano a colonie di protisti simbionti ciliati che vivono nei canali semicircolari e digeriscono le vibrazioni sonore trasformandole in zuccheri.",
           "corretta": false
         }
       ],
-      "spiegazione": "Nei pesci, le ciglia sensorie (strutturalmente identiche a quelle dei protisti) rivestono un canale posto lungo la linea laterale. Questo sistema misura le variazioni di velocità dell'acqua per guidare la direzione e la svolta del pesce, funzionando in modo simile allo sterzo di un'auto."
+      "spiegazione": "La risposta corretta mostra come la struttura ciliare originatasi nei protisti sia stata conservata evolutivamente nei vertebrati come meccanismo passivo di percezione meccanica dei fluidi. Il primo distrattore è estremamente insidioso perché descrive un fenomeno vero e trattato a lezione (l'azione attiva delle ciglia nell'epitelio respiratorio umano per rimuovere il muco), ma lo applica erroneamente ai sistemi sensoriali dell'equilibrio e dell'udito, dove le ciglia non battono attivamente ma si flettono passivamente."
     },
     {
-      "domanda": "Sul piano fisiologico, per quale motivo l'otite o la labirintite compromettono temporaneamente il senso dell'equilibrio nell'uomo?",
+      "domanda": "Una persona colpita da una forte otite lamenta improvvisamente vertigini e perdita dell'equilibrio (labirintite). In base alla biologia del sistema sensoriale umano illustrata nella lezione, qual è la causa fisica di questi sintomi?",
       "opzioni": [
         {
-          "testo": "Perché le tossine batteriche distruggono lo scheletro di silicio che protegge l'orecchio esterno.",
+          "testo": "L'infezione danneggia in modo irreversibile le proteine dineina e tubulina all'interno delle ciglia sensoriali, bloccandone il movimento ondulatorio attivo.",
           "corretta": false
         },
         {
-          "testo": "Perché l'infezione rende denso il liquido nei canali semicircolari, rallentandone lo scorrimento e inviando letture posturali errate al cervello.",
+          "testo": "I batteri patogeni penetrano nel nervo vago, interrompendo la trasmissione degli impulsi elettrici che collegano direttamente la coclea al tronco encefalico.",
+          "corretta": false
+        },
+        {
+          "testo": "Il liquido nei canali semicircolari si densifica a causa dell'infezione, scorrendo più lentamente e impedendo una tempestiva e corretta lettura della postura da parte del cervello.",
           "corretta": true
-        },
-        {
-          "testo": "Perché l'infiammazione blocca la trasmissione di impulsi nervosi lungo il nervo vago.",
-          "corretta": false
         }
       ],
-      "spiegazione": "L'equilibrio umano si basa su tre canali semicircolari dell'orecchio interno contenenti liquido e cellule ciliate. Se un'infezione (come l'otite) rende denso questo liquido, esso scorre troppo lentamente durante i movimenti, impedendo al cervello di ricevere una lettura tempestiva e corretta della postura."
+      "spiegazione": "La risposta corretta si basa sulla spiegazione fisica fornita a lezione: l'infezione rende denso il liquido endolinfatico, rallentando il suo scorrimento nei canali semicircolari a 90 gradi e sfalsando la percezione della postura. Il distrattore che menziona dineina e tubulina evoca correttamente le proteine motorie delle ciglia studiate a lezione, ma cade nell'errore di attribuire loro un movimento attivo nell'orecchio interno, dove invece le ciglia funzionano come recettori passivi."
     },
     {
-      "domanda": "Perché l'uso di una miscela di acidi grassi liberi come veleno da parte del protista predatore delle Grotte di Frasassi risulta estremamente efficace per forare le prede?",
+      "domanda": "Uno studente osserva una colonia di protisti e nota che, sebbene tutte le cellule condividano lo stesso corpo principale, solo alcune di esse all'esterno presentano ciglia in movimento, mentre quelle centrali contengono cibo in digestione. Come si interpreta questo fenomeno evolutivo?",
       "opzioni": [
         {
-          "testo": "Perché gli acidi grassi agiscono come solventi chimici in grado di sciogliere i fosfolipidi (grassi) della membrana cellulare della preda.",
+          "testo": "Le cellule esterne si muovono attivamente per fotosintetizzare grazie alla clorofilla, mentre quelle interne accumulano carbonato di calcio per formare un guscio protettivo.",
+          "corretta": false
+        },
+        {
+          "testo": "Rappresenta una primitiva divisione del lavoro, in cui le cellule si specializzano in funzioni somatiche (movimento e digestione) o riproduttive senza essere ancora un vero organismo multicellulare.",
           "corretta": true
         },
         {
-          "testo": "Perché cristallizzano a contatto con l'acqua buia creando aghi di silicio perforanti.",
-          "corretta": false
-        },
-        {
-          "testo": "Perché inibiscono la sintesi di ATP e bloccano il battito delle ciglia della preda.",
+          "testo": "Si tratta di un'illusione ottica dovuta alla mitosi, in cui la cellula madre si divide asessualmente lasciando le cellule figlie temporaneamente prive di ciglia al centro.",
           "corretta": false
         }
       ],
-      "spiegazione": "Il veleno di questo protista, analizzato tramite risonanza magnetica nucleare, è composto da una miscela di acidi grassi. Poiché la membrana cellulare delle prede è fatta di fosfolipidi (lipidi), gli acidi grassi agiscono sciogliendo e forando la barriera cellulare secondo il principio per cui 'il simile scioglie il simile'."
+      "spiegazione": "La risposta corretta spiega come i protisti coloniali mostrino un inizio di specializzazione cellulare (somatico vs germinale), anticipando l'organizzazione multicellulare. Il primo distrattore unisce in modo scorretto il concetto di fotosintesi (colore verde/clorofilla) e quello di guscio protettivo (carbonato di calcio dei foraminiferi), entrambi citati nella lezione ma estranei alla dinamica di divisione del lavoro coloniale descritta."
     },
     {
-      "domanda": "Quale comportamento ha mostrato la tossina lipidica 'limacostolo' estratta dai protisti quando è stata testata su cellule tumorali umane?",
+      "domanda": "Nelle acque buie delle Grotte di Frasassi vive un protista cacciatore il cui veleno è composto da una miscela di diversi acidi grassi. Qual è la spiegazione chimico-biologica dell'efficacia di questa specifica tossina?",
       "opzioni": [
         {
-          "testo": "Ha dimostrato un effetto letale sulle linee tumorali umane (leucemia, glioblastoma, carcinoma) senza mostrare tossicità sulle cellule sane di controllo.",
+          "testo": "Gli acidi grassi fungono da solvente affine alla membrana fosfolipidica delle prede, permettendo di scioglierla e creare fori per paralizzarle e digerirle.",
           "corretta": true
         },
         {
-          "testo": "Ha aggredito unicamente le cellule umane sane, favorendo la proliferazione delle cellule della leucemia HL-60.",
+          "testo": "Gli acidi grassi attivano istantaneamente la fotosintesi nelle prede, provocando un sovraccarico di ossigeno che le porta all'autodistruzione cellulare.",
           "corretta": false
         },
         {
-          "testo": "Ha indotto la produzione di un rivestimento protettivo di carbonato di calcio attorno alle cellule tumorali.",
+          "testo": "Essendo idrofobi, gli acidi grassi solidificano l'acqua circostante la preda, intrappolandola in una micro-cisti che ne impedisce la fuga.",
           "corretta": false
         }
       ],
-      "spiegazione": "Gli esperimenti condotti in vitro hanno dimostrato l'altissima selettività del limacostolo: la molecola uccide efficacemente le cellule di glioblastoma, leucemia e carcinoma squamoso, ma non esercita effetti tossici nocivi sulle cellule umane sane usate come controllo."
+      "spiegazione": "La risposta corretta ricalca il principio chimico illustrato dal docente: poiché la membrana cellulare della preda è composta da fosfolipidi (grassi), l'uso di una tossina lipidica (acidi grassi) agisce come un solvente affine in grado di disgregarla. Il secondo distrattore sulla fotosintesi è biologicamente assurdo in un ambiente ipogeo completamente buio (come le Grotte di Frasassi), dove la fotosintesi è assente e gli organismi cacciatori si affidano a sensi chimici."
     },
     {
-      "domanda": "In che modo i ricercatori hanno modificato la molecola del limacostolo per renderla ancora più sicura prima della degradazione biologica?",
+      "domanda": "I ricercatori hanno sviluppato un potenziale farmaco antitumorale modificando la molecola tossica (limacostolo) prodotta da un protista predatore. Quale caratteristica rende questo approccio estremamente promettente rispetto alla chemioterapia tradicional?",
       "opzioni": [
         {
-          "testo": "Vi hanno inserito un interruttore chimico artificiale che la attiva e la rende tossica solo quando entra in contatto diretto con una cellula tumorale.",
+          "testo": "La tossina stimola i batteri intestinali a produrre elevate quantità di serotonina, la quale viaggia lungo il nervo vago per distruggere chirurgicamente il glioblastoma nel cervello.",
+          "corretta": false
+        },
+        {
+          "testo": "La molecola è un potente antibiotico che elimina i virus tumorali che causano le neoplasie nei mammiferi, ripristinando la normale mitosi cellulare.",
+          "corretta": false
+        },
+        {
+          "testo": "La molecola è stata dotata di un interruttore chimico che la attiva selettivamente solo a contatto con le cellule tumorali, salvaguardando le cellule umane sane che altrimenti verrebbero danneggiate.",
           "corretta": true
-        },
-        {
-          "testo": "L'hanno legata stabilmente alle membrane delle zecche per rallentare la filtrazione renale.",
-          "corretta": false
-        },
-        {
-          "testo": "L'hanno addizionata con polifenoli estratti dai lieviti per evitarne l'attivazione alla luce solare.",
-          "corretta": false
         }
       ],
-      "spiegazione": "Per ottimizzare l'efficacia e la sicurezza della terapia, gli scienziati hanno aggiunto alla molecola una sorta di 'interruttore chimico': in questo modo la tossina pattuglia i tessuti sani in modo inerte e si attiva diventando distruttiva solo se riconosce e tocca una cellula tumorale, degradandosi poi spontaneamente."
+      "spiegazione": "La risposta corretta descrive l'innovativa modifica biotecnologica illustrata alla fine della lezione, ossia l'inserimento di un 'interruttore chimico' per attivare la tossina solo in presenza di cellule cancerose, preservando i tessuti sani. Il primo distrattore crea una fantasiosa ma scorretta connessione tra la serotonina intestinale e la terapia oncologica, concetti entrambi presenti nella lezione ma appartenenti a parti totalmente diverse della spiegazione."
     }
   ],
   "assistente_ia": {
