@@ -187,184 +187,184 @@
   ],
   "il_super_quiz": [
     {
-      "domanda": "Qual è la spiegazione biologica originaria della sigla \"G\" (come in G1 e G2) nelle fasi del ciclo cellulare e come è cambiata nel tempo?",
+      "domanda": "Durante una passeggiata, uno studente si graffia un braccio con un ramo. La zona ferita diventa rapidamente rossa e si gonfia. Quale dinamica cellulare spiega questa reazione infiammatoria?",
       "opzioni": [
         {
-          "testo": "Inizialmente significava \"gap\" (interruzione), ma oggi indica \"growth/grow\" (accrescimento) poiché si è scoperto che in queste fasi la cellula si accresce.",
+          "testo": "Alcune cellule danneggiate hanno subito apoptosi, liberando sostanze chimiche programmate che attivano i globuli rossi per iniziare la riparazione tissutale.",
+          "corretta": false
+        },
+        {
+          "testo": "Le cellule danneggiate dal graffio sono andate incontro a necrosi, provocando la rottura della membrana e il riversamento del citoplasma, che stimola la produzione di sostanze infiammatorie.",
           "corretta": true
         },
         {
-          "testo": "Significava \"generazione\" delle cellule figlie, ma oggi indica \"genoma\" per via della duplicazione genetica.",
-          "corretta": false
-        },
-        {
-          "testo": "Inizialmente significava \"gamete\" per la divisione meiotica, ma oggi indica \"glicoproteine\" prodotte dal Golgi.",
+          "testo": "Le cellule epidermiche sane circostanti avviano una rapidissima mitosi per rimpiazzare quelle perse, provocando un ispessimento del tessuto che simula la reazione vascolare.",
           "corretta": false
         }
       ],
-      "spiegazione": "Nel testo viene spiegato che originariamente \"G\" indicava \"gap\" (un'interruzione o salto temporale), ma in seguito, scoprendo che la cellula in queste fasi si accresceva sintetizzando proteine funzionali e strutturali, la lettera è rimasta ma associata al termine inglese \"grow\" (accrescimento)."
+      "spiegazione": "La risposta corretta è la B perché la necrosi, provocata da un danno meccanico esterno come un graffio, rompe la membrana cellulare rilasciando il citoplasma e innescando una risposta infiammatoria (arrossamento e gonfiore). Il distrattore A è particolarmente insidioso poiché confonde questo processo distruttivo con l'apoptosi, che è invece una morte programmata estremamente controllata e ordinata. L'apoptosi non genera alcuna infiammazione, in quanto le cellule vengono frammentate in corpi apoptotici e digerite silenziosamente dalle cellule vicine. La mitosi citata in C interviene solo in un secondo momento per ripristinare il tessuto leso."
     },
     {
-      "domanda": "In accordo con la teoria cellulare esposta, da quale singola cellula iniziale derivano tutte le cellule somatiche del corpo umano?",
+      "domanda": "Qual è la differenza fondamentale, in termini di informazione genetica, tra due cromosomi omologhi e due cromatidi fratelli?",
       "opzioni": [
         {
-          "testo": "Dai centrioli attivati.",
+          "testo": "I cromosomi omologhi sono presenti nelle cellule aploidi e portano geni diversi, mentre i cromatidi fratelli si trovano nelle cellule diploidi e sono identici tra loro.",
           "corretta": false
         },
         {
-          "testo": "Dallo zigote.",
+          "testo": "I cromatidi fratelli derivano dalla duplicazione dello stesso cromosoma e sono geneticamente identici, mentre i cromosomi omologhi contengono gli stessi geni ma possono avere sequenze non identiche.",
           "corretta": true
         },
         {
-          "testo": "Dai gameti aploidi non fecondati.",
+          "testo": "I cromosomi omologhi si formano per unione del DNA paterno e materno durante la fase S, mentre i cromatidi fratelli si originano al momento della fecondazione dello zigote.",
           "corretta": false
         }
       ],
-      "spiegazione": "Il testo della lezione afferma che tutte le cellule del nostro corpo derivano da un'unica cellula iniziale chiamata zigote, la quale si divide ripetutamente per formare l'organismo."
+      "spiegazione": "La risposta corretta è la B perché i cromatidi fratelli si formano durante la fase S di replicazione e sono cloni perfetti dello stesso filamento di DNA, mentre i cromosomi omologhi sono una coppia di cromosomi (uno di origine paterna e uno materna) che regolano gli stessi caratteri ma con varianti potenzialmente diverse. Il distrattore C è insidioso perché induce lo studente a ritenere che i cromatidi fratelli si formino solo al momento della fecondazione, quando in realtà essi si generano costantemente in ogni ciclo cellulare durante la duplicazione del DNA. Inoltre, i cromosomi omologhi sono già presenti in ogni cellula diploide somatica, non formandosi direttamente dall'unione fisica del DNA durante la fase S."
     },
     {
-      "domanda": "Quale tipologia di cellule, una volta differenziate e adulte, esce completamente dal ciclo cellulare entrando nella fase quiescente denominata G0?",
+      "domanda": "Un ricercatore osserva in laboratorio una linea cellulare che continua a dividersi indefinitamente, senza arrestarsi anche quando i nutrienti sono scarsi o quando il DNA è gravemente danneggiato. Quale alterazione del ciclo cellulare spiega meglio questa condizione tumorale?",
       "opzioni": [
         {
-          "testo": "Le cellule della pelle (cutanee).",
-          "corretta": false
-        },
-        {
-          "testo": "Le cellule del fegato (epatiche).",
-          "corretta": false
-        },
-        {
-          "testo": "Le cellule nervose (neuroni).",
+          "testo": "Le cellule hanno perso la capacità di avviare l'apoptosi, mantenendo un ciclo di divisione continuo ed eludendo i segnali di morte programmata.",
           "corretta": true
+        },
+        {
+          "testo": "La linea cellulare è entrata definitivamente nella fase G0, accelerando la sintesi proteica e la replicazione del DNA a scapito delle altre cellule.",
+          "corretta": false
+        },
+        {
+          "testo": "Le cellule stanno compiendo esclusivamente divisioni meiotiche anziché mitotiche, raddoppiando la velocità di accrescimento del tessuto circostante.",
+          "corretta": false
         }
       ],
-      "spiegazione": "La fonte indica che le cellule nervose (neuroni), una volta diventate adulte e differenziate, perdono la capacità di fare nuovamente una mitosi ed escono dal ciclo cellulare posizionandosi in fase G0."
+      "spiegazione": "La risposta corretta è la A poiché l'incapacità di rispondere ai segnali di apoptosi (morte programmata) permette alle cellule tumorali di moltiplicarsi indefinitamente eludendo i normali sistemi di controllo fisiologici del ciclo cellulare. Il distrattore B è insidioso perché cita la fase G0, che gli studenti associano correttamente a cellule che non si riproducono attivamente, ma ne inverte l'effetto sostenendo erroneamente che acceleri la replicazione del DNA. Le cellule in G0 sono in realtà in uno stato quiescente e non replicano il proprio DNA, mentre le cellule tumorali mostrano un ciclo mitotico continuo ed esasperato."
     },
     {
-      "domanda": "Qual è la lunghezza approssimativa del filamento di DNA contenuto in una singola cellula umana se venisse completamente disteso in linea retta?",
+      "domanda": "Un pescatore cattura una stella marina che si sta nutrendo dei suoi molluschi. Preso dalla rabbia, taglia l'animale a metà e getta i due pezzi in acqua. Quale sarà la conseguenza biologica di questa azione a lungo termine?",
       "opzioni": [
         {
-          "testo": "Circa due metri.",
+          "testo": "Entrambi i frammenti moriranno rapidamente a causa del riversamento di citochine infiammatorie indotte dalla necrosi del taglio.",
+          "corretta": false
+        },
+        {
+          "testo": "Ciascuna metà rigenererà le parti mancanti esclusivamente tramite divisioni mitotiche, originando due stelle marine geneticamente identiche tra loro.",
           "corretta": true
         },
         {
-          "testo": "Circa pochi micron.",
-          "corretta": false
-        },
-        {
-          "testo": "Circa cinquanta centimetri.",
+          "testo": "I due frammenti attiveranno un processo di meiosi rapida per produrre nuovi gameti capaci di fecondarsi autonomamente nell'acqua.",
           "corretta": false
         }
       ],
-      "spiegazione": "Come indicato espressamente nella lezione, se srotolassimo e distendessimo il filamento di DNA di una singola cellula umana, questo raggiungerebbe una lunghezza di circa due metri."
+      "spiegazione": "La risposta corretta è la B perché organismi semplici come le stelle marine possiedono una straordinaria capacità rigenerativa basata sulla mitosi, in grado di ricreare un intero clone a partire da un frammento corporeo. Il distrattore A è insidioso perché tenta di estendere la reazione infiammatoria da necrosi vista per gli animali superiori all'intero destino vitale della stella marina, ignorandone il potenziale rigenerativo. Il distrattore C confonde la rigenerazione tissutale (che è asessuata e avviene interamente per mitosi) con la riproduzione sessuata basata sulla produzione di gameti per meiosi."
     },
     {
-      "domanda": "Su quali specifiche proteine si avvolge inizialmente il filamento di DNA per formare le caratteristiche perline denominate nucleosomi?",
+      "domanda": "Se confrontiamo i processi di divisione nucleare, qual è la differenza fondamentale nel modo in cui mitosi e meiosi gestiscono la replicazione e la divisione del materiale genetico?",
       "opzioni": [
         {
-          "testo": "Istoni.",
+          "testo": "Nella mitosi il DNA si replica una volta e la cellula si divide una volta, mentre nella meiosi il DNA si replica una volta ma la cellula si divide due volte.",
           "corretta": true
         },
         {
-          "testo": "Tubuline.",
+          "testo": "La mitosi non richiede alcuna duplicazione preventiva del DNA in fase S poiché serve solo alla crescita, mentre la meiosi duplica il DNA due volte per ripartirlo in quattro cellule figlie.",
           "corretta": false
         },
         {
-          "testo": "Centrioli.",
+          "testo": "Nella mitosi si separano i cromosomi omologhi lasciando intatti i centromeri, mentre nella meiosi si separano i cromatidi fratelli in entrambe le divisioni.",
           "corretta": false
         }
       ],
-      "spiegazione": "Il testo specifica che il DNA si avvolge all'inizio su specifiche proteine chiamate istoni, formando le caratteristiche perline del diametro di pochi micron denominate nucleosomi."
+      "spiegazione": "La risposta corretta è la A poiché descrive accuratamente il rapporto numerico tra replicazione del DNA e divisioni cellulari: la mitosi mantiene inalterato il corredo genetico originario, mentre la meiosi dimezza la ploidia dividendo la cellula due volte a fronte di un'unica duplicazione. Il distrattore B è insidioso perché suggerisce erroneamente che la mitosi possa fare a meno della duplicazione del DNA in fase S, trascurando il fatto che ogni cellula figlia deve ricevere una copia esatta del patrimonio genetico. Inoltre, la meiosi non duplica mai il DNA due volte, altrimenti non si otterrebbe il dimezzamento del corredo cromosomico nei gameti."
     },
     {
-      "domanda": "Durante l'anafase mitotica, come cambia la denominazione biologica dei bracci dei cromosomi quando si staccano e vengono trascinati ai poli opposti?",
+      "domanda": "Immagina che durante la formazione dei gameti maschili e femminili non avvenga la meiosi, ma che le cellule germinali si dividano semplicemente per mitosi. Quale sarebbe l'immediata conseguenza biologica al momento della fecondazione?",
       "opzioni": [
         {
-          "testo": "Da diadi diventano tetradi.",
+          "testo": "Lo zigote risultante manterrebbe lo stesso corredo cromosomico aploide dei genitori, ma le cellule somatiche non riuscirebbero a differenziarsi in tessuti adulti.",
           "corretta": false
         },
         {
-          "testo": "Da cromatidi fratelli diventano cromatidi figli.",
+          "testo": "Lo zigote avrebbe un corredo cromosomico dimezzato rispetto ai genitori, portando a un arresto dello sviluppo per carenza di informazioni genetiche.",
+          "corretta": false
+        },
+        {
+          "testo": "Lo zigote avrebbe un corredo cromosomico quadruplo (tetraploide) rispetto all'assetto aploide normale, una condizione incompatibile con la vita dell'organismo.",
           "corretta": true
-        },
-        {
-          "testo": "Da cromosomi omologhi diventano gameti aploidi.",
-          "corretta": false
         }
       ],
-      "spiegazione": "La lezione illustra che durante l'anafase i due cromatidi fratelli si staccano dal centromero comune, cambiando nome in cromatidi figli, e vengono guidati verso le parti opposte della cellula dal fuso mitotico."
+      "spiegazione": "La risposta corretta è la C perché, in assenza di meiosi, le cellule germinali produrrebbero gameti diploidi (2n); la loro fecondazione porterebbe al raddoppio del corredo genetico nello zigote, creando un organismo tetraploide (4n) non vitale. Il distrattore B è insidioso poiché ipotizza un dimezzamento del corredo cromosomico, un concetto che lo studente potrebbe associare genericamente alla riproduzione ma che è biologicamente errato nel contesto di una fecondazione tra cellule mitotiche. Senza il dimezzamento preventivo garantito dalla meiosi, la ploidia aumenterebbe esponenzialmente a ogni generazione, rendendo impossibile la vita dell'organismo."
     },
     {
-      "domanda": "Perché i pescatori del passato, tagliando in due le stelle marine nel tentativo di ucciderle, ottenevano l'effetto opposto?",
+      "domanda": "Durante lo sviluppo intrauterino, le mani e i piedi del feto umano presentano delle membrane che collegano le dita, simili a quelle degli organismi palmati. Come si spiega la scomparsa di queste membrane prima della nascita del bambino?",
       "opzioni": [
         {
-          "testo": "Perché le stelle marine sono echinodermi dotati di un'elevata capacità rigenerativa asessuata per mitosi, e ciascun frammento poteva ricreare una stella intera.",
+          "testo": "Le cellule della membrana subiscono una transizione cellulare, migrando verso l'interno delle dita per mitosi per favorire l'accrescimento osseo.",
+          "corretta": false
+        },
+        {
+          "testo": "Le cellule delle membrane interdigitali vanno incontro a morte cellulare programmata per apoptosi, venendo poi eliminate senza causare processi infiammatori.",
           "corretta": true
         },
         {
-          "testo": "Perché le metà delle stelle marine andavano incontro a necrosi immediata infettando i pesci e i bivalvi della costa.",
-          "corretta": false
-        },
-        {
-          "testo": "Perché la rottura stimolava la fecondazione immediata di uova e spermatozoi depositati sul guscio dei molluschi.",
+          "testo": "Le cellule interdigitali muoiono per necrosi a causa della pressione esercitata dal liquido amniotico, provocando una temporanea infiammazione che stimola la crescita cutanea.",
           "corretta": false
         }
       ],
-      "spiegazione": "Il testo spiega che le stelle marine (le quali sono echinodermi e non molluschi) possiedono una straordinaria capacità di rigenerazione asessuale: tagliandole a metà si favoriva la mitosi cellulare che portava alla nascita di due stelle marine intere in grado di mangiare il doppio dei bivalvi."
+      "spiegazione": "La risposta corretta è la B perché l'apoptosi è una morte cellulare programmata geneticamente che permette di modellare i tessuti embrionali, come le membrane tra le dita del feto, in modo pulito e senza reazioni infiammatorie. Il distrattore C è insidioso perché attribuisce la scomparsa delle membrane a un fattore meccanico distruttivo esterno (la pressione del liquido amniotico) e alla necrosi, che però provocherebbe un'infiammazione diffusa incompatibile con il delicato sviluppo fetale. La transizione cellulare per mitosi ipotizzata in A è biologicamente scorretta poiché le cellule interdigitali vengono rimosse del tutto e non riallocate."
     },
     {
-      "domanda": "Qual è la differenza fondamentale, a livello biologico e di infiammazione dei tessuti, tra la morte cellulare per necrosi e quella per apoptosi?",
+      "domanda": "Considerando la determinazione genetica del sesso nell'essere umano, quale affermazione descrive correttamente il ruolo del cromosoma Y durante lo sviluppo embrionale?",
       "opzioni": [
         {
-          "testo": "La necrosi è un suicidio silenzioso privo di riversamento, mentre l'apoptosi è una lacerazione accidentale che diffonde tossine nell'epidermide.",
-          "corretta": false
-        },
-        {
-          "testo": "La necrosi (causata da traumi o tossine) lacera la membrana riversando il citoplasma all'esterno e generando infiammazione; l'apoptosi è un suicidio programmato pulito che non crea infiammazione.",
+          "testo": "Gli embrioni umani iniziano lo sviluppo seguendo un modello femminile; l'attivazione del cromosoma Y introduce successivamente ormoni che deviano lo sviluppo verso i caratteri maschili.",
           "corretta": true
         },
         {
-          "testo": "La necrosi avviene solo durante lo sviluppo embrionale del feto, mentre l'apoptosi è causata esclusivamente dai graffi fisici o ferite.",
+          "testo": "Il cromosoma Y è indispensabile fin dalle primissime divisioni dello zigote per consentire la formazione dei tessuti somatici essenziali del feto.",
+          "corretta": false
+        },
+        {
+          "testo": "La presenza di un solo cromosoma X nel maschio (corredo XY) costringe la cellula a disattivare il cromosoma Y per evitare aberrazioni genetiche durante la mitosi.",
           "corretta": false
         }
       ],
-      "spiegazione": "Nella lezione viene spiegato che la necrosi è causata da traumi, assenza di nutrienti o tossine e rompe la membrana liberando citoplasma infiammatorio (come nel caso del graffio di un gatto), mentre l'apoptosi è un suicidio cellulare programmato e ordinato in cui la cellula si frammenta in corpi apoptotici senza generare alcuna infiammazione."
+      "spiegazione": "La risposta corretta è la A perché lo sviluppo embrionale umano segue inizialmente un modello predefinito femminile, e solo l'attivazione tardiva dei geni sul cromosoma Y induce gli ormoni necessari a mascolinizzare il feto. Il distrattore B è insidioso poiché fa leva sull'idea intuitiva che il cromosoma Y sia vitale fin dalle prime fasi per lo sviluppo di qualsiasi embrione maschile, mentre in realtà lo zigote si sviluppa inizialmente in modo analogo indipendentemente dal sesso genetico. Il distrattore C è scorretto poiché i maschi mantengono il cromosoma Y pienamente attivo in tutte le loro cellule somatiche durante le normali mitosi."
     },
     {
-      "domanda": "Per quale ragione biologica il docente ritiene che l'espressione standard \"riproduzione sessuale\" sia tecnicamente inesatta?",
+      "domanda": "Uno studente osserva al microscopio delle cellule umane in fase G1 del ciclo cellulare, ma non riesce a individuare i singoli cromosomi con la classica forma a X. Qual è la corretta spiegazione biologica di questa osservazione?",
       "opzioni": [
         {
-          "testo": "Perché la riproduzione (aumento numerico) e la sessualità (rimescolamento genetico) sono due processi biologici distinti: si può avere l'una senza l'altra.",
+          "testo": "Il DNA è stato completamente degradato dagli istoni durante la transizione tra la fase M e la fase G1 per preparare la cellula alla sintesi.",
+          "corretta": false
+        },
+        {
+          "testo": "I cromosomi si sono già divisi nei singoli cromatidi figli, i quali si trovano momentaneamente liberi nel citoplasma a causa della scomparsa del nucleo.",
+          "corretta": false
+        },
+        {
+          "testo": "In fase G1 il DNA si trova sotto forma di cromatina decondensata e sottile, rendendo i cromosomi visibili solo quando si compattano poco prima della mitosi.",
           "corretta": true
-        },
-        {
-          "testo": "Perché la sessualità richiede necessariamente che l'organismo biologico sia diploide in ogni fase vitale.",
-          "corretta": false
-        },
-        {
-          "testo": "Perché lo zigote si forma sempre e unicamente tramite la clonazione mitotica senza la fusione di gameti diversi.",
-          "corretta": false
         }
       ],
-      "spiegazione": "La lezione mette in evidenza che riproduzione (aumento del numero di individui) e sessualità (rimescolamento genetico) sono due processi distinti e indipendenti, come dimostrano gli organismi unicellulari che compiono sessualità (coniugazione) senza aumentare di numero e quelli che si riproducano per mitosi senza sesso."
+      "spiegazione": "La risposta corretta è la C perché durante l'interfase (e in particolare in G1) il DNA è organizzato in cromatina non condensata, ed è troppo sottile per essere distinto come cromosomi singoli, i quali si condensano e diventano visibili solo in profase. Il distrattore B è insidioso perché confonde le fasi dell'interfase con quelle della mitosi, ipotizzando una prematura separazione dei cromatidi e la scomparsa del nucleo che avvengono invece solo a divisione avviata. Il distrattore A è biologicamente assurdo poiché gli istoni sono proteine strutturali che servono a compattare il DNA e non a degradarlo, azione che distruggerebbe l'informazione genetica della cellula."
     },
     {
-      "domanda": "Che cos'è una \"tetrade\" che si forma e si osserva durante la profase uno della meiosi?",
+      "domanda": "Durante la meiosi I, si verifica il processo di crossing over. Quale delle seguenti situazioni descrive correttamente le modalità e lo scopo biologico di questo evento?",
       "opzioni": [
         {
-          "testo": "L'allineamento dei 46 cromatidi lungo la piastra del fuso mitotico cellulare.",
-          "corretta": false
-        },
-        {
-          "testo": "L'unione e l'appaiamento ravvicinato di due cromosomi omologhi duplicati (composti da quattro cromatidi) in cui avviene il crossing over.",
+          "testo": "Avviene uno scambio di frammenti di DNA tra cromatidi non fratelli di cromosomi omologhi, aumentando la variabilità genetica dei gameti prodotti.",
           "corretta": true
         },
         {
-          "testo": "La produzione delle quattro cellule aploidi terminali con nucleo decondensato.",
+          "testo": "I cromatidi fratelli si scambiano segmenti di DNA identici a livello del centromero per correggere eventuali errori di replicazione della fase S.",
+          "corretta": false
+        },
+        {
+          "testo": "I microtubuli del fuso mitotico si incrociano tra loro per garantire che i cromosomi siano distribuiti equamente alle quattro cellule figlie.",
           "corretta": false
         }
       ],
-      "spiegazione": "Durante la profase uno della meiosi, le diadi dei cromosomi omologhi si avvicinano e si accoppiano strettamente, formando una struttura a quattro filamenti cromatidici nota come tetrade, all'interno della quale avviene il processo di crossing over."
+      "spiegazione": "La risposta corretta è la A perché il crossing over consiste nello scambio di materiale genetico tra cromatidi non fratelli di cromosomi omologhi durante la profase I, un meccanismo fondamentale per garantire la variabilità biologica della prole. Il distrattore B è insidioso perché ipotizza che lo scambio avvenga tra cromatidi fratelli, i quali essendo identici non genererebbero alcuna nuova combinazione genetica, e ne inventa una finalità di correzione degli errori di replicazione non reale. Il distrattore C confonde lo scambio genico a livello molecolare (crossing over) con il posizionamento meccanico dei microtubuli del fuso mitotico."
     }
   ],
   "assistente_ia": {
