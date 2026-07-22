@@ -478,5 +478,62 @@
       "titolo": "d",
       "macro": 4
     }
-  ]
+  ],
+  "mappa": {
+    "titolo": "Mitosi e Meiosi: il Ciclo Cellulare e la Trasmissione Genetica",
+    "rami": [
+      {
+        "tema": "Il Ciclo Cellulare",
+        "sotto": [
+          "Fasi G1, S, G2 e mitosi",
+          "Duplicazione del DNA nella fase S",
+          "Crescita cellulare nelle fasi G1 e G2",
+          "Fase G0 per cellule differenziate non dividenti"
+        ]
+      },
+      {
+        "tema": "Compattamento del DNA",
+        "sotto": [
+          "Filamento avvolto sugli istoni nei nucleosomi",
+          "Cromosomi visibili solo prima della mitosi",
+          "Cromatidi fratelli identici uniti nel centromero"
+        ]
+      },
+      {
+        "tema": "La Mitosi e la Citodieresi",
+        "sotto": [
+          "Profase con dissoluzione della membrana nucleare",
+          "Separazione dei cromatidi fratelli nell'anafase",
+          "Strozzatura finale della cellula tramite citodieresi",
+          "Creazione di due cloni cellulari identici"
+        ]
+      },
+      {
+        "tema": "Morte Cellulare",
+        "sotto": [
+          "Necrosi dovuta a tossine o danni fisici",
+          "Apoptosi come morte programmata pulita",
+          "Frammentazione cellulare senza causare infiammazione",
+          "Ciclo continuo e senza apoptosi nei tumori"
+        ]
+      },
+      {
+        "tema": "Ploidia e Gameti",
+        "sotto": [
+          "Cellule somatiche diploidi con cromosomi omologhi",
+          "Gameti aploidi per la riproduzione sessuata",
+          "Fecondazione ripristina lo zigote diploide"
+        ]
+      },
+      {
+        "tema": "La Meiosi",
+        "sotto": [
+          "Generazione di quattro cellule figlie aploidi",
+          "Una duplicazione del DNA e due divisioni",
+          "Crossing over per lo scambio di DNA",
+          "Separazione dei cromosomi omologhi nella meiosi uno"
+        ]
+      }
+    ]
+  }
 }
