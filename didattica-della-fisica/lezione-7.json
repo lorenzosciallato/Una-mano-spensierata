@@ -187,184 +187,184 @@
   ],
   "il_super_quiz": [
     {
-      "domanda": "Nella metodologia dell'Inquiry (IBSE) descritta nella lezione, quando deve avvenire la spiegazione teorica ('explain') rispetto alle attività pratiche?",
+      "domanda": "Durante un esperimento in classe, un'arancia intera galleggia nell'acqua, ma una volta privata della buccia affonda rapidamente. Come si spiega questo fenomeno da un punto di vista fisico?",
       "opzioni": [
         {
-          "testo": "Prima di qualsiasi attività, per fornire le nozioni teoriche necessarie all'esperimento.",
-          "corretta": false
-        },
-        {
-          "testo": "Dopo le attività sperimentali, poiché l'esplorazione e le ipotesi degli studenti precedono la spiegazione.",
+          "testo": "La buccia dell'arancia contiene microscopiche sacche d'aria che ne aumentano il volume senza aggiungere molta massa, abbassando la densità media dell'intero frutto sotto quella dell'acqua.",
           "corretta": true
         },
         {
-          "testo": "Contemporaneamente, interrompendo costantemente l'esperimento per dare definizioni.",
+          "testo": "Rimuovendo la buccia impermeabile, l'acqua penetra facilmente nei pori interni della polpa, aumentandone il peso specifico complessivo fino a superare quello del fluido.",
+          "corretta": false
+        },
+        {
+          "testo": "La perdita della buccia riduce la massa complessiva del frutto, diminuendo di conseguenza l'intensità della spinta ascensionale di Archimede ricevuta dal liquido.",
           "corretta": false
         }
       ],
-      "spiegazione": "La lezione specifica che nella metodologia dell'Inquiry le attività sperimentali si fanno prima della spiegazione teorica ('explain'), che viene dunque posizionata dopo."
+      "spiegazione": "La presenza della buccia porosa agisce come un vero e salvagente grazie all'aria intrappolata nei suoi piccoli pori, che incrementa il volume totale del frutto riducendone la densità complessiva al di sotto di quella dell'acqua. Il distrattore legato alla penetrazione dell'acqua è insidioso perché fa leva su una spiegazione intuitiva ma errata: l'affondamento avviene semplicemente perché la polpa sbucciata ha di per sé una densità intrinseca superiore a quella del liquido. Inoltre, la pura riduzione di massa descritta nella terza opzione non giustifica fisicamente l'affondamento, in quanto la spinta dipende dal volume immerso e non dalla massa in sé."
     },
     {
-      "domanda": "Per quale motivo specifico nell'esperimento iniziale viene rimossa la buccia al mandarino?",
+      "domanda": "Qual è la differenza concettuale tra la densità e il peso specifico di una sostanza?",
       "opzioni": [
         {
-          "testo": "Per alleggerirlo e poter utilizzare due masse diverse, una più piccola dell'altra.",
+          "testo": "La densità varia a seconda della quantità di materia considerata nell'esperimento, mentre il peso specifico rimane costante trattandosi di una proprietà intensiva.",
+          "corretta": false
+        },
+        {
+          "testo": "La densità misura la massa contenuta nell'unità di volume, mentre il peso specifico misura la forza di attrazione gravitazionale esercitata su quella stessa unità di volume.",
           "corretta": true
         },
         {
-          "testo": "Per rendere la superficie del mandarino liscia e idrorepellente.",
-          "corretta": false
-        },
-        {
-          "testo": "Per favorire una reazione chimica immediata con l'acqua del rubinetto.",
+          "testo": "La densità si riferisce esclusivamente ai liquidi presi come riferimento, mentre il peso specifico si applica soltanto ai corpi solidi immersi in un fluido.",
           "corretta": false
         }
       ],
-      "spiegazione": "La lezione indica esplicitamente che la buccia viene tolta al mandarino 'per alleggerire un po' perché voglio usare due masse diverse, una più piccola dell'altra'."
+      "spiegazione": "La densità si concentra sulla quantità di materia (massa) contenuta in uno spazio unitario ed è una proprietà intrinseca indipendente dalla gravità, mentre il peso specifico incorpora l'effetto della forza peso agente su quel volume. Il primo distrattore è particolarmente ingannevole perché inverte la natura delle grandezze: sia la densità che il peso specifico sono proprietà intensive e non variano al variare della quantità totale di materia analizzata. La terza opzione è errata poiché entrambe le grandezze si applicano universalmente a qualsiasi stato di aggregazione della materia."
     },
     {
-      "domanda": "Qual è l'esito immediato dell'esperimento quando l'arancia intera e il mandarino sbucciato vengono immersi nei rispettivi contenitori?",
+      "domanda": "Un insegnante desidera progettare un esperimento rigoroso per dimostrare se la massa di un corpo influenzi direttamente la sua capacità di galleggiare. Quale approccio metodologico garantisce il controllo delle variabili?",
       "opzioni": [
         {
-          "testo": "L'arancia affonda a causa del suo peso maggiore, mentre il mandarino galleggia.",
+          "testo": "Misurare la variazione del livello dell'acqua spostata da uno stesso mandarino inserito prima in un contenitore stretto e poi in uno molto largo.",
           "corretta": false
         },
         {
-          "testo": "Affondano entrambi rapidamente sul fondo dei recipienti.",
+          "testo": "Confrontare un mandarino sbucciato piccolo in un becher e un'arancia intera grande in una vaschetta capiente, così da massimizzare la differenza di massa.",
           "corretta": false
         },
         {
-          "testo": "L'arancia galleggia e il mandarino sbucciato affonda.",
+          "testo": "Immergere due frutti dello stesso tipo e forma, uno con la buccia e uno sbucciato, all'interno dello stesso contenitore d'acqua per osservarne il comportamento.",
           "corretta": true
         }
       ],
-      "spiegazione": "L'osservazione diretta dell'esperimento mostra che l'arancia galleggia stabilmente, mentre il mandarino sbucciato affonda."
+      "spiegazione": "Per isolare scientificamente l'effetto della massa, è fondamentale mantenere costanti tutte le altre variabili di disturbo come la tipologia del fluido e la forma generale, modificando esclusivamente la massa tramite la rimozione della buccia. Il secondo distrattore rappresenta l'errore metodologico iniziale mostrato nella lezione, in cui l'uso simultaneo di contenitori diversi e frutti differenti confonde i fattori in gioco, rendendo impossibile capire se il galleggiamento dipenda dal tipo di frutto, dalla buccia o dal recipiente. Il primo metodo invece studia l'effetto del recipiente, variabile che si è dimostrata ininfluente sul galleggiamento."
     },
     {
-      "domanda": "Per verificare scientificamente se la massa influenzi o meno il galleggiamento dei corpi, come deve essere progettato l'esperimento?",
+      "domanda": "Uno studente appende un blocchetto metallico a un dinamometro leggendo un valore di 1,0 N. Successivamente, immerge il corpo in un becher d'acqua e osserva che l'indice dello strumento scende a 0,9 N. Come si interpreta questo risultato?",
       "opzioni": [
         {
-          "testo": "Si devono mantenere costanti tutte le altre variabili (come il tipo di oggetto e il contenitore), variando unicamente la massa.",
+          "testo": "Il corpo riceve dall'acqua una forza ascensionale di 0,1 N, equivalente alla forza peso del volume di liquido che è stato rimosso dall'oggetto.",
           "corretta": true
         },
         {
-          "testo": "Si devono cambiare contemporaneamente la massa dell'oggetto, la forma del contenitore e la temperatura del liquido.",
+          "testo": "L'immersione nel liquido riduce la massa effettiva del metallo di un decimo, diminuendo di conseguenza la forza di attrazione gravitazionale.",
           "corretta": false
         },
         {
-          "testo": "Si deve aumentare la quantità d'acqua proporzionalmente alla massa dell'oggetto scelto.",
+          "testo": "L'acqua esercita una pressione laterale che stabilizza il corpo solido, riducendo l'attrito interno del dinamometro e alterando la misura.",
           "corretta": false
         }
       ],
-      "spiegazione": "In un sistema sperimentale, per indagare l'effetto di una specifica variabile (la massa), occorre isolarla mantenendo costanti tutti gli altri componenti e cambiando una sola variabile alla volta."
+      "spiegazione": "La variazione di 0,1 N registrata dal dinamometro corrisponde alla spinta di Archimede, che è una forza diretta verso l'alto pari al peso del fluido spostato dal corpo immerso. Il distrattore che ipotizza una variazione della massa è insidioso perché confonde la massa (proprietà intrinseca costante della materia) con il peso apparente avvertito all'interno di un fluido. Il terzo distrattore propone invece una giustificazione meccanica inventata per spiegare lo scostamento senza ricorrere alla spinta idrostatica."
     },
     {
-      "domanda": "Per quale motivo l'arancia con la buccia galleggia, a differenza del mandarino sbucciato?",
+      "domanda": "Considerando la classificazione delle grandezze fisiche in intensive ed estensive, quale affermazione descrive correttamente il comportamento del volume e della densità dell'acqua?",
       "opzioni": [
         {
-          "testo": "Perché la polpa dell'arancia contiene sostanze aspre che respingono l'acqua.",
+          "testo": "Il volume è una proprietà intensiva misurabile direttamente tramite strumenti tarati, mentre la densità è una proprietà estensiva ricavabile unicamente per via matematica.",
           "corretta": false
         },
         {
-          "testo": "Perché la buccia è porosa e ricca d'aria, agendo come un vero e proprio salvagente che ne riduce la densità.",
+          "testo": "Il volume raddoppia se uniamo due porzioni identiche di liquido poiché dipende dalla quantità di materia, mentre la densità rimane identica indipendentemente dalla massa considerata.",
           "corretta": true
         },
         {
-          "testo": "Perché la forza di gravità agisce solo sui corpi privi di buccia protettiva.",
+          "testo": "La densità dell'acqua varia in modo direttamente proporzionale al volume del recipiente che la contiene, mentre il volume del liquido rimane fisso.",
           "corretta": false
         }
       ],
-      "spiegazione": "Le osservazioni microscopiche rivelano che la buccia dell'arancia è porosa e ricca d'aria, funzionando come un salvagente che riduce la densità globale del sistema."
+      "spiegazione": "Il volume è una grandezza estensiva poiché si somma quando si uniscono più parti di materia, mentre la densità è intensiva e descrive una caratteristica qualitativa del materiale che non risente della scala dell'esperimento. Il primo distrattore trae in inganno gli studenti che associano erroneamente la facilità di misurazione diretta alla definizione di proprietà intensiva, scambiando le definizioni teoriche. Il terzo distrattore confonde la forma geometrica del contenitore con le proprietà fisiche del fluido ospitato."
     },
     {
-      "domanda": "Se in un becher contenente acqua a livello 20 ml viene immerso un oggetto e il livello sale a 32,7 ml, qual è il volume dell'oggetto secondo il metodo dello spostamento di liquido?",
+      "domanda": "Durante una discussione in classe, uno studente afferma che gli oggetti pesanti affondano nelle piccole vasche ma riescono a galleggiare quando si trovano in un grande lago. Come può l'insegnante smentire questa ipotesi sul piano pratico?",
       "opzioni": [
         {
-          "testo": "32,7 ml",
+          "testo": "Aggiungendo sale all'acqua del contenitore piccolo per simulare la salinità marina e favorire il galleggiamento del frutto.",
           "corretta": false
         },
         {
-          "testo": "12,7 ml",
+          "testo": "Pesando il frutto prima e dopo l'immersione per dimostrare che la spinta di Archimede non risente delle dimensioni della vasca.",
+          "corretta": false
+        },
+        {
+          "testo": "Mostrando che un mandarino sbucciato affonda inesorabilmente sia in un piccolo becher sia in una grande vasca da acquario.",
           "corretta": true
-        },
-        {
-          "testo": "52,7 ml",
-          "corretta": false
         }
       ],
-      "spiegazione": "Il volume dell'oggetto si calcola per differenza, sottraendo il volume d'acqua iniziale dal volume d'acqua finale raggiunto dopo l'immersione dell'oggetto: 32,7 ml - 20 ml = 12,7 ml."
+      "spiegazione": "L'osservazione diretta del mandarino che affonda in recipienti di scale totalmente diverse isola la variabile 'quantità d'acqua circostante', provando che essa non determina il galleggiamento del corpo. Il primo distrattore introduce il concetto di salinità che, pur essendo scientificamente rilevante per la densità del fluido, non risponde al quesito metodologico sulla quantità d'acqua e rischia di confermare l'idea che il lago o il mare si comportino diversamente per motivi magici. Il secondo distrattore propone una misura non pertinente, poiché la bilancia in aria non decostruisce l'errore visivo legato al galleggiamento nei diversi contenitori."
     },
     {
-      "domanda": "Se un oggetto ha una forza peso in aria di 1 Newton e, una volta immerso nell'acqua, il dinamometro segna 0,9 Newton, qual è l'intensità della spinta di Archimede?",
+      "domanda": "In una fase della lezione viene chiesto di osservare un frutto per un minuto e disegnarlo senza indicazioni specifiche. Successivamente, l'obiettivo viene modificato nel disegnare il frutto per consentire a un compagno di riconoscerlo. Quale conclusione didattica si trae da questa esperienza?",
       "opzioni": [
         {
-          "testo": "0,1 Newton",
+          "testo": "L'osservazione spontanea e priva di uno scopo esplicito si rivela inefficace; per essere scientifica, essa deve essere intenzionale e guidata da un obiettivo preciso.",
           "corretta": true
         },
         {
-          "testo": "0,9 Newton",
+          "testo": "I sensi umani non possiedono una precisione sufficiente per cogliere le differenze tra oggetti naturali senza l'uso di lenti o microscopi.",
           "corretta": false
         },
         {
-          "testo": "1,9 Newton",
+          "testo": "La capacità di descrivere accuratamente un oggetto è un'attitudine innata che non può essere potenziata attraverso l'addestramento scolastico.",
           "corretta": false
         }
       ],
-      "spiegazione": "Il dinamometro registra la forza risultante (pari a 0,9 N) data dalla differenza tra la forza peso verso il basso (1 N) e la spinta di Archimede verso l'alto. La spinta è quindi di 0,1 N."
+      "spiegazione": "L'attività dimostra che l'osservazione scientifica non è una semplice registrazione passiva di immagini, ma un processo attivo governato da una precisa finalità (progettualità). Il distrattore sugli strumenti ottici è insidioso perché la lezione cita effettivamente l'uso di lenti, spingendo lo studente a credere che l'ostacolo fosse di natura puramente sensoriale anziché metodologica. La terza opzione nega il ruolo stesso della didattica delle scienze, che mira invece a strutturare e potenziare la competenza osservativa negli alunni."
     },
     {
-      "domanda": "In base a quanto spiegato nella lezione, a quali elementi si applica la spinta descritta dal principio di Archimede?",
+      "domanda": "L'insegnante insiste sul fatto che le descrizioni fornite dagli studenti per far riconoscere il proprio frutto debbano tendere all'obiettività. Quale comportamento descrive questo rigore scientifico?",
       "opzioni": [
         {
-          "testo": "Esclusivamente agli oggetti solidi immersi nell'acqua distillata.",
+          "testo": "Fornire una descrizione ricca di dettagli creativi e metafore personali per catturare l'attenzione e facilitare l'identificazione emotiva.",
           "corretta": false
         },
         {
-          "testo": "A tutti i corpi immersi in un fluido, categoria che comprende sia i liquidi che i gas (come l'aria).",
+          "testo": "Annotare unicamente dati di fatto fisici e dettagli visivi misurabili, escludendo giudizi soggettivi sul valore o sull'estetica del frutto.",
           "corretta": true
         },
         {
-          "testo": "Solo ai corpi leggeri che hanno una densità inferiore a quella dell'aria.",
+          "testo": "Limitarsi a copiare le caratteristiche anatomiche standard del frutto riportate sui manuali scientifici di riferimento.",
           "corretta": false
         }
       ],
-      "spiegazione": "La spinta di Archimede non riguarda solo i liquidi, ma si genera universalmente all'interno dei fluidi, termine che comprende sia i liquidi che i gas."
+      "spiegazione": "L'obiettività scientifica impone la separazione netta tra i dati oggettivi (colore, macchie, dimensioni) e le impressioni o i giudizi personali. Il primo distrattore è insidioso perché confonde la ricchezza descrittiva di tipo letterario o linguistico con la precisione oggettiva richiesta nel protocollo di ricerca. Il terzo distrattore propone invece un approccio sterile e conformista che annulla il valore dell'osservazione diretta del campione reale."
     },
     {
-      "domanda": "Cosa dimostra la prima fase dell'attività di osservazione del mandarino (svolta per un minuto senza uno scopo preciso)?",
+      "domanda": "La lezione evidenzia che la spinta di Archimede agisce in generale all'interno dei fluidi. Quale dei seguenti fenomeni quotidiani si basa sullo stesso principio fisico applicato ai gas?",
       "opzioni": [
         {
-          "testo": "Che i bambini possiedono una capacità innata di ricordare perfettamente ogni dettaglio visivo.",
+          "testo": "La compressione dell'aria all'interno di una siringa sigillata quando viene esercitata una forza sullo stantuffo.",
           "corretta": false
         },
         {
-          "testo": "Che l'osservazione spontanea è l'unico strumento efficace per classificare gli oggetti naturali.",
+          "testo": "La spinta impressa dal vento alle vele di un'imbarcazione che le permette di muoversi sull'acqua.",
           "corretta": false
         },
         {
-          "testo": "Che se si osserva senza porsi domande o senza obiettivi chiari, l'osservazione si rivela inefficace.",
+          "testo": "Il volo verso l'alto di un palloncino riempito di elio rilasciato nell'atmosfera terrestre.",
           "corretta": true
         }
       ],
-      "spiegazione": "Quando l'osservazione iniziale viene svolta senza uno scopo preciso, la maggior parte dei partecipanti fallisce nel ritrovare il proprio mandarino mescolato agli altri, provando che l'osservazione non finalizzata è inefficace."
+      "spiegazione": "L'aria è un fluido e, come tale, esercita una spinta idrostatica verso l'alto su tutti i corpi in essa immersi; poiché l'elio ha una densità inferiore a quella dell'aria circostante, la spinta ascensionale supera la forza peso del palloncino. Il distrattore della siringa è insidioso perché coinvolge l'aria e una forza, ma descrive la comprimibilità gassosa e non la spinta idrostatica. Il secondo distrattore fa riferimento all'energia cinetica del vento e alla fluidodinamica delle forze dirette, non al galleggiamento archimedeo in un fluido stazionario."
     },
     {
-      "domanda": "Quale delle seguenti caratteristiche definisce la tendenza all'obiettività nel processo di osservazione scientifica?",
+      "domanda": "Si consideri la relazione matematica in cui il peso specifico è uguale al prodotto tra densità e accelerazione di gravità. Cosa si può prevedere se si confrontano due materiali diversi sulla Terra?",
       "opzioni": [
         {
-          "testo": "Rilevare unicamente i fatti ed escludere sensazioni o impressioni soggettive, evitando di anticipare giudizi.",
+          "testo": "Il materiale che possiede un peso specifico doppio rispetto all'altro presenterà anche una densità pari al doppio, essendo le due grandezze direttamente proporzionali.",
           "corretta": true
         },
         {
-          "testo": "Includere valutazioni estetiche personali, specificando ad esempio se l'oggetto sia bello o brutto.",
+          "testo": "Il materiale dotato di densità maggiore presenterà un peso specifico inferiore per compensare l'effetto dell'accelerazione gravitazionale.",
           "corretta": false
         },
         {
-          "testo": "Basare la descrizione esclusivamente sulle opinioni fornite dai compagni del gruppo.",
+          "testo": "La densità e il peso specifico rimangono in ogni caso numericamente identici per ciascun corpo, poiché la gravità agisce solo sui corpi in caduta.",
           "corretta": false
         }
       ],
-      "spiegazione": "L'obiettività dell'osservazione scientifica impone di rilevare fatti concreti escludendo impressioni soggettive o valutazioni estetiche (come bello o brutto) per non anticipare e influenzare il giudizio."
+      "spiegazione": "Essendo l'accelerazione di gravità costante sulla superficie terrestre, il peso specifico e la densità variano in modo direttamente proporzionale, mantenendo fisso il loro rapporto. Il primo distrattore propone un'inversione di proporzionalità che imita formule fisiche di compensazione, confondendo gli studenti che ricordano la presenza di una costante ma non la struttura moltiplicativa della relazione. Il terzo distrattore introduce l'errore concettuale secondo cui la gravità non agirebbe sui corpi statici o immersi, oltre a ignorare la differenza sistematica nelle unità di misura delle due grandezze."
     }
   ],
   "assistente_ia": {
