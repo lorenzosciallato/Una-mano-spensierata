@@ -187,184 +187,184 @@
   ],
   "il_super_quiz": [
     {
-      "domanda": "Quali sono le cellule risultanti al termine della mitosi rispetto alla meiosi nell'essere umano?",
+      "domanda": "Uno studente osserva al microscopio una cellula animale in divisione e nota che i cromosomi omologhi si stanno separando dirigendosi ai poli opposti, senza che i cromatidi fratelli si disgiungano. Quale processo sta osservando?",
       "opzioni": [
         {
-          "testo": "Quattro cellule diploidi per la mitosi e due cellule aploidi per la meiosi.",
+          "testo": "La mitosi, che porterà alla formazione di due cellule figlie diploidi geneticamente identiche.",
           "corretta": false
         },
         {
-          "testo": "Due cellule diploidi per la mitosi e quattro cellule aploidi per la meiosi.",
+          "testo": "L'anafase II della meiosi, che dimezzerà il corredo genetico producendo quattro cellule aploidi.",
+          "corretta": false
+        },
+        {
+          "testo": "L'anafase I della meiosi, che porterà al dimezzamento del numero di cromosomi nelle cellule risultanti.",
           "corretta": true
-        },
-        {
-          "testo": "Due cellule aploidi per la mitosi e quattro cellule diploidi per la meiosi.",
-          "corretta": false
         }
       ],
-      "spiegazione": "La mitosi è una divisione cellulare che produce due cellule figlie diploidi geneticamente identiche alla cellula madre, mentre la meiosi è un processo riduzionale che dimezza il corredo cromosomico, portando alla formazione di quattro cellule figlie aploidi."
+      "spiegazione": "La divisione in cui si separano i cromosomi omologhi riducendo a metà il corredo cromosomico è l'anafase I della meiosi. Nella mitosi e nella meiosi II, invece, sono i cromatidi fratelli a separarsi per migrare ai poli opposti della cellula. Il distrattore riguardante l'anafase II è particolarmente insidioso perché in quella fase si assiste a una separazione dei cromatidi, ma le cellule di partenza sono già aploidi e non diploidi."
     },
     {
-      "domanda": "Durante il processo di crossing over nella meiosi, in quali punti precisi avviene lo scambio fisico di segmenti di DNA?",
+      "domanda": "Durante un'analisi istologica di tessuto ovarico umano, un ricercatore osserva l'esito finale di un singolo processo meiotico completo. Quale combinazione di cellule si aspetta di trovare?",
       "opzioni": [
         {
-          "testo": "Nei centromeri che uniscono i cromatidi fratelli.",
-          "corretta": false
-        },
-        {
-          "testo": "Nei chiasmi, ovvero i punti di incrocio in cui i bracci dei cromosomi omologhi si accavallano.",
+          "testo": "Una sola cellula uovo aploide e tre globuli polari destinati al riassorbimento cellulare.",
           "corretta": true
         },
         {
-          "testo": "Nei cinetocori agganciati al fuso mitotico.",
+          "testo": "Quattro cellule uovo aploidi pronte per essere fecondate, per massimizzare la probabilità di concepimento.",
+          "corretta": false
+        },
+        {
+          "testo": "Due cellule diploidi funzionali e due globuli polari aploidi, come compromesso energetico di sopravvivenza.",
           "corretta": false
         }
       ],
-      "spiegazione": "Il crossing over consiste nello scambio di pezzi di DNA tra cromosomi omologhi. Questo accade quando le tetradi si accoppiano e i loro bracci si accavallano in punti di incrocio specifici chiamati chiasmi."
+      "spiegazione": "L'ovogenesi produce una singola cellula uovo aploide funzionale e tre globuli polari non funzionali destinati al riassorbimento. Questa ripartizione asimmetrica del citoplasma garantisce che la cellula uovo conservi tutte le riserve nutritive necessarie per lo sviluppo iniziale dello zigote. Il distrattore che prevede la produzione di quattro cellule uovo funzionali è insidioso perché confonde il processo femminile con la spermatogenesi maschile, la quale invece produce quattro spermatozoi funzionanti per ogni meiosi."
     },
     {
-      "domanda": "Quante combinazioni di gameti diversi può produrre un essere umano (46 cromosomi) grazie alla sola ridistribuzione indipendente dei cromosomi nella meiosi?",
+      "domanda": "Durante la meiosi I di un ovocita umano, si verifica un errore per cui una coppia di cromosomi omologhi (la tetrade 21) non si disgiunge. Se la meiosi II procede normalmente e il gamete anomalo viene fecondato da uno spermatozoo normale, quale sarà la conseguenza?",
       "opzioni": [
         {
-          "testo": "Più di 64 miliardi.",
+          "testo": "Lo zigote presenterà una monosomia del cromosoma 21, una condizione che permette la sopravvivenza ma causa gravi ritardi.",
+          "corretta": false
+        },
+        {
+          "testo": "Lo zigote presenterà una trisomia del cromosoma 21, poiché riceverà due cromosomi omologhi dalla madre e uno dal padre.",
           "corretta": true
         },
         {
-          "testo": "Esattamente otto combinazioni.",
-          "corretta": false
-        },
-        {
-          "testo": "Circa quarantasei combinazioni complessive.",
+          "testo": "Lo zigote subirà una mutazione genica che modificherà la sequenza del DNA, pur mantenendo un totale di 46 cromosomi.",
           "corretta": false
         }
       ],
-      "spiegazione": "La lezione evidenzia che mentre un organismo con sole tre coppie di cromosomi può produrre otto tipi di gameti diversi, l'essere umano (con 23 coppie di cromosomi) può generare più di 64 miliardi di combinazioni uniche tramite assortimento indipendente."
+      "spiegazione": "La mancata disgiunzione dei cromosomi omologhi durante la meiosi I produce gameti con un cromosoma in più, portando alla trisomia 21 dopo la fecondazione con un gamete normale. Questo difetto numerico causa la sindrome di Down, caratterizzata da un corredo di 47 cromosomi. Il distrattore sulla monosomia è ingannevole perché confonde la perdita con l'aggiunta di un cromosoma, ignorando che l'unica monosomia compatibile con la vita umana è la sindrome di Turner, che riguarda il cromosoma sessuale X."
     },
     {
-      "domanda": "Al termine del processo di ovogenesi o oogenesi femminile, quante cellule uovo funzionali vengono prodotte?",
+      "domanda": "Nel famoso esperimento sulle popolazioni di lucertole descritto nella lezione, in condizioni ambientali stabili e controllate la popolazione unisessuale cresceva molto più velocemente di quella bisessuale. Qual è la ragione di questo divario?",
       "opzioni": [
         {
-          "testo": "Quattro cellule uovo funzionali pronte per la fecondazione.",
+          "testo": "Il fatto che la meiosi consuma molta più energia biologica della mitosi, riducendo la durata media della vita delle lucertole.",
           "corretta": false
         },
         {
-          "testo": "Una sola cellula uovo funzionale, poiché le altre tre sono globuli polari incompleti destinati al riassorbimento.",
+          "testo": "La necessità per la popolazione bisessuale di dimezzare il proprio potenziale riproduttivo poiché i maschi non depongono uova.",
           "corretta": true
         },
         {
-          "testo": "Due cellule uovo funzionali e due globuli polari simmetrici.",
+          "testo": "La presenza di frequenti mutazioni genetiche dannose causate dal crossing over nella popolazione bisessuale.",
           "corretta": false
         }
       ],
-      "spiegazione": "A differenza della spermatogenesi che produce quattro spermatozoi per ogni meiosi, l'ovogenesi distribuisce il citoplasma in modo asimmetrico: produce una sola cellula uovo adatta alla fecondazione e tre globuli polari incompleti che vengono riassorbiti."
+      "spiegazione": "In un ambiente stabile, la popolazione unisessuale ha un enorme vantaggio riproduttivo perché ogni singolo individuo può generare discendenza senza dipendere dall'incontro casuale con un partner di sesso opposto. Al contrario, la popolazione bisessuale dimezza la propria crescita iniziale poiché i maschi non possono deporre uova. Il distrattore sul costo energetico della meiosi è plausibile ma biologicamente non pertinente, poiché l'esperimento dimostra che lo svantaggio iniziale è di natura puramente demografica ed ecologica."
     },
     {
-      "domanda": "Come è organizzato il corredo cromosomico diploide normale di un maschio della specie umana?",
+      "domanda": "Qual è la differenza fondamentale, in termini di impatto sul materiale genetico, tra il processo di crossing over e una mutazione cromosomica?",
       "opzioni": [
         {
-          "testo": "44 autosomi più una coppia di cromosomi sessuali XX.",
-          "corretta": false
-        },
-        {
-          "testo": "44 autosomi più una coppia di cromosomi sessuali XY.",
+          "testo": "Il crossing over comporta uno scambio reciproco di segmenti di DNA senza perdita di materiale, mentre le mutazioni ne alterano la struttura o la quantità.",
           "corretta": true
         },
         {
-          "testo": "46 autosomi indipendenti privi di caratterizzazione X o Y.",
+          "testo": "Il crossing over si verifica per correggere gli errori di duplicazione del DNA, mentre le mutazioni cromosomiche si verificano solo durante la mitosi.",
+          "corretta": false
+        },
+        {
+          "testo": "Il crossing over avviene esclusivamente tra cromatidi fratelli dello stesso cromosoma, mentre le mutazioni avvengono solo tra cromosomi non omologhi.",
           "corretta": false
         }
       ],
-      "spiegazione": "La specie umana possiede 46 cromosomi in totale, suddivisi in 44 autosomi (cromosomi non sessuali) e due cromosomi sessuali, che sono XX nelle femmine e XY nei maschi."
+      "spiegazione": "Il crossing over è un meccanismo controllato di ricombinazione genica reciproca e bilanciata che avviene tra cromosomi omologhi, lasciando inalterato il numero totale di geni. Le mutazioni cromosomiche, invece, rappresentano anomalie strutturali che modificano o danneggiano la sequenza originaria del DNA. Il distrattore che colloca il crossing over tra cromatidi fratelli è molto insidioso, ma errato, poiché i cromatidi fratelli sono geneticamente identici e uno scambio tra di essi non produrrebbe alcuna nuova combinazione di alleli."
     },
     {
-      "domanda": "Da quale anomalia durante la meiosi dei genitori trae origine la trisomia 21 (Sindrome di Down)?",
+      "domanda": "Uno stagno ospita una popolazione di rotiferi che si riproduce per partenogenesi. A causa di una grave siccità estiva, lo stagno inizia a prosciugarsi rapidamente. Come reagisce la popolazione di rotiferi a questo cambiamento ambientale?",
       "opzioni": [
         {
-          "testo": "Da una non disgiunzione cromosomica che causa la mancata separazione di una tetrade, generando una tripletta sul cromosoma 21.",
+          "testo": "Le femmine iniziano a produrre uova diploidi altamente resistenti per mitosi, che rimangono nello stagno asciutto fino al ritorno dell'acqua.",
+          "corretta": false
+        },
+        {
+          "testo": "Gli individui adulti subiscono una metamorfosi rapida in forme resistenti all'essiccamento grazie allo scambio di ormoni stimolato dall'alta salinità.",
+          "corretta": false
+        },
+        {
+          "testo": "Le femmine amittiche generano femmine mittiche che, tramite meiosi, producono uova aploidi da cui nascono maschi per la fecondazione di uova dormienti.",
           "corretta": true
-        },
-        {
-          "testo": "Da una perdita irreparabile del cromosoma Y causata dalle radiazioni solari.",
-          "corretta": false
-        },
-        {
-          "testo": "Da un blocco mitotico della cellula durante la fase di sintesi del DNA.",
-          "corretta": false
         }
       ],
-      "spiegazione": "La trisomia 21 si verifica a causa di un errore di non disgiunzione meiotica: i microtubuli trascinano i cromosomi omologhi verso un unico polo, producendo gameti con un cromosoma 21 in più che, se fecondati, portano a una tripletta anziché a una coppia."
+      "spiegazione": "I rotiferi reagiscono alle avversità ambientali attivando la riproduzione sessuale: le femmine amittiche danno origine a femmine mittiche in grado di compiere la meiosi per produrre uova aploidi, da cui nascono maschi aploidi. La fecondazione tra questi gameti produce uova dormienti protette (cisti) capaci di sopravvivere ad anni di siccità. Il distrattore basato sulla produzione di uova mitotiche resistenti è errato perché la mitosi genera cloni identici e vulnerabili, incapaci di sviluppare le barriere protettive e la variabilità necessarie per superare la crisi dello stagno."
     },
     {
-      "domanda": "Qual è l'unico caso accertato in cui un essere umano può sopravvivere con un cromosoma in meno?",
+      "domanda": "Sia la coniugazione nel paramecio sia la meiosi nei mammiferi sono considerati processi sessuali. Qual è la differenza biologica cruciale che distingue questi due fenomeni?",
       "opzioni": [
         {
-          "testo": "La sindrome di Down.",
+          "testo": "La meiosi dei mammiferi produce una ricombinazione genetica ma non nuovi organismi, mentre la coniugazione del paramecio aumenta il numero totale di individui.",
           "corretta": false
         },
         {
-          "testo": "La sindrome di Turner, in cui individui di sesso femminile possiedono un solo cromosoma X (X0).",
+          "testo": "La coniugazione del paramecio è un processo sessuale che ricombina il genoma tra due cellule senza generarne di nuove, mentre la meiosi dei mammiferi serve a produrre la prole.",
           "corretta": true
         },
         {
-          "testo": "La coniugazione difettosa dei parameci.",
+          "testo": "La coniugazione avviene attraverso la fusione fisica completa dei due parameci in un unico organismo diploide, mentre la meiosi mantiene le cellule distinte.",
           "corretta": false
         }
       ],
-      "spiegazione": "Mentre la perdita di un cromosoma è quasi sempre letale, l'unico caso documentato in cui un essere umano può sopravvivere con una monosomia (45 cromosomi totali) è la sindrome di Turner, che interessa individui fenotipicamente femminili privi di un secondo cromosoma X."
+      "spiegazione": "La coniugazione nei parameci è un esempio di processo sessuale senza riproduzione, poiché le due cellule si scambiano materiale genetico ringiovanendo il proprio ciclo vitale, ma senza aumentare il numero totale di individui. Nei mammiferi, la meiosi è invece strutturalmente integrata nella produzione di gameti deputati alla fecondazione per la nascita di nuova prole. Il distrattore basato sulla fusione cellulare è errato perché i parameci non si fondono in una sola cellula permanente, ma si separano dopo essersi scambiati i micronuclei aploidi."
     },
     {
-      "domanda": "Nell'esperimento sulle popolazioni di lucertole, qual è il limite biologico decisivo dello strain asessuato (clonale) rispetto a quello sessuato?",
+      "domanda": "Il paramecio Paramecium aurelia possiede ben 14 diversi 'mating types' (tipi coniugativi). Qual è il vantaggio evolutivo di avere così tanti 'sessi' rispetto al sistema binario?",
       "opzioni": [
         {
-          "testo": "La popolazione di cloni cresce molto più lentamente in condizioni climatiche calde e stabili.",
+          "testo": "Impedisce l'insorgenza di anomalie cromosomiche come la trisomia, assicurando che la coniugazione avvenga solo tra individui geneticamente perfetti.",
           "corretta": false
         },
         {
-          "testo": "I cloni, avendo un patrimonio genetico identico alla madre, sono tutti ugualmente suscettibili di fronte a improvvisi cambiamenti ambientali, rischiando lo sterminio completo.",
+          "testo": "Permette a ogni singolo paramecio di produrre sia spermatozoi che uova a seconda del partner che incontra, massimizzando l'efficienza energetica.",
+          "corretta": false
+        },
+        {
+          "testo": "Aumenta notevolmente la probabilità statistica di trovare un partner compatibile quando due individui si incontrano casualmente nel mezzo esterno.",
           "corretta": true
-        },
-        {
-          "testo": "I cloni necessitano di una fecondazione interna accidentale per deporre le uova diploidi.",
-          "corretta": false
         }
       ],
-      "spiegazione": "Anche se i cloni crescono più rapidamente in condizioni controllate, la totale assenza di variabilità genetica li rende estremamente vulnerabili: un mutamento ambientale avverso (come il freddo improvviso) colpirebbe tutti gli individui allo stesso modo, rischiando di estinguere l'intera popolazione."
+      "spiegazione": "Avere 14 mating types permette a un paramecio di essere compatibile con ben 13 tipi diversi su 14, aumentando drasticamente la possibilità di accoppiamento in caso di incontro casuale rispetto al sistema a due sessi. Questo meccanismo riduce il rischio di non trovare un partner compatibile nell'ambiente. Il distrattore sulla produzione di uova e spermi è ingannevole perché attribuisce erroneamente la produzione di gameti differenziati a organismi unicellulari, che invece si accoppiano scambiandosi nuclei."
     },
     {
-      "domanda": "Come rispondono i Rotiferi a livello biologico quando le condizioni dello stagno in cui vivono degradano (ad esempio con la siccità estiva)?",
+      "domanda": "Nella lezione si accenna al fatto che i feromoni rilasciati dai protisti unicellulari per riconoscere i partner sono i 'precursori' degli ormoni dei vertebrati. In che senso condividono una logica comune?",
       "opzioni": [
         {
-          "testo": "Continuano a riprodursi unicamente per partenogenesi asessuata per accelerare la crescita.",
-          "corretta": false
-        },
-        {
-          "testo": "Compiono la meiosi producendo uova aploidi da cui nascono maschi aploidi, la cui fecondazione genera uova dormienti (cisti) resistenti.",
+          "testo": "Entrambi agiscono come segnali chimici per la comunicazione e il coordinamento, ma i feromoni operano all'esterno tra organismi e gli ormoni operano all'interno.",
           "corretta": true
         },
         {
-          "testo": "Dissolvono il loro nucleo vegetativo macroscopico per sopravvivere senza acqua.",
+          "testo": "Entrambi vengono secreti direttamente nel sangue per stimolare la meiosi cellulare, ma i feromoni vengono prodotti solo in condizioni di forte stress termico.",
+          "corretta": false
+        },
+        {
+          "testo": "Entrambi servono a determinare se il cariotipo del partner presenta anomalie genetiche prima di procedere alla fecondazione nucleare.",
           "corretta": false
         }
       ],
-      "spiegazione": "Quando l'acqua evapora e la salinità aumenta, i rotiferi abbandonano la riproduzione per partenogenesi mitotica e passano alla riproduzione sessuata meiotica. Questo produce maschi e uova fecondate dormienti (cisti) in grado di resistere alla siccità per anni."
+      "spiegazione": "Sia i feromoni dei protisti sia gli ormoni dei vertebrati sono molecole di segnalazione chimica, ma i feromoni agiscono all'esterno del corpo per comunicare tra individui distinti, mentre gli ormoni coordinano le attività interne tra cellule dello stesso organismo. Questa continuità evolutiva mostra come sistemi complessi derivino da meccanismi di segnalazione ancestrale. Il distrattore sul sangue è biologicamente impossibile per i protisti, ma inganna lo studente che dimentica la natura rigorosamente unicellulare dei ciliati."
     },
     {
-      "domanda": "Per quale motivo la coniugazione nel paramecio viene indicata come un processo di \"sessualità senza riproduzione\"?",
+      "domanda": "Uno studente analizza il cariotipo di un bambino neonato e nota che la ventitreesima coppia cromosomica presenta un cromosoma X di dimensioni normali e un cromosoma Y molto più piccolo. Tutte le altre coppie sono regolari. Quali conclusioni si possono trarre?",
       "opzioni": [
         {
-          "testo": "Perché due cellule si uniscono temporaneamente per scambiarsi materiale genico micronucleare e si separano rimanendo due cellule, senza incrementare il numero di individui.",
+          "testo": "Si tratta di un neonato ermafrodita che possiede sia caratteri maschili che femminili a causa della presenza contemporanea dei due cromosomi diversi.",
+          "corretta": false
+        },
+        {
+          "testo": "Si tratta di un neonato di sesso maschile sano con un corredo cromosomico normale composto da 44 autosomi e due cromosomi sessuali (XY).",
           "corretta": true
         },
         {
-          "testo": "Perché si verifica esclusivamente in assenza totale di feromoni protettivi.",
-          "corretta": false
-        },
-        {
-          "testo": "Perché i parameci producono cloni identici tramite l'allineamento dei microtubuli.",
+          "testo": "Si tratta di un neonato affetto da una sindrome cromosomica poiché il cromosoma Y più piccolo indica una perdita parziale di materiale genetico.",
           "corretta": false
         }
       ],
-      "spiegazione": "Durante la coniugazione, due parameci si uniscono temporaneamente, scambiano segmenti di DNA micronucleare per ringiovanire il proprio genoma e si separano. All'inizio del processo vi sono due cellule e al termine vi sono ancora due cellule: non vi è stato alcun aumento numerico (riproduzione), ma si è compiuto lo scambio genico (sesso)."
+      "spiegazione": "Nei mammiferi sani di sesso maschile, la coppia di cromosomi sessuali è XY, in cui il cromosoma Y è fisiologicamente molto più piccolo del cromosoma X pur trattandosi di una condizione del tutto normale. Il neonato descritto ha un corredo cromosomico sano composto da 44 autosomi e due cromosomi sessuali. Il distrattore sulla sindrome cromosomica è molto insidioso perché fa leva sull'idea errata che i cromosomi omologhi debbano sempre avere la stessa identica forma e dimensione, trascurando la naturale asimmetria dei cromosomi sessuali."
     }
   ],
   "assistente_ia": {
