@@ -1246,6 +1246,17 @@
             stampa(modoSel, evid, true);
           });
         }
+        // l'opzione "Solo mappa mentale" compare solo se la mappa NotebookLM
+        // esiste per questa lezione; se era selezionata e non c'è più, torna a "Tutto"
+        var okMappa = !!(window.__umsMappaGen && window.__umsMappaGen());
+        var bMap = ov.querySelector('[data-modo="mappa"]');
+        if(bMap){
+          bMap.style.display = okMappa ? '' : 'none';
+          if(!okMappa && bMap.classList.contains('sel')){
+            var bTutto = ov.querySelector('[data-modo="completo"]');
+            if(bTutto){ bTutto.click(); }   // passa dal listener vero: aggiorna anche la scelta interna
+          }
+        }
         ov.classList.add('show');
       }
 
@@ -1389,16 +1400,24 @@
       var datiMappa = null;
       fetch(file).then(function(r){return r.json();}).then(function(d){ datiMappa = d; aggancia(); }).catch(function(){});
 
+      // SOLO la mappa pensata da NotebookLM (campo "mappa" del JSON, scritto
+      // dalla pipeline con --mappa). Nessun ripiego dal riassuntone: se la
+      // lezione non ha la mappa, il pulsante non compare (scelta di Lorenzo:
+      // meglio niente che una mappa meccanica).
+      function pulisci(t){ return String(t||'').replace(/\s+/g,' ').trim(); }
       function alberoDa(d){
-        var rami = (d.riassuntone || []).map(function(m){
+        var m = d && d.mappa;
+        if(!m || !Array.isArray(m.rami) || m.rami.length < 2) return null;
+        var rami = m.rami.map(function(r){
           return {
-            testo: (m.titolo || '').replace(/\s+/g,' ').trim(),
-            figli: (m.check_points || []).map(function(cp){
-              return { testo: (cp.domanda || '').replace(/\s+/g,' ').trim(), figli: [] };
-            })
+            testo: pulisci(r.tema),
+            figli: (r.sotto || []).map(function(s){
+              return { testo: pulisci(s), figli: [] };
+            }).filter(function(f){ return f.testo; })
           };
         }).filter(function(r){ return r.testo; });
-        return { testo: (d.titolo_lezione || 'Lezione').replace(/\s+/g,' ').trim(), figli: rami };
+        if(rami.length < 2) return null;
+        return { testo: pulisci(m.titolo || d.titolo_lezione || 'Lezione'), figli: rami };
       }
 
       function aCapo(t, max){
@@ -1487,8 +1506,10 @@
 
       // generatore esposto: lo usa anche il modulo di stampa (mappa sempre fresca)
       window.__umsMappaGen = function(){
-        if(!datiMappa || !(datiMappa.riassuntone || []).length) return '';
-        try { return generaSVG(alberoDa(datiMappa)); } catch(e){ return ''; }
+        if(!datiMappa) return '';
+        var alb = alberoDa(datiMappa);
+        if(!alb) return '';
+        try { return generaSVG(alb); } catch(e){ return ''; }
       };
 
       function apriMappa(){
@@ -1526,7 +1547,7 @@
       // pulsante nella barra dei toggle (o barra propria se la lezione non ha slide)
       var tries = 0;
       function aggancia(){
-        if(!datiMappa || !(datiMappa.riassuntone || []).length) return;
+        if(!datiMappa || !alberoDa(datiMappa)) return;   // niente mappa NotebookLM = niente pulsante
         var barra = document.getElementById('ums-slide-toggle-box');
         var tg = barra && barra.querySelector('.ums-slide-toggle');
         var cont = document.getElementById('dyn-riassuntone-container');
