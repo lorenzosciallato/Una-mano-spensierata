@@ -169,184 +169,184 @@
   ],
   "il_super_quiz": [
     {
-      "domanda": "Qual è la differenza fondamentale tra i virus e i batteri definita all'inizio della lezione?",
+      "domanda": "In un piccolo villaggio viene isolato un virus che ha appena compiuto un salto di specie dagli uccelli all'uomo, mostrando inizialmente una letalità altissima. Dopo un anno di circolazione globale, i medici osservano che l'infezione causa sintomi lievi ma si diffonde più rapidamente. Come si spiega questo fenomeno secondo la lezione?",
       "opzioni": [
         {
-          "testo": "I batteri sono organismi completi e autonomi, mentre i virus sono particelle parassite obbligate che non possono riprodursi senza una cellula ospite.",
+          "testo": "Il virus subisce una progressiva perdita di materiale genetico a ogni ciclo replicativo, riducendo la propria capacità di produrre le proteine strutturali.",
+          "corretta": false
+        },
+        {
+          "testo": "I cicli replicativi selezionano varianti genetiche che causano meno danni all'ospite, assicurando che questo sopravviva abbastanza a lungo da trasmettere il virus.",
           "corretta": true
         },
         {
-          "testo": "I virus possiedono organelli complessi come mitocondri e lisosomi, mentre i batteri ne sono privi.",
-          "corretta": false
-        },
-        {
-          "testo": "I batteri contengono esclusivamente DNA, mentre tutti i virus contengono solo ed esclusivamente filamenti di RNA.",
+          "testo": "L'ospite attiva una risposta immunitaria preventiva basata su immunoglobuline IgG specifiche che bloccano immediatamente l'ancoraggio del patogeno.",
           "corretta": false
         }
       ],
-      "spiegazione": "La lezione definisce i virus non come veri e propri organismi, ma come particelle viventi parassite e parassiti obbligati, in quanto incapaci di riprodurre se stessi senza il supporto energetico e funzionale delle cellule di altri organismi."
+      "spiegazione": "La risposta corretta è la B perché, come spiegato nella lezione, un parassita obbligato ha bisogno di tempo e di energia dall'ospite per riprodursi e propagarsi; varianti genetiche meno aggressive permettono all'ospite di sopravvivere e diffondere maggiormente il virus. Il distrattore A è insidioso perché ipotizza una debolezza biologica del virus nel tempo, ma i virus modificano attivamente i propri geni per adattarsi senza perdere materiale essenziale. Il distrattore C confonde la risposta immunitaria individuale e specifica, che non può essere preventiva all'inizio di una nuova pandemia."
     },
     {
-      "domanda": "Dal punto di vista evolutivo, qual è la strategia ottimale di un virus per la propria propagazione nel tempo?",
+      "domanda": "Qual è la differenza fondamentale nel meccanismo di funzionamento tra un vaccino a RNA messaggero (come Pfizer) e un vaccino a vettore adenovirale (come AstraZeneca)?",
       "opzioni": [
         {
-          "testo": "Uccidere l'ospite il più rapidamente possibile per liberarsi istantaneamente nell'aria e infettare altri individui.",
+          "testo": "Il vaccino a RNA si integra stabilmente nel genoma delle cellule ospiti, mentre il vaccino a DNA viene degradato dagli enzimi cellulari dopo poche ore.",
           "corretta": false
         },
         {
-          "testo": "Sviluppare varianti genetiche sempre più aggressive in grado di aggirare qualsiasi tipo di vaccino a DNA.",
+          "testo": "Il vaccino a RNA stimola la produzione della sola proteina Spike, mentre il vaccino a DNA introduce nell'organismo l'intero virus della SARS-CoV-2 disattivato.",
           "corretta": false
         },
         {
-          "testo": "Diventare progressivamente meno aggressivo nei confronti del proprio ospite per consentirgli di sopravvivere più a lungo.",
+          "testo": "Il vaccino a RNA viene tradotto direttamente nel citoplasma dalle nostre cellule, mentre il vaccino a DNA deve prima penetrare nel nucleo cellulare per essere trascritto.",
           "corretta": true
         }
       ],
-      "spiegazione": "Un virus ha bisogno che l'ospite viva abbastanza a lungo da fornirgli energia e ospitalità per creare miliardi di copie di se stesso. Pertanto, la selezione naturale favorisce le varianti virali meno aggressive che permettono la sopravvivenza dell'ospite."
+      "spiegazione": "La risposta corretta è la C poiché l'RNA messaggero dei vaccini viene iniettato protetto da lipidi e tradotto direttamente nel citoplasma cellulare, mentre il DNA di AstraZeneca necessita del vettore adenovirale per raggiungere il nucleo ed essere trascritto in mRNA. Il distrattore B è insidioso poiché molti confondono il vettore virale (un adenovirus di scimmia vuoto e disattivato) con il virus SARS-CoV-2 intero, che invece caratterizza i vaccini tradizionali cinesi o russi. Il distrattore A inverte la realtà scientifica, ventilando l'ipotesi smentita dell'integrazione genomica del vaccino a RNA, che in realtà viene degradato in poche ore dagli enzimi cellulari."
     },
     {
-      "domanda": "Che cos'è la proteina Spike presente sul virus SARS-CoV-2 e qual è il suo ruolo biologico?",
+      "domanda": "Una persona riceve la prima dose di un vaccino senza mostrare sintomi. Al richiamo, dopo un mese, sviluppa febbre alta e dolori articolari nelle prime 48 ore. Quale processo immunitario spiega questa differente reazione?",
       "opzioni": [
         {
-          "testo": "Una proteina superficiale che funge da chiave di ancoraggio molecolare per agganciarsi ai recettori delle cellule dell'ospite.",
+          "testo": "Il sistema immunitario, già sensibilizzato, riconosce immediatamente l'antigene e scatena una risposta infiammatoria rapida ed energica.",
           "corretta": true
         },
         {
-          "testo": "Un enzima contenuto nel pericapside che distrugge immediatamente i ribosomi e i mitocondri polmonari.",
+          "testo": "La seconda dose contiene una quantità doppia di lipidi protettivi che mettono a dura prova la funzionalità di fegato e reni.",
           "corretta": false
         },
         {
-          "testo": "Un filamento di RNA che converte il materiale genetico del virus in DNA prima dell'ingresso nella cellula.",
+          "testo": "Il corpo produce una massiccia dose di immunoglobuline IgM aspecifiche che sostituiscono definitivamente la memoria immunitaria.",
           "corretta": false
         }
       ],
-      "spiegazione": "La proteina Spike costituisce la corona di protuberanze sulla superficie del SARS-CoV-2 e serve al virus per attaccarsi in modo complementare alle proteine recettoriali dei tessuti respiratori e gastrointestinali dell'ospite, penetrando poi rapidamente al loro interno."
+      "spiegazione": "La risposta corretta è la A perché la febbre e i sintomi post-richiamo testimoniano l'attivazione della risposta immunitaria secondaria: le cellule della memoria riconoscono subito l'antigene e avviano una difesa immediata e intensa. Il distrattore B è errato poiché le dosi dei vaccini a RNA hanno la stessa composizione e gli eccipienti lipidici non sono tossici per i reni a quelle dosi, a differenza dei farmaci antivirali sistemici. Il distrattore C è insidioso perché cita le immunoglobuline IgM trattate a lezione, ma queste caratterizzano la prima risposta aspecifica e non sostituiscono affatto la memoria immunitaria a lungo termine garantita dalle IgG."
     },
     {
-      "domanda": "Quali organelli o strutture cellulari sono presenti all'interno dell'involucro di un virus?",
+      "domanda": "Un biologo analizza due campioni ignoti: nel primo rileva organismi in grado di dividersi autonomamente in un terreno di coltura liquido; nel secondo osserva particelle stabili che si replicano solo dopo l'aggiunta di cellule epiteliali. Come vanno classificati i due campioni?",
       "opzioni": [
         {
-          "testo": "Solo lisosomi e ribosomi per la sintesi autonomica delle proteine Spike.",
+          "testo": "Il primo contiene virus ben adattati all'ambiente esterno; il secondo contiene batteri patogeni che richiedono un ospite per produrre energia.",
           "corretta": false
         },
         {
-          "testo": "Nessuno: non contiene organelli, mitocondri, lisosomi o ribosomi, ma solo un unico filamento di RNA o DNA.",
+          "testo": "Il primo contiene batteri, che sono cellule autonome e complete; il secondo contiene virus, che sono parassiti obbligati privi di apparato metabolico.",
           "corretta": true
         },
         {
-          "testo": "Un nucleo ben definito con cromosomi differenziati identici a quelli della cellula ospite.",
+          "testo": "Il primo contiene batteri simbionti che sfruttano l'ossigeno del terreno; il secondo contiene virus dotati di mitocondri ma privi di nucleo cellulare.",
           "corretta": false
         }
       ],
-      "spiegazione": "La lezione specifica che all'interno dell'involucro del virus non ci sono organuli (lisosomi, mitocondri), né nucleo o cromosomi differenziati: il cromosoma è unico ed è costituito semplicemente da un filamento di RNA o di DNA."
+      "spiegazione": "La risposta corretta è la B: i batteri sono organismi completi capaci di vita autonoma e riproduzione, mentre i virus sono particelle parassite obbligate che necessitano del supporto energetico e funzionale di una cellula ospite. Il distrattore A è un'inversione concettuale insidiosa per chi non ha chiaro che nessun virus può replicarsi autonomamente fuori dalle cellule. Il distrattore C attrae chi ricorda la descrizione degli organuli cellulari ma attribuisce erroneamente i mitocondri ai virus, i quali sono invece privi di qualsiasi organulo."
     },
     {
-      "domanda": "In che modo il ciclo replicativo del SARS-CoV-2 si differenzia da quello dei virus che integrano il proprio genoma nel nucleo dell'ospite?",
+      "domanda": "Durante un esperimento in laboratorio, un ricercatore prova a iniettare un filamento di RNA messaggero virale nudo, sciolto in acqua distillata, nel sangue di un modello animale. L'animale non sviluppa alcuna risposta immunitaria. Qual è la causa di questo fallimento?",
       "opzioni": [
         {
-          "testo": "L'RNA del SARS-CoV-2 viene liberato nel citoplasma e immediatamente tradotto dai ribosomi dell'ospite come se fosse un RNA messaggero cellulare, senza passare dal nucleo.",
+          "testo": "Le molecole di RNA nudo penetrano esclusivamente nelle cellule del fegato, impedendo ai linfociti del sangue di analizzarne la struttura chimica.",
+          "corretta": false
+        },
+        {
+          "testo": "L'acqua distillata altera la sequenza amminoacidica del filamento genico, trasformando la proteina Spike in una proteina innocua e tollerata.",
+          "corretta": false
+        },
+        {
+          "testo": "L'RNA messaggero non protetto da una membrana lipidica viene rapidamente aggredito e completamente degradato dagli enzimi presenti nel sangue.",
           "corretta": true
-        },
-        {
-          "testo": "Il SARS-CoV-2 penetra direttamente nel nucleo integrandosi stabilmente nel DNA per riattivarsi solo in caso di sbalzi di temperatura.",
-          "corretta": false
-        },
-        {
-          "testo": "L'involucro del SARS-CoV-2 si fonde con i mitocondri per produrre l'enzima trascrittasi inversa.",
-          "corretta": false
         }
       ],
-      "spiegazione": "A differenza dei virus che si integrano nel DNA del nucleo della cellula ospite, il SARS-CoV-2 segue una via più rapida: rilascia il suo RNA nel citoplasma, dove viene subito riconosciuto e tradotto dai ribosomi della cellula ospite in proteine virali."
+      "spiegazione": "La risposta corretta è la C perché, come descritto nella lezione, l'RNA messaggero libero ha una vita brevissima nel nostro organismo, venendo degradato in poche ore dagli enzimi cellulari e sanguigni se non protetto da goccioline lipidiche. Il distrattore A confonde la destinazione cellulare con un'improbabile barriera biologica che impedirebbe la presentazione dell'antigene. Il distrattore B fa leva su una spiegazione pseudoscientifica ma errata, poiché l'acqua non altera chimicamente le sequenze genetiche né l'RNA possiede direttamente una sequenza amminoacidica (la quale appartiene invece alle proteine)."
     },
     {
-      "domanda": "Come viene preparato e prodotto un vaccino secondo la metodologia classica descritta nella lezione?",
+      "domanda": "Perché il ciclo replicativo del SARS-CoV-2 è considerato più rapido e diretto rispetto a quello di altri virus come l'HIV o il virus del raffreddore descritti nella lezione?",
       "opzioni": [
         {
-          "testo": "Moltiplicando il virus all'interno di embrioni vivi in uova di pollo e disattivando successivamente i virus estratti chimicamente o tramite radiazioni.",
+          "testo": "Il filamento di RNA del SARS-CoV-2 viene riconosciuto immediatamente come RNA messaggero e tradotto in proteine nel citoplasma, senza passare dal nucleo.",
           "corretta": true
         },
         {
-          "testo": "Sintetizzando direttamente in laboratorio molecole di RNA messaggero avvolte in goccioline lipidiche.",
+          "testo": "Il SARS-CoV-2 rilascia un DNA che si integra istantaneamente nei cromosomi della cellula ospite senza richiedere l'intervento della trascrittasi inversa.",
           "corretta": false
         },
         {
-          "testo": "Utilizzando adenovirus svuotati delle scimmie coltivati in assenza di ossigeno.",
+          "testo": "Il SARS-CoV-2 utilizza i lisosomi e i mitocondri interni alla particella virale per completare l'autoadesione alla membrana cellulare senza consumare energia.",
           "corretta": false
         }
       ],
-      "spiegazione": "Il metodo classico consiste nell'infettare uova di pollo contenenti un embrione vivo per far replicare il virus. I virus estratti vengono poi disattivati chimicamente o tramite radiazioni ionizzanti per renderli non infettivi prima della purificazione."
+      "spiegazione": "La risposta corretta è la A: il virus della SARS-CoV-2 possiede un filamento di RNA che viene tradotto direttamente nei ribosomi della cellula ospite come un normale mRNA, evitando la trascrizione inversa e l'integrazione nucleare. Il distrattore B confonde il meccanismo dei retrovirus, attribuendo erroneamente al SARS-CoV-2 un genoma a DNA capace di integrarsi direttamente nei cromosomi. Il distrattore C ripropone l'errore concettuale sull'esistenza di organuli interni al virus (mitocondri o lisosomi), che la lezione esclude categoricamente."
     },
     {
-      "domanda": "Per quale motivo nei vaccini a mRNA il materiale genetico viene protetto all'interno di microscopiche goccioline lipidiche (grassi)?",
+      "domanda": "Un paziente riceve la prima dose del vaccino AstraZeneca e sviluppa una forte reazione immunitaria. Al momento del richiamo, tuttavia, l'efficacia del vaccino risulta drasticamente ridotta rispetto alle aspettative. Quale spiegazione fornisce la lezione per questo fenomeno?",
       "opzioni": [
         {
-          "testo": "Per evitare che l'RNA si duplichi autonomamente all'interno delle fiale prima della somministrazione.",
+          "testo": "Il DNA contenuto nel vaccino ha modificato i geni della proteina Spike della cellula ospite, rendendo l'organismo tollerante a ogni successiva inoculazione.",
           "corretta": false
         },
         {
-          "testo": "Per proteggere l'RNA dall'attacco immediato degli enzimi corporei e facilitare la fusione con la membrana delle cellule.",
+          "testo": "La prima dose stimola la produzione di anticorpi contro il vettore adenovirale di scimmia, che neutralizzano immediatamente il vaccino al secondo contatto.",
           "corretta": true
         },
         {
-          "testo": "Per forzare il sistema immunitario a produrre unicamente anticorpi aspecifici della classe IgM.",
+          "testo": "Il vettore adenovirale si replica così velocemente da consumare tutta l'energia del sistema immunitario prima che questo possa analizzare la Spike.",
           "corretta": false
         }
       ],
-      "spiegazione": "L'RNA messaggero ha una sopravvivenza nel corpo umano di poche ore ed è degradato rapidamente dagli enzimi. Le goccioline di grasso lo proteggono dagli enzimi ematici e ne consentono la fusione con la membrana cellulare, rilasciandolo intatto all'interno."
+      "spiegazione": "La risposta corretta è la B perché l'utilizzo di un adenovirus di scimmia come vettore (trasportatore) spinge il nostro sistema immunitario a produrre anticorpi anche contro il vettore stesso; al richiamo, questi anticorpi distruggono il vettore prima che possa consegnare il DNA della Spike alle cellule. Il distrattore A è insidioso perché fa perno sul timore (smentito) di alterazioni genetiche permanenti indotte dal vaccino nel genoma dell'ospite. Il distrattore C fa leva su un'idea plausibile di esaurimento energetico, ma cade sull'errore di considerare il vettore virale attivo e capace di replicarsi, mentre la lezione specifica che esso viene disattivato in laboratorio."
     },
     {
-      "domanda": "Perché il richiamo (seconda dose) del vaccino a vettore adenovirale (come AstraZeneca) si è rivelato scarsamente efficace?",
+      "domanda": "A un paziente anziano e debilitato in casa di cura viene diagnosticata un'infezione da SARS-CoV-2 in stato avanzato. Il medico decide di somministrare una terapia con farmaci antivirali specifici. Quale valutazione clinica guida questa scelta terapeutica secondo la lezione?",
       "opzioni": [
         {
-          "testo": "Perché dopo la prima dose il sistema immunitario riconosce l'adenovirus vettore come estraneo e sviluppa anticorpi pronti a neutralizzarlo immediatamente al secondo inoculo.",
+          "testo": "I farmaci antivirali sono altamente tossici per fegato e reni, quindi il loro utilizzo è giustificato solo quando vi è un immediato pericolo di vita.",
           "corretta": true
         },
         {
-          "testo": "Perché il DNA virale si integra stabilmente nel genoma umano impedendo l'accesso ad altre sostanze.",
+          "testo": "Gli antivirali stimolano il sistema immunitario a produrre immunoglobuline IgG molto più velocemente rispetto a quanto farebbe un normale vaccino.",
           "corretta": false
         },
         {
-          "testo": "Perché il vaccino a DNA richiede l'uso di antivirali tossici per reni e fegato prima di ogni somministrazione.",
+          "testo": "La terapia è priva di effetti collaterali significativi ed è quindi preferibile alla somministrazione preventiva dei vaccini a RNA nei soggetti fragili.",
           "corretta": false
         }
       ],
-      "spiegazione": "Dato che il vaccino a vettore adenovirale introduce un virus intero (l'adenovirus delle scimmie), l'organismo produce anticorpi anche contro il vettore stesso. Al momento del richiamo, gli anticorpi già pronti eliminano immediatamente il vettore prima che possa veicolare il DNA nelle cellule."
+      "spiegazione": "La risposta corretta è la A: i farmaci antivirali contro il SARS-CoV-2 sono molecole costose e dotate di una notevole tossicità epatica e renale, per cui si impiegano con estrema prudenza e solo in casi di emergenza clinica. Il distrattore B confonde il meccanismo d'azione degli antivirali (che bloccano la replicazione del virus) con quello dei vaccini (che stimolano la produzione di anticorpi). Il distrattore C rappresenta una semplificazione pericolosa, ipotizzando che gli antivirali siano una via facile e priva di rischi da preferire alla prevenzione vaccinale."
     },
     {
-      "domanda": "Quali sono le differenze temporali e di tipologia anticorpale tra la risposta immunitaria primaria e quella secondaria?",
+      "domanda": "I vaccini tradizionali contro il COVID-19 (come quelli prodotti in Cina e Russia) hanno mostrato un'efficacia inferior al 50% e tempi di produzione molto lunghi rispetto ai vaccini a RNA. Qual è la causa biologica e tecnica di questa differenza?",
       "opzioni": [
         {
-          "testo": "La risposta primaria è rapida e produce IgG, mentre la risposta secondaria richiede mesi per sintetizzare le IgM.",
+          "testo": "I vaccini tradizionali utilizzano frammenti di DNA che si degradano nel sangue in pochi minuti, impedendo ai macrofagi di rilevare la presenza del patogeno.",
           "corretta": false
         },
         {
-          "testo": "La risposta primaria produce anticorpi aspecifici IgM con un decorso lento; la risposta secondaria è rapidissima (2-3 giorni) e produce enormi quantità di immunoglobuline specifiche IgG.",
+          "testo": "I vaccini classici richiedono la coltivazione del virus intero in embrioni di pollo e la successiva disattivazione, un processo lento che può alterare l'immunogenicità.",
           "corretta": true
         },
         {
-          "testo": "Entrambe le risposte avvengono negli stessi tempi, ma la risposta primaria è l'unica a generare memoria a lungo termine nel sangue.",
+          "testo": "I vaccini a RNA contengono nano-dispositivi artificiali che costringono il sistema immunitario a focalizzarsi solo sulle cellule sane dell'epitelio respiratorio.",
           "corretta": false
         }
       ],
-      "spiegazione": "Al primo contatto (risposta primaria) l'organismo reagisce lentamente producendo IgM aspecifiche. In caso di successiva esposizione allo stesso patogeno (risposta secondaria), il sistema immunitario attiva subito la memoria e produce in soli 2-3 giorni un'elevata quantità di IgG specifiche."
+      "spiegazione": "La risposta corretta è la B poiché la produzione classica richiede la replicazione del virus vivo in embrioni di uova di pollo e la sua disattivazione chimica o radiologica, un flusso laborioso e lento che altera parzialmente le proprietà strutturali del virus, riducendone l'efficacia protettiva. Il distrattore A mescola in modo errato la degradazione rapida (caratteristica dell'RNA libero, non del DNA o dei vaccini tradizionali) con la natura stessa del vaccino inattivato. Il distrattore C gioca sulle fake news menzionate ironicamente dal professore a lezione (nano-bot, telecamere), che uno studente disattento potrebbe confondere con concetti scientifici."
     },
     {
-      "domanda": "Secondo quanto spiegato nella lezione, perché i farmaci antivirali attuali vengono somministrati con estrema prudenza e solo in casi eccezionali?",
+      "domanda": "Uno studente accusa i primi sintomi di un forte raffreddore due giorni dopo aver subito un brusco sbalzo di temperatura corporea. Sapendo che il virus del raffreddore convive stabilmente nella sua mucosa nasale fin dall'infanzia, come si spiega questa improvvisa manifestazione?",
       "opzioni": [
         {
-          "testo": "Perché degradano l'RNA messaggero vaccinale bloccando la formazione delle difese immunitarie.",
+          "testo": "Il freddo provoca una mutazione istantanea nel genoma del virus residente, trasformandolo da parassita innocuo a ceppo batterico altamente aggressivo.",
           "corretta": false
         },
         {
-          "testo": "Perché stimolano una reazione infiammatoria violenta con svenimenti e vomito analoga a quella del vaccino AstraZeneca.",
+          "testo": "Il calo di temperatura accelera la trascrittasi inversa delle cellule epiteliali, costringendole a produrre milioni di copie di DNA virale nel citoplasma.",
           "corretta": false
         },
         {
-          "testo": "Perché sono composti altamente tossici che mettono a dura prova la funzionalità di organi vitali come reni e fegato.",
+          "testo": "Lo sbalzo termico o lo stress indeboliscono temporaneamente le difese locali, permettendo al virus latente di avviare un ciclo riproduttivo attivo nelle cellule.",
           "corretta": true
         }
       ],
-      "spiegazione": "La lezione fa notare che i rari antivirali disponibili (come l'aciclovir o quelli contro il SARS-CoV-2) sono molto tossici e stressano fortemente fegato e reni. Vengono quindi somministrati solo in casi eccezionali o quando il paziente è in reale pericolo di vita."
+      "spiegazione": "La risposta corretta è la C: il virus del raffreddore è un parassita ben adattato che risiede stabilmente nell'epitelio respiratorio; quando avverte una debolezza o un calo delle difese dell'ospite (causato ad esempio da uno sbalzo termico), avvia rapidamente la sua replicazione. Il distrattore A è biologicamente errato poiché un virus non può mutare in un batterio, ma attira chi confonde superficialmente i due tipi di microrganismi trattati nella lezione. Il distrattore B usa termini tecnici legati alla trascrittasi inversa in modo non pertinente, dato che le cellule epiteliali umane sane non compiono questo processo e il freddo non ne influenza l'attività in questo modo."
     }
   ],
   "assistente_ia": {
