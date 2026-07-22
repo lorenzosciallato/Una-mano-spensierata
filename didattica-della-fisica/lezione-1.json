@@ -187,184 +187,184 @@
   ],
   "il_super_quiz": [
     {
-      "domanda": "Perché l'alcol denaturato comunemente in commercio presenta una tipica colorazione rosa?",
+      "domanda": "Durante l'esperimento di cromatografia, un gruppo di studenti fa toccare accidentalmente la macchia di inchiostro direttamente con l'alcol sul fondo del bicchiere. Quale conseguenza reale si osserverà a causa di questo errore procedurale?",
       "opzioni": [
         {
-          "testo": "Perché il colorante rosa aumenta la velocità di risalita del liquido sulla carta per capillarità.",
+          "testo": "L'alcol salirà molto più velocemente lungo la carta assorbente trascinando i pigmenti in modo caotico.",
           "corretta": false
         },
         {
-          "testo": "Perché l'alcol è soggetto al monopolio dello Stato e il colore rosa serve a impedire che venga bevuto.",
+          "testo": "L'inchiostro si scioglierà direttamente nel solvente sul fondo del bicchiere, colorando l'alcol anziché separarsi sulla carta.",
           "corretta": true
         },
         {
-          "testo": "Per segnalare che si tratta di alcol puro al 100% utilizzabile solo nei bar.",
+          "testo": "La macchia di inchiostro rimarrà fissata sulla linea di partenza senza subire alcuna alterazione visibile.",
           "corretta": false
         }
       ],
-      "spiegazione": "L'alcol etilico è soggetto al monopolio dello Stato. Nei canali commerciali ordinari viene addizionato con una sostanza rosa per renderlo imbevibile, mentre l'alcol puro non denaturato al 90% è destinato principalmente a laboratori o bar."
+      "spiegazione": "L'alcol deve risalire per capillarità lungo la carta e incontrare la macchia gradualmente per trasportare i diversi pigmenti a velocità differenti. Se la macchia tocca direttamente il liquido sul fondo, l'inchiostro si dissolve istantaneamente nel solvente nel bicchiere, colorandolo e compromettendo l'intera separazione. L'idea di una risalita caotica e accelerata è un distrattore insidioso che fa pensare a un'alterazione della separazione, mentre in realtà il processo sulla carta non avviene affatto."
     },
     {
-      "domanda": "Qual è lo scopo didattico di far formulare un'ipotesi individuale in assoluto silenzio nel metodo Inquiry?",
+      "domanda": "Se durante la preparazione della striscia di carta per la cromatografia si tracciasse la linea di partenza con una penna a sfera anziché con una matita di grafite, quale sarebbe l'effetto sul risultato dell'esperimento?",
       "opzioni": [
         {
-          "testo": "Permettere l'emersione delle preconoscenze di ciascun alunno, proteggendo anche i bambini più timidi.",
+          "testo": "I pigmenti del campione migreranno più lentamente a causa della reazione chimica indotta dai leganti sintetici dell'inchiostro della penna.",
+          "corretta": false
+        },
+        {
+          "testo": "Il solvente non riuscirà a superare la linea di penna, poiché l'inchiostro della penna crea una barriera impermeabile sulla carta porosa.",
+          "corretta": false
+        },
+        {
+          "testo": "La linea tracciata con la penna interferirà con la separazione, poiché anche l'inchiostro della penna si scioglierà nel solvente migrando insieme al campione.",
           "corretta": true
-        },
-        {
-          "testo": "Insegnare ai bambini a completare i compiti di scienze nel minor tempo possibile.",
-          "corretta": false
-        },
-        {
-          "testo": "Impedire agli studenti di utilizzare strumenti di misura digitali o connessioni a Internet.",
-          "corretta": false
         }
       ],
-      "spiegazione": "Il silenzio iniziale permette a tutti gli studenti, compresi quelli più timidi o riflessivi che verrebbero altrimenti sovrastati dai compagni che alzano subito la mano, di confrontarsi con le proprie preconoscenze ed elaborare un'ipotesi personale."
+      "spiegazione": "La matita di grafite viene utilizzata perché la grafite non è solubile nell'alcol e rimane fissa sulla linea di partenza, fungendo da riferimento inerte. L'inchiostro di una penna a sfera comune è invece solubile e verrebbe trasportato dall'alcol insieme al campione, sovrapponendosi e confondendo le bande colorate dei pigmenti analizzati. L'ipotesi della barriera impermeabile è un errore intuitivo comune tra gli studenti, che attribuiscono all'inchiostro una proprietà fisica ostruente inesistente."
     },
     {
-      "domanda": "Perché nell'approccio Inquiry è considerato un errore inserire titoli descrittivi o obiettivi predefiniti in cima alle schede di laboratorio?",
+      "domanda": "Per dimostrare che la separazione dei pigmenti tramite cromatografia su carta è una trasformazione fisica e non chimica, quale esperimento o evidenza risulta decisiva secondo la lezione?",
       "opzioni": [
         {
-          "testo": "Perché le definizioni fisiche cambiano troppo rapidamente da un anno all'altro.",
-          "corretta": false
-        },
-        {
-          "testo": "Perché costringono gli studenti a fare un lavoro di gruppo invece di un lavoro individuale.",
-          "corretta": false
-        },
-        {
-          "testo": "Perché svelano in anticipo l'esito dell'esperienza, mentre l'obiettivo è che lo studente ci arrivi da solo.",
+          "testo": "Miscelare due coloranti puri (es. rosso e blu) sullo stesso punto e verificare che la cromatografia li separi nuovamente restituendo le loro bande originarie.",
           "corretta": true
+        },
+        {
+          "testo": "Verificare se i singoli pigmenti separati reagiscono con l'ossigeno dell'aria cambiando colore stabilmente una volta asciugati.",
+          "corretta": false
+        },
+        {
+          "testo": "Confrontare la velocità con cui l'alcol evapora dalla carta rispetto a quella dell'acqua, per isolare il contributo termico del solvente.",
+          "corretta": false
         }
       ],
-      "spiegazione": "Svelare in anticipo il titolo o l'obiettivo dell'esperienza (come scrivere 'fusione del ghiaccio' in fondo al capitolo) toglie allo studente il percorso di scoperta autonoma che caratterizza la metodologia dell'Inquiry."
+      "spiegazione": "L'esperimento con i coloranti alimentari rosso e blu mostra che l'unione e la successiva separazione dei pigmenti non alterano la natura delle sostanze di partenza, che mantengono le proprie proprietà e si separano esattamente nelle bande originarie. Ciò esclude che l'inchiostro o il solvente abbiano reagito per formare nuove sostanze. Il distrattore sul cambio di colore all'aria attira chi tende erroneamente ad associare qualsiasi variazione cromatica visiva a una reazione chimica irreversibile."
     },
     {
-      "domanda": "Qual è il fenomeno fisico fondamentale che permette al solvente di risalire lungo la striscia di carta da disegno?",
+      "domanda": "Mettendo a confronto i concetti di 'contare' e 'misurare' illustrati nella lezione, quale rappresenta la reale differenza concettuale che uno studente deve comprendere?",
       "opzioni": [
         {
-          "testo": "La capillarità.",
+          "testo": "Contare fornisce un valore esatto privo di incertezze, mentre misurare si limita a ordinare le grandezze in base a una stima visiva approssimativa.",
+          "corretta": false
+        },
+        {
+          "testo": "Contare si basa sull'uso di strumenti digitali automatici, mentre misurare è un processo esclusivamente manuale condotto con righello o metro.",
+          "corretta": false
+        },
+        {
+          "testo": "Contare si applica a entità discrete e isolate, mentre misurare richiede di confrontare una grandezza continua con un'unità di riferimento definendone i rapporti spaziali.",
           "corretta": true
-        },
-        {
-          "testo": "La condensazione atmosferica.",
-          "corretta": false
-        },
-        {
-          "testo": "La gravità invertita.",
-          "corretta": false
         }
       ],
-      "spiegazione": "La risalita spontanea dell'alcol lungo le fibre porose del foglio da disegno avviene grazie al fenomeno fisico della capillarità."
+      "spiegazione": "Il conteggio si effettua su unità discrete e separate (come gli oggetti o le dita), mentre la misurazione si applica a grandezze continue (come lo spazio o il tempo) che non possiedono suddivisioni naturali intrinseche. Gli studenti spesso confondono i due processi perché per misurare finiscono per contare le tacche del righello, non comprendendo che l'atto fondamentale della misura è determinare l'estensione di un intervallo spaziale. Il distrattore sull'approssimazione visiva riduce la misura a una stima imprecisa, confondendo l'incertezza dello strumento con l'assenza di rigore metodologico."
     },
     {
-      "domanda": "In base a quale prova sperimentale si conclude che la cromatografia è una trasformazione fisica e non chimica?",
+      "domanda": "Un blocchetto di legno viene posizionato sopra un righello per misurarne la lunghezza: l'estremità sinistra si trova in corrispondenza dei 2 centimetri, mentre quella destra si allinea con gli 8 centimetri. Uno studente afferma che l'oggetto è lungo 8 centimetri. Quale fraintendimento concettuale rivela questa risposta?",
       "opzioni": [
         {
-          "testo": "Perché l'alcol modifica permanentemente la struttura molecolare dei pigmenti dei pennarelli carioca.",
+          "testo": "Lo studente ha effettuato una sottrazione errata tra la tacca iniziale e quella finale ottenendo un valore alterato.",
           "corretta": false
         },
         {
-          "testo": "Perché combinando coloranti alimentari puri (rosso e blu), il solvente li separa nuovamente senza creare nuove sostanze.",
+          "testo": "Lo studente confonde la lettura diretta di un valore numerico puntuale sullo strumento con la misurazione di una lunghezza continua come intervallo.",
           "corretta": true
         },
         {
-          "testo": "Perché la grafite della matita reagisce chimicamente con l'alcol sul fondo del bicchiere.",
+          "testo": "Lo studente ha applicato una compensazione simmetrica degli spazi vuoti sommando i valori degli estremi.",
           "corretta": false
         }
       ],
-      "spiegazione": "Usando coloranti alimentari puri, una goccia rossa e una blu mescolate sullo stesso punto vengono semplicemente separate dal solvente nelle bande originarie. Ciò dimostra che non è avvenuta alcuna reazione chimica, ma solo una separazione fisica dei componenti di un miscuglio."
+      "spiegazione": "Leggere semplicemente il numero sulla tacca finale ('8') trascura il fatto che l'oggetto non è allineato con lo zero e ignora i primi 2 centimetri non occupati dal blocchetto. Questo accade perché lo studente tratta le tacche del righello come etichette discrete da contare piuttosto che come indicatori di intervalli spaziali continui. Il distrattore sulla sottrazione errata simula un errore di calcolo che in realtà non è avvenuto, poiché lo studente non ha eseguito alcuna operazione matematica di differenza."
     },
     {
-      "domanda": "Quali sono le due parti fondamentali che costituiscono la 'definizione operativa' di una grandezza fisica?",
+      "domanda": "In fisica, una definizione esclusivamente descrittiva o verbale di una grandezza (come 'la lunghezza è la distanza geometrica tra due punti') non è scientificamente sufficiente. Per quale motivo è indispensabile una definizione operativa?",
       "opzioni": [
         {
-          "testo": "La formula teorica della grandezza e l'approvazione scritta del Sistema Internazionale.",
-          "corretta": false
-        },
-        {
-          "testo": "La stima qualitativa ad occhio e la scelta di un'unità di misura non convenzionale.",
-          "corretta": false
-        },
-        {
-          "testo": "La descrizione degli strumenti necessari e la determinazione di una procedura d'uso non ambigua (protocollo).",
+          "testo": "Perché deve specificare concretamente quali strumenti utilizzare e quale protocollo o procedura seguire per effettuare la misurazione in modo univoco.",
           "corretta": true
+        },
+        {
+          "testo": "Perché deve descrivere in dettaglio le proprietà microscopiche e atomiche della materia che costituisce l'oggetto misurato.",
+          "corretta": false
+        },
+        {
+          "testo": "Perché i termini linguistici variano nelle diverse culture, impedendo la standardizzazione delle unità di misura a livello internazionale.",
+          "corretta": false
         }
       ],
-      "spiegazione": "Una grandezza fisica è definita operativamente quando si stabiliscono con precisione sia gli strumenti fisici adatti a misurarla, sia il protocollo d'azione dettagliato (le regole d'uso) per compiere la misurazione."
+      "spiegazione": "La definizione operativa definisce una grandezza fisica descrivendo l'atto stesso della sua misura (gli strumenti e le istruzioni del protocollo), garantendo che scienziati diversi ottengano lo stesso risultato senza ambiguità. Senza questa componente pratica, la definizione verbale resta astratta. Il distrattore sulle variazioni linguistiche è un fatto culturale reale ma irrilevante rispetto al nucleo epistemologico della definizione operativa in fisica."
     },
     {
-      "domanda": "In che anno è stato fondato e formulato ufficialmente il Sistema Internazionale (SI) delle unità di misura?",
+      "domanda": "La definizione scientifica di metro è cambiata nel tempo, passando dall'uso di un 'metro campione' fisico (la barra di platino-iridio di Parigi) alla definizione attuale basata sulla velocità della luce nel vuoto. Qual era il limite concettuale e pratico del vecchio campione materiale?",
       "opzioni": [
         {
-          "testo": "Nel 1795.",
+          "testo": "Il platino e l'iridio risentono fortemente della forza di gravità terrestre, che ne deforma la struttura geometrica e ne altera la massa.",
           "corretta": false
         },
         {
-          "testo": "Nel 1960.",
+          "testo": "Un oggetto fisico conservato in un museo non può essere digitalizzato o confrontato con i moderni sistemi ottici.",
+          "corretta": false
+        },
+        {
+          "testo": "La barra metallica subisce alterazioni fisiche impercettibili nel tempo e le copie distribuite nei vari paesi presentano inevitabili difformità rispetto all'originale.",
           "corretta": true
-        },
-        {
-          "testo": "Nel 1875.",
-          "corretta": false
         }
       ],
-      "spiegazione": "Sebbene il sistema metrico decimale sia nato nel 1795 e il sistema MKS sia stato introdotto nel 1875, la fondazione ufficiale del Sistema Internazionale (SI) risale al 1960."
+      "spiegazione": "Un campione materiale è soggetto a invecchiamento, usura e deformazioni microscopiche; inoltre, la necessità di produrre copie fisiche per ogni nazione introduce progressivamente piccoli errori di riproduzione. Basando la misura sulla velocità della luce (una costante universale), la definizione diventa accessibile in ogni laboratorio del mondo senza dipendere dall'integrità di un singolo oggetto fisico. Il distrattore gravitazionale mescola impropriamente effetti sulla massa con la lunghezza della barra per ingannare chi ha una comprensione superficiale delle alterazioni dei materiali."
     },
     {
-      "domanda": "Come viene definito il metro campione nella fisica moderna per evitare i limiti di usura dei vecchi campioni materiali?",
+      "domanda": "Nella storia dei giganti narrata nella lezione, il padre finisce nel laghetto perché compie passi molto più lunghi di quelli del figlio, pur avendo camminato per lo stesso numero di passi indicato. Quale principio fondamentale della misura viene evidenziato da questo racconto?",
       "opzioni": [
         {
-          "testo": "In base alla distanza percorsa dalla luce nel vuoto in una specifica frazione infinitesima di secondo.",
+          "testo": "L'esigenza di ricorrere a sottomultipli precisi quando l'oggetto misurato non corrisponde a un numero intero di passi.",
+          "corretta": false
+        },
+        {
+          "testo": "La necessità di adottare un'unità di misura di riferimento costante, condivisa e del tutto indipendente dalle caratteristiche di chi misura.",
           "corretta": true
         },
         {
-          "testo": "In base alla lunghezza esatta del braccio del presidente dell'Ufficio dei Pesi e delle Misure di Parigi.",
-          "corretta": false
-        },
-        {
-          "testo": "Attraverso una barra metallica di platino-iridio custodita in un museo parigino.",
+          "testo": "L'importanza di scegliere una grandezza fisica che sia omogenea rispetto alla distanza o all'altezza che si intende misurare.",
           "corretta": false
         }
       ],
-      "spiegazione": "Poiché i campioni fisici materiali si deteriorano, la fisica moderna definisce il metro in modo costante e riproducibile attraverso lo spazio percorso dalla luce nel vuoto in un intervallo di tempo pari a 1/299.792.458 di secondo."
+      "spiegazione": "La misura richiede un'unità costante e convenzionalmente definita (uno standard) affinché l'informazione trasmessa sia univoca per chiunque. Se l'unità di misura varia a seconda del soggetto che esegue l'azione (il passo del padre gigante rispetto a quello del figlio), la misura perde l'oggettività e produce errori applicativi. Il distrattore sull'omogeneità è errato poiché la grandezza scelta (la lunghezza del passo) era concettualmente idonea a stimare una distanza lineare, ma difettava del requisito della standardizzazione."
     },
     {
-      "domanda": "Quale ostacolo cognitivo emerge quando i bambini dichiarano di non poter misurare la stanza perché 'i metri fisici sono finiti'?",
+      "domanda": "In un'attività didattica basata sull'approccio Inquiry (apprendimento per scoperta), per quale motivo un docente non dovrebbe mai inserire titoli espliciti o l'obiettivo dell'esperienza (ad esempio 'La fusione del ghiaccio' o 'Separazione cromatografica') in cima alla scheda di lavoro?",
       "opzioni": [
         {
-          "testo": "La mancata comprensione del principio di iterazione e spostamento dello strumento di misura.",
+          "testo": "Perché rivelare in anticipo l'argomento e l'esito finale dell'esperienza annulla lo sforzo di formulare ipotesi spontanee e di giungere alla comprensione tramite l'osservazione.",
           "corretta": true
         },
         {
-          "testo": "La confusione tra le unità di misura della temperatura e quelle dello spazio.",
+          "testo": "Perché l'uso di termini scientifici complessi nei titoli scoraggia gli studenti più timidi impedendo loro di collaborare attivamente nei gruppi.",
           "corretta": false
         },
         {
-          "testo": "L'incapacità biologica di leggere i numeri superiori a dieci su una scala graduata.",
+          "testo": "Perché le linee guida metodologiche ministeriali impongono la totale assenza di riferimenti testuali per garantire l'anonimato delle prove.",
           "corretta": false
         }
       ],
-      "spiegazione": "I bambini non comprendono spontaneamente che uno strumento di misura può essere spostato e riposizionato consecutivamente (iterato) lungo una distanza; vedono il limite dello strumento fisico come un blocco invalicabile per la misura."
+      "spiegazione": "Il nucleo dell'Inquiry consiste nel far emergere le idee pregresse e guidare lo studente a ricostruire il sapere partendo dall'osservazione diretta di un fenomeno misterioso. Un titolo esplicito svela l'esito dell'esperienza prima ancora che questa sia iniziata, riducendo l'attività a una mera verifica passiva di una risposta già nota. Il distrattore sugli studenti timidi sposta la questione su dinamiche psicologiche e relazionali che non rappresentano la motivazione didattica ed epistemologica di questa regola di progettazione."
     },
     {
-      "domanda": "Nel test del righello non allineato allo zero, quale errore ha commesso il 30% dei bambini rispondendo 'otto'?",
+      "domanda": "Un gruppo di bambini deve misurare la lunghezza dell'aula ma ha a disposizione soltanto un righello da 30 centimetri. Dopo averlo appoggiato una volta sul pavimento, si fermano sostenendo che non è possibile procedere perché 'il righello è finito'. Quale concetto operativo legato alla misurazione manca a questi studenti?",
       "opzioni": [
         {
-          "testo": "Hanno calcolato erroneamente la differenza matematica sottraendo la grafite.",
+          "testo": "La conoscenza delle equivalenze aritmetiche necessarie a convertire i centimetri del righello nei metri della stanza.",
           "corretta": false
         },
         {
-          "testo": "Hanno letto semplicemente il numero finale riportato sulla scala graduata del righello.",
+          "testo": "La comprensione che l'unità di misura può essere riportata in successione (iterazione) lungo l'intera estensione della grandezza continua da misurare.",
           "corretta": true
         },
         {
-          "testo": "Hanno contato le tacche vuote partendo dall'estremità opposta dello strumento.",
+          "testo": "La capacità di stimare visivamente e in modo approssimativo la frazione di spazio rimanente senza ricorrere a uno strumento fisico.",
           "corretta": false
         }
       ],
-      "spiegazione": "Il 30% dei bambini ha risposto 'otto' perché associa l'atto del misurare alla semplice lettura passiva del numero finale indicato dal righello, ignorando lo slittamento del punto di partenza e dimostrando di non padroneggiare il concetto di intervallo continuo."
+      "spiegazione": "Misurare significa scoprire quante volte l'unità di riferimento è contenuta nella grandezza complessiva. I bambini in questa fase associano la misura alla presenza fisica e statica dello strumento, non comprendendo che la procedura prevede lo spostamento ripetuto (iterazione) della stessa unità sommandone i singoli intervalli. Il distrattore sulle equivalenze attira gli studenti che tendono a interpretare ogni difficoltà didattica nella misurazione come un mero ostacolo di calcolo matematico, ignorando la componente procedurale e spaziale."
     }
   ],
   "assistente_ia": {
