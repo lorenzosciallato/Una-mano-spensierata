@@ -188,184 +188,184 @@
   ],
   "il_super_quiz": [
     {
-      "domanda": "Un medico deve formulare una diagnosi per un paziente che mostra sintomi influenzali compatibili con la febbre del West Nile da circa una settimana. Per quale motivo un test sierologico per la ricerca degli anticorpi effettuato in questo momento rischia di fornire un esito negativo nonostante l'infezione sia in corso?",
+      "domanda": "Un medico sospetta che un paziente abbia contratto la febbre del West Nile quindici giorni fa. Decide di attendere ancora qualche giorno prima di effettuare il test diagnostico basato sulla ricerca degli anticorpi nel sangue. Qual è il motivo clinico di questa scelta?",
       "opzioni": [
         {
-          "testo": "Il virus del West Nile possiede un meccanismo che distrugge selettivamente le immunoglobuline IgM durante la prima settimana dall'esposizione.",
+          "testo": "Il virus del West Nile ha un tropismo esclusivo per i tessuti nervosi e impiega almeno ventuno giorni prima di riversarsi nel circolo sanguigno periferico.",
           "corretta": false
         },
         {
-          "testo": "Il sistema immunitario umano impiega circa 21 giorni prima di produrre una quantità di anticorpi IgG sufficientemente elevata e rilevabile nel sangue.",
+          "testo": "Il nostro organismo impiega circa tre settimane per attivare una produzione di anticorpi sufficientemente elevata da poter essere rilevata con certezza nei test di laboratorio.",
           "corretta": true
         },
         {
-          "testo": "Il test sierologico è in grado di rilevare l'infezione solo se eseguito durante la fase asintomatica, che per questa zoonosi dura al massimo tre giorni.",
+          "testo": "I test anticorpali standard non riescono a distinguere il West Nile dalla dengue se eseguiti prima che il virus abbia completato il suo ciclo di replicazione intracellulare.",
           "corretta": false
         }
       ],
-      "spiegazione": "La risposta corretta si basa sul fatto che il sistema immunitario necessita di circa tre settimane (21 giorni) per produrre una risposta anticorpale consistente (IgG) rilevabile dai test di laboratorio. Il primo distrattore è particolarmente insidioso perché inventa un meccanismo biologico di distruzione delle IgM che potrebbe apparire plausibile a uno studente distratto, confondendolo con la normale sequenza temporale della risposta immunitaria. Il terzo distrattore compie invece un errore sulle tempistiche e sulle condizioni di eseguibilità del test, dato che l'incubazione può durare fino a tre settimane e la ricerca degli anticorpi si basa proprio sulla risposta post-infezione attiva."
+      "spiegazione": "La diagnosi di certezza della febbre del West Nile si basa sulla ricerca degli anticorpi che l'organismo produce contro il virus. Poiché il sistema immunitario impiega circa ventuno giorni per accelerare la produzione di queste molecole in quantità consistenti, un test eseguito precocemente risulterebbe negativo pur in presenza dell'infezione. Il distrattore basato sul tropismo nervoso confonde i sintomi gravi (la paralisi) con la dinamica di replicazione e localizzazione iniziale del virus nel sangue."
     },
     {
-      "domanda": "Uno studente rileva la presenza di un piccolo verme cilindrico all'interno di un campione biologico e nota che l'animale presenta una forma a Y dovuta alla giunzione dei due partner. Quale caratteristica anatomica descrive correttamente questa conformazione?",
+      "domanda": "Durante un intervento sanitario, un medico fa immergere la gamba di un paziente infettata da un nematode in acqua fredda per facilitarne l'estrazione. Quale principio biologico sta sfruttando il medico con questa procedura?",
       "opzioni": [
         {
-          "testo": "Il poro genitale della femmina è situato a circa due terzi della lunghezza del corpo, costringendo il maschio ad agganciarsi lateralmente.",
+          "testo": "La bassa temperatura dell'acqua anestetizza la muscolatura cutanea dell'ospite, riducendo l'infiammazione e costringendo il parassita a migrare in superficie.",
+          "corretta": false
+        },
+        {
+          "testo": "Il freddo agisce come stimolo nocicettivo per il verme maschio, che si sposta rapidamente verso l'esterno per evitare lo shock termico nei vasi linfatici.",
+          "corretta": false
+        },
+        {
+          "testo": "La femmina del parassita percepisce il brusco calo termico e fuoriesce parzialmente per deporre le uova, interpretando il contatto come un'immersione in acqua.",
           "corretta": true
-        },
-        {
-          "testo": "L'ermafroditismo della specie impone la fusione parziale dei canali digerenti dei due individui per consentire lo scambio simultaneo di gameti.",
-          "corretta": false
-        },
-        {
-          "testo": "La porzione anteriore del maschio è biforcuta per facilitare l'ancoraggio alla ventosa ventrale della femmina all'interno dei dotti biliari.",
-          "corretta": false
         }
       ],
-      "spiegazione": "La risposta esatta riflette la morfologia unica dei nematodi parassiti, in cui il poro genitale femminile si trova a due terzi del corpo e il maschio vi si aggancia formando una Y. Il secondo distrattore confonde i nematodi con i platelminti (che sono ermafroditi), ipotizzando una fusione dei canali digerenti dei due individui che è biologicamente errata, in quanto i nematodi hanno sessi separati e un semplice intestino tubulare. Il terzo distrattore è un classico errore di associazione con altri parassiti, spostando la localizzazione nei dotti biliari (tipica invece della Fasciola hepatica) e inventando strutture biforcute inesistenti."
+      "spiegazione": "L'immersione dell'arto in acqua fredda simula l'ambiente acquatico necessario alla femmina del nematode per deporre le uova. Il parassita reagisce a questo stimolo perforando la cute ed estraendo il corpo fino al poro genitale per completare la riproduzione. Il distrattore sull'anestesia cutanea è ingannevole perché l'acqua fredda dà sollievo al prurito e al dolore dell'ospite, ma non rappresenta la causa biologica del comportamento della femmina."
     },
     {
-      "domanda": "Durante un'intervento umanitario in un'area rurale, un operatore sanitario deve estrarre un verme di Guinea (nematode sottocutaneo) dall'arto inferiore di un paziente. Qual è la corretta procedura clinica per indurre la fuoriuscita del parassita senza causare superinfezioni batteriche?",
+      "domanda": "Un paziente scopre di avere un'infestazione da tenia intestinale che è rimasta del tutto asintomatica per oltre due anni, senza mai provocare i tipici «dolori da fame». Quale differenza biologica tra le specie spiega questa assenza di sintomi?",
       "opzioni": [
         {
-          "testo": "Applicare una pomata anestetica locale sulla ferita e utilizzare pinzette sterili per estrarre l'animale rapidamente in un'unica soluzione.",
-          "corretta": false
-        },
-        {
-          "testo": "Immergere l'arto in acqua fredda per stimolare la femmina a emergere parzialmente, arrotolandone poi delicatamente il corpo attorno a una penna giorno dopo giorno.",
+          "testo": "La tenia dei bovini si fissa alla parete intestinale usando solo ventose e non possiede gli uncini mobili che causano spasmi dolorosi quando il parassita si agita.",
           "corretta": true
         },
         {
-          "testo": "Somministrare una dose massiccia di sciroppo vermifugo per indurre spasmi muscolari nel parassita, provocando la sua espulsione autonoma attraverso l'ano.",
+          "testo": "La tenia dei suini ricava nutrimento digerendo il muco intestinale mentre quella dei bovini assorbe i nutrienti digeriti direttamente attraverso la superficie corporea.",
+          "corretta": false
+        },
+        {
+          "testo": "La specie uncinata si riproduce per via asessuale ostruendo il duodeno, mentre la specie priva di uncini tollera la compresenza di altri parassiti simbionti.",
           "corretta": false
         }
       ],
-      "spiegazione": "La risposta corretta illustra il metodo empirico e clinico descritto nella lezione, in cui l'immersione in acqua fredda simula l'ambiente acquatico spingendo la femmina a uscire per deporre le uova, consentendo al medico di arrotolarla gradualmente su una penna o matita senza spezzarla. Il primo distrattore confonde questa procedura con la rimozione del verme dell'occhio (trasmesso dal tafano), in cui si usa un anestetico e si estrae il parassita con le pinzette. Il terzo distrattore confonde invece il ciclo e la localizzazione del nematode sottocutaneo con quello degli ossiuri intestinali dei bambini, per i quali si impiega effettivamente uno sciroppo vermifugo per favorire l'eliminazione fecale."
+      "spiegazione": "La tenia dei bovini si ancora alla mucosa intestinale solo tramite ventose e ha un comportamento molto statico, riducendo al minimo l'irritazione locale. La tenia dei suini possiede invece uncini mobili che lacerano e stimolano il duodeno quando il parassita si muove per fame, generando spasmi interpretati come forte appetito. Il distrattore digestivo trae in inganno lo studente distratto poiché entrambe le tenie mancano completamente di apparato digerente e assorbono i nutrienti attraverso il tegumento."
     },
     {
-      "domanda": "Un veterinario raccomanda caldamente la profilassi vaccinale contro la filariosi cardiopolmonare per un cane, ma specifica che non è disponibile un vaccino analogo per l'uomo. Se una persona viene punta da una zanzara infetta da Dirofilaria, quale conseguenza biologica si verificherà nel suo organismo?",
+      "domanda": "In una scuola dell'infanzia si registra un focolaio di ossiuriasi. Nonostante le maestre disinfettino costantemente i giocattoli e curino l'igiene delle mani dei bambini, il contagio continua a diffondersi. Quale modalità di trasmissione spiega la persistenza dell'infezione?",
       "opzioni": [
         {
-          "testo": "La larva migrerà rapidamente verso il cuore umano, provocando una miocardite acuta e una grave insufficienza respiratoria simile a quella del cane.",
+          "testo": "Le larve microscopiche penetrano attivamente attraverso la cute integra dei piedi dei bambini quando corrono senza calzini sul pavimento della classe.",
           "corretta": false
         },
         {
-          "testo": "La larva si localizzerà esclusivamente nei vasi linfatici dello scroto o del seno, riproducendosi attivamente e causando elefantiasi genitale.",
-          "corretta": false
-        },
-        {
-          "testo": "La larva, non riconoscendo l'uomo come ospite naturale, vagherà in modo disordinato nei tessuti sottocutanei provocando irritazioni e rash cutanei.",
+          "testo": "Le uova deposte nella zona perianale cadono a terra e vengono sollevate nell'aria sotto forma di polvere quando i bambini corrono, venendo poi inalate.",
           "corretta": true
+        },
+        {
+          "testo": "Il parassita viene trasmesso per via aerea diretta tramite le goccioline di saliva rilasciate con la tosse o gli starnuti dai soggetti infetti.",
+          "corretta": false
         }
       ],
-      "spiegazione": "La risposta esatta descrive il comportamento aberrante della Dirofilaria nell'uomo: non essendo il suo ospite naturale, il parassita si perde e migra disordinatamente nei tessuti sottocutanei, non riuscendo a localizzarsi nel cuore o nei polmoni. Il primo distrattore rappresenta l'errore comune di ritenere che il parassita compia lo stesso ciclo patologico sia nell'ospite naturale (cane) sia in quello accidentale (uomo). Il secondo distrattore confonde invece la dirofilaria del cane con la filaria trasmessa da altre zanzare che colonizza specificamente il sistema linfatico umano causando deformazioni deformanti degli organi molli."
+      "spiegazione": "La persistenza dell'ossiuriasi in ambienti scolastici è legata alla facilità con cui le uova si disperdono nell'ambiente circostante. Quando i bambini si muovono e giocano, sollevano la polvere del pavimento in cui si sono depositate le uova cadute dalla pelle perianale, favorendone l'inalazione e il successivo ingerimento. Il distrattore sulla penetrazione cutanea confonde la biologia degli ossiuri con quella di altri parassiti dei climi tropicali, mentre quello respiratorio applica erroneamente un meccanismo virale."
     },
     {
-      "domanda": "Una maestra elementare nota che un alunno tende a muoversi continuamente sulla sedia, sollevando parzialmente un gluteo nel tentativo di grattarsi in modo discreto. Sulla base delle dinamiche di trasmissione degli ossiuri, in che modo l'intera classe rischia di essere contagiata?",
+      "domanda": "Un piccolo produttore locale difende la sicurezza dei suoi insaccati artigianali crudi affermando che i suoi suini, allevati all'aperto in un bosco recintato, sono sani e privi di qualsiasi sintomo visibile. Perché questa argomentazione è biologicamente fallace riguardo al rischio di trichinellosi?",
       "opzioni": [
         {
-          "testo": "Le uova deposte nella zona perianale cadono a terra e, venendo sollevate nell'aria sotto forma di polvere dai bambini che corrono, vengono accidentalmente respirate.",
+          "testo": "I suini possono ospitare le larve nei muscoli senza mostrare sintomi clinici, essendosi infettati cacciando piccoli roditori che riescono a entrare nel recinto.",
           "corretta": true
         },
         {
-          "testo": "I bambini contraggono l'infezione toccando le superfici delle sedie contaminate da solventi organici volatili evaporati dalle plastiche morbide.",
+          "testo": "I maiali sani contraggono la parassitosi nutrendosi di vegetali selvatici contaminati dalle uova resistenti depositate dalle volpi o dai lupi della zona.",
           "corretta": false
         },
         {
-          "testo": "Il parassita viene trasmesso da zanzare del genere Culex che pungono i bambini durante le ore pomeridiane all'interno delle aule scolastiche.",
+          "testo": "Le larve di Trichinella si formano principalmente durante la fase di stagionatura all'aria aperta, indipendentemente dallo stato di salute iniziale dell'animale.",
           "corretta": false
         }
       ],
-      "spiegazione": "La risposta corretta evidenzia la modalità di trasmissione degli ossiuri per via aerea, mediante l'inalazione di polvere contenente uova microscopiche sollevata dal movimento dei bambini. Il secondo distrattore unisce in modo confuso un fattore di rischio chimico reale citato nella lezione (l'evaporazione di solventi dalle sedie di plastica morbida nelle scuole) con la trasmissione di un parassita biologico, creando un'associazione fuorviante ma suggestiva per uno studente disattento. Il terzo distrattore confonde invece la trasmissione diretta degli ossiuri con il ruolo di vettore biologico delle zanzare Culex, che nella lezione trasmettono virosi o filariosi ma non i nematodi intestinali."
+      "spiegazione": "I suini infettati da Trichinella agiscono come ospiti e non mostrano sintomi evidenti di malattia, rendendo l'esame ispettivo visivo del tutto insufficiente a garantire la sicurezza delle carni. L'allevamento all'aperto aumenta il rischio di esposizione, poiché i maiali possono facilmente cibarsi di piccoli roditori selvatici infetti. Il distrattore sui vegetali confonde la via di trasmissione di questo parassita (che richiede rigorosamente l'ingestione di tessuto muscolare infetto) con il ciclo vitale di elminti che rilasciano uova nell'ambiente."
     },
     {
-      "domanda": "Un ispettore sanitario deve valutare la sicurezza di una partita di insaccati artigianali stagionati, prodotti da un allevatore locale che non ha sottoposto i suini a controlli veterinari. Quale test pratico permette di escludere visivamente il rischio di contaminazione da larve di Trichinella spiralis?",
+      "domanda": "Sia la Fasciola epatica che l'Echinococco possono colonizzare il fegato umano, ma l'esame delle feci del paziente è utile per diagnosticare solo una di queste due parassitosi. Quale differenza nel ciclo biologico dei parassiti determina questa discrepanza diagnostica?",
       "opzioni": [
         {
-          "testo": "Verificare che la superficie esterna del salame non presenti incrostazioni calcaree o muffe grigie provocate dalla deposizione delle uova del parassita.",
+          "testo": "La Fasciola epatica si moltiplica per via asessuale producendo cisti chiuse nel fegato, mentre l'Echinococco rilascia direttamente le larve nel duodeno per l'espulsione.",
           "corretta": false
         },
         {
-          "testo": "Tagliare fette sottili di carne e osservarle controluce per verificare l'assenza di piccoli puntini bianchi simili a fiocchi di neve nei muscoli.",
+          "testo": "I vermi adulti di Echinococco risiedono nei dotti biliari e rilasciano le uova nella cistifellea, mentre la Fasciola epatica migra costantemente nel flusso sanguigno.",
+          "corretta": false
+        },
+        {
+          "testo": "La Fasciola epatica adulta vive nei dotti biliari e scarica le uova nell'intestino, mentre l'Echinococco nell'uomo forma cisti chiuse e si moltiplica solo asessualmente.",
           "corretta": true
-        },
-        {
-          "testo": "Immergere un campione di prosciutto in una soluzione acida per verificare se le larve muoiono istantaneamente a contatto con un pH inferiore a due.",
-          "corretta": false
         }
       ],
-      "spiegazione": "La risposta esatta descrive il metodo pratico di ispezione visiva controluce della fetta sottile di carne per individuare le cisti di trichina, che appaiono come puntini bianchi opachi nel tessuto muscolare striato. Il primo distrattore confonde la deposizione delle uova con le muffe superficiali di stagionatura, dimenticando che la trichina si localizza esclusivamente all'interno delle fibre muscolari striate e non sulla superficie esterna degli insaccati. Il terzo distrattore commette un errore biologico sostanziale: le larve di trichinella sono protette da una cisti resistente e non vengono uccise dagli acidi dello stomaco (né da soluzioni acide esterne), ma anzi vengono liberate dai succhi gastrici per completare il ciclo nell'intestino dell'ospite."
+      "spiegazione": "La Fasciola epatica adulta colonizza i dotti biliari e sfrutta il flusso della bile per riversare le proprie uova nel duodeno, rendendone possibile il rilevamento fecale. L'Echinococco, invece, nell'uomo si sviluppa esclusivamente sotto forma di cisti chiuse d'acqua negli organi interni, dove si riproduce per via asessuata senza mai produrre uova intestinali. Il distrattore che inverte i meccanismi fa leva sulla parziale sovrapposizione d'organo (fegato) per confondere lo studente distratto sulla localizzazione anatomica specifica dei due cicli parassitari."
     },
     {
-      "domanda": "Qual è la differenza biologica ed ecologica fondamentale tra il ciclo di trasmissione della tenia bovina (Tenia saginata) e quello della tenia del maiale (Tenia solium)?",
+      "domanda": "Secondo l'analisi della comunicazione del rischio presentata nella lezione, per quale motivo le autorità sanitarie non hanno mai comunicato al pubblico il potenziale ruolo delle zanzare come «aghi biologici» nella trasmissione dell'HIV?",
       "opzioni": [
         {
-          "testo": "La tenia del maiale possiede uncini per agganciarsi al duodeno provocando dolorosi crampi da fame, mentre quella bovina usa solo ventose ed è asintomatica.",
+          "testo": "Perché il bilancio rischi-benefici ha evidenziato che la comunicazione di un pericolo incontrollabile avrebbe causato panico senza offrire alcuna soluzione pratica ed efficace.",
           "corretta": true
         },
         {
-          "testo": "La tenia bovina richiede un ospite intermedio acquatico come una chiocciola, mentre quella del maiale si trasmette esclusivamente per via aerea.",
+          "testo": "Perché la zanzara possiede enzimi salivari specifici che neutralizzano completamente la carica virale dell'HIV prima di pungere un secondo ospite.",
           "corretta": false
         },
         {
-          "testo": "La tenia del maiale vive libera nell'intestino crasso assorbendo nutrienti, mentre quella bovina penetra nei vasi sanguigni del fegato.",
+          "testo": "Perché la trasmissione meccanica del virus richiede temperature costantemente superiori ai trenta gradi, rendendo il fenomeno irrilevante per i paesi europei.",
           "corretta": false
         }
       ],
-      "spiegazione": "La risposta corretta mette a confronto le caratteristiche morfologiche e la sintomatologia delle due tenie, evidenziando la presenza di uncini nello scolice della Tenia solium (causa dei dolori da fame dovuto alle sollecitazioni del duodeno) rispetto alle sole ventose della Tenia saginata. Il secondo distrattore attribuisce erroneamente alla tenia bovina il ciclo vitale della Fasciola hepatica (che coinvolge la chiocciola d'acqua dolce), confondendo due parassiti differenti trattati nella lezione. Il terzo distrattore inverte e confonde la localizzazione intestinale tipica delle tenie con quella epatica della fasciola o dei vasi sanguigni."
+      "spiegazione": "La decisione di omettere questo canale teorico di trasmissione risponde a precisi criteri politici ed etici di gestione del rischio. Poiché non esiste alcun metodo per sterminare tutte le zanzare, diffondere tale informazione avrebbe provocato una grave psicosi collettiva senza dare strumenti di difesa reali ai cittadini. Il distrattore sugli enzimi salivari imita una giustificazione biologica verosimile, ma ignora la spiegazione data dal docente che si focalizza sul funzionamento del bilancio sociale tra la gravità del pericolo e l'impossibilità di contrastarlo."
     },
     {
-      "domanda": "Un escursionista consuma un'insalata preparata con crescione selvatico raccolto a bordo di un ruscello di montagna in un'area adibita al pascolo di ovini. Quale meccanismo biologico potrebbe portare allo sviluppo di fitte dolorose al fegato a distanza di un anno da questo pasto?",
+      "domanda": "Un paziente manifesta forti irritazioni e rash cutanei dovuti alla migrazione disordinata e impazzita di una larva di dirofilaria nei suoi tessuti sottocutanei. Quale anomalia biologica causa questo comportamento erratico del parassita?",
       "opzioni": [
         {
-          "testo": "La larva di echinococco ingerita con il crescione ha perforato la parete dello stomaco e ha colonizzato le vie biliari trasformandosi in un verme solitario.",
+          "testo": "Il sistema immunitario umano produce anticorpi che bloccano i recettori chimici della larva, impedendole di raggiungere il sistema digerente superficiale.",
           "corretta": false
         },
         {
-          "testo": "Le cisti di Fasciola hepatica ancorate alle foglie del crescione liberano larve che migrano nel fegato, utilizzando spine cutanee per spostarsi tra i tessuti.",
+          "testo": "La zanzara vettore ha inoculato accidentalmente solo vermi di sesso maschile, la cui mancanza di stimoli ormonali femminili ne inibisce la stabilizzazione cardiaca.",
+          "corretta": false
+        },
+        {
+          "testo": "La larva si trova in un ospite non classico e vaga senza meta nei tessuti superficiali perché non riesce a localizzare le arterie polmonari umane per completare il ciclo.",
           "corretta": true
-        },
-        {
-          "testo": "Le uova di ossiuri depositate sulle foglie acquatiche schiudono nello stomaco, liberando piccoli vermi che si nutrono esclusivamente di cellule epatiche.",
-          "corretta": false
         }
       ],
-      "spiegazione": "La risposta corretta descrive il ciclo della Fasciola hepatica, le cui larve (cercarie) si incistano sul crescione acquatico e, una volta ingerite, migrano nel fegato provocando dolore a causa delle spine cutanee utilizzate per l'ancoraggio e la locomozione tissutale. Il primo distrattore è insidioso perché unisce l'ingestione accidentale di parassiti pascolativi all'echinococco, ma sbaglia attribuendogli lo sviluppo di un \"verme solitario\" e la colonizzazione delle vie biliari (l'echinococco forma invece cisti idatidee chiuse). Il terzo distrattore confonde completamente il crescione con la trasmissione degli ossiuri, i quali hanno una localizzazione strettamente intestinale terminale e non migrano mai nel fegato."
+      "spiegazione": "La dirofilaria è un parassita tipico del cane e, quando viene inoculata accidentalmente nell'uomo da una zanzara infetta, non trova i segnali chimici e anatomici adatti per orientarsi. Questo la spinge a muoversi senza sosta e in modo imprevedibile nei tessuti connettivi cutanei umani anziché localizzarsi nei polmoni e nel cuore. I distrattori tentano di spiegare questo smarrimento ricorrendo a fantasiose anomalie ormonali o immunitarie, concetti vicini alla lezione ma non legati alla specificità di ospite."
     },
     {
-      "domanda": "Durante un esame autoptico, un patologo individua una cisti idatidea sferica delle dimensioni di una pallina da tennis nel cervello di un paziente deceduto. Quale grave errore procedurale durante una diagnosi chirurgica in vita avrebbe potuto causare il decesso immediato del soggetto?",
+      "domanda": "Al rientro da una scampagnata nei boschi, una persona nota una zecca saldamente ancorata alla propria pelle. Decide di afferrarla e tirarla via con forza con le dita, proprio come fa di solito con il proprio cane. Quale grave errore biologico caratterizza questo comportamento?",
       "opzioni": [
         {
-          "testo": "L'esecuzione di una risonanza magnetica che avrebbe eccitato gli spin magnetici delle larve, provocando la loro moltiplicazione asessuata immediata.",
+          "testo": "Lo strappo improvviso induce la zecca femmina a rilasciare istantaneamente migliaia di uova microscopiche all'interno dei capillari sanguigni superficiali.",
           "corretta": false
         },
         {
-          "testo": "La prescrizione di un antibiotico ad ampio spettro che, distruggendo la parete della cisti, avrebbe riversato tossine chimiche nel liquido cerebrospinale.",
-          "corretta": false
-        },
-        {
-          "testo": "La perforazione o rottura accidentale della cisti con il bisturi, con conseguente riversamento di centinaia di larve e shock anafilattico fulminante.",
+          "testo": "Il tentativo di rimozione forzata provoca il rigurgito di saliva infetta e rischia di lasciare la testa con il rostro inserita sotto la cute dell'ospite.",
           "corretta": true
+        },
+        {
+          "testo": "La trazione meccanica stimola la zecca a scavare più a fondo fino a raggiungere il sistema linfatico profondo per evitare il distacco.",
+          "corretta": false
         }
       ],
-      "spiegazione": "La risposta corretta si riferisce al rischio letale associato all'echinococcosi: la cisti idatidea contiene centinaia di larve e la sua rottura accidentale durante la rimozione chirurgica scatena uno shock anafilattico fatale per il paziente. Il primo distrattore è una spiegazione pseudoscientifica fantasiosa ma suggestiva, che sfrutta la terminologia medica delle indagini diagnostiche per confondere uno studente disattento. Il secondo distrattore commette l'errore comune di attribuire agli antibiotici un'azione distruttiva sulle strutture dei parassiti eucariotici pluricellulari, i quali sono invece del tutto insensibili a tali farmaci."
+      "spiegazione": "Le zecche si fissano alla cute dell'ospite cementando l'apparato boccale e la testa in profondità sotto l'epidermide. Una trazione meccanica brusca provoca la decapitazione del parassita, lasciando i tessuti orali infetti nella ferita, e stimola per reazione un abbondante rigurgito di saliva infetta cariche di patogeni come quelli del morbo di Lyme. Il distrattore sulle uova confonde il ciclo di vita dell'artropode, che depone le sue uova solo nell'ambiente esterno una volta completato il pasto e abbandonato l'ospite."
     },
     {
-      "domanda": "In una riunione di dipartimento regionale per la salute pubblica, sorge una controversia sulla gestione del rischio di una nuova virosi trasmessa da vettori biologici. Quale delle seguenti affermazioni distingue correttamente il ruolo dei tecnici da quello dei politici nel processo di analisi del rischio?",
+      "domanda": "Un escursionista viene punto ripetutamente da zanzare di grandi dimensioni sia di giorno che in piena notte, notando che il loro volo è estremamente rumoroso. Basandosi sulle caratteristiche dei vettori descritte nella lezione, quale conclusione si può trarre?",
       "opzioni": [
         {
-          "testo": "I tecnici analizzano i dati epidemiologici per identificare formalmente i pericoli ambientali, mentre i politici assumono la decisione finale sulle misure di gestione bilanciando costi e benefici.",
+          "testo": "L'escursionista è stato attaccato dalla zanzara anofele aborigena, l'unica specie attiva nelle ore diurne in grado di trasmettere la malaria in Europa.",
+          "corretta": false
+        },
+        {
+          "testo": "Le punture diurne sono state causate sicuramente dalla zanzara tigre, che si distingue per le grandi dimensioni superiori al centimetro e il volo ronzante.",
+          "corretta": false
+        },
+        {
+          "testo": "Gli attacchi non sono riconducibili ad alcuna delle tre specie principali descritte, poiché nessuna di esse unisce grandi dimensioni, volo rumoroso e attività diurna.",
           "corretta": true
-        },
-        {
-          "testo": "I politici conducono i test tossicologici di laboratorio sulle sostanze di sintesi, mentre i tecnici si occupano esclusivamente della comunicazione mediatica per evitare il panico sociale.",
-          "corretta": false
-        },
-        {
-          "testo": "I tecnici gestiscono direttamente le risorse finanziarie per le bonifiche ambientali, mentre i politici si limitano a firmare le liberatorie veterinarie per la vendita delle carni.",
-          "corretta": false
         }
       ],
-      "spiegazione": "La risposta corretta rispecchia la distinzione tra la fase tecnica di identificazione dei pericoli (svolta da ingegneri, chimici, biologi e medici) e la fase decisionale e politica di gestione e comunicazione dei rischi basata sul bilancio dei costi e benefici sociali. Il secondo distrattore inverte grossolanamente i ruoli, attribuendo ai politici l'esecuzione dei test scientifici e ai tecnici la comunicazione mediatica, che invece è spesso filtrata e gestita a livello politico. Il terzo distrattore confonde i ruoli operativi, attribuendo ai tecnici la gestione finanziaria e ai politici le mansioni burocratiche veterinarie, che sono invece di competenza tecnica di medici veterinari."
+      "spiegazione": "Nessuna delle tre zanzare analizzate nel corso corrisponde all'identikit segnalato: la zanzara tigre punge h24 ed è aggressiva, ma ha dimensioni molto ridotte; la zanzara comune punge solo nel pomeriggio ed è piccola; la zanzara anofele è grande ma ha un volo impercettibile e punge esclusivamente di notte. Il distrattore sulla zanzara tigre confonde l'aggressività e la persistenza con la stazza corporea, mentre quello sull'anofele ne stravolge l'orario di attività e la tipica silenziosità del volo."
     }
   ],
   "assistente_ia": {
