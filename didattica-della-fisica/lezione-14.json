@@ -187,184 +187,184 @@
   ],
   "il_super_quiz": [
     {
-      "domanda": "Nel modello unipolare del pensiero infantile riguardo ai circuiti elettrici, come viene concepita la batteria?",
+      "domanda": "Uno studente della scuola primaria disegna un circuito con una pila e una lampadina, spiegando che la corrente parte dal polo positivo, attraversa il filo, entra nella lampadina che ne 'mangia' una parte per fare luce, e quella rimanente torna al polo negativo tramite l'altro filo. Quale modello del pensiero infantile descrive accuratamente questo ragionamento, e come si differenzia dal modello scientifico?",
       "opzioni": [
         {
-          "testo": "Come un generatore di correnti scontranti che si fondono all'interno della lampadina.",
+          "testo": "Il modello unipolare, in cui si pensa che l'elettricità si muova solo attraverso un unico filo e che il secondo filo serva unicamente come supporto di sicurezza.",
           "corretta": false
         },
         {
-          "testo": "Come un mero contenitore o serbatoio statico da cui l'energia viaggia a senso unico verso la lampadina per farla funzionare.",
+          "testo": "Il modello della corrente consumata, in cui si ritiene che la lampadina utilizzi parte del flusso elettrico, a differenza del modello scientifico dove l'intensità di corrente rimane costante in ogni punto del circuito.",
           "corretta": true
         },
         {
-          "testo": "Come un elemento passivo che si limita a regolare la velocità di transito delle cariche negative.",
+          "testo": "Il modello delle correnti che si scontrano, in cui si ipotizza che due flussi opposti di elettricità convergano nella lampadina provocando una scintilla luminosa.",
           "corretta": false
         }
       ],
-      "spiegazione": "Il modello unipolare, riscontrabile nei bambini e persistente talvolta fino all'età adulta, prevede l'idea che l'energia passi a senso unico dalla batteria (concepita come contenitore o serbatoio) alla lampadina, senza comprendere la necessità di un circuito chiuso di ritorno."
+      "spiegazione": "La risposta corretta identifica il modello della corrente consumata, in cui lo studente crede che la lampadina riduca l'intensità della corrente usandone una porzione. Nel modello scientifico, invece, la corrente si mantiene costante lungo tutto il circuito e ciò che si trasforma è l'energia. Il distratore legato al modello unipolare è errato perché in quel caso lo studente non concepirebbe nemmeno la necessità di un secondo filo di ritorno per far funzionare il sistema."
     },
     {
-      "domanda": "Nel modello infantile delle 'correnti che si scontrano', come viene spiegata la generazione della luce nella lampadina?",
+      "domanda": "Durante una lezione, un docente propone l'analogia dello scivolo per spiegare il comportamento della corrente in un circuito. Se l'inclinazione o l'altezza dello scivolo rappresenta la differenza di potenziale, che cosa rappresentano rispettivamente le palline che scendono e gli ostacoli eventualmente posizionati lungo la discesa?",
       "opzioni": [
         {
-          "testo": "Come un flusso costante e uniforme di elettroni che attraversa il conduttore senza subire collisioni.",
+          "testo": "Le palline rappresentano la resistenza del materiale conduttore, mentre gli ostacoli indicano la potenza elettrica dissipata sotto forma di calore.",
           "corretta": false
         },
         {
-          "testo": "Come il consumo progressivo delle cariche elettriche lungo l'intero percorso del circuito.",
+          "testo": "Le palline rappresentano l'energia potenziale gravitazionale accumulata dalla pila, mentre gli ostacoli indicano l'intensità di corrente che scorre nell'unità di tempo.",
           "corretta": false
         },
         {
-          "testo": "Come l'incontro e l'urto violento di due correnti opposte provenienti dai poli della batteria, che producono una sorta di scintilla simile a un fulmine.",
+          "testo": "Le palline rappresentano le cariche elettriche (elettroni) in movimento, mentre gli ostacoli rappresentano la resistenza elettrica opposta dal conduttore al loro passaggio.",
           "corretta": true
         }
       ],
-      "spiegazione": "Questo modello mentale descrive la corrente elettrica come due flussi opposti che escono dai poli della batteria e si scontrano nella lampadina, generando l'effetto luminoso come una sorta di scintilla o fenomeno magico."
+      "spiegazione": "In questa analogia fisica, la differenza di altezza dello scivolo fornisce la spinta necessaria al movimento, simulando la differenza di potenziale. Le palline simboleggiano gli elettroni liberi di muoversi che costituiscono la corrente, mentre gli ostacoli che ne rallentano la discesa rappresentano la resistenza del conduttore. Il distratore incentrato sull'energia potenziale è insidioso perché confonde l'entità che possiede l'energia (le cariche/palline) con l'energia potenziale stessa, che nell'analogia corrisponde invece alla quota iniziale dello scivolo."
     },
     {
-      "domanda": "Come viene definita a lezione la corrente elettrica a livello microscopico?",
+      "domanda": "In una pila funzionante con elettrodi di rame e zinco, si nota che col tempo la barretta di rame diventa visibilmente più spessa. Quale processo chimico-fisico spiega questo specifico fenomeno e la conseguente generazione della differenza di potenziale?",
       "opzioni": [
         {
-          "testo": "Come un flusso ordinato di elettroni all'interno di un conduttore, indotto dall'applicazione di una forza elettrica.",
+          "testo": "Gli ioni rame presenti nella soluzione elettrolitica acquistano elettroni (si riducono) depositandosi come rame metallico sulla barretta, mentre lo zinco perde elettroni (si ossida) accumulando cariche negative sul suo elettrodo.",
           "corretta": true
         },
         {
-          "testo": "Come il moto caotico e casuale dei protoni stabili attorno al nucleo dell'atomo.",
+          "testo": "Gli elettroni fluiscono spontaneamente dalla soluzione verso il rame perché quest'ultimo tende a perdere cariche negative più facilmente dello zinco, provocando l'ingrossamento dell'elettrodo per attrazione elettrostatica.",
           "corretta": false
         },
         {
-          "testo": "Como un accumulo statico di calore molecolare generato dalla pressione atmosferica.",
+          "testo": "Lo zinco si deposita sulla barretta di rame a causa del ponte salino che trasporta la materia solida da un elettrodo all'altro per ristabilire l'equilibrio di massa.",
           "corretta": false
         }
       ],
-      "spiegazione": "La lezione definisce la corrente elettrica come un flusso ordinato di elettroni in un conduttore. Normalmente gli elettroni si muovono in modo disordinato, ma l'applicazione di una forza elettrica li spinge a muoversi in un'unica direzione."
+      "spiegazione": "La reazione di ossidoriduzione prevede che lo zinco perda elettroni (ossidazione) e il rame li acquisti (riduzione). Gli elettroni rilasciati dallo zinco rimangono sull'elettrodo, mentre gli ioni rame in soluzione si riducono depositandosi come rame metallico sulla sbarretta, che di conseguenza si ingrossa. Il secondo distratore è errato perché inverte la tendenza dei metalli, dato che è lo zinco a perdere elettroni molto più facilmente del rame. Il terzo distratore confonde il ruolo del ponte salino, che serve solo a far circolare gli ioni nella soluzione elettrolitica e non a trasferire metallo solido tra gli elettrodi."
     },
     {
-      "domanda": "Quale convinzione caratterizzava gli studi di Luigi Galvani a metà del Settecento in seguito alle sue celebri osservazioni sulle rane?",
+      "domanda": "In base alla seconda legge di Ohm, quale combinazione geometrica del conduttore garantisce la minore resistenza elettrica a parità di materiale, minimizzando la dissipazione?",
       "opzioni": [
         {
-          "testo": "Sosteneva che l'elettricità risiedesse esclusivamente negli archi metallici estranei al corpo dell'animale.",
+          "testo": "Un filo molto lungo e dal diametro estremamente ridotto, poiché la lunghezza aumenta la velocità di scorrimento degli elettroni e la sezione piccola concentra il flusso.",
           "corretta": false
         },
         {
-          "testo": "Riteneva che l'elettricità fosse una proprietà biologica intrinseca degli organismi viventi ('elettricità animale').",
+          "testo": "Un filo il più corto possibile e con una sezione (diametro) molto grande, in quanto la resistenza è direttamente proporzionale alla lunghezza e inversamente proporzionale all'area trasversale.",
           "corretta": true
         },
         {
-          "testo": "Ipotizzava che la corrente elettrica si propagasse solo nei conduttori gassosi a temperatura costante.",
+          "testo": "Un filo di media lunghezza e con sezione variabile, poiché le strozzature regolano la tensione mantenendo costante il voltaggio erogato dalla batteria.",
           "corretta": false
         }
       ],
-      "spiegazione": "Galvani, osservando la contrazione dei muscoli delle rane collegate ad archi metallici, concluse che l'elettricità risiedesse direttamente all'interno dell'animale, considerandola una proprietà tipica degli organismi viventi."
+      "spiegazione": "La seconda legge di Ohm stabilisce che la resistenza elettrica aumenta con la lunghezza del conduttore (maggior numero di ostacoli incontrati dagli elettroni) e diminuisce all'aumentare della sua sezione (maggior spazio disponibile per il flusso). Pertanto, un filo corto e largo offre la minima resistenza possibile. Il primo distratore è l'esatto opposto della legge fisica e confonde la restrizione geometrica con un inesistente effetto di accelerazione. Il terzo distratore introduce l'idea intuitiva ma errata che le variazioni di sezione possano stabilizzare la tensione del circuito."
     },
     {
-      "domanda": "Nel funzionamento della pila descritto a lezione (come la pila di Daniell), cosa accade all'elettrodo di zinco?",
+      "domanda": "Uno studente collega due lampadine identiche in serie a una pila da 1,5 V. Successivamente, le collega in parallelo alla stessa pila. Quale differenza osserverà nella luminosità delle lampadine nei due circuiti e perché?",
       "opzioni": [
         {
-          "testo": "Lo zinco si ossida perdendo elettroni e trasformandosi in ioni Zn2+ che entrano nella soluzione, lasciando cariche negative sulla sbarretta.",
+          "testo": "Nei due circuiti la luminosità sarà identica, ma nel collegamento in parallelo la batteria si scaricherà molto più lentamente poiché le lampadine si alternano nel consumare corrente.",
+          "corretta": false
+        },
+        {
+          "testo": "Nel circuito in serie le lampadine brilleranno intensamente perché i loro voltaggi si sommano, mentre in quello in parallelo rimarranno spente perché la corrente si annulla incontrandosi nei nodi.",
+          "corretta": false
+        },
+        {
+          "testo": "Nel circuito in serie la luce sarà fioca perché la differenza di potenziale si suddivide tra i due utilizzatori, mentre in parallelo la luce sarà brillante perché ogni lampadina riceve l'intera tensione della pila.",
           "corretta": true
-        },
-        {
-          "testo": "Lo zinco attira a sé gli elettroni della soluzione e si riduce depositandosi come metallo puro sulla sbarretta di rame.",
-          "corretta": false
-        },
-        {
-          "testo": "Lo zinco si riscalda per effetto Joule fino a fondersi, provocando l'interruzione spontanea del circuito.",
-          "corretta": false
         }
       ],
-      "spiegazione": "Nelle reazioni di ossidoriduzione della pila, lo zinco è la specie chimica che tende a perdere elettroni (ossidazione). Trasformandosi in ioni Zn2+ passa in soluzione, mentre gli elettroni ceduti rimangono accumulati sulla sua barretta conduttrice."
+      "spiegazione": "Nel circuito in serie la differenza di potenziale erogata dalla pila si ripartisce tra le lampadine collegate, riducendo la tensione su ciascuna di esse e rendendo la luce fioca. Nel circuito in parallelo, invece, ogni utilizzatore è collegato direttamente ai poli della pila, ricevendo l'intero voltaggio (1,5 V) e garantendo una luminosità ottimale. Il secondo distratore è particolarmente insidioso perché confonde la somma dei voltaggi dei generatori in serie con quella degli utilizzatori, e applica l'idea errata dello scontro di correnti per giustificare il comportamento in parallelo."
     },
     {
-      "domanda": "Quale analogia fisica o della vita quotidiana viene proposta a lezione per introdurre qualitativamente il concetto di voltaggio (differenza di potenziale)?",
+      "domanda": "In un impianto elettrico domestico viene inserito un fusibile di sicurezza contenente un filamento metallico molto sottile. All'improvviso si verifica un forte e anomalo aumento dell'intensità di corrente. Come agisce il fusibile per proteggere i dispositivi elettronici in base all'effetto Joule?",
       "opzioni": [
         {
-          "testo": "La classificazione delle foglie o dei materiali conduttori in base alle loro proprietà geometriche.",
-          "corretta": false
-        },
-        {
-          "testo": "Il dislivello di uno scivolo, la pendenza di un tavolo o una differenza di pressione, che forniscono la spinta necessaria a generare il movimento.",
+          "testo": "Il filamento molto sottile offre un'elevata resistenza; l'eccesso di corrente genera un forte surriscaldamento per urti che fonde il filo, interrompendo il circuito prima che si danneggino gli apparecchi.",
           "corretta": true
         },
         {
-          "testo": "La propagazione e la riflessione delle onde sonore all'interno di una stanza chiusa.",
+          "testo": "Il fusibile accumula l'energia termica in eccesso all'interno delle sue molecole isolanti e la rilascia gradualmente nell'ambiente circostante per mantenere costante la temperatura del circuito.",
+          "corretta": false
+        },
+        {
+          "testo": "Il filo sottile aumenta la velocità degli elettroni riducendo la tensione complessiva del sistema, agendo come una valvola di sfogo meccanica che disperde la corrente superflua.",
           "corretta": false
         }
       ],
-      "spiegazione": "La lezione utilizza diverse analogie per spiegare la differenza di potenziale (voltaggio) come spinta o dislivello necessario per far muovere le cariche: lo scivolo, il tavolo inclinato per le biglie, la differenza di pressione nel vento o l'acqua di un rubinetto."
+      "spiegazione": "L'effetto Joule consiste nella dissipazione di energia elettrica sotto forma di calore dovuta agli urti degli elettroni nel conduttore. Poiché il filamento del fusibile è sottile, la sua resistenza è elevata; un picco di corrente produce un surriscaldamento tale da fondere il metallo, interrompendo fisicamente il circuito chiuso. Il secondo distratore confonde i materiali ipotizzando che il fusibile sia fatto di isolanti e che immagazzini il calore. Il terzo distratore applica un modello idraulico/meccanico scorretto, ipotizzando una riduzione di tensione tramite aumento di velocità o dispersione fisica di carica."
     },
     {
-      "domanda": "In base alla seconda legge di Ohm esposta a lezione, in che modo la resistenza di un conduttore dipende dalle sue caratteristiche geometriche?",
+      "domanda": "Qual è la differenza fondamentale tra la fase di 'Engagement' (Coinvolgimento) e la fase di 'Explain' (Spiegazione) nel modello didattico delle 5E applicato a una lezione sull'elettricità?",
       "opzioni": [
         {
-          "testo": "La resistenza aumenta all'aumentare della lunghezza del conduttore ed è inversamente proporzionale alla sua sezione (diametro).",
+          "testo": "Nell'Engagement si esegue un esperimento quantitativo per raccogliere dati precisi, mentre nell'Explain si lascia che gli studenti trovino da soli le definizioni formali consultando testi scientifici.",
+          "corretta": false
+        },
+        {
+          "testo": "Nell'Engagement il docente stimola la curiosità e fa emergere le concezioni ingenue senza fornire definizioni formali, mentre nell'Explain guida la riorganizzazione delle evidenze raccolte dando i nomi scientifici corretti ai fenomeni.",
           "corretta": true
         },
         {
-          "testo": "La resistenza è direttamente proporzionale alla sezione del conduttore e diminuisce linearmente all'aumentare della sua lunghezza.",
-          "corretta": false
-        },
-        {
-          "testo": "La resistenza dipende unicamente dal tipo di materiale (Rho) e rimane indipendente da qualsiasi variazione di lunghezza o diametro del filo.",
+          "testo": "Nell'Engagement si assegna un voto formale basato sulle preconoscenze espresse, mentre nell'Explain si propone un compito di realtà per applicare i concetti a contesti inediti.",
           "corretta": false
         }
       ],
-      "spiegazione": "La seconda legge di Ohm stabilisce che la resistenza elettrica aumenta con la lunghezza del conduttore (poiché un numero maggiore di pezzetti offre ostacolo al flusso) ed è inversamente proporzionale alla sezione o diametro (un filo più spesso facilita il transito degli elettroni)."
+      "spiegazione": "Nel modello delle 5E, la fase iniziale di Engagement serve esclusivamente a motivare gli alunni e far emergere le loro idee pregresse (anche errate), escludendo spiegazioni formali del docente. Nella fase di Explain, invece, l'insegnante interviene attivamente per collegare le evidenze dell'esplorazione ai concetti scientifici corretti, introducendo la terminologia formale. Il primo distratore attribuisce erroneamente la raccolta dei dati (fase di Explore) all'Engagement, mentre il terzo confonde la valutazione diagnostica iniziale con quella sommativa (Evaluate) e la spiegazione con la fase di generalizzazione (Elaborate)."
     },
     {
-      "domanda": "Cosa succede in un circuito di lampadine collegate in serie se una di esse si rompe?",
+      "domanda": "Un'insegnante vuole proporre un'attività didattica sulla conducibilità elettrica di vari materiali. Come si differenzia la strutturazione dell'esperienza se decide di impostarla come 'Inquiry Guidato' rispetto a un 'Inquiry Strutturato'?",
       "opzioni": [
         {
-          "testo": "La lampadina rotta viene bypassata dal flusso elettrolitico e le altre lampadine aumentano di luminosità.",
-          "corretta": false
-        },
-        {
-          "testo": "L'intero circuito si interrompe e tutte le altre lampadine si spengono istantaneamente, poiché la corrente fluisce lungo un unico anello.",
+          "testo": "Nell'Inquiry Guidato l'insegnante fornisce solo la domanda di partenza, lasciando che siano gli studenti a progettare la procedura sperimentale, mentre nell'Inquiry Strutturato fornisce sia la domanda sia la procedura dettagliata da seguire.",
           "corretta": true
         },
         {
-          "testo": "Le altre lampadine rimangono accese alla stessa intensità poiché beneficiano di collegamenti indipendenti.",
+          "testo": "Nell'Inquiry Guidato gli studenti devono inventare autonomamente sia la domanda investigabile sia la spiegazione teorica, mentre nell'Inquiry Strutturato l'insegnante svela subito la soluzione prima dell'esperimento.",
+          "corretta": false
+        },
+        {
+          "testo": "Nell'Inquiry Guidato l'insegnante assiste fisicamente i bambini durante l'uso degli strumenti pericolosi, mentre nell'Inquiry Strutturato la classe lavora in totale autonomia senza supervisione.",
           "corretta": false
         }
       ],
-      "spiegazione": "In un circuito in serie, i componenti sono disposti in sequenza lungo un unico percorso chiuso. Se un elemento si interrompe o si svita, l'intero anello si apre, bloccando immediatamente il passaggio della corrente in tutto il circuito."
+      "spiegazione": "La distinzione tra i livelli di Inquiry risiede nel grado di autonomia lasciato agli studenti: nell'Inquiry Strutturato la domanda e la procedura dettagliata sono fornite dal docente, mentre nell'Inquiry Guidato viene data solo la domanda e gli studenti devono progettare autonomamente il protocollo di indagine. Il secondo distratore descrive in realtà l'Inquiry Aperto (dove anche la domanda è formulata dagli alunni) e confonde lo strutturato con un approccio meramente confermativo. Il terzo distratore interpreta erroneamente il termine 'guida' in senso fisico e di vigilanza sulla sicurezza anziché come supporto metodologico e cognitivo."
     },
     {
-      "domanda": "Qual è il principio di funzionamento dei fusibili di sicurezza domestici spiegato a lezione?",
+      "domanda": "Durante un'attività sperimentale per classificare materiali in conduttori e isolanti, un bambino sostiene che una riga di plastica non conduce l'elettricità perché 'è troppo dura e rigida per far passare le cariche, che hanno bisogno di materiali flessibili come i fili'. Come dovrebbe intervenire l'insegnante, seguendo la metodologia IBSE, per superare questa misconoscenza?",
       "opzioni": [
         {
-          "testo": "Sfruttano l'effetto Joule: un filo metallico molto sottile offre un'alta resistenza e, surriscaldandosi per il forte passaggio di corrente, si fonde interrompendo il circuito.",
+          "testo": "Spiegando subito alla classe la struttura atomica del legame covalente della plastica e del legame metallico del rame per chiarire perché gli elettroni non possono muoversi nella riga.",
+          "corretta": false
+        },
+        {
+          "testo": "Invitando gli alunni ad ammorbidire la plastica scaldandola con una fonte di calore per verificare se, una volta diventata flessibile, essa sia in grado di condurre l'elettricità.",
+          "corretta": false
+        },
+        {
+          "testo": "Sfidando l'ipotesi e proponendo di testare nel circuito oggetti metallici molto rigidi (come chiavi o bulloni) e oggetti flessibili ma isolanti (come elastici in gomma), isolando la variabile del materiale da quella della rigidità.",
           "corretta": true
-        },
-        {
-          "testo": "Sfruttano la differenza di concentrazione osmotica tra gli elettrodi di zinco e di rame.",
-          "corretta": false
-        },
-        {
-          "testo": "Utilizzano la deformazione elastica di una molla che scatta quando la temperatura atmosferica scende sotto lo zero.",
-          "corretta": false
         }
       ],
-      "spiegazione": "I fusibili contengono un conduttore molto sottile (alta resistenza geometrica). Se la corrente aumenta eccessivamente, l'effetto Joule (la dissipazione di energia sotto forma di calore) provoca un surriscaldamento tale da fondere il filo, aprendo il circuito e proteggendo i dispositivi."
+      "spiegazione": "La metodologia IBSE richiede di non anticipare risposte trasmissive, ma di guidare gli studenti a verificare le proprie ipotesi tramite l'indagine diretta. Proporre oggetti rigidi che conducono (metallo) e oggetti flessibili che isolano (gomma) permette agli alunni di confutare l'ipotesi basata sulla rigidità, focalizzandosi sulla reale variabile in gioco (la natura del materiale). Il primo distratore rappresenta una tipica scorciatoia trasmissiva che scavalca l'apprendimento attivo, mentre il secondo distratore asseconda un esperimento fuorviante e potenzialmente pericoloso che non aiuta a isolare correttamente le variabili fisiche."
     },
     {
-      "domanda": "Quali sono i motivi principali per cui la didattica a scuola predilige l'uso di pile e batterie invece della corrente elettrica domestica?",
+      "domanda": "Nella fase di 'Elaborate' (Elaborazione) delle 5E, agli studenti viene proposto di progettare un impianto elettrico per illuminare in modo indipendente le stanze di una casa di bambole in cartone. Qual è il principale scopo pedagogico di questa attività rispetto a un tradizionale esercizio scritto?",
       "opzioni": [
         {
-          "testo": "Perché le pile mantengono una corrente scontrante bidirezionale ideale per i bambini sotto i dieci anni.",
-          "corretta": false
-        },
-        {
-          "testo": "Per evidenti ragioni di sicurezza e perché consentono di identificare e leggere chiaramente la sorgente di energia e il valore del voltaggio.",
+          "testo": "Consentire agli studenti di estendere e applicare i concetti appresi sui circuiti a una situazione reale e problematica, affrontando vincoli pratici che richiedono un reale problem-solving cognitivo.",
           "corretta": true
         },
         {
-          "testo": "Perché le batterie contengono esclusivamente proteine bollite capaci di impedire cortocircuiti.",
+          "testo": "Fornire un momento di attività manuale e ricreativa per alleggerire il carico cognitivo degli studenti dopo le fasi teoriche incentrate sulle formule matematiche delle leggi di Ohm.",
+          "corretta": false
+        },
+        {
+          "testo": "Verificare esclusivamente la capacità degli studenti di memorizzare e riprodurre i simboli grafici convenzionali degli utilizzatori, del catodo e dell'anodo visti sul sussidiario.",
           "corretta": false
         }
       ],
-      "spiegazione": "L'uso delle pile nella scuola primaria è fortemente raccomandato per ragioni di sicurezza (basso voltaggio) e perché costituiscono una sorgente di energia localizzabile e tangibile su cui gli studenti possono leggere e analizzare direttamente le caratteristiche fisiche (come 1,5 V)."
+      "spiegazione": "La fase di Elaborate mira a consolidare e generalizzare i concetti strutturati in precedenza, sfidando gli studenti ad applicarli in contesti nuovi e significativi della vita reale. Progettare l'illuminazione indipendente della casa delle bambole richiede di tradurre la teoria dei collegamenti in parallelo in una soluzione tecnologica concreta. Il secondo distratore sminuisce l'attività a un semplice compito manuale o di svago, ignorando il profondo valore cognitivo dell'elaborazione. Il terzo distratore riduce l'esperienza a una mera verifica di nozioni e simboli, che appartiene invece a logiche valutative tradizionali e non all'approccio basato sull'indagine."
     }
   ],
   "assistente_ia": {
