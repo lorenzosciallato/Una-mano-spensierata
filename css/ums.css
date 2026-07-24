@@ -423,6 +423,11 @@
         }
         @media (max-width: 900px) {
             .media-notes-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+            /* ANTI-TRABOCCAMENTO: una colonna di griglia ha min-width:auto, quindi
+               un contenuto largo (le slide affiancate) la faceva crescere oltre lo
+               schermo. Risultato: tutta la pagina piu' larga del telefono e i
+               pulsanti a destra tagliati via. */
+            .media-notes-grid, .media-notes-grid > * { min-width: 0; }
         }
 
         /* ============================================================
@@ -485,9 +490,7 @@
             .kb-frame:hover img,
             .kb-frame.kb-hover img,
             .ia-container:hover .ia-image-col img,
-            .ia-container.kb-hover .ia-image-col img,
-            .flashcard-wrapper:hover .flashcard-front::before { transform: none !important; }
-            .flashcard-wrapper:hover .flashcard-back::before { transform: scaleX(-1) !important; }
+            .ia-container.kb-hover .ia-image-col img { transform: none !important; }
         }
 
         /* ============================================================
@@ -769,10 +772,6 @@
             transition: transform 6s cubic-bezier(.16,.84,.44,1);
             will-change: transform;
         }
-        .flashcard-wrapper:hover .flashcard-front::before,
-        .flashcard-wrapper.kb-hover .flashcard-front::before { transform: scale(1.06); }
-        .flashcard-wrapper:hover .flashcard-back::before,
-        .flashcard-wrapper.kb-hover .flashcard-back::before { transform: scaleX(-1) scale(1.06); }
         .flashcard-back p,
         .flashcard-front h2 {
             position: relative; z-index: 2;
@@ -789,6 +788,15 @@
             font-size: 0.97rem; text-align: left; line-height: 1.65;
             white-space: pre-line; overflow-y: auto;
             max-height: 85%; -webkit-overflow-scrolling: touch; pointer-events: auto;
+            /* la risposta si legge e si seleziona senza far girare la carta */
+            cursor: auto; user-select: text; overscroll-behavior: contain;
+            scrollbar-width: thin; scrollbar-color: rgba(26,47,79,0.38) transparent;
+        }
+        /* barra di scorrimento VISIBILE: prima non si capiva che c'era altro testo */
+        .flashcard-back p::-webkit-scrollbar { width: 8px; }
+        .flashcard-back p::-webkit-scrollbar-track { background: transparent; }
+        .flashcard-back p::-webkit-scrollbar-thumb {
+            background: rgba(26,47,79,0.38); border-radius: 4px;
         }
 
         #fc-start-screen .flashcard-wrapper { cursor: default; }
@@ -1141,26 +1149,13 @@
             position: relative;
             margin-bottom: 1.5rem;
         }
-        /* badge sul banner minimizzato */
-        #wb-badge {
-            display: none;
-            position: absolute; top: 10px; right: 10px;
-            background: var(--navy); color: #fff;
-            font-family: var(--font-body); font-size: 0.72rem; font-weight: 700;
-            letter-spacing: 0.1em; text-transform: uppercase;
-            padding: 6px 14px; border-radius: 50px;
-            cursor: pointer; z-index: 10;
-            box-shadow: var(--shadow-lift);
-            transition: background 0.2s;
-        }
-        #wb-badge:hover { background: var(--navy-lt); }
 
       /* la lavagna — TUTTE le sue altezze vivono qui (token in :root).
          Storia: nasceva a 220px con pulsante "ingrandisci"; poi è stata
          resa sempre grande e il pulsante è morto. Ora: grande di default,
          più bassa quando è aperta accanto al riassuntone su desktop. */
         #smart-whiteboard {
-            display: none;
+            display: flex;
             background: #fff;
             border: 1px solid var(--dust);
             border-radius: var(--r-md);
@@ -1173,6 +1168,15 @@
             transition: height 0.35s ease;
         }
         #smart-whiteboard.wb-visible { display: flex; }
+        /* lavagna ancora vuota: si accorcia e lascia respirare il testo */
+        #smart-whiteboard.wb-vuota-on { height: auto; }
+        #smart-whiteboard.wb-vuota-on .wb-scroll-btns { display: none; }
+        .wb-vuota {
+            padding: 18px 16px; text-align: center;
+            font-family: var(--font-body); font-size: 0.86rem;
+            color: var(--sub, #5f5c55); line-height: 1.5;
+        }
+        .night-mode .wb-vuota { color: #9aa0ad; }
         @media (max-height: 720px){ #smart-whiteboard{ height: 68vh; } }
         @media (max-width: 600px){ #smart-whiteboard{ height: 62vh; } }
         /* aperta nel capitolo riassuntone (desktop): si abbassa per lasciare
@@ -1377,7 +1381,7 @@
             display: inline-block; vertical-align: -0.125em;
             flex-shrink: 0;
         }
-        .wb-title .ums-ic, #wb-badge .ums-ic { width: 1.05em; height: 1.05em; }
+        .wb-title .ums-ic { width: 1.05em; height: 1.05em; }
         #night-toggle .ums-ic { width: 1.15em; height: 1.15em; }
         .quiz-explanation .ums-ic { margin-right: 2px; }
 
@@ -2161,7 +2165,7 @@
         .btn-close-section{ transition: all .2s var(--ease); }
 
         /* ------------------------------------------------------------
-           COPY LAVAGNA — sotto il banner pinguini, due varianti
+           COPY LAVAGNA — sotto la lavagna, due varianti
         ------------------------------------------------------------ */
         .wb-hint{
             margin: 10px 0 18px;
@@ -2728,12 +2732,8 @@
             transition: transform 6s cubic-bezier(.16,.84,.44,1);
             will-change: transform;
         }
-        .urv-wrapper:hover .urv-face::before,
-        .urv-wrapper.kb-hover .urv-face::before{ transform: scale(1.06); }
         @media (prefers-reduced-motion: reduce){
             .urv-face::before{ transition: none !important; }
-            .urv-wrapper:hover .urv-face::before,
-            .urv-wrapper.kb-hover .urv-face::before{ transform: none !important; }
         }
         .urv-face h2{
             position: relative; z-index: 2; background: rgba(255,255,255,0.96);
@@ -3408,3 +3408,68 @@ header{ pointer-events: none; }
 header a,
 header button,
 header #custom-lang-selector{ pointer-events: auto; }
+
+        /* PUNTO INTERROGATIVO SU ACCEDI — compare SOLO a chi non ha la chiave:
+           incuriosisce e invita al clic. Chi e' gia' dentro non lo vede. */
+        .ums-login-btn { position: relative; }
+        .ums-login-q {
+            display: none;
+            position: absolute; top: 2px; right: 4px;
+            width: 15px; height: 15px; border-radius: 50%;
+            background: #E07A3F; color: #fff;
+            font-family: var(--font-body, 'DM Sans', sans-serif);
+            font-size: 10px; font-weight: 700; line-height: 15px; text-align: center;
+            box-shadow: 0 1px 4px rgba(0,0,0,.28);
+            animation: umsQPulse 2.4s ease-in-out infinite;
+            pointer-events: none;
+        }
+        .ums-login-btn.is-out .ums-login-q { display: block; }
+        @keyframes umsQPulse {
+            0%, 70%, 100% { transform: scale(1); }
+            80% { transform: scale(1.22); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .ums-login-q { animation: none; }
+        }
+
+        /* NOTIFICA GRUPPO WHATSAPP — solo per chi non ha effettuato l'accesso */
+        .ums-wa-notif {
+            position: fixed; right: 18px; bottom: 90px; z-index: 99999990;
+            width: 320px; max-width: calc(100vw - 36px);
+            background: #fff; border-radius: 14px;
+            box-shadow: 0 12px 38px rgba(0,0,0,.28);
+            font-family: var(--font-body, 'DM Sans', sans-serif);
+            display: flex; gap: 10px; padding: 12px 12px 12px 14px;
+            align-items: flex-start; cursor: pointer;
+            text-decoration: none; color: inherit;
+            transform: translateY(18px); opacity: 0;
+            transition: transform .28s ease, opacity .28s ease;
+        }
+        .ums-wa-notif.on { transform: translateY(0); opacity: 1; }
+        .ums-wa-ico {
+            flex: 0 0 auto; width: 38px; height: 38px; border-radius: 50%;
+            background: #25D366; display: flex; align-items: center; justify-content: center;
+        }
+        .ums-wa-ico svg { width: 22px; height: 22px; fill: #fff; }
+        .ums-wa-testo { flex: 1 1 auto; min-width: 0; }
+        .ums-wa-top {
+            display: flex; align-items: baseline; gap: 6px; margin-bottom: 2px;
+        }
+        .ums-wa-nome {
+            font-weight: 700; font-size: .86rem; color: #1C1C22;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .ums-wa-ora { font-size: .68rem; color: #8b8b93; margin-left: auto; flex: 0 0 auto; }
+        .ums-wa-msg { font-size: .8rem; line-height: 1.35; color: #4a4a52; }
+        .ums-wa-x {
+            flex: 0 0 auto; width: 22px; height: 22px; border: none; background: transparent;
+            color: #9a9aa2; font-size: 1.1rem; line-height: 1; cursor: pointer; padding: 0;
+            border-radius: 50%;
+        }
+        .ums-wa-x:hover { background: rgba(0,0,0,.06); }
+        .night-mode .ums-wa-notif { background: #23262e; }
+        .night-mode .ums-wa-nome { color: #F2EFE8; }
+        .night-mode .ums-wa-msg { color: #c5c1b8; }
+        @media (max-width: 700px) {
+            .ums-wa-notif { right: 12px; left: 12px; width: auto; bottom: 82px; }
+        }
