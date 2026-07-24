@@ -131,20 +131,28 @@
         // =========================================================================
         // TASK 4 — Smart Whiteboard helpers
         // =========================================================================
+        // Il banner che copriva la lavagna e' stato tolto: la lavagna adesso e'
+        // sempre in vista. Quando e' vuota si accorcia (classe wb-vuota-on) e
+        // mostra la riga di invito, cosi' non occupa mezzo schermo per niente.
+        function wbSyncVuota() {
+            const wb = document.getElementById('smart-whiteboard');
+            if (!wb) return;
+            const vuota = !wb.querySelector('.wb-row');
+            wb.classList.toggle('wb-vuota-on', vuota);
+            const riga = document.getElementById('wb-vuota');
+            if (riga) riga.style.display = vuota ? '' : 'none';
+        }
+
         function wbMinimize() {
-            document.getElementById('smart-whiteboard').classList.remove('wb-visible');
-            document.getElementById('wb-section-banner').style.display = 'block';
-            document.getElementById('wb-badge').style.display = 'none';
-            document.getElementById('wb-badge-count').textContent = wbCount;
+            const wb = document.getElementById('smart-whiteboard');
+            if (wb) wb.classList.add('wb-visible');
+            wbSyncVuota();
         }
 
         // FIX 6 — questa funzione veniva chiamata dal pulsante "✕ Rimuovi" ma non esisteva:
         // rimuovere un'evidenziazione con la lavagna ridotta mandava il codice in errore
         function wbUpdateBadge() {
-            // Lavagna aperta quando ha contenuto; pinguini quando è vuota
-            document.getElementById('wb-badge-count').textContent = wbCount;
-            document.getElementById('wb-badge').style.display = 'none';
-            if (wbCount > 0) { wbMaximize(); } else { wbMinimize(); }
+            wbSyncVuota();
         }
 
         // (rimossa wbToggleExpand: il pulsante "ingrandisci lavagna" non
@@ -207,17 +215,27 @@
                         inp.style.height = inp.scrollHeight + 'px';
                     }
                 });
-                // I pinguini restano solo finché la lavagna è vuota:
-                // se ci sono concetti salvati, la lavagna si apre da sola
-                if (wbCount > 0) wbMaximize();
+                // la lavagna è sempre in vista: qui aggiorno solo lo stato vuoto/pieno
+                wbSyncVuota();
             } catch(e) {}
         }
 
         function wbMaximize() {
-            if (wbCount === 0) return;
-            document.getElementById('wb-section-banner').style.display = 'none';
-            document.getElementById('wb-badge').style.display = 'none'; // Nasconde il badge per evitare overlap
-            document.getElementById('smart-whiteboard').classList.add('wb-visible');
+            const wb = document.getElementById('smart-whiteboard');
+            if (wb) wb.classList.add('wb-visible');
+            wbSyncVuota();
+        }
+
+        // all'apertura della pagina la lavagna e' gia' in vista, vuota e bassa
+        function wbInit() {
+            const wb = document.getElementById('smart-whiteboard');
+            if (wb) wb.classList.add('wb-visible');
+            wbSyncVuota();
+        }
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', wbInit);
+        } else {
+            wbInit();
         }
 
         function wbScroll(delta) {
@@ -278,12 +296,7 @@
 
             wbCount++;
 
-            if (wbCount === 1) {
-                wbMaximize();
-            } else if (!document.getElementById('smart-whiteboard').classList.contains('wb-visible')) {
-                document.getElementById('wb-badge-count').textContent = wbCount;
-                document.getElementById('wb-badge').style.display = 'block';
-            }
+            wbMaximize();
 
             setTimeout(() => { body.scrollTop = body.scrollHeight; }, 50);
 
@@ -303,13 +316,7 @@
 
             wbCount--;
 
-            if (wbCount === 0) {
-                document.getElementById('smart-whiteboard').classList.remove('wb-visible');
-                document.getElementById('wb-section-banner').style.display = 'block';
-                document.getElementById('wb-badge').style.display = 'none';
-            } else if (!document.getElementById('smart-whiteboard').classList.contains('wb-visible')) {
-                document.getElementById('wb-badge-count').textContent = wbCount;
-            }
+            wbSyncVuota();
             
             showToast('Concetto rimosso.', 'success');
 
@@ -760,10 +767,6 @@ if (!fileDaCaricare) {
                             wbRow.remove();
                             wbCount--;
                             wbUpdateBadge();
-                            if (wbCount === 0) {
-                                document.getElementById('smart-whiteboard').classList.remove('wb-visible');
-                                document.getElementById('wb-section-banner').style.display = 'block';
-                            }
                         }
                     }
                     showToast("Sottolineatura rimossa.", "success");
@@ -1470,12 +1473,64 @@ if (!fileDaCaricare) {
                 document.getElementById('fc-back-text').scrollTop = 0;
                 deck.classList.remove('flipped');
                 deck.style.opacity = '1';
+                fcPreparaRisposta();
+                fcAdattaAltezza();
             }, 200);
         }
+        // Su PC la risposta lunga era illeggibile: qualunque clic dentro il testo
+        // rigirava la carta, quindi trascinare la barra di scorrimento o
+        // selezionare una frase era impossibile. Ora il testo della risposta e'
+        // una zona franca: per girare si clicca la cornice attorno alla carta.
         function handleWrapperClick(e) {
             if (window.innerWidth <= 900) return;
+            if (e && e.target && e.target.closest && e.target.closest('#fc-back-text')) return;
+            const sel = window.getSelection && window.getSelection();
+            if (sel && String(sel).trim().length) return;
             toggleFlip();
         }
+
+        // La carta cresce fino a contenere la risposta invece di tagliarla.
+        // Sotto i 440px resta com'era; sopra, si allunga fino al 72% dello
+        // schermo. Solo su PC: su telefono la risposta ha gia' il suo pannello.
+        function fcAdattaAltezza() {
+            const wrap = document.getElementById('flashcard-deck');
+            const p = document.getElementById('fc-back-text');
+            if (!wrap || !p) return;
+            if (window.innerWidth <= 900) { wrap.style.height = ''; return; }
+            const prima = p.style.maxHeight;
+            p.style.maxHeight = 'none';
+            const naturale = p.scrollHeight;
+            p.style.maxHeight = prima;
+            const cornice = 88;                 // padding della faccia + respiro
+            const minima = 440;
+            const massima = Math.max(minima, Math.round(window.innerHeight * 0.72));
+            wrap.style.height = Math.min(massima, Math.max(minima, naturale + cornice)) + 'px';
+        }
+
+        // La rotellina del mouse dentro una faccia ruotata in 3D spesso non
+        // scorre: la gestiamo a mano, e fermiamo l'evento solo finche' c'e'
+        // ancora testo da scorrere (altrimenti la pagina resterebbe bloccata).
+        function fcPreparaRisposta() {
+            const p = document.getElementById('fc-back-text');
+            if (!p || p.dataset.umsScroll === '1') return;
+            p.dataset.umsScroll = '1';
+            p.addEventListener('wheel', function (ev) {
+                const giu = ev.deltaY > 0;
+                const spazio = giu
+                    ? p.scrollTop + p.clientHeight < p.scrollHeight - 1
+                    : p.scrollTop > 0;
+                if (!spazio) return;
+                p.scrollTop += ev.deltaY;
+                ev.preventDefault();
+                ev.stopPropagation();
+            }, { passive: false });
+            p.addEventListener('click', function (ev) { ev.stopPropagation(); });
+        }
+
+        window.addEventListener('resize', function () {
+            clearTimeout(window.__umsFcResize);
+            window.__umsFcResize = setTimeout(fcAdattaAltezza, 150);
+        });
         function forceFlip(e) {
             if (e) e.stopPropagation();
             if (window.innerWidth <= 900) {
@@ -2945,6 +3000,7 @@ if (!fileDaCaricare) {
                     '</span>' +
                 '</div>' +
                 '<button class="ums-inav-item ums-login-btn" id="ums-inav-login" type="button" title="Accedi" aria-label="Accedi" aria-haspopup="dialog">' +
+                '<span class="ums-login-q" aria-hidden="true">?</span>' +
                     '<svg class="ums-ic" aria-hidden="true"><use href="#ic-login"/></svg>' +
                     '<span class="ums-inav-label" id="ums-login-label">Accedi</span>' +
                 '</button>' +
@@ -3924,14 +3980,17 @@ if (!fileDaCaricare) {
         function aggiorna() {
             const lezioneAperta = document.body.classList.contains('ums-master-open');
             const sezioneAperta = pannello ? pannello.classList.contains('active') : false;
+            const haConcetti = !!wb.querySelector('.wb-row');
             chip.classList.toggle('show',
-                lezioneAperta && sezioneAperta && wb.classList.contains('wb-visible') && !inVista);
+                lezioneAperta && sezioneAperta && haConcetti && !inVista);
         }
         new IntersectionObserver(function (voci) {
             inVista = voci[0].isIntersecting;
             aggiorna();
         }, { threshold: 0.05 }).observe(wb);
         new MutationObserver(aggiorna).observe(wb, { attributes: true, attributeFilter: ['class'] });
+        const corpoWb = document.getElementById('wb-body');
+        if (corpoWb) new MutationObserver(aggiorna).observe(corpoWb, { childList: true });
         if (pannello) new MutationObserver(aggiorna).observe(pannello, { attributes: true, attributeFilter: ['class'] });
         new MutationObserver(aggiorna).observe(document.body, { attributes: true, attributeFilter: ['class'] });
     })();
@@ -4055,3 +4114,69 @@ if (!fileDaCaricare) {
         ov.querySelector('.ums-bmc-close').addEventListener('click', chiudi);
         ov.addEventListener('click', function (e) { if (e.target === ov) chiudi(); });
     })();
+
+/* ====================================================================
+   NOTIFICA GRUPPO WHATSAPP — compare SOLO a chi non ha effettuato
+   l'accesso, una volta per sessione. Cliccandola si apre il gruppo.
+   ==================================================================== */
+(function () {
+    var WA = 'https://chat.whatsapp.com/EaX5kr14XxHL9o3qxdDVEP?mode=gi_t';
+    var ICONA = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.5 15.3L2 22l4.9-1.4A10 10 0 1 0 12 2Zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-2.9.8.8-2.8-.2-.3A8 8 0 1 1 12 20Zm4.4-5.8c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.5.1l-.7.9c-.1.2-.3.2-.5.1a6.6 6.6 0 0 1-3.2-2.8c-.1-.2 0-.4.1-.5l.5-.6c.1-.2.1-.3 0-.5l-.7-1.7c-.2-.4-.4-.4-.5-.4h-.5a1 1 0 0 0-.7.3c-.2.3-.9.9-.9 2.1s.9 2.5 1 2.6a9.4 9.4 0 0 0 3.6 3.2c1.7.7 2 .6 2.4.5.4 0 1.4-.5 1.6-1.1.2-.5.2-1 .1-1.1Z"/></svg>';
+
+    function haChiave() {
+        try { return !!localStorage.getItem('ums_chiave'); } catch (e) { return false; }
+    }
+    function giaVista() {
+        try { return sessionStorage.getItem('ums_wa_notif') === '1'; } catch (e) { return true; }
+    }
+    function segna() {
+        try { sessionStorage.setItem('ums_wa_notif', '1'); } catch (e) {}
+    }
+    function ora() {
+        var d = new Date();
+        return d.getHours() + ':' + (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
+    }
+
+    function mostra() {
+        if (haChiave() || giaVista()) return;
+        if (document.querySelector('.ums-wa-notif')) return;
+        segna();
+
+        // link VERO: cliccando, il browser apre il gruppo da solo, senza
+        // finestre intermedie e senza farsi fermare dai blocca-pop-up
+        var box = document.createElement('a');
+        box.className = 'ums-wa-notif';
+        box.href = WA;
+        box.target = '_blank';
+        box.rel = 'noopener';
+        box.setAttribute('aria-label', 'Entra nel gruppo WhatsApp di Una Mano Spensierata');
+        box.innerHTML =
+            '<div class="ums-wa-ico">' + ICONA + '</div>' +
+            '<div class="ums-wa-testo">' +
+                '<div class="ums-wa-top">' +
+                    '<span class="ums-wa-nome">Una Mano Spensierata</span>' +
+                    '<span class="ums-wa-ora">' + ora() + '</span>' +
+                '</div>' +
+                '<div class="ums-wa-msg">Siamo in oltre 300 sul gruppo: appunti, dubbi e date d\u2019esame. Entra anche tu \u2197</div>' +
+            '</div>' +
+            '<button class="ums-wa-x" type="button" aria-label="Chiudi">&times;</button>';
+        document.body.appendChild(box);
+        requestAnimationFrame(function () { box.classList.add('on'); });
+
+        function chiudi(e) {
+            if (e) { e.stopPropagation(); e.preventDefault(); }
+            box.classList.remove('on');
+            setTimeout(function () { if (box.parentNode) box.parentNode.removeChild(box); }, 300);
+        }
+        box.querySelector('.ums-wa-x').addEventListener('click', chiudi);
+        box.addEventListener('click', function () { setTimeout(chiudi, 400); });
+        box.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') chiudi();
+        });
+        setTimeout(function () { if (box.parentNode) chiudi(); }, 14000);
+    }
+
+    function avvia() { setTimeout(mostra, 1000); }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', avvia);
+    else avvia();
+})();
