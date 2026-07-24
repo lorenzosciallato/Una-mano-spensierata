@@ -295,7 +295,7 @@
                             <div class="media-notes-grid">
                                 <div>
                                     <div class="video-container">
-                                        <iframe id="dyn-podcast-player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                        <iframe id="dyn-podcast-player" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                                     </div>
                                     <p class="video-fallback-note" style="display:none;">Il contenuto non è disponibile per questa lezione.</p>
                                     <a id="dyn-podcast-link" href="LINK_YOUTUBE_QUI" target="_blank" class="video-direct-link">YouTube fa i capricci? Apri direttamente ↗</a>
@@ -327,7 +327,7 @@
                             <div class="media-notes-grid">
                                 <div>
                                     <div class="video-container">
-                                        <iframe id="dyn-video-player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                        <iframe id="dyn-video-player" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                                     </div>
                                     <p class="video-fallback-note" style="display:none;">Il contenuto non è disponibile per questa lezione.</p>
                                     <a id="dyn-video-link" href="LINK_YOUTUBE_QUI" target="_blank" class="video-direct-link">YouTube fa i capricci? Apri direttamente ↗</a>
@@ -424,17 +424,10 @@
                         <div class="accordion-content">
                             <div class="media-notes-grid" id="riass-grid">
 
-                                <!-- BANNER PINGUINI + LAVAGNA — figli diretti della
-                                     griglia: su desktop occupano TUTTA la larghezza
-                                     (entrambe le colonne, vedi ums-riass-layout-style) -->
+                                <!-- LAVAGNA — figlia diretta della griglia: su desktop
+                                     occupa TUTTA la larghezza (entrambe le colonne,
+                                     vedi ums-riass-layout-style) -->
                                     <div class="wb-banner-wrap">
-                                        <div id="wb-section-banner" class="kb-frame" data-kenburns onclick="wbMaximize()">
-                                            <img src="img/pinguini.jpg"
-                                                class="section-banner"
-                                                alt="Pinguini">
-                                        </div>
-                                        
-                                        <div id="wb-badge" onclick="wbMaximize()"><svg class="ums-ic" aria-hidden="true"><use href="#ic-pen"/></svg> <span id="wb-badge-count">0</span> concetti</div>
 
                                         <!-- Smart Whiteboard -->
                                         <div id="smart-whiteboard">
@@ -443,6 +436,7 @@
                                             </div>
                                             <div class="wb-body-wrap">
                                                 <div class="wb-body" id="wb-body"></div>
+                                                <div class="wb-vuota" id="wb-vuota">Le frasi che sottolinei qui sotto compaiono su questa lavagna.</div>
                                                 <div class="wb-scroll-btns">
                                                     <button class="wb-scroll-btn" onclick="wbScroll(-40)" aria-label="Scorri in su"><svg class="ums-ic" aria-hidden="true"><use href="#ic-chevron-up"/></svg></button>
                                                     <button class="wb-scroll-btn" onclick="wbScroll(40)" aria-label="Scorri in giù"><svg class="ums-ic" aria-hidden="true"><use href="#ic-chevron-down"/></svg></button>
@@ -765,7 +759,7 @@
          sinistra e spingeva giù il riassuntone, mentre il bloc notes
          (sticky in alto a destra) restava su — testo e appunti si
          allontanavano fino a non poter più leggere e scrivere insieme.
-         Ora: banner pinguini e lavagna occupano tutta la larghezza
+         Ora: la lavagna occupa tutta la larghezza
          della sezione; il bloc notes parte in corrispondenza della
          prima riga del riassuntone ed è alto quanto lo schermo utile
          (poi resta incollato mentre si scorre il testo).
@@ -808,7 +802,7 @@
       figure.ums-slide-fig.flo-full{float:none;clear:both;width:100%;max-width:100%;
         margin:1.4rem auto;display:block}
       figure.ums-slide-fig:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(0,0,0,.14)}
-      figure.ums-slide-fig img{width:100%;display:block;border-radius:8px;aspect-ratio:16/9;object-fit:cover}
+      figure.ums-slide-fig img{width:100%;max-width:100%;display:block;border-radius:8px;aspect-ratio:16/9;object-fit:cover}
       /* SHIMMER — placeholder animato finché l'immagine non ha finito di
          caricare (le slide arrivano da R2 e possono metterci un attimo). */
       figure.ums-slide-fig.caricando{position:relative}
@@ -823,16 +817,26 @@
       figure.ums-slide-fig figcaption{
         font-family:var(--font-sans,'DM Sans',sans-serif);font-size:.72rem;
         color:var(--sub,#6b6b73);text-align:center;margin-top:.4rem;letter-spacing:.02em}
-      /* su schermi stretti niente float: la figura va a piena larghezza */
-      @media (max-width:640px){
-        figure.ums-slide-fig{float:none !important;width:100%;margin:.6rem 0 1.2rem}
+      /* TELEFONO E TABLET — niente float e niente colonne: una slide sotto
+         l'altra, a piena larghezza. La soglia e' 900px, la stessa che il resto
+         del sito usa per il mobile (prima era 640px: fra i 641 e i 900 le slide
+         restavano affiancate e la seconda finiva tagliata fuori schermo). */
+      @media (max-width:900px){
+        figure.ums-slide-fig,
+        figure.ums-slide-fig.flo-dx,
+        figure.ums-slide-fig.flo-sx,
+        figure.ums-slide-fig.flo-full{
+          float:none !important;width:100% !important;max-width:100%;
+          margin:.6rem 0 1.2rem}
+        .ums-riass-soloslide{grid-template-columns:1fr !important}
+        .ums-riass-soloslide figure.ums-slide-fig{margin:0 0 1rem}
       }
       /* modalità "solo testo": le figure spariscono, il testo si ricompatta */
       .ums-riass-solotesto figure.ums-slide-fig{display:none}
       /* modalità "solo slide": sparisce il testo, le figure diventano una
          griglia ordinata (il float non ha senso senza testo attorno) */
       .ums-riass-soloslide > :not(figure.ums-slide-fig){display:none}
-      .ums-riass-soloslide{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem}
+      .ums-riass-soloslide{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;min-width:0}
       .ums-riass-soloslide figure.ums-slide-fig{float:none !important;width:100%;margin:0}
 
       /* lightbox a schermo intero */
@@ -1119,7 +1123,6 @@
         font-family:var(--font-sans,'DM Sans',sans-serif);font-weight:700;font-size:.85rem;
         padding:.8rem 1rem;border-radius:12px;cursor:pointer;border:none;transition:transform .15s,box-shadow .15s}
       .ums-pdf-actions .act-print{background:var(--navy,#22365f);color:#fff}
-      .ums-pdf-actions .act-dl{background:var(--gold,#c8a96e);color:#2a2113}
       .ums-pdf-actions button:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(0,0,0,.15)}
       .ums-pdf-actions button svg{width:1.1em;height:1.1em}
       .ums-pdf-opt{display:flex;gap:.9rem;align-items:flex-start;width:100%;text-align:left;
@@ -1215,12 +1218,14 @@
                 '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="2"/><circle cx="19" cy="6" r="2"/><circle cx="19" cy="18" r="2"/><path d="M7 12h4M11 12l6-6M11 12l6 6"/></svg>'+
                 '<span><span class="tt">Solo mappa mentale</span><span class="ds">Il diagramma dei concetti della lezione.</span></span>'+
               '</button>'+
+              '<button class="ums-pdf-opt" data-modo="flash">'+
+                '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="13" height="12" rx="2"/><path d="M8 3h11a2 2 0 0 1 2 2v11"/></svg>'+
+                '<span><span class="tt">Foglio di ripasso</span><span class="ds">Domande e risposte in due colonne: copri le risposte col quaderno.</span></span>'+
+              '</button>'+
               '<label class="ums-pdf-evid"><input type="checkbox" id="ums-pdf-evid-chk"> Mantieni le mie evidenziazioni</label>'+
               '<div class="ums-pdf-actions">'+
                 '<button class="act-print" type="button">'+
-                  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg> Stampa</button>'+
-                '<button class="act-dl" type="button">'+
-                  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg> Scarica PDF</button>'+
+                  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg> Stampa PDF</button>'+
               '</div>'+
             '</div>';
           document.body.appendChild(ov);
@@ -1240,24 +1245,88 @@
             ov.classList.remove('show');
             stampa(modoSel, evid, false);
           });
-          ov.querySelector('.act-dl').addEventListener('click', function(){
-            var evid = document.getElementById('ums-pdf-evid-chk').checked;
-            ov.classList.remove('show');
-            stampa(modoSel, evid, true);
-          });
+
         }
-        // l'opzione "Solo mappa mentale" compare solo se la mappa NotebookLM
-        // esiste per questa lezione; se era selezionata e non c'è più, torna a "Tutto"
+        // PULSANTI INTELLIGENTI — ogni opzione compare solo se la lezione ha
+        // davvero quel materiale. Chi ha solo il riassuntone non si trova
+        // davanti a quattro scelte di cui tre stampano un foglio vuoto.
+        var okSlide = elencoSlide().length > 0;
         var okMappa = !!(window.__umsMappaGen && window.__umsMappaGen());
-        var bMap = ov.querySelector('[data-modo="mappa"]');
-        if(bMap){
-          bMap.style.display = okMappa ? '' : 'none';
-          if(!okMappa && bMap.classList.contains('sel')){
-            var bTutto = ov.querySelector('[data-modo="completo"]');
-            if(bTutto){ bTutto.click(); }   // passa dal listener vero: aggiorna anche la scelta interna
-          }
+        var okFlash = elencoFlash().length > 0;
+        var disponibili = { completo:(okSlide||okMappa), testo:true,
+                            slide:okSlide, mappa:okMappa, flash:okFlash };
+
+        // "Tutto" racconta solo quello che c'e' davvero dentro
+        var pezzi = ['Riassuntone'];
+        if(okSlide) pezzi.push('slide');
+        if(okMappa) pezzi.push('mappa mentale');
+        var dsTutto = ov.querySelector('[data-modo="completo"] .ds');
+        if(dsTutto){
+          dsTutto.textContent = pezzi.length > 2
+            ? pezzi.slice(0,-1).join(', ') + ' e ' + pezzi[pezzi.length-1] + ', in un unico documento.'
+            : pezzi.join(' e ') + ', in un unico documento.';
+        }
+
+        var visibili = [];
+        ov.querySelectorAll('.ums-pdf-opt').forEach(function(b){
+          var m = b.getAttribute('data-modo');
+          var ok = !!disponibili[m];
+          b.style.display = ok ? '' : 'none';
+          if(ok) visibili.push(b);
+          else b.classList.remove('sel');
+        });
+
+        // se resta una scelta sola non e' una scelta: la nascondo e la applico
+        var sceltaUnica = visibili.length < 2;
+        visibili.forEach(function(b){ if(sceltaUnica) b.style.display = 'none'; });
+        var sub = ov.querySelector('.ums-pdf-sub');
+        if(sub){
+          sub.textContent = sceltaUnica
+            ? 'Questa lezione ha solo il riassuntone: lo stampo cosi\u2019 com\u2019e\u2019.'
+            : 'Scegli cosa includere, poi stampa.';
+        }
+        // se la selezione corrente e' sparita, ne scelgo un'altra valida
+        if(!ov.querySelector('.ums-pdf-opt.sel') && visibili.length){
+          visibili[0].click();
         }
         ov.classList.add('show');
+      }
+
+      function elencoSlide(){
+        if(!datiLezione) return [];
+        var raw = datiLezione.slide || datiLezione.slides || [];
+        if(!Array.isArray(raw)) return [];
+        return raw.map(function(s){ return typeof s==='string' ? s : (s&&s.url); }).filter(Boolean);
+      }
+
+      function elencoFlash(){
+        if(!datiLezione) return [];
+        var raw = datiLezione.flashcards || [];
+        if(!Array.isArray(raw)) return [];
+        return raw.filter(function(c){ return c && c.front; });
+      }
+
+      // FOGLIO DI RIPASSO — domande a sinistra dentro i riquadri, risposte
+      // a destra in colonna: si appoggia un quaderno sulla colonna di destra
+      // e si ripassa. Niente fronte-retro, niente grafica.
+      function flashHTML(carte){
+        var righe = carte.map(function(c, i){
+          return '<div class="fc-riga">'+
+                   '<div class="fc-cell"><span class="fc-num">'+(i+1)+'</span>'+
+                     '<div class="fc-dom">'+esc(c.front)+'</div></div>'+
+                   '<div class="fc-ris"><span class="fc-num-r">'+(i+1)+'</span>'+
+                     '<div>'+esc(c.back||'')+'</div></div>'+
+                 '</div>';
+        }).join('');
+        return '<h2 class="ums-pdf-sec-title">Domande e risposte</h2>'+
+               '<p class="fc-istruzioni">Copri la colonna di destra con un quaderno, '+
+               'rispondi a voce, poi scopri.</p>'+
+               '<div class="fc-foglio">'+righe+'</div>';
+      }
+
+      function esc(s){
+        return String(s==null?'':s)
+          .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
       }
 
       function titoloLezione(){
@@ -1286,14 +1355,17 @@
         var vuoiTesto = (modo==='completo' || modo==='testo');
         var vuoiSlide = (modo==='completo' || modo==='slide');
         var vuoiMappa = (modo==='completo' || modo==='mappa');
+        var vuoiFlash = (modo==='flash');
+        // le flashcard sono un foglio da ritagliare, non un capitolo del
+        // documento: quando si stampano quelle, si stampano solo quelle
+        if(vuoiFlash){ vuoiTesto = vuoiSlide = vuoiMappa = false; }
 
         // classe intestazione sezione: col salto pagina SOLO se prima c'è
         // altro contenuto — altrimenti la prima pagina esce quasi vuota e la
         // sezione finisce "invisibile" a pagina 2 (il bug della mappa bianca)
         var slideHTML = '';
         if(vuoiSlide && datiLezione){
-          var raw = datiLezione.slide || datiLezione.slides || [];
-          var urls = raw.map(function(s){ return typeof s==='string' ? s : (s&&s.url); }).filter(Boolean);
+          var urls = elencoSlide();
           if(urls.length){
             var clsS = vuoiTesto ? 'ums-pdf-slide-title' : 'ums-pdf-sec-title';
             slideHTML = '<h2 class="'+clsS+'">Slide della lezione</h2>' +
@@ -1309,6 +1381,13 @@
             mappaHTML = '<h2 class="'+clsM+'">Mappa mentale</h2>' +
               '<div class="ums-pdf-mappa">' + svgMappa + '</div>';
           }
+        }
+
+        var flashHTMLout = '';
+        if(vuoiFlash){
+          var carte = elencoFlash();
+          if(!carte.length) return;
+          flashHTMLout = flashHTML(carte);
         }
 
         if(!vuoiTesto) testoHTML = '';
@@ -1342,7 +1421,19 @@
           '.ums-pdf-sec-title{font-family:\'Playfair Display\',Georgia,serif;color:#1a2f4f;'+
             'border-top:2px solid #c8a96e;padding-top:14px;margin:10px 0 14px}'+
           '.ums-pdf-mappa{'+(modo!=='mappa' ? 'page:mappa;' : '')+'width:100%;overflow:visible}'+
-          '.ums-pdf-mappa svg{width:100%;height:auto}';
+          '.ums-pdf-mappa svg{width:100%;height:auto}'+
+          /* FOGLIO DI RIPASSO — due colonne: domande e risposte.
+             La linea verticale in mezzo dice dove appoggiare il quaderno. */
+          '.fc-istruzioni{font-size:9.5pt;color:#7a7770;font-style:italic;margin:0 0 10px}'+
+          '.fc-riga{display:grid;grid-template-columns:1fr 1fr;gap:0;'+
+            'border-bottom:1px solid #efe8db;break-inside:avoid;page-break-inside:avoid}'+
+          '.fc-cell{position:relative;padding:9px 14px 9px 24px}'+
+          '.fc-ris{position:relative;padding:9px 14px 9px 24px;border-left:1.5px dashed #c8a96e}'+
+          '.fc-num,.fc-num-r{position:absolute;left:6px;top:10px;font-size:8pt;color:#a89f8e}'+
+          '.fc-dom{font-family:\'Playfair Display\',Georgia,serif;font-weight:700;'+
+            'font-size:11.5pt;line-height:1.35;color:#1a2f4f}'+
+          '.fc-ris div{font-size:10pt;line-height:1.45;color:#25242a;white-space:pre-line}';
+
 
         var html =
           '<html><head><title>'+titolo+' \u2014 Una Mano Spensierata</title>'+
@@ -1354,7 +1445,7 @@
             '<div class="pdf-brand"><div class="wm">Una Mano <em>Spensierata</em></div>'+
             '<div class="dom">unamanospensierata.com</div></div>'+
             '<h1>'+titolo+'</h1></div>'+
-          testoHTML + slideHTML + mappaHTML +
+          testoHTML + slideHTML + mappaHTML + flashHTMLout +
           '<scr'+'ipt>window.onload=function(){setTimeout(function(){window.print();},600);};</scr'+'ipt>'+
           '</body></html>';
 
@@ -1566,8 +1657,7 @@
             '<div class="ums-mappa-card">'+
               '<div class="ums-mappa-head">'+
                 '<span class="tt">Mappa mentale</span>'+
-                '<button type="button" class="m-print"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg> Stampa</button>'+
-                '<button type="button" class="m-dl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg> PDF</button>'+
+                '<button type="button" class="m-print"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg> Stampa PDF</button>'+
                 '<button type="button" class="mx" aria-label="Chiudi">&times;</button>'+
               '</div>'+
               '<div class="ums-mappa-body"></div>'+
@@ -1579,10 +1669,7 @@
             ov.classList.remove('show');
             if(window.__umsStampa) window.__umsStampa('mappa', false, false);
           });
-          ov.querySelector('.m-dl').addEventListener('click', function(){
-            ov.classList.remove('show');
-            if(window.__umsStampa) window.__umsStampa('mappa', false, true);
-          });
+
         }
         ov.querySelector('.ums-mappa-body').innerHTML = svg;
         ov.classList.add('show');
@@ -1595,9 +1682,16 @@
         var barra = document.getElementById('ums-slide-toggle-box');
         var tg = barra && barra.querySelector('.ums-slide-toggle');
         var cont = document.getElementById('dyn-riassuntone-container');
+        // Se la lezione HA le slide aspetto la barra montata dal blocco slide,
+        // per non ritrovarmi due barre. Se NON le ha, quella barra non arriverà
+        // mai: me la costruisco subito, altrimenti il pulsante Mappa comparirebbe
+        // solo dopo venti secondi di attesa a vuoto (era questo il bug).
+        var haSlide = !!(datiMappa && (
+          (Array.isArray(datiMappa.slide)  && datiMappa.slide.length) ||
+          (Array.isArray(datiMappa.slides) && datiMappa.slides.length)));
         if(!tg){
-          if(tries++ < 100){ setTimeout(aggancia, 200); return; }
-          if(!cont) return;
+          if(!cont){ if(tries++ < 100) setTimeout(aggancia, 200); return; }
+          if(haSlide && tries++ < 100){ setTimeout(aggancia, 200); return; }
           var box = document.createElement('div'); box.id='ums-slide-toggle-box';
           tg = document.createElement('div'); tg.className='ums-slide-toggle';
           box.appendChild(tg); cont.parentElement.insertBefore(box, cont);
@@ -1656,6 +1750,26 @@
       iframe.setAttribute('src', 'about:blank');
     }
   }
+
+  // AUDIO FANTASMA — ums.js mette l'indirizzo dell'mp4 nell'iframe appena la
+  // lezione si apre; noi invece aspettavamo di aver scaricato il JSON prima di
+  // zittirlo, e in quella finestra Chrome apriva il suo lettore interno e
+  // partiva da solo. Qui non aspettiamo piu' nulla: sorvegliamo l'attributo src
+  // e lo svuotiamo nell'istante esatto in cui diventa un file audio o video.
+  function sorveglia(id){
+    var el = document.getElementById(id);
+    if(!el) return;
+    function controlla(){
+      var s = el.getAttribute('src') || '';
+      if(AUDIO.test(s) || VIDEO.test(s)) zittisci(el);
+    }
+    controlla();
+    if(window.MutationObserver){
+      new MutationObserver(controlla).observe(el, {attributes:true, attributeFilter:['src']});
+    }
+  }
+  sorveglia('dyn-podcast-player');
+  sorveglia('dyn-video-player');
 
   function monta(idIframe, idLink, url, tipo){
     var iframe = document.getElementById(idIframe);
