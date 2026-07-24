@@ -3483,56 +3483,74 @@ if (!fileDaCaricare) {
                 requestAnimationFrame(() => { ov.classList.add('on'); });
             }
 
-            // STAMPA — la scheda di una lezione, o tutte le schede di una
-            // materia, in un foglio pulito e brandizzato (niente grafica).
+            // STAMPA — usa ESATTAMENTE il foglio della Lavagna (wbSheetHTML):
+            // stesso sfondo, stessa testata, stessa numerazione col numero oro,
+            // stessa barra del colore di evidenziazione, stesso piede.
+            // Unica differenza: i dati arrivano da localStorage invece che dal
+            // DOM della lezione, e la provenienza e' sempre scritta in testata.
+            function schFoglioHTML(s, primo) {
+                var printDate = new Date().toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' });
+                var sotto = 'Lavagna Concetti';
+                if (s.num) sotto += ' \u00b7 ' + T('Lezione') + ' ' + s.num;
+                if (s.titolo) sotto += ' \u00b7 ' + schEsc(s.titolo);
+                sotto += ' \u00b7 ' + printDate;
+
+                var out = '<div style="' + (primo ? '' : 'page-break-before: always; break-before: page;') + '">' +
+                    '<h1 style="font-family: \'Playfair Display\', Georgia, serif; font-size: 30px; font-weight: 700; color: #1A2F4F; margin: 0 0 6px 0; line-height: 1.15;">' +
+                        schEsc(s.nomeMateria) +
+                    '</h1>' +
+                    '<div style="font-size: 12px; color: #918E86; margin-bottom: 14px;">' + sotto + '</div>' +
+                    '<div style="border-top: 4px double #1C1C22; margin-bottom: 28px;"></div>';
+
+                var n = 0;
+                s.righe.forEach(function (r) {
+                    var num = String(++n);
+                    if (num.length < 2) num = '0' + num;
+                    var colore = schEsc(r.color || '#FFF176');
+                    out += '<div style="display: flex; gap: 16px; margin-bottom: 22px; page-break-inside: avoid; break-inside: avoid;">' +
+                            '<div style="font-family: \'Playfair Display\', Georgia, serif; font-weight: 700; font-size: 22px; color: #C8A96E; min-width: 34px; line-height: 1.2; text-align: right;">' + num + '</div>' +
+                            '<div style="flex: 1; border-left: 4px solid ' + colore + '; border-bottom: 1px solid #E4E0D6; padding: 2px 0 14px 16px;">' +
+                                '<p style="font-family: \'Playfair Display\', Georgia, serif; font-weight: 700; font-size: 17px; color: #1A2F4F; margin: 0 0 7px 0; line-height: 1.45;">' + schEsc(r.text) + '</p>' +
+                                (r.note ? '<p style="font-size: 13.5px; color: #555149; margin: 0; line-height: 1.65; white-space: pre-wrap;">&#8627; ' + schEsc(r.note) + '</p>' : '') +
+                            '</div>' +
+                        '</div>';
+                });
+
+                return out + '</div>';
+            }
+
             function schStampa(schede, titoloMateria) {
                 if (!schede || !schede.length) return;
-                var corpo = schede.map(function (s) {
-                    var righe = s.righe.map(function (r) {
-                        var nota = r.note ? '<p class="p-nota">' + schEsc(r.note) + '</p>' : '';
-                        return '<li><span class="p-pallino" style="background:' + schEsc(r.color || '#FFF176') + '"></span>' +
-                               '<div><p class="p-testo">' + schEsc(r.text) + '</p>' + nota + '</div></li>';
-                    }).join('');
-                    return '<section class="p-foglio">' +
-                               '<div class="p-da">' + schEsc(schProvenienza(s)) + '</div>' +
-                               (s.titolo ? '<h2 class="p-titolo">' + schEsc(s.titolo) + '</h2>' : '') +
-                               '<ul class="p-righe">' + righe + '</ul>' +
-                           '</section>';
-                }).join('');
-                var css =
-                    '@page{margin:16mm 14mm}' +
-                    '*{box-sizing:border-box}' +
-                    'body{font-family:\'DM Sans\',system-ui,sans-serif;color:#25242a;margin:0}' +
-                    '.p-head{border-bottom:2px solid #c8a96e;padding-bottom:10px;margin-bottom:20px}' +
-                    '.p-wm{font-family:\'Playfair Display\',Georgia,serif;font-size:19pt;color:#1a2f4f}' +
-                    '.p-wm em{color:#22365f}' +
-                    '.p-dom{font-size:8.5pt;letter-spacing:.12em;text-transform:uppercase;color:#9a7a3f}' +
-                    '.p-mat{font-family:\'Playfair Display\',Georgia,serif;font-size:14pt;color:#1a2f4f;margin:6px 0 0}' +
-                    '.p-foglio{break-inside:avoid;page-break-inside:avoid;margin:0 0 20px}' +
-                    '.p-da{font-size:8.5pt;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:#9a7a3f;margin-bottom:4px}' +
-                    '.p-titolo{font-family:\'Playfair Display\',Georgia,serif;font-size:13pt;color:#1a2f4f;margin:0 0 8px}' +
-                    '.p-righe{list-style:none;margin:0;padding:0}' +
-                    '.p-righe li{display:flex;gap:9px;align-items:flex-start;padding:7px 0;border-bottom:1px solid #efe8db;break-inside:avoid}' +
-                    '.p-pallino{flex:0 0 auto;width:10px;height:10px;border-radius:50%;margin-top:5px}' +
-                    '.p-testo{margin:0;font-size:10.5pt;line-height:1.45}' +
-                    '.p-nota{margin:4px 0 0;font-size:9pt;line-height:1.4;color:#6b6b73;font-style:italic;border-left:2px solid #e5d6bd;padding-left:9px}';
-                var html =
-                    '<html><head><title>' + schEsc(titoloMateria || T('Le mie schede')) + ' \u2014 Una Mano Spensierata</title>' +
-                    '<link rel="preconnect" href="https://fonts.googleapis.com">' +
-                    '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' +
-                    '<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=DM+Sans:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">' +
-                    '<style>' + css + '</style></head><body>' +
-                    '<div class="p-head"><div class="p-wm">Una Mano <em>Spensierata</em></div>' +
-                    '<div class="p-dom">unamanospensierata.com</div>' +
-                    (titoloMateria ? '<div class="p-mat">' + schEsc(titoloMateria) + '</div>' : '') + '</div>' +
-                    corpo +
-                    '<scr' + 'ipt>window.onload=function(){setTimeout(function(){window.print();},500);};</scr' + 'ipt>' +
-                    '</body></html>';
+
+                var printContents =
+                    '<img src="https://unamanospensierata.com/img/sfondo-giappone-1600.png"' +
+                    ' alt="" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.06; z-index: -1;">' +
+                    '<div style="font-family: \'DM Sans\', Arial, sans-serif; padding: 28px 24px; color: #1C1C22; max-width: 780px; margin: 0 auto; -webkit-print-color-adjust: exact; print-color-adjust: exact;">';
+
+                schede.forEach(function (s, i) { printContents += schFoglioHTML(s, i === 0); });
+
+                printContents +=
+                    '<div style="margin-top: 34px; border-top: 4px double #1C1C22; padding-top: 14px; text-align: center;">' +
+                        '<div style="font-family: \'Playfair Display\', Georgia, serif; font-weight: 900; font-size: 15px; letter-spacing: -0.02em; color: #1C1C22;">Una Mano <em style="font-style: italic; color: #1A2F4F;">Spensierata</em></div>' +
+                        '<div style="width: 44px; border-top: 2px solid #C8A96E; margin: 10px auto 0;"></div>' +
+                    '</div>' +
+                    '</div>';
+
                 var ifr = document.createElement('iframe');
                 ifr.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:none';
                 document.body.appendChild(ifr);
                 var doc = ifr.contentWindow.document;
-                doc.open(); doc.write(html); doc.close();
+                doc.open();
+                doc.write(
+                    '<html><head><title>' + schEsc(titoloMateria || T('Le mie schede')) + ' \u2014 Una Mano Spensierata</title>' +
+                    '<link rel="preconnect" href="https://fonts.googleapis.com">' +
+                    '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' +
+                    '<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">' +
+                    '</head><body style="margin:0; background:#fff;">' + printContents +
+                    '<scr' + 'ipt>window.onload = function(){ setTimeout(function(){ window.print(); }, 450); };</scr' + 'ipt>' +
+                    '</body></html>'
+                );
+                doc.close();
                 setTimeout(function () { try { document.body.removeChild(ifr); } catch (e) {} }, 20000);
             }
 
