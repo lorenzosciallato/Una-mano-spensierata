@@ -3009,8 +3009,9 @@ if (!fileDaCaricare) {
                     '<span class="ums-fc-badge" id="ums-fc-badge" hidden>0</span>' +
                     '<span class="ums-inav-label">Ripasso</span>' +
                 '</button>' +
-                '<a class="ums-inav-item" href="' + WA_URL + '" target="_blank" rel="noopener" title="Gruppo WhatsApp" aria-label="Entra nel gruppo WhatsApp">' +
+                '<a class="ums-inav-item ums-inav-wa" href="' + WA_URL + '" target="_blank" rel="noopener" title="Gruppo WhatsApp" aria-label="Entra nel gruppo WhatsApp">' +
                     WA_SVG +
+                    '<span class="ums-wa-badge" id="ums-wa-badge" hidden>1</span>' +
                 '</a>';
             document.body.appendChild(nav);
 
@@ -3112,6 +3113,7 @@ if (!fileDaCaricare) {
                 }
             }
             refreshState();
+            if (window.umsWaBadge) window.umsWaBadge();
 
             const choiceView  = document.getElementById('ums-choice');
             const loginView2  = document.getElementById('ums-view-login');
@@ -4116,67 +4118,20 @@ if (!fileDaCaricare) {
     })();
 
 /* ====================================================================
-   NOTIFICA GRUPPO WHATSAPP — compare SOLO a chi non ha effettuato
-   l'accesso, una volta per sessione. Cliccandola si apre il gruppo.
+   PALLINO "1" SUL GRUPPO WHATSAPP — solo per chi non ha la chiave.
+   L'icona e' gia' un link al gruppo: un clic e ci sei.
    ==================================================================== */
 (function () {
-    var WA = 'https://chat.whatsapp.com/EaX5kr14XxHL9o3qxdDVEP?mode=gi_t';
-    var ICONA = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.5 15.3L2 22l4.9-1.4A10 10 0 1 0 12 2Zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-2.9.8.8-2.8-.2-.3A8 8 0 1 1 12 20Zm4.4-5.8c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.5.1l-.7.9c-.1.2-.3.2-.5.1a6.6 6.6 0 0 1-3.2-2.8c-.1-.2 0-.4.1-.5l.5-.6c.1-.2.1-.3 0-.5l-.7-1.7c-.2-.4-.4-.4-.5-.4h-.5a1 1 0 0 0-.7.3c-.2.3-.9.9-.9 2.1s.9 2.5 1 2.6a9.4 9.4 0 0 0 3.6 3.2c1.7.7 2 .6 2.4.5.4 0 1.4-.5 1.6-1.1.2-.5.2-1 .1-1.1Z"/></svg>';
-
-    function haChiave() {
-        try { return !!localStorage.getItem('ums_chiave'); } catch (e) { return false; }
+    function aggiorna() {
+        var b = document.getElementById('ums-wa-badge');
+        if (!b) return;
+        var dentro = false;
+        try { dentro = !!localStorage.getItem('ums_chiave'); } catch (e) {}
+        b.hidden = dentro;
     }
-    function giaVista() {
-        try { return sessionStorage.getItem('ums_wa_notif') === '1'; } catch (e) { return true; }
-    }
-    function segna() {
-        try { sessionStorage.setItem('ums_wa_notif', '1'); } catch (e) {}
-    }
-    function ora() {
-        var d = new Date();
-        return d.getHours() + ':' + (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
-    }
-
-    function mostra() {
-        if (haChiave() || giaVista()) return;
-        if (document.querySelector('.ums-wa-notif')) return;
-        segna();
-
-        // link VERO: cliccando, il browser apre il gruppo da solo, senza
-        // finestre intermedie e senza farsi fermare dai blocca-pop-up
-        var box = document.createElement('a');
-        box.className = 'ums-wa-notif';
-        box.href = WA;
-        box.target = '_blank';
-        box.rel = 'noopener';
-        box.setAttribute('aria-label', 'Entra nel gruppo WhatsApp di Una Mano Spensierata');
-        box.innerHTML =
-            '<div class="ums-wa-ico">' + ICONA + '</div>' +
-            '<div class="ums-wa-testo">' +
-                '<div class="ums-wa-top">' +
-                    '<span class="ums-wa-nome">Una Mano Spensierata</span>' +
-                    '<span class="ums-wa-ora">' + ora() + '</span>' +
-                '</div>' +
-                '<div class="ums-wa-msg">Siamo in oltre 300 sul gruppo: appunti, dubbi e date d\u2019esame. Entra anche tu \u2197</div>' +
-            '</div>' +
-            '<button class="ums-wa-x" type="button" aria-label="Chiudi">&times;</button>';
-        document.body.appendChild(box);
-        requestAnimationFrame(function () { box.classList.add('on'); });
-
-        function chiudi(e) {
-            if (e) { e.stopPropagation(); e.preventDefault(); }
-            box.classList.remove('on');
-            setTimeout(function () { if (box.parentNode) box.parentNode.removeChild(box); }, 300);
-        }
-        box.querySelector('.ums-wa-x').addEventListener('click', chiudi);
-        box.addEventListener('click', function () { setTimeout(chiudi, 400); });
-        box.addEventListener('keydown', function (e) {
-            if (e.key === 'Escape') chiudi();
-        });
-        setTimeout(function () { if (box.parentNode) chiudi(); }, 14000);
-    }
-
-    function avvia() { setTimeout(mostra, 1000); }
+    window.umsWaBadge = aggiorna;
+    function avvia() { aggiorna(); setTimeout(aggiorna, 600); }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', avvia);
     else avvia();
+    window.addEventListener('storage', aggiorna);
 })();
