@@ -1240,13 +1240,17 @@ if (!fileDaCaricare) {
         //     "<front>": { stato, box, due, front, back } } } }
         // Intervalli raccomandati (giorni) per risposte corrette consecutive.
         // =========================================================================
-        // Intervalli in giorni. Il CASSETTO di una carta è deciso per sempre dal
-        // suo PRIMO esito: sbagliata al primo colpo -> cassetto 'sbagliate'
-        // (torna spesso, per fissarla davvero); saputa al primo colpo ->
-        // 'giuste' (torna raramente). Principio cardine della spaced repetition:
-        // massimo sforzo dove serve, minimo dove non serve.
-        const SR_INT_SBAGLIATE = [1, 2, 4, 8, 15, 30];
-        const SR_INT_GIUSTE    = [3, 7, 16, 35, 70, 140];
+        // Intervalli in giorni.
+        // GIUSTE: la scala classica della spaced repetition — domani, poi 3
+        // giorni, 7, 16, 35, 70. E' la stessa che il sito promette nel pop-up
+        // "Come funziona il ripasso" (prima il codice partiva da 3 e i due si
+        // contraddicevano).
+        // SBAGLIATE (= le ostiche): BASTA UNA VOLTA per entrarci, e non se ne
+        // esce piu'. L'intervallo non supera mai i 10 giorni, cosi' una carta
+        // che ti ha messo in difficolta' torna sempre a galla, anche se poi la
+        // indovini dieci volte di fila.
+        const SR_INT_SBAGLIATE = [1, 2, 4, 6, 8, 10];
+        const SR_INT_GIUSTE    = [1, 3, 7, 16, 35, 70];
         function srTabellaDi(bucket) { return bucket === 'sbagliate' ? SR_INT_SBAGLIATE : SR_INT_GIUSTE; }
 
         function srCaricaTutto() {
@@ -1280,10 +1284,13 @@ if (!fileDaCaricare) {
             const nuova = !db[lk].cards[front];
             let c = db[lk].cards[front] || { box: 0, front, back };
             c.front = front; c.back = back;
-            // CASSETTO PERMANENTE: lo decide il PRIMO esito in assoluto e non
-            // cambia mai più. Carte vecchie senza cassetto: lo derivo dall'ultimo
-            // esito noto (migrazione morbida).
-            if (nuova || !c.bucket) c.bucket = (nuova ? esito : (c.stato || esito)) === 'known' ? 'giuste' : 'sbagliate';
+            // CASSETTO: una carta sbagliata anche UNA SOLA VOLTA e' ostica, entra
+            // fra le "sbagliate" e non ne esce piu'. Chi non l'ha mai sbagliata
+            // resta fra le "giuste". Carte vecchie senza cassetto: lo derivo
+            // dall'ultimo esito noto (migrazione morbida, il primo esito non era
+            // stato salvato da nessuna parte).
+            if (esito !== 'known') c.bucket = 'sbagliate';
+            else if (!c.bucket) c.bucket = (nuova ? 'giuste' : ((c.stato || esito) === 'known' ? 'giuste' : 'sbagliate'));
             const TAB = srTabellaDi(c.bucket);
             if (esito === 'known') {
                 // usa PRIMA l'intervallo del box corrente, POI avanza
