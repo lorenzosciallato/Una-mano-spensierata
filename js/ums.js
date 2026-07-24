@@ -3373,7 +3373,256 @@ if (!fileDaCaricare) {
                 }
             }, 1500);
 
+
+            // ============ SCHEDE (le tue sottolineature e i tuoi appunti) ============
+            // Una "scheda" non si costruisce da zero: e' la Lavagna di una lezione,
+            // gia' scritta dallo studente mentre studiava (localStorage ums_hl::<lk>).
+            // Qui le tiro fuori dalla lezione e le rendo leggibili tutte insieme.
+            let umsHubModo = 'flashcard';
+
+            function schLeggiTutte() {
+                const out = [];
+                for (let i = 0; i < localStorage.length; i++) {
+                    const k = localStorage.key(i) || '';
+                    if (k.indexOf('ums_hl::') !== 0) continue;
+                    const lk = k.slice(8);
+                    let dati = null;
+                    try { dati = JSON.parse(localStorage.getItem(k) || 'null'); } catch (e) {}
+                    const righe = (dati && Array.isArray(dati.wb) ? dati.wb : [])
+                        .filter(r => r && r.text);
+                    if (!righe.length) continue;
+                    const slug = (lk.split('/')[0]) || 'lezione';
+                    const num = (lk.match(/lezione-(\d+)/) || [])[1] || '';
+                    const dbSr = (typeof srCaricaTutto === 'function') ? srCaricaTutto() : {};
+                    const titolo = (dbSr[lk] && dbSr[lk].titolo) || '';
+                    out.push({
+                        lk, slug, num, titolo, righe,
+                        nomeMateria: (typeof umsNomeMateria === 'function') ? umsNomeMateria(slug, titolo) : slug
+                    });
+                }
+                out.sort((a, b) => a.nomeMateria.localeCompare(b.nomeMateria) || (parseInt(a.num || 0) - parseInt(b.num || 0)));
+                return out;
+            }
+
+            function schGruppi() {
+                const g = {};
+                schLeggiTutte().forEach(s => {
+                    (g[s.slug] = g[s.slug] || { slug: s.slug, nome: s.nomeMateria, schede: [] }).schede.push(s);
+                });
+                return Object.values(g);
+            }
+
+            // Da che lezione viene questa scheda: SEMPRE scritto, in ogni foglio.
+            function schProvenienza(s) {
+                return s.nomeMateria + (s.num ? ' \u00b7 ' + T('Lezione') + ' ' + s.num : '');
+            }
+
+            // LETTORE — un foglio alla volta, si scorre come le foto di un social.
+            function schApriLettore(schede, partenza) {
+                if (!schede || !schede.length) return;
+                let ov = document.getElementById('ums-sch-viewer');
+                if (ov) ov.remove();
+                ov = document.createElement('div');
+                ov.id = 'ums-sch-viewer';
+                ov.setAttribute('role', 'dialog');
+                ov.setAttribute('aria-modal', 'true');
+                ov.setAttribute('aria-label', T('Le mie schede'));
+
+                const fogli = schede.map((s, i) => {
+                    const righe = s.righe.map(r => {
+                        const nota = r.note ? '<p class="sch-nota">' + schEsc(r.note) + '</p>' : '';
+                        return '<li class="sch-riga">' +
+                               '<span class="sch-pallino" style="background:' + schEsc(r.color || '#FFF176') + '"></span>' +
+                               '<div><p class="sch-testo">' + schEsc(r.text) + '</p>' + nota + '</div>' +
+                               '</li>';
+                    }).join('');
+                    return '<article class="sch-foglio" tabindex="-1">' +
+                               '<div class="sch-testata">' +
+                                   '<span class="sch-da">' + schEsc(schProvenienza(s)) + '</span>' +
+                                   '<span class="sch-pag">' + (i + 1) + ' / ' + schede.length + '</span>' +
+                               '</div>' +
+                               (s.titolo ? '<h2 class="sch-titolo">' + schEsc(s.titolo) + '</h2>' : '') +
+                               '<ul class="sch-righe">' + righe + '</ul>' +
+                               (i < schede.length - 1 ? '<div class="sch-giu" aria-hidden="true">\u2304</div>' : '') +
+                           '</article>';
+                }).join('');
+
+                ov.innerHTML =
+                    '<div class="sch-barra">' +
+                        '<button class="sch-print" type="button" aria-label="' + T('Stampa') + '">' +
+                            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg>' +
+                            '<span>' + T('Stampa') + '</span>' +
+                        '</button>' +
+                        '<button class="sch-x" type="button" aria-label="' + T('Chiudi') + '">&#10005;</button>' +
+                    '</div>' +
+                    '<div class="sch-scroll" id="sch-scroll">' + fogli + '</div>';
+                document.body.appendChild(ov);
+                document.body.classList.add('ums-noscroll');
+
+                function chiudi() {
+                    ov.remove();
+                    document.body.classList.remove('ums-noscroll');
+                    document.removeEventListener('keydown', tasti);
+                }
+                function tasti(e) { if (e.key === 'Escape') chiudi(); }
+                ov.querySelector('.sch-x').addEventListener('click', chiudi);
+                ov.querySelector('.sch-print').addEventListener('click', function () {
+                    // stampa esattamente cio' che si sta leggendo: una lezione
+                    // sola oppure tutte le schede della materia
+                    var titolo = schede.length > 1 ? schede[0].nomeMateria : '';
+                    schStampa(schede, titolo);
+                });
+                document.addEventListener('keydown', tasti);
+
+                const scroll = ov.querySelector('#sch-scroll');
+                const q = Math.max(0, Math.min(partenza || 0, schede.length - 1));
+                if (q > 0) {
+                    const target = scroll.children[q];
+                    if (target) scroll.scrollTop = target.offsetTop;
+                }
+                requestAnimationFrame(() => { ov.classList.add('on'); });
+            }
+
+            // STAMPA — la scheda di una lezione, o tutte le schede di una
+            // materia, in un foglio pulito e brandizzato (niente grafica).
+            function schStampa(schede, titoloMateria) {
+                if (!schede || !schede.length) return;
+                var corpo = schede.map(function (s) {
+                    var righe = s.righe.map(function (r) {
+                        var nota = r.note ? '<p class="p-nota">' + schEsc(r.note) + '</p>' : '';
+                        return '<li><span class="p-pallino" style="background:' + schEsc(r.color || '#FFF176') + '"></span>' +
+                               '<div><p class="p-testo">' + schEsc(r.text) + '</p>' + nota + '</div></li>';
+                    }).join('');
+                    return '<section class="p-foglio">' +
+                               '<div class="p-da">' + schEsc(schProvenienza(s)) + '</div>' +
+                               (s.titolo ? '<h2 class="p-titolo">' + schEsc(s.titolo) + '</h2>' : '') +
+                               '<ul class="p-righe">' + righe + '</ul>' +
+                           '</section>';
+                }).join('');
+                var css =
+                    '@page{margin:16mm 14mm}' +
+                    '*{box-sizing:border-box}' +
+                    'body{font-family:\'DM Sans\',system-ui,sans-serif;color:#25242a;margin:0}' +
+                    '.p-head{border-bottom:2px solid #c8a96e;padding-bottom:10px;margin-bottom:20px}' +
+                    '.p-wm{font-family:\'Playfair Display\',Georgia,serif;font-size:19pt;color:#1a2f4f}' +
+                    '.p-wm em{color:#22365f}' +
+                    '.p-dom{font-size:8.5pt;letter-spacing:.12em;text-transform:uppercase;color:#9a7a3f}' +
+                    '.p-mat{font-family:\'Playfair Display\',Georgia,serif;font-size:14pt;color:#1a2f4f;margin:6px 0 0}' +
+                    '.p-foglio{break-inside:avoid;page-break-inside:avoid;margin:0 0 20px}' +
+                    '.p-da{font-size:8.5pt;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:#9a7a3f;margin-bottom:4px}' +
+                    '.p-titolo{font-family:\'Playfair Display\',Georgia,serif;font-size:13pt;color:#1a2f4f;margin:0 0 8px}' +
+                    '.p-righe{list-style:none;margin:0;padding:0}' +
+                    '.p-righe li{display:flex;gap:9px;align-items:flex-start;padding:7px 0;border-bottom:1px solid #efe8db;break-inside:avoid}' +
+                    '.p-pallino{flex:0 0 auto;width:10px;height:10px;border-radius:50%;margin-top:5px}' +
+                    '.p-testo{margin:0;font-size:10.5pt;line-height:1.45}' +
+                    '.p-nota{margin:4px 0 0;font-size:9pt;line-height:1.4;color:#6b6b73;font-style:italic;border-left:2px solid #e5d6bd;padding-left:9px}';
+                var html =
+                    '<html><head><title>' + schEsc(titoloMateria || T('Le mie schede')) + ' \u2014 Una Mano Spensierata</title>' +
+                    '<link rel="preconnect" href="https://fonts.googleapis.com">' +
+                    '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' +
+                    '<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=DM+Sans:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">' +
+                    '<style>' + css + '</style></head><body>' +
+                    '<div class="p-head"><div class="p-wm">Una Mano <em>Spensierata</em></div>' +
+                    '<div class="p-dom">unamanospensierata.com</div>' +
+                    (titoloMateria ? '<div class="p-mat">' + schEsc(titoloMateria) + '</div>' : '') + '</div>' +
+                    corpo +
+                    '<scr' + 'ipt>window.onload=function(){setTimeout(function(){window.print();},500);};</scr' + 'ipt>' +
+                    '</body></html>';
+                var ifr = document.createElement('iframe');
+                ifr.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:none';
+                document.body.appendChild(ifr);
+                var doc = ifr.contentWindow.document;
+                doc.open(); doc.write(html); doc.close();
+                setTimeout(function () { try { document.body.removeChild(ifr); } catch (e) {} }, 20000);
+            }
+
+            function schEsc(s) {
+                return String(s == null ? '' : s)
+                    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;');
+            }
+
+            // INTERRUTTORE Flashcard / Schede in cima all'hub
+            function schMontaToggle() {
+                let bar = document.getElementById('ums-hub-modo');
+                if (!bar) {
+                    bar = document.createElement('div');
+                    bar.id = 'ums-hub-modo';
+                    bar.innerHTML =
+                        '<button type="button" data-modo="flashcard"></button>' +
+                        '<button type="button" data-modo="schede"></button>';
+                    fcList.parentNode.insertBefore(bar, fcList);
+                    bar.querySelectorAll('button').forEach(b => {
+                        b.addEventListener('click', () => {
+                            umsHubModo = b.getAttribute('data-modo');
+                            fcRenderHub();
+                        });
+                    });
+                }
+                const nSchede = schLeggiTutte().length;
+                bar.querySelector('[data-modo="flashcard"]').textContent = T('Flashcard');
+                bar.querySelector('[data-modo="schede"]').textContent = T('Schede') + (nSchede ? ' (' + nSchede + ')' : '');
+                bar.querySelectorAll('button').forEach(b => {
+                    b.classList.toggle('on', b.getAttribute('data-modo') === umsHubModo);
+                });
+            }
+
+            function schRenderHub() {
+                // Le schede si salvano e si sincronizzano come le flashcard:
+                // senza chiave non si usano (stesso cancello del ripasso).
+                const gate = document.getElementById('ums-fc-gate');
+                const connesso = !!getChiave();
+                if (gate) gate.hidden = connesso;
+                fcList.innerHTML = '';
+                if (!connesso) {
+                    fcSub.textContent = '';
+                    document.getElementById('ums-fc-gate-text').textContent = T('Per usare le schede serve la tua chiave: accedendo, le tue sottolineature e i tuoi appunti si salvano e ti seguono su qualsiasi dispositivo. Bastano due tocchi, ed è gratis.');
+                    document.getElementById('ums-fc-login').textContent = T('Accedi ora');
+                    return;
+                }
+                const gruppi = schGruppi();
+                if (!gruppi.length) {
+                    fcSub.textContent = '';
+                    fcList.innerHTML = '<div class="ums-fc-empty">' + T('Non hai ancora nessuna scheda.') + '<br>' +
+                        T('Sottolinea una frase nel Riassuntone: finisce sulla Lavagna e diventa una scheda.') + '</div>';
+                    return;
+                }
+                const tot = gruppi.reduce((n, g) => n + g.schede.length, 0);
+                fcSub.textContent = tot + ' ' + T(tot === 1 ? 'scheda dai tuoi appunti' : 'schede dai tuoi appunti');
+
+                gruppi.forEach(g => {
+                    const box = document.createElement('div');
+                    box.className = 'ums-fc-lezione';
+                    const chips = g.schede.map((s, i) =>
+                        '<button class="sch-chip" type="button" data-i="' + i + '">' +
+                        (s.num ? T('Lezione') + ' ' + s.num : schEsc(s.titolo || s.lk)) +
+                        ' <span class="sch-chip-n">' + s.righe.length + '</span></button>'
+                    ).join('');
+                    box.innerHTML =
+                        '<div class="ums-fc-lez-top">' +
+                            '<div>' +
+                                '<div class="ums-fc-lez-nome"></div>' +
+                                '<div class="ums-fc-lez-conta">' + g.schede.length + ' ' +
+                                    T(g.schede.length === 1 ? 'scheda' : 'schede') + '</div>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="sch-chips">' + chips + '</div>' +
+                        '<div class="ums-fc-actions">' +
+                            '<button class="ums-fc-run primary sch-tutte" type="button">' +
+                                T('Leggi tutte') + ' (' + g.schede.length + ')</button>' +
+                        '</div>';
+                    box.querySelector('.ums-fc-lez-nome').textContent = g.nome;
+                    box.querySelector('.sch-tutte').addEventListener('click', () => schApriLettore(g.schede, 0));
+                    box.querySelectorAll('.sch-chip').forEach(ch => {
+                        ch.addEventListener('click', () => schApriLettore(g.schede, parseInt(ch.getAttribute('data-i'), 10)));
+                    });
+                    fcList.appendChild(box);
+                });
+            }
+
             function fcRenderHub() {
+                schMontaToggle();
+                if (umsHubModo === 'schede') { schRenderHub(); return; }
                 // Senza accesso la sezione non salva né sincronizza: cancello con invito
                 const gate = document.getElementById('ums-fc-gate');
                 const connesso = !!getChiave();
