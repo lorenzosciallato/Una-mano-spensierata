@@ -3466,11 +3466,22 @@ if (!fileDaCaricare) {
                 }
                 function tasti(e) { if (e.key === 'Escape') chiudi(); }
                 ov.querySelector('.sch-x').addEventListener('click', chiudi);
+                // Stampa SOLO il foglio che si ha davanti in quel momento:
+                // se sto leggendo la Lezione 3, deve uscire la Lezione 3.
+                function schFoglioInVista() {
+                    var box = ov.querySelector('#sch-scroll');
+                    if (!box) return 0;
+                    var figli = Array.prototype.slice.call(box.children);
+                    var vicino = 0, minimo = Infinity;
+                    for (var i = 0; i < figli.length; i++) {
+                        var d = Math.abs(figli[i].offsetTop - box.scrollTop);
+                        if (d < minimo) { minimo = d; vicino = i; }
+                    }
+                    return vicino;
+                }
                 ov.querySelector('.sch-print').addEventListener('click', function () {
-                    // stampa esattamente cio' che si sta leggendo: una lezione
-                    // sola oppure tutte le schede della materia
-                    var titolo = schede.length > 1 ? schede[0].nomeMateria : '';
-                    schStampa(schede, titolo);
+                    var i = schFoglioInVista();
+                    if (schede[i]) schStampa([schede[i]], '');
                 });
                 document.addEventListener('keydown', tasti);
 
@@ -3628,9 +3639,12 @@ if (!fileDaCaricare) {
                         '<div class="ums-fc-actions">' +
                             '<button class="ums-fc-run primary sch-tutte" type="button">' +
                                 T('Leggi tutte') + ' (' + g.schede.length + ')</button>' +
+                            '<button class="ums-fc-run sch-stampa-tutte" type="button">' +
+                                T('Stampa tutte') + '</button>' +
                         '</div>';
                     box.querySelector('.ums-fc-lez-nome').textContent = g.nome;
                     box.querySelector('.sch-tutte').addEventListener('click', () => schApriLettore(g.schede, 0));
+                    box.querySelector('.sch-stampa-tutte').addEventListener('click', () => schStampa(g.schede, g.nome));
                     box.querySelectorAll('.sch-chip').forEach(ch => {
                         ch.addEventListener('click', () => schApriLettore(g.schede, parseInt(ch.getAttribute('data-i'), 10)));
                     });
