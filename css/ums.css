@@ -3447,3 +3447,120 @@ header #custom-lang-selector{ pointer-events: auto; }
         }
         .ums-wa-badge[hidden] { display: none; }
         @media (min-width: 901px) { .ums-wa-badge { top: 2px; right: 8px; } }
+
+        /* ============================================================
+           SCHEDE — le sottolineature e gli appunti dello studente,
+           leggibili fuori dalla lezione. Interruttore nell'hub + lettore
+           a schermo intero che scorre un foglio alla volta.
+        ============================================================ */
+        #ums-hub-modo{
+            display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+            margin: 0 0 14px;
+        }
+        #ums-hub-modo button{
+            font-family: var(--font-body,'DM Sans',sans-serif); font-weight: 700;
+            font-size: .82rem; padding: .55rem .6rem; border-radius: 999px;
+            border: 1px solid var(--gold-lt,#e5d6bd); background: #fff;
+            color: var(--sub,#6b6b73); cursor: pointer;
+        }
+        #ums-hub-modo button.on{
+            background: var(--navy,#22365f); color: #fff; border-color: var(--navy,#22365f);
+        }
+        .night-mode #ums-hub-modo button{ background:#20232b; color:#c9c9d2; border-color:#3a3f4b; }
+        .night-mode #ums-hub-modo button.on{ background:#8FB4E8; color:#14161c; border-color:#8FB4E8; }
+
+        .sch-chips{ display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 12px; }
+        .sch-chip{
+            display: inline-flex; align-items: center; gap: 6px;
+            font-family: var(--font-body,'DM Sans',sans-serif); font-size: .78rem;
+            padding: .35rem .7rem; border-radius: 999px; cursor: pointer;
+            border: 1px solid var(--dust,#E8E4DC); background: #fff; color: var(--body,#3d3c3a);
+        }
+        .sch-chip:hover{ border-color: var(--gold,#c8a96e); }
+        .sch-chip-n{ font-size: .68rem; color: var(--sub,#7a7770); }
+        .night-mode .sch-chip{ background:#20232b; color:#c9c9d2; border-color:#3a3f4b; }
+
+        #ums-sch-viewer{
+            position: fixed; inset: 0; z-index: 99999999;
+            background: var(--ivory,#f7f4ef);
+            opacity: 0; transition: opacity .2s ease;
+        }
+        #ums-sch-viewer.on{ opacity: 1; }
+        .night-mode #ums-sch-viewer{ background:#14161c; }
+        .sch-barra{
+            position: fixed; top: 14px; right: 16px; z-index: 3;
+            display: flex; gap: 8px; align-items: center;
+        }
+        .sch-print{
+            display: inline-flex; align-items: center; gap: 7px; height: 44px;
+            padding: 0 16px; border-radius: 999px;
+            border: 1px solid var(--dust,#E8E4DC); background: #fff;
+            color: var(--ink,#1c1c22); cursor: pointer;
+            font-family: var(--font-body,'DM Sans',sans-serif); font-weight: 700; font-size: .82rem;
+            box-shadow: 0 4px 16px rgba(0,0,0,.14);
+        }
+        .sch-print:hover{ background: var(--ivory-2,#efebe2); }
+        .sch-print svg{ width: 1.05em; height: 1.05em; }
+        .night-mode .sch-print{ background:#23262e; color:#e8e8ee; border-color:#3a3f4b; }
+        @media (max-width: 480px){ .sch-print span{ display: none; } .sch-print{ padding: 0; width: 44px; justify-content: center; } }
+        .sch-x{
+            position: static; z-index: 3;
+            width: 44px; height: 44px; border-radius: 50%;
+            border: 1px solid var(--dust,#E8E4DC); background: #fff;
+            color: var(--ink,#1c1c22); font-size: 1.2rem; line-height: 1; cursor: pointer;
+            box-shadow: 0 4px 16px rgba(0,0,0,.14);
+        }
+        .sch-x:hover{ background: var(--ivory-2,#efebe2); }
+        .night-mode .sch-x{ background:#23262e; color:#e8e8ee; border-color:#3a3f4b; }
+
+        /* si scorre un foglio alla volta, come le foto di un social */
+        .sch-scroll{
+            height: 100%; overflow-y: auto;
+            scroll-snap-type: y mandatory; -webkit-overflow-scrolling: touch;
+        }
+        .sch-foglio{
+            min-height: 100%; scroll-snap-align: start; scroll-snap-stop: always;
+            box-sizing: border-box; padding: 62px 20px 40px;
+            max-width: 720px; margin: 0 auto; position: relative;
+            display: flex; flex-direction: column;
+        }
+        .sch-testata{
+            display: flex; align-items: baseline; gap: 10px;
+            border-bottom: 1px solid var(--dust,#E8E4DC); padding-bottom: 8px; margin-bottom: 14px;
+        }
+        .sch-da{
+            font-family: var(--font-body,'DM Sans',sans-serif); font-size: .74rem;
+            letter-spacing: .12em; text-transform: uppercase; font-weight: 700;
+            color: var(--gold-dk,#9a7a3f);
+        }
+        .sch-pag{ margin-left: auto; font-size: .72rem; color: var(--sub,#7a7770); }
+        .sch-titolo{
+            font-family: var(--font-display,'Playfair Display',serif);
+            font-size: 1.5rem; color: var(--ink,#1c1c22); margin: 0 0 16px; line-height: 1.25;
+        }
+        .night-mode .sch-titolo{ color:#F2EFE8; }
+        .sch-righe{ list-style: none; margin: 0; padding: 0; }
+        .sch-riga{
+            display: flex; gap: 10px; align-items: flex-start;
+            padding: 12px 0; border-bottom: 1px solid rgba(0,0,0,.06);
+        }
+        .night-mode .sch-riga{ border-bottom-color: rgba(255,255,255,.08); }
+        .sch-pallino{
+            flex: 0 0 auto; width: 12px; height: 12px; border-radius: 50%; margin-top: 5px;
+        }
+        .sch-testo{
+            margin: 0; font-size: 1rem; line-height: 1.55; color: var(--body,#3d3c3a);
+        }
+        .night-mode .sch-testo{ color:#d8d5cd; }
+        .sch-nota{
+            margin: 6px 0 0; font-size: .88rem; line-height: 1.5;
+            color: var(--sub,#7a7770); font-style: italic;
+            border-left: 2px solid var(--gold-lt,#e5d6bd); padding-left: 10px;
+        }
+        .sch-giu{
+            text-align: center; font-size: 1.8rem; color: var(--sub,#7a7770);
+            opacity: .5; margin-top: auto; padding-top: 18px;
+            animation: schGiu 1.8s ease-in-out infinite;
+        }
+        @keyframes schGiu{ 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(5px); } }
+        @media (prefers-reduced-motion: reduce){ .sch-giu{ animation: none; } }
