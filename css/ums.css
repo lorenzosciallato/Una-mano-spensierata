@@ -3432,44 +3432,18 @@ header #custom-lang-selector{ pointer-events: auto; }
             .ums-login-q { animation: none; }
         }
 
-        /* NOTIFICA GRUPPO WHATSAPP — solo per chi non ha effettuato l'accesso */
-        .ums-wa-notif {
-            position: fixed; right: 18px; bottom: 90px; z-index: 99999990;
-            width: 320px; max-width: calc(100vw - 36px);
-            background: #fff; border-radius: 14px;
-            box-shadow: 0 12px 38px rgba(0,0,0,.28);
+        /* PALLINO "1" SUL GRUPPO WHATSAPP — stesso stile del pallino ripasso.
+           Compare SOLO a chi non ha ancora la chiave: un clic e sei nel gruppo. */
+        .ums-inav-wa { position: relative; }
+        .ums-wa-badge {
+            position: absolute; top: 4px; right: 8px;
+            width: 18px; height: 18px; box-sizing: border-box;
+            background: #D14B3D; color: #fff; border-radius: 50%;
+            font-size: .78rem; font-weight: 800; line-height: 18px; text-align: center;
             font-family: var(--font-body, 'DM Sans', sans-serif);
-            display: flex; gap: 10px; padding: 12px 12px 12px 14px;
-            align-items: flex-start; cursor: pointer;
-            text-decoration: none; color: inherit;
-            transform: translateY(18px); opacity: 0;
-            transition: transform .28s ease, opacity .28s ease;
+            box-shadow: 0 2px 6px rgba(209,75,61,.4);
+            animation: umsBadgePop .3s ease both;
+            pointer-events: none;
         }
-        .ums-wa-notif.on { transform: translateY(0); opacity: 1; }
-        .ums-wa-ico {
-            flex: 0 0 auto; width: 38px; height: 38px; border-radius: 50%;
-            background: #25D366; display: flex; align-items: center; justify-content: center;
-        }
-        .ums-wa-ico svg { width: 22px; height: 22px; fill: #fff; }
-        .ums-wa-testo { flex: 1 1 auto; min-width: 0; }
-        .ums-wa-top {
-            display: flex; align-items: baseline; gap: 6px; margin-bottom: 2px;
-        }
-        .ums-wa-nome {
-            font-weight: 700; font-size: .86rem; color: #1C1C22;
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-        }
-        .ums-wa-ora { font-size: .68rem; color: #8b8b93; margin-left: auto; flex: 0 0 auto; }
-        .ums-wa-msg { font-size: .8rem; line-height: 1.35; color: #4a4a52; }
-        .ums-wa-x {
-            flex: 0 0 auto; width: 22px; height: 22px; border: none; background: transparent;
-            color: #9a9aa2; font-size: 1.1rem; line-height: 1; cursor: pointer; padding: 0;
-            border-radius: 50%;
-        }
-        .ums-wa-x:hover { background: rgba(0,0,0,.06); }
-        .night-mode .ums-wa-notif { background: #23262e; }
-        .night-mode .ums-wa-nome { color: #F2EFE8; }
-        .night-mode .ums-wa-msg { color: #c5c1b8; }
-        @media (max-width: 700px) {
-            .ums-wa-notif { right: 12px; left: 12px; width: auto; bottom: 82px; }
-        }
+        .ums-wa-badge[hidden] { display: none; }
+        @media (min-width: 901px) { .ums-wa-badge { top: 2px; right: 8px; } }
