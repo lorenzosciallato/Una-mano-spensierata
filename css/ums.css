@@ -1793,6 +1793,7 @@
 
         /* ---- Superfici con #fff hardcoded ---- */
         .night-mode .content-card,
+        .night-mode .ums404,
         .night-mode .disclaimer-card,
         .night-mode .modal-paper,
         .night-mode .fc-mobile-content,
@@ -3564,3 +3565,54 @@ header #custom-lang-selector{ pointer-events: auto; }
         }
         @keyframes schGiu{ 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(5px); } }
         @media (prefers-reduced-motion: reduce){ .sch-giu{ animation: none; } }
+
+
+        /* ============================================================
+           LEZIONE MANCANTE (404) — riquadro "Mannaggia!"
+           Prima era tutto in stili inline dentro ums.js: su telefono il
+           pulsante WhatsApp era piu' largo del riquadro e sbordava.
+           ============================================================ */
+        .ums404{
+            max-width: 560px; margin: 2.2rem auto 0; padding: 2rem 1.8rem;
+            border: 1px solid var(--dust,#E8E4DC); border-radius: 20px;
+            background: #fff; box-shadow: 0 4px 20px rgba(15,17,23,0.06);
+            text-align: center;
+        }
+        .ums404-emoji{ font-size: 2.4rem; line-height: 1; margin-bottom: .6rem; }
+        .ums404-tit{
+            font-family: var(--font-display,Georgia,serif); font-size: 1.4rem;
+            color: var(--ink,#1C1C22); margin: 0 0 .8rem;
+        }
+        .ums404-txt{
+            color: var(--body,#3D3C3A); line-height: 1.6; margin: 0 0 1.4rem;
+        }
+        .ums404-wa{
+            display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+            max-width: 100%; background: var(--gold,#C8A96E); color: #2A2113;
+            text-decoration: none; font-family: var(--font-body,sans-serif);
+            font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+            font-size: .82rem; line-height: 1.35; padding: .95rem 1.6rem;
+            border-radius: 999px; box-shadow: 0 10px 30px rgba(200,169,110,.35);
+        }
+        .ums404-nav{
+            display: flex; gap: 12px; justify-content: center;
+            margin: 1.6rem 0 0; flex-wrap: wrap;
+        }
+        .ums404-nav a{
+            text-decoration: none; color: var(--navy,#1A2F4F); font-weight: 600;
+            padding: .6rem 1rem; border: 1px solid var(--dust,#E8E4DC);
+            border-radius: 999px; white-space: nowrap;
+        }
+
+        @media (max-width: 700px){
+            .ums404{ margin: 1.4rem auto 0; padding: 1.5rem 1.1rem; border-radius: var(--r-lg,16px); }
+            .ums404-emoji{ font-size: 2rem; }
+            .ums404-tit{ font-size: 1.25rem; }
+            .ums404-txt{ font-size: .95rem; margin-bottom: 1.2rem; }
+            .ums404-wa{
+                display: flex; width: 100%; padding: .9rem 1rem;
+                font-size: .76rem; letter-spacing: .04em; white-space: normal;
+            }
+            .ums404-nav{ gap: 8px; margin-top: 1.2rem; }
+            .ums404-nav a{ flex: 1 1 0; min-width: 0; padding: .6rem .5rem; font-size: .9rem; }
+        }
