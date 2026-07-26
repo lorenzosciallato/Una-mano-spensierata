@@ -606,22 +606,17 @@ if (!fileDaCaricare) {
                         umsM.n ? 'Lezione ' + umsM.n : '';
                     try {
                         const WA = 'https://chat.whatsapp.com/EaX5kr14XxHL9o3qxdDVEP?mode=gi_t';
+                        // Grafica tutta in ums.css (.ums404*): cosi' esiste una
+                        // versione per telefono e il pulsante non sborda piu'.
                         const box = document.createElement('div');
-                        box.style.cssText = 'max-width:560px;margin:2.2rem auto 0;padding:2rem 1.8rem;' +
-                            'border:1px solid var(--dust,#E8E4DC);border-radius:20px;background:#fff;' +
-                            'box-shadow:0 4px 20px rgba(15,17,23,0.06);text-align:center;';
+                        box.className = 'ums404';
                         box.innerHTML =
-                            '<div style="font-size:2.4rem;line-height:1;margin-bottom:.6rem">\uD83D\uDE45</div>' +
-                            '<p style="font-family:var(--font-display,Georgia,serif);font-size:1.4rem;' +
-                            'color:var(--ink,#1C1C22);margin:0 0 .8rem">Mannaggia!</p>' +
-                            '<p style="color:var(--body,#3D3C3A);line-height:1.6;margin:0 0 1.4rem">' +
+                            '<div class="ums404-emoji">\uD83D\uDE45</div>' +
+                            '<p class="ums404-tit">Mannaggia!</p>' +
+                            '<p class="ums404-txt">' +
                             'Non ho il materiale di questa lezione! Se invece tu ce l\u2019hai, ' +
                             'scrivimi: la aggiungiamo insieme!</p>' +
-                            '<a href="' + WA + '" target="_blank" rel="noopener" ' +
-                            'style="display:inline-flex;align-items:center;gap:10px;background:var(--gold,#C8A96E);' +
-                            'color:#2A2113;text-decoration:none;font-family:var(--font-body,sans-serif);' +
-                            'font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:.82rem;' +
-                            'padding:.95rem 1.6rem;border-radius:999px;box-shadow:0 10px 30px rgba(200,169,110,.35)">' +
+                            '<a class="ums404-wa" href="' + WA + '" target="_blank" rel="noopener">' +
                             'Scrivimi sul gruppo WhatsApp</a>';
 
                         // Frecce prev/succ: senza, la lezione mancante è un
@@ -636,18 +631,16 @@ if (!fileDaCaricare) {
                                 const urlN = (nn) => location.pathname + '?file=' +
                                     encodeURIComponent(dec.replace(/(\d+)(\.json)$/i, nn + '$2'));
                                 const nav = document.createElement('div');
-                                nav.style.cssText = 'display:flex;gap:12px;justify-content:center;margin:1.6rem 0 0;flex-wrap:wrap;';
+                                nav.className = 'ums404-nav';
                                 if (curN > 1) {
                                     const a = document.createElement('a');
                                     a.href = urlN(curN - 1);
                                     a.textContent = '\u2039 Lezione ' + (curN - 1);
-                                    a.style.cssText = 'text-decoration:none;color:var(--navy,#1A2F4F);font-weight:600;padding:.6rem 1rem;border:1px solid var(--dust,#E8E4DC);border-radius:999px;';
                                     nav.appendChild(a);
                                 }
                                 const a2 = document.createElement('a');
                                 a2.href = urlN(curN + 1);
                                 a2.textContent = 'Lezione ' + (curN + 1) + ' \u203A';
-                                a2.style.cssText = 'text-decoration:none;color:var(--navy,#1A2F4F);font-weight:600;padding:.6rem 1rem;border:1px solid var(--dust,#E8E4DC);border-radius:999px;';
                                 nav.appendChild(a2);
                                 box.appendChild(nav);
                             }
