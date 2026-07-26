@@ -1363,8 +1363,17 @@
       }
 
       function titoloLezione(){
+        // Il titolo in pagina e' spezzato in due <span> ATTACCATI
+        // ("Sociologia" + "dell'Educazione"): textContent li incollerebbe
+        // senza spazio. Unisco i pezzi a mano, come fa gia' la stampa della
+        // lavagna in ums.js.
         var t = document.getElementById('dyn-title');
-        return t ? (t.textContent||'Lezione').trim() : 'Lezione';
+        if(!t) return 'Lezione';
+        var s = Array.prototype.map.call(t.childNodes, function(n){
+          return (n.textContent||'').trim();
+        }).filter(Boolean).join(' ');
+        s = s.replace(/\s+/g,' ').trim();
+        return s || 'Lezione';
       }
 
       function stampa(modo, conEvidenziazioni, scarica){
@@ -1411,7 +1420,9 @@
           var svgMappa = (window.__umsMappaGen && window.__umsMappaGen()) || window.__umsMappaSVG || '';
           if(svgMappa){
             var clsM = (vuoiTesto || slideHTML) ? 'ums-pdf-slide-title' : 'ums-pdf-sec-title';
-            mappaHTML = '<h2 class="'+clsM+'">Mappa mentale</h2>' +
+            // Quando si stampa la SOLA mappa, il foglio deve contenere il
+            // diagramma e nient'altro: niente titolo di sezione.
+            mappaHTML = (modo==='mappa' ? '' : '<h2 class="'+clsM+'">Mappa mentale</h2>') +
               '<div class="ums-pdf-mappa">' + svgMappa + '</div>';
           }
         }
@@ -1453,8 +1464,9 @@
             'break-inside:avoid;page-break-inside:avoid}'+
           '.ums-pdf-sec-title{font-family:\'Playfair Display\',Georgia,serif;color:#1a2f4f;'+
             'border-top:2px solid #c8a96e;padding-top:14px;margin:10px 0 14px}'+
-          '.ums-pdf-mappa{'+(modo!=='mappa' ? 'page:mappa;' : '')+'width:100%;overflow:visible}'+
-          '.ums-pdf-mappa svg{width:100%;height:auto}'+
+          '.ums-pdf-mappa{'+(modo!=='mappa' ? 'page:mappa;' : '')+'width:100%;overflow:visible;'+
+            'break-inside:avoid;page-break-inside:avoid}'+
+          '.ums-pdf-mappa svg{width:100%;height:auto'+(modo==='mappa' ? ';max-height:190mm' : '')+'}'+
           /* FOGLIO DI RIPASSO — domanda e risposta di seguito, compatto */
           '.fc-qa{margin:0 0 9px;padding:0 0 8px;border-bottom:1px solid #efe8db;'+
             'break-inside:avoid;page-break-inside:avoid}'+
@@ -1464,16 +1476,22 @@
           '.fc-ris{font-size:9.8pt;line-height:1.4;color:#25242a;margin:0;white-space:pre-line}';
 
 
+        // Intestazione col marchio e il nome della materia: su tutto tranne
+        // la stampa della sola mappa (li' mangiava una pagina intera, con il
+        // diagramma spinto al foglio dopo).
+        var testaHTML = (modo==='mappa') ? '' :
+          '<div class="pdf-head">'+
+            '<div class="pdf-brand"><div class="wm">Una Mano <em>Spensierata</em></div>'+
+            '<div class="dom">unamanospensierata.com</div></div>'+
+            '<h1>'+titolo+'</h1></div>';
+
         var html =
           '<html><head><title>'+titolo+' \u2014 Una Mano Spensierata</title>'+
           '<link rel="preconnect" href="https://fonts.googleapis.com">'+
           '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'+
           '<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=DM+Sans:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">'+
           '<style>'+css+'</style></head><body>'+
-          '<div class="pdf-head">'+
-            '<div class="pdf-brand"><div class="wm">Una Mano <em>Spensierata</em></div>'+
-            '<div class="dom">unamanospensierata.com</div></div>'+
-            '<h1>'+titolo+'</h1></div>'+
+          testaHTML +
           testoHTML + slideHTML + mappaHTML + flashHTMLout +
           '<scr'+'ipt>window.onload=function(){setTimeout(function(){window.print();},600);};</scr'+'ipt>'+
           '</body></html>';
