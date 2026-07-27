@@ -1,0 +1,357 @@
+{
+  "titolo_lezione": "Il Principio di Contiguità",
+  "sottotitolo": "Ottimizzare l'apprendimento multimediale allineando parole e immagini nello spazio e nel tempo",
+  "orientamento": {
+    "obiettivi": [
+      "Definire il Principio di Contiguità Spaziale.",
+      "Spiegare il Principio di Contiguità Temporale.",
+      "Identificare le violazioni comuni nel design e-learning.",
+      "Comprendere l'impatto del carico cognitivo estraneo."
+    ],
+    "concetto_fondamentale": "L'integrazione stretta tra testo e grafica riduce lo sforzo mentale necessario per collegare le informazioni, permettendo al cervello di concentrarsi sulla comprensione profonda anziché sulla ricerca visiva.",
+    "nota_extra": "Presta particolare attenzione al concetto di 'split attention': è il nemico principale che i principi di contiguità mirano a sconfiggere.",
+    "domande_autovalutazione": [
+      "Qual è la differenza fondamentale tra contiguità spaziale e temporale?",
+      "Perché le legende separate dalle immagini sono considerate un errore di design?",
+      "Cosa accade alla memoria di lavoro quando la narrazione non è sincronizzata?",
+      "In che modo la realtà aumentata può migliorare l'applicazione di questi principi?",
+      "Quali sono le evidenze empiriche che supportano l'efficacia della contiguità?",
+      "Come influisce lo scrolling dello schermo sull'apprendimento multimediale?"
+    ]
+  },
+  "punti_chiave": [
+    {
+      "id": "contiguita-spaziale",
+      "titolo_breve": "1. Contiguità Spaziale",
+      "sottotitolo": "Posizionare il testo vicino alle grafiche corrispondenti.",
+      "titolo_esteso": "1. Il Principio di Contiguità Spaziale",
+      "testo_modale": "<p>Il <strong>Principio di Contiguità Spaziale</strong> suggerisce che le parole stampate debbano essere posizionate il più vicino possibile agli elementi grafici a cui si riferiscono. In un ambiente e-learning, questo significa evitare di inserire testi in fondo alla pagina o in finestre separate rispetto all'immagine descritta. Quando il testo è adiacente alla grafica, il discente non deve sprecare risorse cognitive per <strong>cercare la corrispondenza</strong> tra ciò che legge e ciò che vede. Al contrario, separare questi elementi costringe l'utente a muovere continuamente lo sguardo, provocando il fenomeno della <strong>split attention</strong> (attenzione divisa), che satura inutilmente la memoria di lavoro e ostacola l'integrazione delle informazioni.</p>"
+    },
+    {
+      "id": "contiguita-temporale",
+      "titolo_breve": "2. Contiguità Temporale",
+      "sottotitolo": "Sincronizzare narrazione e animazioni.",
+      "titolo_esteso": "2. Il Principio di Contiguità Temporale",
+      "testo_modale": "<p>Il <strong>Principio di Contiguità Temporale</strong> stabilisce che la narrazione audio deve avvenire simultaneamente alla presentazione della grafica o dell'animazione corrispondente. Se la spiegazione verbale precede o segue il contenuto visivo, il discente è costretto a mantenere in memoria le informazioni appena ascoltate (o viste) in attesa che appaia l'altra parte del messaggio. Questo <strong>sforzo di ritenzione temporale</strong> crea un sovraccarico cognitivo. La sincronizzazione perfetta permette invece una <strong>connessione immediata</strong> tra il canale uditivo e quello visivo, facilitando la creazione di modelli mentali coerenti e migliorando significativamente la ritenzione a lungo termine.</p>"
+    },
+    {
+      "id": "carico-cognitivo",
+      "titolo_breve": "3. Carico Cognitivo Estraneo",
+      "sottotitolo": "Eliminare i processi mentali inutili.",
+      "titolo_esteso": "3. Riduzione del Carico Cognitivo Estraneo",
+      "testo_modale": "<p>L'obiettivo principale dei principi di contiguità è l'eliminazione dell'<strong>elaborazione estranea</strong>. Gli esseri umani hanno una capacità limitata di elaborazione delle informazioni; quando il design è povero (es. etichette lontane dall'immagine), la mente deve dedicare energia alla <strong>scansione visiva</strong> e alla ricerca di relazioni spaziali. Questa attività è definita 'estranea' perché non contribuisce direttamente all'apprendimento del concetto. Riducendo questo carico, si liberano risorse preziose per l'<strong>elaborazione generativa</strong>, ovvero il processo attivo con cui il discente organizza le informazioni e le integra con le proprie conoscenze pregresse.</p>"
+    },
+    {
+      "id": "evidenze-empiriche",
+      "titolo_breve": "4. Prove e Applicazioni",
+      "sottotitolo": "Risultati dei test di trasferimento e nuove tecnologie.",
+      "titolo_esteso": "4. Evidenze Empiriche e Applicazioni Pratiche",
+      "testo_modale": "<p>Le ricerche dimostrano che gli studenti che utilizzano materiali basati sui principi di contiguità ottengono punteggi superiori nei <strong>test di trasferimento</strong>, dimostrando una capacità maggiore di risolvere problemi nuovi rispetto a chi studia su layout frammentati. Le meta-analisi confermano un <strong>effetto positivo costante</strong> con dimensioni dell'effetto significative. Guardando al futuro, tecnologie come la <strong>realtà aumentata (AR)</strong> rappresentano la frontiera naturale di questi principi, poiché permettono di sovrapporre istruzioni testuali direttamente sugli oggetti reali, eliminando totalmente la necessità di spostare l'attenzione tra supporti diversi e riducendo drasticamente il carico cognitivo.</p>"
+    }
+  ],
+  "podcast_url": "",
+  "video_sintesi_url": "",
+  "riassuntone": [
+    {
+      "title": "La Contiguità Spaziale e il Design delle Interfacce",
+      "testo": "Il Principio di Contiguità Spaziale è un pilastro fondamentale dell'istruzione multimediale che si focalizza sulla disposizione fisica degli elementi su uno schermo o su una pagina. Il concetto cardine è estremamente semplice ma spesso violato: le parole stampate devono trovarsi accanto alla parte della grafica che descrivono. Quando progettiamo un corso e-learning, l'errore più comune è l'utilizzo di legende separate o didascalie poste a grande distanza dall'immagine principale. Questo costringe lo studente a un esercizio di scansione visiva estenuante. Ogni volta che lo sguardo deve spostarsi dall'etichetta al grafico, la mente deve 'tenere in sospeso' un'informazione mentre ne cerca un'altra. Questo processo è una forma di elaborazione estranea che non aggiunge valore educativo, ma anzi sottrae risorse alla memoria di lavoro. Un esempio tipico di violazione si riscontra nei grafici dove i dati sono spiegati da una legenda colorata posta lateralmente; un design corretto, secondo la contiguità spaziale, prevedrebbe invece l'inserimento delle etichette direttamente sopra o accanto alle linee o alle porzioni del grafico. Altre violazioni gravi includono l'uso di finestre pop-up che coprono la grafica correlata o l'obbligo di scorrere lo schermo (scrolling) per leggere il testo che spiega un'immagine che non è più visibile. In sintesi, integrare fisicamente testo e immagini permette al discente di percepire gli elementi come un'unica unità informativa, facilitando la creazione di connessioni mentali immediate e profonde, migliorando così la comprensione e la capacità di applicare quanto appreso in contesti diversi.",
+      "check_points": [
+        {
+          "domanda": "Qual è il rischio principale della separazione tra testo e immagine?",
+          "risposta": "Il rischio è l'insorgenza della split attention, che costringe il cervello a sprecare energia nella ricerca visiva invece che nell'apprendimento, saturando la memoria di lavoro."
+        },
+        {
+          "domanda": "Come si applica correttamente il principio in un diagramma complesso?",
+          "risposta": "Il modo corretto è posizionare le etichette descrittive direttamente accanto alle parti del diagramma, evitando legende numerate o testuali poste in altre zone dello schermo."
+        },
+        {
+          "domanda": "Perché lo scrolling è considerato una violazione?",
+          "risposta": "Perché costringe il discente a visualizzare il testo e la grafica in momenti separati, impedendo la visione simultanea necessaria per integrare le informazioni."
+        }
+      ]
+    },
+    {
+      "title": "Sincronizzazione e Contiguità Temporale",
+      "testo": "Il Principio di Contiguità Temporale estende il concetto di vicinanza dalla dimensione spaziale a quella temporale. Esso afferma che la narrazione parlata e le animazioni visive corrispondenti devono essere presentate nello stesso istante. In molte presentazioni multimediali, capita di ascoltare una spiegazione audio e di vedere l'animazione solo successivamente, o viceversa. Questo sfasamento è critico per l'apprendimento: se la narrazione viene fornita prima, il discente deve memorizzare le parole e attendere l'immagine per dare loro un senso visivo; se l'immagine appare prima, deve mantenere l'immagine in memoria in attesa della spiegazione. In entrambi i casi, la memoria di lavoro viene sovraccaricata da un compito di mantenimento mnemonico che non ha fini didattici. Quando invece audio e video sono perfettamente sincronizzati, il cervello riceve input coerenti attraverso due canali diversi (uditivo e visivo) nello stesso momento. Questo permette un'elaborazione parallela che facilita la costruzione di un modello mentale integrato. Gli esseri umani sono naturalmente portati a cercare relazioni significative tra ciò che sentono e ciò che vedono; la sincronizzazione elimina l'attrito in questo processo di ricerca di senso. È importante notare che questo principio si applica non solo a narrazioni lunghe, ma anche a brevi feedback audio durante esercizi interattivi: il feedback dovrebbe apparire e suonare simultaneamente all'azione dell'utente per essere davvero efficace e memorabile.",
+      "check_points": [
+        {
+          "domanda": "Cosa accade se la narrazione precede l'animazione?",
+          "risposta": "Si crea un sovraccarico perché lo studente deve trattenere le informazioni verbali nella memoria di lavoro fino a quando non appare la grafica di supporto."
+        },
+        {
+          "domanda": "In che modo la sincronizzazione aiuta la memoria di lavoro?",
+          "risposta": "Permette l'elaborazione simultanea sui canali visivo e uditivo, riducendo lo sforzo di dover ricordare elementi isolati per collegarli successivamente."
+        },
+        {
+          "domanda": "Qual è l'impatto della contiguità temporale sui feedback negli esercizi?",
+          "risposta": "Il feedback risulta più efficace se fornito istantaneamente e simultaneamente all'azione, rinforzando immediatamente la connessione logica nella mente dell'utente."
+        }
+      ]
+    },
+    {
+      "title": "Psicologia dell'Apprendimento e Carico Cognitivo",
+      "testo": "La base teorica dei principi di contiguità risiede nella comprensione dei limiti della mente umana come sistema di elaborazione delle informazioni. Gli esseri umani sono 'sense-makers', individui che cercano attivamente di dare un senso alla realtà creando connessioni tra parole e immagini. Tuttavia, la nostra capacità di elaborazione conscia, situata nella memoria di lavoro, è estremamente limitata sia in termini di volume che di durata. Esistono tre tipi di carico cognitivo, ma la contiguità si focalizza sulla riduzione del carico estraneo. Il carico estraneo è causato da un design didattico inefficiente che costringe lo studente a impegnarsi in attività mentali che non favoriscono l'apprendimento, come appunto la ricerca di un'etichetta su una mappa o l'attesa di un segnale audio. Quando le parole e le immagini sono vicine nel tempo e nello spazio, la mente può tenerle insieme nella memoria di lavoro senza sforzo eccessivo. Questo permette di dedicare la capacità di elaborazione residua alla costruzione di relazioni significative tra i concetti. In assenza di contiguità, il discente potrebbe esaurire la propria energia mentale prima ancora di aver compreso il cuore del messaggio. Pertanto, il design non è solo una questione estetica, ma una necessità funzionale per rispettare l'architettura cognitiva umana e massimizzare l'efficacia del trasferimento di conoscenza.",
+      "check_points": [
+        {
+          "domanda": "Cosa significa che gli esseri umani sono 'sense-makers'?",
+          "risposta": "Significa che il cervello cerca costantemente di costruire significati collegando stimoli diversi, come immagini e parole, per formare modelli coerenti."
+        },
+        {
+          "domanda": "Perché il carico cognitivo estraneo è dannoso?",
+          "risposta": "Perché consuma le limitate risorse della memoria di lavoro in compiti inutili, sottraendo energia ai processi di comprensione e integrazione profonda."
+        },
+        {
+          "domanda": "Come interagiscono memoria di lavoro e contiguità?",
+          "risposta": "La contiguità permette di mantenere simultaneamente parole e immagini nella memoria di lavoro, facilitando la creazione di legami logici immediati."
+        }
+      ]
+    },
+    {
+      "title": "Evidenze Sperimentali e Prospettive AR",
+      "testo": "L'efficacia del principio di contiguità non è solo teorica, ma supportata da decenni di ricerca empirica. Numerosi studi hanno confrontato studenti esposti a materiali integrati (secondo i principi di contiguità) con studenti che utilizzavano materiali separati. I risultati sono costanti: i primi superano i secondi in modo significativo nei test di trasferimento, ovvero prove in cui bisogna applicare quanto appreso a situazioni nuove e problematiche. Questo dimostra che la contiguità non aiuta solo a memorizzare fatti, ma a comprendere i meccanismi sottostanti. Le meta-analisi evidenziano un effetto robusto in diversi domini della conoscenza. Un'estensione moderna di questi concetti si trova nella Realtà Aumentata (AR). L'AR ha il potenziale di portare il principio di contiguità spaziale al suo massimo livello, poiché le istruzioni o i dati testuali possono essere visualizzati come 'overlay' direttamente sugli oggetti fisici nel mondo reale. Immaginiamo un tecnico che ripara un macchinario: invece di guardare un manuale e poi il pezzo, vede le etichette fluttuare esattamente sopra i componenti. Sebbene la ricerca sull'AR sia ancora in fase di sviluppo e siano necessari ulteriori studi per ottimizzarne il design, i presupposti basati sulla contiguità suggeriscono che questa tecnologia possa ridurre drasticamente il carico cognitivo, rendendo l'apprendimento e l'esecuzione di compiti complessi molto più fluidi e naturali.",
+      "check_points": [
+        {
+          "domanda": "Cosa dimostrano i test di trasferimento riguardo alla contiguità?",
+          "risposta": "Dimostrano che gli studenti che apprendono con formati integrati sono più capaci di generare soluzioni creative a problemi nuovi rispetto a quelli che usano formati separati."
+        },
+        {
+          "domanda": "Qual è il vantaggio unico della Realtà Aumentata secondo questi principi?",
+          "risposta": "L'AR elimina completamente la necessità di spostare lo sguardo tra diversi supporti, sovrapponendo le informazioni esattamente dove serve l'azione."
+        },
+        {
+          "domanda": "Qual è il risultato tipico delle meta-analisi su questo tema?",
+          "risposta": "Le meta-analisi mostrano un forte effetto positivo e una correlazione costante tra l'applicazione dei principi di contiguità e il miglioramento delle prestazioni di apprendimento."
+        }
+      ]
+    }
+  ],
+  "flashcards": [
+    {
+      "front": "Cos'è il Principio di Contiguità Spaziale?",
+      "back": "È un principio del design multimediale che prescrive di collocare il testo scritto in prossimità fisica dell'elemento grafico a cui si riferisce. Questa vicinanza è cruciale perché la mente umana ha una capacità limitata di processare informazioni nella memoria di lavoro. Se il testo è lontano dall'immagine, il discente deve attivare processi di scansione visiva per collegare i due elementi, consumando risorse cognitive che dovrebbero essere dedicate alla comprensione. Eliminando la distanza, si riduce l'elaborazione estranea e si permette allo studente di integrare immediatamente le informazioni visive e verbali, favorendo la costruzione di modelli mentali più solidi e una migliore ritenzione del materiale educativo nel tempo."
+    },
+    {
+      "front": "Cosa si intende per 'Split Attention'?",
+      "back": "Il fenomeno della 'split attention' o attenzione divisa si verifica quando un discente è costretto a dividere le proprie risorse cognitive tra due o più fonti di informazione che sono separate fisicamente o temporalmente, ma che sono logicamente correlate. Ad esempio, leggere una spiegazione in fondo a una pagina e dover guardare un diagramma in alto costringe lo sguardo a muoversi avanti e indietro. Questo continuo spostamento impedisce alla memoria di lavoro di trattenere contemporaneamente entrambi gli elementi per collegarli, causando un sovraccarico cognitivo. È uno dei principali ostacoli a un apprendimento efficace e viene risolto applicando correttamente il principio di contiguità spaziale, integrando i testi direttamente nei grafici."
+    },
+    {
+      "front": "Definisci il Principio di Contiguità Temporale.",
+      "back": "Il Principio di Contiguità Temporale stabilisce che, nell'apprendimento multimediale, la narrazione audio deve essere sincronizzata con l'animazione o la grafica mostrata a schermo. La sincronizzazione temporale è fondamentale perché permette al cervello di elaborare l'input visivo e quello uditivo simultaneamente. Se c'è un ritardo tra i due (ad esempio, se la voce parla di un processo che verrà mostrato solo dopo), lo studente deve sforzarsi di ricordare le parole per poi applicarle all'immagine futura. Questo sforzo mnemonico è inutile ai fini dell'apprendimento e riduce l'efficacia del messaggio. La presentazione simultanea garantisce invece che le connessioni mentali tra i due canali siano stabilite istantaneamente."
+    },
+    {
+      "front": "Perché le legende separate sono un errore di design?",
+      "back": "Le legende separate (ad esempio, un'immagine con numeri e una lista di nomi sotto) violano il Principio di Contiguità Spaziale. Questo design obbliga il discente a un continuo esercizio di ricerca: deve guardare il numero, scendere a leggere il nome, tornare all'immagine per localizzare il punto e ripetere l'operazione per ogni elemento. Questo processo frammenta l'attenzione e satura la memoria di lavoro con compiti di ricerca visiva che non hanno nulla a che fare con la comprensione del concetto. Un design efficace prevede invece che le etichette testuali siano posizionate direttamente sopra o accanto alle parti dell'immagine, eliminando il bisogno di una legenda separata e riducendo il carico cognitivo."
+    },
+    {
+      "front": "In che modo lo scrolling influisce sulla contiguità?",
+      "back": "Lo scrolling (scorrimento della pagina) è considerato una violazione del principio di contiguità spaziale quando separa il testo dalla relativa grafica. Se un utente deve scorrere verso il basso per leggere una spiegazione, perdendo di vista l'immagine che si trova nella parte superiore della pagina, si verifica una separazione spaziale e temporale. L'impossibilità di vedere simultaneamente testo e immagine impedisce l'integrazione cognitiva. Per ovviare a questo problema, i designer dovrebbero assicurarsi che i contenuti correlati siano visualizzati all'interno di una schermata fissa o utilizzare layout che mantengano l'immagine visibile mentre il testo viene consultato, garantendo che le risorse mentali siano usate per l'apprendimento e non per ricordare l'immagine appena scomparsa."
+    },
+    {
+      "front": "Qual è la giustificazione psicologica della contiguità?",
+      "back": "La giustificazione psicologica risiede nel fatto che gli esseri umani sono 'sense-makers' con risorse cognitive limitate. Per comprendere un contenuto multimediale, dobbiamo essere in grado di mantenere simultaneamente nella memoria di lavoro sia le rappresentazioni verbali che quelle visive per creare connessioni tra loro. I principi di contiguità riducono l'elaborazione estranea (quella necessaria per cercare o coordinare informazioni separate), lasciando più spazio per l'elaborazione essenziale e generativa. In pratica, minimizzando lo sforzo necessario per 'mettere insieme i pezzi', il design basato sulla contiguità permette al cervello di lavorare in modo più efficiente, trasformando le informazioni in conoscenza strutturata senza sprechi di energia mentale."
+    },
+    {
+      "front": "Come viene misurata l'efficacia della contiguità nelle ricerche?",
+      "back": "L'efficacia viene solitamente misurata attraverso test di ritenzione e, soprattutto, test di trasferimento. Mentre i test di ritenzione misurano quanto lo studente ricorda del materiale, i test di trasferimento valutano la capacità di applicare i concetti appresi per risolvere problemi complessi o situazioni inedite. Le evidenze mostrano che gli studenti che utilizzano layout contigui generano significativamente più soluzioni corrette nei test di trasferimento rispetto a quelli che studiano su materiali frammentati. Le meta-analisi di questi studi mostrano effetti positivi costanti, a conferma che la contiguità non è solo un accorgimento estetico, ma un fattore determinante per l'apprendimento profondo e la capacità di problem-solving."
+    },
+    {
+      "front": "Quali sono i vantaggi della Realtà Aumentata per la contiguità?",
+      "back": "La Realtà Aumentata (AR) rappresenta un'applicazione avanzata della contiguità spaziale perché permette di sovrapporre informazioni digitali (come testo o frecce) direttamente sugli oggetti del mondo reale. Questo elimina radicalmente la necessità per il discente di spostare l'attenzione tra un manuale, uno schermo e l'oggetto fisico su cui sta lavorando. Poiché le istruzioni 'vivono' sopra l'oggetto stesso, il carico cognitivo derivante dalla ricerca visiva e dalla coordinazione spaziale viene quasi azzerato. Sebbene la ricerca nel campo educativo sia ancora in espansione, l'AR promette di essere uno degli strumenti più potenti per rispettare l'architettura cognitiva umana, portando l'integrazione tra parole e immagini a un livello di immediatezza senza precedenti."
+    },
+    {
+      "front": "Qual è un esempio di violazione della contiguità temporale?",
+      "back": "Un esempio classico di violazione della contiguità temporale si ha quando un video tutorial presenta un'animazione complessa di un motore in funzione, ma la narrazione che ne spiega le varie fasi viene riprodotta prima che l'animazione inizi o dopo che è terminata. In questo scenario, lo studente ascolta una serie di termini e spiegazioni tecniche 'nel vuoto', senza il supporto visivo immediato, e deve cercare di visualizzarli mentalmente. Quando poi l'animazione parte, deve cercare di ricordare quanto ascoltato per applicarlo a ciò che vede. Questa asincronia costringe la memoria di lavoro a un carico eccessivo, riducendo drasticamente la capacità di comprendere il funzionamento reale del sistema descritto."
+    },
+    {
+      "front": "Quali sono le 'best practices' per allineare testo e grafica?",
+      "back": "Le migliori pratiche includono l'uso di etichette integrate direttamente sugli elementi grafici, posizionando le descrizioni testuali accanto alle parti rilevanti delle immagini. È consigliabile utilizzare pop-up o 'rollover' (testo che appare al passaggio del mouse) solo se non coprono parti cruciali della grafica. Altra pratica fondamentale è assicurarsi che i feedback degli esercizi siano sulla stessa schermata dell'esercizio stesso, evitando link esterni o nuove finestre. Infine, per contenuti complessi, è preferibile utilizzare schermate fisse dove testo e immagine sono sempre visibili insieme, eliminando la necessità di scrolling. Queste strategie mirano a creare un ambiente di apprendimento fluido dove l'informazione è presentata come un tutto unitario e coerente."
+    }
+  ],
+  "il_super_quiz": [
+    {
+      "domanda": "Uno sviluppatore inserisce una legenda numerata sotto l'illustrazione di un motore per spiegarne le parti. Qual è la principale conseguenza cognitiva di questa scelta?",
+      "opzioni": [
+        {
+          "testo": "L'apprendimento migliora perché l'immagine rimane pulita e priva di distrazioni visive.",
+          "corretta": false
+        },
+        {
+          "testo": "Si genera un'attenzione divisa che costringe lo studente a sprecare risorse per collegare numeri e nomi.",
+          "corretta": true
+        },
+        {
+          "testo": "Il carico cognitivo diminuisce perché le informazioni testuali sono raggruppate in modo ordinato.",
+          "corretta": false
+        }
+      ],
+      "spiegazione": "La risposta corretta è legata al Principio di Contiguità Spaziale, che avverte come la separazione tra testo e immagini generi un processo estraneo di ricerca visiva. Il primo distrattore è insidioso perché molti progettisti credono erroneamente che la 'pulizia' visiva sia prioritaria rispetto all'integrazione. Tuttavia, la ricerca dimostra che dover spostare lo sguardo avanti e indietro tra legenda e grafico ostacola la creazione di connessioni mentali."
+    },
+    {
+      "domanda": "Qual è la differenza fondamentale tra il Principio di Contiguità Spaziale e quello Temporale nell'e-learning?",
+      "opzioni": [
+        {
+          "testo": "Il primo riguarda la posizione delle parole scritte, il secondo la sincronizzazione della narrazione audio.",
+          "corretta": true
+        },
+        {
+          "testo": "Il primo si applica alle immagini statiche, mentre il secondo si riferisce esclusivamente ai video animati.",
+          "corretta": false
+        },
+        {
+          "testo": "Il primo serve a ridurre il carico cognitivo, mentre il secondo serve ad aumentare la velocità di fruizione.",
+          "corretta": false
+        }
+      ],
+      "spiegazione": "La differenza risiede nel canale e nella modalità di presentazione: lo spazio riguarda il layout visivo (testo scritto vicino alla parte del grafico), mentre il tempo riguarda la simultaneità (audio che descrive ciò che appare). Il secondo distrattore è sbagliato perché entrambi i principi possono applicarsi a vari tipi di media, non solo a foto o video. Entrambi i principi mirano a ridurre il carico estraneo, quindi il terzo distrattore fallisce nell'individuare uno scopo divergente."
+    },
+    {
+      "domanda": "In una lezione di fisica, un'animazione mostra un esperimento e, solo al termine di essa, inizia una spiegazione audio dettagliata. Perché questa struttura è meno efficace?",
+      "opzioni": [
+        {
+          "testo": "Perché lo studente non può focalizzarsi bene sull'animazione se c'è anche un commento sonoro.",
+          "corretta": false
+        },
+        {
+          "testo": "Perché lo studente deve sforzarsi di ricordare le immagini mentre ascolta la spiegazione successiva.",
+          "corretta": true
+        },
+        {
+          "testo": "Perché la narrazione audio dovrebbe essere sempre sostituita da sottotitoli scritti durante l'animazione.",
+          "corretta": false
+        }
+      ],
+      "spiegazione": "Secondo il Principio di Contiguità Temporale, la narrazione deve essere sincronizzata con l'evento visivo. Se la spiegazione arriva dopo, si sovraccarica la memoria di lavoro che deve trattenere i dettagli dell'animazione per dare un senso alle parole. Il primo distrattore confonde questo principio con una gestione errata dell'attenzione, mentre in realtà la simultaneità facilita l'integrazione delle informazioni."
+    },
+    {
+      "domanda": "Le ricerche empiriche sui principi di contiguità hanno dimostrato che gli studenti esposti a layout integrati ottengono risultati migliori soprattutto nei test di trasferimento. Cosa implica questo?",
+      "opzioni": [
+        {
+          "testo": "Che gli studenti riescono a memorizzare un numero maggiore di definizioni tecniche a lungo termine.",
+          "corretta": false
+        },
+        {
+          "testo": "Che gli studenti sono più capaci di applicare le conoscenze apprese per risolvere problemi nuovi.",
+          "corretta": true
+        },
+        {
+          "testo": "Che gli studenti completano il corso in meno tempo grazie alla semplicità dei materiali.",
+          "corretta": false
+        }
+      ],
+      "spiegazione": "I test di trasferimento misurano la comprensione profonda, ovvero la capacità di generare soluzioni creative a problemi mai visti, non la semplice memoria. Il primo distrattore è un errore comune: la contiguità non serve solo a ricordare nomi, ma a comprendere relazioni. Riducendo il carico estraneo, la mente ha più risorse per dare un senso al materiale, migliorando appunto il trasferimento e non solo la velocità di fruizione."
+    },
+    {
+      "domanda": "Considerando l'uso della Realtà Aumentata (AR) per la manutenzione di un macchinario, come può questa tecnologia ottimizzare la contiguità?",
+      "opzioni": [
+        {
+          "testo": "Sovrapponendo le istruzioni testuali direttamente sulle parti del macchinario che l'utente sta guardando.",
+          "corretta": true
+        },
+        {
+          "testo": "Fornendo un manuale digitale separato che l'utente può consultare rapidamente su un tablet.",
+          "corretta": false
+        },
+        {
+          "testo": "Sostituendo completamente le istruzioni scritte con segnali luminosi o icone prive di testo.",
+          "corretta": false
+        }
+      ],
+      "spiegazione": "L'AR applica idealmente la Contiguità Spaziale eliminando la necessità di spostare lo sguardo tra l'oggetto reale e un manuale esterno. Il secondo distrattore descrive una situazione di 'attenzione divisa', che è esattamente ciò che il principio vuole evitare. Anche se la ricerca sull'AR è ancora in evoluzione, il suo vantaggio teorico risiede proprio nell'integrazione perfetta di testo e visione diretta."
+    },
+    {
+      "domanda": "Uno studente trova difficile seguire una spiegazione perché deve scorrere la pagina (scrolling) per vedere l'immagine citata nel testo in alto. Quale principio viene violato?",
+      "opzioni": [
+        {
+          "testo": "La Contiguità Temporale, poiché il tempo di lettura non coincide con la visione dell'immagine.",
+          "corretta": false
+        },
+        {
+          "testo": "La Contiguità Spaziale, perché il testo e la grafica corrispondente sono separati fisicamente.",
+          "corretta": true
+        },
+        {
+          "testo": "Il principio di segmentazione, perché l'informazione non è divisa in blocchi abbastanza piccoli.",
+          "corretta": false
+        }
+      ],
+      "spiegazione": "Lo scorrimento della pagina crea una separazione spaziale che impedisce di vedere simultaneamente parole e immagini, forzando la memoria di lavoro a un lavoro extra. Molti confondono questo con un problema temporale (distrattore 1) perché lo scrolling richiede tempo, ma la causa primaria è la disposizione spaziale. Il terzo distrattore è una semplificazione eccessiva: il problema non è la quantità di testo, ma la sua posizione rispetto all'immagine."
+    },
+    {
+      "domanda": "Quale tra queste è considerata una 'best practice' per fornire feedback in un esercizio interattivo online?",
+      "opzioni": [
+        {
+          "testo": "Inserire il feedback correttivo in una schermata separata che appare dopo aver confermato la risposta.",
+          "corretta": false
+        },
+        {
+          "testo": "Posizionare il messaggio di feedback immediatamente accanto alla risposta selezionata dall'utente.",
+          "corretta": true
+        },
+        {
+          "testo": "Inviare un'email riassuntiva con tutte le correzioni alla fine della sessione di studio.",
+          "corretta": false
+        }
+      ],
+      "spiegazione": "Posizionare il feedback vicino alla risposta applica la contiguità spaziale, permettendo allo studente di confrontare subito il proprio errore con la spiegazione. Il primo distrattore è un errore di design molto comune che frammenta l'esperienza di apprendimento. Invece, separare temporalmente o spazialmente il feedback (come nel primo e terzo caso) aumenta il carico cognitivo necessario per ricollegare la correzione al contesto della domanda originale."
+    },
+    {
+      "domanda": "In un corso e-learning sul funzionamento del cuore, le etichette delle valvole appaiono solo quando l'utente passa il mouse sopra di esse. È una scelta corretta?",
+      "opzioni": [
+        {
+          "testo": "Sì, perché mantiene l'integrazione spaziale senza nascondere dettagli importanti del grafico.",
+          "corretta": true
+        },
+        {
+          "testo": "No, perché viola la contiguità temporale rendendo l'apparizione del testo intermittente.",
+          "corretta": false
+        },
+        {
+          "testo": "Sì, ma solo se le etichette sono accompagnate da una voce narrante che le legge ad alta voce.",
+          "corretta": false
+        }
+      ],
+      "spiegazione": "L'uso di pop-up o rollover è una tecnica avanzata per rispettare la contiguità spaziale, poiché il testo appare esattamente dove serve (vicino all'elemento). Il secondo distrattore è insidioso perché confonde la 'comparsa nel tempo' con la violazione della sincronizzazione audio-video, che è l'ambito della contiguità temporale. Questa soluzione evita il sovraffollamento visivo pur mantenendo il legame diretto tra parola e immagine."
+    },
+    {
+      "domanda": "Perché l'essere umano è definito un 'sense-maker' nel contesto del Principio di Contiguità?",
+      "opzioni": [
+        {
+          "testo": "Perché cerca attivamente di trovare relazioni significative tra le parole e le immagini presentate.",
+          "corretta": true
+        },
+        {
+          "testo": "Perché preferisce studiare materiali che contengono solo testo per evitare confusioni visive.",
+          "corretta": false
+        },
+        {
+          "testo": "Perché ha una capacità illimitata di processare informazioni se presentate in formato multimediale.",
+          "corretta": false
+        }
+      ],
+      "spiegazione": "Il termine 'sense-maker' sottolinea che l'apprendimento non è ricezione passiva, ma un tentativo di connettere elementi diversi per formare un modello mentale coerente. Il terzo distrattore è palesemente errato poiché la memoria di lavoro è limitata, ed è proprio per questo che la contiguità è fondamentale. La contiguità aiuta questo processo naturale riducendo gli sforzi inutili di ricerca visiva."
+    },
+    {
+      "domanda": "Durante la progettazione di una lezione, un docente decide di inserire i sottotitoli che ripetono parola per parola la narrazione audio sopra un'animazione. Perché questa scelta potrebbe essere problematica?",
+      "opzioni": [
+        {
+          "testo": "Perché gli studenti non riescono a leggere e guardare l'animazione contemporaneamente, creando un conflitto visivo.",
+          "corretta": true
+        },
+        {
+          "testo": "Perché viola il principio di contiguità temporale, dato che il testo scritto è più lento dell'audio.",
+          "corretta": false
+        },
+        {
+          "testo": "Perché ripetere le stesse informazioni in due formati diversi è sempre la strategia migliore per la memoria.",
+          "corretta": false
+        }
+      ],
+      "spiegazione": "Sebbene non sia l'argomento centrale della lezione 6, il conflitto visivo è un effetto collaterale della cattiva gestione dello spazio. Se lo studente deve leggere e guardare l'animazione, la sua attenzione spaziale è divisa (violazione del concetto di base della contiguità spaziale applicata ai sottotitoli). Il secondo distrattore sbaglia causa (non è una questione di velocità), mentre il terzo ignora il rischio di sovraccarico del canale visivo."
+    }
+  ],
+  "assistente_ia": {
+    "nome": "Assistente IA",
+    "sottotesto": "Chatta con l'intera lezione",
+    "url": "https://notebooklm.google.com/notebook/f97c4ecc-9f3c-4f2c-9878-54f66d15ad3d"
+  }
+}
