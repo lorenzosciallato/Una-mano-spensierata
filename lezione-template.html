@@ -1841,11 +1841,15 @@
   #ums-read-bar .sep{width:1px;height:34px;background:var(--gold-lt,#E8D5AA);margin:0 .2rem}
   #ums-read-bar .pos{font-weight:700;color:var(--sub,#7A7770);min-width:74px;text-align:center;
     font-variant-numeric:tabular-nums}
+  #ums-read-bar .vel-giu,#ums-read-bar .vel-su{min-width:48px;font-size:1.35rem;padding:0 .6rem}
+  #ums-read-bar .vel{font-weight:700;color:var(--navy,#1A2F4F);min-width:58px;text-align:center;
+    font-variant-numeric:tabular-nums}
   #ums-read-bar .esci{border-color:transparent;color:var(--sub,#7A7770)}
   #ums-read-bar svg{width:1.25em;height:1.25em}
   .night-mode #ums-read-bar button{background:#23262e;color:#c9c9d2;border-color:#3a3f4b}
   .night-mode #ums-read-bar .play{background:#8FB4E8;color:#14161C;border-color:#8FB4E8}
   .night-mode #ums-read-bar .sep{background:#3a3f4b}
+  .night-mode #ums-read-bar .vel{color:#c9c9d2}
   @media (prefers-reduced-motion:reduce){ .ums-lb,.ums-lb-cur{transition:none} }
 </style>
 <script>
@@ -1853,7 +1857,8 @@
   "use strict";
   var blocchi = [];          // {el, audio, testo, schema, macro}
   var idx = 0, attivo = false, audioEl = null;
-  var elBar, elPos, elPlay, elSchema, live;
+  var velocita = 1.0;
+  var elBar, elPos, elPlay, elSchema, elVel, live;
 
   function param(k){ try{return new URLSearchParams(location.search).get(k);}catch(e){return null;} }
 
@@ -1925,23 +1930,37 @@
       btn('prev','Paragrafo precedente (freccia sinistra)', I.prev)+
       btn('play','Play o pausa (barra spaziatrice)','<svg class="ic-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg><svg class="ic-pause" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg><span class="ptxt">Play</span>')+
       btn('next','Paragrafo successivo (freccia destra)', I.next)+
+      '<span class="sep"></span>'+
+      btn('vel-giu','Rallenta la voce','&minus;')+
+      '<span class="vel" aria-live="polite">1,0&times;</span>'+
+      btn('vel-su','Accelera la voce','+')+
       '<span class="pos"></span>'+
       '<span class="sep"></span>'+
       btn('rip','Riascolta questo paragrafo dall\'inizio', I.restart+' Paragrafo')+
       btn('esci','Esci dalla lettura','Esci');
     document.body.appendChild(elBar);
-    elPos=elBar.querySelector('.pos'); elPlay=elBar.querySelector('.play');
+    elPos=elBar.querySelector('.pos'); elPlay=elBar.querySelector('.play'); elVel=elBar.querySelector('.vel');
     elBar.querySelector('.lezione').onclick=function(){ vaiA(0,true); };
     elBar.querySelector('.macro').onclick=inizioMacro;
     elBar.querySelector('.prev').onclick=function(){ vai(-1); };
     elBar.querySelector('.next').onclick=function(){ vai(1); };
     elBar.querySelector('.rip').onclick=leggiBlocco;
+    elBar.querySelector('.vel-giu').onclick=function(){ cambiaVel(-0.1); };
+    elBar.querySelector('.vel-su').onclick=function(){ cambiaVel(0.1); };
     elPlay.onclick=playPausa;
     elBar.querySelector('.esci').onclick=esci;
+    mostraVel();
 
     elSchema=document.createElement('div'); elSchema.id='ums-schema';
     elSchema.setAttribute('aria-hidden','true');   // è un aiuto visivo; il testo lo dà l'annuncio
     document.body.appendChild(elSchema);
+  }
+
+  function mostraVel(){ if(elVel) elVel.textContent = velocita.toFixed(1).replace('.', ',') + '\u00D7'; }
+  function cambiaVel(d){
+    velocita = Math.min(2.0, Math.max(0.5, Math.round((velocita + d) * 10) / 10));
+    if(audioEl) audioEl.playbackRate = velocita;
+    mostraVel();
   }
 
   function annuncia(t){
@@ -1990,6 +2009,7 @@
     ferma();
     var b=blocchi[idx];
     audioEl=new Audio(b.audio);
+    audioEl.playbackRate=velocita;
     audioEl.onended=mostraFermo;
     audioEl.play().then(mostraLeggendo).catch(function(){ mostraFermo(); });
   }
@@ -2076,6 +2096,7 @@
   }
 })();
 </script>
+<!-- ===================== FINE · ASCOLTA IL RIASSUNTONE ===================== -->
 <!-- ===================== FINE · ASCOLTA IL RIASSUNTONE ===================== -->
 
 <!-- ================= UMS · BLOCCO MEDIA (mp3 / mp4 da Cloudflare R2) =================
