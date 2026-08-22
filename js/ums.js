@@ -4416,3 +4416,70 @@ if (!fileDaCaricare) {
     else avvia();
     window.addEventListener('storage', aggiorna);
 })();
+
+// ====================================================================
+// SEZIONE 17 — LETTURA FACILITATA ("Leggi meglio", pensata per DSA)
+// Un pulsante "Aa" fisso sopra quello della notte. Acceso → classe
+// ums-facile sul body (tutto il resto lo fa ums.css, SEZIONE 17).
+// La scelta si ricorda come la modalità notte. Nessuna funzione
+// esistente viene toccata: il blocco è additivo.
+// ====================================================================
+(function () {
+    var CHIAVE = 'ums_lettura_facile';
+    var FONT_ID = 'ums-font-facile';
+    var FONT_URL = 'https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap';
+
+    function caricaFont() {
+        if (document.getElementById(FONT_ID)) return;
+        var l = document.createElement('link');
+        l.id = FONT_ID; l.rel = 'stylesheet'; l.href = FONT_URL;
+        document.head.appendChild(l);
+    }
+
+    function applica(on, btn) {
+        document.body.classList.toggle('ums-facile', on);
+        if (on) caricaFont();
+        if (btn) {
+            btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+            btn.setAttribute('aria-label', on ? 'Disattiva lettura facilitata' : 'Attiva lettura facilitata');
+            btn.title = on ? 'Lettura facilitata: accesa' : 'Leggi meglio (lettura facilitata)';
+        }
+        // la carta di Dritti al Sodo cambia forma: riallinea l'altezza
+        try { if (typeof fcAdattaAltezza === 'function') fcAdattaAltezza(); } catch (e) {}
+    }
+
+    function avvia() {
+        if (document.getElementById('ums-facile-btn')) return;
+        var btn = document.createElement('button');
+        btn.id = 'ums-facile-btn';
+        btn.type = 'button';
+        btn.textContent = 'Aa';
+        document.body.appendChild(btn);
+
+        var salvato = false;
+        try { salvato = localStorage.getItem(CHIAVE) === '1'; } catch (e) {}
+        applica(salvato, btn);
+
+        btn.addEventListener('click', function () {
+            var on = !document.body.classList.contains('ums-facile');
+            applica(on, btn);
+            try { localStorage.setItem(CHIAVE, on ? '1' : '0'); } catch (e) {}
+        });
+
+        // Su telefono il pulsante "gira" apre normalmente la risposta in un
+        // pannello a parte. In lettura facilitata la risposta compare invece
+        // sotto la domanda: intercettiamo il tocco prima del gestore originale
+        // e giriamo la carta come su PC. A modalità spenta non succede nulla.
+        document.addEventListener('click', function (e) {
+            if (!document.body.classList.contains('ums-facile')) return;
+            var b = e.target && e.target.closest ? e.target.closest('.btn-flip-mobile') : null;
+            if (!b) return;
+            e.stopPropagation(); e.stopImmediatePropagation(); e.preventDefault();
+            var deck = document.getElementById('flashcard-deck');
+            if (deck) deck.classList.toggle('flipped');
+        }, true);
+    }
+
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', avvia);
+    else avvia();
+})();
