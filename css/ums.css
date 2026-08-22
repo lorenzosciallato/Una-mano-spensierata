@@ -3778,58 +3778,57 @@ body.ums-facile.night-mode .flashcard-back p{ background: #1C1F27; color: #E8E4D
 body.ums-facile.night-mode .flashcard-front h2{ background: #0F1117; color: #fff; }
 
 
-/* ---- UN PARAGRAFO ALLA VOLTA (riassuntone, solo con "Aa" acceso) ---- */
-#ums-para-btn{ display: none; }
-body.ums-facile #ums-para-btn{
-    display: inline-flex; align-items: center; gap: 8px;
-    margin: 0 0 14px; padding: 9px 16px;
-    border-radius: 50px; border: 1px solid var(--gold);
-    background: #fff; color: var(--navy);
-    font-family: var(--font-facile); font-size: 0.95rem; font-weight: 700;
-    letter-spacing: 0.03em; cursor: pointer;
-    box-shadow: var(--shadow-card);
+/* ---- RIGA DI LETTURA (solo PC, solo riassuntone, solo con "Aa" acceso) ----
+   Una striscia evidenzia UNA riga; si sposta con le frecce ↑ ↓, Esc spegne. */
+#ums-riga-btn{ display: none; }
+@media (min-width: 901px){
+    body.ums-facile #ums-riga-btn{
+        display: inline-flex; align-items: center; gap: 8px;
+        margin: 0 0 14px; padding: 9px 16px;
+        border-radius: 50px; border: 1px solid var(--gold);
+        background: #fff; color: var(--navy);
+        font-family: var(--font-facile); font-size: 0.95rem; font-weight: 700;
+        letter-spacing: 0.03em; cursor: pointer;
+        box-shadow: var(--shadow-card);
+    }
+    body.ums-facile #ums-riga-btn:hover{ background: #FBF6E9; }
+    body.ums-facile #ums-riga-btn[aria-pressed="true"]{ background: var(--gold); color: var(--night); }
+    body.ums-facile.night-mode #ums-riga-btn{ background: #1E212A; color: #E8E4DC; }
+    body.ums-facile.night-mode #ums-riga-btn[aria-pressed="true"]{ background: var(--gold); color: var(--night); }
+    #ums-riga-btn .ums-riga-help{
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 22px; height: 22px; border-radius: 50%;
+        border: 1.5px solid currentColor; font-size: 0.8rem; margin-left: 4px;
+    }
 }
-body.ums-facile #ums-para-btn:hover{ background: #FBF6E9; }
-body.ums-facile #ums-para-btn[aria-pressed="true"]{ background: var(--gold); color: var(--night); }
-body.ums-facile.night-mode #ums-para-btn{ background: #1E212A; color: #E8E4DC; }
-body.ums-facile.night-mode #ums-para-btn[aria-pressed="true"]{ background: var(--gold); color: var(--night); }
-#ums-para-btn .ums-para-help{
-    display: inline-flex; align-items: center; justify-content: center;
-    width: 22px; height: 22px; border-radius: 50%;
-    border: 1.5px solid currentColor; font-size: 0.8rem; margin-left: 4px;
+#ums-riga-band{
+    position: absolute; left: 0; top: 0; width: 0; height: 0;
+    display: none; pointer-events: none; z-index: 5;
+    /* stile "lightbox" (CHI 2023): la riga resta com'è, il resto si attenua;
+       niente colore pieno, così non si confonde con gli evidenziatori gialli */
+    background: transparent;
+    border-radius: 6px;
+    box-shadow: 0 0 0 2px var(--gold), 0 4px 16px rgba(15,17,23,0.10);
+    transition: top .12s ease, height .12s ease;
 }
-/* i blocchi nascosti */
-body.ums-para-on #dyn-riassuntone-container > .ums-para-nascosto{ display: none !important; }
-/* in questa modalità la scatola non ha bisogno di scorrere: si allarga al paragrafo */
-body.ums-para-on #dyn-riassuntone-container{ max-height: none !important; overflow: visible !important; }
-/* Avanti / Indietro sotto al paragrafo */
-#ums-para-nav{
-    display: none; align-items: center; justify-content: space-between; gap: 12px;
-    margin: 18px 0 6px; max-width: 55ch;   /* stessa larghezza del testo */
+body.ums-riga-on #ums-riga-band{ display: block; }
+.night-mode #ums-riga-band{ box-shadow: 0 0 0 2px var(--gold), 0 4px 16px rgba(0,0,0,0.4); }
+/* due veli (sopra e sotto la riga) attenuano tutto il riassuntone TRANNE
+   la riga nella cornice, che resta a contrasto pieno */
+.ums-riga-velo{
+    position: absolute; display: none; pointer-events: none; z-index: 4;
+    background: rgba(251,246,233,0.62);
 }
-#ums-para-nav button{
-    padding: 12px 20px; border-radius: 50px; border: 1px solid var(--gold);
-    background: var(--navy); color: #fff; cursor: pointer;
-    font-family: var(--font-facile); font-size: 1rem; font-weight: 700; letter-spacing: 0.03em;
-    box-shadow: var(--shadow-card);
-}
-#ums-para-nav button:disabled{ opacity: .35; cursor: default; }
-#ums-para-nav .ums-para-conta{
-    font-family: var(--font-facile); font-size: 1rem; font-weight: 700; color: var(--gold-dk);
-    letter-spacing: 0.08em;
-}
-.night-mode #ums-para-nav .ums-para-conta{ color: var(--gold); }
-@media (max-width: 900px){
-    #ums-para-nav button{ padding: 12px 14px; font-size: 0.95rem; }
-}
+body.ums-riga-on .ums-riga-velo{ display: block; }
+.night-mode .ums-riga-velo{ background: rgba(15,17,23,0.62); }
 
-/* ---- tutorial (pop-up brandizzato, testo facilitato) ---- */
-#ums-para-tut{
+/* ---- tutorial della riga (pop-up brandizzato, testo facilitato) ---- */
+#ums-riga-tut{
     display: none; position: fixed; inset: 0; z-index: 99999999;
     background: rgba(15,17,23,0.6); backdrop-filter: blur(4px);
     align-items: center; justify-content: center; padding: 20px;
 }
-#ums-para-tut.aperto{ display: flex; }
+#ums-riga-tut.aperto{ display: flex; }
 .ums-riga-tut-card{
     background: #FBF6E9; color: #2B2A28;
     width: 100%; max-width: 520px;
