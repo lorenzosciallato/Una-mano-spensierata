@@ -4521,46 +4521,95 @@ if (!fileDaCaricare) {
         return !!el; // deve stare dentro il riassuntone
     }
 
+    // ---- blocco di testo che contiene un nodo (p, h3, li, div...): è lì che
+    //      vive la GRIGLIA delle righe (ogni riga è alta esattamente line-height) ----
+    function bloccoDi(el, c) {
+        while (el && el !== c) {
+            if (el.nodeType === 1) {
+                var d = getComputedStyle(el).display;
+                if (d !== 'inline' && d !== 'inline-block' && d !== 'contents') return el;
+            }
+            el = el.parentNode;
+        }
+        return c;
+    }
+
+    // METODO: parola per parola (Range, niente modifiche al DOM) + griglia
+    // del blocco. Una riga NON si ricava dalla geometria dei pezzi di testo
+    // (che cambiano con grassetti, evidenziatori, capolettera) ma dal suo
+    // numero d'ordine: riga = floor((cima parola - cima blocco) / line-height).
+    // Così il capolettera, i grassetti e gli evidenziatori finiscono sulla
+    // riga giusta per costruzione, e l'altezza della cornice è sempre quella
+    // della riga.
     function misura() {
         righe = [];
         var c = cont(); if (!c) return;
         var cr = c.getBoundingClientRect();
+        var blocchi = [];          // in ordine di documento
+        var info = new Map();      // blocco -> {top, lh, lines:{idx:{l,r}}}
+
+        function datiBlocco(b) {
+            var d = info.get(b);
+            if (d) return d;
+            var br = b.getBoundingClientRect();
+            var cs = getComputedStyle(b);
+            var lh = parseFloat(cs.lineHeight);
+            d = { top: br.top + (parseFloat(cs.paddingTop) || 0), lh: lh, lines: {}, tops: [] };
+            info.set(b, d); blocchi.push(b);
+            return d;
+        }
+
         var walker = document.createTreeWalker(c, NodeFilter.SHOW_TEXT, null);
-        var rects = [];
-        var n;
+        var n, parole = [];
         while ((n = walker.nextNode())) {
             if (!testoValido(n)) continue;
-            var lh = parseFloat(getComputedStyle(n.parentNode).lineHeight) || 28;
-            var r = document.createRange(); r.selectNodeContents(n);
-            var rs = r.getClientRects();
-            for (var i = 0; i < rs.length; i++) {
-                var q = rs[i];
-                if (q.width < 2 || q.height < 2) continue;
-                if (q.height > lh * 1.7) continue;            // capolettera flottante
-                rects.push({
-                    top: q.top - cr.top + c.scrollTop, bottom: q.bottom - cr.top + c.scrollTop,
-                    left: q.left - cr.left + c.scrollLeft, right: q.right - cr.left + c.scrollLeft
+            var b = bloccoDi(n.parentNode, c);
+            var d = datiBlocco(b);
+            var txt = n.nodeValue, re = /\S+/g, m;
+            while ((m = re.exec(txt))) {
+                var r = document.createRange();
+                r.setStart(n, m.index); r.setEnd(n, m.index + m[0].length);
+                var q = r.getBoundingClientRect();
+                if (q.width < 1 || q.height < 1) continue;
+                parole.push({ b: b, top: q.top, left: q.left, right: q.right, h: q.height });
+                d.tops.push(q.top);
+            }
+        }
+
+        // line-height ignota ("normal")? la si ricava dalla distanza tra le
+        // cime delle parole su righe diverse
+        blocchi.forEach(function (b) {
+            var d = info.get(b);
+            if (d.lh && !isNaN(d.lh)) return;
+            var t = d.tops.slice().sort(function (x, y) { return x - y; });
+            var gap = 0;
+            for (var i = 1; i < t.length; i++) { var g = t[i] - t[i - 1]; if (g > 2 && (!gap || g < gap)) gap = g; }
+            d.lh = gap || (parseFloat(getComputedStyle(b).fontSize) * 1.5) || 28;
+        });
+
+        // ogni parola → riga del suo blocco
+        parole.forEach(function (p) {
+            var d = info.get(p.b);
+            var idx = Math.floor((p.top - d.top + 1) / d.lh);
+            if (idx < 0) idx = 0;
+            var L = d.lines[idx];
+            if (!L) d.lines[idx] = { l: p.left, r: p.right };
+            else { if (p.left < L.l) L.l = p.left; if (p.right > L.r) L.r = p.right; }
+        });
+
+        // righe in ordine: blocco per blocco, indice per indice
+        blocchi.forEach(function (b) {
+            var d = info.get(b);
+            Object.keys(d.lines).map(Number).sort(function (x, y) { return x - y; }).forEach(function (i) {
+                var L = d.lines[i];
+                righe.push({
+                    top: d.top + i * d.lh - cr.top + c.scrollTop,
+                    height: d.lh,
+                    left: L.l - cr.left + c.scrollLeft,
+                    width: L.r - L.l
                 });
-            }
-        }
-        rects.sort(function (a, b) { return (a.top + a.bottom) - (b.top + b.bottom); });
-        // raggruppa per sovrapposizione verticale (stessa riga = centri vicini)
-        var cur = null;
-        for (var k = 0; k < rects.length; k++) {
-            var q2 = rects[k];
-            var cy = (q2.top + q2.bottom) / 2;
-            if (cur && Math.abs(cy - (cur.top + cur.bottom) / 2) < Math.min(q2.bottom - q2.top, cur.bottom - cur.top) * 0.6) {
-                cur.top = Math.min(cur.top, q2.top); cur.bottom = Math.max(cur.bottom, q2.bottom);
-                cur.left = Math.min(cur.left, q2.left); cur.right = Math.max(cur.right, q2.right);
-            } else {
-                cur = { top: q2.top, bottom: q2.bottom, left: q2.left, right: q2.right };
-                righe.push(cur);
-            }
-        }
-        for (var z = 0; z < righe.length; z++) {
-            var L = righe[z];
-            righe[z] = { top: L.top, height: L.bottom - L.top, left: L.left, width: L.right - L.left };
-        }
+            });
+        });
     }
 
     // la scatola scorre davvero? (su PC sì; se il template la allunga, no)
