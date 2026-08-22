@@ -4488,12 +4488,15 @@ if (!fileDaCaricare) {
 // ====================================================================
 // SEZIONE 18 — RIGA DI LETTURA con le frecce (solo PC, solo riassuntone)
 // Attiva solo se "Aa" (SEZIONE 17) è acceso. Misura dove cadono le righe
-// del riassuntone e disegna una striscia sulla riga scelta; ↓ ↑ la spostano,
+// del riassuntone e disegna una cornice sulla riga scelta; ↓ ↑ la spostano,
 // Esc spegne. Blocco additivo: non tocca nessuna funzione esistente.
+// NB: su PC #dyn-riassuntone-container è una scatola che SCORRE PER CONTO
+// SUO (max-height 560px, overflow auto): le righe si misurano in coordinate
+// della scatola e si scorre la scatola, non la pagina.
 // ====================================================================
 (function () {
     var TUT_KEY = 'ums_riga_tutorial_visto';
-    var righe = [];        // [{top,height,left,width}] in coordinate di pagina
+    var righe = [];        // [{top,height,left,width}] relative al CONTENUTO della scatola
     var idx = -1;
     var attiva = false;
     var btn, band, tut, veloSu, veloGiu;
@@ -4501,78 +4504,131 @@ if (!fileDaCaricare) {
     function desktop() { return window.innerWidth > 900; }
     function cont() { return document.getElementById('dyn-riassuntone-container'); }
 
-    // ---- misura le righe: una Range per ogni blocco di testo, getClientRects
-    //      restituisce un rettangolo per ogni frammento di riga ----
+    // ---- testo da considerare: nodi di testo veri del riassuntone,
+    //      NON dentro slide/figure/pulsanti/elementi flottanti/nascosti ----
+    function testoValido(n) {
+        if (!n.nodeValue || !n.nodeValue.trim()) return false;
+        var el = n.parentNode, c = cont();
+        while (el && el !== c) {
+            if (el.nodeType === 1) {
+                var tag = el.tagName;
+                if (tag === 'FIGURE' || tag === 'FIGCAPTION' || tag === 'IMG' || tag === 'SVG' || tag === 'BUTTON' || tag === 'SCRIPT' || tag === 'STYLE' || tag === 'TEXTAREA' || tag === 'INPUT') return false;
+                var cs = getComputedStyle(el);
+                if (cs.display === 'none' || cs.visibility === 'hidden' || cs.float !== 'none' || cs.position === 'absolute' || cs.position === 'fixed') return false;
+            }
+            el = el.parentNode;
+        }
+        return !!el; // deve stare dentro il riassuntone
+    }
+
     function misura() {
         righe = [];
         var c = cont(); if (!c) return;
-        var blocchi = c.querySelectorAll('h3, p, li');
-        var sy = window.scrollY, sx = window.scrollX;
-        for (var b = 0; b < blocchi.length; b++) {
-            var el = blocchi[b];
-            if (!el.offsetParent) continue;                 // nascosto (es. "Solo slide")
-            if (el.closest('figure, .flo, .ums-slide')) continue; // didascalie slide
-            var r = document.createRange();
-            r.selectNodeContents(el);
-            var rects = r.getClientRects();
-            var perRiga = {};
-            for (var i = 0; i < rects.length; i++) {
-                var q = rects[i];
+        var cr = c.getBoundingClientRect();
+        var walker = document.createTreeWalker(c, NodeFilter.SHOW_TEXT, null);
+        var rects = [];
+        var n;
+        while ((n = walker.nextNode())) {
+            if (!testoValido(n)) continue;
+            var lh = parseFloat(getComputedStyle(n.parentNode).lineHeight) || 28;
+            var r = document.createRange(); r.selectNodeContents(n);
+            var rs = r.getClientRects();
+            for (var i = 0; i < rs.length; i++) {
+                var q = rs[i];
                 if (q.width < 2 || q.height < 2) continue;
-                var k = Math.round(q.top / 4) * 4;          // stessa riga ≈ stesso top
-                if (!perRiga[k]) perRiga[k] = { top: q.top, bottom: q.bottom, left: q.left, right: q.right };
-                else {
-                    var p = perRiga[k];
-                    p.top = Math.min(p.top, q.top); p.bottom = Math.max(p.bottom, q.bottom);
-                    p.left = Math.min(p.left, q.left); p.right = Math.max(p.right, q.right);
-                }
+                if (q.height > lh * 1.7) continue;            // capolettera flottante
+                rects.push({
+                    top: q.top - cr.top + c.scrollTop, bottom: q.bottom - cr.top + c.scrollTop,
+                    left: q.left - cr.left + c.scrollLeft, right: q.right - cr.left + c.scrollLeft
+                });
             }
-            var chiavi = Object.keys(perRiga).map(Number).sort(function (a, b) { return a - b; });
-            for (var z = 0; z < chiavi.length; z++) {
-                var L = perRiga[chiavi[z]];
-                righe.push({ top: L.top + sy, height: L.bottom - L.top, left: L.left + sx, width: L.right - L.left });
+        }
+        rects.sort(function (a, b) { return (a.top + a.bottom) - (b.top + b.bottom); });
+        // raggruppa per sovrapposizione verticale (stessa riga = centri vicini)
+        var cur = null;
+        for (var k = 0; k < rects.length; k++) {
+            var q2 = rects[k];
+            var cy = (q2.top + q2.bottom) / 2;
+            if (cur && Math.abs(cy - (cur.top + cur.bottom) / 2) < Math.min(q2.bottom - q2.top, cur.bottom - cur.top) * 0.6) {
+                cur.top = Math.min(cur.top, q2.top); cur.bottom = Math.max(cur.bottom, q2.bottom);
+                cur.left = Math.min(cur.left, q2.left); cur.right = Math.max(cur.right, q2.right);
+            } else {
+                cur = { top: q2.top, bottom: q2.bottom, left: q2.left, right: q2.right };
+                righe.push(cur);
             }
+        }
+        for (var z = 0; z < righe.length; z++) {
+            var L = righe[z];
+            righe[z] = { top: L.top, height: L.bottom - L.top, left: L.left, width: L.right - L.left };
         }
     }
 
+    // la scatola scorre davvero? (su PC sì; se il template la allunga, no)
+    function scorrevole(c) { return c.scrollHeight > c.clientHeight + 2; }
+
     function disegna(scorri) {
         if (!attiva || !band) return;
-        if (!righe.length) { band.style.display = 'none'; return; }
+        var c = cont();
+        if (!c || !righe.length) { band.style.display = 'none'; if (veloSu) { veloSu.style.display = 'none'; veloGiu.style.display = 'none'; } return; }
         if (idx < 0) idx = 0;
         if (idx >= righe.length) idx = righe.length - 1;
         var L = righe[idx];
         var pad = 6;
-        band.style.display = 'block';
-        band.style.top = (L.top - pad / 2) + 'px';
-        band.style.height = (L.height + pad) + 'px';
-        band.style.left = (L.left - 10) + 'px';
-        band.style.width = (L.width + 20) + 'px';
-        // veli: coprono il riassuntone sopra e sotto la riga
-        var c = cont();
-        if (c && veloSu && veloGiu) {
-            var cr = c.getBoundingClientRect();
-            var cTop = cr.top + window.scrollY, cLeft = cr.left + window.scrollX;
-            var bTop = L.top - pad / 2, bBot = L.top + L.height + pad / 2;
-            veloSu.style.left = cLeft + 'px'; veloSu.style.width = cr.width + 'px';
-            veloSu.style.top = cTop + 'px'; veloSu.style.height = Math.max(0, bTop - cTop) + 'px';
-            veloGiu.style.left = cLeft + 'px'; veloGiu.style.width = cr.width + 'px';
-            veloGiu.style.top = bBot + 'px'; veloGiu.style.height = Math.max(0, cTop + cr.height - bBot) + 'px';
-        }
-        if (scorri) {
-            var y = L.top + L.height / 2;
-            var vh = window.innerHeight;
-            // tieni la riga nel terzo centrale dello schermo
-            if (y - window.scrollY < vh * 0.3 || y - window.scrollY > vh * 0.7) {
-                window.scrollTo({ top: y - vh / 2, behavior: 'smooth' });
+
+        // 1) porta la riga dentro la parte visibile della scatola
+        if (scorri && scorrevole(c)) {
+            var vis0 = c.scrollTop, vis1 = c.scrollTop + c.clientHeight;
+            if (L.top - pad < vis0 + 24 || L.top + L.height + pad > vis1 - 24) {
+                c.scrollTop = Math.max(0, L.top + L.height / 2 - c.clientHeight / 2);
             }
+        }
+
+        // 2) coordinate di pagina (dopo lo scroll della scatola)
+        var cr = c.getBoundingClientRect();
+        var pageTop = cr.top + window.scrollY, pageLeft = cr.left + window.scrollX;
+        var lineTop = pageTop + (L.top - c.scrollTop);
+        var lineLeft = pageLeft + (L.left - c.scrollLeft);
+
+        // 3) porta la riga nel terzo centrale dello schermo (scroll di pagina)
+        if (scorri) {
+            var yv = lineTop + L.height / 2 - window.scrollY;
+            if (yv < window.innerHeight * 0.3 || yv > window.innerHeight * 0.7) {
+                window.scrollTo({ top: lineTop + L.height / 2 - window.innerHeight / 2, behavior: 'smooth' });
+            }
+        }
+
+        // 4) cornice, ma solo se la riga sta nella parte visibile della scatola
+        var visTop = pageTop, visBot = pageTop + c.clientHeight;
+        var bTop = lineTop - pad / 2, bBot = lineTop + L.height + pad / 2;
+        if (bBot <= visTop || bTop >= visBot) { band.style.display = 'none'; }
+        else {
+            band.style.display = 'block';
+            band.style.top = bTop + 'px';
+            band.style.height = (bBot - bTop) + 'px';
+            band.style.left = (lineLeft - 10) + 'px';
+            band.style.width = (L.width + 20) + 'px';
+        }
+
+        // 5) veli: solo sulla parte visibile della scatola, sopra e sotto la riga
+        if (veloSu && veloGiu) {
+            var w = c.clientWidth;
+            var su0 = visTop, su1 = Math.min(Math.max(bTop, visTop), visBot);
+            var giu0 = Math.max(Math.min(bBot, visBot), visTop), giu1 = visBot;
+            veloSu.style.display = 'block'; veloGiu.style.display = 'block';
+            veloSu.style.left = pageLeft + 'px'; veloSu.style.width = w + 'px';
+            veloSu.style.top = su0 + 'px'; veloSu.style.height = Math.max(0, su1 - su0) + 'px';
+            veloGiu.style.left = pageLeft + 'px'; veloGiu.style.width = w + 'px';
+            veloGiu.style.top = giu0 + 'px'; veloGiu.style.height = Math.max(0, giu1 - giu0) + 'px';
         }
     }
 
     // ---- prima riga visibile come punto di partenza ----
     function primaVisibile() {
-        var sy = window.scrollY, vh = window.innerHeight;
+        var c = cont(); if (!c) return 0;
+        var cr = c.getBoundingClientRect();
         for (var i = 0; i < righe.length; i++) {
-            if (righe[i].top >= sy + 80 && righe[i].top < sy + vh * 0.6) return i;
+            var yv = cr.top + (righe[i].top - c.scrollTop);      // in viewport
+            if (yv >= Math.max(cr.top, 0) + 8 && yv < Math.min(cr.bottom, window.innerHeight)) return i;
         }
         return 0;
     }
@@ -4591,6 +4647,7 @@ if (!fileDaCaricare) {
         document.body.classList.remove('ums-riga-on');
         if (btn) btn.setAttribute('aria-pressed', 'false');
         if (band) band.style.display = 'none';
+        if (veloSu) { veloSu.style.display = 'none'; veloGiu.style.display = 'none'; }
     }
 
     // ---- tutorial ----
@@ -4606,6 +4663,21 @@ if (!fileDaCaricare) {
         try { localStorage.setItem(TUT_KEY, '1'); } catch (e) {}
         if (tut.dataset.poi === '1') accendi();
         tut.dataset.poi = '0';
+    }
+
+    var rafPend = false;
+    function ridisegna() {               // su scroll: solo riposiziona, niente scroll automatico
+        if (!attiva || rafPend) return;
+        rafPend = true;
+        requestAnimationFrame(function () { rafPend = false; disegna(false); });
+    }
+    function rimisura() {                // il testo ha cambiato forma: ricalcola e resta sulla riga
+        clearTimeout(window.__umsRigaT);
+        window.__umsRigaT = setTimeout(function () {
+            if (!attiva) return;
+            if (!desktop() || !document.body.classList.contains('ums-facile')) { spegni(); return; }
+            var k = idx; misura(); idx = k; disegna(false);
+        }, 150);
     }
 
     function costruisci() {
@@ -4661,24 +4733,17 @@ if (!fileDaCaricare) {
             if (!attiva) return;
             var t = e.target;
             if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
-            if (e.key === 'ArrowDown') { e.preventDefault(); idx++; disegna(true); }
-            else if (e.key === 'ArrowUp') { e.preventDefault(); idx--; disegna(true); }
+            if (e.key === 'ArrowDown') { e.preventDefault(); if (idx < righe.length - 1) idx++; disegna(true); }
+            else if (e.key === 'ArrowUp') { e.preventDefault(); if (idx > 0) idx--; disegna(true); }
             else if (e.key === 'Escape') { spegni(); }
         });
 
-        // il testo cambia forma? ricalcola e resta sulla stessa riga
-        var rimisura = function () {
-            clearTimeout(window.__umsRigaT);
-            window.__umsRigaT = setTimeout(function () {
-                if (!attiva) return;
-                if (!desktop() || !document.body.classList.contains('ums-facile')) { spegni(); return; }
-                var k = idx; misura(); idx = k; disegna(false);
-            }, 150);
-        };
+        // la pagina o la scatola scorrono → cornice e veli seguono
+        window.addEventListener('scroll', ridisegna, { passive: true });
+        c.addEventListener('scroll', ridisegna, { passive: true });
         window.addEventListener('resize', rimisura);
         if ('MutationObserver' in window) {
             new MutationObserver(rimisura).observe(c, { childList: true, subtree: true, attributes: true });
-            // "Aa" spento → la riga si spegne da sola
             new MutationObserver(function () {
                 if (!document.body.classList.contains('ums-facile') && attiva) spegni();
             }).observe(document.body, { attributes: true, attributeFilter: ['class'] });
