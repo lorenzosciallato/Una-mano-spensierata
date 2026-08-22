@@ -3673,20 +3673,28 @@ body.ums-facile .content-card .factor-card strong,
 body.ums-facile .content-card .factor-card small,
 body.ums-facile .modal-paper p, body.ums-facile .modal-paper li,
 body.ums-facile .fc-mobile-content, body.ums-facile .fc-mobile-content p{
-    font-size: 1.15rem !important;
-    line-height: 1.9 !important;
-    letter-spacing: 0.035em !important;
-    word-spacing: 0.14em !important;
+    font-size: 1.18rem !important;   /* ~19px: Rello 2013 consiglia 18pt */
+    line-height: 1.6 !important;     /* l'interlinea alta non ha prove: moderata */
+    letter-spacing: 0.05em !important; /* Zorzi 2012: +2.5pt su 14pt ≈ 0.05-0.06em */
+    word-spacing: 0.18em !important;   /* BDA: spazio tra parole ≥ 3.5× quello tra lettere */
     text-align: left !important;
     hyphens: none !important; -webkit-hyphens: none !important;
 }
+/* i due riquadri "Concetto fondamentale" e "Nota extra" non contengono
+   paragrafi: prendono le stesse regole del corpo */
+body.ums-facile #dyn-concetto-fondamentale,
+body.ums-facile #dyn-nota-extra{
+    font-size: 1.18rem !important; line-height: 1.6 !important;
+    letter-spacing: 0.05em !important; word-spacing: 0.18em !important;
+    text-align: left !important; max-width: 55ch;
+}
 body.ums-facile .content-card p,
-body.ums-facile .content-card li{ max-width: 65ch; }
+body.ums-facile .content-card li{ max-width: 55ch; } /* righe corte: Schneps 2013, -50% salti indietro */
 body.ums-facile .content-card p{ margin-bottom: 1.4em !important; }
 body.ums-facile .content-card li{ margin-bottom: 0.6em !important; }
 body.ums-facile .content-card h3{ line-height: 1.45 !important; letter-spacing: 0.02em !important; }
 /* il riassuntone ha già un limite di larghezza (68ch): lo stringiamo un filo */
-body.ums-facile #dyn-riassuntone-container{ max-width: 62ch; }
+body.ums-facile #dyn-riassuntone-container{ max-width: 55ch; }
 /* troppi grassetti nel corpo affaticano: li lasciamo appena marcati */
 body.ums-facile .content-card p strong{ font-weight: 600; }
 
@@ -3743,8 +3751,8 @@ body.ums-facile .flashcard-back p{
     background: #FBF6E9; color: #2B2A28;
     border: 1px solid var(--gold-lt); border-top: 4px solid var(--gold);
     border-radius: 0 0 var(--r-lg) var(--r-lg);
-    font-size: 1.15rem !important; line-height: 1.9 !important;
-    letter-spacing: 0.035em !important; word-spacing: 0.14em !important;
+    font-size: 1.18rem !important; line-height: 1.6 !important;
+    letter-spacing: 0.05em !important; word-spacing: 0.18em !important;
     padding: 1.4rem 1.6rem; margin-top: -6px;
 }
 body.ums-facile .flashcard-back p::before{
@@ -3768,3 +3776,85 @@ body.ums-facile #fc-start-screen .flashcard-front h2::before{ display: none; }
 /* notte: carta scura, niente crema */
 body.ums-facile.night-mode .flashcard-back p{ background: #1C1F27; color: #E8E4DC; border-color: #2C3140; border-top-color: var(--gold); }
 body.ums-facile.night-mode .flashcard-front h2{ background: #0F1117; color: #fff; }
+
+
+/* ---- RIGA DI LETTURA (solo PC, solo riassuntone, solo con "Aa" acceso) ----
+   Una striscia evidenzia UNA riga; si sposta con le frecce ↑ ↓, Esc spegne. */
+#ums-riga-btn{ display: none; }
+@media (min-width: 901px){
+    body.ums-facile #ums-riga-btn{
+        display: inline-flex; align-items: center; gap: 8px;
+        margin: 0 0 14px; padding: 9px 16px;
+        border-radius: 50px; border: 1px solid var(--gold);
+        background: #fff; color: var(--navy);
+        font-family: var(--font-facile); font-size: 0.95rem; font-weight: 700;
+        letter-spacing: 0.03em; cursor: pointer;
+        box-shadow: var(--shadow-card);
+    }
+    body.ums-facile #ums-riga-btn:hover{ background: #FBF6E9; }
+    body.ums-facile #ums-riga-btn[aria-pressed="true"]{ background: var(--gold); color: var(--night); }
+    body.ums-facile.night-mode #ums-riga-btn{ background: #1E212A; color: #E8E4DC; }
+    body.ums-facile.night-mode #ums-riga-btn[aria-pressed="true"]{ background: var(--gold); color: var(--night); }
+    #ums-riga-btn .ums-riga-help{
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 22px; height: 22px; border-radius: 50%;
+        border: 1.5px solid currentColor; font-size: 0.8rem; margin-left: 4px;
+    }
+}
+#ums-riga-band{
+    position: absolute; left: 0; top: 0; width: 0; height: 0;
+    display: none; pointer-events: none; z-index: 5;
+    /* stile "lightbox" (CHI 2023): la riga resta com'è, il resto si attenua;
+       niente colore pieno, così non si confonde con gli evidenziatori gialli */
+    background: transparent;
+    border-radius: 6px;
+    box-shadow: 0 0 0 2px var(--gold), 0 4px 16px rgba(15,17,23,0.10);
+    transition: top .12s ease, height .12s ease;
+}
+body.ums-riga-on #ums-riga-band{ display: block; }
+.night-mode #ums-riga-band{ box-shadow: 0 0 0 2px var(--gold), 0 4px 16px rgba(0,0,0,0.4); }
+/* due veli (sopra e sotto la riga) attenuano tutto il riassuntone TRANNE
+   la riga nella cornice, che resta a contrasto pieno */
+.ums-riga-velo{
+    position: absolute; display: none; pointer-events: none; z-index: 4;
+    background: rgba(251,246,233,0.62);
+}
+body.ums-riga-on .ums-riga-velo{ display: block; }
+.night-mode .ums-riga-velo{ background: rgba(15,17,23,0.62); }
+
+/* ---- tutorial della riga (pop-up brandizzato, testo facilitato) ---- */
+#ums-riga-tut{
+    display: none; position: fixed; inset: 0; z-index: 99999999;
+    background: rgba(15,17,23,0.6); backdrop-filter: blur(4px);
+    align-items: center; justify-content: center; padding: 20px;
+}
+#ums-riga-tut.aperto{ display: flex; }
+.ums-riga-tut-card{
+    background: #FBF6E9; color: #2B2A28;
+    width: 100%; max-width: 520px;
+    border-radius: var(--r-xl); border-top: 4px solid var(--gold);
+    padding: 32px 36px; box-shadow: 0 40px 80px rgba(0,0,0,0.4);
+    font-family: var(--font-facile);
+}
+.night-mode .ums-riga-tut-card{ background: #1C1F27; color: #E8E4DC; }
+.ums-riga-tut-card h3{
+    font-family: var(--font-facile); font-size: 1.4rem; font-weight: 700;
+    margin: 0 0 18px; line-height: 1.4; letter-spacing: 0.02em;
+}
+.ums-riga-tut-card ol{ margin: 0 0 22px; padding-left: 1.4em; }
+.ums-riga-tut-card li{
+    font-size: 1.15rem; line-height: 1.6; letter-spacing: 0.04em; word-spacing: 0.16em;
+    margin-bottom: 14px; max-width: 40ch;
+}
+.ums-riga-tut-card kbd{
+    display: inline-block; padding: 2px 10px; margin: 0 2px;
+    border-radius: 6px; border: 1.5px solid var(--gold-dk);
+    background: #fff; color: var(--navy); font-family: var(--font-facile);
+    font-weight: 700; font-size: 1rem; vertical-align: middle;
+}
+.night-mode .ums-riga-tut-card kbd{ background: #0F1117; color: #E8E4DC; }
+.ums-riga-tut-ok{
+    width: 100%; padding: 14px; border: none; border-radius: 50px;
+    background: var(--navy); color: #fff; cursor: pointer;
+    font-family: var(--font-facile); font-size: 1.05rem; font-weight: 700; letter-spacing: 0.04em;
+}
