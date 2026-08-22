@@ -4483,3 +4483,216 @@ if (!fileDaCaricare) {
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', avvia);
     else avvia();
 })();
+
+
+// ====================================================================
+// SEZIONE 18 — RIGA DI LETTURA con le frecce (solo PC, solo riassuntone)
+// Attiva solo se "Aa" (SEZIONE 17) è acceso. Misura dove cadono le righe
+// del riassuntone e disegna una striscia sulla riga scelta; ↓ ↑ la spostano,
+// Esc spegne. Blocco additivo: non tocca nessuna funzione esistente.
+// ====================================================================
+(function () {
+    var TUT_KEY = 'ums_riga_tutorial_visto';
+    var righe = [];        // [{top,height,left,width}] in coordinate di pagina
+    var idx = -1;
+    var attiva = false;
+    var btn, band, tut, veloSu, veloGiu;
+
+    function desktop() { return window.innerWidth > 900; }
+    function cont() { return document.getElementById('dyn-riassuntone-container'); }
+
+    // ---- misura le righe: una Range per ogni blocco di testo, getClientRects
+    //      restituisce un rettangolo per ogni frammento di riga ----
+    function misura() {
+        righe = [];
+        var c = cont(); if (!c) return;
+        var blocchi = c.querySelectorAll('h3, p, li');
+        var sy = window.scrollY, sx = window.scrollX;
+        for (var b = 0; b < blocchi.length; b++) {
+            var el = blocchi[b];
+            if (!el.offsetParent) continue;                 // nascosto (es. "Solo slide")
+            if (el.closest('figure, .flo, .ums-slide')) continue; // didascalie slide
+            var r = document.createRange();
+            r.selectNodeContents(el);
+            var rects = r.getClientRects();
+            var perRiga = {};
+            for (var i = 0; i < rects.length; i++) {
+                var q = rects[i];
+                if (q.width < 2 || q.height < 2) continue;
+                var k = Math.round(q.top / 4) * 4;          // stessa riga ≈ stesso top
+                if (!perRiga[k]) perRiga[k] = { top: q.top, bottom: q.bottom, left: q.left, right: q.right };
+                else {
+                    var p = perRiga[k];
+                    p.top = Math.min(p.top, q.top); p.bottom = Math.max(p.bottom, q.bottom);
+                    p.left = Math.min(p.left, q.left); p.right = Math.max(p.right, q.right);
+                }
+            }
+            var chiavi = Object.keys(perRiga).map(Number).sort(function (a, b) { return a - b; });
+            for (var z = 0; z < chiavi.length; z++) {
+                var L = perRiga[chiavi[z]];
+                righe.push({ top: L.top + sy, height: L.bottom - L.top, left: L.left + sx, width: L.right - L.left });
+            }
+        }
+    }
+
+    function disegna(scorri) {
+        if (!attiva || !band) return;
+        if (!righe.length) { band.style.display = 'none'; return; }
+        if (idx < 0) idx = 0;
+        if (idx >= righe.length) idx = righe.length - 1;
+        var L = righe[idx];
+        var pad = 6;
+        band.style.display = 'block';
+        band.style.top = (L.top - pad / 2) + 'px';
+        band.style.height = (L.height + pad) + 'px';
+        band.style.left = (L.left - 10) + 'px';
+        band.style.width = (L.width + 20) + 'px';
+        // veli: coprono il riassuntone sopra e sotto la riga
+        var c = cont();
+        if (c && veloSu && veloGiu) {
+            var cr = c.getBoundingClientRect();
+            var cTop = cr.top + window.scrollY, cLeft = cr.left + window.scrollX;
+            var bTop = L.top - pad / 2, bBot = L.top + L.height + pad / 2;
+            veloSu.style.left = cLeft + 'px'; veloSu.style.width = cr.width + 'px';
+            veloSu.style.top = cTop + 'px'; veloSu.style.height = Math.max(0, bTop - cTop) + 'px';
+            veloGiu.style.left = cLeft + 'px'; veloGiu.style.width = cr.width + 'px';
+            veloGiu.style.top = bBot + 'px'; veloGiu.style.height = Math.max(0, cTop + cr.height - bBot) + 'px';
+        }
+        if (scorri) {
+            var y = L.top + L.height / 2;
+            var vh = window.innerHeight;
+            // tieni la riga nel terzo centrale dello schermo
+            if (y - window.scrollY < vh * 0.3 || y - window.scrollY > vh * 0.7) {
+                window.scrollTo({ top: y - vh / 2, behavior: 'smooth' });
+            }
+        }
+    }
+
+    // ---- prima riga visibile come punto di partenza ----
+    function primaVisibile() {
+        var sy = window.scrollY, vh = window.innerHeight;
+        for (var i = 0; i < righe.length; i++) {
+            if (righe[i].top >= sy + 80 && righe[i].top < sy + vh * 0.6) return i;
+        }
+        return 0;
+    }
+
+    function accendi() {
+        if (!desktop() || !document.body.classList.contains('ums-facile')) return;
+        misura();
+        if (!righe.length) return;
+        attiva = true; idx = primaVisibile();
+        document.body.classList.add('ums-riga-on');
+        btn.setAttribute('aria-pressed', 'true');
+        disegna(true);
+    }
+    function spegni() {
+        attiva = false; idx = -1;
+        document.body.classList.remove('ums-riga-on');
+        if (btn) btn.setAttribute('aria-pressed', 'false');
+        if (band) band.style.display = 'none';
+    }
+
+    // ---- tutorial ----
+    function apriTutorial(poiAccendi) {
+        if (!tut) return;
+        tut.classList.add('aperto');
+        tut.dataset.poi = poiAccendi ? '1' : '0';
+        var ok = tut.querySelector('.ums-riga-tut-ok'); if (ok) ok.focus();
+    }
+    function chiudiTutorial() {
+        if (!tut) return;
+        tut.classList.remove('aperto');
+        try { localStorage.setItem(TUT_KEY, '1'); } catch (e) {}
+        if (tut.dataset.poi === '1') accendi();
+        tut.dataset.poi = '0';
+    }
+
+    function costruisci() {
+        var c = cont(); if (!c || !c.parentNode) return;
+        if (document.getElementById('ums-riga-btn')) return;
+
+        btn = document.createElement('button');
+        btn.id = 'ums-riga-btn'; btn.type = 'button';
+        btn.setAttribute('aria-pressed', 'false');
+        btn.innerHTML = '<span>Riga di lettura</span><span class="ums-riga-help" title="Come funziona" aria-label="Come funziona">?</span>';
+        c.parentNode.insertBefore(btn, c);
+
+        band = document.createElement('div');
+        band.id = 'ums-riga-band'; band.setAttribute('aria-hidden', 'true');
+        document.body.appendChild(band);
+        veloSu = document.createElement('div'); veloSu.className = 'ums-riga-velo'; veloSu.setAttribute('aria-hidden', 'true');
+        veloGiu = document.createElement('div'); veloGiu.className = 'ums-riga-velo'; veloGiu.setAttribute('aria-hidden', 'true');
+        document.body.appendChild(veloSu); document.body.appendChild(veloGiu);
+
+        tut = document.createElement('div');
+        tut.id = 'ums-riga-tut'; tut.setAttribute('role', 'dialog'); tut.setAttribute('aria-modal', 'true');
+        tut.innerHTML =
+            '<div class="ums-riga-tut-card">' +
+            '<h3>La riga di lettura</h3>' +
+            '<ol>' +
+            '<li>Una riga resta chiara, dentro una cornice. Le altre si fanno più leggere. Quella chiara è la riga che stai leggendo.</li>' +
+            '<li>Premi <kbd>&darr;</kbd> per andare alla riga sotto.</li>' +
+            '<li>Premi <kbd>&uarr;</kbd> per tornare alla riga sopra.</li>' +
+            '<li>Premi <kbd>Esc</kbd> per spegnere la riga.</li>' +
+            '<li>Puoi spegnerla anche con il pulsante, quando vuoi.</li>' +
+            '</ol>' +
+            '<button type="button" class="ums-riga-tut-ok">Ho capito</button>' +
+            '</div>';
+        document.body.appendChild(tut);
+
+        btn.addEventListener('click', function (e) {
+            var help = e.target.closest('.ums-riga-help');
+            if (help) { apriTutorial(false); return; }
+            if (attiva) { spegni(); return; }
+            var visto = false;
+            try { visto = localStorage.getItem(TUT_KEY) === '1'; } catch (err) {}
+            if (!visto) apriTutorial(true); else accendi();
+        });
+        tut.querySelector('.ums-riga-tut-ok').addEventListener('click', chiudiTutorial);
+        tut.addEventListener('click', function (e) { if (e.target === tut) chiudiTutorial(); });
+
+        // frecce: solo con riga accesa e fuori da campi di testo
+        document.addEventListener('keydown', function (e) {
+            if (tut && tut.classList.contains('aperto')) {
+                if (e.key === 'Escape' || e.key === 'Enter') { e.preventDefault(); chiudiTutorial(); }
+                return;
+            }
+            if (!attiva) return;
+            var t = e.target;
+            if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+            if (e.key === 'ArrowDown') { e.preventDefault(); idx++; disegna(true); }
+            else if (e.key === 'ArrowUp') { e.preventDefault(); idx--; disegna(true); }
+            else if (e.key === 'Escape') { spegni(); }
+        });
+
+        // il testo cambia forma? ricalcola e resta sulla stessa riga
+        var rimisura = function () {
+            clearTimeout(window.__umsRigaT);
+            window.__umsRigaT = setTimeout(function () {
+                if (!attiva) return;
+                if (!desktop() || !document.body.classList.contains('ums-facile')) { spegni(); return; }
+                var k = idx; misura(); idx = k; disegna(false);
+            }, 150);
+        };
+        window.addEventListener('resize', rimisura);
+        if ('MutationObserver' in window) {
+            new MutationObserver(rimisura).observe(c, { childList: true, subtree: true, attributes: true });
+            // "Aa" spento → la riga si spegne da sola
+            new MutationObserver(function () {
+                if (!document.body.classList.contains('ums-facile') && attiva) spegni();
+            }).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+        }
+        // cambio vista (Solo testo / Testo+slide...) → rimisura
+        document.addEventListener('click', function (e) {
+            if (e.target.closest && e.target.closest('button')) rimisura();
+        });
+    }
+
+    function avvia() {
+        costruisci();
+        if (!document.getElementById('ums-riga-btn')) setTimeout(costruisci, 1500); // container tardivo
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', avvia);
+    else avvia();
+})();
