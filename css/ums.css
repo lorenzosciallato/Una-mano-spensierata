@@ -3616,3 +3616,155 @@ header #custom-lang-selector{ pointer-events: auto; }
             .ums404-nav{ gap: 8px; margin-top: 1.2rem; }
             .ums404-nav a{ flex: 1 1 0; min-width: 0; padding: .6rem .5rem; font-size: .9rem; }
         }
+
+/* ====================================================================
+   SEZIONE 17 — LETTURA FACILITATA ("Leggi meglio", pensata per DSA)
+   Tutto vive sotto body.ums-facile: a modalità spenta queste regole
+   non esistono e il sito resta identico. Il pulsante è #ums-facile-btn,
+   creato da ums.js (SEZIONE 17) sopra il pulsante notte.
+   ==================================================================== */
+
+/* ---- il pulsante "Aa" ---- */
+#ums-facile-btn{
+    position: fixed; bottom: 84px; right: 24px;
+    z-index: 9999998;
+    width: 52px; height: 52px; border-radius: 50%;
+    border: 1px solid var(--dust);
+    background: #fff; color: var(--ink);
+    font-family: var(--font-body); font-weight: 700; font-size: 1.05rem;
+    letter-spacing: -0.02em; line-height: 1;
+    cursor: pointer;
+    box-shadow: var(--shadow-lift);
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.2s, background 0.3s, border-color 0.3s;
+}
+#ums-facile-btn:hover{ transform: scale(1.08); border-color: var(--gold); }
+#ums-facile-btn:active{ transform: scale(0.96); }
+#ums-facile-btn[aria-pressed="true"]{
+    background: var(--gold); color: var(--night); border-color: var(--gold);
+}
+.night-mode #ums-facile-btn{ background: #1E212A; color: #E8E4DC; border-color: #2C3140; }
+.night-mode #ums-facile-btn[aria-pressed="true"]{ background: var(--gold); color: var(--night); }
+@media (max-width: 900px){
+    #ums-facile-btn{ bottom: calc(138px + env(safe-area-inset-bottom, 0px)); }
+}
+
+/* ---- il testo ---- */
+body.ums-facile{ --font-facile: 'Atkinson Hyperlegible', 'DM Sans', system-ui, sans-serif; }
+
+/* carattere più leggibile su tutto il contenuto della lezione
+   (il marchio nella barra in alto resta com'è) */
+body.ums-facile .content-card,
+body.ums-facile .content-card *:not(svg):not(use),
+body.ums-facile .modal-paper, body.ums-facile .modal-paper *,
+body.ums-facile .fc-mobile-content, body.ums-facile .fc-mobile-content *,
+body.ums-facile .flashcard-front h2, body.ums-facile .flashcard-back p{
+    font-family: var(--font-facile) !important;
+}
+
+/* corpo del testo: più grande, più arioso, righe corte, mai giustificato */
+body.ums-facile .content-card p,
+body.ums-facile .content-card li,
+body.ums-facile .content-card .cornell-box,
+body.ums-facile .content-card .obj-box,
+body.ums-facile .content-card .quiz-question,
+body.ums-facile .content-card .quiz-option,
+body.ums-facile .content-card .factor-card strong,
+body.ums-facile .content-card .factor-card small,
+body.ums-facile .modal-paper p, body.ums-facile .modal-paper li,
+body.ums-facile .fc-mobile-content, body.ums-facile .fc-mobile-content p{
+    font-size: 1.15rem !important;
+    line-height: 1.9 !important;
+    letter-spacing: 0.035em !important;
+    word-spacing: 0.14em !important;
+    text-align: left !important;
+    hyphens: none !important; -webkit-hyphens: none !important;
+}
+body.ums-facile .content-card p,
+body.ums-facile .content-card li{ max-width: 65ch; }
+body.ums-facile .content-card p{ margin-bottom: 1.4em !important; }
+body.ums-facile .content-card li{ margin-bottom: 0.6em !important; }
+body.ums-facile .content-card h3{ line-height: 1.45 !important; letter-spacing: 0.02em !important; }
+/* il riassuntone ha già un limite di larghezza (68ch): lo stringiamo un filo */
+body.ums-facile #dyn-riassuntone-container{ max-width: 62ch; }
+/* troppi grassetti nel corpo affaticano: li lasciamo appena marcati */
+body.ums-facile .content-card p strong{ font-weight: 600; }
+
+/* sfondo crema al posto del bianco (solo di giorno) */
+body.ums-facile:not(.night-mode) .content-card,
+body.ums-facile:not(.night-mode) .quiz-option,
+body.ums-facile:not(.night-mode) .modal-paper,
+body.ums-facile:not(.night-mode) .fc-mobile-content{ background: #FBF6E9 !important; }
+body.ums-facile:not(.night-mode) .content-card p,
+body.ums-facile:not(.night-mode) .content-card li{ color: #2B2A28; }
+
+/* ---- DRITTI AL SODO rifatte: niente immagine, niente giro 3D.
+   La domanda sta sopra, la risposta compare sotto quando si "gira". ---- */
+body.ums-facile .flashcard-wrapper{
+    height: auto !important; perspective: none;
+}
+body.ums-facile .flashcard-inner{
+    transform: none !important; transform-style: flat;
+    transition: none; box-shadow: none;
+    background: transparent;
+}
+body.ums-facile .flashcard-front,
+body.ums-facile .flashcard-back{
+    position: static !important; height: auto !important;
+    transform: none !important; backface-visibility: visible;
+    display: block; padding: 0; overflow: visible;
+    background: transparent !important;
+    justify-content: flex-start;
+}
+body.ums-facile .flashcard-front::before,
+body.ums-facile .flashcard-back::before{ display: none !important; }
+body.ums-facile .flashcard-front h2,
+body.ums-facile .flashcard-back p{
+    box-shadow: none; width: 100%; max-width: none !important;
+    border-radius: var(--r-lg);
+    text-align: left !important;
+    max-height: none !important; overflow: visible !important;
+}
+body.ums-facile .flashcard-front h2{
+    background: var(--navy); color: #fff;
+    font-size: 1.35rem !important; font-weight: 700;
+    line-height: 1.55 !important; letter-spacing: 0.02em;
+    padding: 1.4rem 1.6rem;
+    margin: 0 !important;
+}
+body.ums-facile .flashcard-front h2::before{
+    content: "Domanda"; display: block;
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--gold-lt); margin-bottom: 0.5rem;
+}
+body.ums-facile .flashcard-back{ display: none; }
+body.ums-facile .flashcard-wrapper.flipped .flashcard-back{ display: block; }
+body.ums-facile .flashcard-back p{
+    background: #FBF6E9; color: #2B2A28;
+    border: 1px solid var(--gold-lt); border-top: 4px solid var(--gold);
+    border-radius: 0 0 var(--r-lg) var(--r-lg);
+    font-size: 1.15rem !important; line-height: 1.9 !important;
+    letter-spacing: 0.035em !important; word-spacing: 0.14em !important;
+    padding: 1.4rem 1.6rem; margin-top: -6px;
+}
+body.ums-facile .flashcard-back p::before{
+    content: "Risposta"; display: block;
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--gold-dk); margin-bottom: 0.5rem;
+}
+/* schermata di partenza: stessa carta, ma non si "gira" */
+body.ums-facile #fc-start-screen .flashcard-front h2{ text-align: center !important; }
+body.ums-facile #fc-start-screen .flashcard-front h2::before{ display: none; }
+/* su telefono il pulsante "gira" non sta più appeso in fondo alla carta */
+@media (max-width: 900px){
+    body.ums-facile .flashcard-front h2{ font-size: 1.15rem !important; margin: 0 !important; }
+    body.ums-facile .btn-flip-mobile{
+        position: static !important; display: block !important;
+        margin: 14px auto 0; width: 100%;
+    }
+    /* la risposta non deve sovrapporsi al pulsante "gira" */
+    body.ums-facile .flashcard-back p{ margin-top: 12px; border-radius: var(--r-lg); }
+}
+/* notte: carta scura, niente crema */
+body.ums-facile.night-mode .flashcard-back p{ background: #1C1F27; color: #E8E4DC; border-color: #2C3140; border-top-color: var(--gold); }
+body.ums-facile.night-mode .flashcard-front h2{ background: #0F1117; color: #fff; }
