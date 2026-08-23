@@ -4788,105 +4788,74 @@ if (!fileDaCaricare) {
 
 
 // ====================================================================
-// SEZIONE 21 — NAVIGAZIONE DA TASTIERA (Tab)
-// • Al PRIMO Tab della pagina: apre il pannello "Inizia", apre il primo
-//   accordion e mette il fuoco sul suo titolo (col contorno oro visibile).
-// • Il pop-up con le istruzioni compare UNA VOLTA SOLA IN ASSOLUTO
-//   (ricordato in localStorage): dopo, mai più — così non intralcia.
-// • Invio/Spazio sul titolo apre/chiude la sezione.
-// • Mentre navighi da tastiera la scatola del riassuntone non scorre più
-//   per conto suo: ↑↓ scorrono la pagina, senza conflitti.
-// Additivo: non tocca le funzioni esistenti.
+// SEZIONE 21 — NAVIGAZIONE DA TASTIERA (standard, robusta)
+// Problema risolto: prima il Tab entrava DENTRO le sezioni chiuse (Copia,
+// note, Stampa...), servivano decine di Tab e Invio apriva "tutt'altro".
+// Ora: ciò che sta in una sezione CHIUSA è tolto dal giro del Tab. Il Tab
+// salta di titolo in titolo (01, 02, 03...); Invio/Spazio apre/chiude quella
+// sezione; quando è aperta il suo contenuto entra nel giro; Maiusc+Tab
+// torna indietro (comportamento nativo del browser). Niente scorciatoie
+// strane. Additivo: non cambia le funzioni esistenti.
 // ====================================================================
 (function () {
     var TUT_KEY = 'ums_tastiera_tutorial_visto';
-    var pop = null, popTimer = null;
-    var modoTastiera = false;
     var primoTab = true;
 
-    // ---- pop-up istruzioni (una volta sola in assoluto) ----
-    function giaVisto() { try { return localStorage.getItem(TUT_KEY) === '1'; } catch (e) { return false; } }
-    function segnaVisto() { try { localStorage.setItem(TUT_KEY, '1'); } catch (e) {} }
+    // ---- 1) togli dal Tab tutto ciò che è dentro una sezione CHIUSA ----
+    // (accordion-content senza .active, e master-content senza .active).
+    // Si ripassa a ogni apertura/chiusura, così il giro del Tab resta pulito.
+    function elementiFocalizzabili(root) {
+        return root.querySelectorAll(
+            'a[href], button, input, textarea, select, [tabindex], [contenteditable="true"]'
+        );
+    }
+    function aggiornaTabIndex() {
+        // pannello "Inizia": stato logico dal bottone (aria-expanded), non
+        // dalla classe .active che cambia a metà animazione
+        var masterBtn = document.getElementById('master-toggle-btn');
+        var masterChiuso = masterBtn && masterBtn.getAttribute('aria-expanded') !== 'true';
 
-    function mostraPopUnaVolta() {
-        if (giaVisto()) return;
-        segnaVisto();
-        pop = document.createElement('div');
-        pop.id = 'ums-tasti-pop';
-        pop.setAttribute('role', 'dialog');
-        pop.setAttribute('aria-label', 'Come navigare con la tastiera');
-        pop.innerHTML =
-            '<div class="ums-tasti-card">' +
-                '<p class="ums-tasti-tit">Navigare con la tastiera</p>' +
-                '<ul>' +
-                    '<li><kbd>Tab</kbd> passa da un elemento al successivo.</li>' +
-                    '<li><kbd>Invio</kbd> o <kbd>Spazio</kbd> apre una sezione o gira una carta.</li>' +
-                    '<li><kbd>&uarr;</kbd> <kbd>&darr;</kbd> scorrono la pagina.</li>' +
-                    '<li><kbd>Esc</kbd> chiude i pop-up.</li>' +
-                '</ul>' +
-                '<button type="button" class="ums-tasti-ok">Ho capito</button>' +
-            '</div>';
-        document.body.appendChild(pop);
-        pop.classList.add('su');
-        var ok = pop.querySelector('.ums-tasti-ok');
-        ok.addEventListener('click', chiudiPop);
-        // Esc chiude (gestito sotto). Il fuoco NON va sul pulsante: resta
-        // sull'accordion, così puoi continuare col Tab senza intoppi.
-    }
-    function chiudiPop() {
-        if (pop) { pop.classList.remove('su'); if (pop.parentNode) pop.parentNode.removeChild(pop); pop = null; }
-    }
+        document.querySelectorAll('.accordion-content').forEach(function (panel) {
+            var chiuso = !panel.classList.contains('active');
+            elementiFocalizzabili(panel).forEach(function (el) {
+                if (chiuso) {
+                    if (el.getAttribute('data-ums-ti') === null) {
+                        // salvo l'eventuale tabindex originale una volta sola
+                        el.setAttribute('data-ums-ti', el.hasAttribute('tabindex') ? el.getAttribute('tabindex') : 'auto');
+                    }
+                    el.setAttribute('tabindex', '-1');
+                } else {
+                    var orig = el.getAttribute('data-ums-ti');
+                    if (orig !== null) {
+                        if (orig === 'auto') el.removeAttribute('tabindex');
+                        else el.setAttribute('tabindex', orig);
+                        el.removeAttribute('data-ums-ti');
+                    }
+                }
+            });
+        });
 
-    // ---- modo tastiera: la scatola del riassuntone smette di scorrere ----
-    function entraTastiera() {
-        if (modoTastiera) return;
-        modoTastiera = true;
-        document.body.classList.add('ums-kbd');
-    }
-    function esciTastiera() {
-        if (!modoTastiera) return;
-        modoTastiera = false;
-        document.body.classList.remove('ums-kbd');
+        // se il pannello Inizia è chiuso, anche i titoli di sezione sono
+        // fuori vista → li tolgo dal Tab; quando è aperto tornano
+        document.querySelectorAll('.accordion-header').forEach(function (h) {
+            if (masterChiuso) h.setAttribute('tabindex', '-1');
+            else h.removeAttribute('tabindex');
+        });
     }
 
-    // ---- al PRIMO Tab: apri "Inizia" + primo accordion + fuoco sul titolo ----
-    function apriPrimoAccordion() {
-        var master = document.getElementById('master-toggle-btn');
-        var content = document.getElementById('master-content');
-        // apri il pannello "Inizia" se è chiuso
-        if (master && content && !content.classList.contains('active') &&
-            master.getAttribute('aria-expanded') !== 'true') {
-            master.click();
-        }
-        // apri il primo accordion se è chiuso, poi metti il fuoco sul suo titolo
-        setTimeout(function () {
-            var h = document.querySelector('.accordion-header');
-            if (!h) return;
-            var content2 = h.closest('.ums-acc-h') ? h.closest('.ums-acc-h').nextElementSibling : h.nextElementSibling;
-            if (content2 && !content2.classList.contains('active')) h.click();
-            try { h.focus(); } catch (e) {}
-        }, 260);
+    // ripassa dopo ogni clic (apre/chiude sezioni) e all'avvio
+    document.addEventListener('click', function () { setTimeout(aggiornaTabIndex, 60); }, true);
+    if ('MutationObserver' in window) {
+        var mc = document.getElementById('master-content') || document.body;
+        new MutationObserver(function () { clearTimeout(window.__umsTi); window.__umsTi = setTimeout(aggiornaTabIndex, 60); })
+            .observe(document.body, { attributes: true, subtree: true, attributeFilter: ['class'] });
     }
+    setTimeout(aggiornaTabIndex, 800);
+    setTimeout(aggiornaTabIndex, 2000);
 
-    document.addEventListener('keydown', function (e) {
-        if (e.key === 'Tab') {
-            entraTastiera();
-            if (primoTab) {
-                primoTab = false;
-                mostraPopUnaVolta();
-                apriPrimoAccordion();
-                e.preventDefault();          // il primo Tab "atterra" sul primo accordion, non altrove
-                return;
-            }
-        } else if (e.key === 'Escape') {
-            chiudiPop();
-        }
-    }, true);
-    document.addEventListener('mousedown', function () { chiudiPop(); esciTastiera(); primoTab = true; }, true);
-
-    // ---- accordion / master: apertura con Invio o Spazio quando hanno il fuoco ----
-    // (i titoli sono già <button>: Invio funziona da solo; aggiungo Spazio,
-    //  che di default scrollerebbe la pagina.)
+    // ---- 2) Invio/Spazio sul titolo apre/chiude la sezione ----
+    // (i titoli sono <button>: Invio è nativo; aggiungo Spazio, che di
+    //  default scrollerebbe, e prevengo il doppio-toggle.)
     document.addEventListener('keydown', function (e) {
         if (e.key !== ' ' && e.key !== 'Spacebar') return;
         var h = e.target && e.target.closest ? e.target.closest('.accordion-header, .master-header') : null;
@@ -4895,7 +4864,62 @@ if (!fileDaCaricare) {
         h.click();
     }, true);
 
-    // ---- Dritti al Sodo: carta girabile da tastiera + "La so"/"Ripasso" già button ----
+    // ---- 3) pop-up istruzioni UNA VOLTA SOLA + primo Tab apre la sezione 01 ----
+    function giaVisto() { try { return localStorage.getItem(TUT_KEY) === '1'; } catch (e) { return false; } }
+    function segnaVisto() { try { localStorage.setItem(TUT_KEY, '1'); } catch (e) {} }
+    function mostraPopUnaVolta() {
+        if (giaVisto()) return;
+        segnaVisto();
+        var pop = document.createElement('div');
+        pop.id = 'ums-tasti-pop';
+        pop.setAttribute('role', 'dialog');
+        pop.setAttribute('aria-label', 'Come navigare con la tastiera');
+        pop.innerHTML =
+            '<div class="ums-tasti-card">' +
+                '<p class="ums-tasti-tit">Navigare con la tastiera</p>' +
+                '<ul>' +
+                    '<li><kbd>Tab</kbd> va alla sezione successiva. <kbd>Maiusc</kbd>+<kbd>Tab</kbd> torna indietro.</li>' +
+                    '<li><kbd>Invio</kbd> o <kbd>Spazio</kbd> apre o chiude la sezione.</li>' +
+                    '<li><kbd>&uarr;</kbd> <kbd>&darr;</kbd> scorrono la pagina.</li>' +
+                    '<li><kbd>Esc</kbd> chiude i pop-up.</li>' +
+                '</ul>' +
+                '<button type="button" class="ums-tasti-ok">Ho capito</button>' +
+            '</div>';
+        document.body.appendChild(pop);
+        pop.classList.add('su');
+        pop.querySelector('.ums-tasti-ok').addEventListener('click', function () {
+            pop.classList.remove('su'); if (pop.parentNode) pop.parentNode.removeChild(pop);
+        });
+        var suEsc = function (ev) { if (ev.key === 'Escape') { if (pop.parentNode) pop.parentNode.removeChild(pop); document.removeEventListener('keydown', suEsc); } };
+        document.addEventListener('keydown', suEsc);
+    }
+    function apriPrimaSezione() {
+        var master = document.getElementById('master-toggle-btn');
+        var content = document.getElementById('master-content');
+        if (master && content && !content.classList.contains('active') &&
+            master.getAttribute('aria-expanded') !== 'true') {
+            master.click();
+        }
+        setTimeout(function () {
+            aggiornaTabIndex();
+            var h = document.querySelector('.accordion-header');
+            if (!h) return;
+            var panel = h.closest('.ums-acc-h') ? h.closest('.ums-acc-h').nextElementSibling : h.nextElementSibling;
+            if (panel && !panel.classList.contains('active')) h.click();
+            setTimeout(function () { aggiornaTabIndex(); try { h.focus(); } catch (e) {} }, 120);
+        }, 260);
+    }
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Tab' && primoTab) {
+            primoTab = false;
+            mostraPopUnaVolta();
+            apriPrimaSezione();
+            e.preventDefault();     // il primo Tab atterra sulla sezione 01
+        }
+    }, true);
+    document.addEventListener('mousedown', function () { primoTab = true; }, true);
+
+    // ---- 4) Dritti al Sodo: carta girabile da tastiera ----
     function preparaCarta() {
         var deck = document.getElementById('flashcard-deck');
         if (!deck || deck.dataset.umsKbd === '1') return;
@@ -4915,9 +4939,5 @@ if (!fileDaCaricare) {
     document.addEventListener('click', function (e) {
         if (e.target && e.target.closest && e.target.closest('.btn-start')) setTimeout(preparaCarta, 300);
     });
-    if ('MutationObserver' in window) {
-        var g = document.getElementById('fc-game-screen');
-        if (g) new MutationObserver(preparaCarta).observe(g, { attributes: true, attributeFilter: ['style'] });
-    }
     setTimeout(preparaCarta, 2000);
 })();
