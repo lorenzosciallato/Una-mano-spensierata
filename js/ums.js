@@ -4788,18 +4788,29 @@ if (!fileDaCaricare) {
 
 
 // ====================================================================
-// SEZIONE 21 — NAVIGAZIONE DA TASTIERA (Tab): pop-up istruzioni +
-// accordion con Invio/Spazio + scatola del riassuntone tolta mentre si
-// naviga da tastiera (così ↑↓ scorrono la PAGINA, senza conflitti).
+// SEZIONE 21 — NAVIGAZIONE DA TASTIERA (Tab)
+// • Al PRIMO Tab della pagina: apre il pannello "Inizia", apre il primo
+//   accordion e mette il fuoco sul suo titolo (col contorno oro visibile).
+// • Il pop-up con le istruzioni compare UNA VOLTA SOLA IN ASSOLUTO
+//   (ricordato in localStorage): dopo, mai più — così non intralcia.
+// • Invio/Spazio sul titolo apre/chiude la sezione.
+// • Mentre navighi da tastiera la scatola del riassuntone non scorre più
+//   per conto suo: ↑↓ scorrono la pagina, senza conflitti.
 // Additivo: non tocca le funzioni esistenti.
 // ====================================================================
 (function () {
+    var TUT_KEY = 'ums_tastiera_tutorial_visto';
     var pop = null, popTimer = null;
     var modoTastiera = false;
+    var primoTab = true;
 
-    // ---- pop-up istruzioni: compare a OGNI Tab, sparisce appena navighi ----
-    function creaPop() {
-        if (pop) return pop;
+    // ---- pop-up istruzioni (una volta sola in assoluto) ----
+    function giaVisto() { try { return localStorage.getItem(TUT_KEY) === '1'; } catch (e) { return false; } }
+    function segnaVisto() { try { localStorage.setItem(TUT_KEY, '1'); } catch (e) {} }
+
+    function mostraPopUnaVolta() {
+        if (giaVisto()) return;
+        segnaVisto();
         pop = document.createElement('div');
         pop.id = 'ums-tasti-pop';
         pop.setAttribute('role', 'dialog');
@@ -4811,22 +4822,22 @@ if (!fileDaCaricare) {
                     '<li><kbd>Tab</kbd> passa da un elemento al successivo.</li>' +
                     '<li><kbd>Invio</kbd> o <kbd>Spazio</kbd> apre una sezione o gira una carta.</li>' +
                     '<li><kbd>&uarr;</kbd> <kbd>&darr;</kbd> scorrono la pagina.</li>' +
-                    '<li><kbd>Esc</kbd> chiude questa finestra e i pop-up.</li>' +
+                    '<li><kbd>Esc</kbd> chiude i pop-up.</li>' +
                 '</ul>' +
+                '<button type="button" class="ums-tasti-ok">Ho capito</button>' +
             '</div>';
         document.body.appendChild(pop);
-        return pop;
-    }
-    function mostraPop() {
-        creaPop();
         pop.classList.add('su');
-        clearTimeout(popTimer);
-        popTimer = setTimeout(nascondiPop, 6000);   // sparisce da sola dopo un po'
+        var ok = pop.querySelector('.ums-tasti-ok');
+        ok.addEventListener('click', chiudiPop);
+        // Esc chiude (gestito sotto). Il fuoco NON va sul pulsante: resta
+        // sull'accordion, così puoi continuare col Tab senza intoppi.
     }
-    function nascondiPop() { if (pop) pop.classList.remove('su'); }
+    function chiudiPop() {
+        if (pop) { pop.classList.remove('su'); if (pop.parentNode) pop.parentNode.removeChild(pop); pop = null; }
+    }
 
-    // entra in "modo tastiera" al primo Tab: da qui in poi il riassuntone non
-    // scorre più per conto suo (↑↓ = pagina). Torna al mouse al primo clic.
+    // ---- modo tastiera: la scatola del riassuntone smette di scorrere ----
     function entraTastiera() {
         if (modoTastiera) return;
         modoTastiera = true;
@@ -4838,16 +4849,53 @@ if (!fileDaCaricare) {
         document.body.classList.remove('ums-kbd');
     }
 
-    document.addEventListener('keydown', function (e) {
-        if (e.key === 'Tab') { entraTastiera(); mostraPop(); }
-        else if (e.key === 'Escape') { nascondiPop(); }
-        else if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') { nascondiPop(); }
-    }, true);
-    document.addEventListener('mousedown', function () { nascondiPop(); esciTastiera(); }, true);
+    // ---- al PRIMO Tab: apri "Inizia" + primo accordion + fuoco sul titolo ----
+    function apriPrimoAccordion() {
+        var master = document.getElementById('master-toggle-btn');
+        var content = document.getElementById('master-content');
+        // apri il pannello "Inizia" se è chiuso
+        if (master && content && !content.classList.contains('active') &&
+            master.getAttribute('aria-expanded') !== 'true') {
+            master.click();
+        }
+        // apri il primo accordion se è chiuso, poi metti il fuoco sul suo titolo
+        setTimeout(function () {
+            var h = document.querySelector('.accordion-header');
+            if (!h) return;
+            var content2 = h.closest('.ums-acc-h') ? h.closest('.ums-acc-h').nextElementSibling : h.nextElementSibling;
+            if (content2 && !content2.classList.contains('active')) h.click();
+            try { h.focus(); } catch (e) {}
+        }, 260);
+    }
 
-    // ---- Dritti al Sodo: la carta si raggiunge col Tab e si gira con
-    //      Invio / Spazio (i pulsanti "La so"/"Ripasso dopo" sono già
-    //      <button>, quindi già raggiungibili e premibili col Tab+Invio) ----
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Tab') {
+            entraTastiera();
+            if (primoTab) {
+                primoTab = false;
+                mostraPopUnaVolta();
+                apriPrimoAccordion();
+                e.preventDefault();          // il primo Tab "atterra" sul primo accordion, non altrove
+                return;
+            }
+        } else if (e.key === 'Escape') {
+            chiudiPop();
+        }
+    }, true);
+    document.addEventListener('mousedown', function () { chiudiPop(); esciTastiera(); primoTab = true; }, true);
+
+    // ---- accordion / master: apertura con Invio o Spazio quando hanno il fuoco ----
+    // (i titoli sono già <button>: Invio funziona da solo; aggiungo Spazio,
+    //  che di default scrollerebbe la pagina.)
+    document.addEventListener('keydown', function (e) {
+        if (e.key !== ' ' && e.key !== 'Spacebar') return;
+        var h = e.target && e.target.closest ? e.target.closest('.accordion-header, .master-header') : null;
+        if (!h) return;
+        e.preventDefault();
+        h.click();
+    }, true);
+
+    // ---- Dritti al Sodo: carta girabile da tastiera + "La so"/"Ripasso" già button ----
     function preparaCarta() {
         var deck = document.getElementById('flashcard-deck');
         if (!deck || deck.dataset.umsKbd === '1') return;
@@ -4864,7 +4912,6 @@ if (!fileDaCaricare) {
             }
         });
     }
-    // il deck viene mostrato solo dopo "Inizia il Ripasso": lo preparo al volo
     document.addEventListener('click', function (e) {
         if (e.target && e.target.closest && e.target.closest('.btn-start')) setTimeout(preparaCarta, 300);
     });
@@ -4873,15 +4920,4 @@ if (!fileDaCaricare) {
         if (g) new MutationObserver(preparaCarta).observe(g, { attributes: true, attributeFilter: ['style'] });
     }
     setTimeout(preparaCarta, 2000);
-
-    // ---- accordion: apertura con Invio / Spazio quando il titolo ha il fuoco ----
-    // (i titoli sono già <button>: Invio funziona da solo; aggiungo Spazio,
-    // che di default farebbe scorrere la pagina.)
-    document.addEventListener('keydown', function (e) {
-        if (e.key !== ' ' && e.key !== 'Spacebar') return;
-        var h = e.target && e.target.closest ? e.target.closest('.accordion-header, .master-header') : null;
-        if (!h) return;
-        e.preventDefault();
-        h.click();
-    }, true);
 })();
