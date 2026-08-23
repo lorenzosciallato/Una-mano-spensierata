@@ -2344,6 +2344,11 @@
 .night-mode .ums-stampe-azioni button{ background:#262933; color:#E8E4DC; }
 .night-mode .ums-stampe-azioni .primario{ background:var(--gold,#C8A96E); color:#14161c; }
 .ums-stampe-stato{ font-size:.9rem; margin:0 0 12px; opacity:.8; }
+.ums-stampe-modo{ display:flex; flex-direction:column; gap:8px; margin:0 0 14px;
+  padding:12px 14px; border:1px solid var(--dust,#E5DFD3); border-radius:12px; background:rgba(200,169,110,.06); }
+.night-mode .ums-stampe-modo{ border-color:#2C3140; background:rgba(200,169,110,.08); }
+.ums-stampe-opt{ display:flex; align-items:flex-start; gap:10px; font-size:.88rem; line-height:1.45; cursor:pointer; }
+.ums-stampe-opt input{ margin-top:3px; width:17px; height:17px; accent-color:var(--gold,#C8A96E); flex:0 0 auto; }
 </style>
 <script id="ums-stampe-script">
 (function(){
@@ -2384,6 +2389,10 @@
         '<button type="button" class="tutte">Seleziona tutte</button>'+
         '<button type="button" class="nessuna">Deseleziona tutte</button>'+
       '</div>'+
+      '<div class="ums-stampe-modo">'+
+        '<label class="ums-stampe-opt"><input type="radio" name="ums-lettura" value="standard" checked> <span><b>Lettura standard</b> \u2014 compatta, paragrafi distanziati (meno pagine).</span></label>'+
+        '<label class="ums-stampe-opt"><input type="radio" name="ums-lettura" value="facile"> <span><b>Lettura facilitata</b> \u2014 carattere pi\u00f9 grande e righe corte, per chi fa fatica a leggere <i>(consuma pi\u00f9 pagine)</i>.</span></label>'+
+      '</div>'+
       '<p class="ums-stampe-stato"></p>'+
       '<div class="ums-stampe-lista"></div>'+
       '<div class="ums-stampe-azioni">'+
@@ -2411,6 +2420,8 @@
       nota.innerHTML='Scegli le lezioni e stampa le mappe mentali in un colpo, a colori. Una lezione per pagina.';
     }
     ov.querySelector('.primario').textContent = 'Stampa';
+    var modoBox = ov.querySelector('.ums-stampe-modo');
+    if(modoBox) modoBox.style.display = (modo==='riass') ? 'flex' : 'none';
   }
   function segna(v){
     if(!lez) return;
@@ -2479,19 +2490,46 @@
       '.mp{display:flex;align-items:center;justify-content:center;min-height:150mm}'+
       '.mp svg{max-width:100%;max-height:170mm;height:auto}';
   }
+  // spaziatura per la lettura STANDARD: paragrafi ben distanziati, così le
+  // schede stampate non sono un muro (era il problema segnalato)
+  function cssStandard(){
+    return 'p{margin:0 0 .85rem;line-height:1.6}'+
+      'h3{margin:1.5rem 0 .6rem}'+
+      '.cornell-box{margin:1.1rem 0}';
+  }
+  // lettura FACILITATA: come la modalità "Aa" del sito — carattere più
+  // grande, righe corte, più aria fra righe e paragrafi. Consuma più pagine.
+  function cssFacile(){
+    return 'body{font-size:12.8pt;line-height:1.85;letter-spacing:.01em}'+
+      'p{margin:0 0 1.15rem;max-width:34em;text-align:left;word-spacing:.06em}'+
+      'h3{font-size:1.35rem;line-height:1.4;margin:1.7rem 0 .7rem}'+
+      '.lez-head h1{font-size:1.7rem}'+
+      '.cornell-box{margin:1.3rem 0;padding:1rem 1.2rem}'+
+      '.cornell-question{font-size:1.05em}';
+  }
   function testaLezione(m){
     return '<div class="lez-head"><div class="pdf-brand"><div class="wm">Una Mano <em>Spensierata</em></div>'+
       '<div class="dom">unamanospensierata.com</div></div>'+
       '<div class="et">'+esc(nomeMateria())+' \u00b7 Lezione '+m.n+'</div>'+
       '<h1>'+esc(m.titolo)+'</h1></div>';
   }
+  // spezza il testo in paragrafi ESATTAMENTE come il sito (chunkParagraphs
+  // in ums.js): ogni ~2 frasi un paragrafo → gli stessi "vuoti" della pagina
+  function chunkPar(rawText){
+    if(!rawText) return [];
+    if(typeof rawText!=='string') rawText=String(rawText);
+    if(/<[a-z][\s\S]*>/i.test(rawText)) return [rawText];
+    var count=0;
+    var marked=rawText.replace(/\.\s+/g,function(m){ count++; return (count%2===0)?'.\u0001':m; });
+    return marked.split('\u0001').map(function(s){return s.trim();}).filter(Boolean);
+  }
   function riassuntoneHTML(d){
     var macro=(d&&d.riassuntone)||[];
     if(!macro.length) return '<p class="vuoto">Questa lezione non ha un riassunto.</p>';
     return macro.map(function(mac){
       var h = mac.titolo ? '<h3>'+esc(mac.titolo)+'</h3>' : '';
-      var corpo = String(mac.testo||'').split(/\n\s*\n/).map(function(par){
-        return '<p>'+esc(par.trim())+'</p>';
+      var corpo = chunkPar(mac.testo).map(function(par){
+        return '<p>'+esc(par)+'</p>';
       }).join('');
       var cp = (mac.check_points||[]).map(function(c){
         return '<div class="cornell-box"><div class="cp-label">Check Point</div>'+
@@ -2512,6 +2550,9 @@
     });
     if(!scelte.length) return;
     var materia=nomeMateria();
+    var lettura='standard';
+    var sel=ov.querySelector('input[name="ums-lettura"]:checked');
+    if(sel) lettura=sel.value;
     var titoloDoc=(modo==='riass'?'Riassunti':'Mappe')+' \u2014 '+materia;
     var corpo='';
     if(modo==='riass'){
@@ -2528,7 +2569,8 @@
           '<p class="pie">unamanospensierata.com</p></section>';
       }).join('');
     }
-    var css=testaComune()+(modo==='mappe'?'@media print{@page{size:A4 landscape}}':'');
+    var css=testaComune()+(modo==='mappe'?'@media print{@page{size:A4 landscape}}':'')+
+      (modo==='riass' && lettura==='facile' ? cssFacile() : cssStandard());
     var w=window.open('','_blank');
     if(!w) return;
     w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>'+esc(titoloDoc)+'</title>'+
