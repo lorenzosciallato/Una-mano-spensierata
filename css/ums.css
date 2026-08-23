@@ -3699,7 +3699,9 @@ body.ums-facile #dyn-riassuntone-container{ max-width: 55ch; }
 body.ums-facile .content-card p strong{ font-weight: 600; }
 
 /* sfondo crema al posto del bianco (solo di giorno) */
-body.ums-facile:not(.night-mode) .content-card,
+/* crema SOLO sulle superfici di lettura (dentro le sezioni aperte):
+   la carta intera resta com'è, così la copertina non si vela */
+body.ums-facile:not(.night-mode) .accordion-content,
 body.ums-facile:not(.night-mode) .quiz-option,
 body.ums-facile:not(.night-mode) .modal-paper,
 body.ums-facile:not(.night-mode) .fc-mobile-content{ background: #FBF6E9 !important; }
@@ -3802,6 +3804,9 @@ body.ums-facile.night-mode #ums-para-btn[aria-pressed="true"]{ background: var(-
 body.ums-para-on #dyn-riassuntone-container > .ums-para-nascosto{ display: none !important; }
 /* in questa modalità la scatola non ha bisogno di scorrere: si allarga al paragrafo */
 body.ums-para-on #dyn-riassuntone-container{ max-height: none !important; overflow: visible !important; }
+/* mentre il lettore vocale legge, comanda lui: la sua barra basta,
+   Avanti/Indietro del paragrafo si nascondono (le frecce guidano entrambi) */
+body.ums-read-on #ums-para-nav{ display: none !important; }
 /* Avanti / Indietro sotto al paragrafo */
 #ums-para-nav{
     display: none; align-items: center; justify-content: space-between; gap: 12px;
@@ -3922,44 +3927,37 @@ input:focus-visible, textarea:focus-visible, select:focus-visible{
 .ums-acc-h{ margin: 0; padding: 0; font-size: inherit; font-weight: inherit; line-height: inherit; display: block; }
 .ums-acc-h > .accordion-header{ width: 100%; }
 
-/* ---- POP-UP "TI È D'AIUTO?" ---- */
+/* ---- POP-UP "TI È D'AIUTO?" — al centro, stessa veste del pannello sostegno ---- */
 #ums-aiuto-pop{
-    position: fixed; z-index: 9999997;
-    left: 50%; bottom: 22px; transform: translate(-50%, 24px);
-    width: min(460px, calc(100vw - 28px));
-    background: #FBF6E9; color: #2B2A28;
-    border-radius: 18px; border-top: 4px solid var(--gold);
-    box-shadow: 0 24px 60px rgba(15,17,23,0.35);
-    padding: 20px 22px 18px;
-    opacity: 0; transition: opacity .3s ease, transform .3s ease;
+    display: flex; position: fixed; inset: 0; z-index: 99999998;
+    background: rgba(15,17,23,.55);
+    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+    align-items: center; justify-content: center; padding: 24px;
+    opacity: 0; transition: opacity .25s ease;
 }
-#ums-aiuto-pop.su{ opacity: 1; transform: translate(-50%, 0); }
-.night-mode #ums-aiuto-pop{ background: #1C1F27; color: #E8E4DC; }
-.ums-aiuto-x{
-    position: absolute; top: 10px; right: 12px;
-    border: none; background: none; cursor: pointer;
-    font-size: 0.95rem; color: inherit; opacity: .6; padding: 6px;
-}
-.ums-aiuto-x:hover{ opacity: 1; }
+#ums-aiuto-pop.su{ opacity: 1; }
+#ums-aiuto-pop .ums-aiuto-card{ max-width: 420px; width: 100%; position: relative; }
+#ums-aiuto-pop.su .ums-aiuto-card{ animation: umsAiutoSu .3s ease; }
+@keyframes umsAiutoSu{ from{ transform: translateY(14px); } to{ transform: none; } }
 .ums-aiuto-titolo{
-    margin: 0 0 8px; font-family: var(--font-display, serif);
-    font-size: 1.15rem; font-weight: 700; color: var(--navy);
+    margin: 14px 0 10px; font-family: var(--font-display, serif);
+    font-size: 1.3rem; font-weight: 700; color: var(--navy); text-align: center;
 }
-.night-mode .ums-aiuto-titolo{ color: #E8E4DC; }
-.ums-aiuto-testo{ margin: 0 0 14px; font-size: 0.93rem; line-height: 1.55; }
-.ums-aiuto-azioni{ display: flex; gap: 10px; flex-wrap: wrap; }
+.night-mode .ums-aiuto-titolo{ color: #8FB4E8; }
+.ums-aiuto-azioni{ display: flex; flex-direction: column; gap: 10px; }
 .ums-aiuto-si{
-    flex: 1; min-width: 150px; padding: 12px 16px; border-radius: 50px; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+    width: 100%; padding: 14px 16px; border-radius: 50px; cursor: pointer;
     border: none; background: var(--navy); color: #fff;
-    font-family: var(--font-body); font-weight: 700; letter-spacing: 0.03em;
+    font-family: var(--font-body); font-weight: 700; font-size: 1rem; letter-spacing: 0.03em;
 }
 .ums-aiuto-si:hover{ background: var(--gold); color: var(--night); }
+.ums-aiuto-si .ums-cup{ width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .ums-aiuto-no{
-    padding: 12px 16px; border-radius: 50px; cursor: pointer;
-    border: 1px solid var(--dust); background: transparent; color: inherit;
-    font-family: var(--font-body); font-weight: 600;
+    width: 100%; padding: 12px 16px; border-radius: 50px; cursor: pointer;
+    border: 1px solid var(--dust); background: transparent; color: var(--sub);
+    font-family: var(--font-body); font-weight: 600; font-size: 0.95rem;
 }
-.night-mode .ums-aiuto-no{ border-color: #2C3140; }
-@media (max-width: 900px){
-    #ums-aiuto-pop{ bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
-}
+.ums-aiuto-no:hover{ color: var(--ink); border-color: var(--gold); }
+.night-mode .ums-aiuto-no{ border-color: #2C3140; color: #A9AFBC; }
+.night-mode .ums-aiuto-no:hover{ color: #E8E4DC; border-color: var(--gold); }
