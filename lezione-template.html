@@ -1265,6 +1265,7 @@
                 '<span><span class="tt">Solo mappa mentale</span><span class="ds">Il diagramma dei concetti della lezione.</span></span>'+
               '</button>'+
               '<label class="ums-pdf-evid"><input type="checkbox" id="ums-pdf-evid-chk"> Mantieni le mie evidenziazioni</label>'+
+              '<label class="ums-pdf-evid"><input type="checkbox" id="ums-pdf-facile-chk"> Lettura facilitata (carattere pi\u00f9 grande, righe corte \u2014 consuma pi\u00f9 pagine)</label>'+
               '<div class="ums-pdf-actions">'+
                 '<button class="act-print" type="button">'+
                   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg> Stampa PDF</button>'+
@@ -1284,8 +1285,9 @@
           });
           ov.querySelector('.act-print').addEventListener('click', function(){
             var evid = document.getElementById('ums-pdf-evid-chk').checked;
+            var facile = document.getElementById('ums-pdf-facile-chk').checked;
             ov.classList.remove('show');
-            stampa(modoSel, evid, false);
+            stampa(modoSel, evid, false, facile);
           });
 
         }
@@ -1385,7 +1387,17 @@
         return s || 'Lezione';
       }
 
-      function stampa(modo, conEvidenziazioni, scarica){
+      // CSS lettura facilitata IDENTICO alla modalità "Aa" del sito
+      // (Atkinson Hyperlegible, 1.18rem, interlinea 1.6, spaziatura lettere
+      // 0.05em, spazio parole 0.18em, righe ~55 caratteri, testo a sinistra)
+      function cssLetturaFacile(){
+        return 'body{font-family:\'Atkinson Hyperlegible\',\'DM Sans\',system-ui,sans-serif;'+
+            'font-size:1.18rem;line-height:1.6;letter-spacing:.05em;word-spacing:.18em}'+
+          'p{max-width:55ch;text-align:left;margin:0 0 1.15rem}'+
+          'h3{line-height:1.45;letter-spacing:.02em;margin:1.7rem 0 .7rem}'+
+          '.cornell-box{margin:1.3rem 0}';
+      }
+      function stampa(modo, conEvidenziazioni, scarica, facile){
         var cont = document.getElementById('dyn-riassuntone-container');
         if(!cont) return;
         // clono il testo per non toccare la pagina viva
@@ -1484,6 +1496,8 @@
             'font-size:11pt;line-height:1.3;color:#1a2f4f;margin:0 0 2px}'+
           '.fc-ris{font-size:9.8pt;line-height:1.4;color:#25242a;margin:0;white-space:pre-line}';
 
+        // lettura facilitata: appendo le regole "Aa" DOPO, così vincono
+        if(facile && (modo==='completo' || modo==='testo')){ css += cssLetturaFacile(); }
 
         // Intestazione col marchio e il nome della materia: su tutto tranne
         // la stampa della sola mappa (li' mangiava una pagina intera, con il
@@ -1498,7 +1512,7 @@
           '<html><head><title>'+titolo+' \u2014 Una Mano Spensierata</title>'+
           '<link rel="preconnect" href="https://fonts.googleapis.com">'+
           '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'+
-          '<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=DM+Sans:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">'+
+          '<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=DM+Sans:ital,wght@0,400;0,700;1,400&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">'+
           '<style>'+css+'</style></head><body>'+
           testaHTML +
           testoHTML + slideHTML + mappaHTML + flashHTMLout +
@@ -2349,6 +2363,28 @@
 .night-mode .ums-stampe-modo{ border-color:#2C3140; background:rgba(200,169,110,.08); }
 .ums-stampe-opt{ display:flex; align-items:flex-start; gap:10px; font-size:.88rem; line-height:1.45; cursor:pointer; }
 .ums-stampe-opt input{ margin-top:3px; width:17px; height:17px; accent-color:var(--gold,#C8A96E); flex:0 0 auto; }
+.ums-print-pill{ display:inline-flex; align-items:center; gap:7px; }
+.ums-print-pill svg{ width:1em; height:1em; flex:0 0 auto; }
+/* tre tinte leggermente diverse, coerenti col tema (navy / oro / terracotta tenue) */
+.ums-pill-single{ border-color:var(--navy,#1A2F4F) !important; color:var(--navy,#1A2F4F) !important; }
+.ums-pill-single:hover{ background:var(--navy,#1A2F4F) !important; color:#fff !important; }
+.ums-pill-riass{ border-color:var(--gold,#C8A96E) !important; color:var(--gold-dk,#9A7A3F) !important; }
+.ums-pill-riass:hover{ background:var(--gold,#C8A96E) !important; color:#14161c !important; }
+.ums-pill-mappe{ border-color:#B5744E !important; color:#B5744E !important; }
+.ums-pill-mappe:hover{ background:#B5744E !important; color:#fff !important; }
+.night-mode .ums-pill-single{ border-color:#8FB4E8 !important; color:#8FB4E8 !important; }
+.night-mode .ums-pill-single:hover{ background:#8FB4E8 !important; color:#14161c !important; }
+.night-mode .ums-pill-riass{ color:var(--gold,#C8A96E) !important; }
+.night-mode .ums-pill-mappe{ color:#D89B76 !important; border-color:#D89B76 !important; }
+/* barra dei toggle: pulita e senza spazi strani su cellulare/tablet */
+@media (max-width:820px){
+  #ums-slide-toggle-box .ums-slide-toggle{ gap:8px; row-gap:8px; }
+  #ums-slide-toggle-box .ums-slide-toggle button{ flex:1 1 auto; justify-content:center; }
+  .ums-print-pill{ flex:1 1 100%; justify-content:center; }
+}
+@media (max-width:480px){
+  #ums-slide-toggle-box .ums-slide-toggle button{ font-size:.9rem; padding:10px 12px; }
+}
 </style>
 <script id="ums-stampe-script">
 (function(){
@@ -2500,12 +2536,13 @@
   // lettura FACILITATA: come la modalità "Aa" del sito — carattere più
   // grande, righe corte, più aria fra righe e paragrafi. Consuma più pagine.
   function cssFacile(){
-    return 'body{font-size:12.8pt;line-height:1.85;letter-spacing:.01em}'+
-      'p{margin:0 0 1.15rem;max-width:34em;text-align:left;word-spacing:.06em}'+
-      'h3{font-size:1.35rem;line-height:1.4;margin:1.7rem 0 .7rem}'+
-      '.lez-head h1{font-size:1.7rem}'+
-      '.cornell-box{margin:1.3rem 0;padding:1rem 1.2rem}'+
-      '.cornell-question{font-size:1.05em}';
+    // IDENTICO alla modalità "Aa": Atkinson, 1.18rem, interlinea 1.6,
+    // spaziatura lettere .05em, spazio parole .18em, righe ~55 caratteri.
+    return 'body{font-family:\'Atkinson Hyperlegible\',\'DM Sans\',system-ui,sans-serif;'+
+        'font-size:1.18rem;line-height:1.6;letter-spacing:.05em;word-spacing:.18em}'+
+      'p{max-width:55ch;text-align:left;margin:0 0 1.15rem}'+
+      'h3{line-height:1.45;letter-spacing:.02em;margin:1.7rem 0 .7rem}'+
+      '.cornell-box{margin:1.3rem 0;padding:1rem 1.2rem}';
   }
   function testaLezione(m){
     return '<div class="lez-head"><div class="pdf-brand"><div class="wm">Una Mano <em>Spensierata</em></div>'+
@@ -2575,7 +2612,7 @@
     if(!w) return;
     w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>'+esc(titoloDoc)+'</title>'+
       '<link rel="preconnect" href="https://fonts.googleapis.com">'+
-      '<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">'+
+      '<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:ital,wght@0,400;0,700;1,400&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">'+
       '<style>'+css+'</style></head><body>'+corpo+'</body></html>');
     w.document.close(); w.focus();
     setTimeout(function(){ try{ w.print(); }catch(e){} }, 700);
@@ -2590,14 +2627,22 @@
     if(document.getElementById('ums-riass-btn')) return;
     var modello=(tg.querySelector('button')&&tg.querySelector('button').className)||'';
     var b1=document.createElement('button');
-    b1.type='button'; b1.id='ums-riass-btn'; b1.className=modello;
-    b1.textContent='Tutti i riassunti';
+    b1.type='button'; b1.id='ums-riass-btn'; b1.className=modello+' ums-print-pill ums-pill-riass';
+    b1.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;flex:0 0 auto"><path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg> <span>Tutti i riassunti</span>';
     b1.addEventListener('click', function(){ apri('riass'); });
     var b2=document.createElement('button');
-    b2.type='button'; b2.id='ums-mappe-btn'; b2.className=modello;
-    b2.textContent='Tutte le mappe';
+    b2.type='button'; b2.id='ums-mappe-btn'; b2.className=modello+' ums-print-pill ums-pill-mappe';
+    b2.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:1em;height:1em;flex:0 0 auto"><path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg> <span>Tutte le mappe</span>';
     b2.addEventListener('click', function(){ apri('mappe'); });
     tg.appendChild(b1); tg.appendChild(b2);
+    // il pulsante singolo "Stampa il riassuntone" (montato da un altro script,
+    // magari dopo) prende la classe colore appena esiste
+    var provaSingle=0;
+    (function vestiSingle(){
+      var single=document.getElementById('ums-print-btn');
+      if(single){ single.classList.add('ums-print-pill','ums-pill-single'); return; }
+      if(provaSingle++<40) setTimeout(vestiSingle,200);
+    })();
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', aggancia);
   else aggancia();
