@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Una Mano Spensierata | Lezione Dinamica</title>
     <meta name="ums-build" content="v10">
 
@@ -72,7 +72,6 @@
     ================================================================ -->
 </head>
 <body>
-    <a href="#master-content" id="ums-salta">Salta al contenuto</a>
     <!-- NIGHT MODE — applica subito il tema salvato per evitare il "flash" chiaro -->
     <script>try{if(localStorage.getItem('ums_night_mode')==='1'){document.body.classList.add('night-mode');}}catch(e){}</script>
 <!-- ================================================================
@@ -246,7 +245,6 @@
 
                     <!-- 01. OBIETTIVI -->
                     <div class="accordion-item">
-                        <h2 class="ums-acc-h">
                         <button class="accordion-header">
                             <span class="ch-number">01</span>
                             <span class="ch-text">
@@ -254,7 +252,7 @@
                                 <span class="ch-title">Obiettivi &amp; Punti Chiave</span>
                             </span>
                             <span class="ch-icon">+</span>
-                        </button></h2>
+                        </button>
                         <div class="accordion-content">
                             
                             <!-- Box Obiettivi -->
@@ -285,7 +283,6 @@
 
                     <!-- 02. PODCAST -->
                     <div class="accordion-item">
-                        <h2 class="ums-acc-h">
                         <button class="accordion-header">
                             <span class="ch-number">02</span>
                             <span class="ch-text">
@@ -293,7 +290,7 @@
                                 <span class="ch-title">Il Podcast</span>
                             </span>
                             <span class="ch-icon">+</span>
-                        </button></h2>
+                        </button>
                         <div class="accordion-content">
                             <div class="media-notes-grid">
                                 <div>
@@ -318,7 +315,6 @@
 
                     <!-- 03. VIDEO SINTESI -->
                     <div class="accordion-item">
-                        <h2 class="ums-acc-h">
                         <button class="accordion-header">
                             <span class="ch-number">03</span>
                             <span class="ch-text">
@@ -326,7 +322,7 @@
                                 <span class="ch-title">Video Sintesi</span>
                             </span>
                             <span class="ch-icon">+</span>
-                        </button></h2>
+                        </button>
                         <div class="accordion-content">
                             <div class="media-notes-grid">
                                 <div>
@@ -351,7 +347,6 @@
 
                     <!-- 04. FLASHCARDS -->
                     <div class="accordion-item">
-                        <h2 class="ums-acc-h">
                         <button class="accordion-header">
                             <span class="ch-number">04</span>
                             <span class="ch-text">
@@ -359,7 +354,7 @@
                                 <span class="ch-title">Dritti al Sodo</span>
                             </span>
                             <span class="ch-icon">+</span>
-                        </button></h2>
+                        </button>
                         <div class="accordion-content">
                             <!-- FOGLIO DI RIPASSO — domande a sinistra, risposte a destra:
                                  si stampa e si copre la colonna col quaderno. Il pulsante
@@ -427,7 +422,6 @@
 
                     <!-- 05. RIASSUNTONE -->
                     <div class="accordion-item">
-                        <h2 class="ums-acc-h">
                         <button class="accordion-header">
                             <span class="ch-number">05</span>
                             <span class="ch-text">
@@ -435,7 +429,7 @@
                                 <span class="ch-title">Il Riassuntone</span>
                             </span>
                             <span class="ch-icon">+</span>
-                        </button></h2>
+                        </button>
                         <div class="accordion-content">
                             <div class="media-notes-grid" id="riass-grid">
 
@@ -504,7 +498,6 @@
 
                     <!-- 06. PAUSA — MINI WORD SEARCH — TASK 1: notranslate -->
                     <div class="accordion-item">
-                        <h2 class="ums-acc-h">
                         <button class="accordion-header">
                             <span class="ch-number">06</span>
                             <span class="ch-text">
@@ -512,7 +505,7 @@
                                 <span class="ch-title">Fai una Pausa</span>
                             </span>
                             <span class="ch-icon">+</span>
-                        </button></h2>
+                        </button>
                         <div class="accordion-content">
 
                             <!-- TASK 1: aggiunta classe notranslate + rimosso il <p> ridondante -->
@@ -617,7 +610,6 @@
 
                     <!-- 07. ASSISTENTE IA -->
                     <div class="accordion-item">
-                        <h2 class="ums-acc-h">
                         <button class="accordion-header">
                             <span class="ch-number">07</span>
                             <span class="ch-text">
@@ -625,7 +617,7 @@
                                 <span class="ch-title" id="dyn-ia-tab-title">Assistente IA</span>
                             </span>
                             <span class="ch-icon">+</span>
-                        </button></h2>
+                        </button>
                         <div class="accordion-content">
                             <div class="ia-container" data-kenburns>
                                 <div class="ia-image-col">
@@ -645,7 +637,6 @@
 
                     <!-- 08. IL SUPER QUIZ -->
                     <div class="accordion-item">
-                        <h2 class="ums-acc-h">
                         <button class="accordion-header">
                             <span class="ch-number">08</span>
                             <span class="ch-text">
@@ -653,7 +644,7 @@
                                 <span class="ch-title">Il Super Quiz</span>
                             </span>
                             <span class="ch-icon">+</span>
-                        </button></h2>
+                        </button>
                         <div class="accordion-content">
                             <div class="quiz-list" id="dyn-super-quiz"></div>
                             <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione <svg class="ums-ic" aria-hidden="true"><use href="#ic-chevron-up"/></svg></button>
@@ -1702,12 +1693,6 @@
         if(!alb) return '';
         try { return generaSVG(alb); } catch(e){ return ''; }
       };
-      // per la "Mappa per l'esame": genera l'SVG dai dati di QUALUNQUE lezione
-      window.__umsMappaGenDa = function(d){
-        var alb = alberoDa(d);
-        if(!alb) return '';
-        try { return generaSVG(alb); } catch(e){ return ''; }
-      };
 
       function apriMappa(){
         var svg = window.__umsMappaGen();
@@ -1731,28 +1716,9 @@
             ov.classList.remove('show');
             if(window.__umsStampa) window.__umsStampa('mappa', false, false);
           });
-          // accessibilità: Esc chiude la mappa
-          document.addEventListener('keydown', function(e){
-            if(e.key==='Escape' && ov.classList.contains('show')) ov.classList.remove('show');
-          });
 
         }
         ov.querySelector('.ums-mappa-body').innerHTML = svg;
-        // accessibilità: il disegno è muto per gli screen reader → stessa
-        // struttura come elenco invisibile (classe .ums-sr-only in ums.css)
-        try {
-          var svgEl = ov.querySelector('.ums-mappa-body svg');
-          if (svgEl) svgEl.setAttribute('aria-hidden','true');
-          var alb2 = alberoDa(datiMappa);
-          var esc2 = function(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); };
-          if (alb2) {
-            var ul = '<ul>' + alb2.figli.map(function(r){
-              return '<li>' + esc2(r.testo) + (r.figli.length ? '<ul>' + r.figli.map(function(f){ return '<li>'+esc2(f.testo)+'</li>'; }).join('') + '</ul>' : '') + '</li>';
-            }).join('') + '</ul>';
-            ov.querySelector('.ums-mappa-body').insertAdjacentHTML('beforeend',
-              '<div class="ums-sr-only" role="region" aria-label="Mappa mentale in forma di elenco">' + ul + '</div>');
-          }
-        } catch(err) {}
         ov.classList.add('show');
       }
 
@@ -2304,173 +2270,5 @@
 </script>
 <!-- =============== FINE BLOCCO MEDIA =============== -->
 
-
-<!-- ================= UMS · MAPPA PER L'ESAME (strumento compensativo) =================
-     Blocco additivo. Aggiunge alla barra dei toggle il pulsante "Mappa per l'esame":
-     raccoglie le mappe mentali di TUTTA la materia (dai JSON già online), fa scegliere
-     le lezioni con le spunte, e stampa un PDF sobrio in bianco e nero, una lezione per
-     pagina — il formato "scarno, solo parole chiave" che gli atenei chiedono per gli
-     strumenti compensativi (L. 170/2010). Retrocompatibile: senza mappe non compare. -->
-<style id="ums-esame-style">
-#ums-esame-btn{ display:inline-flex; align-items:center; gap:7px; }
-#ums-esame-overlay{ display:none; position:fixed; inset:0; z-index:99999998;
-  background:rgba(15,17,23,.6); backdrop-filter:blur(4px);
-  align-items:center; justify-content:center; padding:20px; }
-#ums-esame-overlay.show{ display:flex; }
-.ums-esame-card{ background:var(--ivory,#F7F3EA); color:var(--ink,#1C1C22);
-  width:100%; max-width:560px; max-height:86vh; overflow:auto;
-  border-radius:18px; border-top:4px solid var(--gold,#C8A96E);
-  padding:26px 30px; box-shadow:0 40px 80px rgba(0,0,0,.4); }
-.night-mode .ums-esame-card{ background:#1C1F27; color:#E8E4DC; }
-.ums-esame-card h3{ margin:0 0 8px; font-size:1.25rem; }
-.ums-esame-nota{ font-size:.9rem; line-height:1.55; opacity:.85; margin:0 0 16px; }
-.ums-esame-lista{ display:flex; flex-direction:column; gap:6px; margin:0 0 18px; }
-.ums-esame-riga{ display:flex; align-items:center; gap:10px; padding:8px 10px;
-  border:1px solid var(--dust,#E5DFD3); border-radius:10px; cursor:pointer; }
-.night-mode .ums-esame-riga{ border-color:#2C3140; }
-.ums-esame-riga input{ width:18px; height:18px; accent-color:var(--gold,#C8A96E); }
-.ums-esame-riga.spenta{ opacity:.45; cursor:default; }
-.ums-esame-azioni{ display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap; }
-.ums-esame-azioni button{ padding:11px 18px; border-radius:50px; cursor:pointer;
-  font-weight:700; border:1px solid var(--gold,#C8A96E); background:#fff; color:var(--navy,#1A2F4F); }
-.ums-esame-azioni .primario{ background:var(--navy,#1A2F4F); color:#fff; border-color:var(--navy,#1A2F4F); }
-.night-mode .ums-esame-azioni button{ background:#262933; color:#E8E4DC; }
-.night-mode .ums-esame-azioni .primario{ background:var(--gold,#C8A96E); color:#14161c; }
-.ums-esame-stato{ font-size:.9rem; margin:0 0 12px; opacity:.8; }
-</style>
-<script id="ums-esame-script">
-(function(){
-  function param(k){ try{return new URLSearchParams(location.search).get(k);}catch(e){return null;} }
-  var fileP = param('file'); if(!fileP) return;
-  var dec = decodeURIComponent(fileP);
-  var slash = dec.lastIndexOf('/');
-  var dir = slash>=0 ? dec.slice(0,slash+1) : '';
-  var base = slash>=0 ? dec.slice(slash+1) : dec;
-  var folder = dec.split('/')[0];
-  if(!/(\d+)\.json$/i.test(base)) return;
-
-  function urlLez(n){ return dir + base.replace(/(\d+)(\.json)$/i, n+'$2'); }
-  function catalogo(){ try{ return JSON.parse(localStorage.getItem('ums_catalogo')||'{}'); }catch(e){ return {}; } }
-  function totale(){ var c=catalogo(); return (c[folder]&&c[folder].n)||0; }
-  function nomeMateria(){ var c=catalogo(); return (c[folder]&&c[folder].nome)||folder; }
-  function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
-  var ov=null, mappe=null; // mappe: [{n, titolo, dati}] caricate una volta
-
-  function apri(){
-    if(!ov){
-      ov=document.createElement('div'); ov.id='ums-esame-overlay';
-      ov.setAttribute('role','dialog'); ov.setAttribute('aria-modal','true');
-      ov.setAttribute('aria-label','Mappa per l\u2019esame');
-      ov.innerHTML='<div class="ums-esame-card">'+
-        '<h3>Mappa per l\u2019esame</h3>'+
-        '<p class="ums-esame-nota">Un PDF in bianco e nero con le mappe mentali della materia, una lezione per pagina: <b>solo parole chiave</b>, come chiedono le universit\u00e0 per gli strumenti compensativi (L.\u00a0170/2010). Ricorda: va inviata al docente <b>prima dell\u2019esame</b>, nei tempi previsti dal tuo ateneo, che pu\u00f2 chiedere riduzioni \u2014 togli pure le spunte alle lezioni che non ti servono.</p>'+
-        '<p class="ums-esame-stato"></p>'+
-        '<div class="ums-esame-lista"></div>'+
-        '<div class="ums-esame-azioni">'+
-          '<button type="button" class="annulla">Chiudi</button>'+
-          '<button type="button" class="primario">Stampa PDF</button>'+
-        '</div></div>';
-      document.body.appendChild(ov);
-      ov.addEventListener('click', function(e){ if(e.target===ov) chiudi(); });
-      ov.querySelector('.annulla').addEventListener('click', chiudi);
-      ov.querySelector('.primario').addEventListener('click', stampaScelte);
-      document.addEventListener('keydown', function(e){
-        if(e.key==='Escape' && ov.classList.contains('show')) chiudi();
-      });
-    }
-    ov.classList.add('show');
-    ov.querySelector('.annulla').focus();
-    if(!mappe) carica();
-  }
-  function chiudi(){ if(ov) ov.classList.remove('show'); }
-
-  function carica(){
-    var tot = totale();
-    var stato = ov.querySelector('.ums-esame-stato');
-    if(!tot){ stato.textContent='Non riesco a leggere l\u2019elenco delle lezioni: apri prima la pagina iniziale del sito, poi riprova.'; return; }
-    mappe=[]; var fatte=0;
-    stato.textContent='Raccolgo le mappe\u2026 0 / '+tot;
-    var lista = ov.querySelector('.ums-esame-lista'); lista.innerHTML='';
-    for(var n=1;n<=tot;n++){
-      (function(n){
-        fetch(urlLez(n)).then(function(r){ return r.ok ? r.json() : null; })
-        .catch(function(){ return null; })
-        .then(function(d){
-          fatte++;
-          stato.textContent='Raccolgo le mappe\u2026 '+fatte+' / '+tot;
-          var okMappa = d && d.mappa && Array.isArray(d.mappa.rami) && d.mappa.rami.length>=2;
-          mappe.push({ n:n, titolo:(d&&(d.mappa&&d.mappa.titolo||d.titolo_lezione))||('Lezione '+n), dati:d, ok:!!okMappa });
-          if(fatte===tot){ mappe.sort(function(a,b){return a.n-b.n;}); disegnaLista(); stato.textContent=''; }
-        });
-      })(n);
-    }
-  }
-
-  function disegnaLista(){
-    var lista = ov.querySelector('.ums-esame-lista'); lista.innerHTML='';
-    mappe.forEach(function(m){
-      var l=document.createElement('label');
-      l.className='ums-esame-riga'+(m.ok?'':' spenta');
-      l.innerHTML='<input type="checkbox" '+(m.ok?'checked':'disabled')+' data-n="'+m.n+'">'+
-        '<span>Lezione '+m.n+' \u2014 '+esc(m.titolo)+(m.ok?'':' <i>(senza mappa)</i>')+'</span>';
-      lista.appendChild(l);
-    });
-  }
-
-  function stampaScelte(){
-    if(!mappe) return;
-    var scelte = [];
-    ov.querySelectorAll('.ums-esame-lista input:checked').forEach(function(c){
-      var n=parseInt(c.dataset.n,10);
-      var m=mappe.filter(function(x){return x.n===n;})[0];
-      if(m && m.ok) scelte.push(m);
-    });
-    if(!scelte.length) return;
-    var materia = nomeMateria();
-    var pagine = scelte.map(function(m){
-      var svg = window.__umsMappaGenDa ? window.__umsMappaGenDa(m.dati) : '';
-      if(!svg) return '';
-      return '<section class="pg">'+
-        '<p class="testa">'+esc(materia)+' \u00b7 Lezione '+m.n+' \u2014 '+esc(m.titolo)+'</p>'+
-        '<div class="mp">'+svg+'</div>'+
-        '<p class="piede">Strumento compensativo (mappa concettuale a parole chiave) \u00b7 L. 170/2010 \u00b7 unamanospensierata.com</p>'+
-      '</section>';
-    }).join('');
-    var w = window.open('', '_blank');
-    if(!w) return;
-    w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Mappe per l\u2019esame \u2014 '+esc(materia)+'</title><style>'+
-      '@page{ size:A4 landscape; margin:10mm; }'+
-      'body{ margin:0; font-family:Georgia,serif; color:#000; background:#fff; }'+
-      '.pg{ page-break-after:always; display:flex; flex-direction:column; height:190mm; }'+
-      '.testa{ font-size:11px; margin:0 0 4mm; color:#000; letter-spacing:.04em; }'+
-      '.mp{ flex:1; display:flex; align-items:center; justify-content:center; }'+
-      '.mp svg{ max-width:100%; max-height:165mm; height:auto; filter:grayscale(1); }'+
-      '.piede{ font-size:9px; margin:4mm 0 0; color:#333; }'+
-      '</style></head><body>'+pagine+'</body></html>');
-    w.document.close();
-    w.focus();
-    setTimeout(function(){ try{ w.print(); }catch(e){} }, 600);
-    chiudi();
-  }
-
-  // pulsante nella barra dei toggle (arriva quando arriva la barra)
-  var tenta=0;
-  function aggancia(){
-    var tg = document.querySelector('#ums-slide-toggle-box .ums-slide-toggle');
-    if(!tg){ if(++tenta<40) setTimeout(aggancia,400); return; }
-    if(document.getElementById('ums-esame-btn')) return;
-    var b=document.createElement('button');
-    b.type='button'; b.id='ums-esame-btn';
-    b.className=(tg.querySelector('button')&&tg.querySelector('button').className)||'';
-    b.textContent='Mappa per l\u2019esame';
-    b.addEventListener('click', apri);
-    tg.appendChild(b);
-  }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', aggancia);
-  else aggancia();
-})();
-</script>
-<!-- ================= FINE · MAPPA PER L'ESAME ================= -->
 </body>
 </html>
