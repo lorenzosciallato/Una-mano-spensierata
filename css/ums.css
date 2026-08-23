@@ -3891,8 +3891,16 @@ body.ums-read-on #ums-para-nav{ display: none !important; }
    col mouse non compare mai, quindi l'estetica non cambia. */
 button:focus-visible, a:focus-visible, [tabindex]:focus-visible,
 input:focus-visible, textarea:focus-visible, select:focus-visible{
-    outline: 2px solid var(--gold-dk) !important;
-    outline-offset: 2px;
+    outline: 3px solid var(--gold-dk) !important;
+    outline-offset: 3px;
+    border-radius: 6px;
+}
+/* sui titoli di sezione il contorno è pieno e ben staccato, impossibile
+   non vederlo mentre navighi da tastiera */
+.accordion-header:focus-visible, .master-header:focus-visible{
+    outline: 3px solid var(--gold-dk) !important;
+    outline-offset: -3px;
+    box-shadow: inset 0 0 0 3px rgba(200,169,110,.25);
 }
 .night-mode button:focus-visible, .night-mode a:focus-visible,
 .night-mode [tabindex]:focus-visible{
@@ -3958,3 +3966,11 @@ input:focus-visible, textarea:focus-visible, select:focus-visible{
 }
 .night-mode .ums-tasti-card kbd{ background: #0F1117; color: #E8E4DC; }
 @media (prefers-reduced-motion: reduce){ #ums-tasti-pop{ backdrop-filter: none; } }
+.ums-tasti-ok{
+    margin-top: 18px; width: 100%; padding: 12px; border: none; border-radius: 50px;
+    background: var(--navy); color: #fff; cursor: pointer;
+    font-family: var(--font-body); font-weight: 700; font-size: 1rem; letter-spacing: .03em;
+    pointer-events: auto;
+}
+#ums-tasti-pop{ pointer-events: none; }
+#ums-tasti-pop .ums-tasti-card{ pointer-events: auto; }
