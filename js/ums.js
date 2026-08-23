@@ -4539,7 +4539,18 @@ if (!fileDaCaricare) {
             nav.querySelector('.ums-para-next').disabled = (idx === bl.length - 1);
         }
         if (scorri) {
-            try { (titolo || cur).scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) {}
+            // niente scatti: si scorre SOLO se l'inizio del paragrafo non è
+            // già comodo in vista, e lo si porta sotto la barra in alto —
+            // mai a filo schermo (dove finirebbe nascosto dalla barra)
+            try {
+                var anc = (titolo || cur);
+                var r = anc.getBoundingClientRect();
+                var barra = document.getElementById('ums-topbar');
+                var sopra = (barra ? barra.offsetHeight : 64) + 26;
+                if (r.top < sopra - 8 || r.top > window.innerHeight * 0.45) {
+                    window.scrollTo({ top: r.top + window.scrollY - sopra, behavior: 'smooth' });
+                }
+            } catch (e) {}
         }
     }
 
@@ -4670,6 +4681,19 @@ if (!fileDaCaricare) {
                     }
                 }
             }).observe(c, { childList: true });
+            // SINCRONIA col lettore "Ascolta il riassuntone": se sono accesi
+            // INSIEME, le frecce comandano il lettore (che è più in primo
+            // piano) e il paragrafo visibile LO SEGUE: il blocco evidenziato
+            // dal lettore (.ums-lb-cur) diventa il paragrafo mostrato.
+            new MutationObserver(function () {
+                if (!attiva || !document.body.classList.contains('ums-read-on')) return;
+                var cur = c.querySelector('.ums-lb-cur');
+                if (!cur) return;
+                while (cur.parentNode && cur.parentNode !== c) cur = cur.parentNode; // figlio diretto
+                var bl = blocchi();
+                var k = bl.indexOf(cur);
+                if (k >= 0 && k !== idx) { idx = k; applica(true); }
+            }).observe(c, { attributes: true, attributeFilter: ['class'], subtree: true });
         }
     }
 
@@ -4730,11 +4754,11 @@ if (!fileDaCaricare) {
 
 // ====================================================================
 // SEZIONE 20 — POP-UP "TI È D'AIUTO?" (invito al sostegno)
-// Una card discreta in basso che riprende il tono del pannello "Tienimi
-// acceso" e lo apre col pulsante. PER ORA compare a OGNI apertura di
-// lezione (fase di prova: SEMPRE = true). Quando la prova è finita,
-// mettere SEMPRE = false: comparirà una volta ogni UNA_SU aperture.
-// Blocco additivo: non tocca nessuna funzione esistente.
+// Pop-up BRANDIZZATO al centro dello schermo, stessa veste del pannello
+// "Tienimi acceso" (logo, tagline, cornice oro): riprende quel tono e col
+// pulsante lo apre. PER ORA compare a OGNI apertura di lezione (fase di
+// prova: SEMPRE = true). A prova finita mettere SEMPRE = false: comparirà
+// una volta ogni UNA_SU aperture. Blocco additivo.
 // ====================================================================
 (function () {
     var SEMPRE = true;        // ⚠️ fase di prova: true = compare sempre
@@ -4752,39 +4776,48 @@ if (!fileDaCaricare) {
     }
 
     function mostra() {
-        // niente doppioni, e mai sopra il pannello del sostegno già aperto
         if (document.getElementById('ums-aiuto-pop')) return;
         var bmc = document.getElementById('ums-bmc-overlay');
-        if (bmc && bmc.classList.contains('show')) return;
+        if (bmc && bmc.classList.contains('show')) return;   // pannello già aperto
 
         var pop = document.createElement('div');
         pop.id = 'ums-aiuto-pop';
         pop.setAttribute('role', 'dialog');
-        pop.setAttribute('aria-label', 'Sostieni il sito');
+        pop.setAttribute('aria-modal', 'true');
+        pop.setAttribute('aria-label', 'Ti \u00e8 d\u2019aiuto? Sostieni il sito');
+        // stessa veste del pannello del sostegno: card, logo, tagline
         pop.innerHTML =
-            '<button class="ums-aiuto-x" type="button" aria-label="Chiudi">&#10005;</button>' +
-            '<p class="ums-aiuto-titolo">Ciao! Ti \u00e8 d\u2019aiuto?</p>' +
-            '<p class="ums-aiuto-testo">Questo sito \u00e8 <b>gratis</b>, e lo rester\u00e0. Se ti sta accompagnando nello studio, considera di contribuire alla sua manutenzione: chi sostiene <b>non compra un vantaggio</b> \u2014 tiene acceso il sito, e dalla seconda fascia in su una parte va a <b>Still I Rise</b>, che apre scuole dove la scuola non c\u2019\u00e8.</p>' +
-            '<div class="ums-aiuto-azioni">' +
-                '<button class="ums-aiuto-si" type="button">Tienimi acceso</button>' +
-                '<button class="ums-aiuto-no" type="button">Un\u2019altra volta</button>' +
+            '<div class="ums-bmc-card ums-aiuto-card">' +
+                '<button class="ums-bmc-close" type="button" aria-label="Chiudi">&#10005;</button>' +
+                '<div class="ums-bmc-logo notranslate" translate="no">' +
+                    '<span class="l1">Una Mano</span><span class="l2">Spensierata</span>' +
+                '</div>' +
+                '<div class="ums-bmc-tag"><span>Il tuo compagno di studi</span></div>' +
+                '<p class="ums-aiuto-titolo">Ciao! Ti \u00e8 d\u2019aiuto?</p>' +
+                '<p class="ums-bmc-intro">Questo sito \u00e8 <b>gratis</b>, e lo rester\u00e0: nessuna lezione dietro un abbonamento. Se ti sta accompagnando nello studio, considera di contribuire a tenerlo acceso: chi sostiene <b>non compra un vantaggio</b> &mdash; copre dominio, server e ore di lavoro, e dalla seconda fascia in su una parte della quota va a <b>Still I Rise</b>, che apre scuole per bambini profughi e vulnerabili dove la scuola non c\u2019\u00e8.</p>' +
+                '<div class="ums-aiuto-azioni">' +
+                    '<button class="ums-aiuto-si" type="button"><svg class="ums-cup" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V8Z"/><path d="M17 9h1.8a2.2 2.2 0 0 1 0 4.4H17"/><path d="M7 3.5c0 .8-.8 1.2-.8 2s.8 1.2.8 2"/><path d="M11 3.5c0 .8-.8 1.2-.8 2s.8 1.2.8 2"/></svg> Tienimi acceso</button>' +
+                    '<button class="ums-aiuto-no" type="button">Un\u2019altra volta</button>' +
+                '</div>' +
             '</div>';
         document.body.appendChild(pop);
         requestAnimationFrame(function () { pop.classList.add('su'); });
 
         function via() {
             pop.classList.remove('su');
-            setTimeout(function () { if (pop.parentNode) pop.parentNode.removeChild(pop); }, 350);
+            setTimeout(function () { if (pop.parentNode) pop.parentNode.removeChild(pop); }, 300);
             document.removeEventListener('keydown', suEsc);
         }
         function suEsc(e) { if (e.key === 'Escape') via(); }
         document.addEventListener('keydown', suEsc);
-        pop.querySelector('.ums-aiuto-x').addEventListener('click', via);
+        pop.addEventListener('click', function (e) { if (e.target === pop) via(); });
+        pop.querySelector('.ums-bmc-close').addEventListener('click', via);
         pop.querySelector('.ums-aiuto-no').addEventListener('click', via);
         pop.querySelector('.ums-aiuto-si').addEventListener('click', function () {
             via();
             if (window.umsApriSostegno) window.umsApriSostegno();
         });
+        pop.querySelector('.ums-bmc-close').focus();
     }
 
     function avvia() {
