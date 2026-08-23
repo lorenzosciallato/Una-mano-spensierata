@@ -1159,10 +1159,7 @@ if (!fileDaCaricare) {
                 acc.addEventListener('click', function(e) {
                     e.stopPropagation();
                     this.classList.toggle('active');
-                    // il titolo può essere avvolto in un <h2> (accessibilità):
-                    // il pannello è il fratello dell'involucro, non del bottone
-                    const wrap = this.closest('.ums-acc-h');
-                    const panel = (wrap || this).nextElementSibling;
+                    const panel = this.nextElementSibling;
                     const icon = this.querySelector('.ch-icon');
                     if (panel.classList.contains('active')) {
                         panel.style.maxHeight = null;
@@ -4489,307 +4486,326 @@ if (!fileDaCaricare) {
 
 
 // ====================================================================
-// SEZIONE 18 — UN PARAGRAFO ALLA VOLTA (riassuntone, con "Aa" acceso)
-// Mostra un solo blocco del riassuntone (titolo, paragrafo o check point);
-// tutto il resto è nascosto — come il lettore "Ascolta il riassuntone".
-// Si avanza con Avanti/Indietro o con ← → (↑ ↓ restano liberi per
-// scorrere la pagina), Esc esce. Nessuna misura geometrica: solo una
-// classe che nasconde. Blocco additivo: non tocca funzioni esistenti.
+// SEZIONE 18 — RIGA DI LETTURA con le frecce (solo PC, solo riassuntone)
+// Attiva solo se "Aa" (SEZIONE 17) è acceso. Misura dove cadono le righe
+// del riassuntone e disegna una cornice sulla riga scelta; ↓ ↑ la spostano,
+// Esc spegne. Blocco additivo: non tocca nessuna funzione esistente.
+// NB: su PC #dyn-riassuntone-container è una scatola che SCORRE PER CONTO
+// SUO (max-height 560px, overflow auto): le righe si misurano in coordinate
+// della scatola e si scorre la scatola, non la pagina.
 // ====================================================================
 (function () {
-    var TUT_KEY = 'ums_paragrafo_tutorial_visto';
-    var attiva = false, idx = 0;
-    var btn, nav, tut, contatore;
+    var TUT_KEY = 'ums_riga_tutorial_visto';
+    var righe = [];        // [{top,height,left,width}] relative al CONTENUTO della scatola
+    var idx = -1;
+    var attiva = false;
+    var btn, band, tut, veloSu, veloGiu;
 
+    function desktop() { return window.innerWidth > 900; }
     function cont() { return document.getElementById('dyn-riassuntone-container'); }
 
-    // i blocchi che si possono "sfogliare": figli diretti con del testo, niente slide/figure
-    function blocchi() {
-        var c = cont(); if (!c) return [];
-        var out = [];
-        for (var i = 0; i < c.children.length; i++) {
-            var el = c.children[i];
-            var tag = el.tagName;
-            if (tag === 'FIGURE' || tag === 'IMG' || tag === 'SCRIPT' || tag === 'STYLE' || tag === 'BUTTON') continue;
-            if (!el.textContent || !el.textContent.trim()) continue;
-            if (el.querySelector && el.querySelector('img, figure') && !el.querySelector('p, li')) continue;
-            out.push(el);
+    // ---- testo da considerare: nodi di testo veri del riassuntone,
+    //      NON dentro slide/figure/pulsanti/elementi flottanti/nascosti ----
+    function testoValido(n) {
+        if (!n.nodeValue || !n.nodeValue.trim()) return false;
+        var el = n.parentNode, c = cont();
+        while (el && el !== c) {
+            if (el.nodeType === 1) {
+                var tag = el.tagName;
+                if (tag === 'FIGURE' || tag === 'FIGCAPTION' || tag === 'IMG' || tag === 'SVG' || tag === 'BUTTON' || tag === 'SCRIPT' || tag === 'STYLE' || tag === 'TEXTAREA' || tag === 'INPUT') return false;
+                var cs = getComputedStyle(el);
+                if (cs.display === 'none' || cs.visibility === 'hidden' || cs.float !== 'none' || cs.position === 'absolute' || cs.position === 'fixed') return false;
+            }
+            el = el.parentNode;
         }
-        return out;
+        return !!el; // deve stare dentro il riassuntone
     }
 
-    function applica(scorri) {
+    // ---- blocco di testo che contiene un nodo (p, h3, li, div...): è lì che
+    //      vive la GRIGLIA delle righe (ogni riga è alta esattamente line-height) ----
+    function bloccoDi(el, c) {
+        while (el && el !== c) {
+            if (el.nodeType === 1) {
+                var d = getComputedStyle(el).display;
+                if (d !== 'inline' && d !== 'inline-block' && d !== 'contents') return el;
+            }
+            el = el.parentNode;
+        }
+        return c;
+    }
+
+    // METODO: parola per parola (Range, niente modifiche al DOM) + griglia
+    // del blocco. Una riga NON si ricava dalla geometria dei pezzi di testo
+    // (che cambiano con grassetti, evidenziatori, capolettera) ma dal suo
+    // numero d'ordine: riga = floor((cima parola - cima blocco) / line-height).
+    // Così il capolettera, i grassetti e gli evidenziatori finiscono sulla
+    // riga giusta per costruzione, e l'altezza della cornice è sempre quella
+    // della riga.
+    function misura() {
+        righe = [];
         var c = cont(); if (!c) return;
-        var bl = blocchi();
-        if (!bl.length) return;
-        if (idx >= bl.length) idx = bl.length - 1;
+        var cr = c.getBoundingClientRect();
+        var blocchi = [];          // in ordine di documento
+        var info = new Map();      // blocco -> {top, lh, lines:{idx:{l,r}}}
+
+        function datiBlocco(b) {
+            var d = info.get(b);
+            if (d) return d;
+            var br = b.getBoundingClientRect();
+            var cs = getComputedStyle(b);
+            var lh = parseFloat(cs.lineHeight);
+            d = { top: br.top + (parseFloat(cs.paddingTop) || 0), lh: lh, lines: {}, tops: [] };
+            info.set(b, d); blocchi.push(b);
+            return d;
+        }
+
+        var walker = document.createTreeWalker(c, NodeFilter.SHOW_TEXT, null);
+        var n, parole = [];
+        while ((n = walker.nextNode())) {
+            if (!testoValido(n)) continue;
+            var b = bloccoDi(n.parentNode, c);
+            var d = datiBlocco(b);
+            var txt = n.nodeValue, re = /\S+/g, m;
+            while ((m = re.exec(txt))) {
+                var r = document.createRange();
+                r.setStart(n, m.index); r.setEnd(n, m.index + m[0].length);
+                var q = r.getBoundingClientRect();
+                if (q.width < 1 || q.height < 1) continue;
+                parole.push({ b: b, top: q.top, left: q.left, right: q.right, h: q.height });
+                d.tops.push(q.top);
+            }
+        }
+
+        // line-height ignota ("normal")? la si ricava dalla distanza tra le
+        // cime delle parole su righe diverse
+        blocchi.forEach(function (b) {
+            var d = info.get(b);
+            if (d.lh && !isNaN(d.lh)) return;
+            var t = d.tops.slice().sort(function (x, y) { return x - y; });
+            var gap = 0;
+            for (var i = 1; i < t.length; i++) { var g = t[i] - t[i - 1]; if (g > 2 && (!gap || g < gap)) gap = g; }
+            d.lh = gap || (parseFloat(getComputedStyle(b).fontSize) * 1.5) || 28;
+        });
+
+        // ogni parola → riga del suo blocco
+        parole.forEach(function (p) {
+            var d = info.get(p.b);
+            var idx = Math.floor((p.top - d.top + 1) / d.lh);
+            if (idx < 0) idx = 0;
+            var L = d.lines[idx];
+            if (!L) d.lines[idx] = { l: p.left, r: p.right };
+            else { if (p.left < L.l) L.l = p.left; if (p.right > L.r) L.r = p.right; }
+        });
+
+        // righe in ordine: blocco per blocco, indice per indice
+        blocchi.forEach(function (b) {
+            var d = info.get(b);
+            Object.keys(d.lines).map(Number).sort(function (x, y) { return x - y; }).forEach(function (i) {
+                var L = d.lines[i];
+                righe.push({
+                    top: d.top + i * d.lh - cr.top + c.scrollTop,
+                    height: d.lh,
+                    left: L.l - cr.left + c.scrollLeft,
+                    width: L.r - L.l
+                });
+            });
+        });
+    }
+
+    // la scatola scorre davvero? (su PC sì; se il template la allunga, no)
+    function scorrevole(c) { return c.scrollHeight > c.clientHeight + 2; }
+
+    function disegna(scorri) {
+        if (!attiva || !band) return;
+        var c = cont();
+        if (!c || !righe.length) { band.style.display = 'none'; if (veloSu) { veloSu.style.display = 'none'; veloGiu.style.display = 'none'; } return; }
         if (idx < 0) idx = 0;
-        var cur = bl[idx];
-        // il titolo del macroargomento resta visibile sopra il paragrafo
-        var titolo = null;
-        for (var k = idx; k >= 0; k--) { if (bl[k].tagName === 'H3') { titolo = bl[k]; break; } }
-        for (var i = 0; i < c.children.length; i++) {
-            var el = c.children[i];
-            var vis = (el === cur || el === titolo);
-            el.classList.toggle('ums-para-nascosto', !vis);
+        if (idx >= righe.length) idx = righe.length - 1;
+        var L = righe[idx];
+        var pad = 6;
+
+        // 1) porta la riga dentro la parte visibile della scatola
+        if (scorri && scorrevole(c)) {
+            var vis0 = c.scrollTop, vis1 = c.scrollTop + c.clientHeight;
+            if (L.top - pad < vis0 + 24 || L.top + L.height + pad > vis1 - 24) {
+                c.scrollTop = Math.max(0, L.top + L.height / 2 - c.clientHeight / 2);
+            }
         }
-        if (contatore) contatore.textContent = (idx + 1) + ' / ' + bl.length;
-        if (nav) {
-            nav.querySelector('.ums-para-prev').disabled = (idx === 0);
-            nav.querySelector('.ums-para-next').disabled = (idx === bl.length - 1);
-        }
+
+        // 2) coordinate di pagina (dopo lo scroll della scatola)
+        var cr = c.getBoundingClientRect();
+        var pageTop = cr.top + window.scrollY, pageLeft = cr.left + window.scrollX;
+        var lineTop = pageTop + (L.top - c.scrollTop);
+        var lineLeft = pageLeft + (L.left - c.scrollLeft);
+
+        // 3) porta la riga nel terzo centrale dello schermo (scroll di pagina)
         if (scorri) {
-            try { (titolo || cur).scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) {}
+            var yv = lineTop + L.height / 2 - window.scrollY;
+            if (yv < window.innerHeight * 0.3 || yv > window.innerHeight * 0.7) {
+                window.scrollTo({ top: lineTop + L.height / 2 - window.innerHeight / 2, behavior: 'smooth' });
+            }
+        }
+
+        // 4) cornice, ma solo se la riga sta nella parte visibile della scatola
+        var visTop = pageTop, visBot = pageTop + c.clientHeight;
+        var bTop = lineTop - pad / 2, bBot = lineTop + L.height + pad / 2;
+        if (bBot <= visTop || bTop >= visBot) { band.style.display = 'none'; }
+        else {
+            band.style.display = 'block';
+            band.style.top = bTop + 'px';
+            band.style.height = (bBot - bTop) + 'px';
+            band.style.left = (lineLeft - 10) + 'px';
+            band.style.width = (L.width + 20) + 'px';
+        }
+
+        // 5) veli: solo sulla parte visibile della scatola, sopra e sotto la riga
+        if (veloSu && veloGiu) {
+            var w = c.clientWidth;
+            var su0 = visTop, su1 = Math.min(Math.max(bTop, visTop), visBot);
+            var giu0 = Math.max(Math.min(bBot, visBot), visTop), giu1 = visBot;
+            veloSu.style.display = 'block'; veloGiu.style.display = 'block';
+            veloSu.style.left = pageLeft + 'px'; veloSu.style.width = w + 'px';
+            veloSu.style.top = su0 + 'px'; veloSu.style.height = Math.max(0, su1 - su0) + 'px';
+            veloGiu.style.left = pageLeft + 'px'; veloGiu.style.width = w + 'px';
+            veloGiu.style.top = giu0 + 'px'; veloGiu.style.height = Math.max(0, giu1 - giu0) + 'px';
         }
     }
 
-    function primoVisibile() {
-        var bl = blocchi();
-        for (var i = 0; i < bl.length; i++) {
-            var r = bl[i].getBoundingClientRect();
-            if (r.bottom > 80 && r.top < window.innerHeight * 0.7) return i;
+    // ---- prima riga visibile come punto di partenza ----
+    function primaVisibile() {
+        var c = cont(); if (!c) return 0;
+        var cr = c.getBoundingClientRect();
+        for (var i = 0; i < righe.length; i++) {
+            var yv = cr.top + (righe[i].top - c.scrollTop);      // in viewport
+            if (yv >= Math.max(cr.top, 0) + 8 && yv < Math.min(cr.bottom, window.innerHeight)) return i;
         }
         return 0;
     }
 
     function accendi() {
-        if (!document.body.classList.contains('ums-facile')) return;
-        if (!blocchi().length) return;
-        attiva = true; idx = primoVisibile();
-        document.body.classList.add('ums-para-on');
+        if (!desktop() || !document.body.classList.contains('ums-facile')) return;
+        misura();
+        if (!righe.length) return;
+        attiva = true; idx = primaVisibile();
+        document.body.classList.add('ums-riga-on');
         btn.setAttribute('aria-pressed', 'true');
-        if (nav) nav.style.display = 'flex';
-        applica(true);
+        disegna(true);
     }
     function spegni() {
-        attiva = false;
-        document.body.classList.remove('ums-para-on');
-        var c = cont();
-        if (c) for (var i = 0; i < c.children.length; i++) c.children[i].classList.remove('ums-para-nascosto');
+        attiva = false; idx = -1;
+        document.body.classList.remove('ums-riga-on');
         if (btn) btn.setAttribute('aria-pressed', 'false');
-        if (nav) nav.style.display = 'none';
-    }
-    function vai(d) {
-        if (!attiva) return;
-        var n = blocchi().length;
-        var nuovo = Math.min(n - 1, Math.max(0, idx + d));
-        if (nuovo === idx) return;
-        idx = nuovo; applica(true);
+        if (band) band.style.display = 'none';
+        if (veloSu) { veloSu.style.display = 'none'; veloGiu.style.display = 'none'; }
     }
 
     // ---- tutorial ----
-    function apriTutorial(poi) {
-        tut.classList.add('aperto'); tut.dataset.poi = poi ? '1' : '0';
+    function apriTutorial(poiAccendi) {
+        if (!tut) return;
+        tut.classList.add('aperto');
+        tut.dataset.poi = poiAccendi ? '1' : '0';
         var ok = tut.querySelector('.ums-riga-tut-ok'); if (ok) ok.focus();
     }
     function chiudiTutorial() {
+        if (!tut) return;
         tut.classList.remove('aperto');
         try { localStorage.setItem(TUT_KEY, '1'); } catch (e) {}
         if (tut.dataset.poi === '1') accendi();
         tut.dataset.poi = '0';
     }
 
+    var rafPend = false;
+    function ridisegna() {               // su scroll: solo riposiziona, niente scroll automatico
+        if (!attiva || rafPend) return;
+        rafPend = true;
+        requestAnimationFrame(function () { rafPend = false; disegna(false); });
+    }
+    function rimisura() {                // il testo ha cambiato forma: ricalcola e resta sulla riga
+        clearTimeout(window.__umsRigaT);
+        window.__umsRigaT = setTimeout(function () {
+            if (!attiva) return;
+            if (!desktop() || !document.body.classList.contains('ums-facile')) { spegni(); return; }
+            var k = idx; misura(); idx = k; disegna(false);
+        }, 150);
+    }
+
     function costruisci() {
         var c = cont(); if (!c || !c.parentNode) return;
-        if (document.getElementById('ums-para-btn')) return;
+        if (document.getElementById('ums-riga-btn')) return;
 
         btn = document.createElement('button');
-        btn.id = 'ums-para-btn'; btn.type = 'button';
+        btn.id = 'ums-riga-btn'; btn.type = 'button';
         btn.setAttribute('aria-pressed', 'false');
-        btn.innerHTML = '<span>Un paragrafo alla volta</span><span class="ums-para-help" title="Come funziona" aria-label="Come funziona">?</span>';
+        btn.innerHTML = '<span>Riga di lettura</span><span class="ums-riga-help" title="Come funziona" aria-label="Come funziona">?</span>';
         c.parentNode.insertBefore(btn, c);
 
-        nav = document.createElement('div');
-        nav.id = 'ums-para-nav'; nav.style.display = 'none';
-        nav.innerHTML =
-            '<button type="button" class="ums-para-prev">&larr; Indietro</button>' +
-            '<span class="ums-para-conta"></span>' +
-            '<button type="button" class="ums-para-next">Avanti &rarr;</button>';
-        contatore = nav.querySelector('.ums-para-conta');
-        if (c.nextSibling) c.parentNode.insertBefore(nav, c.nextSibling); else c.parentNode.appendChild(nav);
+        band = document.createElement('div');
+        band.id = 'ums-riga-band'; band.setAttribute('aria-hidden', 'true');
+        document.body.appendChild(band);
+        veloSu = document.createElement('div'); veloSu.className = 'ums-riga-velo'; veloSu.setAttribute('aria-hidden', 'true');
+        veloGiu = document.createElement('div'); veloGiu.className = 'ums-riga-velo'; veloGiu.setAttribute('aria-hidden', 'true');
+        document.body.appendChild(veloSu); document.body.appendChild(veloGiu);
 
         tut = document.createElement('div');
-        tut.id = 'ums-para-tut'; tut.setAttribute('role', 'dialog'); tut.setAttribute('aria-modal', 'true');
+        tut.id = 'ums-riga-tut'; tut.setAttribute('role', 'dialog'); tut.setAttribute('aria-modal', 'true');
         tut.innerHTML =
             '<div class="ums-riga-tut-card">' +
-            '<h3>Un paragrafo alla volta</h3>' +
+            '<h3>La riga di lettura</h3>' +
             '<ol>' +
-            '<li>Vedi un solo paragrafo. Gli altri sono nascosti.</li>' +
-            '<li>Premi <kbd>Avanti</kbd> (o la freccia <kbd>&rarr;</kbd>) per leggere il paragrafo dopo.</li>' +
-            '<li>Premi <kbd>Indietro</kbd> (o la freccia <kbd>&larr;</kbd>) per tornare a quello prima.</li>' +
-            '<li>Premi di nuovo il pulsante, o <kbd>Esc</kbd>, per vedere tutto il testo.</li>' +
+            '<li>Una riga resta chiara, dentro una cornice. Le altre si fanno più leggere. Quella chiara è la riga che stai leggendo.</li>' +
+            '<li>Premi <kbd>&darr;</kbd> per andare alla riga sotto.</li>' +
+            '<li>Premi <kbd>&uarr;</kbd> per tornare alla riga sopra.</li>' +
+            '<li>Premi <kbd>Esc</kbd> per spegnere la riga.</li>' +
+            '<li>Puoi spegnerla anche con il pulsante, quando vuoi.</li>' +
             '</ol>' +
             '<button type="button" class="ums-riga-tut-ok">Ho capito</button>' +
             '</div>';
         document.body.appendChild(tut);
-        tut.querySelector('.ums-riga-tut-ok').addEventListener('click', chiudiTutorial);
-        tut.addEventListener('click', function (e) { if (e.target === tut) chiudiTutorial(); });
 
         btn.addEventListener('click', function (e) {
-            if (e.target.closest('.ums-para-help')) { apriTutorial(false); return; }
+            var help = e.target.closest('.ums-riga-help');
+            if (help) { apriTutorial(false); return; }
             if (attiva) { spegni(); return; }
             var visto = false;
             try { visto = localStorage.getItem(TUT_KEY) === '1'; } catch (err) {}
             if (!visto) apriTutorial(true); else accendi();
         });
-        nav.querySelector('.ums-para-prev').addEventListener('click', function () { vai(-1); });
-        nav.querySelector('.ums-para-next').addEventListener('click', function () { vai(1); });
+        tut.querySelector('.ums-riga-tut-ok').addEventListener('click', chiudiTutorial);
+        tut.addEventListener('click', function (e) { if (e.target === tut) chiudiTutorial(); });
 
+        // frecce: solo con riga accesa e fuori da campi di testo
         document.addEventListener('keydown', function (e) {
-            if (tut.classList.contains('aperto')) {
+            if (tut && tut.classList.contains('aperto')) {
                 if (e.key === 'Escape' || e.key === 'Enter') { e.preventDefault(); chiudiTutorial(); }
                 return;
             }
             if (!attiva) return;
             var t = e.target;
             if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
-            // se un pop-up è aperto (slide ingrandita, mappa, sostegno, mappa
-            // per l'esame, punti chiave) o il lettore vocale sta leggendo,
-            // le frecce restano a loro: niente conflitti
-            if (document.querySelector('.ums-slide-lb.on, #ums-mappa-overlay.show, #ums-bmc-overlay.show, #ums-esame-overlay.show, #factor-modal.open')) return;
-            if (document.body.classList.contains('ums-read-on')) return;
-            // ← → cambiano paragrafo; ↑ ↓ restano liberi per scorrere la pagina
-            if (e.key === 'ArrowRight') { e.preventDefault(); vai(1); }
-            else if (e.key === 'ArrowLeft') { e.preventDefault(); vai(-1); }
+            if (e.key === 'ArrowDown') { e.preventDefault(); if (idx < righe.length - 1) idx++; disegna(true); }
+            else if (e.key === 'ArrowUp') { e.preventDefault(); if (idx > 0) idx--; disegna(true); }
             else if (e.key === 'Escape') { spegni(); }
         });
 
+        // la pagina o la scatola scorrono → cornice e veli seguono
+        window.addEventListener('scroll', ridisegna, { passive: true });
+        c.addEventListener('scroll', ridisegna, { passive: true });
+        window.addEventListener('resize', rimisura);
         if ('MutationObserver' in window) {
-            // "Aa" spento → si esce
+            new MutationObserver(rimisura).observe(c, { childList: true, subtree: true, attributes: true });
             new MutationObserver(function () {
                 if (!document.body.classList.contains('ums-facile') && attiva) spegni();
             }).observe(document.body, { attributes: true, attributeFilter: ['class'] });
-            // il riassuntone viene riscritto (cambio vista / lezione) → riapplica sullo stesso numero
-            new MutationObserver(function (ms) {
-                if (!attiva) return;
-                for (var i = 0; i < ms.length; i++) {
-                    if (ms[i].type === 'childList') {
-                        clearTimeout(window.__umsParaT);
-                        window.__umsParaT = setTimeout(function () { applica(false); }, 120);
-                        return;
-                    }
-                }
-            }).observe(c, { childList: true });
         }
+        // cambio vista (Solo testo / Testo+slide...) → rimisura
+        document.addEventListener('click', function (e) {
+            if (e.target.closest && e.target.closest('button')) rimisura();
+        });
     }
 
     function avvia() {
         costruisci();
-        if (!document.getElementById('ums-para-btn')) setTimeout(costruisci, 1500);
-    }
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', avvia);
-    else avvia();
-})();
-
-
-// ====================================================================
-// SEZIONE 19 — ACCESSIBILITÀ INVISIBILE (annunci per screen reader)
-// Una "voce di servizio" (aria-live) che legge l'esito del quiz a chi
-// usa uno screen reader. Nessun cambiamento visibile, nessuna funzione
-// esistente toccata: il blocco ascolta i clic e annuncia dopo.
-// ====================================================================
-(function () {
-    var live;
-    function assicuraLive() {
-        if (live) return live;
-        live = document.createElement('div');
-        live.id = 'ums-annuncio';
-        live.className = 'ums-sr-only';
-        live.setAttribute('aria-live', 'polite');
-        live.setAttribute('role', 'status');
-        document.body.appendChild(live);
-        return live;
-    }
-    function annuncia(msg) {
-        var l = assicuraLive();
-        l.textContent = '';                    // reset: due esiti uguali di fila vanno riletti
-        setTimeout(function () { l.textContent = msg; }, 50);
-    }
-    // Esc chiude il pop-up dei Punti Chiave (prima si chiudeva solo col mouse)
-    document.addEventListener('keydown', function (e) {
-        if (e.key !== 'Escape') return;
-        var m = document.getElementById('factor-modal');
-        if (m && m.classList.contains('open')) m.classList.remove('open');
-    });
-    document.addEventListener('click', function (e) {
-        var b = e.target && e.target.closest ? e.target.closest('.quiz-option') : null;
-        if (!b) return;
-        // il gestore originale colora i pulsanti e mostra la spiegazione:
-        // aspettiamo un attimo e leggiamo il risultato già pronto
-        setTimeout(function () {
-            var card = b.closest('.quiz-card, [id^="quiz-card-"]') || b.parentNode.parentNode;
-            if (!card) return;
-            var expl = card.querySelector('.quiz-explanation');
-            if (expl && expl.textContent && expl.textContent.trim()) {
-                annuncia(expl.textContent.trim());
-            }
-        }, 120);
-    }, true);
-})();
-
-
-// ====================================================================
-// SEZIONE 20 — POP-UP "TI È D'AIUTO?" (invito al sostegno)
-// Una card discreta in basso che riprende il tono del pannello "Tienimi
-// acceso" e lo apre col pulsante. PER ORA compare a OGNI apertura di
-// lezione (fase di prova: SEMPRE = true). Quando la prova è finita,
-// mettere SEMPRE = false: comparirà una volta ogni UNA_SU aperture.
-// Blocco additivo: non tocca nessuna funzione esistente.
-// ====================================================================
-(function () {
-    var SEMPRE = true;        // ⚠️ fase di prova: true = compare sempre
-    var UNA_SU = 4;           // a prova finita (SEMPRE=false): 1 apertura su 4
-    var RITARDO_MS = 15000;   // compare dopo 15 secondi, a lezione avviata
-    var CONT_KEY = 'ums_aiuto_contatore';
-
-    function tocca() {
-        if (SEMPRE) return true;
-        var n = 0;
-        try { n = parseInt(localStorage.getItem(CONT_KEY) || '0', 10) || 0; } catch (e) {}
-        n++;
-        try { localStorage.setItem(CONT_KEY, String(n)); } catch (e) {}
-        return n % UNA_SU === 0;
-    }
-
-    function mostra() {
-        // niente doppioni, e mai sopra il pannello del sostegno già aperto
-        if (document.getElementById('ums-aiuto-pop')) return;
-        var bmc = document.getElementById('ums-bmc-overlay');
-        if (bmc && bmc.classList.contains('show')) return;
-
-        var pop = document.createElement('div');
-        pop.id = 'ums-aiuto-pop';
-        pop.setAttribute('role', 'dialog');
-        pop.setAttribute('aria-label', 'Sostieni il sito');
-        pop.innerHTML =
-            '<button class="ums-aiuto-x" type="button" aria-label="Chiudi">&#10005;</button>' +
-            '<p class="ums-aiuto-titolo">Ciao! Ti \u00e8 d\u2019aiuto?</p>' +
-            '<p class="ums-aiuto-testo">Questo sito \u00e8 <b>gratis</b>, e lo rester\u00e0. Se ti sta accompagnando nello studio, considera di contribuire alla sua manutenzione: chi sostiene <b>non compra un vantaggio</b> \u2014 tiene acceso il sito, e dalla seconda fascia in su una parte va a <b>Still I Rise</b>, che apre scuole dove la scuola non c\u2019\u00e8.</p>' +
-            '<div class="ums-aiuto-azioni">' +
-                '<button class="ums-aiuto-si" type="button">Tienimi acceso</button>' +
-                '<button class="ums-aiuto-no" type="button">Un\u2019altra volta</button>' +
-            '</div>';
-        document.body.appendChild(pop);
-        requestAnimationFrame(function () { pop.classList.add('su'); });
-
-        function via() {
-            pop.classList.remove('su');
-            setTimeout(function () { if (pop.parentNode) pop.parentNode.removeChild(pop); }, 350);
-            document.removeEventListener('keydown', suEsc);
-        }
-        function suEsc(e) { if (e.key === 'Escape') via(); }
-        document.addEventListener('keydown', suEsc);
-        pop.querySelector('.ums-aiuto-x').addEventListener('click', via);
-        pop.querySelector('.ums-aiuto-no').addEventListener('click', via);
-        pop.querySelector('.ums-aiuto-si').addEventListener('click', function () {
-            via();
-            if (window.umsApriSostegno) window.umsApriSostegno();
-        });
-    }
-
-    function avvia() {
-        if (!tocca()) return;
-        setTimeout(mostra, RITARDO_MS);
+        if (!document.getElementById('ums-riga-btn')) setTimeout(costruisci, 1500); // container tardivo
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', avvia);
     else avvia();
