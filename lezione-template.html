@@ -241,7 +241,7 @@
                 </button>
             </div>
 
-            <div class="master-content" id="master-content">
+            <div class="master-content" id="master-content" tabindex="-1">
                 <div class="master-content-inner">
 
                     <!-- 01. OBIETTIVI -->
@@ -2305,40 +2305,47 @@
 <!-- =============== FINE BLOCCO MEDIA =============== -->
 
 
-<!-- ================= UMS · MAPPA PER L'ESAME (strumento compensativo) =================
-     Blocco additivo. Aggiunge alla barra dei toggle il pulsante "Mappa per l'esame":
-     raccoglie le mappe mentali di TUTTA la materia (dai JSON già online), fa scegliere
-     le lezioni con le spunte, e stampa un PDF sobrio in bianco e nero, una lezione per
-     pagina — il formato "scarno, solo parole chiave" che gli atenei chiedono per gli
-     strumenti compensativi (L. 170/2010). Retrocompatibile: senza mappe non compare. -->
-<style id="ums-esame-style">
-#ums-esame-btn{ display:inline-flex; align-items:center; gap:7px; }
-#ums-esame-overlay{ display:none; position:fixed; inset:0; z-index:99999998;
-  background:rgba(15,17,23,.6); backdrop-filter:blur(4px);
+
+
+<!-- ================= UMS · STAMPA RIASSUNTI / MAPPE =================
+     Blocco additivo. Aggiunge alla barra dei toggle due pulsanti:
+     "Tutti i riassunti" e "Tutte le mappe". Ognuno apre una finestra con
+     l'elenco delle lezioni della materia e le spunte; poi stampa in un
+     colpo, a colori, brandizzato, con "Lezione N — titolo" e l'indirizzo
+     su ogni pagina. Riassunti: ogni lezione inizia in pagina nuova.
+     Mappe: una lezione per pagina. Tutto navigabile da tastiera. -->
+<style id="ums-stampe-style">
+#ums-riass-btn, #ums-mappe-btn{ display:inline-flex; align-items:center; gap:7px; }
+#ums-stampe-overlay{ display:none; position:fixed; inset:0; z-index:99999998;
+  background:rgba(15,17,23,.6); -webkit-backdrop-filter:blur(4px); backdrop-filter:blur(4px);
   align-items:center; justify-content:center; padding:20px; }
-#ums-esame-overlay.show{ display:flex; }
-.ums-esame-card{ background:var(--ivory,#F7F3EA); color:var(--ink,#1C1C22);
+#ums-stampe-overlay.show{ display:flex; }
+.ums-stampe-card{ background:var(--ivory,#F7F3EA); color:var(--ink,#1C1C22);
   width:100%; max-width:560px; max-height:86vh; overflow:auto;
   border-radius:18px; border-top:4px solid var(--gold,#C8A96E);
   padding:26px 30px; box-shadow:0 40px 80px rgba(0,0,0,.4); }
-.night-mode .ums-esame-card{ background:#1C1F27; color:#E8E4DC; }
-.ums-esame-card h3{ margin:0 0 8px; font-size:1.25rem; }
-.ums-esame-nota{ font-size:.9rem; line-height:1.55; opacity:.85; margin:0 0 16px; }
-.ums-esame-lista{ display:flex; flex-direction:column; gap:6px; margin:0 0 18px; }
-.ums-esame-riga{ display:flex; align-items:center; gap:10px; padding:8px 10px;
+.night-mode .ums-stampe-card{ background:#1C1F27; color:#E8E4DC; }
+.ums-stampe-card h3{ margin:0 0 8px; font-size:1.25rem; }
+.ums-stampe-nota{ font-size:.9rem; line-height:1.55; opacity:.85; margin:0 0 14px; }
+.ums-stampe-tutte{ display:flex; gap:14px; align-items:center; margin:0 0 12px; font-size:.9rem; }
+.ums-stampe-tutte button{ background:none; border:none; color:var(--gold-dk,#9A7A3F); font-weight:700;
+  cursor:pointer; text-decoration:underline; padding:4px 2px; font-size:.9rem; }
+.ums-stampe-lista{ display:flex; flex-direction:column; gap:6px; margin:0 0 18px; }
+.ums-stampe-riga{ display:flex; align-items:center; gap:10px; padding:8px 10px;
   border:1px solid var(--dust,#E5DFD3); border-radius:10px; cursor:pointer; }
-.night-mode .ums-esame-riga{ border-color:#2C3140; }
-.ums-esame-riga input{ width:18px; height:18px; accent-color:var(--gold,#C8A96E); }
-.ums-esame-riga.spenta{ opacity:.45; cursor:default; }
-.ums-esame-azioni{ display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap; }
-.ums-esame-azioni button{ padding:11px 18px; border-radius:50px; cursor:pointer;
+.night-mode .ums-stampe-riga{ border-color:#2C3140; }
+.ums-stampe-riga input{ width:18px; height:18px; accent-color:var(--gold,#C8A96E); }
+.ums-stampe-riga.spenta{ opacity:.5; cursor:default; }
+.ums-stampe-riga .manca{ font-style:italic; opacity:.75; }
+.ums-stampe-azioni{ display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap; }
+.ums-stampe-azioni button{ padding:11px 18px; border-radius:50px; cursor:pointer;
   font-weight:700; border:1px solid var(--gold,#C8A96E); background:#fff; color:var(--navy,#1A2F4F); }
-.ums-esame-azioni .primario{ background:var(--navy,#1A2F4F); color:#fff; border-color:var(--navy,#1A2F4F); }
-.night-mode .ums-esame-azioni button{ background:#262933; color:#E8E4DC; }
-.night-mode .ums-esame-azioni .primario{ background:var(--gold,#C8A96E); color:#14161c; }
-.ums-esame-stato{ font-size:.9rem; margin:0 0 12px; opacity:.8; }
+.ums-stampe-azioni .primario{ background:var(--navy,#1A2F4F); color:#fff; border-color:var(--navy,#1A2F4F); }
+.night-mode .ums-stampe-azioni button{ background:#262933; color:#E8E4DC; }
+.night-mode .ums-stampe-azioni .primario{ background:var(--gold,#C8A96E); color:#14161c; }
+.ums-stampe-stato{ font-size:.9rem; margin:0 0 12px; opacity:.8; }
 </style>
-<script id="ums-esame-script">
+<script id="ums-stampe-script">
 (function(){
   function param(k){ try{return new URLSearchParams(location.search).get(k);}catch(e){return null;} }
   var fileP = param('file'); if(!fileP) return;
@@ -2355,122 +2362,206 @@
   function nomeMateria(){ var c=catalogo(); return (c[folder]&&c[folder].nome)||folder; }
   function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-  var ov=null, mappe=null; // mappe: [{n, titolo, dati}] caricate una volta
+  var ov=null, lez=null, modo='riass';  // lez: [{n,titolo,dati,okR,okM}]
 
-  function apri(){
-    if(!ov){
-      ov=document.createElement('div'); ov.id='ums-esame-overlay';
-      ov.setAttribute('role','dialog'); ov.setAttribute('aria-modal','true');
-      ov.setAttribute('aria-label','Mappa per l\u2019esame');
-      ov.innerHTML='<div class="ums-esame-card">'+
-        '<h3>Mappa per l\u2019esame</h3>'+
-        '<p class="ums-esame-nota">Un PDF in bianco e nero con le mappe mentali della materia, una lezione per pagina: <b>solo parole chiave</b>, come chiedono le universit\u00e0 per gli strumenti compensativi (L.\u00a0170/2010). Ricorda: va inviata al docente <b>prima dell\u2019esame</b>, nei tempi previsti dal tuo ateneo, che pu\u00f2 chiedere riduzioni \u2014 togli pure le spunte alle lezioni che non ti servono.</p>'+
-        '<p class="ums-esame-stato"></p>'+
-        '<div class="ums-esame-lista"></div>'+
-        '<div class="ums-esame-azioni">'+
-          '<button type="button" class="annulla">Chiudi</button>'+
-          '<button type="button" class="primario">Stampa PDF</button>'+
-        '</div></div>';
-      document.body.appendChild(ov);
-      ov.addEventListener('click', function(e){ if(e.target===ov) chiudi(); });
-      ov.querySelector('.annulla').addEventListener('click', chiudi);
-      ov.querySelector('.primario').addEventListener('click', stampaScelte);
-      document.addEventListener('keydown', function(e){
-        if(e.key==='Escape' && ov.classList.contains('show')) chiudi();
-      });
-    }
+  function apri(quale){
+    modo = quale;
+    if(!ov) costruisciOverlay();
+    aggiornaTesti();
     ov.classList.add('show');
     ov.querySelector('.annulla').focus();
-    if(!mappe) carica();
+    if(!lez) carica(); else disegnaLista();
   }
   function chiudi(){ if(ov) ov.classList.remove('show'); }
 
+  function costruisciOverlay(){
+    ov=document.createElement('div'); ov.id='ums-stampe-overlay';
+    ov.setAttribute('role','dialog'); ov.setAttribute('aria-modal','true');
+    ov.innerHTML='<div class="ums-stampe-card">'+
+      '<h3 class="ums-stampe-tit"></h3>'+
+      '<p class="ums-stampe-nota"></p>'+
+      '<div class="ums-stampe-tutte">'+
+        '<button type="button" class="tutte">Seleziona tutte</button>'+
+        '<button type="button" class="nessuna">Deseleziona tutte</button>'+
+      '</div>'+
+      '<p class="ums-stampe-stato"></p>'+
+      '<div class="ums-stampe-lista"></div>'+
+      '<div class="ums-stampe-azioni">'+
+        '<button type="button" class="annulla">Chiudi</button>'+
+        '<button type="button" class="primario">Stampa</button>'+
+      '</div></div>';
+    document.body.appendChild(ov);
+    ov.addEventListener('click', function(e){ if(e.target===ov) chiudi(); });
+    ov.querySelector('.annulla').addEventListener('click', chiudi);
+    ov.querySelector('.primario').addEventListener('click', stampaScelte);
+    ov.querySelector('.tutte').addEventListener('click', function(){ segna(true); });
+    ov.querySelector('.nessuna').addEventListener('click', function(){ segna(false); });
+    document.addEventListener('keydown', function(e){
+      if(e.key==='Escape' && ov.classList.contains('show')) chiudi();
+    });
+  }
+  function aggiornaTesti(){
+    var tit = ov.querySelector('.ums-stampe-tit');
+    var nota = ov.querySelector('.ums-stampe-nota');
+    if(modo==='riass'){
+      tit.textContent='Tutti i riassunti';
+      nota.innerHTML='Scegli le lezioni e stampa i riassunti in un colpo, a colori. Ogni lezione inizia in una pagina nuova.';
+    } else {
+      tit.textContent='Tutte le mappe';
+      nota.innerHTML='Scegli le lezioni e stampa le mappe mentali in un colpo, a colori. Una lezione per pagina.';
+    }
+    ov.querySelector('.primario').textContent = 'Stampa';
+  }
+  function segna(v){
+    if(!lez) return;
+    ov.querySelectorAll('.ums-stampe-lista input:not(:disabled)').forEach(function(c){ c.checked=v; });
+  }
+
   function carica(){
-    var tot = totale();
-    var stato = ov.querySelector('.ums-esame-stato');
+    var tot=totale();
+    var stato=ov.querySelector('.ums-stampe-stato');
     if(!tot){ stato.textContent='Non riesco a leggere l\u2019elenco delle lezioni: apri prima la pagina iniziale del sito, poi riprova.'; return; }
-    mappe=[]; var fatte=0;
-    stato.textContent='Raccolgo le mappe\u2026 0 / '+tot;
-    var lista = ov.querySelector('.ums-esame-lista'); lista.innerHTML='';
+    lez=[]; var fatte=0;
+    stato.textContent='Raccolgo le lezioni\u2026 0 / '+tot;
+    ov.querySelector('.ums-stampe-lista').innerHTML='';
     for(var n=1;n<=tot;n++){
       (function(n){
         fetch(urlLez(n)).then(function(r){ return r.ok ? r.json() : null; })
         .catch(function(){ return null; })
         .then(function(d){
           fatte++;
-          stato.textContent='Raccolgo le mappe\u2026 '+fatte+' / '+tot;
-          var okMappa = d && d.mappa && Array.isArray(d.mappa.rami) && d.mappa.rami.length>=2;
-          mappe.push({ n:n, titolo:(d&&(d.mappa&&d.mappa.titolo||d.titolo_lezione))||('Lezione '+n), dati:d, ok:!!okMappa });
-          if(fatte===tot){ mappe.sort(function(a,b){return a.n-b.n;}); disegnaLista(); stato.textContent=''; }
+          stato.textContent='Raccolgo le lezioni\u2026 '+fatte+' / '+tot;
+          var okR = !!(d && Array.isArray(d.riassuntone) && d.riassuntone.length);
+          var okM = !!(d && d.mappa && Array.isArray(d.mappa.rami) && d.mappa.rami.length>=2);
+          lez.push({ n:n, titolo:(d&&(d.titolo_lezione||(d.mappa&&d.mappa.titolo)))||('Lezione '+n),
+                     dati:d, okR:okR, okM:okM, mancante:!d });
+          if(fatte===tot){ lez.sort(function(a,b){return a.n-b.n;}); disegnaLista(); stato.textContent=''; }
         });
       })(n);
     }
   }
 
   function disegnaLista(){
-    var lista = ov.querySelector('.ums-esame-lista'); lista.innerHTML='';
-    mappe.forEach(function(m){
+    var lista=ov.querySelector('.ums-stampe-lista'); lista.innerHTML='';
+    lez.forEach(function(m){
+      var ok = (modo==='riass') ? m.okR : m.okM;
+      var motivo = m.mancante ? ' <span class="manca">(lezione mancante)</span>'
+                 : (ok ? '' : (modo==='riass' ? ' <span class="manca">(senza riassunto)</span>' : ' <span class="manca">(senza mappa)</span>'));
       var l=document.createElement('label');
-      l.className='ums-esame-riga'+(m.ok?'':' spenta');
-      l.innerHTML='<input type="checkbox" '+(m.ok?'checked':'disabled')+' data-n="'+m.n+'">'+
-        '<span>Lezione '+m.n+' \u2014 '+esc(m.titolo)+(m.ok?'':' <i>(senza mappa)</i>')+'</span>';
+      l.className='ums-stampe-riga'+(ok?'':' spenta');
+      l.innerHTML='<input type="checkbox" '+(ok?'checked':'disabled')+' data-n="'+m.n+'">'+
+        '<span>Lezione '+m.n+' \u2014 '+esc(m.titolo)+motivo+'</span>';
       lista.appendChild(l);
     });
   }
 
+  // ---- costruzione HTML di stampa ----
+  function testaComune(){
+    return '@page{margin:16mm 14mm}'+
+      '*{box-sizing:border-box}'+
+      'body{margin:0;font-family:\'DM Sans\',system-ui,sans-serif;color:#1c1c22;line-height:1.6}'+
+      '.pdf-brand{text-align:center;margin:0 0 4px}'+
+      '.pdf-brand .wm{font-family:\'Playfair Display\',Georgia,serif;font-weight:900;font-size:1.05rem;letter-spacing:-.02em;color:#1c1c22}'+
+      '.pdf-brand .wm em{font-style:italic;color:#1a2f4f}'+
+      '.pdf-brand .dom{font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:#9a7a3f;font-weight:700;margin-top:2px}'+
+      '.lez{break-before:page;page-break-before:always}'+
+      '.lez:first-of-type{break-before:auto;page-break-before:auto}'+
+      '.lez-head{border-bottom:2px solid #c8a96e;padding-bottom:10px;margin:0 0 18px;text-align:center}'+
+      '.lez-head .et{font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:#9a7a3f;font-weight:700}'+
+      '.lez-head h1{font-family:\'Playfair Display\',Georgia,serif;font-size:1.5rem;color:#1a2f4f;margin:6px 0 0}'+
+      'h3{font-family:\'Playfair Display\',Georgia,serif;color:#1a2f4f;font-size:1.2rem;margin:1.3rem 0 .5rem;break-after:avoid;page-break-after:avoid}'+
+      'p{margin:0 0 .7rem;text-align:justify}'+
+      '.cornell-box{border:1px solid #e5d6bd;border-radius:10px;padding:.8rem 1rem;margin:1rem 0;background:#faf7f1;break-inside:avoid;page-break-inside:avoid}'+
+      '.cp-label{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:#9a7a3f;font-weight:700}'+
+      '.cornell-question{font-weight:700;margin:.5rem 0 .2rem}'+
+      '.pie{margin-top:6px;text-align:center;font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:#9a7a3f}'+
+      '.vuoto{font-style:italic;color:#7a736a;margin:1rem 0}'+
+      '.mp{display:flex;align-items:center;justify-content:center;min-height:150mm}'+
+      '.mp svg{max-width:100%;max-height:170mm;height:auto}';
+  }
+  function testaLezione(m){
+    return '<div class="lez-head"><div class="pdf-brand"><div class="wm">Una Mano <em>Spensierata</em></div>'+
+      '<div class="dom">unamanospensierata.com</div></div>'+
+      '<div class="et">'+esc(nomeMateria())+' \u00b7 Lezione '+m.n+'</div>'+
+      '<h1>'+esc(m.titolo)+'</h1></div>';
+  }
+  function riassuntoneHTML(d){
+    var macro=(d&&d.riassuntone)||[];
+    if(!macro.length) return '<p class="vuoto">Questa lezione non ha un riassunto.</p>';
+    return macro.map(function(mac){
+      var h = mac.titolo ? '<h3>'+esc(mac.titolo)+'</h3>' : '';
+      var corpo = String(mac.testo||'').split(/\n\s*\n/).map(function(par){
+        return '<p>'+esc(par.trim())+'</p>';
+      }).join('');
+      var cp = (mac.check_points||[]).map(function(c){
+        return '<div class="cornell-box"><div class="cp-label">Check Point</div>'+
+          '<p class="cornell-question">'+esc(c.domanda||'')+'</p>'+
+          '<p>'+esc(c.risposta||'')+'</p></div>';
+      }).join('');
+      return h+corpo+cp;
+    }).join('');
+  }
+
   function stampaScelte(){
-    if(!mappe) return;
-    var scelte = [];
-    ov.querySelectorAll('.ums-esame-lista input:checked').forEach(function(c){
+    if(!lez) return;
+    var scelte=[];
+    ov.querySelectorAll('.ums-stampe-lista input:checked').forEach(function(c){
       var n=parseInt(c.dataset.n,10);
-      var m=mappe.filter(function(x){return x.n===n;})[0];
-      if(m && m.ok) scelte.push(m);
+      var m=lez.filter(function(x){return x.n===n;})[0];
+      if(m) scelte.push(m);
     });
     if(!scelte.length) return;
-    var materia = nomeMateria();
-    var pagine = scelte.map(function(m){
-      var svg = window.__umsMappaGenDa ? window.__umsMappaGenDa(m.dati) : '';
-      if(!svg) return '';
-      return '<section class="pg">'+
-        '<p class="testa">'+esc(materia)+' \u00b7 Lezione '+m.n+' \u2014 '+esc(m.titolo)+'</p>'+
-        '<div class="mp">'+svg+'</div>'+
-        '<p class="piede">Strumento compensativo (mappa concettuale a parole chiave) \u00b7 L. 170/2010 \u00b7 unamanospensierata.com</p>'+
-      '</section>';
-    }).join('');
-    var w = window.open('', '_blank');
+    var materia=nomeMateria();
+    var titoloDoc=(modo==='riass'?'Riassunti':'Mappe')+' \u2014 '+materia;
+    var corpo='';
+    if(modo==='riass'){
+      corpo=scelte.map(function(m){
+        return '<section class="lez">'+testaLezione(m)+
+          riassuntoneHTML(m.dati)+
+          '<p class="pie">unamanospensierata.com</p></section>';
+      }).join('');
+    } else {
+      corpo=scelte.map(function(m){
+        var svg=(window.__umsMappaGenDa && m.dati)?window.__umsMappaGenDa(m.dati):'';
+        var dis = svg ? '<div class="mp">'+svg+'</div>' : '<p class="vuoto">Questa lezione non ha una mappa.</p>';
+        return '<section class="lez">'+testaLezione(m)+dis+
+          '<p class="pie">unamanospensierata.com</p></section>';
+      }).join('');
+    }
+    var css=testaComune()+(modo==='mappe'?'@media print{@page{size:A4 landscape}}':'');
+    var w=window.open('','_blank');
     if(!w) return;
-    w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Mappe per l\u2019esame \u2014 '+esc(materia)+'</title><style>'+
-      '@page{ size:A4 landscape; margin:10mm; }'+
-      'body{ margin:0; font-family:Georgia,serif; color:#000; background:#fff; }'+
-      '.pg{ page-break-after:always; display:flex; flex-direction:column; height:190mm; }'+
-      '.testa{ font-size:11px; margin:0 0 4mm; color:#000; letter-spacing:.04em; }'+
-      '.mp{ flex:1; display:flex; align-items:center; justify-content:center; }'+
-      '.mp svg{ max-width:100%; max-height:165mm; height:auto; filter:grayscale(1); }'+
-      '.piede{ font-size:9px; margin:4mm 0 0; color:#333; }'+
-      '</style></head><body>'+pagine+'</body></html>');
-    w.document.close();
-    w.focus();
-    setTimeout(function(){ try{ w.print(); }catch(e){} }, 600);
+    w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>'+esc(titoloDoc)+'</title>'+
+      '<link rel="preconnect" href="https://fonts.googleapis.com">'+
+      '<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">'+
+      '<style>'+css+'</style></head><body>'+corpo+'</body></html>');
+    w.document.close(); w.focus();
+    setTimeout(function(){ try{ w.print(); }catch(e){} }, 700);
     chiudi();
   }
 
-  // pulsante nella barra dei toggle (arriva quando arriva la barra)
+  // ---- pulsanti nella barra dei toggle ----
   var tenta=0;
   function aggancia(){
-    var tg = document.querySelector('#ums-slide-toggle-box .ums-slide-toggle');
+    var tg=document.querySelector('#ums-slide-toggle-box .ums-slide-toggle');
     if(!tg){ if(++tenta<40) setTimeout(aggancia,400); return; }
-    if(document.getElementById('ums-esame-btn')) return;
-    var b=document.createElement('button');
-    b.type='button'; b.id='ums-esame-btn';
-    b.className=(tg.querySelector('button')&&tg.querySelector('button').className)||'';
-    b.textContent='Mappa per l\u2019esame';
-    b.addEventListener('click', apri);
-    tg.appendChild(b);
+    if(document.getElementById('ums-riass-btn')) return;
+    var modello=(tg.querySelector('button')&&tg.querySelector('button').className)||'';
+    var b1=document.createElement('button');
+    b1.type='button'; b1.id='ums-riass-btn'; b1.className=modello;
+    b1.textContent='Tutti i riassunti';
+    b1.addEventListener('click', function(){ apri('riass'); });
+    var b2=document.createElement('button');
+    b2.type='button'; b2.id='ums-mappe-btn'; b2.className=modello;
+    b2.textContent='Tutte le mappe';
+    b2.addEventListener('click', function(){ apri('mappe'); });
+    tg.appendChild(b1); tg.appendChild(b2);
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', aggancia);
   else aggancia();
 })();
 </script>
-<!-- ================= FINE · MAPPA PER L'ESAME ================= -->
+<!-- ================= FINE · STAMPA RIASSUNTI / MAPPE ================= -->
+
 </body>
 </html>
