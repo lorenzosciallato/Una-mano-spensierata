@@ -4753,17 +4753,16 @@ if (!fileDaCaricare) {
 
 
 // ====================================================================
-// SEZIONE 20 — POP-UP "TI È D'AIUTO?" (invito al sostegno)
-// Pop-up BRANDIZZATO al centro dello schermo, stessa veste del pannello
-// "Tienimi acceso" (logo, tagline, cornice oro): riprende quel tono e col
-// pulsante lo apre. PER ORA compare a OGNI apertura di lezione (fase di
-// prova: SEMPRE = true). A prova finita mettere SEMPRE = false: comparirà
-// una volta ogni UNA_SU aperture. Blocco additivo.
+// SEZIONE 20 — INVITO AL SOSTEGNO (apre il pannello del caffè)
+// Dopo 15 s dall'apertura della lezione mostra DIRETTAMENTE il pannello
+// "Tienimi acceso" con le tre fasce e i prezzi (window.umsApriSostegno,
+// SEZIONE 11): nessuna card intermedia, nessun doppione. Per ora a OGNI
+// apertura (fase di prova: SEMPRE=true); poi 1 su UNA_SU. Additivo.
 // ====================================================================
 (function () {
     var SEMPRE = true;        // ⚠️ fase di prova: true = compare sempre
     var UNA_SU = 4;           // a prova finita (SEMPRE=false): 1 apertura su 4
-    var RITARDO_MS = 15000;   // compare dopo 15 secondi, a lezione avviata
+    var RITARDO_MS = 15000;
     var CONT_KEY = 'ums_aiuto_contatore';
 
     function tocca() {
@@ -4774,56 +4773,115 @@ if (!fileDaCaricare) {
         try { localStorage.setItem(CONT_KEY, String(n)); } catch (e) {}
         return n % UNA_SU === 0;
     }
-
     function mostra() {
-        if (document.getElementById('ums-aiuto-pop')) return;
-        var bmc = document.getElementById('ums-bmc-overlay');
-        if (bmc && bmc.classList.contains('show')) return;   // pannello già aperto
-
-        var pop = document.createElement('div');
-        pop.id = 'ums-aiuto-pop';
-        pop.setAttribute('role', 'dialog');
-        pop.setAttribute('aria-modal', 'true');
-        pop.setAttribute('aria-label', 'Ti \u00e8 d\u2019aiuto? Sostieni il sito');
-        // stessa veste del pannello del sostegno: card, logo, tagline
-        pop.innerHTML =
-            '<div class="ums-bmc-card ums-aiuto-card">' +
-                '<button class="ums-bmc-close" type="button" aria-label="Chiudi">&#10005;</button>' +
-                '<div class="ums-bmc-logo notranslate" translate="no">' +
-                    '<span class="l1">Una Mano</span><span class="l2">Spensierata</span>' +
-                '</div>' +
-                '<div class="ums-bmc-tag"><span>Il tuo compagno di studi</span></div>' +
-                '<p class="ums-aiuto-titolo">Ciao! Ti \u00e8 d\u2019aiuto?</p>' +
-                '<p class="ums-bmc-intro">Questo sito \u00e8 <b>gratis</b>, e lo rester\u00e0: nessuna lezione dietro un abbonamento. Se ti sta accompagnando nello studio, considera di contribuire a tenerlo acceso: chi sostiene <b>non compra un vantaggio</b> &mdash; copre dominio, server e ore di lavoro, e dalla seconda fascia in su una parte della quota va a <b>Still I Rise</b>, che apre scuole per bambini profughi e vulnerabili dove la scuola non c\u2019\u00e8.</p>' +
-                '<div class="ums-aiuto-azioni">' +
-                    '<button class="ums-aiuto-si" type="button"><svg class="ums-cup" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V8Z"/><path d="M17 9h1.8a2.2 2.2 0 0 1 0 4.4H17"/><path d="M7 3.5c0 .8-.8 1.2-.8 2s.8 1.2.8 2"/><path d="M11 3.5c0 .8-.8 1.2-.8 2s.8 1.2.8 2"/></svg> Tienimi acceso</button>' +
-                    '<button class="ums-aiuto-no" type="button">Un\u2019altra volta</button>' +
-                '</div>' +
-            '</div>';
-        document.body.appendChild(pop);
-        requestAnimationFrame(function () { pop.classList.add('su'); });
-
-        function via() {
-            pop.classList.remove('su');
-            setTimeout(function () { if (pop.parentNode) pop.parentNode.removeChild(pop); }, 300);
-            document.removeEventListener('keydown', suEsc);
-        }
-        function suEsc(e) { if (e.key === 'Escape') via(); }
-        document.addEventListener('keydown', suEsc);
-        pop.addEventListener('click', function (e) { if (e.target === pop) via(); });
-        pop.querySelector('.ums-bmc-close').addEventListener('click', via);
-        pop.querySelector('.ums-aiuto-no').addEventListener('click', via);
-        pop.querySelector('.ums-aiuto-si').addEventListener('click', function () {
-            via();
-            if (window.umsApriSostegno) window.umsApriSostegno();
-        });
-        pop.querySelector('.ums-bmc-close').focus();
+        var ov = document.getElementById('ums-bmc-overlay');
+        if (ov && ov.classList.contains('show')) return;   // già aperto a mano
+        if (typeof window.umsApriSostegno === 'function') window.umsApriSostegno();
     }
-
     function avvia() {
         if (!tocca()) return;
         setTimeout(mostra, RITARDO_MS);
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', avvia);
     else avvia();
+})();
+
+
+// ====================================================================
+// SEZIONE 21 — NAVIGAZIONE DA TASTIERA (Tab): pop-up istruzioni +
+// accordion con Invio/Spazio + scatola del riassuntone tolta mentre si
+// naviga da tastiera (così ↑↓ scorrono la PAGINA, senza conflitti).
+// Additivo: non tocca le funzioni esistenti.
+// ====================================================================
+(function () {
+    var pop = null, popTimer = null;
+    var modoTastiera = false;
+
+    // ---- pop-up istruzioni: compare a OGNI Tab, sparisce appena navighi ----
+    function creaPop() {
+        if (pop) return pop;
+        pop = document.createElement('div');
+        pop.id = 'ums-tasti-pop';
+        pop.setAttribute('role', 'dialog');
+        pop.setAttribute('aria-label', 'Come navigare con la tastiera');
+        pop.innerHTML =
+            '<div class="ums-tasti-card">' +
+                '<p class="ums-tasti-tit">Navigare con la tastiera</p>' +
+                '<ul>' +
+                    '<li><kbd>Tab</kbd> passa da un elemento al successivo.</li>' +
+                    '<li><kbd>Invio</kbd> o <kbd>Spazio</kbd> apre una sezione o gira una carta.</li>' +
+                    '<li><kbd>&uarr;</kbd> <kbd>&darr;</kbd> scorrono la pagina.</li>' +
+                    '<li><kbd>Esc</kbd> chiude questa finestra e i pop-up.</li>' +
+                '</ul>' +
+            '</div>';
+        document.body.appendChild(pop);
+        return pop;
+    }
+    function mostraPop() {
+        creaPop();
+        pop.classList.add('su');
+        clearTimeout(popTimer);
+        popTimer = setTimeout(nascondiPop, 6000);   // sparisce da sola dopo un po'
+    }
+    function nascondiPop() { if (pop) pop.classList.remove('su'); }
+
+    // entra in "modo tastiera" al primo Tab: da qui in poi il riassuntone non
+    // scorre più per conto suo (↑↓ = pagina). Torna al mouse al primo clic.
+    function entraTastiera() {
+        if (modoTastiera) return;
+        modoTastiera = true;
+        document.body.classList.add('ums-kbd');
+    }
+    function esciTastiera() {
+        if (!modoTastiera) return;
+        modoTastiera = false;
+        document.body.classList.remove('ums-kbd');
+    }
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Tab') { entraTastiera(); mostraPop(); }
+        else if (e.key === 'Escape') { nascondiPop(); }
+        else if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') { nascondiPop(); }
+    }, true);
+    document.addEventListener('mousedown', function () { nascondiPop(); esciTastiera(); }, true);
+
+    // ---- Dritti al Sodo: la carta si raggiunge col Tab e si gira con
+    //      Invio / Spazio (i pulsanti "La so"/"Ripasso dopo" sono già
+    //      <button>, quindi già raggiungibili e premibili col Tab+Invio) ----
+    function preparaCarta() {
+        var deck = document.getElementById('flashcard-deck');
+        if (!deck || deck.dataset.umsKbd === '1') return;
+        deck.dataset.umsKbd = '1';
+        deck.setAttribute('tabindex', '0');
+        deck.setAttribute('role', 'button');
+        deck.setAttribute('aria-label', 'Carta: premi Invio o Spazio per girarla');
+        deck.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+                e.preventDefault();
+                if (typeof forceFlip === 'function') forceFlip(e);
+                else if (typeof toggleFlip === 'function') toggleFlip();
+                else deck.click();
+            }
+        });
+    }
+    // il deck viene mostrato solo dopo "Inizia il Ripasso": lo preparo al volo
+    document.addEventListener('click', function (e) {
+        if (e.target && e.target.closest && e.target.closest('.btn-start')) setTimeout(preparaCarta, 300);
+    });
+    if ('MutationObserver' in window) {
+        var g = document.getElementById('fc-game-screen');
+        if (g) new MutationObserver(preparaCarta).observe(g, { attributes: true, attributeFilter: ['style'] });
+    }
+    setTimeout(preparaCarta, 2000);
+
+    // ---- accordion: apertura con Invio / Spazio quando il titolo ha il fuoco ----
+    // (i titoli sono già <button>: Invio funziona da solo; aggiungo Spazio,
+    // che di default farebbe scorrere la pagina.)
+    document.addEventListener('keydown', function (e) {
+        if (e.key !== ' ' && e.key !== 'Spacebar') return;
+        var h = e.target && e.target.closest ? e.target.closest('.accordion-header, .master-header') : null;
+        if (!h) return;
+        e.preventDefault();
+        h.click();
+    }, true);
 })();
