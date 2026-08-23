@@ -687,6 +687,9 @@
                 max-height: 560px; overflow-y: auto; padding-right: 16px;
                 border-bottom: 1px solid var(--dust);
             }
+            body.ums-kbd #dyn-riassuntone-container{
+                max-height: none; overflow: visible; border-bottom: none;
+            }
             #dyn-riassuntone-container::-webkit-scrollbar { width: 5px; }
             #dyn-riassuntone-container::-webkit-scrollbar-thumb { background-color: var(--dust); border-radius: 3px; }
         }
@@ -3927,37 +3930,31 @@ input:focus-visible, textarea:focus-visible, select:focus-visible{
 .ums-acc-h{ margin: 0; padding: 0; font-size: inherit; font-weight: inherit; line-height: inherit; display: block; }
 .ums-acc-h > .accordion-header{ width: 100%; }
 
-/* ---- POP-UP "TI È D'AIUTO?" — al centro, stessa veste del pannello sostegno ---- */
-#ums-aiuto-pop{
-    display: flex; position: fixed; inset: 0; z-index: 99999998;
-    background: rgba(15,17,23,.55);
-    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+/* ---- POP-UP ISTRUZIONI TASTIERA (compare a ogni Tab, al centro) ---- */
+#ums-tasti-pop{
+    display: none; position: fixed; inset: 0; z-index: 100000001;
+    background: rgba(15,17,23,.5);
+    -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
     align-items: center; justify-content: center; padding: 24px;
-    opacity: 0; transition: opacity .25s ease;
+    pointer-events: none;
 }
-#ums-aiuto-pop.su{ opacity: 1; }
-#ums-aiuto-pop .ums-aiuto-card{ max-width: 420px; width: 100%; position: relative; }
-#ums-aiuto-pop.su .ums-aiuto-card{ animation: umsAiutoSu .3s ease; }
-@keyframes umsAiutoSu{ from{ transform: translateY(14px); } to{ transform: none; } }
-.ums-aiuto-titolo{
-    margin: 14px 0 10px; font-family: var(--font-display, serif);
-    font-size: 1.3rem; font-weight: 700; color: var(--navy); text-align: center;
+#ums-tasti-pop.su{ display: flex; }
+.ums-tasti-card{
+    background: #FBF6E9; color: #2B2A28;
+    width: 100%; max-width: 440px;
+    border-radius: 20px; border-top: 4px solid var(--gold);
+    padding: 26px 30px; box-shadow: 0 30px 70px rgba(0,0,0,.4);
+    font-family: var(--font-body);
 }
-.night-mode .ums-aiuto-titolo{ color: #8FB4E8; }
-.ums-aiuto-azioni{ display: flex; flex-direction: column; gap: 10px; }
-.ums-aiuto-si{
-    display: inline-flex; align-items: center; justify-content: center; gap: 9px;
-    width: 100%; padding: 14px 16px; border-radius: 50px; cursor: pointer;
-    border: none; background: var(--navy); color: #fff;
-    font-family: var(--font-body); font-weight: 700; font-size: 1rem; letter-spacing: 0.03em;
+.night-mode .ums-tasti-card{ background: #1C1F27; color: #E8E4DC; }
+.ums-tasti-tit{ margin: 0 0 14px; font-family: var(--font-display, serif); font-size: 1.25rem; font-weight: 700; color: var(--navy); }
+.night-mode .ums-tasti-tit{ color: #8FB4E8; }
+.ums-tasti-card ul{ margin: 0; padding-left: 0; list-style: none; }
+.ums-tasti-card li{ font-size: 1rem; line-height: 1.5; margin-bottom: 12px; }
+.ums-tasti-card kbd{
+    display: inline-block; padding: 2px 9px; margin: 0 2px;
+    border-radius: 6px; border: 1.5px solid var(--gold-dk);
+    background: #fff; color: var(--navy); font-weight: 700; font-size: .95rem; vertical-align: middle;
 }
-.ums-aiuto-si:hover{ background: var(--gold); color: var(--night); }
-.ums-aiuto-si .ums-cup{ width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-.ums-aiuto-no{
-    width: 100%; padding: 12px 16px; border-radius: 50px; cursor: pointer;
-    border: 1px solid var(--dust); background: transparent; color: var(--sub);
-    font-family: var(--font-body); font-weight: 600; font-size: 0.95rem;
-}
-.ums-aiuto-no:hover{ color: var(--ink); border-color: var(--gold); }
-.night-mode .ums-aiuto-no{ border-color: #2C3140; color: #A9AFBC; }
-.night-mode .ums-aiuto-no:hover{ color: #E8E4DC; border-color: var(--gold); }
+.night-mode .ums-tasti-card kbd{ background: #0F1117; color: #E8E4DC; }
+@media (prefers-reduced-motion: reduce){ #ums-tasti-pop{ backdrop-filter: none; } }
