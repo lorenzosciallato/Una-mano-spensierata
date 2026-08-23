@@ -3778,57 +3778,58 @@ body.ums-facile.night-mode .flashcard-back p{ background: #1C1F27; color: #E8E4D
 body.ums-facile.night-mode .flashcard-front h2{ background: #0F1117; color: #fff; }
 
 
-/* ---- RIGA DI LETTURA (solo PC, solo riassuntone, solo con "Aa" acceso) ----
-   Una striscia evidenzia UNA riga; si sposta con le frecce ↑ ↓, Esc spegne. */
-#ums-riga-btn{ display: none; }
-@media (min-width: 901px){
-    body.ums-facile #ums-riga-btn{
-        display: inline-flex; align-items: center; gap: 8px;
-        margin: 0 0 14px; padding: 9px 16px;
-        border-radius: 50px; border: 1px solid var(--gold);
-        background: #fff; color: var(--navy);
-        font-family: var(--font-facile); font-size: 0.95rem; font-weight: 700;
-        letter-spacing: 0.03em; cursor: pointer;
-        box-shadow: var(--shadow-card);
-    }
-    body.ums-facile #ums-riga-btn:hover{ background: #FBF6E9; }
-    body.ums-facile #ums-riga-btn[aria-pressed="true"]{ background: var(--gold); color: var(--night); }
-    body.ums-facile.night-mode #ums-riga-btn{ background: #1E212A; color: #E8E4DC; }
-    body.ums-facile.night-mode #ums-riga-btn[aria-pressed="true"]{ background: var(--gold); color: var(--night); }
-    #ums-riga-btn .ums-riga-help{
-        display: inline-flex; align-items: center; justify-content: center;
-        width: 22px; height: 22px; border-radius: 50%;
-        border: 1.5px solid currentColor; font-size: 0.8rem; margin-left: 4px;
-    }
+/* ---- UN PARAGRAFO ALLA VOLTA (riassuntone, solo con "Aa" acceso) ---- */
+#ums-para-btn{ display: none; }
+body.ums-facile #ums-para-btn{
+    display: inline-flex; align-items: center; gap: 8px;
+    margin: 0 0 14px; padding: 9px 16px;
+    border-radius: 50px; border: 1px solid var(--gold);
+    background: #fff; color: var(--navy);
+    font-family: var(--font-facile); font-size: 0.95rem; font-weight: 700;
+    letter-spacing: 0.03em; cursor: pointer;
+    box-shadow: var(--shadow-card);
 }
-#ums-riga-band{
-    position: absolute; left: 0; top: 0; width: 0; height: 0;
-    display: none; pointer-events: none; z-index: 5;
-    /* stile "lightbox" (CHI 2023): la riga resta com'è, il resto si attenua;
-       niente colore pieno, così non si confonde con gli evidenziatori gialli */
-    background: transparent;
-    border-radius: 6px;
-    box-shadow: 0 0 0 2px var(--gold), 0 4px 16px rgba(15,17,23,0.10);
-    transition: top .12s ease, height .12s ease;
+body.ums-facile #ums-para-btn:hover{ background: #FBF6E9; }
+body.ums-facile #ums-para-btn[aria-pressed="true"]{ background: var(--gold); color: var(--night); }
+body.ums-facile.night-mode #ums-para-btn{ background: #1E212A; color: #E8E4DC; }
+body.ums-facile.night-mode #ums-para-btn[aria-pressed="true"]{ background: var(--gold); color: var(--night); }
+#ums-para-btn .ums-para-help{
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 22px; height: 22px; border-radius: 50%;
+    border: 1.5px solid currentColor; font-size: 0.8rem; margin-left: 4px;
 }
-body.ums-riga-on #ums-riga-band{ display: block; }
-.night-mode #ums-riga-band{ box-shadow: 0 0 0 2px var(--gold), 0 4px 16px rgba(0,0,0,0.4); }
-/* due veli (sopra e sotto la riga) attenuano tutto il riassuntone TRANNE
-   la riga nella cornice, che resta a contrasto pieno */
-.ums-riga-velo{
-    position: absolute; display: none; pointer-events: none; z-index: 4;
-    background: rgba(251,246,233,0.62);
+/* i blocchi nascosti */
+body.ums-para-on #dyn-riassuntone-container > .ums-para-nascosto{ display: none !important; }
+/* in questa modalità la scatola non ha bisogno di scorrere: si allarga al paragrafo */
+body.ums-para-on #dyn-riassuntone-container{ max-height: none !important; overflow: visible !important; }
+/* Avanti / Indietro sotto al paragrafo */
+#ums-para-nav{
+    display: none; align-items: center; justify-content: space-between; gap: 12px;
+    margin: 18px 0 6px;
 }
-body.ums-riga-on .ums-riga-velo{ display: block; }
-.night-mode .ums-riga-velo{ background: rgba(15,17,23,0.62); }
+#ums-para-nav button{
+    padding: 12px 20px; border-radius: 50px; border: 1px solid var(--gold);
+    background: var(--navy); color: #fff; cursor: pointer;
+    font-family: var(--font-facile); font-size: 1rem; font-weight: 700; letter-spacing: 0.03em;
+    box-shadow: var(--shadow-card);
+}
+#ums-para-nav button:disabled{ opacity: .35; cursor: default; }
+#ums-para-nav .ums-para-conta{
+    font-family: var(--font-facile); font-size: 1rem; font-weight: 700; color: var(--gold-dk);
+    letter-spacing: 0.08em;
+}
+.night-mode #ums-para-nav .ums-para-conta{ color: var(--gold); }
+@media (max-width: 900px){
+    #ums-para-nav button{ padding: 12px 14px; font-size: 0.95rem; }
+}
 
-/* ---- tutorial della riga (pop-up brandizzato, testo facilitato) ---- */
-#ums-riga-tut{
+/* ---- tutorial (pop-up brandizzato, testo facilitato) ---- */
+#ums-para-tut{
     display: none; position: fixed; inset: 0; z-index: 99999999;
     background: rgba(15,17,23,0.6); backdrop-filter: blur(4px);
     align-items: center; justify-content: center; padding: 20px;
 }
-#ums-riga-tut.aperto{ display: flex; }
+#ums-para-tut.aperto{ display: flex; }
 .ums-riga-tut-card{
     background: #FBF6E9; color: #2B2A28;
     width: 100%; max-width: 520px;
@@ -3857,4 +3858,108 @@ body.ums-riga-on .ums-riga-velo{ display: block; }
     width: 100%; padding: 14px; border: none; border-radius: 50px;
     background: var(--navy); color: #fff; cursor: pointer;
     font-family: var(--font-facile); font-size: 1.05rem; font-weight: 700; letter-spacing: 0.04em;
+}
+
+
+/* ====================================================================
+   SEZIONE 19 — ACCESSIBILITÀ INVISIBILE
+   Regole che non cambiano NULLA per chi non ne ha bisogno:
+   si attivano solo con impostazioni di sistema o con la tastiera.
+   ==================================================================== */
+
+/* 1) "Riduci movimento" del sistema operativo: spegne animazioni e
+   transizioni per chi soffre movimento a schermo (vestibolare/emicrania).
+   Per tutti gli altri il sito resta identico. */
+@media (prefers-reduced-motion: reduce){
+    *, *::before, *::after{
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    html{ scroll-behavior: auto !important; }
+}
+
+/* 2) Contorno di messa a fuoco SOLO da tastiera (:focus-visible):
+   col mouse non compare mai, quindi l'estetica non cambia. */
+button:focus-visible, a:focus-visible, [tabindex]:focus-visible,
+input:focus-visible, textarea:focus-visible, select:focus-visible{
+    outline: 2px solid var(--gold-dk) !important;
+    outline-offset: 2px;
+}
+.night-mode button:focus-visible, .night-mode a:focus-visible,
+.night-mode [tabindex]:focus-visible{
+    outline-color: var(--gold) !important;
+}
+
+/* 3) Bersagli piccoli: area cliccabile allargata a ≥24px SENZA cambiare
+   la grafica (un alone invisibile intorno al pallino). WCAG 2.2 §2.5.8 */
+.hl-swatch, .wb-hl-swatch{ position: relative; }
+.hl-swatch::after, .wb-hl-swatch::after{
+    content: ''; position: absolute; inset: -6px; border-radius: 50%;
+}
+
+/* 4) Classe di servizio: contenuto letto dagli screen reader ma
+   invisibile a schermo (per mappa-elenco, annunci del quiz, ecc.) */
+.ums-sr-only{
+    position: absolute !important;
+    width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%);
+    white-space: nowrap; border: 0;
+}
+
+
+/* ---- SALTA AL CONTENUTO (invisibile finché non ci arrivi col Tab) ---- */
+#ums-salta{
+    position: absolute; left: -9999px; top: 12px; z-index: 100000000;
+    padding: 12px 20px; border-radius: 50px;
+    background: var(--navy); color: #fff; text-decoration: none;
+    font-family: var(--font-body); font-weight: 700; letter-spacing: 0.04em;
+    box-shadow: var(--shadow-lift);
+}
+#ums-salta:focus{ left: 16px; }
+
+/* i titoli h2 delle sezioni: involucro trasparente, grafica identica */
+.ums-acc-h{ margin: 0; padding: 0; font-size: inherit; font-weight: inherit; line-height: inherit; display: block; }
+.ums-acc-h > .accordion-header{ width: 100%; }
+
+/* ---- POP-UP "TI È D'AIUTO?" ---- */
+#ums-aiuto-pop{
+    position: fixed; z-index: 9999997;
+    left: 50%; bottom: 22px; transform: translate(-50%, 24px);
+    width: min(460px, calc(100vw - 28px));
+    background: #FBF6E9; color: #2B2A28;
+    border-radius: 18px; border-top: 4px solid var(--gold);
+    box-shadow: 0 24px 60px rgba(15,17,23,0.35);
+    padding: 20px 22px 18px;
+    opacity: 0; transition: opacity .3s ease, transform .3s ease;
+}
+#ums-aiuto-pop.su{ opacity: 1; transform: translate(-50%, 0); }
+.night-mode #ums-aiuto-pop{ background: #1C1F27; color: #E8E4DC; }
+.ums-aiuto-x{
+    position: absolute; top: 10px; right: 12px;
+    border: none; background: none; cursor: pointer;
+    font-size: 0.95rem; color: inherit; opacity: .6; padding: 6px;
+}
+.ums-aiuto-x:hover{ opacity: 1; }
+.ums-aiuto-titolo{
+    margin: 0 0 8px; font-family: var(--font-display, serif);
+    font-size: 1.15rem; font-weight: 700; color: var(--navy);
+}
+.night-mode .ums-aiuto-titolo{ color: #E8E4DC; }
+.ums-aiuto-testo{ margin: 0 0 14px; font-size: 0.93rem; line-height: 1.55; }
+.ums-aiuto-azioni{ display: flex; gap: 10px; flex-wrap: wrap; }
+.ums-aiuto-si{
+    flex: 1; min-width: 150px; padding: 12px 16px; border-radius: 50px; cursor: pointer;
+    border: none; background: var(--navy); color: #fff;
+    font-family: var(--font-body); font-weight: 700; letter-spacing: 0.03em;
+}
+.ums-aiuto-si:hover{ background: var(--gold); color: var(--night); }
+.ums-aiuto-no{
+    padding: 12px 16px; border-radius: 50px; cursor: pointer;
+    border: 1px solid var(--dust); background: transparent; color: inherit;
+    font-family: var(--font-body); font-weight: 600;
+}
+.night-mode .ums-aiuto-no{ border-color: #2C3140; }
+@media (max-width: 900px){
+    #ums-aiuto-pop{ bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
 }
