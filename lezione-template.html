@@ -1182,6 +1182,9 @@
       .ums-pdf-evid{display:flex;align-items:center;gap:.6rem;margin:.4rem 0 1.2rem;
         font-size:.86rem;color:var(--body,#3d3c3a);cursor:pointer}
       body.night-mode .ums-pdf-evid{color:#c9c9d2}
+      .ums-pdf-evid-nota{margin:-.6rem 0 1rem;padding:.6rem .8rem;font-size:.82rem;line-height:1.45;
+        background:rgba(200,169,110,.14);border-radius:10px;color:var(--sub,#6b6b73)}
+      body.night-mode .ums-pdf-evid-nota{background:rgba(200,169,110,.12);color:#c9c9d2}
       .ums-pdf-evid input{width:18px;height:18px;accent-color:var(--gold,#c8a96e);cursor:pointer}
       .ums-pdf-x{position:absolute;top:14px;right:16px;width:34px;height:34px;border:none;
         background:transparent;font-size:1.6rem;color:var(--sub,#7a7770);cursor:pointer;line-height:1;border-radius:50%}
@@ -1267,6 +1270,7 @@
                 '<span><span class="tt">Solo mappa mentale</span><span class="ds">Il diagramma dei concetti della lezione.</span></span>'+
               '</button>'+
               '<label class="ums-pdf-evid"><input type="checkbox" id="ums-pdf-evid-chk"> Mantieni le mie evidenziazioni</label>'+
+              '<p class="ums-pdf-evid-nota" id="ums-pdf-evid-nota" hidden>Per stampare i colori: nella finestra di stampa apri <b>Altre impostazioni</b> e attiva <b>Grafica di sfondo</b>. Senza, il browser stampa il testo ma non gli sfondi colorati.</p>'+
               '<label class="ums-pdf-evid"><input type="checkbox" id="ums-pdf-facile-chk"> Lettura facilitata (carattere pi\u00f9 grande, righe corte \u2014 consuma pi\u00f9 pagine)</label>'+
               '<div class="ums-pdf-actions">'+
                 '<button class="act-print" type="button">'+
@@ -1284,6 +1288,10 @@
               b.classList.add('sel');
               modoSel = b.getAttribute('data-modo');
             });
+          });
+          document.getElementById('ums-pdf-evid-chk').addEventListener('change', function(){
+            var nota=document.getElementById('ums-pdf-evid-nota');
+            if(nota) nota.hidden = !this.checked;
           });
           ov.querySelector('.act-print').addEventListener('click', function(){
             var evid = document.getElementById('ums-pdf-evid-chk').checked;
@@ -1394,10 +1402,10 @@
       // 0.05em, spazio parole 0.18em, righe ~55 caratteri, testo a sinistra)
       function cssLetturaFacile(){
         return 'body{font-family:\'Atkinson Hyperlegible\',\'DM Sans\',system-ui,sans-serif;'+
-            'font-size:1.18rem;line-height:1.6;letter-spacing:.05em;word-spacing:.18em}'+
-          'p{max-width:55ch;text-align:left;margin:0 0 1.15rem}'+
-          'h3{line-height:1.45;letter-spacing:.02em;margin:1.7rem 0 .7rem}'+
-          '.cornell-box{margin:1.3rem 0}';
+            'font-size:1.38rem;line-height:1.7;letter-spacing:.05em;word-spacing:.18em}'+
+          'p{max-width:52ch;text-align:left;margin:0 0 1.3rem}'+
+          'h3{font-size:1.5rem;line-height:1.4;letter-spacing:.02em;margin:1.9rem 0 .8rem}'+
+          '.cornell-box{margin:1.4rem 0}';
       }
       function stampa(modo, conEvidenziazioni, scarica, facile){
         var cont = document.getElementById('dyn-riassuntone-container');
@@ -1839,14 +1847,14 @@
   /* ---- pulsante d'ingresso (nascosto finché non c'è audio) ---- */
   #ums-ascolta-bar{display:none;margin:0 0 1.3rem}
   #ums-ascolta-bar.c-è{display:flex}
-  #ums-ascolta-btn{display:inline-flex;align-items:center;gap:.6rem;
-    font-family:var(--font-body,'DM Sans',sans-serif);font-weight:700;font-size:1.02rem;
-    padding:.9rem 1.5rem;border-radius:14px;cursor:pointer;
-    border:2px solid var(--navy,#1A2F4F);background:var(--navy,#1A2F4F);color:#fff;
+  #ums-ascolta-btn{display:inline-flex;align-items:center;gap:.5rem;
+    font-family:var(--font-body,'DM Sans',sans-serif);font-weight:700;font-size:.82rem;
+    padding:.5rem .95rem;border-radius:999px;cursor:pointer;
+    border:1px solid var(--navy,#1A2F4F);background:var(--navy,#1A2F4F);color:#fff;
     transition:transform .12s ease,box-shadow .2s ease}
   #ums-ascolta-btn:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(26,47,79,.32)}
   #ums-ascolta-btn:focus-visible{outline:3px solid var(--gold,#C8A96E);outline-offset:3px}
-  #ums-ascolta-btn svg{width:1.35em;height:1.35em}
+  #ums-ascolta-btn svg{width:1.05em;height:1.05em}
   .night-mode #ums-ascolta-btn{background:#8FB4E8;border-color:#8FB4E8;color:#14161C}
 
   /* ---- lettura: paragrafo corrente ingrandito e in evidenza, gli altri attenuati ---- */
@@ -1895,6 +1903,8 @@
   #ums-read-bar .vel-giu,#ums-read-bar .vel-su{min-width:48px;font-size:1.35rem;padding:0 .6rem}
   #ums-read-bar .vel{font-weight:700;color:var(--navy,#1A2F4F);min-width:58px;text-align:center;
     font-variant-numeric:tabular-nums}
+  #ums-read-bar .auto.on{background:var(--gold,#C8A96E);color:#14161c;border-color:var(--gold,#C8A96E)}
+  .night-mode #ums-read-bar .auto.on{background:var(--gold,#C8A96E);color:#14161c;border-color:var(--gold,#C8A96E)}
   #ums-read-bar .esci{border-color:transparent;color:var(--sub,#7A7770)}
   #ums-read-bar svg{width:1.25em;height:1.25em}
   .night-mode #ums-read-bar button{background:#23262e;color:#c9c9d2;border-color:#3a3f4b}
@@ -1909,6 +1919,7 @@
   var blocchi = [];          // {el, audio, testo, schema, macro}
   var idx = 0, attivo = false, audioEl = null;
   var velocita = 1.0;
+  var autoplay = false;   // legge tutto di seguito; si attiva a mano
   var elBar, elPos, elPlay, elSchema, elVel, live;
 
   function param(k){ try{return new URLSearchParams(location.search).get(k);}catch(e){return null;} }
@@ -1982,6 +1993,8 @@
       btn('play','Play o pausa (barra spaziatrice)','<svg class="ic-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg><svg class="ic-pause" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg><span class="ptxt">Play</span>')+
       btn('next','Paragrafo successivo (freccia destra)', I.next)+
       '<span class="sep"></span>'+
+      btn('auto','Leggi tutto di seguito senza fermarti','<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3v18l15-9z"/></svg> Autoplay')+
+      '<span class="sep"></span>'+
       btn('vel-giu','Rallenta la voce','&minus;')+
       '<span class="vel" aria-live="polite">1,0&times;</span>'+
       btn('vel-su','Accelera la voce','+')+
@@ -1998,6 +2011,14 @@
     elBar.querySelector('.rip').onclick=leggiBlocco;
     elBar.querySelector('.vel-giu').onclick=function(){ cambiaVel(-0.1); };
     elBar.querySelector('.vel-su').onclick=function(){ cambiaVel(0.1); };
+    elBar.querySelector('.auto').onclick=function(){
+      autoplay=!autoplay;
+      var a=elBar.querySelector('.auto');
+      a.classList.toggle('on', autoplay);
+      a.setAttribute('aria-pressed', autoplay?'true':'false');
+      // se accendo l'autoplay mentre è fermo, riparte da dove sono
+      if(autoplay && (!audioEl || audioEl.paused)) leggiBlocco();
+    };
     elPlay.onclick=playPausa;
     elBar.querySelector('.esci').onclick=esci;
     mostraVel();
@@ -2056,12 +2077,19 @@
     if(leggi) leggiBlocco();
   }
 
+  function fineBlocco(){
+    // autoplay: se c'è un paragrafo dopo, ci passo e lo leggo; altrimenti stop
+    if(autoplay && idx < blocchi.length-1){ vaiA(idx+1, true); return; }
+    if(autoplay && idx === blocchi.length-1){ autoplay=false;
+      var a=elBar&&elBar.querySelector('.auto'); if(a){ a.classList.remove('on'); a.setAttribute('aria-pressed','false'); } }
+    mostraFermo();
+  }
   function leggiBlocco(){
     ferma();
     var b=blocchi[idx];
     audioEl=new Audio(b.audio);
     audioEl.playbackRate=velocita;
-    audioEl.onended=mostraFermo;
+    audioEl.onended=fineBlocco;
     audioEl.play().then(mostraLeggendo).catch(function(){ mostraFermo(); });
   }
   function playPausa(){
@@ -2540,10 +2568,10 @@
     // IDENTICO alla modalità "Aa": Atkinson, 1.18rem, interlinea 1.6,
     // spaziatura lettere .05em, spazio parole .18em, righe ~55 caratteri.
     return 'body{font-family:\'Atkinson Hyperlegible\',\'DM Sans\',system-ui,sans-serif;'+
-        'font-size:1.18rem;line-height:1.6;letter-spacing:.05em;word-spacing:.18em}'+
-      'p{max-width:55ch;text-align:left;margin:0 0 1.15rem}'+
-      'h3{line-height:1.45;letter-spacing:.02em;margin:1.7rem 0 .7rem}'+
-      '.cornell-box{margin:1.3rem 0;padding:1rem 1.2rem}';
+        'font-size:1.38rem;line-height:1.7;letter-spacing:.05em;word-spacing:.18em}'+
+      'p{max-width:52ch;text-align:left;margin:0 0 1.3rem}'+
+      'h3{font-size:1.5rem;line-height:1.4;letter-spacing:.02em;margin:1.9rem 0 .8rem}'+
+      '.cornell-box{margin:1.4rem 0;padding:1rem 1.2rem}';
   }
   function testaLezione(m){
     return '<div class="lez-head"><div class="pdf-brand"><div class="wm">Una Mano <em>Spensierata</em></div>'+
@@ -3078,6 +3106,14 @@ body.night-mode .ums-menu-pop .vista-on{ background:rgba(143,180,232,.16); }
     voce('Tutte le slide', function(){ if(window.__umsStampeApri) window.__umsStampeApri('slide'); });
     tg.appendChild(mSt.wrap);
 
+    // riordino: Studia · Mappa mentale · ⚙ Impostazioni · 🖨 Stampa (ultimo)
+    function riordina(){
+      var studio=document.getElementById('ums-studio-btn');
+      var mappa=document.getElementById('ums-btn-mappa');
+      var imp=document.getElementById('ums-menu-imp'); imp=imp&&imp.closest('.ums-menu-wrap');
+      var stp=document.getElementById('ums-menu-stampa'); stp=stp&&stp.closest('.ums-menu-wrap');
+      [studio, mappa, imp, stp].forEach(function(el){ if(el && el.parentNode===tg) tg.appendChild(el); });
+    }
     // nascondo i vecchi pulsanti di stampa sciolti (le azioni ora sono nel menu).
     // Alcuni vengono montati da altri script con ritardo: riprovo per un po'.
     var giri=0;
@@ -3088,6 +3124,7 @@ body.night-mode .ums-menu-pop .vista-on{ background:rgba(143,180,232,.16); }
       Array.prototype.forEach.call(document.querySelectorAll('#ums-slide-toggle-box .ums-tg-vista'), function(v){
         if(['Solo testo','Testo + slide','Solo slide'].indexOf((v.textContent||'').trim())>=0) v.style.display='none';
       });
+      riordina();
       if(giri++<30) setTimeout(nascondiVecchi,300);
     })();
   }
