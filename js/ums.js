@@ -4588,7 +4588,6 @@ if (!fileDaCaricare) {
     }
 
     function accendi() {
-        if (!document.body.classList.contains('ums-facile')) return;
         if (!blocchi().length) return;
         attiva = true; idx = primoVisibile();
         document.body.classList.add('ums-para-on');
@@ -4690,10 +4689,8 @@ if (!fileDaCaricare) {
         });
 
         if ('MutationObserver' in window) {
-            // "Aa" spento → si esce
-            new MutationObserver(function () {
-                if (!document.body.classList.contains('ums-facile') && attiva) spegni();
-            }).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+            // (rimosso il vincolo che spegneva "un paragrafo" quando Aa era spento:
+            //  ora la funzione è indipendente dalla lettura facilitata)
             // il riassuntone viene riscritto (cambio vista / lezione) → riapplica sullo stesso numero
             new MutationObserver(function (ms) {
                 if (!attiva) return;
