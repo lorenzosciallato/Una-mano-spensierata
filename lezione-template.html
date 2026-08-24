@@ -1182,6 +1182,17 @@
       .ums-pdf-evid{display:flex;align-items:center;gap:.6rem;margin:.4rem 0 1.2rem;
         font-size:.86rem;color:var(--body,#3d3c3a);cursor:pointer}
       body.night-mode .ums-pdf-evid{color:#c9c9d2}
+
+      .ums-pdf-brand{ font-family:var(--font-display,'Playfair Display',serif); font-weight:700;
+        line-height:1.02; text-align:center; margin:.2rem 0 .1rem; }
+      .ums-pdf-brand .l1, .ums-pdf-brand .l2{ display:block; font-size:1.35rem; white-space:nowrap; }
+      .ums-pdf-brand .l1{ color:var(--ink,#1C1C22); }
+      .ums-pdf-brand .l2{ color:var(--navy,#1A2F4F); font-style:italic; }
+      body.night-mode .ums-pdf-brand .l2{ color:#8FB4E8; }
+      .ums-pdf-card h3{ text-align:center; }
+      .ums-pdf-savehint{ font-size:.82rem; line-height:1.45; color:var(--sub,#6b6b73);
+        margin:.2rem 0 1rem; padding:.6rem .8rem; background:rgba(26,47,79,.06); border-radius:10px; }
+      body.night-mode .ums-pdf-savehint{ background:rgba(143,180,232,.08); color:#c9c9d2; }
       .ums-pdf-evid-nota{margin:-.6rem 0 1rem;padding:.6rem .8rem;font-size:.82rem;line-height:1.45;
         background:rgba(200,169,110,.14);border-radius:10px;color:var(--sub,#6b6b73)}
       body.night-mode .ums-pdf-evid-nota{background:rgba(200,169,110,.12);color:#c9c9d2}
@@ -1251,6 +1262,7 @@
           ov.innerHTML =
             '<div class="ums-pdf-card">'+
               '<button class="ums-pdf-x" aria-label="Chiudi">&times;</button>'+
+              '<div class="ums-pdf-brand notranslate" translate="no"><span class="l1">Una Mano</span><span class="l2">Spensierata</span></div>'+
               '<h3>Stampa o salva</h3>'+
               '<p class="ums-pdf-sub">Scegli cosa includere, poi stampa o scarica in PDF.</p>'+
               '<button class="ums-pdf-opt" data-modo="completo">'+
@@ -1271,6 +1283,7 @@
               '</button>'+
               '<label class="ums-pdf-evid"><input type="checkbox" id="ums-pdf-evid-chk"> Mantieni le mie evidenziazioni</label>'+
               '<p class="ums-pdf-evid-nota" id="ums-pdf-evid-nota" hidden>Per stampare i colori: nella finestra di stampa apri <b>Altre impostazioni</b> e attiva <b>Grafica di sfondo</b>. Senza, il browser stampa il testo ma non gli sfondi colorati.</p>'+
+              '<p class="ums-pdf-savehint">Vuoi salvarlo invece di stamparlo? Nella finestra che si apre, alla voce <b>Destinazione</b> scegli <b>Salva come PDF</b> e premi <b>Salva</b>.</p>'+
               '<label class="ums-pdf-evid"><input type="checkbox" id="ums-pdf-facile-chk"> Lettura facilitata (carattere pi\u00f9 grande, righe corte \u2014 consuma pi\u00f9 pagine)</label>'+
               '<div class="ums-pdf-actions">'+
                 '<button class="act-print" type="button">'+
@@ -1959,8 +1972,24 @@
 
   function aggiungi(el, dati, macro){
     el.classList.add('ums-lb');
-    blocchi.push({ el:el, audio:dati.audio, testo:(dati.testo||el.textContent||'').trim(),
+    var cont=document.getElementById('dyn-riassuntone-container');
+    var childIdx = cont ? Array.prototype.indexOf.call(cont.children, el) : -1;
+    blocchi.push({ el:el, childIdx:childIdx, audio:dati.audio, testo:(dati.testo||el.textContent||'').trim(),
                    schema:dati.schema || null, macro:macro });
+  }
+  // ritrova l'elemento vivo del blocco: se il riferimento è stato staccato dal
+  // DOM (succede quando le sottolineature vengono ripristinate rimpiazzando
+  // l'HTML del riassuntone), lo recupero per posizione e riattacco .ums-lb
+  function elBlocco(i){
+    var bl=blocchi[i]; if(!bl) return null;
+    if(bl.el && bl.el.isConnected) return bl.el;
+    var cont=document.getElementById('dyn-riassuntone-container');
+    if(cont && bl.childIdx>=0 && cont.children[bl.childIdx]){
+      bl.el=cont.children[bl.childIdx];
+      bl.el.classList.add('ums-lb');
+      return bl.el;
+    }
+    return bl.el || null;
   }
 
   function montaPulsante(cont){
@@ -2068,14 +2097,25 @@
   }
   function vaiA(i,leggi){
     if(i<0) i=0; if(i>blocchi.length-1) i=blocchi.length-1; idx=i;
-    blocchi.forEach(function(b){ b.el.classList.remove('ums-lb-cur'); });
-    var b=blocchi[idx]; b.el.classList.add('ums-lb-cur');
-    try{ b.el.scrollIntoView({behavior:'smooth',block:'center'}); }catch(e){ b.el.scrollIntoView(); }
+    blocchi.forEach(function(b,k){ var e=elBlocco(k); if(e) e.classList.remove('ums-lb-cur'); });
+    var b=blocchi[idx]; var el=elBlocco(idx); if(el){ el.classList.add('ums-lb-cur');
+      try{ el.scrollIntoView({behavior:'smooth',block:'center'}); }catch(e){ el.scrollIntoView(); } }
     if(elPos) elPos.textContent=(idx+1)+' / '+blocchi.length;
     mostraSchema(b.schema);
     annuncia(b.testo);
     if(leggi) leggiBlocco();
   }
+
+  function garantisciEvidenza(){
+    // se sto leggendo ma per qualche motivo nessun paragrafo è evidenziato,
+    // rimetto l'evidenza su quello corrente (evita il "tutto oscurato")
+    if(!attivo) return;
+    if(!document.querySelector('.ums-lb-cur') && blocchi[idx]){
+      blocchi.forEach(function(b,k){ var e=elBlocco(k); if(e) e.classList.remove('ums-lb-cur'); });
+      var e=elBlocco(idx); if(e) e.classList.add('ums-lb-cur');
+    }
+  }
+  setInterval(garantisciEvidenza, 700);
 
   function fineBlocco(){
     // autoplay: se c'è un paragrafo dopo, ci passo e lo leggo; altrimenti stop
@@ -2370,7 +2410,8 @@
   border-radius:18px; border-top:4px solid var(--gold,#C8A96E);
   padding:26px 30px; box-shadow:0 40px 80px rgba(0,0,0,.4); }
 .night-mode .ums-stampe-card{ background:#1C1F27; color:#E8E4DC; }
-.ums-stampe-card h3{ margin:0 0 8px; font-size:1.25rem; }
+.ums-stampe-card h3{ margin:0 0 8px; font-size:1.25rem; text-align:center; }
+.ums-stampe-nota{ text-align:center; }
 .ums-stampe-nota{ font-size:.9rem; line-height:1.55; opacity:.85; margin:0 0 14px; }
 .ums-stampe-tutte{ display:flex; gap:14px; align-items:center; margin:0 0 12px; font-size:.9rem; }
 .ums-stampe-tutte button{ background:none; border:none; color:var(--gold-dk,#9A7A3F); font-weight:700;
@@ -2442,6 +2483,7 @@
     ov=document.createElement('div'); ov.id='ums-stampe-overlay';
     ov.setAttribute('role','dialog'); ov.setAttribute('aria-modal','true');
     ov.innerHTML='<div class="ums-stampe-card">'+
+      '<div class="ums-pdf-brand notranslate" translate="no"><span class="l1">Una Mano</span><span class="l2">Spensierata</span></div>'+
       '<h3 class="ums-stampe-tit"></h3>'+
       '<p class="ums-stampe-nota"></p>'+
       '<div class="ums-stampe-tutte">'+
@@ -2454,6 +2496,7 @@
       '</div>'+
       '<p class="ums-stampe-stato"></p>'+
       '<div class="ums-stampe-lista"></div>'+
+      '<p class="ums-pdf-savehint">Vuoi salvarlo invece di stamparlo? Nella finestra che si apre, alla voce <b>Destinazione</b> scegli <b>Salva come PDF</b> e premi <b>Salva</b>.</p>'+
       '<div class="ums-stampe-azioni">'+
         '<button type="button" class="annulla">Chiudi</button>'+
         '<button type="button" class="primario">Stampa</button>'+
@@ -2740,7 +2783,7 @@ body.night-mode .ums-studio-top .tt{ color:#8FB4E8; }
 .ums-studio-x:hover{ background:var(--navy,#1A2F4F); color:#fff; }
 body.night-mode .ums-studio-x{ background:#20232b; color:#E8E4DC; border-color:#8FB4E8; }
 .ums-studio-corpo{ flex:1 1 auto; display:flex; gap:0; min-height:0; }
-.ums-studio-sx{ flex:1 1 52%; min-width:0; overflow:auto; padding:26px 30px 140px; }
+.ums-studio-sx{ flex:1 1 52%; min-width:0; overflow:auto; padding:10px 30px 140px; }
 .ums-studio-dx{ flex:1 1 48%; min-width:0; overflow:hidden; padding:20px;
   border-left:1px solid var(--dust,#E5DFD3); background:rgba(200,169,110,.05);
   display:flex; flex-direction:column; gap:14px; }
@@ -2765,7 +2808,7 @@ body.night-mode .ums-studio-dx .wb-hint{ background:rgba(143,180,232,.08); }
 #ums-studio-btn svg{ width:1.05em; height:1.05em; flex:0 0 auto; }
 
 /* --- pop-up Studia: controlli fissi sopra il pop-up + lavagna piena --- */
-body.ums-studio-aperto #ums-facile-btn{ z-index:99999995 !important; }
+body.ums-studio-aperto #ums-facile-btn{ display:none !important; }
 body.ums-studio-aperto #ums-read-bar{ z-index:99999996 !important; }
 body.ums-studio-aperto #floating-highlighter{ z-index:99999997 !important; }
 /* il riassuntone nel pop-up scorre nella colonna sinistra */
@@ -2842,7 +2885,6 @@ body.night-mode .ums-studio-inv{ background:#20232b; color:#E8E4DC; border-color
     overlay.setAttribute('aria-label','Studia: riassuntone e lavagna');
     overlay.innerHTML=
       '<div class="ums-studio-top">'+
-        '<span class="tt">Studia</span>'+
         '<div class="ums-studio-viste" id="ums-studio-viste"></div>'+
         '<button type="button" class="ums-studio-inv" id="ums-studio-inv" title="Scambia i due lati">\u21C4 Inverti</button>'+
         '<button type="button" class="ums-studio-x">Chiudi \u2715</button>'+
@@ -3076,34 +3118,52 @@ body.night-mode .ums-menu-pop .vista-on{ background:rgba(143,180,232,.16); }
       .replace(/\bums-tg-vista\b/g,'').replace(/\bon\b/g,'').replace(/\bums-print-pill\b/g,'')
       .replace(/\bums-pill-\S+/g,'').trim();
 
-    // ========== ⚙ IMPOSTAZIONI — costruita a parte, appena le viste esistono ==========
-    // Le viste sono montate da un altro script con ritardo: le aspetto con un
-    // watcher dedicato, così il pulsante ⚙ compare SEMPRE quando ci sono
-    // (prima a volte partivo troppo presto e non compariva).
+    // ========== ⚙ IMPOSTAZIONI — creata SEMPRE (contiene Lettura facilitata,
+    // e le viste Solo testo/Testo+slide/Solo slide se la lezione ha le slide) ==========
+    var mImp=creaMenu('ums-menu-imp', ICON_GEAR+' <span>Impostazioni</span>', modelloBase);
+    // 1) Lettura facilitata (sempre presente)
+    var vFac=document.createElement('button'); vFac.type='button';
+    vFac.innerHTML='<span>Lettura facilitata</span>';
+    function segnaFac(){ vFac.classList.toggle('vista-on', document.body.classList.contains('ums-facile')); }
+    vFac.addEventListener('click', function(){
+      var aa=document.getElementById('ums-facile-btn');
+      if(aa){ aa.click(); } else {
+        var on=!document.body.classList.contains('ums-facile');
+        document.body.classList.toggle('ums-facile', on);
+        try{ localStorage.setItem('ums_lettura_facile', on?'1':'0'); }catch(e){}
+      }
+      setTimeout(segnaFac,30);
+    });
+    mImp.pop.appendChild(vFac);
+    setTimeout(segnaFac,50);
+    tg.appendChild(mImp.wrap);
+    // 2) le viste (se/quando esistono) vengono aggiunte in cima con un watcher
     var impGiri=0;
-    (function costruisciImpostazioni(){
-      if(document.getElementById('ums-menu-imp')) return;   // già fatto
+    (function aggiungiViste(){
+      if(mImp.pop.querySelector('.ums-vista-voce')) return;   // già aggiunte
       var viste=Array.prototype.slice.call(tg.querySelectorAll('.ums-tg-vista'))
         .filter(function(x){ return ['Solo testo','Testo + slide','Solo slide'].indexOf((x.textContent||'').trim())>=0; });
-      if(!viste.length){ if(impGiri++<40){ setTimeout(costruisciImpostazioni,300); } return; }
-      var mImp=creaMenu('ums-menu-imp', ICON_GEAR+' <span>Impostazioni</span>', modelloBase);
+      if(!viste.length){ if(impGiri++<40){ setTimeout(aggiungiViste,300); } return; }
       var tit=document.createElement('div'); tit.className='voce-tit'; tit.textContent='Come vedere il riassunto';
-      mImp.pop.appendChild(tit);
+      mImp.pop.insertBefore(tit, mImp.pop.firstChild);
+      var dopoTit=tit.nextSibling;
       viste.forEach(function(v){
-        var voce=document.createElement('button'); voce.type='button';
+        var voce=document.createElement('button'); voce.type='button'; voce.className='ums-vista-voce';
         voce.textContent=(v.textContent||'').trim();
         function segnaAttiva(){
-          Array.prototype.forEach.call(mImp.pop.querySelectorAll('button'), function(b){ b.classList.remove('vista-on'); });
+          Array.prototype.forEach.call(mImp.pop.querySelectorAll('.ums-vista-voce'), function(b){ b.classList.remove('vista-on'); });
           if(v.classList.contains('on')) voce.classList.add('vista-on');
         }
         voce.addEventListener('click', function(){ v.click(); setTimeout(segnaAttiva,30); });
-        mImp.pop.appendChild(voce);
+        mImp.pop.insertBefore(voce, dopoTit);
         setTimeout(segnaAttiva,50);
       });
-      tg.appendChild(mImp.wrap);
+      // separatore tra viste e Lettura facilitata
+      var sep=document.createElement('div'); sep.className='sep';
+      mImp.pop.insertBefore(sep, dopoTit);
       viste.forEach(function(v){ v.style.display='none'; });
-      riordina();
     })();
+    riordina();
 
     // ========== 🖨 STAMPA (menu unico) ==========
     var mSt=creaMenu('ums-menu-stampa', ICON_PRINT+' <span>Stampa</span>', modelloBase);
