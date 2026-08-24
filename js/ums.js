@@ -4324,9 +4324,9 @@ if (!fileDaCaricare) {
             document.addEventListener('keydown', suEsc);
             var riduci = false;
             try { riduci = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
-            // il gatto compare casualmente 1 volta su 4; le altre, dritti alla carta
-            var toccaAlGatto = (Math.random() < 0.25);
-            if (riduci || gattoOk === false || !toccaAlGatto) {
+            // il gatto fa parte del pop-up: quando il pop-up si apre, c'è sempre
+            // (la rarità "1 volta su 4" è gestita da chi apre il pop-up, non qui)
+            if (riduci || gattoOk === false) {
                 ov.classList.remove('gatto-in');
                 ov.querySelector('.ums-bmc-close').focus();
                 return;
@@ -4888,8 +4888,8 @@ if (!fileDaCaricare) {
 // apertura (fase di prova: SEMPRE=true); poi 1 su UNA_SU. Additivo.
 // ====================================================================
 (function () {
-    var SEMPRE = true;        // ⚠️ fase di prova: true = compare sempre
-    var UNA_SU = 4;           // a prova finita (SEMPRE=false): 1 apertura su 4
+    var SEMPRE = false;       // fase di prova finita: pop-up NON a ogni apertura
+    var UNA_SU = 4;           // il pop-up (con gatto) compare 1 volta su 4
     var RITARDO_MS = 15000;
     var CONT_KEY = 'ums_aiuto_contatore';
 
