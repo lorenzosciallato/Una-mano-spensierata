@@ -697,8 +697,19 @@ if (!fileDaCaricare) {
                     const parentEl = ancestor.nodeType === 3 ? ancestor.parentElement : ancestor;
                     const insideHL = parentEl.closest('.highlighted-text') !== null;
 
-                    highlighterBtn.style.top = `${rect.top + window.scrollY - 56}px`;
-                    highlighterBtn.style.left = `${rect.left + window.scrollX + (rect.width / 2) - 70}px`;
+                    var dentroStudio = document.body.classList.contains('ums-studio-aperto');
+                    if (dentroStudio) {
+                        // nel pop-up (fixed) uso coordinate del viewport
+                        highlighterBtn.style.position = 'fixed';
+                        highlighterBtn.style.top = `${rect.top - 56}px`;
+                        highlighterBtn.style.left = `${rect.left + (rect.width / 2) - 70}px`;
+                        highlighterBtn.style.zIndex = '99999995';
+                    } else {
+                        highlighterBtn.style.position = 'absolute';
+                        highlighterBtn.style.top = `${rect.top + window.scrollY - 56}px`;
+                        highlighterBtn.style.left = `${rect.left + window.scrollX + (rect.width / 2) - 70}px`;
+                        highlighterBtn.style.zIndex = '';
+                    }
                     highlighterBtn.style.display = 'flex';
 
                     const removeBtn = document.getElementById('hl-remove-btn');
