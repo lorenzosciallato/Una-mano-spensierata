@@ -227,7 +227,7 @@
     </header>
 
     <!-- Main Content Card -->
-    <div class="content-card">
+    <div class="content-card" role="main" aria-label="Contenuto della lezione">
 
         <div class="master-accordion-item">
             <div class="ums-master-row">
@@ -298,7 +298,7 @@
                             <div class="media-notes-grid">
                                 <div>
                                     <div class="video-container">
-                                        <iframe id="dyn-podcast-player" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                        <iframe id="dyn-podcast-player" title="Podcast della lezione" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                                     </div>
                                     <p class="video-fallback-note" style="display:none;">Il contenuto non è disponibile per questa lezione.</p>
                                     <a id="dyn-podcast-link" href="LINK_YOUTUBE_QUI" target="_blank" class="video-direct-link">YouTube fa i capricci? Apri direttamente ↗</a>
@@ -331,7 +331,7 @@
                             <div class="media-notes-grid">
                                 <div>
                                     <div class="video-container">
-                                        <iframe id="dyn-video-player" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                        <iframe id="dyn-video-player" title="Video sintesi della lezione" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                                     </div>
                                     <p class="video-fallback-note" style="display:none;">Il contenuto non è disponibile per questa lezione.</p>
                                     <a id="dyn-video-link" href="LINK_YOUTUBE_QUI" target="_blank" class="video-direct-link">YouTube fa i capricci? Apri direttamente ↗</a>
@@ -1544,6 +1544,7 @@
 
         var ifr = document.createElement('iframe');
         ifr.style.cssText='position:fixed;right:0;bottom:0;width:0;height:0;border:none';
+        ifr.setAttribute('aria-hidden','true'); ifr.setAttribute('title','Stampa');
         document.body.appendChild(ifr);
         var doc = ifr.contentWindow.document;
         doc.open(); doc.write(html); doc.close();
@@ -3181,6 +3182,19 @@ body.night-mode .ums-menu-pop .vista-on{ background:rgba(143,180,232,.16); }
     });
     mImp.pop.appendChild(vFac);
     setTimeout(segnaFac,50);
+    // 1-bis) Contrasto elevato — scurisce i testi tenui per chi fatica a leggere.
+    //   Non cambia nulla per chi non l'attiva. Si ricorda la scelta.
+    var vContr=document.createElement('button'); vContr.type='button';
+    vContr.innerHTML='<span>Contrasto elevato</span>';
+    function segnaContr(){ vContr.classList.toggle('vista-on', document.body.classList.contains('ums-contrasto')); }
+    vContr.addEventListener('click', function(){
+      var on=!document.body.classList.contains('ums-contrasto');
+      document.body.classList.toggle('ums-contrasto', on);
+      try{ localStorage.setItem('ums_contrasto', on?'1':'0'); }catch(e){}
+      segnaContr();
+    });
+    mImp.pop.appendChild(vContr);
+    setTimeout(segnaContr,50);
     tg.appendChild(mImp.wrap);
     // 2) le viste (Solo testo / Testo+slide / Solo slide) vengono aggiunte al
     //    menu ⚙ APPENA compaiono. Le viste sono montate da un altro script con
