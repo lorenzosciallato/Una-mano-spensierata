@@ -2844,8 +2844,21 @@ if (!fileDaCaricare) {
 
                     const insideHL = parentEl.closest('.highlighted-text') !== null;
 
-                    btn.style.top = (rect.top + window.scrollY - 56) + 'px';
-                    btn.style.left = Math.max(8, rect.left + window.scrollX + (rect.width / 2) - 70) + 'px';
+                    // nel pop-up Studia il contenitore è fixed e la pagina non
+                    // scorre: uso le coordinate del viewport (niente scrollY),
+                    // altrimenti il pulsante finiva fuori schermo e "spariva".
+                    var dentroStudio = document.body.classList.contains('ums-studio-aperto');
+                    if (dentroStudio) {
+                        btn.style.position = 'fixed';
+                        btn.style.zIndex = '99999995';
+                        btn.style.top = (rect.top - 56) + 'px';
+                        btn.style.left = Math.max(8, rect.left + (rect.width / 2) - 70) + 'px';
+                    } else {
+                        btn.style.position = 'absolute';
+                        btn.style.zIndex = '';
+                        btn.style.top = (rect.top + window.scrollY - 56) + 'px';
+                        btn.style.left = Math.max(8, rect.left + window.scrollX + (rect.width / 2) - 70) + 'px';
+                    }
                     btn.style.display = 'flex';
 
                     const removeBtn = document.getElementById('hl-remove-btn');
