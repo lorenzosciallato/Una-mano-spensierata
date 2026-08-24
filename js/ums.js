@@ -4324,7 +4324,9 @@ if (!fileDaCaricare) {
             document.addEventListener('keydown', suEsc);
             var riduci = false;
             try { riduci = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
-            if (riduci || gattoOk === false) {
+            // il gatto compare casualmente 1 volta su 4; le altre, dritti alla carta
+            var toccaAlGatto = (Math.random() < 0.25);
+            if (riduci || gattoOk === false || !toccaAlGatto) {
                 ov.classList.remove('gatto-in');
                 ov.querySelector('.ums-bmc-close').focus();
                 return;
