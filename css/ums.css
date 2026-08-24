@@ -3786,13 +3786,12 @@ body.ums-facile.night-mode .flashcard-front h2{ background: #0F1117; color: #fff
 /* ---- UN PARAGRAFO ALLA VOLTA (riassuntone, solo con "Aa" acceso) ---- */
 #ums-para-btn{ display: none; }
 body.ums-facile #ums-para-btn{
-    display: inline-flex; align-items: center; gap: 8px;
-    margin: 0 0 14px; padding: 9px 16px;
-    border-radius: 50px; border: 1px solid var(--gold);
-    background: #fff; color: var(--navy);
-    font-family: var(--font-facile); font-size: 0.95rem; font-weight: 700;
-    letter-spacing: 0.03em; cursor: pointer;
-    box-shadow: var(--shadow-card);
+    display: inline-flex; align-items: center; gap: 7px;
+    margin: 0 0 14px; padding: .5rem .95rem;
+    border-radius: 999px; border: 1px solid var(--gold-lt,#e5d6bd);
+    background: #fff; color: var(--sub,#6b6b73);
+    font-family: var(--font-body,'DM Sans',sans-serif); font-size: .82rem; font-weight: 600;
+    letter-spacing: normal; cursor: pointer;
 }
 body.ums-facile #ums-para-btn:hover{ background: #FBF6E9; }
 body.ums-facile #ums-para-btn[aria-pressed="true"]{ background: var(--gold); color: var(--night); }
@@ -3800,8 +3799,8 @@ body.ums-facile.night-mode #ums-para-btn{ background: #1E212A; color: #E8E4DC; }
 body.ums-facile.night-mode #ums-para-btn[aria-pressed="true"]{ background: var(--gold); color: var(--night); }
 #ums-para-btn .ums-para-help{
     display: inline-flex; align-items: center; justify-content: center;
-    width: 22px; height: 22px; border-radius: 50%;
-    border: 1.5px solid currentColor; font-size: 0.8rem; margin-left: 4px;
+    width: 18px; height: 18px; border-radius: 50%;
+    border: 1.5px solid currentColor; font-size: 0.72rem; margin-left: 4px;
 }
 /* i blocchi nascosti */
 body.ums-para-on #dyn-riassuntone-container > .ums-para-nascosto{ display: none !important; }
