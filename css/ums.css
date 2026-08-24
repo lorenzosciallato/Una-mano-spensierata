@@ -3972,3 +3972,69 @@ input:focus-visible, textarea:focus-visible, select:focus-visible{
 }
 #ums-tasti-pop{ pointer-events: none; }
 #ums-tasti-pop .ums-tasti-card{ pointer-events: auto; }
+
+
+/* ====================================================================
+   INTRO GATTO — pop-up sostegno: il gatto compare piccolo al centro,
+   cresce piano, poi spunta la nuvoletta col cuore, poi arriva la carta.
+   ==================================================================== */
+#ums-bmc-overlay .ums-bmc-gatto{ display:none; }
+#ums-bmc-overlay.gatto-in .ums-bmc-gatto{
+    display:flex; align-items:center; justify-content:center;
+    position:absolute; inset:0; cursor:pointer; z-index:2;
+}
+#ums-bmc-overlay.gatto-in .ums-bmc-card{ display:none; }
+
+.ums-bmc-gatto .gatto-wrap{ position:relative; width:min(430px, 80vw); }
+.ums-bmc-gatto img{ width:100%; display:block; user-select:none; -webkit-user-drag:none;
+    filter: drop-shadow(0 20px 44px rgba(0,0,0,.38)); }
+
+#ums-bmc-overlay.gatto-in .gatto-wrap{
+    animation: umsGattoCresce 2.2s cubic-bezier(.22,.9,.3,1) both;
+    transform-origin: center center;
+}
+@keyframes umsGattoCresce{
+    from{ transform: scale(.12); opacity:0; }
+    25% { opacity:1; }
+    to  { transform: scale(1);   opacity:1; }
+}
+
+/* nuvoletta a fumetto: parte dalla zona del muso (in alto, lato destro) */
+.gatto-fumetto{
+    position:absolute; top:-13%; left:55%;
+    width:76px; height:64px; background:#fff; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow: 0 8px 22px rgba(0,0,0,.28);
+    opacity:0; transform: scale(0);
+    transform-origin: 30% 115%;   /* cresce "uscendo" dal muso sotto di lei */
+}
+.gatto-fumetto::after{            /* la coda del fumetto, punta verso il muso */
+    content:''; position:absolute; bottom:-10px; left:22px;
+    width:0; height:0; border:10px solid transparent;
+    border-top-color:#fff; border-bottom:0; transform: rotate(24deg);
+}
+#ums-bmc-overlay.gatto-in .gatto-fumetto{
+    animation: umsFumettoPop .5s cubic-bezier(.34,1.56,.64,1) 2.35s both;
+}
+@keyframes umsFumettoPop{
+    from{ opacity:0; transform: scale(0); }
+    to  { opacity:1; transform: scale(1); }
+}
+.gatto-fumetto svg{ width:30px; height:auto; display:block;
+    animation: umsCuoreBatte 1.1s ease-in-out 2.95s infinite; }
+@keyframes umsCuoreBatte{
+    0%,100%{ transform: scale(1); }
+    50%    { transform: scale(1.22); }
+}
+
+/* telefono: gatto un filo più piccolo, nuvoletta proporzionata */
+@media (max-width:480px){
+    .ums-bmc-gatto .gatto-wrap{ width: 86vw; }
+    .gatto-fumetto{ width:60px; height:50px; top:-14%; left:52%; }
+    .gatto-fumetto svg{ width:24px; }
+}
+@media (prefers-reduced-motion: reduce){
+    #ums-bmc-overlay.gatto-in .gatto-wrap,
+    #ums-bmc-overlay.gatto-in .gatto-fumetto,
+    .gatto-fumetto svg{ animation:none !important; opacity:1; transform:none; }
+}
