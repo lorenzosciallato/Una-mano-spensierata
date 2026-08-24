@@ -2982,7 +2982,7 @@ body.night-mode .ums-studio-inv{ background:#20232b; color:#E8E4DC; border-color
     if(document.getElementById('ums-studio-btn')) return;
     var modello=(tg.querySelector('button')&&tg.querySelector('button').className)||'';
     var b=document.createElement('button');
-    b.type='button'; b.id='ums-studio-btn'; b.className=modello;
+    b.type='button'; b.id='ums-studio-btn'; b.className='ums-bar-pill';
     b.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v16"/><rect x="3" y="5" width="8" height="14" rx="1"/><rect x="13" y="5" width="8" height="14" rx="1"/></svg> <span>Studia con la lavagna</span>';
     b.addEventListener('click', apri);
     tg.appendChild(b);
@@ -3003,6 +3003,18 @@ body.night-mode .ums-studio-inv{ background:#20232b; color:#E8E4DC; border-color
      Additivo: non riscrive i pulsanti esistenti, li nasconde e ne delega
      le azioni. Vale sia in pagina sia (per gli stessi ID) nel modale Studia. -->
 <style id="ums-barra2-style">
+/* pillola coerente per TUTTI i pulsanti della barra, valida anche nel modale
+   (prima il look veniva dal selettore .ums-slide-toggle button, che non
+   raggiungeva i pulsanti spostati nel pop-up) */
+.ums-bar-pill{ font-family:var(--font-body,'DM Sans',sans-serif);
+  font-weight:600; font-size:.82rem; padding:.5rem .95rem; border-radius:999px;
+  border:1px solid var(--gold-lt,#e5d6bd); background:#fff; color:var(--sub,#6b6b73);
+  cursor:pointer; display:inline-flex; align-items:center; gap:7px; line-height:1.1; }
+.ums-bar-pill:hover{ background:var(--ivory-2,#efebe2); }
+.ums-bar-pill svg{ width:1.05em; height:1.05em; flex:0 0 auto; }
+body.night-mode .ums-bar-pill{ background:#20232b; color:#c9c9d2; border-color:#3a3f4b; }
+#ums-studio-viste .ums-bar-pill{ background:#fff; }
+
 .ums-menu-wrap{ position:relative; display:inline-flex; }
 .ums-menu-btn{ display:inline-flex; align-items:center; gap:7px; }
 .ums-menu-btn svg{ width:1.05em; height:1.05em; flex:0 0 auto; }
@@ -3042,7 +3054,7 @@ body.night-mode .ums-menu-pop .vista-on{ background:rgba(143,180,232,.16); }
   function creaMenu(id, btnHTML, btnClass){
     var wrap=document.createElement('div'); wrap.className='ums-menu-wrap';
     var btn=document.createElement('button'); btn.type='button'; btn.id=id;
-    btn.className=(btnClass||'')+' ums-menu-btn'; btn.innerHTML=btnHTML;
+    btn.className=(btnClass||'')+' ums-menu-btn ums-bar-pill'; btn.innerHTML=btnHTML;
     var pop=document.createElement('div'); pop.className='ums-menu-pop';
     wrap.appendChild(btn); wrap.appendChild(pop);
     btn.addEventListener('click', function(e){
@@ -3064,12 +3076,16 @@ body.night-mode .ums-menu-pop .vista-on{ background:rgba(143,180,232,.16); }
       .replace(/\bums-tg-vista\b/g,'').replace(/\bon\b/g,'').replace(/\bums-print-pill\b/g,'')
       .replace(/\bums-pill-\S+/g,'').trim();
 
-    // --- riferimenti ai pulsanti esistenti (le azioni le deleghiamo a loro) ---
-    var viste=Array.prototype.slice.call(tg.querySelectorAll('.ums-tg-vista'))
-      .filter(function(x){ return ['Solo testo','Testo + slide','Solo slide'].indexOf((x.textContent||'').trim())>=0; });
-
-    // ========== ⚙ IMPOSTAZIONI (solo se ci sono le viste = lezione con slide) ==========
-    if(viste.length){
+    // ========== ⚙ IMPOSTAZIONI — costruita a parte, appena le viste esistono ==========
+    // Le viste sono montate da un altro script con ritardo: le aspetto con un
+    // watcher dedicato, così il pulsante ⚙ compare SEMPRE quando ci sono
+    // (prima a volte partivo troppo presto e non compariva).
+    var impGiri=0;
+    (function costruisciImpostazioni(){
+      if(document.getElementById('ums-menu-imp')) return;   // già fatto
+      var viste=Array.prototype.slice.call(tg.querySelectorAll('.ums-tg-vista'))
+        .filter(function(x){ return ['Solo testo','Testo + slide','Solo slide'].indexOf((x.textContent||'').trim())>=0; });
+      if(!viste.length){ if(impGiri++<40){ setTimeout(costruisciImpostazioni,300); } return; }
       var mImp=creaMenu('ums-menu-imp', ICON_GEAR+' <span>Impostazioni</span>', modelloBase);
       var tit=document.createElement('div'); tit.className='voce-tit'; tit.textContent='Come vedere il riassunto';
       mImp.pop.appendChild(tit);
@@ -3085,8 +3101,9 @@ body.night-mode .ums-menu-pop .vista-on{ background:rgba(143,180,232,.16); }
         setTimeout(segnaAttiva,50);
       });
       tg.appendChild(mImp.wrap);
-      viste.forEach(function(v){ v.style.display='none'; });   // nascondo SOLO le 3 viste vere
-    }
+      viste.forEach(function(v){ v.style.display='none'; });
+      riordina();
+    })();
 
     // ========== 🖨 STAMPA (menu unico) ==========
     var mSt=creaMenu('ums-menu-stampa', ICON_PRINT+' <span>Stampa</span>', modelloBase);
