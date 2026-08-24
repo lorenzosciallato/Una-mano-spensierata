@@ -2724,6 +2724,49 @@ body.ums-studio-aperto #floating-highlighter{ z-index:99999997 !important; }
 /* il riassuntone nel pop-up scorre nella colonna sinistra */
 .ums-studio-sx #dyn-riassuntone-container{ max-height:none; overflow:visible; }
 
+
+/* ===== FIX pop-up Studia: Aa dentro il pop-up, ascolta non copre i colori, inverti ===== */
+/* 1) Aa deve raggiungere il riassuntone anche quando è nel pop-up (fuori da .content-card).
+      Ricalco le stesse regole della lettura facilitata, mirate al container. */
+body.ums-facile #ums-studio-overlay #dyn-riassuntone-container,
+body.ums-facile #ums-studio-overlay #dyn-riassuntone-container *:not(svg):not(use){
+  font-family: var(--font-facile) !important;
+}
+body.ums-facile #ums-studio-overlay #dyn-riassuntone-container p,
+body.ums-facile #ums-studio-overlay #dyn-riassuntone-container li,
+body.ums-facile #ums-studio-overlay #dyn-riassuntone-container .cornell-box{
+  font-size: 1.32rem !important;      /* nel pop-up c'è spazio: un filo più grande */
+  line-height: 1.7 !important;
+  letter-spacing: 0.05em !important;
+  word-spacing: 0.18em !important;
+  text-align: left !important;
+  hyphens: none !important; -webkit-hyphens: none !important;
+  max-width: 60ch;
+}
+body.ums-facile #ums-studio-overlay #dyn-riassuntone-container h3{
+  line-height: 1.45 !important; letter-spacing: 0.02em !important;
+}
+/* crema SOLO dietro il testo (colonna sinistra), non sulla lavagna, solo di giorno */
+body.ums-facile:not(.night-mode) #ums-studio-overlay .ums-studio-sx{ background:#FBF6E9 !important; }
+body.ums-facile:not(.night-mode) #ums-studio-overlay #dyn-riassuntone-container p,
+body.ums-facile:not(.night-mode) #ums-studio-overlay #dyn-riassuntone-container li{ color:#2B2A28; }
+
+/* 2) quando "Ascolta" è attivo, la sua barra sta in basso: alzo la fascia
+      istruzioni+colori sopra di essa, così i colori restano visibili */
+body.ums-read-on #ums-studio-overlay .ums-studio-dx{ padding-bottom: 96px; }
+body.ums-read-on #ums-studio-overlay .wb-hint{ position: relative; z-index: 2; }
+
+/* 3) inverti box: quando attivo, la colonna destra (lavagna) va a sinistra */
+#ums-studio-overlay.ums-inverti .ums-studio-corpo{ flex-direction: row-reverse; }
+/* il bordo divisorio segue l'inversione */
+#ums-studio-overlay.ums-inverti .ums-studio-dx{ border-left:none; border-right:1px solid var(--dust,#E5DFD3); }
+body.night-mode #ums-studio-overlay.ums-inverti .ums-studio-dx{ border-right-color:#2C3140; }
+.ums-studio-inv{ border:1px solid var(--gold,#C8A96E); background:#fff; color:var(--navy,#1A2F4F);
+  border-radius:50px; padding:9px 16px; font-weight:700; cursor:pointer;
+  font-family:var(--font-body,sans-serif); display:inline-flex; align-items:center; gap:7px; }
+.ums-studio-inv:hover{ background:var(--navy,#1A2F4F); color:#fff; }
+body.night-mode .ums-studio-inv{ background:#20232b; color:#E8E4DC; border-color:#8FB4E8; }
+
 /* viste (Solo testo / Testo+slide / Solo slide) nel top del pop-up */
 .ums-studio-top{ gap:14px; }
 #ums-studio-viste{ display:flex; gap:6px; flex:1 1 auto; justify-content:center; flex-wrap:wrap; }
@@ -2754,6 +2797,7 @@ body.ums-studio-aperto #floating-highlighter{ z-index:99999997 !important; }
       '<div class="ums-studio-top">'+
         '<span class="tt">Studia</span>'+
         '<div class="ums-studio-viste" id="ums-studio-viste"></div>'+
+        '<button type="button" class="ums-studio-inv" id="ums-studio-inv" title="Scambia i due lati">\u21C4 Inverti</button>'+
         '<button type="button" class="ums-studio-x">Chiudi \u2715</button>'+
       '</div>'+
       '<div class="ums-studio-corpo">'+
@@ -2764,6 +2808,15 @@ body.ums-studio-aperto #floating-highlighter{ z-index:99999997 !important; }
     slotSx=overlay.querySelector('#ums-studio-sx-slot');
     slotDx=overlay.querySelector('#ums-studio-dx-slot');
     overlay.querySelector('.ums-studio-x').addEventListener('click', chiudi);
+    // inverti i due lati, scelta ricordata
+    var invBtn=overlay.querySelector('#ums-studio-inv');
+    if(invBtn){
+      invBtn.addEventListener('click', function(){
+        var on=!overlay.classList.contains('ums-inverti');
+        overlay.classList.toggle('ums-inverti', on);
+        try{ localStorage.setItem('ums_studio_inverti', on?'1':'0'); }catch(e){}
+      });
+    }
     document.addEventListener('keydown', function(e){
       if(e.key==='Escape' && aperto) chiudi();
     });
@@ -2821,6 +2874,8 @@ body.ums-studio-aperto #floating-highlighter{ z-index:99999997 !important; }
         slotViste.appendChild(v);
       });
     }
+    var inv=false; try{ inv=localStorage.getItem('ums_studio_inverti')==='1'; }catch(e){}
+    overlay.classList.toggle('ums-inverti', inv);
     overlay.classList.add('show');
     aperto=true;
     document.body.classList.add('ums-studio-aperto');
