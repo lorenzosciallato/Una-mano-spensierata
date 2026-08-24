@@ -451,6 +451,7 @@
             showToast('Apertura finestra di stampa...', 'success');
             const printContents = wbSheetHTML();
             const iframe = document.createElement('iframe');
+            iframe.setAttribute('aria-hidden','true'); iframe.setAttribute('title','Stampa');
             iframe.style.position = 'fixed';
             iframe.style.right = '0';
             iframe.style.bottom = '0';
@@ -3593,6 +3594,7 @@ if (!fileDaCaricare) {
 
                 var ifr = document.createElement('iframe');
                 ifr.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:none';
+                ifr.setAttribute('aria-hidden','true'); ifr.setAttribute('title','Stampa');
                 document.body.appendChild(ifr);
                 var doc = ifr.contentWindow.document;
                 doc.open();
@@ -4557,6 +4559,29 @@ if (!fileDaCaricare) {
 // ums-facile sul body (tutto il resto lo fa ums.css, SEZIONE 17).
 // La scelta si ricorda come la modalità notte. Nessuna funzione
 // esistente viene toccata: il blocco è additivo.
+// ====================================================================
+// CONTRASTO ELEVATO — ripristina la scelta salvata e, se l'utente ha
+// impostato "più contrasto" nel sistema, lo attiva da solo. Non tocca
+// nulla per chi non ne ha bisogno.
+// ====================================================================
+(function () {
+    function applicaContrasto(on) {
+        document.body.classList.toggle('ums-contrasto', on);
+    }
+    var salvato = null;
+    try { salvato = localStorage.getItem('ums_contrasto'); } catch (e) {}
+    if (salvato === '1') {
+        applicaContrasto(true);
+    } else if (salvato === null) {
+        // nessuna scelta esplicita: seguo la preferenza del sistema operativo
+        try {
+            if (window.matchMedia && window.matchMedia('(prefers-contrast: more)').matches) {
+                applicaContrasto(true);
+            }
+        } catch (e) {}
+    }
+})();
+
 // ====================================================================
 (function () {
     var CHIAVE = 'ums_lettura_facile';
