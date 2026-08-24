@@ -3182,13 +3182,15 @@ body.night-mode .ums-menu-pop .vista-on{ background:rgba(143,180,232,.16); }
     mImp.pop.appendChild(vFac);
     setTimeout(segnaFac,50);
     tg.appendChild(mImp.wrap);
-    // 2) le viste (se/quando esistono) vengono aggiunte in cima con un watcher
-    var impGiri=0;
-    (function aggiungiViste(){
-      if(mImp.pop.querySelector('.ums-vista-voce')) return;   // già aggiunte
+    // 2) le viste (Solo testo / Testo+slide / Solo slide) vengono aggiunte al
+    //    menu ⚙ APPENA compaiono. Le viste sono montate da un altro script con
+    //    tempi variabili: invece di riprovare a tempo (che a volte si arrendeva
+    //    → "a volte c'è, a volte no"), le aspetto con un osservatore PERMANENTE.
+    function aggiungiViste(){
+      if(mImp.pop.querySelector('.ums-vista-voce')) return true;   // già fatte
       var viste=Array.prototype.slice.call(tg.querySelectorAll('.ums-tg-vista'))
         .filter(function(x){ return ['Solo testo','Testo + slide','Solo slide'].indexOf((x.textContent||'').trim())>=0; });
-      if(!viste.length){ if(impGiri++<40){ setTimeout(aggiungiViste,300); } return; }
+      if(!viste.length) return false;   // non ancora pronte: riproverà l'osservatore
       var tit=document.createElement('div'); tit.className='voce-tit'; tit.textContent='Come vedere il riassunto';
       mImp.pop.insertBefore(tit, mImp.pop.firstChild);
       var dopoTit=tit.nextSibling;
@@ -3203,11 +3205,36 @@ body.night-mode .ums-menu-pop .vista-on{ background:rgba(143,180,232,.16); }
         mImp.pop.insertBefore(voce, dopoTit);
         setTimeout(segnaAttiva,50);
       });
-      // separatore tra viste e Lettura facilitata
       var sep=document.createElement('div'); sep.className='sep';
       mImp.pop.insertBefore(sep, dopoTit);
       viste.forEach(function(v){ v.style.display='none'; });
-    })();
+      // sincronizzo il segno di spunta con la vista attiva (default: Testo + slide)
+      function sincronizzaViste(){
+        var voci=mImp.pop.querySelectorAll('.ums-vista-voce');
+        Array.prototype.forEach.call(voci, function(voce){
+          var vv=viste.filter(function(x){ return (x.textContent||'').trim()===(voce.textContent||'').trim(); })[0];
+          voce.classList.toggle('vista-on', !!(vv && vv.classList.contains('on')));
+        });
+      }
+      sincronizzaViste(); setTimeout(sincronizzaViste,150); setTimeout(sincronizzaViste,600);
+      // se cambia la vista attiva (anche da fuori), aggiorno la spunta
+      if('MutationObserver' in window){
+        viste.forEach(function(v){ new MutationObserver(sincronizzaViste).observe(v,{attributes:true,attributeFilter:['class']}); });
+      }
+      return true;
+    }
+    // provo subito; se non ci sono ancora, un osservatore permanente le aggiunge
+    // appena vengono create (niente più lotteria)
+    if('MutationObserver' in window){
+      // osservatore PERMANENTE: se le viste non ci sono ancora le aggiunge appena
+      // compaiono, e se sparissero e ricomparissero le rimette (il guard interno
+      // evita i doppioni). Niente disconnect → niente lotteria.
+      var moViste=new MutationObserver(function(){ aggiungiViste(); });
+      moViste.observe(tg, { childList:true, subtree:true });
+    }
+    // rete di sicurezza aggiuntiva: ritenta a tempo per i primi 30s
+    var giriRete=0;
+    (function rete(){ aggiungiViste(); if(giriRete++<60) setTimeout(rete,500); })();
     riordina();
 
     // ========== 🖨 STAMPA (menu unico) ==========
