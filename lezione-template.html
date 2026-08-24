@@ -2684,6 +2684,20 @@ body.night-mode .ums-studio-dx{ border-left-color:#2C3140; background:rgba(143,1
 /* pulsante di apertura */
 #ums-studio-btn{ display:inline-flex; align-items:center; gap:7px; }
 #ums-studio-btn svg{ width:1.05em; height:1.05em; flex:0 0 auto; }
+
+/* --- pop-up Studia: controlli fissi sopra il pop-up + lavagna piena --- */
+body.ums-studio-aperto #ums-facile-btn{ z-index:99999995 !important; }
+body.ums-studio-aperto #ums-read-bar{ z-index:99999996 !important; }
+body.ums-studio-aperto #floating-highlighter{ z-index:99999997 !important; }
+/* la colonna destra e la lavagna riempiono l'altezza disponibile */
+.ums-studio-dx{ }
+#ums-studio-dx-slot{ flex:1 1 auto; min-height:0; }
+#ums-studio-dx-slot #smart-whiteboard{ height:100%; }
+#ums-studio-dx-slot #smart-whiteboard .wb-body-wrap{ flex:1 1 auto; min-height:0; display:flex; flex-direction:column; }
+#ums-studio-dx-slot #smart-whiteboard .wb-body{ flex:1 1 auto; max-height:none !important; height:auto !important; }
+/* il riassuntone nel pop-up: box che scorre col MOUSE, a tutta pagina in modalità tastiera */
+.ums-studio-sx #dyn-riassuntone-container{ max-height:none; overflow:visible; }
+body:not(.ums-kbd) .ums-studio-sx{ overflow:auto; }
 /* su mobile non si apre: affiancare non ha senso su schermo stretto */
 @media (max-width:820px){ #ums-studio-btn{ display:none !important; } #ums-studio-overlay{ display:none !important; } }
 </style>
@@ -2729,6 +2743,7 @@ body.night-mode .ums-studio-dx{ border-left-color:#2C3140; background:rgba(143,1
     // lo porto con lui, così resta accanto
     var paraBtn=document.getElementById('ums-para-btn');
     var paraNav=document.getElementById('ums-para-nav');
+    var ascoltaBar=document.getElementById('ums-ascolta-bar');
 
     // segnaposti per il ritorno
     segnaRiass=document.createComment('riass-qui'); riassParent=riass.parentNode;
@@ -2736,11 +2751,26 @@ body.night-mode .ums-studio-dx{ border-left-color:#2C3140; background:rgba(143,1
     segnaWb=document.createComment('wb-qui'); wbParent=wb.parentNode;
     wbParent.insertBefore(segnaWb, wb);
 
+    // la fascia con i colori dell'evidenziatore + istruzioni sottolineatura
+    var hint=document.querySelector('.wb-hint');
+    var segnaHint=null, hintParent=null;
+
     // sposto DENTRO il pop-up (stessi nodi → tutte le funzioni continuano)
+    if(ascoltaBar){ 
+      window.__umsStudioAscolta=[ascoltaBar, document.createComment('asc-qui')];
+      ascoltaBar.parentNode.insertBefore(window.__umsStudioAscolta[1], ascoltaBar);
+      slotSx.appendChild(ascoltaBar);
+    }
     if(paraBtn) slotSx.appendChild(paraBtn);
     slotSx.appendChild(riass);
     if(paraNav) slotSx.appendChild(paraNav);
     slotDx.appendChild(wb);
+    if(hint){
+      segnaHint=document.createComment('hint-qui'); hintParent=hint.parentNode;
+      hintParent.insertBefore(segnaHint, hint);
+      slotDx.appendChild(hint);
+      window.__umsStudioHint=[hint, segnaHint];
+    }
 
     overlay.classList.add('show');
     aperto=true;
@@ -2754,6 +2784,7 @@ body.night-mode .ums-studio-dx{ border-left-color:#2C3140; background:rgba(143,1
     var wb=document.getElementById('smart-whiteboard');
     var paraBtn=document.getElementById('ums-para-btn');
     var paraNav=document.getElementById('ums-para-nav');
+    var ascoltaBar=document.getElementById('ums-ascolta-bar');
     // rimetto tutto al suo posto, nell'ordine giusto
     if(segnaRiass && segnaRiass.parentNode){
       if(paraBtn) segnaRiass.parentNode.insertBefore(paraBtn, segnaRiass);
@@ -2764,6 +2795,16 @@ body.night-mode .ums-studio-dx{ border-left-color:#2C3140; background:rgba(143,1
     if(segnaWb && segnaWb.parentNode){
       segnaWb.parentNode.insertBefore(wb, segnaWb);
       segnaWb.parentNode.removeChild(segnaWb);
+    }
+    if(window.__umsStudioAscolta){
+      var ab=window.__umsStudioAscolta[0], sab=window.__umsStudioAscolta[1];
+      if(sab && sab.parentNode){ sab.parentNode.insertBefore(ab, sab); sab.parentNode.removeChild(sab); }
+      window.__umsStudioAscolta=null;
+    }
+    if(window.__umsStudioHint){
+      var h=window.__umsStudioHint[0], sh=window.__umsStudioHint[1];
+      if(sh && sh.parentNode){ sh.parentNode.insertBefore(h, sh); sh.parentNode.removeChild(sh); }
+      window.__umsStudioHint=null;
     }
     overlay.classList.remove('show');
     aperto=false;
