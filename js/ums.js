@@ -2915,6 +2915,30 @@ if (!fileDaCaricare) {
             const sync = () => document.body.classList.toggle('ums-master-open', content.classList.contains('open'));
             btn.addEventListener('click', () => requestAnimationFrame(sync));
             sync();
+
+            // ANTI-AUTOSCROLL: aprendo "Inizia", l'espansione delle sezioni o un
+            // focus faceva saltare la pagina in fondo ai disclaimer. Il salto è
+            // automatico e immediato: per pochi frame subito dopo l'apertura
+            // rimetto su la vista SOLO se è schizzata in basso da sola. Qualsiasi
+            // tuo gesto di scroll disattiva subito il guard: non ti tolgo mai il
+            // controllo della pagina.
+            btn.addEventListener('click', function () {
+                // se sta CHIUDENDO, non faccio nulla
+                if (btn.getAttribute('aria-expanded') === 'true') return;
+                var y = window.scrollY;
+                var scroller = document.scrollingElement || document.documentElement;
+                var attivo = true;
+                function stop() { attivo = false; }
+                window.addEventListener('wheel', stop, { once: true, passive: true, capture: true });
+                window.addEventListener('touchstart', stop, { once: true, passive: true, capture: true });
+                window.addEventListener('keydown', stop, { once: true, capture: true });
+                var frame = 0;
+                (function tieniFermo() {
+                    if (!attivo) return;
+                    if (window.scrollY > y + 120) { window.scrollTo(0, y); scroller.scrollTop = y; }
+                    if (++frame < 30) requestAnimationFrame(tieniFermo);   // ~0,5s al massimo
+                })();
+            });
         })();
     
 
