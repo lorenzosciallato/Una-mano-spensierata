@@ -800,7 +800,7 @@
       /* toggle Solo testo / Testo + slide (invariato) */
       .ums-slide-toggle{display:flex;gap:.5rem;margin:0 0 1.2rem;flex-wrap:wrap;align-items:center}
       .ums-slide-toggle button{font-family:var(--font-sans,'DM Sans',sans-serif);
-        font-weight:600;font-size:.82rem;padding:.5rem .95rem;border-radius:999px;
+        font-weight:600;font-size:.82rem;padding:.5rem .8rem;border-radius:999px;
         border:1px solid var(--gold-lt,#e5d6bd);background:#fff;color:var(--sub,#6b6b73);cursor:pointer}
       .ums-slide-toggle button.on{background:var(--navy,#22365f);color:#fff;border-color:var(--navy,#22365f)}
 
@@ -1860,9 +1860,9 @@
   /* ---- pulsante d'ingresso (nascosto finché non c'è audio) ---- */
   #ums-ascolta-bar{display:none;margin:0 0 1.3rem}
   #ums-ascolta-bar.c-è{display:flex}
-  #ums-ascolta-btn{display:inline-flex;align-items:center;gap:.5rem;
+  #ums-ascolta-btn{display:inline-flex;align-items:center;gap:.45rem;
     font-family:var(--font-body,'DM Sans',sans-serif);font-weight:700;font-size:.82rem;
-    padding:.5rem .95rem;border-radius:999px;cursor:pointer;
+    padding:.5rem .8rem;border-radius:999px;cursor:pointer;
     border:1px solid var(--navy,#1A2F4F);background:var(--navy,#1A2F4F);color:#fff;
     transition:transform .12s ease,box-shadow .2s ease}
   #ums-ascolta-btn:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(26,47,79,.32)}
@@ -2766,6 +2766,7 @@
      Solo da tablet/desktop: su mobile il pulsante non compare (lì la vista
      resta com'è). Additivo, non tocca le funzioni esistenti. -->
 <style id="ums-studio-style">
+.ums-studio-toolbar{ display:flex; gap:.5rem; flex-wrap:wrap; align-items:center; margin:0 0 14px; }
 #ums-studio-overlay{ display:none; position:fixed; inset:0; z-index:99999990;
   background:var(--ivory,#F7F4EF); }
 body.night-mode #ums-studio-overlay{ background:#14161c; }
@@ -2917,11 +2918,12 @@ body.night-mode .ums-studio-inv{ background:#20232b; color:#E8E4DC; border-color
     var wb=document.getElementById('smart-whiteboard');
     if(!riass || !wb) return;
 
-    // il pulsante "Un paragrafo alla volta" sta subito prima del riassuntone:
-    // lo porto con lui, così resta accanto
+    // Ascolta e Un paragrafo ora vivono nella barra dei pulsanti: porto i
+    // PULSANTI stessi nel pop-up (sopra il riassuntone), e li rimetto in barra
+    // alla chiusura.
     var paraBtn=document.getElementById('ums-para-btn');
     var paraNav=document.getElementById('ums-para-nav');
-    var ascoltaBar=document.getElementById('ums-ascolta-bar');
+    var ascoltaBtn=document.getElementById('ums-ascolta-btn');
     // i menu consolidati (⚙ Impostazioni e 🖨 Stampa) li porto nel top del pop-up
     var menuWraps=[];
     var wImp=document.getElementById('ums-menu-imp');
@@ -2940,12 +2942,6 @@ body.night-mode .ums-studio-inv{ background:#20232b; color:#E8E4DC; border-color
     var segnaHint=null, hintParent=null;
 
     // sposto DENTRO il pop-up (stessi nodi → tutte le funzioni continuano)
-    if(ascoltaBar){ 
-      window.__umsStudioAscolta=[ascoltaBar, document.createComment('asc-qui')];
-      ascoltaBar.parentNode.insertBefore(window.__umsStudioAscolta[1], ascoltaBar);
-      slotSx.appendChild(ascoltaBar);
-    }
-    if(paraBtn) slotSx.appendChild(paraBtn);
     slotSx.appendChild(riass);
     if(paraNav) slotSx.appendChild(paraNav);
     slotDx.appendChild(wb);
@@ -2956,10 +2952,19 @@ body.night-mode .ums-studio-inv{ background:#20232b; color:#E8E4DC; border-color
       window.__umsStudioHint=[hint, segnaHint];
     }
 
-    // porto i menu ⚙ Impostazioni e 🖨 Stampa nel top del pop-up
+    // porto Ascolta, Un paragrafo e i menu ⚙/🖨 tutti nel top del pop-up, una riga
     var slotViste=overlay.querySelector('#ums-studio-viste');
-    if(menuWraps.length && slotViste){
+    if(slotViste){
       window.__umsStudioViste=[];
+      // Ascolta per primo
+      if(ascoltaBtn){
+        var segA=document.createComment('asc'); ascoltaBtn.parentNode.insertBefore(segA, ascoltaBtn);
+        window.__umsStudioAscolta=[ascoltaBtn, segA]; slotViste.appendChild(ascoltaBtn);
+      }
+      if(paraBtn){
+        var segP=document.createComment('para'); paraBtn.parentNode.insertBefore(segP, paraBtn);
+        window.__umsStudioPara=[paraBtn, segP]; slotViste.appendChild(paraBtn);
+      }
       menuWraps.forEach(function(w){
         var seg=document.createComment('menu'); w.parentNode.insertBefore(seg, w);
         window.__umsStudioViste.push([w, seg]);
@@ -3004,6 +3009,13 @@ body.night-mode .ums-studio-inv{ background:#20232b; color:#E8E4DC; border-color
       if(sab && sab.parentNode){ sab.parentNode.insertBefore(ab, sab); sab.parentNode.removeChild(sab); }
       window.__umsStudioAscolta=null;
     }
+    if(window.__umsStudioPara){
+      var pb=window.__umsStudioPara[0], spb=window.__umsStudioPara[1];
+      if(spb && spb.parentNode){ spb.parentNode.insertBefore(pb, spb); spb.parentNode.removeChild(spb); }
+      window.__umsStudioPara=null;
+    }
+    // rimuovo la barretta temporanea del pop-up
+    var tb=document.querySelector('.ums-studio-toolbar'); if(tb && !tb.children.length) tb.remove();
     if(window.__umsStudioHint){
       var h=window.__umsStudioHint[0], sh=window.__umsStudioHint[1];
       if(sh && sh.parentNode){ sh.parentNode.insertBefore(h, sh); sh.parentNode.removeChild(sh); }
@@ -3046,11 +3058,28 @@ body.night-mode .ums-studio-inv{ background:#20232b; color:#E8E4DC; border-color
      le azioni. Vale sia in pagina sia (per gli stessi ID) nel modale Studia. -->
 <style id="ums-barra2-style">
 /* la barra dei pulsanti si stende su tutta la larghezza, così stanno in UNA riga */
+/* la barra dei pulsanti resta sopra il riassuntone. Se non stanno in una riga,
+   vanno a capo in modo ordinato: righe centrate, spaziatura uniforme. */
 @media (min-width:901px){
-  #riass-grid > #ums-slide-toggle-box{ grid-column:1 / -1; }
+  #ums-slide-toggle-box .ums-slide-toggle{ display:grid; grid-template-columns:repeat(3,1fr); gap:.55rem; align-items:stretch; }
+  #ums-slide-toggle-box .ums-slide-toggle > *{ display:flex; }
+  #ums-slide-toggle-box .ums-slide-toggle > * > button,
+  #ums-slide-toggle-box .ums-slide-toggle > button{ width:100%; justify-content:center; }
+  #ums-slide-toggle-box .ums-menu-wrap{ width:100%; }
+  #ums-slide-toggle-box .ums-menu-wrap > .ums-menu-btn{ width:100%; justify-content:center; }
 }
-.ums-slide-toggle{ flex-wrap:nowrap; }
-@media (max-width:900px){ .ums-slide-toggle{ flex-wrap:wrap; } }
+@media (max-width:900px){
+  #ums-slide-toggle-box .ums-slide-toggle{ display:grid; grid-template-columns:1fr 1fr; gap:.5rem; }
+  #ums-slide-toggle-box .ums-slide-toggle > * > button,
+  #ums-slide-toggle-box .ums-slide-toggle > button{ width:100%; justify-content:center; }
+  #ums-slide-toggle-box .ums-menu-wrap{ width:100%; }
+}
+@media (max-width:460px){
+  #ums-slide-toggle-box .ums-slide-toggle{ grid-template-columns:1fr; }
+}
+/* nel modale il top resta una riga flex (i menu NON a tutta larghezza) */
+#ums-studio-viste .ums-menu-wrap{ width:auto; }
+#ums-studio-viste .ums-menu-wrap > .ums-menu-btn{ width:auto; }
 
 /* Ascolta nella barra: pillola come gli altri MA blu piena */
 .ums-bar-pill.ums-pill-ascolta{ background:var(--navy,#1A2F4F) !important; color:#fff !important;
@@ -3065,8 +3094,8 @@ body.ums-facile #ums-para-btn.ums-bar-pill{ display:inline-flex !important; }
 /* pillola coerente per TUTTI i pulsanti della barra, valida anche nel modale
    (prima il look veniva dal selettore .ums-slide-toggle button, che non
    raggiungeva i pulsanti spostati nel pop-up) */
-.ums-bar-pill{ font-family:var(--font-body,'DM Sans',sans-serif);
-  font-weight:600; font-size:.82rem; padding:.5rem .95rem; border-radius:999px;
+.ums-bar-pill{ font-family:var(--font-body,'DM Sans',sans-serif); white-space:nowrap;
+  font-weight:600; font-size:.82rem; padding:.5rem .8rem; border-radius:999px;
   border:1px solid var(--gold-lt,#e5d6bd); background:#fff; color:var(--sub,#6b6b73);
   cursor:pointer; display:inline-flex; align-items:center; gap:7px; line-height:1.1; }
 .ums-bar-pill:hover{ background:var(--ivory-2,#efebe2); }
@@ -3201,16 +3230,10 @@ body.night-mode .ums-menu-pop .vista-on{ background:rgba(143,180,232,.16); }
     tg.appendChild(mSt.wrap);
 
     // riordino: Studia · Mappa mentale · ⚙ Impostazioni · 🖨 Stampa (ultimo)
-    // sposto la barra a livello della griglia, così può prendere tutta la larghezza
-    (function stendiBarra(){
-      var box=document.getElementById('ums-slide-toggle-box');
-      var grid=document.getElementById('riass-grid');
-      if(box && grid && box.parentNode!==grid){
-        grid.insertBefore(box, grid.firstChild);   // in cima, su tutta la larghezza
-      }
-    })();
-
     function riordina(){
+      // se il pop-up Studia è aperto, NON tocco Ascolta/Un paragrafo: li sta
+      // gestendo il modale (altrimenti glieli strappo via)
+      if(document.body.classList.contains('ums-studio-aperto')) return;
       // porto DENTRO la barra anche Ascolta e Un paragrafo, così TUTTI i pulsanti
       // stanno sull'unica riga flex (prima erano in contenitori separati sotto).
       var ascoltaBar=document.getElementById('ums-ascolta-bar');
