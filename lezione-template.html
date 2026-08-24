@@ -1530,6 +1530,7 @@
       }
       // esposta per i pulsanti Stampa/PDF del pop-up della mappa mentale
       window.__umsStampa = stampa;
+      window.__umsStampaSingola = apriPopup;   // menu unico Stampa: 'questa lezione'
     })();
     </script>
 
@@ -2407,6 +2408,7 @@
     if(!lez) carica(); else disegnaLista();
   }
   function chiudi(){ if(ov) ov.classList.remove('show'); }
+  window.__umsStampeApri = apri;   // usato dal menu unico Stampa
 
   function costruisciOverlay(){
     ov=document.createElement('div'); ov.id='ums-stampe-overlay';
@@ -2444,6 +2446,9 @@
     if(modo==='riass'){
       tit.textContent='Tutti i riassunti';
       nota.innerHTML='Scegli le lezioni e stampa i riassunti in un colpo, a colori. Ogni lezione inizia in una pagina nuova.';
+    } else if(modo==='slide'){
+      tit.textContent='Tutte le slide';
+      nota.innerHTML='Scegli le lezioni e stampa le slide in un colpo, a colori.';
     } else {
       tit.textContent='Tutte le mappe';
       nota.innerHTML='Scegli le lezioni e stampa le mappe mentali in un colpo, a colori. Una lezione per pagina.';
@@ -2473,8 +2478,10 @@
           stato.textContent='Raccolgo le lezioni\u2026 '+fatte+' / '+tot;
           var okR = !!(d && Array.isArray(d.riassuntone) && d.riassuntone.length);
           var okM = !!(d && d.mappa && Array.isArray(d.mappa.rami) && d.mappa.rami.length>=2);
+          var slArr = d && (d.slide || d.slides);
+          var okS = !!(Array.isArray(slArr) && slArr.length);
           lez.push({ n:n, titolo:(d&&(d.titolo_lezione||(d.mappa&&d.mappa.titolo)))||('Lezione '+n),
-                     dati:d, okR:okR, okM:okM, mancante:!d });
+                     dati:d, okR:okR, okM:okM, okS:okS, mancante:!d });
           if(fatte===tot){ lez.sort(function(a,b){return a.n-b.n;}); disegnaLista(); stato.textContent=''; }
         });
       })(n);
@@ -2484,9 +2491,10 @@
   function disegnaLista(){
     var lista=ov.querySelector('.ums-stampe-lista'); lista.innerHTML='';
     lez.forEach(function(m){
-      var ok = (modo==='riass') ? m.okR : m.okM;
+      var ok = (modo==='riass') ? m.okR : (modo==='slide' ? m.okS : m.okM);
+      var senza = (modo==='riass' ? '(senza riassunto)' : (modo==='slide' ? '(senza slide)' : '(senza mappa)'));
       var motivo = m.mancante ? ' <span class="manca">(lezione mancante)</span>'
-                 : (ok ? '' : (modo==='riass' ? ' <span class="manca">(senza riassunto)</span>' : ' <span class="manca">(senza mappa)</span>'));
+                 : (ok ? '' : ' <span class="manca">'+senza+'</span>');
       var l=document.createElement('label');
       l.className='ums-stampe-riga'+(ok?'':' spenta');
       l.innerHTML='<input type="checkbox" '+(ok?'checked':'disabled')+' data-n="'+m.n+'">'+
@@ -2583,12 +2591,22 @@
     var lettura='standard';
     var sel=ov.querySelector('input[name="ums-lettura"]:checked');
     if(sel) lettura=sel.value;
-    var titoloDoc=(modo==='riass'?'Riassunti':'Mappe')+' \u2014 '+materia;
+    var titoloDoc=(modo==='riass'?'Riassunti':(modo==='slide'?'Slide':'Mappe'))+' \u2014 '+materia;
     var corpo='';
     if(modo==='riass'){
       corpo=scelte.map(function(m){
         return '<section class="lez">'+testaLezione(m)+
           riassuntoneHTML(m.dati)+
+          '<p class="pie">unamanospensierata.com</p></section>';
+      }).join('');
+    } else if(modo==='slide'){
+      corpo=scelte.map(function(m){
+        var raw=(m.dati && (m.dati.slide||m.dati.slides))||[];
+        var urls=raw.map(function(s){ return typeof s==='string'?s:(s&&s.url); }).filter(Boolean);
+        var imgs = urls.length
+          ? urls.map(function(u){ return '<div class="sl"><img src="'+u+'" alt="Slide"></div>'; }).join('')
+          : '<p class="vuoto">Questa lezione non ha slide.</p>';
+        return '<section class="lez">'+testaLezione(m)+imgs+
           '<p class="pie">unamanospensierata.com</p></section>';
       }).join('');
     } else {
@@ -2599,7 +2617,8 @@
           '<p class="pie">unamanospensierata.com</p></section>';
       }).join('');
     }
-    var css=testaComune()+(modo==='mappe'?'@media print{@page{size:A4 landscape}}':'')+
+    var css=testaComune()+
+      ((modo==='mappe'||modo==='slide')?'@media print{@page{size:A4 landscape}} .sl{break-inside:avoid;page-break-inside:avoid;margin:0 0 10mm;text-align:center} .sl img{max-width:100%;max-height:170mm;height:auto;border:1px solid #e5d6bd;border-radius:6px}':'')+
       (modo==='riass' && lettura==='facile' ? cssFacile() : cssStandard());
     var w=window.open('','_blank');
     if(!w) return;
@@ -2833,9 +2852,12 @@ body.night-mode .ums-studio-inv{ background:#20232b; color:#E8E4DC; border-color
     var paraBtn=document.getElementById('ums-para-btn');
     var paraNav=document.getElementById('ums-para-nav');
     var ascoltaBar=document.getElementById('ums-ascolta-bar');
-    var visteTesti=['Solo testo','Testo + slide','Solo slide'];
-    var viste=Array.prototype.slice.call(document.querySelectorAll('#ums-slide-toggle-box .ums-slide-toggle button'))
-      .filter(function(x){ return visteTesti.indexOf((x.textContent||'').trim())>=0; });
+    // i menu consolidati (⚙ Impostazioni e 🖨 Stampa) li porto nel top del pop-up
+    var menuWraps=[];
+    var wImp=document.getElementById('ums-menu-imp');
+    var wSt=document.getElementById('ums-menu-stampa');
+    if(wImp && wImp.closest('.ums-menu-wrap')) menuWraps.push(wImp.closest('.ums-menu-wrap'));
+    if(wSt && wSt.closest('.ums-menu-wrap')) menuWraps.push(wSt.closest('.ums-menu-wrap'));
 
     // segnaposti per il ritorno
     segnaRiass=document.createComment('riass-qui'); riassParent=riass.parentNode;
@@ -2864,14 +2886,14 @@ body.night-mode .ums-studio-inv{ background:#20232b; color:#E8E4DC; border-color
       window.__umsStudioHint=[hint, segnaHint];
     }
 
-    // porto le viste (Solo testo / Testo+slide / Solo slide) nel top del pop-up
+    // porto i menu ⚙ Impostazioni e 🖨 Stampa nel top del pop-up
     var slotViste=overlay.querySelector('#ums-studio-viste');
-    if(viste.length && slotViste){
+    if(menuWraps.length && slotViste){
       window.__umsStudioViste=[];
-      viste.forEach(function(v){
-        var seg=document.createComment('vista'); v.parentNode.insertBefore(seg, v);
-        window.__umsStudioViste.push([v, seg]);
-        slotViste.appendChild(v);
+      menuWraps.forEach(function(w){
+        var seg=document.createComment('menu'); w.parentNode.insertBefore(seg, w);
+        window.__umsStudioViste.push([w, seg]);
+        slotViste.appendChild(w);
       });
     }
     var inv=false; try{ inv=localStorage.getItem('ums_studio_inverti')==='1'; }catch(e){}
@@ -2889,9 +2911,6 @@ body.night-mode .ums-studio-inv{ background:#20232b; color:#E8E4DC; border-color
     var paraBtn=document.getElementById('ums-para-btn');
     var paraNav=document.getElementById('ums-para-nav');
     var ascoltaBar=document.getElementById('ums-ascolta-bar');
-    var visteTesti=['Solo testo','Testo + slide','Solo slide'];
-    var viste=Array.prototype.slice.call(document.querySelectorAll('#ums-slide-toggle-box .ums-slide-toggle button'))
-      .filter(function(x){ return visteTesti.indexOf((x.textContent||'').trim())>=0; });
     // rimetto tutto al suo posto, nell'ordine giusto
     if(segnaRiass && segnaRiass.parentNode){
       if(paraBtn) segnaRiass.parentNode.insertBefore(paraBtn, segnaRiass);
@@ -2945,6 +2964,138 @@ body.night-mode .ums-studio-inv{ background:#20232b; color:#E8E4DC; border-color
 })();
 </script>
 <!-- ================= FINE · STUDIA ================= -->
+
+
+<!-- ================= UMS · BARRA UNIFICATA (⚙ Impostazioni + 🖨 Stampa) =================
+     Consolida i pulsanti sparsi della barra del riassuntone in due menu:
+     • ⚙ Impostazioni  → le viste (Solo testo / Testo+slide / Solo slide),
+       solo se la lezione ha le slide.
+     • 🖨 Stampa        → questa lezione · tutti i riassunti · tutte le mappe · tutte le slide.
+     Restano fuori: 📖 Studia con la lavagna, Mappa mentale.
+     Additivo: non riscrive i pulsanti esistenti, li nasconde e ne delega
+     le azioni. Vale sia in pagina sia (per gli stessi ID) nel modale Studia. -->
+<style id="ums-barra2-style">
+.ums-menu-wrap{ position:relative; display:inline-flex; }
+.ums-menu-btn{ display:inline-flex; align-items:center; gap:7px; }
+.ums-menu-btn svg{ width:1.05em; height:1.05em; flex:0 0 auto; }
+.ums-menu-pop{ position:absolute; top:calc(100% + 8px); left:0; z-index:99999999;
+  min-width:230px; background:var(--ivory,#F7F4EF); border:1px solid var(--dust,#E5DFD3);
+  border-radius:14px; box-shadow:0 18px 50px rgba(0,0,0,.22); padding:8px; display:none; }
+.ums-menu-pop.show{ display:block; }
+body.night-mode .ums-menu-pop{ background:#1C1F27; border-color:#2C3140; }
+.ums-menu-pop button{ display:flex; align-items:center; gap:9px; width:100%;
+  text-align:left; padding:10px 12px; border:none; background:none; border-radius:9px;
+  cursor:pointer; font-family:var(--font-body,'DM Sans',sans-serif); font-size:.92rem;
+  color:var(--ink,#1C1C22); }
+.ums-menu-pop button:hover{ background:rgba(200,169,110,.16); }
+body.night-mode .ums-menu-pop button{ color:#E8E4DC; }
+.ums-menu-pop .voce-tit{ font-size:.7rem; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--gold-dk,#9A7A3F); font-weight:700; padding:8px 12px 4px; }
+.ums-menu-pop .sep{ height:1px; background:var(--dust,#E5DFD3); margin:6px 4px; }
+body.night-mode .ums-menu-pop .sep{ background:#2C3140; }
+.ums-menu-pop .vista-on{ background:rgba(26,47,79,.10); font-weight:700; }
+body.night-mode .ums-menu-pop .vista-on{ background:rgba(143,180,232,.16); }
+.ums-menu-pop svg{ width:1.05em; height:1.05em; flex:0 0 auto; opacity:.85; }
+/* nel modale il menu deve stare sopra tutto */
+#ums-studio-overlay .ums-menu-pop{ z-index:100000002; }
+</style>
+<script id="ums-barra2-script">
+(function(){
+  var ICON_PRINT='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg>';
+  var ICON_GEAR='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>';
+
+  function chiudiTuttiMenu(except){
+    document.querySelectorAll('.ums-menu-pop.show').forEach(function(p){ if(p!==except) p.classList.remove('show'); });
+  }
+  document.addEventListener('click', function(e){
+    if(!e.target.closest || !e.target.closest('.ums-menu-wrap')) chiudiTuttiMenu(null);
+  });
+
+  function creaMenu(id, btnHTML, btnClass){
+    var wrap=document.createElement('div'); wrap.className='ums-menu-wrap';
+    var btn=document.createElement('button'); btn.type='button'; btn.id=id;
+    btn.className=(btnClass||'')+' ums-menu-btn'; btn.innerHTML=btnHTML;
+    var pop=document.createElement('div'); pop.className='ums-menu-pop';
+    wrap.appendChild(btn); wrap.appendChild(pop);
+    btn.addEventListener('click', function(e){
+      e.stopPropagation();
+      var open=!pop.classList.contains('show');
+      chiudiTuttiMenu(pop);
+      pop.classList.toggle('show', open);
+    });
+    return {wrap:wrap, btn:btn, pop:pop};
+  }
+
+  var tenta=0;
+  function costruisci(){
+    var tg=document.querySelector('#ums-slide-toggle-box .ums-slide-toggle');
+    if(!tg){ if(++tenta<50) setTimeout(costruisci,300); return; }
+    if(document.getElementById('ums-menu-stampa')) return;   // già fatto
+
+    var modelloBase=((tg.querySelector('button')&&tg.querySelector('button').className)||'')
+      .replace(/\bums-tg-vista\b/g,'').replace(/\bon\b/g,'').replace(/\bums-print-pill\b/g,'')
+      .replace(/\bums-pill-\S+/g,'').trim();
+
+    // --- riferimenti ai pulsanti esistenti (le azioni le deleghiamo a loro) ---
+    var viste=Array.prototype.slice.call(tg.querySelectorAll('.ums-tg-vista'))
+      .filter(function(x){ return ['Solo testo','Testo + slide','Solo slide'].indexOf((x.textContent||'').trim())>=0; });
+
+    // ========== ⚙ IMPOSTAZIONI (solo se ci sono le viste = lezione con slide) ==========
+    if(viste.length){
+      var mImp=creaMenu('ums-menu-imp', ICON_GEAR+' <span>Impostazioni</span>', modelloBase);
+      var tit=document.createElement('div'); tit.className='voce-tit'; tit.textContent='Come vedere il riassunto';
+      mImp.pop.appendChild(tit);
+      viste.forEach(function(v){
+        var voce=document.createElement('button'); voce.type='button';
+        voce.textContent=(v.textContent||'').trim();
+        function segnaAttiva(){
+          Array.prototype.forEach.call(mImp.pop.querySelectorAll('button'), function(b){ b.classList.remove('vista-on'); });
+          if(v.classList.contains('on')) voce.classList.add('vista-on');
+        }
+        voce.addEventListener('click', function(){ v.click(); setTimeout(segnaAttiva,30); });
+        mImp.pop.appendChild(voce);
+        setTimeout(segnaAttiva,50);
+      });
+      tg.appendChild(mImp.wrap);
+      viste.forEach(function(v){ v.style.display='none'; });   // nascondo SOLO le 3 viste vere
+    }
+
+    // ========== 🖨 STAMPA (menu unico) ==========
+    var mSt=creaMenu('ums-menu-stampa', ICON_PRINT+' <span>Stampa</span>', modelloBase);
+    function voce(txt, fn){
+      var b=document.createElement('button'); b.type='button'; b.innerHTML=ICON_PRINT+' <span>'+txt+'</span>';
+      b.addEventListener('click', function(){ mSt.pop.classList.remove('show'); fn(); });
+      mSt.pop.appendChild(b); return b;
+    }
+    var t1=document.createElement('div'); t1.className='voce-tit'; t1.textContent='Questa lezione';
+    mSt.pop.appendChild(t1);
+    voce('Stampa questa lezione', function(){ if(window.__umsStampaSingola) window.__umsStampaSingola(); });
+    var sep=document.createElement('div'); sep.className='sep'; mSt.pop.appendChild(sep);
+    var t2=document.createElement('div'); t2.className='voce-tit'; t2.textContent='Tutta la materia';
+    mSt.pop.appendChild(t2);
+    voce('Tutti i riassunti', function(){ if(window.__umsStampeApri) window.__umsStampeApri('riass'); });
+    voce('Tutte le mappe', function(){ if(window.__umsStampeApri) window.__umsStampeApri('mappe'); });
+    voce('Tutte le slide', function(){ if(window.__umsStampeApri) window.__umsStampeApri('slide'); });
+    tg.appendChild(mSt.wrap);
+
+    // nascondo i vecchi pulsanti di stampa sciolti (le azioni ora sono nel menu).
+    // Alcuni vengono montati da altri script con ritardo: riprovo per un po'.
+    var giri=0;
+    (function nascondiVecchi(){
+      ['ums-print-btn','ums-riass-btn','ums-mappe-btn'].forEach(function(id){
+        var el=document.getElementById(id); if(el) el.style.display='none';
+      });
+      Array.prototype.forEach.call(document.querySelectorAll('#ums-slide-toggle-box .ums-tg-vista'), function(v){
+        if(['Solo testo','Testo + slide','Solo slide'].indexOf((v.textContent||'').trim())>=0) v.style.display='none';
+      });
+      if(giri++<30) setTimeout(nascondiVecchi,300);
+    })();
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', costruisci);
+  else costruisci();
+})();
+</script>
+<!-- ================= FINE · BARRA UNIFICATA ================= -->
 
 </body>
 </html>
