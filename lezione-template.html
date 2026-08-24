@@ -798,7 +798,7 @@
     ================================================================ -->
     <style>
       /* toggle Solo testo / Testo + slide (invariato) */
-      .ums-slide-toggle{display:flex;gap:.4rem;margin:0 0 1.2rem;flex-wrap:wrap}
+      .ums-slide-toggle{display:flex;gap:.5rem;margin:0 0 1.2rem;flex-wrap:wrap;align-items:center}
       .ums-slide-toggle button{font-family:var(--font-sans,'DM Sans',sans-serif);
         font-weight:600;font-size:.82rem;padding:.5rem .95rem;border-radius:999px;
         border:1px solid var(--gold-lt,#e5d6bd);background:#fff;color:var(--sub,#6b6b73);cursor:pointer}
@@ -3045,6 +3045,23 @@ body.night-mode .ums-studio-inv{ background:#20232b; color:#E8E4DC; border-color
      Additivo: non riscrive i pulsanti esistenti, li nasconde e ne delega
      le azioni. Vale sia in pagina sia (per gli stessi ID) nel modale Studia. -->
 <style id="ums-barra2-style">
+/* la barra dei pulsanti si stende su tutta la larghezza, così stanno in UNA riga */
+@media (min-width:901px){
+  #riass-grid > #ums-slide-toggle-box{ grid-column:1 / -1; }
+}
+.ums-slide-toggle{ flex-wrap:nowrap; }
+@media (max-width:900px){ .ums-slide-toggle{ flex-wrap:wrap; } }
+
+/* Ascolta nella barra: pillola come gli altri MA blu piena */
+.ums-bar-pill.ums-pill-ascolta{ background:var(--navy,#1A2F4F) !important; color:#fff !important;
+  border-color:var(--navy,#1A2F4F) !important; }
+.ums-bar-pill.ums-pill-ascolta:hover{ background:var(--navy,#1A2F4F) !important; }
+body.night-mode .ums-bar-pill.ums-pill-ascolta{ background:#8FB4E8 !important; color:#14161C !important; border-color:#8FB4E8 !important; }
+/* Un paragrafo: quando è nella barra usa la pillola (vale anche fuori da Aa) */
+#ums-para-btn.ums-bar-pill{ margin:0 !important; box-shadow:none !important; }
+body.ums-facile #ums-para-btn.ums-bar-pill{ display:inline-flex !important; }
+#ums-para-btn.ums-bar-pill .ums-para-help{ width:18px; height:18px; font-size:.72rem; }
+
 /* pillola coerente per TUTTI i pulsanti della barra, valida anche nel modale
    (prima il look veniva dal selettore .ums-slide-toggle button, che non
    raggiungeva i pulsanti spostati nel pop-up) */
@@ -3184,12 +3201,33 @@ body.night-mode .ums-menu-pop .vista-on{ background:rgba(143,180,232,.16); }
     tg.appendChild(mSt.wrap);
 
     // riordino: Studia · Mappa mentale · ⚙ Impostazioni · 🖨 Stampa (ultimo)
+    // sposto la barra a livello della griglia, così può prendere tutta la larghezza
+    (function stendiBarra(){
+      var box=document.getElementById('ums-slide-toggle-box');
+      var grid=document.getElementById('riass-grid');
+      if(box && grid && box.parentNode!==grid){
+        grid.insertBefore(box, grid.firstChild);   // in cima, su tutta la larghezza
+      }
+    })();
+
     function riordina(){
+      // porto DENTRO la barra anche Ascolta e Un paragrafo, così TUTTI i pulsanti
+      // stanno sull'unica riga flex (prima erano in contenitori separati sotto).
+      var ascoltaBar=document.getElementById('ums-ascolta-bar');
+      var ascoltaBtn=document.getElementById('ums-ascolta-btn');
+      if(ascoltaBtn && ascoltaBar && ascoltaBar.parentNode!==tg){
+        ascoltaBtn.classList.add('ums-bar-pill','ums-pill-ascolta');
+        tg.appendChild(ascoltaBtn);   // sposto il pulsante nella barra
+        if(ascoltaBar && !ascoltaBar.children.length) ascoltaBar.style.display='none';
+      }
+      var para=document.getElementById('ums-para-btn');
+      if(para && para.parentNode!==tg){ para.classList.add('ums-bar-pill'); tg.appendChild(para); }
       var studio=document.getElementById('ums-studio-btn');
       var mappa=document.getElementById('ums-btn-mappa');
       var imp=document.getElementById('ums-menu-imp'); imp=imp&&imp.closest('.ums-menu-wrap');
       var stp=document.getElementById('ums-menu-stampa'); stp=stp&&stp.closest('.ums-menu-wrap');
-      [studio, mappa, imp, stp].forEach(function(el){ if(el && el.parentNode===tg) tg.appendChild(el); });
+      // ordine finale: Ascolta · Un paragrafo · Studia · Mappa · ⚙ · 🖨 (ultimo)
+      [ascoltaBtn, para, studio, mappa, imp, stp].forEach(function(el){ if(el && el.parentNode===tg) tg.appendChild(el); });
     }
     // nascondo i vecchi pulsanti di stampa sciolti (le azioni ora sono nel menu).
     // Alcuni vengono montati da altri script con ritardo: riprovo per un po'.
