@@ -4930,7 +4930,7 @@ if (!fileDaCaricare) {
             if (!h) return;
             var panel = h.closest('.ums-acc-h') ? h.closest('.ums-acc-h').nextElementSibling : h.nextElementSibling;
             if (panel && !panel.classList.contains('active')) h.click();
-            setTimeout(function () { aggiornaTabIndex(); try { h.focus(); } catch (e) {} }, 120);
+            setTimeout(function () { aggiornaTabIndex(); try { h.focus({preventScroll:true}); } catch (e) { try{h.focus();}catch(_){} } }, 120);
         }, 260);
     }
     document.addEventListener('keydown', function (e) {
