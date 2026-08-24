@@ -484,7 +484,7 @@
                                      Ora contiene SOLO il testo del riassuntone: il bloc
                                      notes a destra parte alla sua stessa altezza -->
                                 <div>
-                                    <div id="dyn-riassuntone-container" class="text-content-box"></div>
+                                    <div id="dyn-riassuntone-container" class="text-content-box" tabindex="-1"></div>
                                 </div>
 
                                 <!-- ================== COLONNA DESTRA ================== -->
@@ -2644,6 +2644,29 @@
 <!-- ================= FINE · STAMPA RIASSUNTI / MAPPE ================= -->
 
 
+<script id="ums-barra-garante">
+(function(){
+  // Garantisce che la barra dei pulsanti (#ums-slide-toggle-box) esista SEMPRE,
+  // anche nelle lezioni senza slide: senza di essa i pulsanti Studia/Stampa/Mappa
+  // non avevano dove attaccarsi e sparivano. Se lo script delle slide la crea,
+  // questo non fa nulla; altrimenti la crea vuota al posto giusto.
+  var tries=0;
+  function assicura(){
+    if(document.getElementById('ums-slide-toggle-box')) return;
+    var cont=document.getElementById('dyn-riassuntone-container');
+    if(!cont || !cont.querySelector('p')){ if(tries++<200) setTimeout(assicura,150); return; }
+    // se lo script slide sta per crearla (lezione CON slide), aspetto un filo
+    if(tries<3){ tries++; setTimeout(assicura,150); return; }
+    if(document.getElementById('ums-slide-toggle-box')) return;
+    var box=document.createElement('div'); box.id='ums-slide-toggle-box';
+    var tg=document.createElement('div'); tg.className='ums-slide-toggle';
+    box.appendChild(tg);
+    cont.parentElement.insertBefore(box, cont);
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', assicura);
+  else assicura();
+})();
+</script>
 <!-- ================= UMS · STUDIA (riassuntone + lavagna affiancati) =================
      Consegna 1. Un pulsante "Studia con la lavagna" apre un pop-up a tutto
      schermo: a sinistra il riassuntone (con TUTTE le sue funzioni — Aa,
@@ -2671,14 +2694,23 @@ body.night-mode .ums-studio-top .tt{ color:#8FB4E8; }
 body.night-mode .ums-studio-x{ background:#20232b; color:#E8E4DC; border-color:#8FB4E8; }
 .ums-studio-corpo{ flex:1 1 auto; display:flex; gap:0; min-height:0; }
 .ums-studio-sx{ flex:1 1 52%; min-width:0; overflow:auto; padding:26px 30px 140px; }
-.ums-studio-dx{ flex:1 1 48%; min-width:0; overflow:auto; padding:20px;
-  border-left:1px solid var(--dust,#E5DFD3); background:rgba(200,169,110,.05); display:flex; flex-direction:column; }
+.ums-studio-dx{ flex:1 1 48%; min-width:0; overflow:hidden; padding:20px;
+  border-left:1px solid var(--dust,#E5DFD3); background:rgba(200,169,110,.05);
+  display:flex; flex-direction:column; gap:14px; }
 body.night-mode .ums-studio-dx{ border-left-color:#2C3140; background:rgba(143,180,232,.05); }
-/* la lavagna dentro il pop-up: grande, riempie la colonna destra */
+/* la lavagna: LARGA (tutta la colonna) e alta (riempie lo spazio) */
 #ums-studio-dx-slot{ flex:1 1 auto; display:flex; min-height:0; }
-#ums-studio-dx-slot #smart-whiteboard{ width:100%; max-width:none; margin:0; display:flex; flex-direction:column; }
-#ums-studio-dx-slot #smart-whiteboard .wb-body-wrap{ flex:1 1 auto; }
-#ums-studio-dx-slot #smart-whiteboard .wb-body{ max-height:none; height:100%; }
+#ums-studio-dx-slot #smart-whiteboard{ width:100%; max-width:none; margin:0; display:flex; flex-direction:column; min-height:0; }
+#ums-studio-dx-slot #smart-whiteboard .wb-body-wrap{ flex:1 1 auto; min-height:0; display:flex; flex-direction:column; }
+#ums-studio-dx-slot #smart-whiteboard .wb-body{ flex:1 1 auto; max-height:none !important; height:auto !important; }
+/* le istruzioni + colori: SOTTO la lavagna, sempre visibili, legenda compatta */
+.ums-studio-dx .wb-hint{ flex:0 0 auto; margin:0; padding:12px 14px; border-radius:12px;
+  background:rgba(200,169,110,.09); font-size:.82rem; line-height:1.4; }
+body.night-mode .ums-studio-dx .wb-hint{ background:rgba(143,180,232,.08); }
+.ums-studio-dx .wb-hint .hl-palette-row{ margin-top:8px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.ums-studio-dx .wb-hint .hl-palette-micro{ font-size:.72rem; }
+.ums-studio-dx .wb-hint .hl-swatch{ width:26px !important; height:26px !important; }
+.ums-studio-dx .wb-hint .hl-copy-mobile{ display:none; }
 /* il riassuntone dentro il pop-up occupa tutta la colonna, niente scatola stretta */
 #ums-studio-sx-slot #dyn-riassuntone-container{ max-height:none !important; overflow:visible !important; }
 /* pulsante di apertura */
@@ -2689,15 +2721,18 @@ body.night-mode .ums-studio-dx{ border-left-color:#2C3140; background:rgba(143,1
 body.ums-studio-aperto #ums-facile-btn{ z-index:99999995 !important; }
 body.ums-studio-aperto #ums-read-bar{ z-index:99999996 !important; }
 body.ums-studio-aperto #floating-highlighter{ z-index:99999997 !important; }
-/* la colonna destra e la lavagna riempiono l'altezza disponibile */
-.ums-studio-dx{ }
-#ums-studio-dx-slot{ flex:1 1 auto; min-height:0; }
-#ums-studio-dx-slot #smart-whiteboard{ height:100%; }
-#ums-studio-dx-slot #smart-whiteboard .wb-body-wrap{ flex:1 1 auto; min-height:0; display:flex; flex-direction:column; }
-#ums-studio-dx-slot #smart-whiteboard .wb-body{ flex:1 1 auto; max-height:none !important; height:auto !important; }
-/* il riassuntone nel pop-up: box che scorre col MOUSE, a tutta pagina in modalità tastiera */
+/* il riassuntone nel pop-up scorre nella colonna sinistra */
 .ums-studio-sx #dyn-riassuntone-container{ max-height:none; overflow:visible; }
-body:not(.ums-kbd) .ums-studio-sx{ overflow:auto; }
+
+/* viste (Solo testo / Testo+slide / Solo slide) nel top del pop-up */
+.ums-studio-top{ gap:14px; }
+#ums-studio-viste{ display:flex; gap:6px; flex:1 1 auto; justify-content:center; flex-wrap:wrap; }
+#ums-studio-viste .ums-tg-vista{ margin:0; }
+/* la colonna destra riempie tutta l'altezza; la lavagna cresce fino in fondo */
+.ums-studio-corpo{ align-items:stretch; }
+.ums-studio-dx{ height:100%; }
+#ums-studio-dx-slot{ flex:1 1 auto; min-height:0; display:flex; }
+#ums-studio-dx-slot #smart-whiteboard{ flex:1 1 auto; height:100%; }
 /* su mobile non si apre: affiancare non ha senso su schermo stretto */
 @media (max-width:820px){ #ums-studio-btn{ display:none !important; } #ums-studio-overlay{ display:none !important; } }
 </style>
@@ -2717,7 +2752,8 @@ body:not(.ums-kbd) .ums-studio-sx{ overflow:auto; }
     overlay.setAttribute('aria-label','Studia: riassuntone e lavagna');
     overlay.innerHTML=
       '<div class="ums-studio-top">'+
-        '<span class="tt">Studia \u2014 riassuntone e lavagna</span>'+
+        '<span class="tt">Studia</span>'+
+        '<div class="ums-studio-viste" id="ums-studio-viste"></div>'+
         '<button type="button" class="ums-studio-x">Chiudi \u2715</button>'+
       '</div>'+
       '<div class="ums-studio-corpo">'+
@@ -2744,6 +2780,9 @@ body:not(.ums-kbd) .ums-studio-sx{ overflow:auto; }
     var paraBtn=document.getElementById('ums-para-btn');
     var paraNav=document.getElementById('ums-para-nav');
     var ascoltaBar=document.getElementById('ums-ascolta-bar');
+    var visteTesti=['Solo testo','Testo + slide','Solo slide'];
+    var viste=Array.prototype.slice.call(document.querySelectorAll('#ums-slide-toggle-box .ums-slide-toggle button'))
+      .filter(function(x){ return visteTesti.indexOf((x.textContent||'').trim())>=0; });
 
     // segnaposti per il ritorno
     segnaRiass=document.createComment('riass-qui'); riassParent=riass.parentNode;
@@ -2768,10 +2807,20 @@ body:not(.ums-kbd) .ums-studio-sx{ overflow:auto; }
     if(hint){
       segnaHint=document.createComment('hint-qui'); hintParent=hint.parentNode;
       hintParent.insertBefore(segnaHint, hint);
-      slotDx.appendChild(hint);
+      slotDx.parentNode.appendChild(hint);  // sotto la lavagna, nella colonna destra
       window.__umsStudioHint=[hint, segnaHint];
     }
 
+    // porto le viste (Solo testo / Testo+slide / Solo slide) nel top del pop-up
+    var slotViste=overlay.querySelector('#ums-studio-viste');
+    if(viste.length && slotViste){
+      window.__umsStudioViste=[];
+      viste.forEach(function(v){
+        var seg=document.createComment('vista'); v.parentNode.insertBefore(seg, v);
+        window.__umsStudioViste.push([v, seg]);
+        slotViste.appendChild(v);
+      });
+    }
     overlay.classList.add('show');
     aperto=true;
     document.body.classList.add('ums-studio-aperto');
@@ -2785,6 +2834,9 @@ body:not(.ums-kbd) .ums-studio-sx{ overflow:auto; }
     var paraBtn=document.getElementById('ums-para-btn');
     var paraNav=document.getElementById('ums-para-nav');
     var ascoltaBar=document.getElementById('ums-ascolta-bar');
+    var visteTesti=['Solo testo','Testo + slide','Solo slide'];
+    var viste=Array.prototype.slice.call(document.querySelectorAll('#ums-slide-toggle-box .ums-slide-toggle button'))
+      .filter(function(x){ return visteTesti.indexOf((x.textContent||'').trim())>=0; });
     // rimetto tutto al suo posto, nell'ordine giusto
     if(segnaRiass && segnaRiass.parentNode){
       if(paraBtn) segnaRiass.parentNode.insertBefore(paraBtn, segnaRiass);
@@ -2795,6 +2847,13 @@ body:not(.ums-kbd) .ums-studio-sx{ overflow:auto; }
     if(segnaWb && segnaWb.parentNode){
       segnaWb.parentNode.insertBefore(wb, segnaWb);
       segnaWb.parentNode.removeChild(segnaWb);
+    }
+    if(window.__umsStudioViste){
+      window.__umsStudioViste.forEach(function(pair){
+        var v=pair[0], seg=pair[1];
+        if(seg && seg.parentNode){ seg.parentNode.insertBefore(v, seg); seg.parentNode.removeChild(seg); }
+      });
+      window.__umsStudioViste=null;
     }
     if(window.__umsStudioAscolta){
       var ab=window.__umsStudioAscolta[0], sab=window.__umsStudioAscolta[1];
