@@ -4273,7 +4273,7 @@ if (!fileDaCaricare) {
         if (!document.getElementById('ums-bmc-gatto-style')) {
             var stG = document.createElement('style');
             stG.id = 'ums-bmc-gatto-style';
-            stG.textContent = "#ums-bmc-overlay .ums-bmc-gatto{ display:none; }\n#ums-bmc-overlay.gatto-in .ums-bmc-gatto{ display:flex; align-items:center; justify-content:center; position:absolute; inset:0; cursor:pointer; z-index:2; }\n#ums-bmc-overlay.gatto-in .ums-bmc-card{ display:none !important; }\n.ums-bmc-gatto .gatto-wrap{ position:relative; }\n.ums-bmc-gatto img{ display:block; user-select:none; -webkit-user-drag:none; filter: drop-shadow(0 20px 44px rgba(0,0,0,.38)); max-height:74vh; max-width:86vw; width:auto; height:auto; }\n#ums-bmc-overlay.gatto-in .gatto-wrap{ animation: umsGattoCresce 2.2s cubic-bezier(.22,.9,.3,1) both; transform-origin:center center; }\n@keyframes umsGattoCresce{ from{ transform:scale(.12); opacity:0; } 25%{ opacity:1; } to{ transform:scale(1); opacity:1; } }\n.gatto-fumetto{ position:absolute; left:var(--muso-x,50%); top:var(--muso-y,20%); width:76px; height:64px; background:#fff; border-radius:50%;\n  display:flex; align-items:center; justify-content:center; box-shadow:0 8px 22px rgba(0,0,0,.28);\n  opacity:0; transform:translate(-50%,-135%) scale(0); transform-origin:30% 130%; }\n.gatto-fumetto::after{ content:''; position:absolute; bottom:-10px; left:50%; margin-left:-8px; width:0; height:0;\n  border:10px solid transparent; border-top-color:#fff; border-bottom:0; }\n#ums-bmc-overlay.gatto-in .gatto-fumetto{ animation: umsFumettoPop .5s cubic-bezier(.34,1.56,.64,1) 2.35s both; }\n@keyframes umsFumettoPop{ from{ opacity:0; transform:translate(-50%,-135%) scale(0);} to{ opacity:1; transform:translate(-50%,-135%) scale(1);} }\n.gatto-fumetto svg{ width:30px; height:auto; display:block; animation: umsCuoreBatte 1.1s ease-in-out 2.95s infinite; }\n@keyframes umsCuoreBatte{ 0%,100%{ transform:scale(1);} 50%{ transform:scale(1.22);} }\n@media (max-width:480px){ .gatto-fumetto{ width:60px; height:50px; } .gatto-fumetto svg{ width:24px; } }\n@media (prefers-reduced-motion: reduce){ #ums-bmc-overlay.gatto-in .gatto-wrap, #ums-bmc-overlay.gatto-in .gatto-fumetto, .gatto-fumetto svg{ animation:none !important; opacity:1; transform:translate(-50%,-135%); } }";
+            stG.textContent = "#ums-bmc-overlay .ums-bmc-gatto{ display:none; }\n#ums-bmc-overlay.gatto-in .ums-bmc-gatto{ display:flex; align-items:center; justify-content:center; position:absolute; inset:0; cursor:pointer; z-index:2; }\n#ums-bmc-overlay.gatto-in .ums-bmc-card{ display:none !important; }\n.ums-bmc-gatto .gatto-wrap{ position:relative; }\n.ums-bmc-gatto img{ display:block; user-select:none; -webkit-user-drag:none; filter: drop-shadow(0 20px 44px rgba(0,0,0,.38)); max-height:74vh; max-width:86vw; width:auto; height:auto; }\n/* gatto invisibile mentre l'immagine si carica: niente lampi */\n.ums-bmc-gatto.gatto-carica{ opacity:0; }\n/* le animazioni partono con 'gatto-anima' (messa dal JS quando il gatto è pronto) */\n.ums-bmc-gatto.gatto-anima .gatto-wrap{ animation: umsGattoCresce 2.2s cubic-bezier(.22,.9,.3,1) both; transform-origin:center center; }\n@keyframes umsGattoCresce{ from{ transform:scale(.12); opacity:0; } 25%{ opacity:1; } to{ transform:scale(1); opacity:1; } }\n.gatto-fumetto{ position:absolute; left:var(--muso-x,50%); top:var(--muso-y,20%); width:76px; height:64px; background:#fff; border-radius:50%;\n  display:flex; align-items:center; justify-content:center; box-shadow:0 8px 22px rgba(0,0,0,.28);\n  opacity:0; transform:translate(-50%,-135%) scale(0); transform-origin:30% 130%; }\n.gatto-fumetto::after{ content:''; position:absolute; bottom:-10px; left:50%; margin-left:-8px; width:0; height:0;\n  border:10px solid transparent; border-top-color:#fff; border-bottom:0; }\n.ums-bmc-gatto.gatto-anima .gatto-fumetto{ animation: umsFumettoPop .5s cubic-bezier(.34,1.56,.64,1) 2.35s both; }\n@keyframes umsFumettoPop{ from{ opacity:0; transform:translate(-50%,-135%) scale(0);} to{ opacity:1; transform:translate(-50%,-135%) scale(1);} }\n.gatto-fumetto svg{ width:30px; height:auto; display:block; }\n.ums-bmc-gatto.gatto-anima .gatto-fumetto svg{ animation: umsCuoreBatte 1.1s ease-in-out 2.95s infinite; }\n@keyframes umsCuoreBatte{ 0%,100%{ transform:scale(1);} 50%{ transform:scale(1.22);} }\n@media (max-width:480px){ .gatto-fumetto{ width:60px; height:50px; } .gatto-fumetto svg{ width:24px; } }\n@media (prefers-reduced-motion: reduce){ .ums-bmc-gatto.gatto-anima .gatto-wrap, .ums-bmc-gatto.gatto-anima .gatto-fumetto, .gatto-fumetto svg{ animation:none !important; opacity:1; transform:translate(-50%,-135%); } }";
             document.head.appendChild(stG);
         }
         const gattoBox = document.createElement('div');
@@ -4292,6 +4292,7 @@ if (!fileDaCaricare) {
         const vaiAllaCard = function () {
             clearTimeout(timerCard); timerCard = null;
             ov.classList.remove('gatto-in');
+            gattoBox.classList.remove('gatto-anima', 'gatto-carica');
             try { ov.querySelector('.ums-bmc-close').focus(); } catch (e) {}
         };
         gattoBox.addEventListener('click', vaiAllaCard);
@@ -4299,6 +4300,7 @@ if (!fileDaCaricare) {
         const chiudi = function () {
             clearTimeout(timerCard); timerCard = null;
             ov.classList.remove('show', 'gatto-in');
+            gattoBox.classList.remove('gatto-anima', 'gatto-carica');
             document.body.classList.remove('ums-noscroll');
             document.removeEventListener('keydown', suEsc);
             if (btn) btn.focus();
@@ -4306,9 +4308,13 @@ if (!fileDaCaricare) {
         const suEsc = function (e) { if (e.key === 'Escape') chiudi(); };
         var fumetto = gattoBox.querySelector('.gatto-fumetto');
         const partiIntro = function () {
-            ov.classList.remove('gatto-in');
-            void gattoBox.offsetWidth;            // riavvia le animazioni CSS
+            // riavvio le animazioni CSS SENZA togliere 'gatto-in' (che nasconde la
+            // scheda): tolgo/rimetto una classe solo sul gatto, così la scheda non
+            // ricompare mai per errore. 'gatto-in' resta sempre attivo qui.
             ov.classList.add('gatto-in');
+            gattoBox.classList.remove('gatto-anima');
+            void gattoBox.offsetWidth;            // forza il reflow → l'animazione riparte
+            gattoBox.classList.add('gatto-anima');
             clearTimeout(timerCard);
             timerCard = setTimeout(vaiAllaCard, 4400);
         };
@@ -4327,11 +4333,23 @@ if (!fileDaCaricare) {
             var g = GATTI[Math.floor(Math.random() * GATTI.length)];
             fumetto.style.setProperty('--muso-x', g.musoX + '%');
             fumetto.style.setProperty('--muso-y', g.musoY + '%');
-            // il gatto è già in cache? allora parto subito; altrimenti aspetto il load
-            gattoImg.onload = function () { gattoOk = true; partiIntro(); };
+            // NASCONDO SUBITO la scheda: metto già 'gatto-in' prima ancora di
+            // caricare l'immagine, così non c'è nessun lampo della scheda mentre
+            // il gatto arriva. Il gatto è invisibile finché l'immagine non è pronta.
+            ov.classList.add('gatto-in');
+            gattoBox.classList.add('gatto-carica');   // gatto nascosto durante il caricamento
+            gattoImg.onload = function () {
+                gattoOk = true;
+                gattoBox.classList.remove('gatto-carica');
+                partiIntro();
+            };
             gattoImg.onerror = function () { gattoOk = false; vaiAllaCard(); };
             gattoImg.src = g.uri;
-            if (gattoImg.complete && gattoImg.naturalWidth) { gattoOk = true; partiIntro(); }
+            if (gattoImg.complete && gattoImg.naturalWidth) {
+                gattoOk = true;
+                gattoBox.classList.remove('gatto-carica');
+                partiIntro();
+            }
         };
         if (btn) btn.addEventListener('click', apri);
         ov.querySelector('.ums-bmc-close').addEventListener('click', chiudi);
