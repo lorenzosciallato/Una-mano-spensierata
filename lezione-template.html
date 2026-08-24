@@ -1132,21 +1132,23 @@
       #ums-fc-print-btn svg{width:1.05em;height:1.05em}
       body.night-mode #ums-fc-print-btn{background:#20232b;color:#c9c9d2;border-color:#3a3f4b}
       #ums-slide-toggle-box .ums-slide-toggle{align-items:center}
-      /* MOBILE — con cinque pulsanti il flex-wrap li lasciava sfusi e
-         disallineati: griglia a 6 colonne, le tre viste occupano la prima
-         riga (2 colonne ciascuna), le due azioni la seconda (3 e 3). */
-      @media (max-width:700px){
-        #ums-slide-toggle-box .ums-slide-toggle{
-          display:grid;grid-template-columns:repeat(6,1fr);gap:.4rem;align-items:stretch}
-        #ums-slide-toggle-box .ums-slide-toggle button{
-          justify-content:center;text-align:center;white-space:nowrap;
-          font-size:.76rem;padding:.55rem .3rem;margin:0}
-        #ums-slide-toggle-box .ums-tg-vista{grid-column:span 2}
-        #ums-slide-toggle-box #ums-print-btn{grid-column:span 3;margin-left:0}
-        #ums-slide-toggle-box #ums-btn-mappa{grid-column:span 3}
-        #ums-slide-toggle-box #ums-print-btn{display:inline-flex}
-      }
       #ums-slide-toggle-box #ums-print-btn{margin-left:auto}
+      /* MOBILE — i pulsanti (viste + Mappa + le tre stampe) NON si devono mai
+         accavallare. Griglia semplice a 2 colonne: ogni pulsante ha la sua
+         cella, niente sovrapposizioni, niente margin-left:auto che li spinge
+         uno sull'altro. Su schermi molto stretti diventa 1 colonna. */
+      @media (max-width:760px){
+        #ums-slide-toggle-box .ums-slide-toggle{
+          display:grid;grid-template-columns:1fr 1fr;gap:.5rem;align-items:stretch}
+        #ums-slide-toggle-box .ums-slide-toggle button{
+          justify-content:center;text-align:center;
+          font-size:.8rem;padding:.6rem .5rem;margin:0 !important;width:100%}
+        /* le tre viste stanno strette: le metto in fila da tre in cima */
+        #ums-slide-toggle-box .ums-tg-vista{grid-column:auto}
+      }
+      @media (max-width:420px){
+        #ums-slide-toggle-box .ums-slide-toggle{grid-template-columns:1fr}
+      }
 
       #ums-pdf-overlay{display:none;position:fixed;inset:0;z-index:99999999;
         background:rgba(15,17,23,.55);align-items:center;justify-content:center;padding:5vw}
@@ -2376,15 +2378,6 @@
 .night-mode .ums-pill-single:hover{ background:#8FB4E8 !important; color:#14161c !important; }
 .night-mode .ums-pill-riass{ color:var(--gold,#C8A96E) !important; }
 .night-mode .ums-pill-mappe{ color:#D89B76 !important; border-color:#D89B76 !important; }
-/* barra dei toggle: pulita e senza spazi strani su cellulare/tablet */
-@media (max-width:820px){
-  #ums-slide-toggle-box .ums-slide-toggle{ gap:8px; row-gap:8px; }
-  #ums-slide-toggle-box .ums-slide-toggle button{ flex:1 1 auto; justify-content:center; }
-  .ums-print-pill{ flex:1 1 100%; justify-content:center; }
-}
-@media (max-width:480px){
-  #ums-slide-toggle-box .ums-slide-toggle button{ font-size:.9rem; padding:10px 12px; }
-}
 </style>
 <script id="ums-stampe-script">
 (function(){
@@ -2649,6 +2642,154 @@
 })();
 </script>
 <!-- ================= FINE · STAMPA RIASSUNTI / MAPPE ================= -->
+
+
+<!-- ================= UMS · STUDIA (riassuntone + lavagna affiancati) =================
+     Consegna 1. Un pulsante "Studia con la lavagna" apre un pop-up a tutto
+     schermo: a sinistra il riassuntone (con TUTTE le sue funzioni — Aa,
+     notte, ascolta, un paragrafo alla volta — perché è lo STESSO elemento,
+     spostato qui dentro, non una copia), a destra la lavagna grande.
+     Alla chiusura riassuntone e lavagna tornano al loro posto in pagina.
+     Solo da tablet/desktop: su mobile il pulsante non compare (lì la vista
+     resta com'è). Additivo, non tocca le funzioni esistenti. -->
+<style id="ums-studio-style">
+#ums-studio-overlay{ display:none; position:fixed; inset:0; z-index:99999990;
+  background:var(--ivory,#F7F4EF); }
+body.night-mode #ums-studio-overlay{ background:#14161c; }
+#ums-studio-overlay.show{ display:flex; flex-direction:column; }
+.ums-studio-top{ display:flex; align-items:center; justify-content:space-between;
+  padding:12px 20px; border-bottom:1px solid var(--dust,#E5DFD3);
+  background:var(--ivory,#F7F4EF); flex:0 0 auto; }
+body.night-mode .ums-studio-top{ background:#181b21; border-bottom-color:#2C3140; }
+.ums-studio-top .tt{ font-family:var(--font-display,'Playfair Display',serif);
+  font-size:1.15rem; font-weight:700; color:var(--navy,#1A2F4F); }
+body.night-mode .ums-studio-top .tt{ color:#8FB4E8; }
+.ums-studio-x{ border:1px solid var(--gold,#C8A96E); background:#fff; color:var(--navy,#1A2F4F);
+  border-radius:50px; padding:9px 18px; font-weight:700; cursor:pointer; font-family:var(--font-body,sans-serif);
+  display:inline-flex; align-items:center; gap:7px; }
+.ums-studio-x:hover{ background:var(--navy,#1A2F4F); color:#fff; }
+body.night-mode .ums-studio-x{ background:#20232b; color:#E8E4DC; border-color:#8FB4E8; }
+.ums-studio-corpo{ flex:1 1 auto; display:flex; gap:0; min-height:0; }
+.ums-studio-sx{ flex:1 1 52%; min-width:0; overflow:auto; padding:26px 30px 140px; }
+.ums-studio-dx{ flex:1 1 48%; min-width:0; overflow:auto; padding:20px;
+  border-left:1px solid var(--dust,#E5DFD3); background:rgba(200,169,110,.05); display:flex; flex-direction:column; }
+body.night-mode .ums-studio-dx{ border-left-color:#2C3140; background:rgba(143,180,232,.05); }
+/* la lavagna dentro il pop-up: grande, riempie la colonna destra */
+#ums-studio-dx-slot{ flex:1 1 auto; display:flex; min-height:0; }
+#ums-studio-dx-slot #smart-whiteboard{ width:100%; max-width:none; margin:0; display:flex; flex-direction:column; }
+#ums-studio-dx-slot #smart-whiteboard .wb-body-wrap{ flex:1 1 auto; }
+#ums-studio-dx-slot #smart-whiteboard .wb-body{ max-height:none; height:100%; }
+/* il riassuntone dentro il pop-up occupa tutta la colonna, niente scatola stretta */
+#ums-studio-sx-slot #dyn-riassuntone-container{ max-height:none !important; overflow:visible !important; }
+/* pulsante di apertura */
+#ums-studio-btn{ display:inline-flex; align-items:center; gap:7px; }
+#ums-studio-btn svg{ width:1.05em; height:1.05em; flex:0 0 auto; }
+/* su mobile non si apre: affiancare non ha senso su schermo stretto */
+@media (max-width:820px){ #ums-studio-btn{ display:none !important; } #ums-studio-overlay{ display:none !important; } }
+</style>
+<script id="ums-studio-script">
+(function(){
+  var overlay, slotSx, slotDx, aperto=false;
+  // segnaposti dove riportare gli elementi quando si chiude
+  var segnaRiass=null, segnaWb=null;
+  var riassParent=null, wbParent=null;
+
+  function costruisci(){
+    if(overlay) return;
+    overlay=document.createElement('div');
+    overlay.id='ums-studio-overlay';
+    overlay.setAttribute('role','dialog');
+    overlay.setAttribute('aria-modal','true');
+    overlay.setAttribute('aria-label','Studia: riassuntone e lavagna');
+    overlay.innerHTML=
+      '<div class="ums-studio-top">'+
+        '<span class="tt">Studia \u2014 riassuntone e lavagna</span>'+
+        '<button type="button" class="ums-studio-x">Chiudi \u2715</button>'+
+      '</div>'+
+      '<div class="ums-studio-corpo">'+
+        '<div class="ums-studio-sx"><div id="ums-studio-sx-slot"></div></div>'+
+        '<div class="ums-studio-dx"><div id="ums-studio-dx-slot"></div></div>'+
+      '</div>';
+    document.body.appendChild(overlay);
+    slotSx=overlay.querySelector('#ums-studio-sx-slot');
+    slotDx=overlay.querySelector('#ums-studio-dx-slot');
+    overlay.querySelector('.ums-studio-x').addEventListener('click', chiudi);
+    document.addEventListener('keydown', function(e){
+      if(e.key==='Escape' && aperto) chiudi();
+    });
+  }
+
+  function apri(){
+    costruisci();
+    var riass=document.getElementById('dyn-riassuntone-container');
+    var wb=document.getElementById('smart-whiteboard');
+    if(!riass || !wb) return;
+
+    // il pulsante "Un paragrafo alla volta" sta subito prima del riassuntone:
+    // lo porto con lui, così resta accanto
+    var paraBtn=document.getElementById('ums-para-btn');
+    var paraNav=document.getElementById('ums-para-nav');
+
+    // segnaposti per il ritorno
+    segnaRiass=document.createComment('riass-qui'); riassParent=riass.parentNode;
+    riassParent.insertBefore(segnaRiass, riass);
+    segnaWb=document.createComment('wb-qui'); wbParent=wb.parentNode;
+    wbParent.insertBefore(segnaWb, wb);
+
+    // sposto DENTRO il pop-up (stessi nodi → tutte le funzioni continuano)
+    if(paraBtn) slotSx.appendChild(paraBtn);
+    slotSx.appendChild(riass);
+    if(paraNav) slotSx.appendChild(paraNav);
+    slotDx.appendChild(wb);
+
+    overlay.classList.add('show');
+    aperto=true;
+    document.body.classList.add('ums-studio-aperto');
+    overlay.querySelector('.ums-studio-x').focus();
+  }
+
+  function chiudi(){
+    if(!aperto) return;
+    var riass=document.getElementById('dyn-riassuntone-container');
+    var wb=document.getElementById('smart-whiteboard');
+    var paraBtn=document.getElementById('ums-para-btn');
+    var paraNav=document.getElementById('ums-para-nav');
+    // rimetto tutto al suo posto, nell'ordine giusto
+    if(segnaRiass && segnaRiass.parentNode){
+      if(paraBtn) segnaRiass.parentNode.insertBefore(paraBtn, segnaRiass);
+      segnaRiass.parentNode.insertBefore(riass, segnaRiass);
+      if(paraNav) segnaRiass.parentNode.insertBefore(paraNav, segnaRiass);
+      segnaRiass.parentNode.removeChild(segnaRiass);
+    }
+    if(segnaWb && segnaWb.parentNode){
+      segnaWb.parentNode.insertBefore(wb, segnaWb);
+      segnaWb.parentNode.removeChild(segnaWb);
+    }
+    overlay.classList.remove('show');
+    aperto=false;
+    document.body.classList.remove('ums-studio-aperto');
+    var apri=document.getElementById('ums-studio-btn');
+    if(apri) try{ apri.focus(); }catch(e){}
+  }
+
+  // pulsante di apertura, accanto agli altri della barra del riassuntone
+  var tenta=0;
+  function aggancia(){
+    var tg=document.querySelector('#ums-slide-toggle-box .ums-slide-toggle');
+    if(!tg){ if(++tenta<40) setTimeout(aggancia,400); return; }
+    if(document.getElementById('ums-studio-btn')) return;
+    var modello=(tg.querySelector('button')&&tg.querySelector('button').className)||'';
+    var b=document.createElement('button');
+    b.type='button'; b.id='ums-studio-btn'; b.className=modello;
+    b.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v16"/><rect x="3" y="5" width="8" height="14" rx="1"/><rect x="13" y="5" width="8" height="14" rx="1"/></svg> <span>Studia con la lavagna</span>';
+    b.addEventListener('click', apri);
+    tg.appendChild(b);
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', aggancia);
+  else aggancia();
+})();
+</script>
+<!-- ================= FINE · STUDIA ================= -->
 
 </body>
 </html>
