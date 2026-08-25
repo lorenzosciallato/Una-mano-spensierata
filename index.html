@@ -332,6 +332,27 @@ body.night-mode .year-head{border-bottom-color:#3a332c;}
 .subj-chevron svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
 .subj-card:hover .subj-chevron{color:var(--gold-dk); transform:translateX(3px);}
 
+/* Card in evidenza: Bacheca appelli (prima voce, stile navy per distinguerla) */
+.bacheca-card{
+  display:flex; align-items:center; gap:1rem; width:100%; text-align:left;
+  background:var(--navy); border:1px solid var(--navy); border-radius:var(--r-md);
+  padding:1.1rem 1.3rem; margin-bottom:1.4rem; cursor:pointer; text-decoration:none;
+  box-shadow:var(--shadow-card);
+  transition:transform .2s var(--ease), box-shadow .2s, background-color .2s;
+}
+.bacheca-card:hover{transform:translateY(-2px); box-shadow:var(--shadow-lift); background:var(--navy-lt);}
+.bacheca-glyph{width:46px; min-width:46px; height:46px; display:flex; align-items:center; justify-content:center;
+  background:rgba(232,213,170,.16); border-radius:12px; color:var(--gold-lt);}
+.bacheca-glyph svg{width:26px; height:26px; stroke:currentColor; fill:none; stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round;}
+.bacheca-body{flex:1; min-width:0;}
+.bacheca-kicker{display:block; font-size:.6rem; font-weight:700; letter-spacing:.24em; text-transform:uppercase; color:var(--gold-lt); margin-bottom:3px;}
+.bacheca-name{font-family:var(--font-display); font-weight:700; font-size:1.2rem; color:var(--ivory); line-height:1.2; display:block;}
+.bacheca-meta{font-size:.8rem; color:rgba(247,244,239,.7); margin-top:2px; display:block;}
+.bacheca-chevron{color:var(--gold-lt); flex-shrink:0; transition:transform .2s var(--ease);}
+.bacheca-chevron svg{width:18px; height:18px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round;}
+.bacheca-card:hover .bacheca-chevron{transform:translateX(4px);}
+body.night-mode .bacheca-card{background:var(--navy); border-color:#3A5A85;}
+
 .subj-empty{display:none; text-align:center; padding:3rem 1rem;
   font-family:var(--font-display); font-style:italic; color:var(--sub); font-size:1.1rem; line-height:1.7;
   grid-column:1/-1;}
@@ -660,6 +681,18 @@ body.instant #appview, body.instant #topbar, body.instant #top-controls{transiti
     <input type="text" id="course-search" placeholder="Cerca una materia&hellip;" autocomplete="off">
     <button type="button" class="search-clear" id="search-clear" aria-label="Cancella ricerca">&times;</button>
   </div>
+
+  <a href="bacheca-appelli.html" class="bacheca-card">
+    <span class="bacheca-glyph" aria-hidden="true">
+      <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg>
+    </span>
+    <span class="bacheca-body">
+      <span class="bacheca-kicker">Sessione d'esame</span>
+      <span class="bacheca-name">Bacheca degli Appelli</span>
+      <span class="bacheca-meta">Date, docenti e piano esami &mdash; tutte le materie</span>
+    </span>
+    <span class="bacheca-chevron" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></span>
+  </a>
 
   <div class="subj-grid" id="course-grid"></div>
   <div class="subj-empty" id="subj-empty">Nessuna materia trovata.<br>Prova con un termine diverso.</div>
