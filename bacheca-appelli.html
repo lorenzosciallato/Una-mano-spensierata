@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Una Mano Spensierata | Bacheca Appelli</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ivory:#F7F4EF; --ivory-2:#EFEBE2;
+  --gold:#C8A96E; --gold-lt:#E8D5AA; --gold-dk:#9A7A3F;
+  --navy:#1A2F4F; --navy-lt:#2A4A72;
+  --dust:#E8E4DC; --mist:#C5C1B8;
+  --ink:#1C1C22; --body:#3D3C3A; --sub:#7A7770;
+  --font-display:'Playfair Display', Georgia, serif;
+  --font-body:'DM Sans', system-ui, sans-serif;
+  --r-sm:8px; --r-md:14px; --r-lg:20px; --r-pill:50px;
+  --shadow-card:0 4px 20px rgba(15,17,23,0.06), 0 1px 3px rgba(15,17,23,0.04);
+  --shadow-lift:0 18px 46px rgba(15,17,23,0.16), 0 3px 10px rgba(15,17,23,0.06);
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+body{background:var(--ivory); font-family:var(--font-body); color:var(--body); line-height:1.6; -webkit-font-smoothing:antialiased;}
+a{color:inherit;}
+a:focus-visible, button:focus-visible{outline:2px solid var(--gold); outline-offset:3px; border-radius:6px;}
+::selection{background:var(--gold-lt); color:var(--ink);}
+
+/* Header */
+.page-top{max-width:1250px; margin:0 auto; padding:1.4rem 1.2rem 0; display:flex; align-items:center; justify-content:space-between; gap:1rem;}
+.back-link{display:inline-flex; align-items:center; gap:.5rem; font-size:.9rem; font-weight:500; color:var(--navy); text-decoration:none; padding:.55rem .9rem; border:1px solid var(--dust); border-radius:var(--r-pill); background:#fff; transition:.2s;}
+.back-link:hover{border-color:var(--gold); transform:translateY(-2px); box-shadow:var(--shadow-card);}
+.back-link svg{width:15px; height:15px; stroke:currentColor; fill:none; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round;}
+
+header.hero{text-align:center; margin:2.2rem 1rem 1.6rem;}
+.hero-kicker{display:block; font-size:.66rem; font-weight:700; letter-spacing:.3em; text-transform:uppercase; color:var(--gold-dk); margin-bottom:.7rem;}
+.hero-kicker::before, .hero-kicker::after{content:'—'; margin:0 .6em; color:var(--gold);}
+header.hero h1{font-family:var(--font-display); font-weight:900; font-size:clamp(2.2rem,6vw,3.8rem); color:var(--ink); line-height:1.05;}
+header.hero .h1-italic{font-style:italic; color:var(--navy); display:block;}
+.hero-sub{margin-top:.6rem; font-size:1rem; color:var(--sub);}
+
+/* Layout */
+.wrap{display:flex; width:95%; max-width:1250px; margin:0 auto; gap:22px; padding-bottom:60px; align-items:flex-start;}
+@media(max-width:900px){ .wrap{flex-direction:column;} }
+
+.card{background:#fff; border:1px solid var(--dust); border-radius:var(--r-lg); box-shadow:var(--shadow-card);}
+.content{flex:1; padding:1.6rem;}
+
+/* Accordion anni */
+.year-acc{margin-bottom:12px; border:1px solid var(--dust); border-radius:var(--r-md); overflow:hidden; background:#fff;}
+.year-head{width:100%; padding:1rem 1.2rem; text-align:left; background:#fff; border:none; cursor:pointer;
+  display:flex; align-items:center; gap:1rem; transition:background .2s;}
+.year-head:hover{background:var(--ivory);}
+.yh-num{flex:none; width:38px; height:38px; border-radius:50%; background:var(--navy); color:var(--ivory);
+  font-family:var(--font-display); font-weight:700; font-size:1.1rem; display:flex; align-items:center; justify-content:center;}
+.yh-text{flex:1;}
+.yh-title{display:block; font-family:var(--font-display); font-weight:700; font-size:1.15rem; color:var(--ink);}
+.yh-sub{display:block; font-size:.75rem; color:var(--sub);}
+.yh-count{font-size:.78rem; font-weight:500; color:var(--gold-dk); background:rgba(200,169,110,.12); padding:.25rem .7rem; border-radius:var(--r-pill); white-space:nowrap;}
+.yh-arrow{flex:none; color:var(--sub); transition:transform .3s;}
+.yh-arrow svg{width:18px; height:18px; stroke:currentColor; fill:none; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round; display:block;}
+.year-acc.open .yh-arrow{transform:rotate(180deg);}
+.year-body{display:none; padding:14px; border-top:1px solid var(--dust); background:var(--ivory);}
+.year-acc.open .year-body{display:block;}
+
+.mat-btn{display:flex; align-items:center; gap:.7rem; width:100%; text-align:left; background:#fff; border:1px solid var(--dust);
+  border-radius:var(--r-sm); padding:.85rem 1rem; margin-bottom:8px; cursor:pointer; font-family:var(--font-body);
+  font-size:.98rem; color:var(--ink); transition:.18s;}
+.mat-btn:last-child{margin-bottom:0;}
+.mat-btn:hover{border-color:var(--gold); color:var(--navy); transform:translateX(4px); box-shadow:var(--shadow-card);}
+.mat-btn .mat-chevron{margin-left:auto; color:var(--gold-dk); transition:transform .2s;}
+.mat-btn:hover .mat-chevron{transform:translateX(3px);}
+.mat-btn .mat-chevron svg{width:16px; height:16px; stroke:currentColor; fill:none; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round; display:block;}
+.mat-count{font-size:.72rem; color:var(--sub); background:var(--ivory-2); padding:.15rem .55rem; border-radius:var(--r-pill);}
+
+/* Vista risultati appelli */
+#results{display:none;}
+.results-head{display:flex; align-items:center; gap:1rem; margin-bottom:1.4rem; flex-wrap:wrap;}
+.results-head h2{font-family:var(--font-display); font-weight:700; font-style:italic; font-size:1.6rem; color:var(--ink); flex:1; min-width:200px;}
+.btn-back-mat{display:inline-flex; align-items:center; gap:.4rem; font-size:.88rem; font-weight:500; color:var(--navy);
+  background:#fff; border:1px solid var(--dust); border-radius:var(--r-pill); padding:.5rem .9rem; cursor:pointer; transition:.2s;}
+.btn-back-mat:hover{border-color:var(--gold); transform:translateY(-2px);}
+.btn-back-mat svg{width:14px; height:14px; stroke:currentColor; fill:none; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round;}
+
+.appello{background:#fff; border:1px solid var(--dust); border-left:5px solid var(--navy); border-radius:var(--r-md);
+  padding:1.2rem 1.3rem; margin-bottom:1rem; transition:.2s; position:relative;}
+.appello.selected{border-left-color:var(--gold); background:rgba(200,169,110,.07);}
+.appello .ap-data{font-family:var(--font-display); font-weight:700; font-size:1.15rem; color:var(--ink); margin-bottom:.2rem;}
+.appello .ap-doc{font-size:.9rem; color:var(--sub); margin-bottom:.5rem;}
+.appello .ap-count{display:inline-block; font-size:.76rem; font-weight:500; color:var(--gold-dk); background:rgba(200,169,110,.12); padding:.22rem .7rem; border-radius:var(--r-pill); margin-bottom:.9rem;}
+.appello .ap-count.urgente{color:#8a3a2e; background:rgba(180,70,50,.1);}
+.appello .ap-count.passato{color:var(--sub); background:var(--ivory-2);}
+.btn-pick{display:block; width:100%; padding:.7rem; border-radius:var(--r-sm); border:1px solid var(--navy); background:var(--navy);
+  color:var(--ivory); font-family:var(--font-body); font-weight:500; font-size:.92rem; cursor:pointer; transition:.2s;}
+.btn-pick:hover{background:var(--navy-lt);}
+.btn-pick.active{background:#fff; color:var(--navy); border-color:var(--gold); }
+.btn-pick.active:hover{background:var(--ivory);}
+
+/* Planner laterale */
+.planner{width:320px; flex:none; padding:1.4rem; position:sticky; top:1.4rem;}
+@media(max-width:900px){ .planner{width:100%; position:static;} }
+.planner h3{font-family:var(--font-display); font-weight:700; font-size:1.25rem; color:var(--ink); margin-bottom:.3rem;}
+.planner .p-sub{font-size:.82rem; color:var(--sub); margin-bottom:1rem;}
+#planner-list{min-height:60px; margin-bottom:1rem;}
+.planner-empty{font-size:.9rem; color:var(--sub); font-style:italic; padding:1rem 0; text-align:center;}
+.p-item{background:var(--ivory); border:1px solid var(--dust); border-radius:var(--r-sm); padding:.7rem .9rem; margin-bottom:.6rem; position:relative; font-size:.88rem;}
+.p-item strong{color:var(--navy); display:block; font-size:.9rem; margin-bottom:.15rem;}
+.p-item .p-x{position:absolute; top:.6rem; right:.7rem; cursor:pointer; color:var(--sub); font-weight:700; line-height:1; transition:color .2s;}
+.p-item .p-x:hover{color:#8a3a2e;}
+.p-actions{display:flex; flex-direction:column; gap:.55rem;}
+.p-btn{padding:.7rem; border-radius:var(--r-sm); border:1px solid var(--dust); background:#fff; color:var(--ink);
+  font-family:var(--font-body); font-weight:500; font-size:.88rem; cursor:pointer; transition:.2s;}
+.p-btn:hover{border-color:var(--gold); transform:translateY(-1px);}
+.p-btn.p-primary{background:var(--gold); border-color:var(--gold); color:var(--navy); font-weight:700;}
+.p-btn.p-primary:hover{background:var(--gold-lt);}
+
+/* Disclaimer + footer */
+.disclaimer{margin-top:1.6rem; padding:1.4rem; background:var(--ivory-2); border:1px solid var(--dust); border-radius:var(--r-md);}
+.disclaimer h3{font-family:var(--font-display); font-weight:700; font-size:1.05rem; color:var(--ink); margin-bottom:.5rem;}
+.disclaimer h3:not(:first-child){margin-top:1.1rem;}
+.disclaimer p{font-size:.82rem; color:var(--sub); line-height:1.55;}
+.footer{max-width:1250px; margin:0 auto; padding:1rem 1.2rem 3rem; display:flex; gap:12px; flex-wrap:wrap; justify-content:center;}
+.foot-badge{display:inline-flex; align-items:center; gap:.5rem; font-size:.8rem; color:var(--ink); text-decoration:none;
+  background:#fff; border:1px solid var(--dust); border-radius:var(--r-pill); padding:.55rem 1rem; transition:.2s;}
+.foot-badge:hover{border-color:var(--gold); transform:translateY(-2px); box-shadow:var(--shadow-card);}
+.loading{text-align:center; padding:3rem 1rem; color:var(--sub); font-style:italic;}
+
+/* Dark mode */
+body.night-mode{--ivory:#14161C; --ivory-2:#1B1E26; --dust:#2C303B; --ink:#F2EFE8; --body:#D7D3CA; --sub:#9A968C; --navy:#2A4A72; --navy-lt:#3A5A85;}
+body.night-mode .card, body.night-mode .year-acc, body.night-mode .year-head, body.night-mode .mat-btn, body.night-mode .appello, body.night-mode .p-btn, body.night-mode .back-link, body.night-mode .foot-badge{background:#1B1E26;}
+body.night-mode .year-body{background:#14161C;}
+body.night-mode .hero-kicker, body.night-mode .yh-count{color:#D9BC85;}
+body.night-mode header.hero h1, body.night-mode .yh-title, body.night-mode .results-head h2, body.night-mode .planner h3{color:#F2EFE8;}
+body.night-mode .btn-pick{background:var(--navy); color:#F2EFE8; border-color:var(--navy);}
+body.night-mode .p-btn.p-primary{color:#14161C;}
+
+/* Toggle notte */
+#night{position:fixed; bottom:1.2rem; right:1.2rem; width:46px; height:46px; border-radius:50%; border:1px solid var(--dust);
+  background:#fff; cursor:pointer; box-shadow:var(--shadow-card); z-index:50; display:flex; align-items:center; justify-content:center; transition:.2s;}
+#night:hover{border-color:var(--gold); transform:scale(1.08);}
+#night svg{width:20px; height:20px; stroke:var(--navy); fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round;}
+body.night-mode #night{background:#1B1E26;}
+body.night-mode #night svg{stroke:var(--gold-lt);}
+</style>
+</head>
+<body>
+
+<div class="page-top">
+  <a href="index.html" class="back-link">
+    <svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg> Torna alla home
+  </a>
+</div>
+
+<header class="hero">
+  <span class="hero-kicker">Sessione d'esame</span>
+  <h1>Bacheca <span class="h1-italic">degli Appelli</span></h1>
+  <p class="hero-sub">Scegli una materia, guarda le date e costruisci il tuo piano esami.</p>
+</header>
+
+<div class="wrap">
+  <div class="card content">
+    <!-- vista elenco materie -->
+    <div id="main-view">
+      <div class="loading" id="loading">Carico gli appelli&hellip;</div>
+      <div id="anni-container"></div>
+    </div>
+    <!-- vista appelli di una materia -->
+    <div id="results">
+      <div class="results-head">
+        <button class="btn-back-mat" onclick="goBack()"><svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg> Materie</button>
+        <h2 id="results-title"></h2>
+      </div>
+      <div id="appelli-list"></div>
+    </div>
+
+    <div class="disclaimer">
+      <h3>Da dove vengono queste date</h3>
+      <p>Le date degli appelli sono raccolte manualmente e a scopo puramente informativo e di mutuo aiuto tra studenti. <strong>Non sostituiscono in alcun modo le fonti ufficiali:</strong> verifica sempre data, ora e aula sul portale ufficiale dell'Ateneo (ESSE3) e sugli avvisi dei docenti prima di presentarti a un esame. Gli appelli possono essere spostati, annullati o modificati in qualsiasi momento.</p>
+      <h3>Hai visto un errore? 🛠️</h3>
+      <p>Costruisco e aggiorno questo sito da solo. Se una data è sbagliata o manca un appello, scrivimi sul gruppo WhatsApp: correggo il prima possibile. Grazie per l'aiuto!</p>
+    </div>
+  </div>
+
+  <aside class="card planner">
+    <h3>Il tuo piano esami</h3>
+    <p class="p-sub">Seleziona gli appelli per aggiungerli qui.</p>
+    <div id="planner-list"><div class="planner-empty">Nessun esame selezionato.</div></div>
+    <div class="p-actions">
+      <button class="p-btn p-primary" onclick="copyPlan()">Copia lista 📋</button>
+      <button class="p-btn" onclick="downloadPlan()">Scarica .txt 💾</button>
+      <button class="p-btn" onclick="clearPlan()">Svuota tutto 🗑️</button>
+    </div>
+  </aside>
+</div>
+
+<div class="footer">
+  <a href="https://www.instagram.com/sciallato_lorenzo/" target="_blank" rel="noopener" class="foot-badge">Creato da <strong>Lorenzo</strong> &copy; 2025</a>
+  <a href="https://chat.whatsapp.com/EaX5kr14XxHL9o3qxdDVEP?mode=gi_t" target="_blank" rel="noopener" class="foot-badge">💬 Gruppo WhatsApp</a>
+</div>
+
+<button id="night" type="button" aria-label="Attiva/disattiva modalità notte">
+  <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+</button>
+
+<script>
+const ORDINALE={1:'Primo',2:'Secondo',3:'Terzo',4:'Quarto',5:'Quinto',0:'Altro'};
+const chevron='<svg viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg>';
+let DATI=null, userPlan=[];
+
+// carico gli appelli dal JSON esterno
+fetch('appelli.json?v=' + Date.now())
+  .then(r=>{ if(!r.ok) throw new Error('http'); return r.json(); })
+  .then(j=>{ DATI=j; renderAnni(); })
+  .catch(e=>{ document.getElementById('loading').textContent='Non riesco a caricare gli appelli. Riprova piu tardi.'; });
+
+function renderAnni(){
+  document.getElementById('loading').style.display='none';
+  const cont=document.getElementById('anni-container');
+  cont.innerHTML='';
+  const anni=Object.keys(DATI.anni).sort((a,b)=>{ if(a==='0')return 1; if(b==='0')return -1; return a-b; });
+  anni.forEach(anno=>{
+    const materie=DATI.anni[anno];
+    const nApp=materie.reduce((s,m)=>s+m.appelli.length,0);
+    const acc=document.createElement('div'); acc.className='year-acc';
+    const titolo = anno==='0' ? 'Altro' : ORDINALE[anno]+' Anno';
+    const numHtml = anno==='0' ? '<span class="yh-num">•</span>' : '<span class="yh-num">'+anno+'</span>';
+    acc.innerHTML =
+      '<button class="year-head" type="button">'+
+        numHtml+
+        '<span class="yh-text"><span class="yh-title">'+titolo+'</span>'+
+        '<span class="yh-sub">Anno Accademico '+(DATI.anno_accademico||'')+'</span></span>'+
+        '<span class="yh-count">'+materie.length+' materie</span>'+
+        '<span class="yh-arrow"><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></span>'+
+      '</button>'+
+      '<div class="year-body"></div>';
+    const body=acc.querySelector('.year-body');
+    materie.forEach(m=>{
+      const b=document.createElement('button'); b.className='mat-btn'; b.type='button';
+      b.innerHTML='<span>'+titleCase(m.materia)+'</span>'+
+        '<span class="mat-count">'+m.appelli.length+'</span>'+
+        '<span class="mat-chevron">'+chevron+'</span>';
+      b.addEventListener('click',()=>showMat(m));
+      body.appendChild(b);
+    });
+    acc.querySelector('.year-head').addEventListener('click',()=>{
+      const wasOpen=acc.classList.contains('open');
+      document.querySelectorAll('.year-acc').forEach(x=>x.classList.remove('open'));
+      if(!wasOpen) acc.classList.add('open');
+    });
+    cont.appendChild(acc);
+  });
+}
+
+function titleCase(s){
+  return s.toLowerCase().replace(/(^|\s|')([a-zà-ù])/g,(m,p,c)=>p+c.toUpperCase())
+    .replace(/\b(I|Ii|Iii|Iv|V)\b/gi,x=>x.toUpperCase());
+}
+
+function showMat(m){
+  document.getElementById('main-view').style.display='none';
+  document.getElementById('results').style.display='block';
+  document.getElementById('results-title').textContent=titleCase(m.materia);
+  const list=document.getElementById('appelli-list');
+  list.innerHTML='';
+  m.appelli.forEach(a=>{
+    const sel=userPlan.some(p=>p.mat===m.materia && p.data===a.data && p.ora===a.ora);
+    const cd=countdown(a.data);
+    const div=document.createElement('div');
+    div.className='appello'+(sel?' selected':'');
+    div.innerHTML=
+      '<div class="ap-data">📅 '+a.data+' &middot; ore '+a.ora+'</div>'+
+      '<div class="ap-doc">Docente: '+titleCase(a.doc)+'</div>'+
+      '<span class="ap-count '+cd.cls+'">'+cd.txt+'</span>'+
+      '<button class="btn-pick'+(sel?' active':'')+'">'+(sel?'Rimuovi dal piano −':'Aggiungi al piano +')+'</button>';
+    div.querySelector('.btn-pick').addEventListener('click',()=>togglePick(m.materia,a,div));
+    list.appendChild(div);
+  });
+}
+
+function countdown(dstr){
+  const p=dstr.split('/'); const d=new Date(p[2],p[1]-1,p[0]);
+  const oggi=new Date(); oggi.setHours(0,0,0,0);
+  const diff=Math.round((d-oggi)/86400000);
+  if(diff<0) return {txt:'Concluso', cls:'passato'};
+  if(diff===0) return {txt:'⏳ Oggi!', cls:'urgente'};
+  if(diff===1) return {txt:'⏳ Domani', cls:'urgente'};
+  if(diff<=7) return {txt:'⏳ Tra '+diff+' giorni', cls:'urgente'};
+  return {txt:'⏳ Tra '+diff+' giorni', cls:''};
+}
+
+function togglePick(mat,a,div){
+  const i=userPlan.findIndex(p=>p.mat===mat && p.data===a.data && p.ora===a.ora);
+  const btn=div.querySelector('.btn-pick');
+  if(i===-1){ userPlan.push({mat:mat,data:a.data,ora:a.ora,doc:a.doc}); div.classList.add('selected'); btn.classList.add('active'); btn.textContent='Rimuovi dal piano −'; }
+  else { userPlan.splice(i,1); div.classList.remove('selected'); btn.classList.remove('active'); btn.textContent='Aggiungi al piano +'; }
+  updatePlanner();
+}
+
+function updatePlanner(){
+  const list=document.getElementById('planner-list');
+  if(!userPlan.length){ list.innerHTML='<div class="planner-empty">Nessun esame selezionato.</div>'; return; }
+  const ord=[...userPlan].sort((a,b)=>toDate(a.data)-toDate(b.data));
+  list.innerHTML=ord.map(p=>
+    '<div class="p-item"><span class="p-x" data-mat="'+esc(p.mat)+'" data-data="'+p.data+'" data-ora="'+p.ora+'">✖</span>'+
+    '<strong>'+titleCase(p.mat)+'</strong>'+p.data+' &middot; ore '+p.ora+'</div>').join('');
+  list.querySelectorAll('.p-x').forEach(x=>x.addEventListener('click',()=>{
+    const i=userPlan.findIndex(p=>p.mat===x.dataset.mat && p.data===x.dataset.data && p.ora===x.dataset.ora);
+    if(i!==-1) userPlan.splice(i,1);
+    updatePlanner();
+    if(document.getElementById('results').style.display==='block'){
+      const t=document.getElementById('results-title').textContent;
+      const m=findMat(t); if(m) showMat(m);
+    }
+  }));
+}
+function esc(s){return s.replace(/"/g,'&quot;');}
+function toDate(d){const p=d.split('/');return new Date(p[2],p[1]-1,p[0]);}
+function findMat(titolo){
+  for(const anno in DATI.anni){ for(const m of DATI.anni[anno]){ if(titleCase(m.materia)===titolo) return m; } }
+  return null;
+}
+function goBack(){ document.getElementById('main-view').style.display='block'; document.getElementById('results').style.display='none'; }
+
+function copyPlan(){
+  if(!userPlan.length){ alert('Il piano è vuoto!'); return; }
+  const ord=[...userPlan].sort((a,b)=>toDate(a.data)-toDate(b.data));
+  const t='Il mio piano esami — Una Mano Spensierata\n\n'+ord.map(p=>'• '+titleCase(p.mat)+': '+p.data+' ore '+p.ora+' ('+titleCase(p.doc)+')').join('\n');
+  navigator.clipboard.writeText(t).then(()=>alert('Piano copiato negli appunti!'),()=>alert('Copia non riuscita.'));
+}
+function downloadPlan(){
+  if(!userPlan.length){ alert('Il piano è vuoto!'); return; }
+  const ord=[...userPlan].sort((a,b)=>toDate(a.data)-toDate(b.data));
+  const t='Il mio piano esami — Una Mano Spensierata\n\n'+ord.map(p=>'• '+titleCase(p.mat)+': '+p.data+' ore '+p.ora+' ('+titleCase(p.doc)+')').join('\n');
+  const blob=new Blob([t],{type:'text/plain'}); const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download='piano_esami.txt'; a.click();
+}
+function clearPlan(){ if(userPlan.length && confirm('Svuotare tutto il piano?')){ userPlan=[]; updatePlanner(); } }
+
+// notte: eredita la preferenza salvata dal sito
+(function(){
+  try{ if(localStorage.getItem('ums_night_mode')==='1') document.body.classList.add('night-mode'); }catch(e){}
+  document.getElementById('night').addEventListener('click',()=>{
+    const on=document.body.classList.toggle('night-mode');
+    try{ localStorage.setItem('ums_night_mode', on?'1':'0'); }catch(e){}
+  });
+})();
+</script>
+</body>
+</html>
