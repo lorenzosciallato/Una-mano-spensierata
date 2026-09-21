@@ -352,6 +352,15 @@ body.night-mode .year-head{border-bottom-color:#3a332c;}
 .bacheca-chevron svg{width:18px; height:18px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round;}
 .bacheca-card:hover .bacheca-chevron{transform:translateX(4px);}
 body.night-mode .bacheca-card{background:var(--navy); border-color:#3A5A85;}
+/* Le due card in evidenza affiancate: Bacheca appelli + Calendario lezioni */
+.hub-row{display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.4rem;}
+.hub-row .bacheca-card{margin-bottom:0; height:100%;}
+.bacheca-card.cal-card{background:var(--gold-dk); border-color:var(--gold-dk);}
+.bacheca-card.cal-card:hover{background:#B08D4A;}
+.bacheca-card.cal-card .bacheca-glyph{background:rgba(255,255,255,.16); color:#FFF3D6;}
+.bacheca-card.cal-card .bacheca-kicker, .bacheca-card.cal-card .bacheca-chevron{color:#FFF3D6;}
+body.night-mode .bacheca-card.cal-card{background:#7E6533; border-color:#A88A4F;}
+@media(max-width:760px){.hub-row{grid-template-columns:1fr; gap:.8rem;}}
 
 .subj-empty{display:none; text-align:center; padding:3rem 1rem;
   font-family:var(--font-display); font-style:italic; color:var(--sub); font-size:1.1rem; line-height:1.7;
@@ -682,6 +691,7 @@ body.instant #appview, body.instant #topbar, body.instant #top-controls{transiti
     <button type="button" class="search-clear" id="search-clear" aria-label="Cancella ricerca">&times;</button>
   </div>
 
+  <div class="hub-row">
   <a href="bacheca-appelli.html" class="bacheca-card">
     <span class="bacheca-glyph" aria-hidden="true">
       <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg>
@@ -693,6 +703,18 @@ body.instant #appview, body.instant #topbar, body.instant #top-controls{transiti
     </span>
     <span class="bacheca-chevron" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></span>
   </a>
+  <a href="calendario-lezioni.html" class="bacheca-card cal-card">
+    <span class="bacheca-glyph" aria-hidden="true">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+    </span>
+    <span class="bacheca-body">
+      <span class="bacheca-kicker">I semestre 2026/27</span>
+      <span class="bacheca-name">Calendario delle Lezioni</span>
+      <span class="bacheca-meta">Oggi, domani, settimana &mdash; per anno e gruppo A-L / M-Z</span>
+    </span>
+    <span class="bacheca-chevron" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></span>
+  </a>
+  </div>
 
   <div class="subj-grid" id="course-grid"></div>
   <div class="subj-empty" id="subj-empty">Nessuna materia trovata.<br>Prova con un termine diverso.</div>

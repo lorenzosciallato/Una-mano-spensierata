@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Una Mano Spensierata | Calendario delle lezioni</title>
+<meta name="description" content="Calendario delle lezioni di Scienze della formazione primaria (UniMC) — I semestre 2026/27, tutte le materie, tutti gli anni, filtri per anno e gruppo.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ivory:#F7F4EF; --ivory-2:#EFEBE2;
+  --gold:#C8A96E; --gold-lt:#E8D5AA; --gold-dk:#9A7A3F;
+  --navy:#1A2F4F; --navy-lt:#2A4A72;
+  --dust:#E8E4DC; --mist:#C5C1B8;
+  --ink:#1C1C22; --body:#3D3C3A; --sub:#7A7770;
+  --card:#fff;
+  --font-display:'Playfair Display', Georgia, serif;
+  --font-body:'DM Sans', system-ui, sans-serif;
+  --r-sm:8px; --r-md:14px; --r-lg:20px; --r-pill:50px;
+  --shadow-card:0 4px 20px rgba(15,17,23,0.06), 0 1px 3px rgba(15,17,23,0.04);
+  --shadow-lift:0 18px 46px rgba(15,17,23,0.16), 0 3px 10px rgba(15,17,23,0.06);
+  --ease:cubic-bezier(.16,.84,.44,1);
+  /* un colore per anno di corso */
+  --a1:#B9924F; --a2:#5F8A6A; --a3:#4C74A6; --a4:#8A5A86; --a5:#B4634D;
+  --a1-bg:#F7EEDC; --a2-bg:#E6F0E8; --a3-bg:#E4ECF6; --a4-bg:#F0E5EF; --a5-bg:#F8E6E0;
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--ivory); font-family:var(--font-body); color:var(--body); line-height:1.6; -webkit-font-smoothing:antialiased; font-size:16px;}
+a{color:inherit;}
+button{font-family:inherit; cursor:pointer;}
+a:focus-visible, button:focus-visible, input:focus-visible{outline:2px solid var(--gold); outline-offset:3px; border-radius:6px;}
+::selection{background:var(--gold-lt); color:var(--ink);}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}
+
+/* ---------- testata ---------- */
+.page-top{max-width:1250px; margin:0 auto; padding:1.4rem 1.2rem 0; display:flex; align-items:center; justify-content:space-between; gap:1rem;}
+.back-link{display:inline-flex; align-items:center; gap:.5rem; font-size:.9rem; font-weight:500; color:var(--navy); text-decoration:none; padding:.55rem .9rem; border:1px solid var(--dust); border-radius:var(--r-pill); background:var(--card); transition:.2s;}
+.back-link:hover{border-color:var(--gold); transform:translateY(-2px); box-shadow:var(--shadow-card);}
+.back-link svg{width:15px; height:15px; stroke:currentColor; fill:none; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round;}
+.appelli-link{display:inline-flex; align-items:center; gap:.5rem; font-size:.9rem; font-weight:500; color:var(--ivory); text-decoration:none; padding:.55rem 1rem; border-radius:var(--r-pill); background:var(--navy); transition:.2s;}
+.appelli-link:hover{background:var(--navy-lt); transform:translateY(-2px); box-shadow:var(--shadow-card);}
+.appelli-link svg{width:15px; height:15px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round;}
+
+header.hero{text-align:center; margin:2.2rem 1rem 1.4rem;}
+.hero-kicker{display:block; font-size:.66rem; font-weight:700; letter-spacing:.3em; text-transform:uppercase; color:var(--gold-dk); margin-bottom:.7rem;}
+.hero-kicker::before, .hero-kicker::after{content:'—'; margin:0 .6em; color:var(--gold);}
+header.hero h1{font-family:var(--font-display); font-weight:900; font-size:clamp(2.2rem,6vw,3.8rem); color:var(--ink); line-height:1.05;}
+header.hero .h1-italic{font-style:italic; color:var(--navy); display:block;}
+.hero-sub{margin-top:.7rem; font-size:1rem; color:var(--sub);}
+
+.wrap{max-width:1250px; margin:0 auto; padding:0 1.2rem 3rem;}
+
+/* ---------- avviso ---------- */
+.avviso{display:flex; gap:1rem; align-items:flex-start; background:#FFF8E8; border:2px solid var(--gold); border-radius:var(--r-lg); padding:1.2rem 1.4rem; margin:0 0 1.4rem; box-shadow:var(--shadow-card);}
+.avviso .av-ico{flex:0 0 auto; width:42px; height:42px; border-radius:50%; background:var(--gold); color:#fff; display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-weight:900; font-size:1.5rem; line-height:1;}
+.avviso h2{font-family:var(--font-display); font-weight:700; font-size:1.2rem; color:var(--ink); margin-bottom:.25rem;}
+.avviso p{font-size:.93rem; color:var(--body); line-height:1.6;}
+.avviso a{color:var(--navy); font-weight:700; text-decoration:underline; text-underline-offset:3px;}
+.avviso .av-meta{display:block; margin-top:.5rem; font-size:.78rem; color:var(--sub);}
+
+/* ---------- comandi ---------- */
+.controls{z-index:20; background:var(--card); border:1px solid var(--dust); border-radius:var(--r-lg); padding:.9rem 1rem; box-shadow:var(--shadow-card); display:flex; flex-direction:column; gap:.8rem;}
+.controls.stuck{border-radius:0 0 var(--r-lg) var(--r-lg); box-shadow:var(--shadow-lift);}
+.ctl-row{display:flex; flex-wrap:wrap; gap:.6rem .9rem; align-items:center;}
+.search-pill{display:flex; align-items:center; gap:.6rem; background:var(--ivory); border:1px solid var(--dust); border-radius:var(--r-pill); padding:0 1rem; flex:1 1 260px; min-width:0; transition:.2s;}
+.search-pill:focus-within{border-color:var(--gold); box-shadow:0 0 0 4px rgba(200,169,110,.14);}
+.search-pill svg{width:18px; height:18px; stroke:var(--sub); fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; flex:0 0 auto;}
+.search-pill input{flex:1; border:none; background:transparent; font-family:var(--font-body); font-size:1rem; color:var(--ink); padding:.75rem 0; min-width:0; outline:none;}
+.search-pill input::placeholder{color:var(--mist);}
+.search-clear{border:none; background:transparent; color:var(--mist); font-size:1.4rem; line-height:1; padding:0 .1rem; display:none;}
+.search-clear.on{display:block;}
+.search-clear:hover{color:var(--navy);}
+
+.seg{display:inline-flex; background:var(--ivory); border:1px solid var(--dust); border-radius:var(--r-pill); padding:3px; gap:2px; flex-wrap:wrap;}
+.seg button{border:none; background:transparent; color:var(--body); font-weight:500; font-size:.86rem; padding:.42rem .8rem; border-radius:var(--r-pill); transition:.18s; display:inline-flex; align-items:center; gap:.4rem; white-space:nowrap;}
+.seg button:hover{background:rgba(200,169,110,.14);}
+.seg button.on{background:var(--navy); color:var(--ivory); font-weight:700;}
+.seg .dot{width:9px; height:9px; border-radius:50%; background:var(--c); flex:0 0 auto;}
+.seg button.on .dot{box-shadow:0 0 0 2px rgba(255,255,255,.75);}
+.ctl-label{font-size:.72rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--sub); margin-right:.2rem;}
+.ctl-group{display:flex; align-items:center; gap:.5rem; flex-wrap:wrap;}
+.ctl-right{margin-left:auto;}
+@media(min-width:701px){.controls{position:sticky; top:0;}}
+@media(max-width:700px){ .ctl-right{margin-left:0;} .controls{padding:.75rem .8rem;} .seg button{padding:.4rem .62rem; font-size:.82rem;} }
+
+/* ---------- oggi / domani / dopodomani ---------- */
+.tre{display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; margin:1.6rem 0 1.2rem;}
+@media(max-width:860px){.tre{grid-template-columns:1fr;}}
+.tre-card{background:var(--card); border:1px solid var(--dust); border-radius:var(--r-lg); padding:1.1rem 1.15rem 1rem; box-shadow:var(--shadow-card); display:flex; flex-direction:column; min-height:150px;}
+.tre-card.oggi{border-color:var(--gold); box-shadow:0 0 0 4px rgba(200,169,110,.14), var(--shadow-card);}
+.tre-head{display:flex; align-items:baseline; gap:.7rem; border-bottom:1px solid var(--dust); padding-bottom:.6rem; margin-bottom:.7rem;}
+.tre-head .tre-num{font-family:var(--font-display); font-weight:900; font-size:2.6rem; line-height:.9; color:var(--gold);}
+.tre-card.oggi .tre-num{color:var(--navy);}
+.tre-head .tre-when{font-family:var(--font-display); font-weight:700; font-style:italic; font-size:1.25rem; color:var(--ink); line-height:1;}
+.tre-head .tre-day{display:block; font-size:.78rem; color:var(--sub); margin-top:.2rem; font-style:normal; font-family:var(--font-body);}
+.tre-list{display:flex; flex-direction:column; gap:.45rem;}
+.tre-empty{font-family:var(--font-display); font-style:italic; color:var(--sub); font-size:1rem; padding:.6rem 0;}
+.tre-more{margin-top:.5rem; border:1px dashed var(--gold); background:transparent; color:var(--gold-dk); font-weight:700; font-size:.82rem; padding:.55rem .8rem; border-radius:10px; text-align:left; line-height:1.4;}
+.tre-more:hover{background:rgba(200,169,110,.12);}
+
+/* ---------- evento (usato ovunque) ---------- */
+.ev{display:grid; grid-template-columns:auto 1fr; gap:.15rem .75rem; align-items:start; background:var(--ivory); border:1px solid var(--dust); border-left:5px solid var(--c, var(--gold)); border-radius:10px; padding:.55rem .7rem .55rem .65rem; font-size:.86rem; line-height:1.35; transition:.18s;}
+.ev:hover{border-color:var(--c); background:var(--card); box-shadow:var(--shadow-card);}
+.ev .ev-time{grid-row:1/4; font-variant-numeric:tabular-nums; font-weight:700; color:var(--ink); font-size:.86rem; white-space:nowrap; padding-top:.05rem;}
+.ev .ev-time small{display:block; font-weight:400; color:var(--sub); font-size:.74rem;}
+.ev .ev-mat{font-weight:700; color:var(--ink); display:flex; flex-wrap:wrap; gap:.35rem .45rem; align-items:center;}
+.ev .ev-doc{color:var(--body); font-size:.82rem;}
+.ev .ev-aula{color:var(--sub); font-size:.78rem;}
+.badge{display:inline-block; font-size:.66rem; font-weight:700; letter-spacing:.06em; padding:.1rem .45rem; border-radius:6px; background:var(--c); color:#fff; line-height:1.5; white-space:nowrap;}
+.badge.g{background:var(--navy);}
+.badge.t{background:transparent; color:var(--c); border:1px solid var(--c);}
+.ev.hit .ev-mat{text-decoration:underline; text-decoration-color:var(--gold); text-decoration-thickness:2px; text-underline-offset:3px;}
+
+/* ---------- pannello principale ---------- */
+.panel{background:var(--card); border:1px solid var(--dust); border-radius:var(--r-lg); box-shadow:var(--shadow-card); padding:1.1rem; margin-top:.6rem;}
+.panel-head{display:flex; align-items:center; justify-content:space-between; gap:.8rem; flex-wrap:wrap; margin-bottom:1rem;}
+.nav{display:flex; align-items:center; gap:.5rem;}
+.nav button{border:1px solid var(--dust); background:var(--ivory); color:var(--navy); width:38px; height:38px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; transition:.18s;}
+.nav button:hover{border-color:var(--gold); background:var(--card); transform:translateY(-1px);}
+.nav button svg{width:16px; height:16px; stroke:currentColor; fill:none; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round;}
+.nav .today-btn{width:auto; border-radius:var(--r-pill); padding:0 .9rem; font-weight:700; font-size:.84rem;}
+.panel-title{font-family:var(--font-display); font-weight:700; font-size:1.45rem; color:var(--ink); line-height:1.1;}
+.panel-title small{display:block; font-family:var(--font-body); font-size:.8rem; color:var(--sub); font-weight:400; margin-top:.15rem;}
+.count-chip{font-size:.72rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--gold-dk); background:rgba(200,169,110,.12); padding:.3rem .7rem; border-radius:var(--r-pill);}
+
+/* settimana */
+.week{display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:.7rem;}
+@media(max-width:1100px){.week{grid-template-columns:repeat(3,minmax(0,1fr));}}
+@media(max-width:700px){.week{grid-template-columns:1fr;}}
+.day{background:var(--ivory-2); border-radius:var(--r-md); padding:.6rem .55rem .7rem; min-height:120px; display:flex; flex-direction:column; gap:.45rem; border:1px solid transparent;}
+.day.is-today{border-color:var(--gold); background:#FFF9EC;}
+.day.past{opacity:.72;}
+.day-h{display:flex; align-items:baseline; gap:.5rem; padding:0 .2rem .35rem; border-bottom:1px solid var(--dust); margin-bottom:.15rem;}
+.day-h .dn{font-family:var(--font-display); font-weight:900; font-size:1.6rem; color:var(--ink); line-height:1;}
+.day.is-today .dn{color:var(--navy);}
+.day-h .dw{font-size:.8rem; font-weight:700; color:var(--sub); text-transform:capitalize;}
+.day-h .dc{margin-left:auto; font-size:.7rem; color:var(--mist); font-weight:700;}
+.day.is-today .dw::after{content:'oggi'; margin-left:.4rem; background:var(--gold); color:#fff; font-size:.6rem; padding:.05rem .4rem; border-radius:6px; letter-spacing:.06em;}
+.day-empty{font-family:var(--font-display); font-style:italic; color:var(--mist); font-size:.92rem; padding:.4rem .2rem;}
+.week .ev{padding:.5rem .55rem .5rem .55rem; font-size:.8rem; grid-template-columns:1fr;}
+.week .ev .ev-time{grid-row:auto; font-size:.78rem;}
+.week .ev .ev-time small{display:inline; margin-left:.25rem;}
+
+/* mese */
+.month{display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:.4rem;}
+.month .mh{text-align:center; font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--sub); padding-bottom:.3rem;}
+.mcell{background:var(--ivory-2); border-radius:10px; min-height:82px; padding:.4rem .45rem; border:1px solid transparent; text-align:left; display:flex; flex-direction:column; gap:.3rem; transition:.18s; color:inherit;}
+.mcell:hover{border-color:var(--gold); background:var(--card); box-shadow:var(--shadow-card); transform:translateY(-1px);}
+.mcell.other{opacity:.35;}
+.mcell.is-today{border-color:var(--gold); background:#FFF9EC;}
+.mcell .mn{font-family:var(--font-display); font-weight:700; font-size:1.05rem; color:var(--ink); line-height:1;}
+.mcell.is-today .mn{color:var(--navy);}
+.mcell .mdots{display:flex; flex-wrap:wrap; gap:3px;}
+.mcell .mdots i{width:8px; height:8px; border-radius:50%; background:var(--c); display:block;}
+.mcell .mc{margin-top:auto; font-size:.7rem; color:var(--sub); font-weight:700;}
+@media(max-width:560px){.mcell{min-height:64px; padding:.3rem;} .mcell .mn{font-size:.9rem;} .month .mh{font-size:.6rem;}}
+
+/* elenco */
+.list-day{margin-bottom:1.2rem;}
+.list-day h3{display:flex; align-items:baseline; gap:.6rem; font-family:var(--font-display); font-weight:700; font-size:1.1rem; color:var(--ink); border-bottom:1px solid var(--dust); padding-bottom:.35rem; margin-bottom:.55rem; position:sticky; top:0; background:var(--card); z-index:1;}
+.list-day h3 .ln{color:var(--gold); font-size:1.6rem; font-weight:900; line-height:.9;}
+.list-day h3 small{font-family:var(--font-body); font-size:.78rem; color:var(--sub); font-weight:400;}
+.list-day .lgrid{display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:.5rem;}
+.more-btn{display:block; margin:1rem auto 0; border:1px solid var(--dust); background:var(--ivory); color:var(--navy); font-weight:700; padding:.65rem 1.3rem; border-radius:var(--r-pill); transition:.18s;}
+.more-btn:hover{border-color:var(--gold); transform:translateY(-1px);}
+
+.empty-big{text-align:center; padding:3rem 1rem; font-family:var(--font-display); font-style:italic; color:var(--sub); font-size:1.15rem; line-height:1.6;}
+.legend{display:flex; flex-wrap:wrap; gap:.5rem 1rem; margin-top:1rem; font-size:.78rem; color:var(--sub); align-items:center;}
+.legend span{display:inline-flex; align-items:center; gap:.35rem;}
+.legend i{width:10px; height:10px; border-radius:50%; background:var(--c); display:inline-block;}
+.legend .badge{font-size:.62rem;}
+
+.hint{font-size:.82rem; color:var(--sub); margin-top:.9rem; line-height:1.55;}
+.hint strong{color:var(--body);}
+
+/* footer */
+.footer{display:flex; justify-content:center; gap:.7rem; flex-wrap:wrap; margin:2rem auto 1rem; padding:0 1rem;}
+.foot-badge{display:inline-flex; align-items:center; gap:.4rem; font-size:.82rem; color:var(--sub); text-decoration:none; background:var(--card); border:1px solid var(--dust); border-radius:var(--r-pill); padding:.5rem 1rem; transition:.2s;}
+.foot-badge:hover{border-color:var(--gold); transform:translateY(-2px); box-shadow:var(--shadow-card);}
+.foot-badge strong{color:var(--ink);}
+.site-footer{text-align:center; padding:1rem 1.5rem 3rem;}
+.site-footer p{font-size:.7rem; color:var(--mist); letter-spacing:.1em; text-transform:uppercase; font-weight:600;}
+
+/* notte */
+body.night-mode{--ivory:#14161C; --ivory-2:#1B1E26; --dust:#2C303B; --mist:#5E6270; --ink:#F2EFE8; --body:#D7D3CA; --sub:#9A968C; --navy:#2A4A72; --navy-lt:#3A5A85; --card:#1B1E26;
+  --a1-bg:#2A2519; --a2-bg:#1B2A20; --a3-bg:#1B2434; --a4-bg:#2A1F2A; --a5-bg:#2E1F1B;}
+body.night-mode .avviso{background:#26221A; border-color:var(--gold-dk);}
+body.night-mode .day.is-today, body.night-mode .mcell.is-today{background:#26221A;}
+body.night-mode .hero-kicker{color:#D9BC85;}
+body.night-mode .ev:hover{background:#23262F;}
+#night{position:fixed; bottom:1.2rem; right:1.2rem; width:46px; height:46px; border-radius:50%; border:1px solid var(--dust); background:var(--card); box-shadow:var(--shadow-card); display:flex; align-items:center; justify-content:center; z-index:30; transition:.2s;}
+#night:hover{border-color:var(--gold); transform:scale(1.08);}
+#night svg{width:20px; height:20px; stroke:var(--navy); fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round;}
+body.night-mode #night svg{stroke:var(--gold-lt);}
+
+@media(prefers-reduced-motion:reduce){*{transition:none!important; scroll-behavior:auto!important;}}
+</style>
+</head>
+<body>
+
+<div class="page-top">
+  <a href="index.html" class="back-link">
+    <svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg> Torna alla home
+  </a>
+  <a href="bacheca-appelli.html" class="appelli-link">
+    <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg> Bacheca degli Appelli
+  </a>
+</div>
+
+<header class="hero">
+  <span class="hero-kicker">Scienze della formazione primaria</span>
+  <h1>Calendario <span class="h1-italic">delle lezioni</span></h1>
+  <p class="hero-sub" id="hero-sub">I semestre 2026/27 · dal 28 settembre al 18 dicembre · tutte le materie, tutti gli anni</p>
+</header>
+
+<div class="wrap">
+
+  <section class="avviso" role="note" aria-label="Avviso importante">
+    <div class="av-ico" aria-hidden="true">!</div>
+    <div>
+      <h2>Attenzione: gli orari possono cambiare</h2>
+      <p>Gli orari riportati qui possono aver subito variazioni per esigenze dei docenti, imprevisti, cambi d'aula, sospensioni o recuperi decisi dopo la pubblicazione. Prima di presentarti in aula, <strong>verifica sempre sul calendario ufficiale dell'Università</strong>:
+      <a href="https://unimc-public.prod.up.cineca.it/lezioni?tipologiaRicerca=corso&amp;annoAccademico=68d3ebaadb77ac001e11cf50&amp;corsoDiStudio=68d3ebaedb77ac001e11d04c" target="_blank" rel="noopener">apri University Planner UniMC</a> e controlla anche gli avvisi sulla pagina del docente.</p>
+      <span class="av-meta" id="av-meta">Dati esportati dal calendario ufficiale il 21 settembre 2026. Questo calendario non sostituisce le fonti ufficiali.</span>
+    </div>
+  </section>
+
+  <div class="controls" id="controls">
+    <div class="ctl-row">
+      <div class="search-pill">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <label for="q" class="sr-only">Cerca una materia o un docente</label>
+        <input type="search" id="q" placeholder="Cerca materia o docente… (es. Pedagogia, Betti)" autocomplete="off">
+        <button type="button" class="search-clear" id="q-clear" aria-label="Cancella ricerca">&times;</button>
+      </div>
+      <div class="ctl-group ctl-right">
+        <span class="ctl-label">Vista</span>
+        <div class="seg" role="tablist" aria-label="Vista" id="seg-view">
+          <button type="button" data-v="week" class="on">Settimana</button>
+          <button type="button" data-v="month">Mese</button>
+          <button type="button" data-v="list">Elenco</button>
+        </div>
+      </div>
+    </div>
+    <div class="ctl-row">
+      <div class="ctl-group">
+        <span class="ctl-label">Anno</span>
+        <div class="seg" id="seg-anno" aria-label="Filtra per anno di corso">
+          <button type="button" data-a="0" class="on">Tutti</button>
+          <button type="button" data-a="1"><i class="dot" style="--c:var(--a1)"></i>1°</button>
+          <button type="button" data-a="2"><i class="dot" style="--c:var(--a2)"></i>2°</button>
+          <button type="button" data-a="3"><i class="dot" style="--c:var(--a3)"></i>3°</button>
+          <button type="button" data-a="4"><i class="dot" style="--c:var(--a4)"></i>4°</button>
+          <button type="button" data-a="5"><i class="dot" style="--c:var(--a5)"></i>5°</button>
+        </div>
+      </div>
+      <div class="ctl-group">
+        <span class="ctl-label">Gruppo</span>
+        <div class="seg" id="seg-gruppo" aria-label="Filtra per gruppo alfabetico">
+          <button type="button" data-g="" class="on">Tutti</button>
+          <button type="button" data-g="A-L">A-L</button>
+          <button type="button" data-g="M-Z">M-Z</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="tre" id="tre" aria-label="Prossimi giorni"></section>
+
+  <section class="panel" id="panel">
+    <div class="panel-head">
+      <div class="nav" id="nav">
+        <button type="button" id="prev" aria-label="Indietro"><svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></button>
+        <button type="button" id="next" aria-label="Avanti"><svg viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></button>
+        <button type="button" class="today-btn" id="go-today">Oggi</button>
+      </div>
+      <div class="panel-title" id="panel-title"></div>
+      <span class="count-chip" id="count"></span>
+    </div>
+    <div id="body"></div>
+    <div class="legend">
+      <span><i style="--c:var(--a1)"></i>1° anno</span>
+      <span><i style="--c:var(--a2)"></i>2° anno</span>
+      <span><i style="--c:var(--a3)"></i>3° anno</span>
+      <span><i style="--c:var(--a4)"></i>4° anno</span>
+      <span><i style="--c:var(--a5)"></i>5° anno</span>
+      <span><span class="badge g">A-L</span> <span class="badge g">M-Z</span> gruppo alfabetico</span>
+      <span><span class="badge g">Gr. 2</span> turno di laboratorio</span>
+    </div>
+    <p class="hint"><strong>Come si legge.</strong> Ogni lezione ha il colore del suo anno di corso. Se una materia è divisa per cognome vedi l'etichetta A-L o M-Z: scegli il tuo gruppo qui sopra e spariscono le lezioni dell'altro. I laboratori a turni mostrano il numero del gruppo (Gr. 1, Gr. 2…). Nella vista Mese clicca un giorno per aprirlo.</p>
+  </section>
+
+</div>
+
+<div class="footer">
+  <a href="https://www.instagram.com/sciallato_lorenzo/" target="_blank" rel="noopener" class="foot-badge">Creato da <strong>Lorenzo</strong> &copy; 2025</a>
+  <a href="https://chat.whatsapp.com/EaX5kr14XxHL9o3qxdDVEP?mode=gi_t" target="_blank" rel="noopener" class="foot-badge">💬 Gruppo WhatsApp</a>
+</div>
+<footer class="site-footer">
+  <p><strong class="notranslate" translate="no">Una Mano Spensierata</strong> &nbsp;&middot;&nbsp; Tutti i diritti riservati &nbsp;&middot;&nbsp; Lorenzo Sciallato &copy; 2025</p>
+</footer>
+
+<button id="night" type="button" aria-label="Attiva/disattiva modalità notte">
+  <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+</button>
+
+<script>
+(function(){
+  'use strict';
+  const $=s=>document.querySelector(s);
+  const GIORNI=['domenica','lunedì','martedì','mercoledì','giovedì','venerdì','sabato'];
+  const GIORNI_S=['dom','lun','mar','mer','gio','ven','sab'];
+  const MESI=['gennaio','febbraio','marzo','aprile','maggio','giugno','luglio','agosto','settembre','ottobre','novembre','dicembre'];
+  const MESI_S=['gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov','dic'];
+
+  let EV=[], META={};
+  let state={view:'week', anno:0, gruppo:'', q:'', cursor:null};
+  try{
+    const s=JSON.parse(localStorage.getItem('ums_cal_filtri')||'{}');
+    if(s.anno) state.anno=s.anno; if(s.gruppo) state.gruppo=s.gruppo; if(s.view) state.view=s.view;
+  }catch(e){}
+
+  /* ---------- date helpers (tutto in locale) ---------- */
+  const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  const parse=s=>{const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d);};
+  const addDays=(d,n)=>{const x=new Date(d); x.setDate(x.getDate()+n); return x;};
+  const monday=d=>{const x=new Date(d); const w=(x.getDay()+6)%7; x.setDate(x.getDate()-w); x.setHours(0,0,0,0); return x;};
+  const today=()=>{const t=new Date(); t.setHours(0,0,0,0); return t;};
+  const fmtLong=d=>GIORNI[d.getDay()]+' '+d.getDate()+' '+MESI[d.getMonth()];
+  const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+
+  /* ---------- filtro ---------- */
+  const norm=s=>(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  function passa(e){
+    if(state.anno && e.anno!==state.anno) return false;
+    if(state.gruppo && (e.g==='A-L'||e.g==='M-Z') && e.g!==state.gruppo) return false;
+    if(state.q){
+      const q=norm(state.q);
+      if(!norm(e.m).includes(q) && !norm(e.doc).includes(q) && !norm(e.a).includes(q)) return false;
+    }
+    return true;
+  }
+  const filtrati=()=>EV.filter(passa);
+  const byDay=list=>{const m={}; list.forEach(e=>{(m[e.d]=m[e.d]||[]).push(e);}); return m;};
+
+  /* ---------- rendering evento ---------- */
+  const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  function gruppoLabel(g){ if(!g) return ''; if(g==='A-L'||g==='M-Z') return g; return 'Gr. '+g.replace('G',''); }
+  function evHTML(e){
+    const c='var(--a'+(e.anno||1)+')';
+    const tipo=e.t==='LAB'?'<span class="badge t">Lab</span>':(e.t==='LET'?'<span class="badge t">Lettorato</span>':'');
+    const gl=gruppoLabel(e.g);
+    const hit=state.q?' hit':'';
+    return '<div class="ev'+hit+'" style="--c:'+c+'">'+
+      '<div class="ev-time">'+e.i+'<small>–'+e.f+'</small></div>'+
+      '<div class="ev-mat">'+esc(e.m)+(gl?' <span class="badge g">'+gl+'</span>':'')+tipo+'</div>'+
+      (e.doc?'<div class="ev-doc">'+esc(e.doc)+'</div>':'')+
+      '<div class="ev-aula">'+(e.a?esc(e.a):'aula da definire')+'</div>'+
+    '</div>';
+  }
+
+  /* ---------- oggi / domani / dopodomani ---------- */
+  const treOpen={};
+  function renderTre(){
+    const t=today(); const m=byDay(filtrati());
+    const inizio=parse(META.inizio||'2026-09-28'), fine=parse(META.fine||'2026-12-18');
+    let html='';
+    [['Oggi',0],['Domani',1],['Dopodomani',2]].forEach(([lab,off])=>{
+      const d=addDays(t,off); const k=iso(d); const list=(m[k]||[]).slice().sort((a,b)=>a.i.localeCompare(b.i));
+      let body;
+      if(list.length){
+        const CAP=5; const tutte=state.anno||state.gruppo||state.q||treOpen[off];
+        const vis=tutte?list:list.slice(0,CAP);
+        body='<div class="tre-list">'+vis.map(evHTML).join('')+'</div>';
+        if(!tutte && list.length>CAP) body+='<button type="button" class="tre-more" data-off="'+off+'">+ altre '+(list.length-CAP)+' lezioni di tutti gli anni. Scegli il tuo anno qui sopra per vedere solo le tue, oppure mostra tutto.</button>';
+      }
+      else if(d<inizio){
+        const gg=Math.round((inizio-d)/86400000);
+        body='<div class="tre-empty">Le lezioni iniziano '+fmtLong(inizio)+(gg>0?' — tra '+gg+' giorn'+(gg===1?'o':'i'):'')+'.</div>';
+      }
+      else if(d>fine) body='<div class="tre-empty">Semestre concluso il '+fmtLong(fine)+'.</div>';
+      else if(d.getDay()===0) body='<div class="tre-empty">Domenica: niente lezioni.</div>';
+      else body='<div class="tre-empty">Nessuna lezione'+(state.anno||state.gruppo||state.q?' con i filtri attivi':'')+'.</div>';
+      html+='<article class="tre-card'+(off===0?' oggi':'')+'">'+
+        '<div class="tre-head"><span class="tre-num">'+d.getDate()+'</span><span class="tre-when">'+lab+'<span class="tre-day">'+cap(GIORNI[d.getDay()])+' '+d.getDate()+' '+MESI[d.getMonth()]+'</span></span></div>'+
+        body+'</article>';
+    });
+    $('#tre').innerHTML=html;
+    $('#tre').querySelectorAll('.tre-more').forEach(b=>b.addEventListener('click',()=>{treOpen[b.dataset.off]=true; renderTre();}));
+  }
+
+  /* ---------- settimana ---------- */
+  function renderWeek(){
+    const mon=monday(state.cursor); const t=today(); const m=byDay(filtrati());
+    const sat=addDays(mon,5);
+    const sameMonth=mon.getMonth()===sat.getMonth();
+    $('#panel-title').innerHTML='Settimana '+mon.getDate()+(sameMonth?'':' '+MESI_S[mon.getMonth()])+' – '+sat.getDate()+' '+MESI[sat.getMonth()]+'<small>'+(META.semestre||'')+'</small>';
+    let html='<div class="week">'; let n=0;
+    for(let i=0;i<6;i++){
+      const d=addDays(mon,i); const k=iso(d); const list=(m[k]||[]).slice().sort((a,b)=>a.i.localeCompare(b.i)); n+=list.length;
+      const cls='day'+(k===iso(t)?' is-today':'')+(d<t?' past':'');
+      html+='<div class="'+cls+'"><div class="day-h"><span class="dn">'+d.getDate()+'</span><span class="dw">'+GIORNI_S[d.getDay()]+'</span><span class="dc">'+(list.length?list.length:'')+'</span></div>';
+      html+=list.length?list.map(evHTML).join(''):'<div class="day-empty">—</div>';
+      html+='</div>';
+    }
+    html+='</div>';
+    if(!n) html+='<div class="empty-big">Nessuna lezione in questa settimana'+(state.anno||state.gruppo||state.q?' con i filtri attivi':'')+'.<br>Usa le frecce per cambiare settimana.</div>';
+    $('#body').innerHTML=html;
+    $('#count').textContent=n+' lezion'+(n===1?'e':'i');
+  }
+
+  /* ---------- mese ---------- */
+  function renderMonth(){
+    const c=state.cursor; const first=new Date(c.getFullYear(),c.getMonth(),1); const t=today(); const m=byDay(filtrati());
+    $('#panel-title').innerHTML=cap(MESI[first.getMonth()])+' '+first.getFullYear()+'<small>clicca un giorno per aprirlo</small>';
+    let html='<div class="month">'+['lun','mar','mer','gio','ven','sab'].map(x=>'<div class="mh">'+x+'</div>').join('');
+    let d=monday(first); let n=0;
+    const last=new Date(c.getFullYear(),c.getMonth()+1,0);
+    while(d<=last || d.getMonth()===first.getMonth()){
+      for(let i=0;i<7;i++){
+        const dd=addDays(d,i);
+        if(dd.getDay()===0) continue;
+        const k=iso(dd); const list=m[k]||[]; const other=dd.getMonth()!==first.getMonth();
+        if(!other) n+=list.length;
+        const anni=[...new Set(list.map(e=>e.anno))].sort();
+        html+='<button type="button" class="mcell'+(other?' other':'')+(k===iso(t)?' is-today':'')+'" data-d="'+k+'" aria-label="'+fmtLong(dd)+', '+list.length+' lezioni">'+
+          '<span class="mn">'+dd.getDate()+'</span>'+
+          '<span class="mdots">'+anni.map(a=>'<i style="--c:var(--a'+a+')"></i>').join('')+'</span>'+
+          (list.length?'<span class="mc">'+list.length+'</span>':'')+
+        '</button>';
+      }
+      d=addDays(d,7);
+      if(d.getMonth()!==first.getMonth() && d>last) break;
+    }
+    html+='</div>';
+    $('#body').innerHTML=html;
+    $('#count').textContent=n+' lezion'+(n===1?'e':'i');
+    $('#body').querySelectorAll('.mcell').forEach(b=>b.addEventListener('click',()=>{
+      state.cursor=parse(b.dataset.d); setView('week'); window.scrollTo({top:$('#panel').offsetTop-90, behavior:'smooth'});
+    }));
+  }
+
+  /* ---------- elenco ---------- */
+  let listLimit=14;
+  function renderList(){
+    const t=today(); const m=byDay(filtrati());
+    const days=Object.keys(m).sort().filter(k=>parse(k)>=t);
+    const past=Object.keys(m).sort().filter(k=>parse(k)<t);
+    const shown=days.slice(0,listLimit);
+    $('#panel-title').innerHTML='Prossime lezioni<small>in ordine cronologico, a partire da oggi</small>';
+    let n=0; days.forEach(k=>n+=m[k].length);
+    let html='';
+    if(!days.length) html='<div class="empty-big">Nessuna lezione in programma'+(state.anno||state.gruppo||state.q?' con i filtri attivi':'')+'.</div>';
+    shown.forEach(k=>{
+      const d=parse(k); const list=m[k].slice().sort((a,b)=>a.i.localeCompare(b.i));
+      html+='<div class="list-day"><h3><span class="ln">'+d.getDate()+'</span>'+cap(GIORNI[d.getDay()])+' '+MESI[d.getMonth()]+'<small>'+list.length+' lezion'+(list.length===1?'e':'i')+'</small></h3><div class="lgrid">'+list.map(evHTML).join('')+'</div></div>';
+    });
+    if(days.length>listLimit) html+='<button type="button" class="more-btn" id="more">Mostra altri giorni ('+(days.length-listLimit)+')</button>';
+    else if(past.length) html+='<p class="hint" style="text-align:center">Le lezioni già passate non sono elencate: le trovi nella vista Settimana o Mese.</p>';
+    $('#body').innerHTML=html;
+    $('#count').textContent=n+' lezion'+(n===1?'e':'i');
+    const mb=$('#more'); if(mb) mb.addEventListener('click',()=>{listLimit+=14; renderList();});
+  }
+
+  function render(){
+    renderTre();
+    $('#nav').style.display=state.view==='list'?'none':'flex';
+    if(state.view==='week') renderWeek(); else if(state.view==='month') renderMonth(); else renderList();
+    try{ localStorage.setItem('ums_cal_filtri', JSON.stringify({anno:state.anno, gruppo:state.gruppo, view:state.view})); }catch(e){}
+  }
+  function setView(v){
+    state.view=v; listLimit=14;
+    $('#seg-view').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
+    render();
+  }
+
+  /* ---------- comandi ---------- */
+  $('#seg-view').addEventListener('click',e=>{const b=e.target.closest('button'); if(b) setView(b.dataset.v);});
+  $('#seg-anno').addEventListener('click',e=>{const b=e.target.closest('button'); if(!b) return; state.anno=+b.dataset.a; $('#seg-anno').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b)); render();});
+  $('#seg-gruppo').addEventListener('click',e=>{const b=e.target.closest('button'); if(!b) return; state.gruppo=b.dataset.g; $('#seg-gruppo').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b)); render();});
+  const q=$('#q');
+  q.addEventListener('input',()=>{state.q=q.value.trim(); $('#q-clear').classList.toggle('on',!!state.q); listLimit=14; render();});
+  $('#q-clear').addEventListener('click',()=>{q.value=''; state.q=''; $('#q-clear').classList.remove('on'); render(); q.focus();});
+  $('#prev').addEventListener('click',()=>{ if(state.view==='month'){state.cursor=new Date(state.cursor.getFullYear(),state.cursor.getMonth()-1,1);} else state.cursor=addDays(monday(state.cursor),-7); render();});
+  $('#next').addEventListener('click',()=>{ if(state.view==='month'){state.cursor=new Date(state.cursor.getFullYear(),state.cursor.getMonth()+1,1);} else state.cursor=addDays(monday(state.cursor),7); render();});
+  $('#go-today').addEventListener('click',()=>{state.cursor=today(); render();});
+  document.addEventListener('keydown',e=>{
+    if(e.target.tagName==='INPUT') return;
+    if(e.key==='ArrowLeft') $('#prev').click(); if(e.key==='ArrowRight') $('#next').click();
+  });
+
+  /* barra comandi: ombra quando si incolla in alto */
+  const ctl=$('#controls');
+  const io=new IntersectionObserver(([en])=>ctl.classList.toggle('stuck',en.intersectionRatio<1),{threshold:[1],rootMargin:'-1px 0px 0px 0px'});
+  io.observe(ctl);
+
+  /* notte */
+  try{ if(localStorage.getItem('ums_night_mode')==='1') document.body.classList.add('night-mode'); }catch(e){}
+  $('#night').addEventListener('click',()=>{const on=document.body.classList.toggle('night-mode'); try{localStorage.setItem('ums_night_mode',on?'1':'0');}catch(e){}});
+
+  /* ---------- caricamento ---------- */
+  $('#body').innerHTML='<div class="empty-big">Carico il calendario…</div>';
+  fetch('calendario-lezioni.json',{cache:'no-store'}).then(r=>r.json()).then(data=>{
+    EV=data.eventi||[]; META=data;
+    META.inizio=EV.length?EV[0].d:'2026-09-28';
+    if(data.aggiornato){
+      const d=parse(data.aggiornato);
+      $('#av-meta').textContent='Dati esportati dal calendario ufficiale il '+d.getDate()+' '+MESI[d.getMonth()]+' '+d.getFullYear()+'. Questo calendario non sostituisce le fonti ufficiali.';
+    }
+    const t=today(); const inizio=parse(META.inizio), fine=parse(META.fine||'2026-12-18');
+    state.cursor = t<inizio ? inizio : (t>fine ? fine : t);
+    $('#seg-anno').querySelectorAll('button').forEach(x=>x.classList.toggle('on',+x.dataset.a===state.anno));
+    $('#seg-gruppo').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x.dataset.g===state.gruppo));
+    setView(state.view);
+  }).catch(()=>{
+    $('#body').innerHTML='<div class="empty-big">Non riesco a caricare il calendario.<br>Ricarica la pagina o controlla la connessione.</div>';
+    $('#tre').innerHTML='';
+  });
+})();
+</script>
+</body>
+</html>
