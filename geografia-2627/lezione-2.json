@@ -474,5 +474,67 @@
       "titolo": "i",
       "macro": 4
     }
-  ]
+  ],
+  "esercizi": {
+    "controllato": "2026-09-29",
+    "trovati": [
+      {
+        "id": "es1",
+        "tipo": "reticolo_coordinate",
+        "titolo": "Coordinate geografiche sul reticolo",
+        "punti_esame": "1 punto su 15",
+        "consegna": "Dato un reticolo cartografico a assi ortogonali con paralleli e meridiani e i relativi valori in gradi, individuare la latitudine e la longitudine esatte di un punto segnato sulla griglia. Esprimere la posizione in gradi e primi sessagesimali, indicando la relativa direzione cardinale.",
+        "procedimento": [
+          "Osservare il reticolo e determinare la direzione verso cui i valori dei gradi crescono o decrescono sia per la latitudine che per la longitudine.",
+          "Scrivere sui margini del foglio i numeri dei gradi intermedi lungo la griglia per evitare errori di conteggio.",
+          "Calcolare la latitudine individuando il grado di riferimento e stimando i primi in sessagesimali in base alla posizione rispetto all'Equatore, aggiungendo l'indicazione 'Nord' o 'Sud'.",
+          "Calcolare la longitudine individuando il grado di riferimento e stimando i primi rispetto al meridiano di riferimento, aggiungendo l'indicazione 'Est' o 'Ovest'.",
+          "Completare la notazione inserendo sempre i primi anche per i gradi interi (es. 21° 00'), in modo da definire un punto preciso e non un'area generica."
+        ],
+        "consigli_docente": [
+          "Annotare sempre i valori dei gradi intermedi lungo i lati del reticolo prima di individuare il punto preciso.",
+          "Utilizzare la logica sessagesimale (in sessantesimi, come l'orologio) per calcolare i primi frazionari tra un grado e l'altro.",
+          "Scrivere '00' primi per i punti che cadono esattamente sulla linea di un grado intero."
+        ],
+        "errori_comuni": [
+          "Ruotare il foglio o credere che l'indicazione '20° Nord' significhi che il Nord si trova a sinistra del foglio.",
+          "Invertire la direzione di incremento o decremento dei gradi lungo gli assi.",
+          "Omettere i primi o lo '00' nelle coordinate, trasformando l'individuazione di un punto preciso in quella di un'intera zona."
+        ],
+        "esempio_lezione": "Determinazione delle coordinate di Hanoi: latitudine 21° 00' N e longitudine 105° 50' E (dopo aver corretto l'errore di stampa del testo che indicava 150° invece di 105°); e Hong Kong: latitudine 22° 15' N e longitudine 114° 10' E.",
+        "cause_discusse": [],
+        "serve_disegno": true
+      },
+      {
+        "id": "es2",
+        "tipo": "densita_popolamento",
+        "titolo": "Densità e distribuzione del popolamento",
+        "punti_esame": "1 punto su 15",
+        "consegna": "Calcolare la densità media di popolazione (in abitanti/km²) per una superficie data e analizzare il tipo di distribuzione degli abitanti sul territorio. Distinguere se la distribuzione è sparsa o accentrata e spiegarne le motivazioni geografiche e ambientali.",
+        "procedimento": [
+          "Calcolare l'area della superficie considerata (se si tratta di un quadrato con lato noto L, l'area è L × L).",
+          "Inserire il numero totale di abitanti al numeratore e l'area in km² al denominatore.",
+          "Dividere il numero di abitanti per l'area ottenendo la densità media in abitanti/km².",
+          "Osservare la disposizione spaziale degli abitanti per classificare la distribuzione come sparsa oppure accentrata.",
+          "Discutere i fattori ambientali, storici e sociali che giustificano il tipo di insediamento osservato."
+        ],
+        "consigli_docente": [
+          "Non confondere il calcolo dell'area del quadrato (lato per lato) con il calcolo del perimetro.",
+          "Mettere sempre il soggetto dell'indicatore (gli abitanti) al numeratore della formula.",
+          "Ricordare che in geografia nessuna distribuzione è 'casuale', ma risponde sempre a precise ragioni territoriali e ambientali."
+        ],
+        "errori_comuni": [
+          "Calcolare il perimetro anziché l'area al denominatore (es. fare 2+2+2+2 al posto di 2×2 per un lato di 2 km).",
+          "Definire una distribuzione sparsa come 'casuale'.",
+          "Ritenere che territori con la stessa densità media abbiano necessariamente la medesima distribuzione reale della popolazione sul territorio."
+        ],
+        "esempio_lezione": "Confronto tra due aree quadrate di 1 km² con 9 abitanti ciascuna: entrambe hanno una densità media di 9 ab/km², ma una presenta una distribuzione sparsa (1 abitante per zona) e l'altra una distribuzione accentrata (tutti e 9 gli abitanti raggruppati in una sola porzione, lasciando zone vuote).",
+        "cause_discusse": [
+          "Distribuzione sparsa: ambiente omogeneamente favorevole, presenza diffusa e abbondante d'acqua, terreni fertili ovunque, strade accessibili e sicurezza del territorio che permette di vivere isolati senza timore di aggressioni.",
+          "Distribuzione accentrata: ambiente ostile o irregolare, presenza di acqua limitata a un unico punto (es. pozzo), necessità di difesa e protezione (vicinanza a castelli o mura urbane) e assenza di infrastrutture diffuse."
+        ],
+        "serve_disegno": true
+      }
+    ]
+  }
 }
