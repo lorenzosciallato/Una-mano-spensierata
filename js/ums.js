@@ -870,11 +870,13 @@ if (!fileDaCaricare) {
                 const f = new URLSearchParams(location.search).get('file') || '';
                 const m = f.match(/(?:^|\/)([^\/]+)\/[^\/]*lezione-(\d+)\.json/i) ||
                           f.match(/^([^\/]+)\/[^\/]*lezione-(\d+)\.json/i);
-                const cartella = m ? m[1] : '';
+                const cartellaVera = m ? m[1] : '';
+                // annualita' nel nome cartella (es. biologia-2627): la tolgo per il titolo
+                const cartella = cartellaVera.replace(/-\d{4}$/, '');
                 const n = m ? parseInt(m[2], 10) : null;
                 const nome = UMS_NOMI_MATERIE[cartella] ||
                     cartella.split('-').map(w => w ? w.charAt(0).toUpperCase() + w.slice(1) : w).join(' ');
-                return { cartella: cartella, n: n, nome: nome };
+                return { cartella: cartellaVera, n: n, nome: nome };
             } catch (e) { return { cartella: '', n: null, nome: '' }; }
         }
 

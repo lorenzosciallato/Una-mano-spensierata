@@ -292,6 +292,16 @@ body.app-mode #appview{opacity:1; transform:translateY(0); pointer-events:auto;}
 
 /* Intestazione d'anno — editoriale: numero grande a lato, titolo Playfair,
    sottotitolo anno accademico. Occupa l'intera riga della griglia. */
+.ann-switch{display:flex; gap:8px; margin:18px 0 6px; flex-wrap:wrap;}
+.ann-switch button{font-family:var(--font-body); font-size:.72rem; font-weight:700; letter-spacing:.16em;
+  text-transform:uppercase; padding:9px 16px; border-radius:999px; cursor:pointer;
+  background:transparent; color:var(--navy); border:1px solid var(--gold-lt);
+  transition:background .2s, color .2s, border-color .2s;}
+.ann-switch button:hover{border-color:var(--gold);}
+.ann-switch button.attiva{background:var(--navy); color:var(--ivory); border-color:var(--navy);}
+.ann-switch button .ann-n{opacity:.65; font-weight:600; margin-left:6px; letter-spacing:.04em;}
+body.night-mode .ann-switch button{color:#f0e9e2; border-color:#3a332c;}
+body.night-mode .ann-switch button.attiva{background:var(--gold-dk); border-color:var(--gold-dk); color:#fff;}
 .year-head{grid-column:1/-1; display:flex; align-items:center; gap:18px;
   margin:30px 0 8px; padding-bottom:14px; border-bottom:1px solid var(--gold-lt);}
 .year-head:first-child{margin-top:4px;}
@@ -716,6 +726,7 @@ body.instant #appview, body.instant #topbar, body.instant #top-controls{transiti
   </a>
   </div>
 
+  <div class="ann-switch" id="ann-switch" role="tablist" aria-label="Anno accademico"></div>
   <div class="subj-grid" id="course-grid"></div>
   <div class="subj-empty" id="subj-empty">Nessuna materia trovata.<br>Prova con un termine diverso.</div>
 
@@ -796,17 +807,34 @@ function normalizza(s){ return s.toLowerCase().normalize('NFD').replace(/[\u0300
 // rendering. Tutte etichettate anno accademico 25/26. Una materia senza voce
 // qui finisce in "Altro" in fondo (cosi non sparisce mai).
 // =========================================================================
-const ANNO_ACCADEMICO = '25/26';
+// ANNUALITA': la cartella dice l'anno accademico. Cartelle senza suffisso
+// (es. "biologia") = 2025/26. Cartelle con suffisso a 4 cifre
+// (es. "biologia-2627") = 2026/27, e cosi' via per gli anni futuri.
+// Ogni annualita' mostra SOLO le materie che hanno lezioni (cioe' che la
+// pipeline ha gia' messo in `courses`).
+const ANNUALITA_BASE = '2526';
+const ANNUALITA_NOMI = {'2526':'2025/26','2627':'2026/27','2728':'2027/28','2829':'2028/29'};
 const ANNO_MATERIE = {
   1: ['sociologiaeducazione','storiaeducazione','didattica','educazione-motoria',
-      'educazionemusicale','pedagogia-generale','psicologiasviluppo'],
+      'educazionemusicale','pedagogia-generale','psicologiasviluppo',
+      // nomi possibili delle cartelle nuove (dal piano 2026/27)
+      'sociologia-dell-educazione','storia-dell-educazione','didattica-generale',
+      'educazione-musicale','psicologia-dello-sviluppo','lettorato-di-lingua-inglese-di-base',
+      'lingua-inglese','inglese'],
   2: ['biologia','linguistica-italiana','neuropsichiatria','diritto-pubblico',
-      'didattica-della-fisica'],
-  3: ['grammatica-italiana'],
+      'didattica-della-fisica','biologia-generale','neuropsichiatria-infantile',
+      'geografia','linguistica'],
+  3: ['grammatica-italiana','didattica-della-matematica','pedagogia-sperimentale',
+      'teorie-e-metodi-di-programmazione-e-valutazione','teorie-e-metodi',
+      'lingua-inglese-iii','inglese-iii'],
   4: ['educazione-ambientale','pedagogia-e-didattica-speciale-modulo-uno',
       'pedagogia-e-didattica-speciale-modulo-due','letteratura-per-l-infanzia',
-      'psicologia-dell-educazione'],
-  5: ['storiacontemporanea']
+      'psicologia-dell-educazione','pedagogia-sociale','letteratura-italiana',
+      'pedagogia-e-didattica-speciale'],
+  5: ['storiacontemporanea','storia-contemporanea','educazione-all-immagine',
+      'etica-professionale','la-gestione-della-classe-multietnica-e-plurilingue',
+      'gestione-della-classe-multietnica-e-plurilingue','classe-multietnica',
+      'lingua-inglese-v','inglese-v']
 };
 const ORDINALE = {1:'Primo',2:'Secondo',3:'Terzo',4:'Quarto',5:'Quinto'};
 
@@ -815,23 +843,76 @@ function cartellaDi(c){
   if(c.url){ const m = c.url.match(/^([^/]+)\//); return m ? m[1] : ''; }
   return '';
 }
+function annualitaDi(c){
+  const m = cartellaDi(c).match(/-(\d{4})$/);
+  return m ? m[1] : ANNUALITA_BASE;
+}
+function nomeAnnualita(k){
+  return ANNUALITA_NOMI[k] || ('20' + k.slice(0,2) + '/' + k.slice(2));
+}
+// confronto "a prova di trattini": storia-dell-educazione == storiadelleducazione
+function chiave(s){ return String(s).toLowerCase().replace(/[^a-z0-9]/g,''); }
+const _ANNO_IDX = {};
+[1,2,3,4,5].forEach(a => ANNO_MATERIE[a].forEach(x => { _ANNO_IDX[chiave(x)] = a; }));
 function annoDi(cartella){
-  for(const a of [1,2,3,4,5]){ if(ANNO_MATERIE[a].includes(cartella)) return a; }
-  return 0;
+  const base = String(cartella).replace(/-\d{4}$/,'');
+  const k = chiave(base);
+  if(_ANNO_IDX[k]) return _ANNO_IDX[k];
+  // "modulo uno/due", "mod-a" ecc.: provo togliendo la coda dopo "modulo"/"mod"
+  const k2 = chiave(base.replace(/-(modulo|mod)-.*$/,''));
+  return _ANNO_IDX[k2] || 0;
+}
+// il nome in pagina senza l'etichetta dell'annualita' (es. "Biologia (26/27)")
+function nomePulito(n){
+  return String(n).replace(/\s*[\(\[]?\s*\d{2}\s*\/\s*\d{2}\s*[\)\]]?\s*$/,'').trim();
+}
+
+let annualitaCorrente = null;
+function annualitaPresenti(){
+  const set = new Set(courses.map(annualitaDi));
+  return [...set].sort().reverse();   // la piu' recente per prima
+}
+function renderAnnSwitch(){
+  const box = document.getElementById('ann-switch');
+  const elenco = annualitaPresenti();
+  box.innerHTML = '';
+  if(elenco.length < 2){ box.style.display = 'none'; return; }
+  box.style.display = '';
+  elenco.forEach(k => {
+    const n = courses.filter(c => annualitaDi(c) === k).length;
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.setAttribute('role','tab');
+    b.setAttribute('aria-selected', k === annualitaCorrente ? 'true' : 'false');
+    b.className = k === annualitaCorrente ? 'attiva' : '';
+    b.innerHTML = nomeAnnualita(k) + `<span class="ann-n">${n}</span>`;
+    b.addEventListener('click', () => {
+      annualitaCorrente = k;
+      try{ localStorage.setItem('ums-annualita', k); }catch(e){}
+      renderAnnSwitch(); renderCourses(); filtraMaterie();
+    });
+    box.appendChild(b);
+  });
+}
+function scegliAnnualitaIniziale(){
+  const elenco = annualitaPresenti();
+  let salvata = null;
+  try{ salvata = localStorage.getItem('ums-annualita'); }catch(e){}
+  annualitaCorrente = (salvata && elenco.includes(salvata)) ? salvata : elenco[0];
 }
 
 function cardCorso(c, i){
   const hasLezioni = !!c.lezioni;
   const el = document.createElement(hasLezioni ? 'button' : 'a');
   el.className = 'subj-card';
-  el.dataset.search = normalizza(c.name);
+  el.dataset.search = normalizza(nomePulito(c.name));
   if (hasLezioni){ el.type = 'button'; el.addEventListener('click', () => openCourse(c)); }
   else { el.href = c.url; el.target = '_blank'; el.rel = 'noopener'; }
   const glyph = GLYPHS[i % GLYPHS.length];
   el.innerHTML = `
     <span class="subj-glyph" aria-hidden="true"><svg viewBox="0 0 40 40">${glyph}</svg></span>
     <span class="subj-body">
-      <span class="subj-name">${c.name}</span>
+      <span class="subj-name">${nomePulito(c.name)}</span>
       <span class="subj-meta">${hasLezioni ? c.lezioni.count + ' lezioni' : 'Sito esterno \u2197'}</span>
     </span>
     <span class="subj-chevron" aria-hidden="true">${chevronSVG}</span>`;
@@ -842,7 +923,12 @@ function renderCourses(){
   const grid = document.getElementById('course-grid');
   grid.innerHTML = '';
   const perAnno = {1:[],2:[],3:[],4:[],5:[],0:[]};
-  courses.forEach((c,i) => { perAnno[annoDi(cartellaDi(c))].push(i); });
+  if(!annualitaCorrente) scegliAnnualitaIniziale();
+  let quante = 0;
+  courses.forEach((c,i) => {
+    if(annualitaDi(c) !== annualitaCorrente) return;
+    perAnno[annoDi(cartellaDi(c))].push(i); quante++;
+  });
   [1,2,3,4,5,0].forEach(anno => {
     const indici = perAnno[anno];
     if(!indici.length) return;
@@ -859,14 +945,14 @@ function renderCourses(){
         `<span class="yh-num">${anno}</span>` +
         `<span class="yh-text">` +
           `<span class="yh-title">${titolo}</span>` +
-          `<span class="yh-sub">Anno Accademico ${ANNO_ACCADEMICO}</span>` +
+          `<span class="yh-sub">Anno Accademico ${nomeAnnualita(annualitaCorrente)}</span>` +
         `</span>` +
         `<span class="yh-count">${nMaterie}</span>`;
     }
     grid.appendChild(head);
     indici.forEach(i => grid.appendChild(cardCorso(courses[i], i)));
   });
-  aggiornaConteggio(courses.length);
+  aggiornaConteggio(quante);
 }
 function aggiornaConteggio(n){
   document.getElementById('course-count').textContent = n === 1 ? '1 materia' : n + ' materie';
@@ -948,7 +1034,7 @@ function openCourse(course){
   const key = courseKey(course);
   const visits = loadVisits();
 
-  document.getElementById('cv-title').textContent = course.name;
+  document.getElementById('cv-title').textContent = nomePulito(course.name);
 
   const list = document.getElementById('cv-list');
   list.innerHTML = '';
@@ -1023,6 +1109,8 @@ searchInput.addEventListener('input', filtraMaterie);
 document.getElementById('search-clear').addEventListener('click', () => { searchInput.value=''; filtraMaterie(); searchInput.focus(); });
 searchInput.addEventListener('keydown', (e) => { if(e.key==='Escape'){ searchInput.value=''; filtraMaterie(); } });
 
+scegliAnnualitaIniziale();
+renderAnnSwitch();
 renderCourses();
 </script>
 
