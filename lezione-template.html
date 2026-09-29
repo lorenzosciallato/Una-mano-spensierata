@@ -988,6 +988,9 @@
         // Pesi: titolo sezione x3, paragrafo x2 (prima il capitolo giusto, poi
         // il punto giusto nel capitolo).
         function distribuisci(){
+          // si può richiamare più volte: prima tolgo le slide già messe
+          Array.prototype.forEach.call(cont.querySelectorAll('.ums-slide-fig'),
+            function(f){ f.parentNode.removeChild(f); });
           // sezioni in ordine, ognuna coi suoi paragrafi
           var sezioni = [];
           var corrente = null;
@@ -1063,6 +1066,19 @@
           });
         }
         distribuisci();
+
+        // ANTI-LOTTERIA: il ripristino delle evidenziazioni (che arriva dopo,
+        // con tempi variabili) riscrive tutto il testo e cancellava le slide.
+        // Ora, se il testo viene riscritto, le slide si rimettono da sole.
+        window.addEventListener('ums:riassuntone-riscritto', function(){ distribuisci(); });
+        var attesaRimonta = null;
+        new MutationObserver(function(){
+          if(cont.querySelector('.ums-slide-fig') || !cont.querySelector('p')) return;
+          clearTimeout(attesaRimonta);
+          attesaRimonta = setTimeout(function(){
+            if(!cont.querySelector('.ums-slide-fig')) distribuisci();
+          }, 120);
+        }).observe(cont, { childList: true });
 
         // Toggle a tre stati: classi sul container decidono cosa si vede.
         function modo(quale){

@@ -167,6 +167,17 @@
             return String(h);
         }
 
+        // Le slide NON fanno parte del testo salvato: se finissero nel salvataggio,
+        // al ripristino riapparirebbero quelle vecchie (o sparirebbero le nuove).
+        function umsHtmlSenzaSlide(html) {
+            try {
+                const tmp = document.createElement('div');
+                tmp.innerHTML = html || '';
+                tmp.querySelectorAll('.ums-slide-fig').forEach(f => f.remove());
+                return tmp.innerHTML;
+            } catch (e) { return html || ''; }
+        }
+
         function umsPersistState() {
             clearTimeout(umsPersistTimer);
             umsPersistTimer = setTimeout(() => {
@@ -183,7 +194,7 @@
                     });
                     const payload = {
                         hash: umsPristineHash,
-                        html: container ? container.innerHTML : '',
+                        html: container ? umsHtmlSenzaSlide(container.innerHTML) : '',
                         wb: rows
                     };
                     localStorage.setItem('ums_hl::' + umsLessonKey, JSON.stringify(payload));
@@ -204,7 +215,11 @@
                     return;
                 }
                 const container = document.getElementById('dyn-riassuntone-container');
-                if (container && data.html) container.innerHTML = data.html;
+                if (container && data.html) {
+                    container.innerHTML = umsHtmlSenzaSlide(data.html);
+                    // le slide le rimonta il loro script (vedi lezione-template.html)
+                    try { window.dispatchEvent(new Event('ums:riassuntone-riscritto')); } catch (e) {}
+                }
                 (data.wb || []).forEach(r => {
                     wbAddEntry(r.text, r.color, r.id);
                     const row = document.querySelector(`.wb-row[data-hl-id="${r.id}"]`);
