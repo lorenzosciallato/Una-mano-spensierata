@@ -660,6 +660,25 @@
                         </div>
                     </div>
 
+                    <!-- 09. ESERCIZI D'ESAME — compare SOLO se la lezione ne ha
+                         (campo "esercizi" del JSON, preparato dal server) -->
+                    <div class="accordion-item" id="acc-esercizi" style="display:none">
+                        <h2 class="ums-acc-h">
+                        <button class="accordion-header">
+                            <span class="ch-number">09</span>
+                            <span class="ch-text">
+                                <span class="ch-eyebrow">Prova scritta</span>
+                                <span class="ch-title">Esercizi d'esame</span>
+                            </span>
+                            <span class="ch-icon">+</span>
+                        </button></h2>
+                        <div class="accordion-content">
+                            <p id="esx-conteggio" style="color:var(--sub);margin:0 0 1.2rem;font-size:.95rem"></p>
+                            <div id="esx-root"></div>
+                            <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione <svg class="ums-ic" aria-hidden="true"><use href="#ic-chevron-up"/></svg></button>
+                        </div>
+                    </div>
+
                 </div><!-- /master-content-inner -->
             </div><!-- /master-content -->
         </div><!-- /master-accordion-item -->
@@ -786,6 +805,7 @@
     <!-- Tutto il JavaScript del progetto vive in js/ums.js (vedi README).
          Google Translate DEVE caricare dopo: la sua callback è definita lì. -->
     <script src="js/ums.js"></script>
+    <script src="js/ums-esercizi.js" defer></script>
     <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
     <!-- ================================================================
