@@ -2,13 +2,18 @@
    UNA MANO SPENSIERATA — ESERCIZI D'ESAME
    Compare nella lezione SOLO se il JSON ha "esercizi.trovati".
    Il server (ums_esercizi.py) trova gli esercizi della prova scritta
-   nella lezione e ne prepara le illustrazioni; qui si generano le
-   VARIANTI (sempre diverse) e si corregge "con la matita rossa e blu":
-   blu quello che va, rosso quello che non va, con il perché.
+   nella lezione; qui si generano le VARIANTI (sempre diverse) e si
+   corregge "con la matita rossa e blu": blu quello che va, rosso
+   quello che non va, con il perché.
+   SOLO DISEGNI VETTORIALI: niente immagini generate, perché negli
+   esercizi il disegno deve corrispondere esattamente ai numeri.
    Tipi:
      reticolo_coordinate  — latitudine/longitudine su un reticolo
      densita_popolamento  — area, densità, distribuzione sparsa/accentrata
-     altro                — varianti preparate da NotebookLM (scorta)
+     altro                — varianti preparate da NotebookLM (scorta), solo se
+                            l'esercizio non ha bisogno di un disegno;
+                            con "da_costruire" si mostra la spiegazione
+                            in attesa del suo generatore vettoriale
 ============================================================ */
 (function () {
   'use strict';
@@ -21,7 +26,7 @@
     var b = d && d.esercizi;
     var lista = (b && Array.isArray(b.trovati) ? b.trovati : []).filter(function (e) {
       if (!e || !e.tipo) return false;
-      if (e.tipo === 'altro') return Array.isArray(e.banca) && e.banca.length > 0;
+      if (e.tipo === 'altro') return e.da_costruire || (Array.isArray(e.banca) && e.banca.length > 0);
       return e.tipo === 'reticolo_coordinate' || e.tipo === 'densita_popolamento';
     });
     if (!lista.length) return;
@@ -92,20 +97,12 @@
       'border:1px solid var(--gold-lt);background:transparent;color:var(--ink);text-align:left}',
       '.esx-scelta button[aria-pressed=true]{background:var(--navy);border-color:var(--navy);color:#fff}',
       '.esx-scelta small{display:block;font-weight:400;opacity:.75;font-size:.78rem;margin-top:2px}',
-      '.esx-front{margin:0 0 22px;border-radius:14px;overflow:hidden;background:var(--esx-carta);',
-      'box-shadow:0 0 0 1px rgba(139,110,75,.35),0 0 0 6px var(--esx-carta),0 0 0 7px rgba(139,110,75,.3)}',
-      '.esx-front img{display:block;width:100%;height:auto;max-height:340px;object-fit:cover}',
-      '.esx-front.dittico{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:6px}',
-      '.esx-front.dittico img{border-radius:9px;max-height:260px}',
-      '.esx-front figcaption,.esx-fig figcaption{font:italic .92rem/1.45 var(--font-display);color:var(--esx-seppia);',
-      'padding:8px 12px 10px;background:var(--esx-carta)}',
-      '.esx-front.dittico figure{margin:0}',
       '.esx-titolo{font:700 1.45rem/1.25 var(--font-display);color:var(--ink);margin:0 0 4px}',
       '.esx-valore{font-size:.9rem;color:var(--sub);margin:0 0 12px}',
       '.esx-consegna{max-width:68ch;line-height:1.65;margin:0 0 18px}',
       '.esx-banco{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:22px;align-items:start}',
       '@media (min-width:821px){.esx-banco .esx-tavola{position:sticky;top:calc(var(--topbar-h,62px) + 16px)}}',
-      '@media (max-width:820px){.esx-banco{grid-template-columns:1fr}.esx-front.dittico{grid-template-columns:1fr}}',
+      '@media (max-width:820px){.esx-banco{grid-template-columns:1fr}}',
       '.esx-tavola{background:var(--esx-carta);border-radius:10px;padding:10px;',
       'box-shadow:inset 0 0 0 1px rgba(139,110,75,.35),inset 0 0 60px rgba(139,110,75,.18)}',
       '.esx-tavola svg{display:block;width:100%;height:auto}',
@@ -154,11 +151,7 @@
       'border-radius:10px;cursor:pointer;line-height:1.4}',
       '.esx-opz label.giusta{border-color:var(--esx-blu);box-shadow:inset 3px 0 0 var(--esx-blu)}',
       '.esx-opz label.sbagliata{border-color:var(--esx-rosso);box-shadow:inset 3px 0 0 var(--esx-rosso)}',
-      '.esx-fig{margin:10px 0 0;display:grid;grid-template-columns:1fr 1fr;gap:10px}',
-      '.esx-fig figure{margin:0;border-radius:10px;overflow:hidden;background:var(--esx-carta)}',
-      '.esx-fig img{display:block;width:100%;height:auto}',
-      '@media (max-width:560px){.esx-fig{grid-template-columns:1fr}}',
-      '.esx-disegno{opacity:0;transition:opacity .6s ease}',
+                              '.esx-disegno{opacity:0;transition:opacity .6s ease}',
       '.esx-disegno.on{opacity:1}',
       '@media (prefers-reduced-motion:reduce){.esx-disegno{transition:none}}',
       '.esx-etic-trappola{cursor:pointer}',
@@ -210,44 +203,17 @@
 
   function esercizio(e) {
     var box = el('div', { class: 'esx-ex' });
-    var fr = frontespizio(e); if (fr) box.appendChild(fr);
     box.appendChild(el('h3', { class: 'esx-titolo', text: e.titolo || 'Esercizio' }));
     if (e.punti_esame) box.appendChild(el('p', { class: 'esx-valore', text: 'All\u2019esame vale ' + e.punti_esame + '.' }));
     if (e.consegna) box.appendChild(el('p', { class: 'esx-consegna', text: e.consegna }));
     var area = el('div');
     box.appendChild(area);
     var motore = e.tipo === 'reticolo_coordinate' ? Reticolo
-               : e.tipo === 'densita_popolamento' ? Densita : Banca;
+               : e.tipo === 'densita_popolamento' ? Densita
+               : e.da_costruire ? InArrivo : Banca;
     motore(area, e);
     var dc = docente(e); if (dc) box.appendChild(dc);
     return box;
-  }
-
-  var DIDASCALIE = {
-    globo: 'Paralleli e meridiani: il reticolo che d\u00e0 a ogni luogo il suo indirizzo.',
-    sparsa: 'Insediamento sparso: case isolate, ognuna con il suo pozzo e i suoi campi.',
-    accentrata: 'Insediamento accentrato: tutti dentro le mura, attorno all\u2019unico pozzo.'
-  };
-
-  function immagine(url, alt) {
-    var im = el('img', { src: url, alt: alt || '', loading: 'lazy', decoding: 'async' });
-    im.addEventListener('error', function () { var f = im.closest('figure'); if (f) f.style.display = 'none'; });
-    im.addEventListener('load', riapriPannello);
-    return im;
-  }
-
-  function frontespizio(e) {
-    var ill = e.illustrazioni || {};
-    if (e.tipo === 'densita_popolamento' && ill.sparsa && ill.accentrata) {
-      return el('div', { class: 'esx-front dittico' }, [
-        el('figure', null, [immagine(ill.sparsa, DIDASCALIE.sparsa), el('figcaption', { text: DIDASCALIE.sparsa })]),
-        el('figure', null, [immagine(ill.accentrata, DIDASCALIE.accentrata), el('figcaption', { text: DIDASCALIE.accentrata })])
-      ]);
-    }
-    var url = ill.globo || ill.scena || ill.sparsa;
-    if (!url) return null;
-    var cap = ill.globo ? DIDASCALIE.globo : (e.titolo || '');
-    return el('figure', { class: 'esx-front' }, [immagine(url, cap), el('figcaption', { text: cap })]);
   }
 
   function docente(e) {
@@ -739,9 +705,8 @@
         }, function (c) {
           var a = c[0].valore(), b = c[1].valore(); if (!a || !b) return null;
           var ok = a === (v.sparsaA ? 'sparsa' : 'accentrata') && b === (v.sparsaA ? 'accentrata' : 'sparsa');
-          var extra = figure();
-          return ok ? { ok: true, testo: 'Giusto: ' + n.sparsa + ' \u00e8 sparsa, ' + n.accentrata + ' \u00e8 accentrata. La densit\u00e0 media da sola non racconta come vive la gente sul territorio.', extra: extra }
-                    : { ok: false, chiave: 'distr', testo: n.sparsa + ' \u00e8 sparsa: case distribuite su tutto il territorio. ' + n.accentrata + ' \u00e8 accentrata: tutti raccolti in una parte. La densit\u00e0 \u00e8 uguale, la distribuzione no.', extra: extra };
+          return ok ? { ok: true, testo: 'Giusto: ' + n.sparsa + ' \u00e8 sparsa, ' + n.accentrata + ' \u00e8 accentrata. La densit\u00e0 media da sola non racconta come vive la gente sul territorio.' }
+                    : { ok: false, chiave: 'distr', testo: n.sparsa + ' \u00e8 sparsa: case distribuite su tutto il territorio. ' + n.accentrata + ' \u00e8 accentrata: tutti raccolti in una parte. La densit\u00e0 \u00e8 uguale, la distribuzione no.' };
         });
       });
       coda.push(function () {
@@ -784,15 +749,6 @@
           });
         });
       }
-    }
-
-    function figure() {
-      var ill = e.illustrazioni || {};
-      if (!ill.sparsa || !ill.accentrata) return null;
-      return el('div', { class: 'esx-fig' }, [
-        el('figure', null, [immagine(ill.sparsa, DIDASCALIE.sparsa), el('figcaption', { text: 'Sparso' })]),
-        el('figure', null, [immagine(ill.accentrata, DIDASCALIE.accentrata), el('figcaption', { text: 'Accentrato' })])
-      ]);
     }
 
     function chiudi() {
@@ -838,6 +794,18 @@
       riapriPannello();
     }
     nuovaVariante();
+  }
+
+  /* =====================================================================
+     TIPI NUOVI CON UN DISEGNO: in attesa del generatore vettoriale
+     ===================================================================== */
+  function InArrivo(area, e) {
+    var f = el('div', { class: 'esx-foglio' });
+    f.appendChild(el('h4', { text: 'Esercizio interattivo in preparazione' }));
+    f.appendChild(el('p', { class: 'esx-consegna', text: 'Questo esercizio si risolve su un disegno con misure precise. ' +
+      'Per non darti figure sbagliate, qui arriver\u00e0 con un disegno costruito apposta, sempre diverso a ogni tentativo. ' +
+      'Intanto trovi sotto il metodo spiegato in aula.' }));
+    area.appendChild(f);
   }
 
   /* =====================================================================
