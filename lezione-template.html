@@ -885,7 +885,8 @@
         //  - nuovo:   {url:"...", titolo:"La Parola ..."}  (con titolo OCR)
         var slides = grezze.map(function(s){
           if(typeof s === 'string') return { url:s, titolo:'' };
-          return { url:(s && s.url) || '', titolo:(s && s.titolo) || '' };
+          return { url:(s && s.url) || '', titolo:(s && s.titolo) || '',
+                   macro:(s && typeof s.macro === 'number') ? s.macro : null };
         }).filter(function(s){ return s.url; });
         if(!slides.length) return;
         var tries=0;
@@ -1038,56 +1039,28 @@
             sez.usate++;
           }
 
-          // RAMO PRIORITARIO — abbinamento semantico deciso dall'IA in pipeline:
-          // se le slide portano l'indice "macro", ogni slide va in quella sezione,
-          // sparsa dx/sx nel testo (niente più matching per parole). Il tetto qui
-          // NON si applica: il macro giusto vince sempre.
-          var conMacro = slides.filter(function(s){ return typeof s.macro === 'number'; }).length;
-          if(conMacro >= Math.ceil(slides.length/2)){
-            slides.forEach(function(slide,i){
-              var mi = (typeof slide.macro === 'number') ? slide.macro : 0;
-              if(mi < 0 || mi >= sezioni.length) mi = Math.min(sezioni.length-1, mi < 0 ? 0 : sezioni.length-1);
-              piazzaInSezione(sezioni[mi], slide, i, null);
+          // ORDINE DI ARRIVO (scelta di Lorenzo): le slide restano nella
+          // sequenza del deck. Ognuna va nel capitolo indicato dal server
+          // (campo "macro"); se manca, la si distribuisce in fila per posizione.
+          // Dentro il capitolo le slide si spargono sui paragrafi SEMPRE in
+          // avanti, quindi l'ordine a schermo è identico a quello del deck.
+          var perSez = sezioni.map(function(){ return []; });
+          var ultimo = 0;
+          slides.forEach(function(slide, i){
+            var mi = (typeof slide.macro === 'number') ? slide.macro
+                     : Math.floor(i * sezioni.length / slides.length);
+            mi = Math.max(0, Math.min(sezioni.length - 1, mi));
+            if(mi < ultimo) mi = ultimo;          // mai all'indietro
+            ultimo = mi;
+            perSez[mi].push({ slide: slide, i: i });
+          });
+          perSez.forEach(function(lista, si){
+            var par = sezioni[si].paragrafi, k = lista.length, P = par.length;
+            lista.forEach(function(x, j){
+              var pi = Math.min(P - 1, Math.floor(j * P / k));
+              par[pi].el.parentNode.insertBefore(creaFigura(x.slide, x.i), par[pi].el);
             });
-            return;
-          }
-
-          if(conTitolo >= Math.ceil(slides.length/2)){
-            slides.forEach(function(slide,i){
-              var tw = parole(slide.titolo);
-              var bestSez=-1, bestScore=0, bestPar=null;
-              sezioni.forEach(function(sez, si){
-                if(sez.usate >= tetto) return;   // sezione piena: tocca alle altre
-                var sTit = punteggio(tw, sez.titolo);
-                var mPar = 0, pEl = null;
-                sez.paragrafi.forEach(function(p){
-                  var s = punteggio(tw, p.el.textContent);
-                  if(s > mPar){ mPar = s; pEl = p; }
-                });
-                var tot = sTit*3 + mPar*2;
-                if(tot > bestScore){ bestScore = tot; bestSez = si; bestPar = pEl; }
-              });
-              if(bestScore === 0){
-                // nessun aggancio: sezione col minor numero di slide (equilibrio)
-                var minU = Infinity;
-                sezioni.forEach(function(sez, si){
-                  if(sez.usate < minU && sez.usate < tetto){ minU = sez.usate; bestSez = si; }
-                });
-                bestPar = null;
-              }
-              if(bestSez < 0){ cont.appendChild(creaFigura(slide,i)); return; }
-              piazzaInSezione(sezioni[bestSez], slide, i, bestPar);
-            });
-          } else {
-            // senza titoli OCR: giro round-robin sulle sezioni, in ordine
-            slides.forEach(function(slide,i){
-              var si = Math.min(sezioni.length-1, Math.floor(i * sezioni.length / slides.length));
-              // se la sezione ideale e' piena, avanti alla prossima con posto
-              var giri = 0;
-              while(sezioni[si].usate >= tetto && giri < sezioni.length){ si=(si+1)%sezioni.length; giri++; }
-              piazzaInSezione(sezioni[si], slide, i, null);
-            });
-          }
+          });
         }
         distribuisci();
 
