@@ -263,10 +263,11 @@
     }
     root.appendChild(palco);
     var fermaCorrente = null;
+    var voci = lista.map(function (e) { return { e: e, T: motoreDi(e) }; }).filter(function (x) { return x.T; });
     function apri(e) {
       if (fermaCorrente) fermaCorrente();
       palco.innerHTML = '';
-      var x = esercizio(e);
+      var x = esercizio(e, voci);
       fermaCorrente = x.ferma;
       palco.appendChild(x.nodo);
       riapriPannello();
@@ -274,9 +275,12 @@
     apri(lista[0]);
   }
 
-  function esercizio(e) {
-    var T = e.tipo === 'reticolo_coordinate' ? RETICOLO : e.tipo === 'densita_popolamento' ? DENSITA
-          : e.da_costruire ? null : BANCA;
+  function motoreDi(e) {
+    return e.tipo === 'reticolo_coordinate' ? RETICOLO : e.tipo === 'densita_popolamento' ? DENSITA
+         : e.da_costruire ? null : BANCA;
+  }
+  function esercizio(e, voci) {
+    var T = motoreDi(e);
     var box = el('div');
     box.appendChild(el('h3', { class: 'esx-titolo', text: e.titolo || 'Esercizio' }));
     box.appendChild(el('p', { class: 'esx-valore', text: (e.punti_esame ? 'All\u2019esame vale ' + e.punti_esame + '. ' : '') +
@@ -287,7 +291,7 @@
     var modi = [
       { k: 'impara', n: '1', t: 'Impara il metodo', s: 'Animazione passo passo', ok: conTutorial },
       { k: 'allena', n: conTutorial ? '2' : '1', t: 'Allenati', s: '15 esercizi sempre diversi', ok: true },
-      { k: 'stampa', n: conTutorial ? '3' : '2', t: 'Stampa la scheda', s: '15 esercizi, soluzioni in fondo', ok: true }
+      { k: 'stampa', n: conTutorial ? '3' : '2', t: 'Stampa la scheda', s: voci.length > 1 ? 'Tutti gli esercizi, con il metodo' : 'Il metodo e 15 esercizi', ok: true }
     ].filter(function (m) { return m.ok; });
     var bar = el('div', { class: 'esx-modi', role: 'group', 'aria-label': 'Che cosa vuoi fare' });
     var bottoni = {};
@@ -305,7 +309,7 @@
       contenuto.innerHTML = '';
       if (k === 'impara') ferma = Tutorial(contenuto, T, e, function () { vai('allena'); });
       else if (k === 'allena') ferma = Serie(contenuto, T, e, function () { vai('stampa'); });
-      else PannelloStampa(contenuto, T, e);
+      else PannelloStampa(contenuto, voci);
       riapriPannello();
     }
     vai(conTutorial && !leggi(chiave(e, 'tutorial')) ? 'impara' : 'allena');
@@ -374,7 +378,7 @@
       var sc = def.scena(p.scena);
       tav.innerHTML = ''; tav.appendChild(sc.nodo);
       var inizio = k; while (inizio > 0 && passi[inizio - 1].scena === p.scena) inizio--;
-      for (var j = inizio; j < k; j++) if (passi[j].fai) passi[j].fai(sc.api, false, t);
+      for (var j = inizio; j < k; j++) if (passi[j].fai && !passi[j].momentaneo) passi[j].fai(sc.api, false, t);
       if (p.fai) p.fai(sc.api, true, t);
       lav.innerHTML = '';
       lav.appendChild(el('p', { class: 'esx-passo-n', text: 'Passo ' + (k + 1) + ' di ' + passi.length }));
@@ -390,8 +394,6 @@
       var indietro = el('button', { type: 'button', class: 'esx-btn sec', text: 'Indietro' });
       indietro.disabled = k === 0;
       indietro.addEventListener('click', function () { mostra(k - 1); });
-      var rivedi = el('button', { type: 'button', class: 'esx-btn sec', text: 'Rivedi l\u2019animazione' });
-      rivedi.addEventListener('click', function () { mostra(k); });
       var avanti = null;
       if (!ultimo) {
         avanti = el('button', { type: 'button', class: 'esx-btn', text: 'Avanti' });
@@ -400,7 +402,7 @@
         avanti = el('button', { type: 'button', class: 'esx-btn', text: opzioni.fine.testo });
         avanti.addEventListener('click', opzioni.fine.azione);
       }
-      lav.appendChild(el('div', { class: 'esx-comandi' }, [indietro, avanti, rivedi]));
+      lav.appendChild(el('div', { class: 'esx-comandi' }, [indietro, avanti]));
       if (!stretto()) lav.appendChild(el('p', { class: 'esx-tasti', text: 'Puoi usare anche le frecce della tastiera.' }));
       if (ultimo && opzioni.allaFine) opzioni.allaFine();
       riapriPannello();
@@ -563,17 +565,18 @@
   /* =================================================================
      STAMPA
      ================================================================= */
-  function PannelloStampa(dove, T, e) {
+  function PannelloStampa(dove, voci) {
     var seme = nuovoSeme();
     var box = el('div', { class: 'esx-stampa' });
     box.appendChild(el('h4', { style: 'font:700 1.15rem var(--font-display);color:var(--ink);margin:0 0 10px', text: 'Scheda da stampare' }));
-    box.appendChild(el('p', { text: '15 esercizi nuovi, impaginati su fogli A4, con lo spazio per le risposte. Le soluzioni sono nell\u2019ultima pagina: puoi correggerti da solo o far esercitare qualcun altro.' }));
+    box.appendChild(el('p', { text: 'Tutti gli esercizi d\u2019esame di questa lezione (' + voci.map(function (x) { return x.e.titolo; }).join(' e ') + '). ' +
+      'Per ognuno: il metodo spiegato passo passo con i disegni, poi 15 esercizi nuovi con lo spazio per le risposte. Le soluzioni sono nelle ultime pagine.' }));
     var numeroScheda = el('p', { class: 'esx-nota' });
     function scriviNumero() { numeroScheda.textContent = 'Scheda n. ' + seme + '. Ristampando la stessa scheda, gli esercizi restano gli stessi.'; }
     scriviNumero();
     box.appendChild(numeroScheda);
     var stampa = el('button', { type: 'button', class: 'esx-btn', text: 'Stampa la scheda' });
-    stampa.addEventListener('click', function () { stampaScheda(T, e, seme); });
+    stampa.addEventListener('click', function () { stampaScheda(voci, seme); });
     var altra = el('button', { type: 'button', class: 'esx-btn sec', text: 'Prepara un\u2019altra scheda' });
     altra.addEventListener('click', function () { seme = nuovoSeme(); scriviNumero(); });
     box.appendChild(el('div', { class: 'esx-comandi' }, [stampa, altra]));
@@ -581,32 +584,75 @@
     dove.appendChild(box);
   }
 
-  function htmlScheda(T, e, seme) {
-    var opz = T.opzioniStampa ? T.opzioniStampa() : {};
-    var varianti = T.serie(seme, N_SERIE, opz, e);
-    var corpo = varianti.map(function (v, i) { return '<section class="es">' + T.stampa(v, i + 1) + '</section>'; }).join('');
-    return '<!doctype html><html lang="it"><head><meta charset="utf-8"><title>' + esc(e.titolo || 'Esercizi') + ' \u2014 scheda ' + seme + '</title>' +
+  // Il tutorial su carta: i passi segnati "stampa", con il disegno fermo al punto giusto.
+  function tutorialStampato(T, e) {
+    if (!T.tutorial) return '';
+    var def = T.tutorial(e), passi = def.passi, out = [];
+    var scelti = passi.map(function (p, k) { return k; }).filter(function (k) { return passi[k].stampa; });
+    if (!scelti.length) scelti = passi.map(function (p, k) { return k; });
+    var t = Orologio();
+    scelti.forEach(function (k, n) {
+      var p = passi[k], fig = '';
+      if (p.stampa !== 'testo') {
+        var sc = def.scena(p.scena, { stampa: true, fs: 15, larghezza: '84mm' });
+        var inizio = k; while (inizio > 0 && passi[inizio - 1].scena === p.scena) inizio--;
+        for (var j = inizio; j <= k; j++) if (passi[j].fai && (j === k || !passi[j].momentaneo)) passi[j].fai(sc.api, false, t);
+        fig = '<div class="fig">' + sc.nodo.outerHTML + '</div>';
+      }
+      var testi = (Array.isArray(p.testo) ? p.testo : [p.testo]).map(function (x) { return '<p>' + esc(x) + '</p>'; }).join('');
+      var extra = p.extra ? p.extra(null) : null;
+      out.push('<div class="tut' + (fig ? '' : ' solo') + '">' + fig + '<div class="txt"><h4>' + (n + 1) + '. ' + esc(p.titolo || '') + '</h4>' + testi +
+        (p.regola ? '<p class="regola">' + esc(p.regola) + '</p>' : '') + (extra ? '<div class="mini">' + extra.outerHTML + '</div>' : '') + '</div></div>');
+    });
+    t.ferma();
+    return out.join('');
+  }
+
+  function htmlScheda(voci, seme) {
+    var parti = voci.map(function (x, i) {
+      var opz = x.T.opzioniStampa ? x.T.opzioniStampa() : {};
+      var varianti = x.T.serie(seme + i * 7919, N_SERIE, opz, x.e);
+      return { x: x, varianti: varianti, n: i + 1 };
+    });
+    var corpo = parti.map(function (pt) {
+      var es = pt.varianti.map(function (v, k) { return '<section class="es">' + pt.x.T.stampa(v, k + 1) + '</section>'; }).join('');
+      var tut = tutorialStampato(pt.x.T, pt.x.e);
+      return '<div class="parte"><h2>' + pt.n + '. ' + esc(pt.x.e.titolo || 'Esercizio') + (pt.x.e.punti_esame ? ' <small>(all\u2019esame vale ' + esc(pt.x.e.punti_esame) + ')</small>' : '') + '</h2>' +
+        (tut ? '<h3 class="sez">Come si fa</h3>' + tut : '') +
+        '<h3 class="sez nuova">Esercizi</h3>' + pt.x.T.istruzioniStampa + es + '</div>';
+    }).join('');
+    var sol = '<div class="sol"><h2>Soluzioni della scheda n. ' + seme + '</h2>' + parti.map(function (pt) {
+      return '<h3>' + pt.n + '. ' + esc(pt.x.e.titolo || '') + '</h3>' + pt.x.T.soluzioni(pt.varianti);
+    }).join('') + '</div>';
+    return '<!doctype html><html lang="it"><head><meta charset="utf-8"><title>Esercizi d\u2019esame \u2014 scheda ' + seme + '</title>' +
       '<style>' +
       '@page{size:A4;margin:13mm}' +
       'body{font:10.5pt/1.45 Georgia,"Times New Roman",serif;color:#1d1a16;margin:0}' +
-      'header{border-bottom:1px solid #999;padding-bottom:6px;margin-bottom:8px}' +
-      'header h1{font-size:15pt;margin:0}header p{margin:3px 0 0;font-size:9.5pt;color:#333}' +
+      'header{border-bottom:1px solid #999;padding-bottom:6px;margin-bottom:10px}' +
+      'header h1{font-size:16pt;margin:0}header p{margin:3px 0 0;font-size:9.5pt;color:#333}' +
+      '.parte{break-before:page;page-break-before:always}.parte:first-of-type{break-before:auto;page-break-before:auto}' +
+      '.parte h2{font-size:15pt;margin:0 0 6px}.parte h2 small{font-size:10pt;font-weight:400;color:#444}' +
+      'h3.sez{font-size:12pt;margin:8px 0 6px;border-bottom:1px solid #ccc;padding-bottom:2px}h3.sez.nuova{break-before:page;page-break-before:always}' +
+      '.tut{display:flex;gap:12px;align-items:flex-start;break-inside:avoid;page-break-inside:avoid;margin:0 0 9px}' +
+      '.tut .fig{flex:none}.tut .fig svg{display:block}.tut .txt{flex:1}.tut.solo .txt{padding-left:0}' +
+      '.tut h4{font-size:11pt;margin:0 0 3px}.tut p{margin:0 0 4px;font-size:10pt}' +
+      '.tut .regola{font-weight:700;background:#f1ead9;padding:4px 7px;border-radius:4px}' +
+      '.tut .mini svg{width:28mm;height:auto}' +
       '.es{break-inside:avoid;page-break-inside:avoid;border:1px solid #bbb;border-radius:6px;padding:7px 10px;margin:0 0 7px}' +
       '.es h3{font-size:10.5pt;margin:0 0 4px}' +
       '.riga{display:flex;gap:12px;align-items:flex-start}.riga svg{display:block;flex:none}' +
       '.risp{font-size:10pt;line-height:2.15}.risp b{font-weight:700}' +
-      '.sol{break-before:page;page-break-before:always}.sol h2{font-size:14pt;margin:0 0 8px}' +
+      '.sol{break-before:page;page-break-before:always}.sol h2{font-size:14pt;margin:0 0 8px}.sol h3{font-size:11.5pt;margin:12px 0 4px}' +
       'table{border-collapse:collapse;width:100%;font-size:9.5pt}td,th{border:1px solid #aaa;padding:4px 6px;text-align:left;vertical-align:top}th{background:#eee}' +
       '</style></head><body>' +
-      '<header><h1>' + esc(e.titolo || 'Esercizi d\u2019esame') + '</h1><p>Una Mano Spensierata, Geografia. Scheda n. ' + seme +
-      '. Nome ________________________ Data ____________</p></header>' + T.istruzioniStampa + corpo +
-      '<section class="sol"><h2>Soluzioni della scheda n. ' + seme + '</h2>' + T.soluzioni(varianti) + '</section>' +
+      '<header><h1>Esercizi d\u2019esame</h1><p>Una Mano Spensierata, Geografia. ' + voci.map(function (x) { return esc(x.e.titolo); }).join(' \u2014 ') +
+      '<br>Scheda n. ' + seme + '. Nome ________________________ Data ____________</p></header>' + corpo + sol +
       '<script>window.onload=function(){setTimeout(function(){window.print()},400)}<\/script></body></html>';
   }
-  function stampaScheda(T, e, seme) {
+  function stampaScheda(voci, seme) {
     var w = window.open('', '_blank');
     if (!w) { alert('Il browser ha bloccato la finestra di stampa: consenti le finestre pop-up per questo sito e riprova.'); return; }
-    w.document.open(); w.document.write(htmlScheda(T, e, seme)); w.document.close();
+    w.document.open(); w.document.write(htmlScheda(voci, seme)); w.document.close();
   }
 
   /* =================================================================
@@ -616,35 +662,88 @@
      da localizzare (in aula Hanoi e Hong Kong). Si risponde in gradi e
      primi; i primi si stimano come sull'orologio.
      ================================================================= */
-  // Città reali, coordinate arrotondate ai 5 primi (la precisione di una lettura a occhio).
+  // Città reali: coordinate di Wikipedia (verificate il 30/09/2026), arrotondate ai 5 primi (la precisione di una lettura a occhio).
+  // I punti che NON sono città reali hanno nomi di città immaginarie, per non confonderli con luoghi veri.
+  var IMMAGINARIE = ['Topolinia', 'Paperopoli', 'Gotham City', 'Metropolis', 'Atlantide', 'Lilliput', 'Utopia', 'El Dorado',
+    'Shangri-La', 'Camelot', 'Macondo', 'Springfield', 'Avalon', 'Smallville', 'Brigadoon', 'Laputa'];
   var CITTA = [
-    ['Milano', 45, 30, 'N', 9, 10, 'E'], ['Torino', 45, 5, 'N', 7, 40, 'E'], ['Venezia', 45, 25, 'N', 12, 20, 'E'],
-    ['Bologna', 44, 30, 'N', 11, 20, 'E'], ['Firenze', 43, 45, 'N', 11, 15, 'E'], ['Ancona', 43, 35, 'N', 13, 30, 'E'],
-    ['Macerata', 43, 20, 'N', 13, 25, 'E'], ['Roma', 41, 55, 'N', 12, 30, 'E'], ['Napoli', 40, 50, 'N', 14, 15, 'E'],
-    ['Bari', 41, 5, 'N', 16, 50, 'E'], ['Palermo', 38, 5, 'N', 13, 20, 'E'], ['Cagliari', 39, 15, 'N', 9, 5, 'E'],
-    ['Parigi', 48, 50, 'N', 2, 20, 'E'], ['Lione', 45, 45, 'N', 4, 50, 'E'], ['Marsiglia', 43, 20, 'N', 5, 20, 'E'],
-    ['Barcellona', 41, 25, 'N', 2, 10, 'E'], ['Ginevra', 46, 10, 'N', 6, 10, 'E'], ['Monaco di Baviera', 48, 10, 'N', 11, 35, 'E'],
-    ['Vienna', 48, 10, 'N', 16, 20, 'E'], ['Budapest', 47, 30, 'N', 19, 0, 'E'], ['Praga', 50, 5, 'N', 14, 25, 'E'],
-    ['Berlino', 52, 30, 'N', 13, 25, 'E'], ['Varsavia', 52, 15, 'N', 21, 0, 'E'], ['Zagabria', 45, 50, 'N', 16, 0, 'E'],
-    ['Lubiana', 46, 5, 'N', 14, 30, 'E'], ['Belgrado', 44, 45, 'N', 20, 25, 'E'], ['Atene', 38, 0, 'N', 23, 45, 'E'],
-    ['Sofia', 42, 40, 'N', 23, 20, 'E'], ['Bucarest', 44, 25, 'N', 26, 5, 'E'], ['Istanbul', 41, 0, 'N', 29, 0, 'E'],
-    ['Copenaghen', 55, 40, 'N', 12, 35, 'E'], ['Oslo', 59, 55, 'N', 10, 45, 'E'], ['Stoccolma', 59, 20, 'N', 18, 5, 'E'],
-    ['Madrid', 40, 25, 'N', 3, 40, 'O'], ['Lisbona', 38, 45, 'N', 9, 10, 'O'],
-    ['Il Cairo', 30, 5, 'N', 31, 15, 'E'], ['Alessandria d\u2019Egitto', 31, 10, 'N', 29, 55, 'E'], ['Gerusalemme', 31, 45, 'N', 35, 15, 'E'],
-    ['Hanoi', 21, 0, 'N', 105, 50, 'E'], ['Hong Kong', 22, 15, 'N', 114, 10, 'E'], ['Haiphong', 20, 50, 'N', 106, 40, 'E'],
-    ['Macao', 22, 10, 'N', 113, 35, 'E'], ['Canton', 23, 10, 'N', 113, 15, 'E'], ['Nanning', 22, 50, 'N', 108, 20, 'E'],
-    ['Tokyo', 35, 40, 'N', 139, 40, 'E'], ['Osaka', 34, 40, 'N', 135, 30, 'E'], ['Kyoto', 35, 0, 'N', 135, 45, 'E'],
-    ['Pechino', 39, 55, 'N', 116, 25, 'E'], ['Seul', 37, 35, 'N', 127, 0, 'E'], ['Shanghai', 31, 15, 'N', 121, 30, 'E'],
-    ['Bangkok', 13, 45, 'N', 100, 30, 'E'], ['Mumbai', 19, 5, 'N', 72, 55, 'E'], ['Nuova Delhi', 28, 35, 'N', 77, 10, 'E'],
-    ['New York', 40, 45, 'N', 74, 0, 'O'], ['Washington', 38, 55, 'N', 77, 0, 'O'], ['Filadelfia', 39, 55, 'N', 75, 10, 'O'],
-    ['Boston', 42, 20, 'N', 71, 5, 'O'], ['Toronto', 43, 40, 'N', 79, 25, 'O'], ['Montr\u00e9al', 45, 30, 'N', 73, 35, 'O'],
-    ['Chicago', 41, 55, 'N', 87, 40, 'O'], ['Los Angeles', 34, 5, 'N', 118, 15, 'O'], ['San Francisco', 37, 45, 'N', 122, 25, 'O'],
+    ['Milano', 45, 30, 'N', 9, 10, 'E'],
+    ['Torino', 45, 5, 'N', 7, 40, 'E'],
+    ['Venezia', 45, 25, 'N', 12, 20, 'E'],
+    ['Bologna', 44, 30, 'N', 11, 20, 'E'],
+    ['Firenze', 43, 45, 'N', 11, 15, 'E'],
+    ['Ancona', 43, 35, 'N', 13, 30, 'E'],
+    ['Macerata', 43, 20, 'N', 13, 25, 'E'],
+    ['Roma', 41, 55, 'N', 12, 30, 'E'],
+    ['Napoli', 40, 50, 'N', 14, 15, 'E'],
+    ['Bari', 41, 10, 'N', 16, 50, 'E'],
+    ['Palermo', 38, 5, 'N', 13, 20, 'E'],
+    ['Cagliari', 39, 15, 'N', 9, 5, 'E'],
+    ['Parigi', 48, 50, 'N', 2, 20, 'E'],
+    ['Lione', 45, 45, 'N', 4, 50, 'E'],
+    ['Marsiglia', 43, 20, 'N', 5, 20, 'E'],
+    ['Barcellona', 41, 25, 'N', 2, 10, 'E'],
+    ['Ginevra', 46, 10, 'N', 6, 10, 'E'],
+    ['Monaco di Baviera', 48, 10, 'N', 11, 35, 'E'],
+    ['Vienna', 48, 10, 'N', 16, 20, 'E'],
+    ['Budapest', 47, 30, 'N', 19, 5, 'E'],
+    ['Praga', 50, 5, 'N', 14, 25, 'E'],
+    ['Berlino', 52, 30, 'N', 13, 25, 'E'],
+    ['Varsavia', 52, 15, 'N', 21, 0, 'E'],
+    ['Zagabria', 45, 50, 'N', 16, 0, 'E'],
+    ['Lubiana', 46, 5, 'N', 14, 30, 'E'],
+    ['Belgrado', 44, 50, 'N', 20, 25, 'E'],
+    ['Atene', 38, 0, 'N', 23, 45, 'E'],
+    ['Sofia', 42, 40, 'N', 23, 20, 'E'],
+    ['Bucarest', 44, 25, 'N', 26, 5, 'E'],
+    ['Istanbul', 41, 0, 'N', 28, 55, 'E'],
+    ['Copenaghen', 55, 40, 'N', 12, 35, 'E'],
+    ['Oslo', 59, 55, 'N', 10, 45, 'E'],
+    ['Stoccolma', 59, 20, 'N', 18, 5, 'E'],
+    ['Madrid', 40, 25, 'N', 3, 40, 'O'],
+    ['Lisbona', 38, 45, 'N', 9, 10, 'O'],
+    ['Il Cairo', 30, 5, 'N', 31, 15, 'E'],
+    ['Alessandria d\u2019Egitto', 31, 10, 'N', 29, 55, 'E'],
+    ['Gerusalemme', 31, 45, 'N', 35, 15, 'E'],
+    ['Hanoi', 21, 0, 'N', 105, 50, 'E'],
+    ['Hong Kong', 22, 20, 'N', 114, 10, 'E'],
+    ['Haiphong', 20, 50, 'N', 106, 40, 'E'],
+    ['Macao', 22, 10, 'N', 113, 30, 'E'],
+    ['Canton', 23, 10, 'N', 113, 15, 'E'],
+    ['Nanning', 22, 50, 'N', 108, 20, 'E'],
+    ['Tokyo', 35, 40, 'N', 139, 40, 'E'],
+    ['Osaka', 34, 40, 'N', 135, 30, 'E'],
+    ['Kyoto', 35, 0, 'N', 135, 45, 'E'],
+    ['Pechino', 39, 55, 'N', 116, 25, 'E'],
+    ['Seul', 37, 35, 'N', 127, 0, 'E'],
+    ['Shanghai', 31, 15, 'N', 121, 30, 'E'],
+    ['Bangkok', 13, 45, 'N', 100, 30, 'E'],
+    ['Mumbai', 19, 5, 'N', 72, 55, 'E'],
+    ['Nuova Delhi', 28, 35, 'N', 77, 15, 'E'],
+    ['New York', 40, 45, 'N', 74, 0, 'O'],
+    ['Washington', 38, 55, 'N', 77, 0, 'O'],
+    ['Filadelfia', 39, 55, 'N', 75, 10, 'O'],
+    ['Boston', 42, 20, 'N', 71, 5, 'O'],
+    ['Toronto', 43, 40, 'N', 79, 25, 'O'],
+    ['Montr\u00e9al', 45, 30, 'N', 73, 35, 'O'],
+    ['Chicago', 41, 55, 'N', 87, 40, 'O'],
+    ['Los Angeles', 34, 5, 'N', 118, 15, 'O'],
+    ['San Francisco', 37, 45, 'N', 122, 25, 'O'],
     ['Citt\u00e0 del Messico', 19, 25, 'N', 99, 10, 'O'],
-    ['Buenos Aires', 34, 35, 'S', 58, 25, 'O'], ['Montevideo', 34, 55, 'S', 56, 10, 'O'], ['Rio de Janeiro', 22, 55, 'S', 43, 10, 'O'],
-    ['San Paolo', 23, 35, 'S', 46, 40, 'O'], ['Santiago del Cile', 33, 25, 'S', 70, 40, 'O'], ['Lima', 12, 5, 'S', 77, 5, 'O'],
-    ['Citt\u00e0 del Capo', 33, 55, 'S', 18, 25, 'E'], ['Johannesburg', 26, 10, 'S', 28, 5, 'E'], ['Durban', 29, 50, 'S', 31, 0, 'E'],
-    ['Sydney', 33, 50, 'S', 151, 10, 'E'], ['Canberra', 35, 15, 'S', 149, 10, 'E'], ['Melbourne', 37, 50, 'S', 145, 0, 'E'],
-    ['Brisbane', 27, 30, 'S', 153, 0, 'E'], ['Perth', 31, 55, 'S', 115, 50, 'E']
+    ['Buenos Aires', 34, 35, 'S', 58, 25, 'O'],
+    ['Montevideo', 34, 55, 'S', 56, 10, 'O'],
+    ['Rio de Janeiro', 22, 55, 'S', 43, 10, 'O'],
+    ['San Paolo', 23, 35, 'S', 46, 40, 'O'],
+    ['Santiago del Cile', 33, 25, 'S', 70, 40, 'O'],
+    ['Lima', 12, 5, 'S', 77, 0, 'O'],
+    ['Citt\u00e0 del Capo', 33, 55, 'S', 18, 25, 'E'],
+    ['Johannesburg', 26, 10, 'S', 28, 5, 'E'],
+    ['Durban', 29, 55, 'S', 31, 5, 'E'],
+    ['Sydney', 33, 50, 'S', 151, 15, 'E'],
+    ['Canberra', 35, 20, 'S', 149, 10, 'E'],
+    ['Melbourne', 37, 50, 'S', 145, 0, 'E'],
+    ['Brisbane', 27, 30, 'S', 153, 0, 'E'],
+    ['Perth', 32, 0, 'S', 115, 55, 'E']
   ];
   var FRAZ = { 0: 'proprio sulla linea', 5: 'appena oltre la linea, a un dodicesimo', 10: 'a un sesto', 15: 'a un quarto',
     20: 'a un terzo', 25: 'poco prima della met\u00e0', 30: 'a met\u00e0', 35: 'poco oltre la met\u00e0',
@@ -680,11 +779,11 @@
   }
 
   // Serie graduata: i primi 5 a nord-est con due etichette per asse; poi emisferi sud/ovest,
-  // una sola etichetta, i primi "00" (es. 3 e 8) e l'etichetta stampata male (es. 12 e 15).
+  // una sola etichetta, e i primi "00" (esercizi 3 e 8).
   function varianteReticolo(r, i, cols, rows, usate) {
     var livello = i < 5 ? 0 : i < 10 ? 1 : 2;
     var zero = i === 2 ? 'lat' : i === 7 ? 'lon' : null;
-    var trappola = i === 11 || i === 14;
+    var trappola = false;   // l'errore di stampa visto in aula non fa parte dell'esercizio d'esame
     var conCitta = (i % 3) !== 1 && !zero;
     var emisferi = livello === 0 ? [['N', 'E']] : livello === 1 ? [['S', 'E'], ['N', 'O']] : [['S', 'O'], ['S', 'E'], ['N', 'O']];
     var em = rpick(r, emisferi);
@@ -708,7 +807,7 @@
         v.a0 = rint(r, 3, 60); v.b0 = rint(r, 3, 168);
         var p1 = puntoCasuale(r, v, zero, []);
         var p2 = p1 && puntoCasuale(r, v, null, [p1]);
-        if (p1 && p2) { p1.nome = 'A'; p2.nome = 'B'; v.punti = [p1, p2]; }
+        if (p1 && p2) { var due = rmescola(r, IMMAGINARIE); p1.nome = due[0]; p2.nome = due[1]; v.punti = [p1, p2]; }
       }
     }
     var lineeLat = [], lineeLon = [];
@@ -984,8 +1083,7 @@
       grado: 'Sbagliare il conto dei gradi partendo dall\u2019etichetta',
       primiVuoti: 'Dimenticare i primi (anche gli 00\u2032 vanno scritti)',
       primiOltre: 'Scrivere primi oltre 59',
-      stima: 'Stimare male la frazione del riquadro',
-      trappola: 'Non accorgersi dell\u2019etichetta stampata male'
+      stima: 'Stimare male la frazione del riquadro'
     },
     opzioni: function () { return stretto() ? { cols: 6, rows: 5 } : { cols: 8, rows: 6 }; },
     opzioniStampa: function () { return { cols: 8, rows: 6 }; },
@@ -1002,11 +1100,8 @@
         trovataMsg.textContent = 'Esatto: quell\u2019etichetta rompeva la sequenza di un grado per linea. Il valore giusto \u00e8 ' + v.trappola.vera + '\u00b0.';
         trovataMsg.style.color = BLU;
       } });
-      foglio.appendChild(el('h4', { text: v.citta ? 'Scrivi le coordinate dei due luoghi' : 'Scrivi le coordinate dei punti A e B' }));
-      if (v.trappola) {
-        foglio.appendChild(el('p', { class: 'esx-nota', style: 'margin:0 0 6px', text: 'Occhio: un\u2019etichetta \u00e8 stampata male, come quella del libro vista in aula. Trovala e toccala sul reticolo.' }));
-        foglio.appendChild(trovataMsg);
-      }
+      foglio.appendChild(el('h4', { text: 'Scrivi le coordinate dei due luoghi' }));
+      foglio.appendChild(el('p', { class: 'esx-nota', style: 'margin:-6px 0 12px', text: v.citta ? 'Citt\u00e0 reali, con le loro coordinate vere arrotondate ai 5 primi.' : 'Citt\u00e0 immaginarie: i punti non corrispondono a luoghi reali.' }));
       ordinaLuoghi(v).forEach(function (p) {
         var blocco = el('div', { class: 'esx-luogo' }), c = {};
         blocco.appendChild(el('h5', { text: p.nome }));
@@ -1078,7 +1173,7 @@
       });
       if (v.trappola && !r.trappola) { tuttoOk = false; err('trappola', 'L\u2019etichetta ' + v.trappola.falsa + '\u00b0 era sbagliata: nella sequenza doveva esserci ' + v.trappola.vera + '\u00b0.'); }
       return { preso: tuttoOk, errori: errori, campi: campi,
-        nota: (v.citta ? 'Sono le coordinate reali dei due luoghi, arrotondate ai 5 primi. ' : '') + 'La correzione accetta 5\u2032 in pi\u00f9 o in meno: \u00e8 una stima a occhio.' };
+        nota: (v.citta ? 'Sono le coordinate reali dei due luoghi, arrotondate ai 5 primi. ' : 'Le citt\u00e0 sono immaginarie: conta solo leggere bene il reticolo. ') + 'La correzione accetta 5\u2032 in pi\u00f9 o in meno: \u00e8 una stima a occhio.' };
     },
     procedimento: function (v0) {
       var v = JSON.parse(JSON.stringify(v0));
@@ -1103,46 +1198,43 @@
       });
       return { scena: scena, passi: passi };
     },
-    // Il tutorial: l'esempio svolto in aula, Hanoi e Hong Kong, con l'errore di stampa «150» al posto di 105.
+    // Il tutorial: l'esempio svolto in aula, Hanoi e Hong Kong.
     tutorial: function (e) {
       var aula = { cols: 11, rows: 6, a0: 18, b0: 104, ns: 'N', eo: 'E', labLat: [20], labLon: [105], citta: true, trappola: null,
         punti: [{ nome: 'Hanoi', latG: 21, latM: 0, lonG: 105, lonM: 50 }, { nome: 'Hong Kong', latG: 22, latM: 15, lonG: 114, lonM: 10 }] };
-      var libro = JSON.parse(JSON.stringify(aula)); libro.labLon = []; libro.trappola = { asse: 'lon', vera: 105, falsa: 150, trovata: false };
       var sud = { cols: 6, rows: 4, a0: 32, b0: 55, ns: 'S', eo: 'O', labLat: [34], labLon: [57], citta: true, trappola: null,
         punti: [{ nome: 'Buenos Aires', latG: 34, latM: 35, lonG: 58, lonM: 25 }, { nome: 'Montevideo', latG: 34, latM: 55, lonG: 56, lonM: 10 }] };
-      var scene = { aula: aula, libro: libro, sud: sud };
-      function scena(nome) { return disegnaReticolo(JSON.parse(JSON.stringify(scene[nome])), {}); }
+      var scene = { aula: aula, sud: sud };
+      function scena(nome, opz) { return disegnaReticolo(JSON.parse(JSON.stringify(scene[nome])), opz || {}); }
       function ha(a) { return a.v.punti[0]; }
       function hk(a) { return a.v.punti[1]; }
       var passi = [
-        { scena: 'aula', titolo: 'L\u2019esercizio numero uno della prova', testo: ['All\u2019esame trovi un reticolo come questo: linee orizzontali e verticali, a un grado l\u2019una dall\u2019altra, e dei luoghi da localizzare. \u00c8 il reticolo visto in aula, con Hanoi e Hong Kong.', 'Cambieranno i numeri, non il metodo.'],
+        { scena: 'aula', stampa: 'testo', momentaneo: true, titolo: 'L\u2019esercizio numero uno della prova', testo: ['All\u2019esame trovi un reticolo come questo: linee orizzontali e verticali, a un grado l\u2019una dall\u2019altra, e dei luoghi da localizzare. \u00c8 il reticolo visto in aula, con Hanoi e Hong Kong nei punti in cui li ha letti il docente.', 'Cambieranno i numeri, non il metodo.'],
           fai: function (a, an, t) { a.evidenziaLuoghi(an, t); } },
-        { scena: 'aula', titolo: 'I paralleli danno la latitudine', testo: 'Le linee orizzontali sono i paralleli. Dicono quanto un luogo \u00e8 a nord o a sud dell\u2019equatore: \u00e8 la latitudine.',
+        { scena: 'aula', stampa: 'testo', momentaneo: true, titolo: 'I paralleli danno la latitudine', testo: 'Le linee orizzontali sono i paralleli. Dicono quanto un luogo \u00e8 a nord o a sud dell\u2019equatore: \u00e8 la latitudine.',
           fai: function (a, an, t) { a.linee('paralleli', an, t); } },
-        { scena: 'aula', titolo: 'I meridiani danno la longitudine', testo: 'Le linee verticali sono i meridiani. Dicono quanto un luogo \u00e8 a est o a ovest del meridiano di Greenwich: \u00e8 la longitudine.',
+        { scena: 'aula', stampa: 'testo', momentaneo: true, titolo: 'I meridiani danno la longitudine', testo: 'Le linee verticali sono i meridiani. Dicono quanto un luogo \u00e8 a est o a ovest del meridiano di Greenwich: \u00e8 la longitudine.',
           fai: function (a, an, t) { a.linee('meridiani', an, t); } },
-        { scena: 'aula', titolo: 'Che cosa vuol dire \u00ab20\u00b0 N\u00bb', testo: ['Non vuol dire che il nord \u00e8 a sinistra. Il nord \u00e8 sempre in alto, e il foglio non si gira.', 'Vuol dire che ogni punto di quella linea sta 20 gradi a nord dell\u2019equatore. Allo stesso modo, ogni punto del meridiano \u00ab105\u00b0 E\u00bb sta 105 gradi a est di Greenwich.'],
+        { scena: 'aula', stampa: true, momentaneo: true, titolo: 'Che cosa vuol dire \u00ab20\u00b0 N\u00bb', testo: ['Non vuol dire che il nord \u00e8 a sinistra. Il nord \u00e8 sempre in alto, e il foglio non si gira.', 'Vuol dire che ogni punto di quella linea sta 20 gradi a nord dell\u2019equatore. Allo stesso modo, ogni punto del meridiano \u00ab105\u00b0 E\u00bb sta 105 gradi a est di Greenwich.'],
           regola: 'L\u2019etichetta \u00e8 il valore di tutta la linea, non una direzione del foglio.', fai: function (a, an, t) { a.etichetta('lat', an, t); a.etichetta('lon', an, t); } },
-        { scena: 'libro', titolo: 'Occhio agli errori di stampa', testo: ['Sul libro visto in aula quel meridiano era stampato \u00ab150\u00b0\u00bb. Ma lo schema \u00e8 di un grado per linea: l\u00ec non pu\u00f2 esserci 150. Le cifre sono state invertite: \u00e8 105.', 'Le misure devono essere precise: controlla sempre che la sequenza torni.'],
-          fai: function (a, an, t) { a.trappola(an, t); } },
-        { scena: 'aula', titolo: 'Primo passo: scrivi tutti i valori', testo: ['Il trucco del docente: prima di tutto scrivi il valore di ogni linea, partendo dalle etichette.', 'Siamo a nord: salendo i numeri crescono, 21, 22, 23, 24; scendendo 19, 18. Siamo a est: verso destra crescono, 106, 107 e via di seguito.'],
+        { scena: 'aula', stampa: true, titolo: 'Primo passo: scrivi tutti i valori', testo: ['Il trucco del docente: prima di tutto scrivi il valore di ogni linea, partendo dalle etichette.', 'Siamo a nord: salendo i numeri crescono, 21, 22, 23, 24; scendendo 19, 18. Siamo a est: verso destra crescono, 106, 107 e via di seguito.'],
           regola: 'Scrivi i valori di tutte le linee: cos\u00ec non sbagli il verso in cui crescono.', fai: function (a, an, t) { a.valori('lat', an, t); a.valori('lon', an, t); } },
-        { scena: 'aula', titolo: 'Hanoi: latitudine', testo: ['Hanoi sta proprio sul parallelo dei 21\u00b0. Latitudine: 21\u00b000\u2032 N.', 'Gli 00 si scrivono sempre: senza, indichi un\u2019area, come a battaglia navale, e non un punto.'],
+        { scena: 'aula', stampa: 'testo', titolo: 'Hanoi: latitudine', testo: ['Hanoi sta proprio sul parallelo dei 21\u00b0. Latitudine: 21\u00b000\u2032 N.', 'Gli 00 si scrivono sempre: senza, indichi un\u2019area, come a battaglia navale, e non un punto.'],
           regola: 'Gradi e primi, sempre: 21\u00b000\u2032.', extra: function (t) { return quadrante(0, t); }, fai: function (a, an, t) { a.fascia(ha(a), 'lat', an, t); } },
-        { scena: 'aula', titolo: 'Hanoi: longitudine', testo: ['Hanoi sta tra i meridiani 105\u00b0 e 106\u00b0: si parte dalla linea con il valore pi\u00f9 basso, 105\u00b0.', 'Un grado sono 60 primi, come un\u2019ora sono 60 minuti. Dividiamo il riquadro in sesti, 10 primi ciascuno: Hanoi \u00e8 a cinque sesti, cio\u00e8 50\u2032. Longitudine: 105\u00b050\u2032 E.'],
+        { scena: 'aula', stampa: true, titolo: 'Hanoi: longitudine', testo: ['Hanoi sta tra i meridiani 105\u00b0 e 106\u00b0: si parte dalla linea con il valore pi\u00f9 basso, 105\u00b0.', 'Un grado sono 60 primi, come un\u2019ora sono 60 minuti. Dividiamo il riquadro in sesti, 10 primi ciascuno: Hanoi \u00e8 a cinque sesti, cio\u00e8 50\u2032. Longitudine: 105\u00b050\u2032 E.'],
           extra: function (t) { return quadrante(50, t); }, fai: function (a, an, t) { a.fascia(ha(a), 'lon', an, t); a.dividi(ha(a), 'lon', 6, an, t); a.tratto(ha(a), 'lon', an, t); } },
-        { scena: 'aula', titolo: 'Hong Kong: latitudine', testo: ['Hong Kong sta tra i paralleli 22\u00b0 e 23\u00b0: si parte da 22\u00b0.', 'Dividiamo il riquadro in quarti, come i quarti d\u2019ora: 15, 30, 45. Hong Kong \u00e8 a un quarto sopra la linea: 22\u00b015\u2032 N.'],
+        { scena: 'aula', stampa: true, titolo: 'Hong Kong: latitudine', testo: ['Hong Kong sta tra i paralleli 22\u00b0 e 23\u00b0: si parte da 22\u00b0.', 'Dividiamo il riquadro in quarti, come i quarti d\u2019ora: 15, 30, 45. Hong Kong \u00e8 a un quarto sopra la linea: 22\u00b015\u2032 N.'],
           extra: function (t) { return quadrante(15, t); }, regola: 'Met\u00e0 = 30\u2032, un quarto = 15\u2032, tre quarti = 45\u2032, un terzo = 20\u2032, due terzi = 40\u2032.',
           fai: function (a, an, t) { a.fascia(hk(a), 'lat', an, t); a.dividi(hk(a), 'lat', 4, an, t); a.tratto(hk(a), 'lat', an, t); } },
-        { scena: 'aula', titolo: 'Hong Kong: longitudine', testo: 'Tra i meridiani 114\u00b0 e 115\u00b0, poco dopo la linea del 114\u00b0: un sesto del riquadro, cio\u00e8 10\u2032. Longitudine: 114\u00b010\u2032 E.',
+        { scena: 'aula', stampa: 'testo', titolo: 'Hong Kong: longitudine', testo: 'Tra i meridiani 114\u00b0 e 115\u00b0, poco dopo la linea del 114\u00b0: un sesto del riquadro, cio\u00e8 10\u2032. Longitudine: 114\u00b010\u2032 E.',
           extra: function (t) { return quadrante(10, t); }, fai: function (a, an, t) { a.fascia(hk(a), 'lon', an, t); a.dividi(hk(a), 'lon', 6, an, t); a.tratto(hk(a), 'lon', an, t); } },
-        { scena: 'aula', titolo: 'Le risposte', testo: ['Hanoi: 21\u00b000\u2032 N, 105\u00b050\u2032 E.', 'Hong Kong: 22\u00b015\u2032 N, 114\u00b010\u2032 E.', 'Il cerchietto \u00b0 indica i gradi, l\u2019apice \u2032 i primi. Ci si ferma ai primi.'],
+        { scena: 'aula', stampa: true, titolo: 'Le risposte', testo: ['Hanoi: 21\u00b000\u2032 N, 105\u00b050\u2032 E.', 'Hong Kong: 22\u00b015\u2032 N, 114\u00b010\u2032 E.', 'Il cerchietto \u00b0 indica i gradi, l\u2019apice \u2032 i primi. Ci si ferma ai primi.'],
           fai: function (a, an, t) { a.cartellino(ha(a), an, t); a.cartellino(hk(a), an, t); } },
-        { scena: 'sud', titolo: 'E se siamo a sud o a ovest?', testo: ['Stesso metodo, ma i numeri crescono nell\u2019altro verso: a sud scendendo, a ovest verso sinistra.', 'Per questo si scrivono prima tutti i valori. Il grado resta quello della linea con il valore pi\u00f9 basso.'],
+        { scena: 'sud', stampa: 'testo', titolo: 'E se siamo a sud o a ovest?', testo: ['Stesso metodo, ma i numeri crescono nell\u2019altro verso: a sud scendendo, a ovest verso sinistra.', 'Per questo si scrivono prima tutti i valori. Il grado resta quello della linea con il valore pi\u00f9 basso.'],
           fai: function (a, an, t) { a.valori('lat', an, t); a.valori('lon', an, t); } },
-        { scena: 'sud', titolo: 'Buenos Aires', testo: ['Tra 34\u00b0 e 35\u00b0 S: si parte da 34\u00b0, e scendendo il luogo \u00e8 poco oltre la met\u00e0, 35\u2032.', 'Tra 58\u00b0 e 59\u00b0 O: si parte da 58\u00b0, e verso sinistra \u00e8 poco prima della met\u00e0, 25\u2032.', 'Risposta: 34\u00b035\u2032 S, 58\u00b025\u2032 O.'],
+        { scena: 'sud', stampa: true, titolo: 'Buenos Aires', testo: ['Tra 34\u00b0 e 35\u00b0 S: si parte da 34\u00b0, e scendendo il luogo \u00e8 poco oltre la met\u00e0, 35\u2032.', 'Tra 58\u00b0 e 59\u00b0 O: si parte da 58\u00b0, e verso sinistra \u00e8 poco prima della met\u00e0, 25\u2032.', 'Risposta: 34\u00b035\u2032 S, 58\u00b025\u2032 O.'],
           fai: function (a, an, t) { var p = a.v.punti[0]; a.fascia(p, 'lat', an, t); a.tratto(p, 'lat', an, t); a.fascia(p, 'lon', an, t); a.tratto(p, 'lon', an, t); a.cartellino(p, an, t); } },
-        { scena: 'aula', titolo: 'Ricapitolando', testo: ['1. Scrivi i valori di tutte le linee. 2. Per ogni luogo prendi la linea con il valore pi\u00f9 basso. 3. Stima i primi come sull\u2019orologio. 4. Scrivi gradi, primi e direzione: N o S, E o O.', 'Ora prova tu: 15 reticoli sempre diversi.'],
+        { scena: 'aula', stampa: 'testo', titolo: 'Ricapitolando', testo: ['1. Scrivi i valori di tutte le linee. 2. Per ogni luogo prendi la linea con il valore pi\u00f9 basso. 3. Stima i primi come sull\u2019orologio. 4. Scrivi gradi, primi e direzione: N o S, E o O.', 'Ora prova tu: 15 reticoli sempre diversi.'],
           dopo: function () { return docente(e); }, fai: function (a, an, t) { a.soluzione(false, t); } }
       ];
       return { scena: scena, passi: passi };
@@ -1153,7 +1245,7 @@
       var risp = ordinaLuoghi(v).map(function (p) {
         return '<div><b>' + esc(p.nome) + '</b><br>Lat. _____\u00b0 _____\u2032 ____<br>Long. _____\u00b0 _____\u2032 ____</div>';
       }).join('<div style="height:8px"></div>');
-      return '<h3>' + n + '.' + (v.trappola ? ' Un\u2019etichetta \u00e8 stampata male: correggila.' : '') + '</h3><div class="riga">' + d.nodo.outerHTML + '<div class="risp">' + risp + '</div></div>';
+      return '<h3>' + n + '.</h3><div class="riga">' + d.nodo.outerHTML + '<div class="risp">' + risp + '</div></div>';
     },
     soluzioni: function (vs) {
       return '<table><tr><th>N.</th><th>Primo luogo</th><th>Secondo luogo</th><th>Nota</th></tr>' + vs.map(function (v, i) {
@@ -1462,27 +1554,27 @@
       var meta = JSON.parse(JSON.stringify(aula)); meta.meta = true; meta.pozzo = false; meta.centro = [.3, .3];
       meta.pAccentrata = [[.2, .2], [.32, .15], [.14, .34], [.28, .3], [.44, .24], [.2, .47], [.36, .42], [.52, .14], [.12, .62]];
       var scene = { aula: aula, due: due, meta: meta };
-      function scena(nome) { return disegnaDensita(scene[nome], {}); }
+      function scena(nome, opz) { return disegnaDensita(scene[nome], opz || {}); }
       var passi = [
-        { scena: 'aula', titolo: 'Il secondo esercizio della prova', testo: ['Due quadrati. Ogni pallino \u00e8 un abitante. Sotto c\u2019\u00e8 il lato: qui 1 km, come in aula.', 'Si calcolano area e densit\u00e0, poi si guarda come sono distribuiti gli abitanti, e perch\u00e9.'],
+        { scena: 'aula', stampa: 'testo', momentaneo: true, titolo: 'Il secondo esercizio della prova', testo: ['Due quadrati. Ogni pallino \u00e8 un abitante. Sotto c\u2019\u00e8 il lato: qui 1 km, come in aula.', 'Si calcolano area e densit\u00e0, poi si guarda come sono distribuiti gli abitanti, e perch\u00e9.'],
           fai: function (a, an, t) { a.lati(an, t); } },
-        { scena: 'aula', titolo: 'Conta gli abitanti', testo: 'In A ci sono 9 pallini: 9 abitanti.', fai: function (a, an, t) { a.conta('A', an, t); } },
-        { scena: 'aula', titolo: 'E in B?', testo: 'Anche in B: 9 abitanti.', fai: function (a, an, t) { a.conta('B', an, t); } },
-        { scena: 'due', titolo: 'L\u2019area: lato \u00d7 lato', testo: ['Con il lato di 1 km l\u2019area \u00e8 1 \u00d7 1 = 1 km\u00b2. Se il lato \u00e8 2 km, l\u2019area \u00e8 2 \u00d7 2 = 4 km\u00b2: quattro quadratini da 1 km\u00b2.', 'Guarda: si contano proprio i quadratini.'],
+        { scena: 'aula', stampa: 'testo', titolo: 'Conta gli abitanti', testo: 'In A ci sono 9 pallini: 9 abitanti.', fai: function (a, an, t) { a.conta('A', an, t); } },
+        { scena: 'aula', stampa: true, titolo: 'E in B?', testo: 'Anche in B: 9 abitanti.', fai: function (a, an, t) { a.conta('B', an, t); } },
+        { scena: 'due', stampa: 'testo', titolo: 'L\u2019area: lato \u00d7 lato', testo: ['Con il lato di 1 km l\u2019area \u00e8 1 \u00d7 1 = 1 km\u00b2. Se il lato \u00e8 2 km, l\u2019area \u00e8 2 \u00d7 2 = 4 km\u00b2: quattro quadratini da 1 km\u00b2.', 'Guarda: si contano proprio i quadratini.'],
           regola: 'Area del quadrato = lato \u00d7 lato.', fai: function (a, an, t) { a.celle('A', an, t); } },
-        { scena: 'due', titolo: 'L\u2019errore di ogni anno', testo: ['2 + 2 + 2 + 2 = 8 non \u00e8 l\u2019area: \u00e8 il perimetro, la lunghezza del bordo.', 'Il docente lo vede tutti gli anni. L\u2019area del quadrato di lato 2 \u00e8 4 km\u00b2.'],
+        { scena: 'due', stampa: true, titolo: 'L\u2019errore di ogni anno', testo: ['2 + 2 + 2 + 2 = 8 non \u00e8 l\u2019area: \u00e8 il perimetro, la lunghezza del bordo.', 'Il docente lo vede tutti gli anni. L\u2019area del quadrato di lato 2 \u00e8 4 km\u00b2.'],
           fai: function (a, an, t) { a.perimetro('A', an, t); } },
-        { scena: 'aula', titolo: 'La densit\u00e0', testo: ['Densit\u00e0 = abitanti \u00f7 area. Gli abitanti sono il soggetto e vanno sopra, al numeratore: vale per tutti i tassi e gli indici.', 'In A: 9 \u00f7 1 = 9 abitanti per km\u00b2.'],
+        { scena: 'aula', stampa: 'testo', titolo: 'La densit\u00e0', testo: ['Densit\u00e0 = abitanti \u00f7 area. Gli abitanti sono il soggetto e vanno sopra, al numeratore: vale per tutti i tassi e gli indici.', 'In A: 9 \u00f7 1 = 9 abitanti per km\u00b2.'],
           regola: 'Il soggetto va al numeratore.', extra: function () { return formula('9', '1', '9 ab/km\u00b2'); }, fai: function (a, an, t) { a.conta('A', false, t); a.conta('B', false, t); a.densita('A', an, t); } },
-        { scena: 'aula', titolo: '\u00abCome uguale?\u00bb', testo: ['In B: 9 \u00f7 1 = 9 ab/km\u00b2. La stessa densit\u00e0.', 'Eppure i due quadrati sono diversissimi: la densit\u00e0 media, da sola, non dice come vive la gente.'],
+        { scena: 'aula', stampa: true, titolo: '\u00abCome uguale?\u00bb', testo: ['In B: 9 \u00f7 1 = 9 ab/km\u00b2. La stessa densit\u00e0.', 'Eppure i due quadrati sono diversissimi: la densit\u00e0 media, da sola, non dice come vive la gente.'],
           fai: function (a, an, t) { a.densita('B', an, t); } },
-        { scena: 'aula', titolo: 'Sparsa e accentrata', testo: ['In A le case sono su tutto il territorio: distribuzione sparsa, come le case sparse della campagna marchigiana.', 'In B sono raccolte in una parte: distribuzione accentrata.'],
+        { scena: 'aula', stampa: true, titolo: 'Sparsa e accentrata', testo: ['In A le case sono su tutto il territorio: distribuzione sparsa, come le case sparse della campagna marchigiana.', 'In B sono raccolte in una parte: distribuzione accentrata.'],
           fai: function (a, an, t) { a.distribuzione(an, t); } },
-        { scena: 'aula', titolo: 'Il perch\u00e9', testo: ['\u00abNon mi dite casuale\u00bb: in geografia niente lo \u00e8.', 'Si vive sparsi se acqua, terra fertile e strade ci sono ovunque e se ci si sente sicuri. Ci si raccoglie se l\u2019acqua c\u2019\u00e8 solo nel pozzo (il cerchio blu) o se serve difendersi dentro le mura.'],
+        { scena: 'aula', stampa: 'testo', titolo: 'Il perch\u00e9', testo: ['\u00abNon mi dite casuale\u00bb: in geografia niente lo \u00e8.', 'Si vive sparsi se acqua, terra fertile e strade ci sono ovunque e se ci si sente sicuri. Ci si raccoglie se l\u2019acqua c\u2019\u00e8 solo nel pozzo (il cerchio blu) o se serve difendersi dentro le mura.'],
           regola: 'Acqua, terra, strade, sicurezza.' },
-        { scena: 'meta', titolo: 'La parte abitata', testo: ['Qui oltre la diagonale di B non abita nessuno. I 9 abitanti vivono su mezzo km\u00b2.', '9 \u00f7 0,5 = 18 abitanti per km\u00b2: dove la gente vive davvero, vive pi\u00f9 fitta della media.'],
+        { scena: 'meta', stampa: true, titolo: 'La parte abitata', testo: ['Qui oltre la diagonale di B non abita nessuno. I 9 abitanti vivono su mezzo km\u00b2.', '9 \u00f7 0,5 = 18 abitanti per km\u00b2: dove la gente vive davvero, vive pi\u00f9 fitta della media.'],
           extra: function () { return formula('9', '0,5', '18 ab/km\u00b2'); }, fai: function (a, an, t) { a.meta(an, t); } },
-        { scena: 'aula', titolo: 'Ricapitolando', testo: ['1. Conta gli abitanti. 2. Area = lato \u00d7 lato. 3. Densit\u00e0 = abitanti \u00f7 area. 4. Stessa densit\u00e0? Guarda la distribuzione: sparsa o accentrata. 5. Spiega il perch\u00e9.', 'Ora prova tu: 15 coppie di quadrati sempre diverse.'],
+        { scena: 'aula', stampa: 'testo', titolo: 'Ricapitolando', testo: ['1. Conta gli abitanti. 2. Area = lato \u00d7 lato. 3. Densit\u00e0 = abitanti \u00f7 area. 4. Stessa densit\u00e0? Guarda la distribuzione: sparsa o accentrata. 5. Spiega il perch\u00e9.', 'Ora prova tu: 15 coppie di quadrati sempre diverse.'],
           dopo: function () { return docente(e); }, fai: function (a, an, t) { a.soluzione(false, t); } }
       ];
       return { scena: scena, passi: passi };
