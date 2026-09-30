@@ -706,7 +706,7 @@
     ['Alessandria d\u2019Egitto', 31, 10, 'N', 29, 55, 'E'],
     ['Gerusalemme', 31, 45, 'N', 35, 15, 'E'],
     ['Hanoi', 21, 0, 'N', 105, 50, 'E'],
-    ['Hong Kong', 22, 20, 'N', 114, 10, 'E'],
+    ['Hong Kong', 22, 15, 'N', 114, 10, 'E'],
     ['Haiphong', 20, 50, 'N', 106, 40, 'E'],
     ['Macao', 22, 10, 'N', 113, 30, 'E'],
     ['Canton', 23, 10, 'N', 113, 15, 'E'],
@@ -1209,7 +1209,7 @@
       function ha(a) { return a.v.punti[0]; }
       function hk(a) { return a.v.punti[1]; }
       var passi = [
-        { scena: 'aula', stampa: 'testo', momentaneo: true, titolo: 'L\u2019esercizio numero uno della prova', testo: ['All\u2019esame trovi un reticolo come questo: linee orizzontali e verticali, a un grado l\u2019una dall\u2019altra, e dei luoghi da localizzare. \u00c8 il reticolo visto in aula, con Hanoi e Hong Kong nei punti in cui li ha letti il docente.', 'Cambieranno i numeri, non il metodo.'],
+        { scena: 'aula', stampa: 'testo', momentaneo: true, titolo: 'L\u2019esercizio numero uno della prova', testo: ['All\u2019esame trovi un reticolo come questo: linee orizzontali e verticali, a un grado l\u2019una dall\u2019altra, e dei luoghi da localizzare. \u00c8 il reticolo visto in aula, con Hanoi e Hong Kong.', 'Cambieranno i numeri, non il metodo.'],
           fai: function (a, an, t) { a.evidenziaLuoghi(an, t); } },
         { scena: 'aula', stampa: 'testo', momentaneo: true, titolo: 'I paralleli danno la latitudine', testo: 'Le linee orizzontali sono i paralleli. Dicono quanto un luogo \u00e8 a nord o a sud dell\u2019equatore: \u00e8 la latitudine.',
           fai: function (a, an, t) { a.linee('paralleli', an, t); } },
