@@ -786,8 +786,11 @@
     var zero = i === 2 ? 'lat' : i === 7 ? 'lon' : null;
     var trappola = false;   // l'errore di stampa visto in aula non fa parte dell'esercizio d'esame
     var conCitta = (i % 3) !== 1 && !zero;
-    var emisferi = livello === 0 ? [['N', 'E']] : livello === 1 ? [['S', 'E'], ['N', 'O']] : [['S', 'O'], ['S', 'E'], ['N', 'O']];
-    var em = rpick(r, emisferi);
+    // Emisferi fissati per ogni serie da 15: 5 nord-est (per impratichirsi), poi 3 sud-est,
+    // 3 nord-ovest e 4 sud-ovest. Così 7 esercizi hanno la latitudine sud, 7 la longitudine
+    // ovest, e 4 hanno entrambe (i numeri crescono verso il basso E verso sinistra).
+    var PIANO = ['NE', 'NE', 'NE', 'NE', 'NE', 'SE', 'NO', 'SE', 'NO', 'SO', 'SE', 'SO', 'NO', 'SO', 'SO'];
+    var em = (PIANO[i % PIANO.length]).split('');
     var v = { cols: cols, rows: rows, ns: em[0], eo: em[1], punti: [], citta: false };
     if (conCitta) {
       var cand = rmescola(r, CITTA.filter(function (c) { return c[3] === em[0] && c[6] === em[1] && !usate[c[0]]; }));
