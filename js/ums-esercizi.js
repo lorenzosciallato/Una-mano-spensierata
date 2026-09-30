@@ -645,10 +645,11 @@
       '.sol{break-before:page;page-break-before:always}.sol h2{font-size:14pt;margin:0 0 8px}.sol h3{font-size:11.5pt;margin:12px 0 4px}' +
       'table{border-collapse:collapse;width:100%;font-size:9.5pt}td,th{border:1px solid #aaa;padding:4px 6px;text-align:left;vertical-align:top}th{background:#eee}' +
       '</style></head><body>' +
-      '<header><h1>Esercizi d\u2019esame</h1><p>Una Mano Spensierata, Geografia. ' + voci.map(function (x) { return esc(x.e.titolo); }).join(' \u2014 ') +
-      '<br>Scheda n. ' + seme + '. Nome ________________________ Data ____________</p></header>' + corpo + sol +
+      '<header><h1>Esercizi d\u2019esame</h1><p>' + voci.map(function (x) { return esc(x.e.titolo); }).join(' \u2014 ') +
+      '<br><b>Soluzioni in fondo al documento, ' + (voci.length > 1 ? 'sia per ' + voci.map(function (x) { return esc(minuscola(x.e.titolo)); }).join(' sia per ') : 'per ' + esc(minuscola(voci[0].e.titolo))) + '.</b></p></header>' + corpo + sol +
       '<script>window.onload=function(){setTimeout(function(){window.print()},400)}<\/script></body></html>';
   }
+  function minuscola(t) { t = String(t || ''); return t.charAt(0).toLowerCase() + t.slice(1); }
   function stampaScheda(voci, seme) {
     var w = window.open('', '_blank');
     if (!w) { alert('Il browser ha bloccato la finestra di stampa: consenti le finestre pop-up per questo sito e riprova.'); return; }
