@@ -372,5 +372,62 @@
     "nome": "Assistente IA",
     "sottotesto": "Chatta con l'intera lezione",
     "url": "https://notebooklm.google.com/notebook/22adaea9-7673-4f5e-9f70-6f62ffcbea30"
+  },
+  "esercizi": {
+    "controllato": "2026-10-05",
+    "trovati": [
+      {
+        "id": "es1",
+        "tipo": "reticolo_coordinate",
+        "titolo": "Determinazione di latitudine e longitudine",
+        "punti_esame": "",
+        "consegna": "Individuare e calcolare le coordinate geografiche di latitudine e longitudine di un punto specifico posizionato all'interno di un reticolo di paralleli e meridiani.",
+        "procedimento": [
+          "Individuare la posizione del punto assegnato all'interno del reticolo cartografico.",
+          "Leggere il valore numerico del parallelo di riferimento per ricavare la latitudine.",
+          "Leggere il valore numerico del meridiano di riferimento per ricavare la longitudine."
+        ],
+        "consigli_docente": [
+          "Prestare attenzione all'orientamento del reticolo e ai riferimenti cardinali."
+        ],
+        "errori_comuni": [
+          "Invertire o scambiare i valori della latitudine con quelli della longitudine."
+        ],
+        "esempio_lezione": "",
+        "cause_discusse": [],
+        "serve_disegno": true
+      },
+      {
+        "id": "es2",
+        "tipo": "densita_popolamento",
+        "titolo": "Calcolo della densità di popolamento e descrizione del modello spaziale",
+        "punti_esame": "",
+        "consegna": "Calcolare la densità media di popolazione (espressa in abitanti/km²) a partire dai dati e dalla figura fornita, e descrivere il relativo modello geografico di distribuzione spaziale.",
+        "procedimento": [
+          "Contare gli elementi (es. pallini o abitanti) presenti nella figura e inserire il totale al numeratore.",
+          "Moltiplicare il numero di elementi per il loro valore unitario (se non indicato diversamente, ciascun elemento vale 1).",
+          "Calcolare la superficie dell'area al denominatore moltiplicando tra loro le dimensioni dei lati del quadrato.",
+          "Dividere il numeratore per il denominatore per ottenere il valore finale della densità (abitanti/km²).",
+          "Osservare la disposizione degli elementi nello spazio e identificare il modello di distribuzione (es. sparso, accentrato, lineare sinuoso, lineare retto, centralizzato)."
+        ],
+        "consigli_docente": [
+          "Moltiplicare sempre il conteggio degli elementi per il loro valore specifico laddove indicato.",
+          "Distinguere tra linee sinuose (che seguono elementi naturali come corsi d'acqua, coste o rilievi) e linee rette/regolari (frutto di pianificazione antropica come lottizzazioni o strade).",
+          "Ricordare che la densità media è una misura sintetica: la stessa densità numerica può corrispondere a modelli di distribuzione spaziale completamente differenti."
+        ],
+        "errori_comuni": [
+          "Definire il modello di distribuzione come 'casuale': in geografia la distribuzione dei fenomeni non è mai casuale, ma risponde sempre a fattori naturali o antropici."
+        ],
+        "esempio_lezione": "Quadrato di lato 1 km contenente 9 pallini (ciascuno di valore 1). Al numeratore: 9 * 1 = 9 abitanti. Al denominatore: 1 km * 1 km = 1 km². Risultato: 9 abitanti/km². La distribuzione dei punti viene definita sparsa e irregolare nel primo schema, oppure accentrata/agglomerata nel secondo.",
+        "cause_discusse": [
+          "Abbondanza d'acqua e presenza di una rete idrica capillare (favorisce una distribuzione sparsa).",
+          "Condizioni di sicurezza e stabilità sociale, come nel sistema agricolo mezzadrile con poderi e case coloniche sparse vicine al luogo di lavoro (favorisce una distribuzione sparsa).",
+          "Presenza d'acqua concentrata in un solo punto o sorgente (favorisce un insediamento accentrato).",
+          "Periodi storici di insicurezza sociale che spingono la popolazione a riunirsi per difesa attorno a un castello, una rocca o delle mura (favorisce un insediamento accentrato).",
+          "Terreni circostanti non coltivabili, aridi o rocciosi, oppure appartenenti a un unico proprietario (favorisce un insediamento accentrato)."
+        ],
+        "serve_disegno": true
+      }
+    ]
   }
 }
