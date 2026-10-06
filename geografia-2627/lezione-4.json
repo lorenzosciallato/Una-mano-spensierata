@@ -371,5 +371,71 @@
     "nome": "Assistente IA",
     "sottotesto": "Chatta con l'intera lezione",
     "url": "https://notebooklm.google.com/notebook/22adaea9-7673-4f5e-9f70-6f62ffcbea30"
+  },
+  "esercizi": {
+    "controllato": "2026-10-06",
+    "trovati": [
+      {
+        "id": "es1",
+        "tipo": "reticolo_coordinate",
+        "titolo": "Coordinate geografiche di latitudine e longitudine",
+        "punti_esame": "1 punto",
+        "consegna": "Individuare e determinare le coordinate assolute di latitudine e longitudine di un determinato punto su un reticolo geografico o su una carta. L'esercizio richiede di identificare la posizione esatta dello spazio attraverso l'incrocio tra paralleli e meridiani.",
+        "procedimento": [],
+        "consigli_docente": [],
+        "errori_comuni": [
+          "Fare attenzione a eventuali errori di stampa dei gradi di latitudine e longitudine presenti sui fogli o materiali d'esame."
+        ],
+        "esempio_lezione": "",
+        "cause_discusse": [],
+        "serve_disegno": true
+      },
+      {
+        "id": "es2",
+        "tipo": "densita_popolamento",
+        "titolo": "Densità e distribuzione della popolazione",
+        "punti_esame": "",
+        "consegna": "Calcolare e analizzare la densità di popolamento e la distribuzione spaziale di un fenomeno o della popolazione sul territorio. Occorre valutare l'organizzazione dello spazio, distinguendo tra concentrazioni e distribuzioni sparse.",
+        "procedimento": [],
+        "consigli_docente": [],
+        "errori_comuni": [
+          "Definire o considerare la distribuzione della popolazione come 'casuale': in geografia la distribuzione è sparsa o concentrata e risponde sempre a precise ragioni territoriali e ambientali."
+        ],
+        "esempio_lezione": "",
+        "cause_discusse": [
+          "Presenza di risorse energetiche e materie prime (es. giacimenti di carbone o bacini idroelettrici che attraggono forza lavoro e industrie, come nel triangolo industriale).",
+          "Fattori ambientali e climatici che modificano le condizioni di abitabilità e la disponibilità di risorse.",
+          "Fattori storici, demografici ed economici (es. epidemie, carestie, guerre e flussi migratori)."
+        ],
+        "serve_disegno": true
+      },
+      {
+        "id": "es3",
+        "tipo": "altro",
+        "titolo": "Costruzione e interpretazione di grafici e istogrammi",
+        "punti_esame": "",
+        "consegna": "Costruire e interpretare un grafico o istogramma (come il grafico cartesiano della transizione demografica) ponendo il tempo sull'asse orizzontale e l'intensità del fenomeno sull'asse verticale. Occorre analizzare l'andamento delle curve dei tassi e individuare i punti critici di variazione.",
+        "procedimento": [
+          "Tracciare il quadrante degli assi cartesiani.",
+          "Disporre la variabile tempo (anni/fasi) sull'asse orizzontale e l'intensità del fenomeno (es. tassi di natalità e mortalità) sull'asse verticale.",
+          "Tracciare la curva del quoziente di natalità (in verde) e la curva del quoziente di mortalità (in rosso).",
+          "Individuare i punti di intersezione tra le due curve, in cui l'incremento/crescita naturale è pari a zero.",
+          "Analizzare la fase intermedia di transizione demografica compresa tra l'iniziale alto livello e il finale basso livello di natalità e mortalità."
+        ],
+        "consigli_docente": [
+          "Prediligere rappresentazioni cartesiane semplici e facilmente replicabili nell'attività didattica.",
+          "Non limitarsi a sintetizzare solo il punto di partenza e quello di arrivo, ma analizzare accuratamente cosa avviene nelle fasi intermedie del grafico.",
+          "Utilizzare gli istogrammi a canne orizzontali o le piramidi della popolazione solo quando si devono confrontare due fenomeni simmetrici o asimmetrici rispetto a un asse centrale (es. maschi e femmine)."
+        ],
+        "errori_comuni": [
+          "Fornire definizioni o letture troppo sintetiche che trascurano l'andamento reale del fenomeno e le sue oscillazioni nella fase centrale della transizione demografica.",
+          "Impiegare canne orizzontali in assenza di un doppio fenomeno simmetrico da mettere a confronto."
+        ],
+        "esempio_lezione": "Grafico cartesiano della transizione demografica articolato in 4 fasi, con la curva del quoziente di natalità in verde e quella del quoziente di mortalità in rosso.",
+        "cause_discusse": [],
+        "serve_disegno": true,
+        "da_costruire": true
+      }
+    ]
   }
 }
