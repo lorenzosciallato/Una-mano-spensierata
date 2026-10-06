@@ -531,5 +531,71 @@
       "titolo": "Organizzazione Funzionale dello Spazio Coloniale",
       "macro": 4
     }
-  ]
+  ],
+  "mappa": {
+    "titolo": "Geografia Umana, Modelli Spaziali e Dinamiche Territoriali",
+    "rami": [
+      {
+        "tema": "Organizzazione didattica, laboratori ed esami universitari",
+        "sotto": [
+          "Iscrizione e gestione delle frequenze nei laboratori",
+          "Pianificazione dei turni dell'esame scritto",
+          "Prevenzione delle sovrapposizioni con altri corsi"
+        ]
+      },
+      {
+        "tema": "Densità demografica e modelli di distribuzione spaziale",
+        "sotto": [
+          "Distinzione tra densità media e distribuzione reale",
+          "Calcolo matematico rapporto tra elementi e superficie",
+          "Insediamento sparso associato all'agricoltura mezzadrile",
+          "Concentrazione abitativa per difesa o scarsità d'acqua",
+          "Modelli distribuzionali lineari naturali e antropici"
+        ]
+      },
+      {
+        "tema": "Evoluzione del concetto di regione geografica",
+        "sotto": [
+          "Esempio storico del Midwest negli atlanti americani",
+          "Regioni formali definite da omogeneità del paesaggio",
+          "Regioni funzionali basate su flussi e trasporti",
+          "Superamento dei rigidi confini amministrativi nella didattica"
+        ]
+      },
+      {
+        "tema": "Analisi geografica dei paesaggi industriali e urbani",
+        "sotto": [
+          "Localizzazione dell'industria pesante presso le ferrovie",
+          "Fattori produttivi tra materie prime ed energia",
+          "Caratteristiche formali dei quartieri operai omogenei",
+          "Processi di riuso, adattamento e abbandono territoriale"
+        ]
+      },
+      {
+        "tema": "Adattamento umano nei territori acclivi e costieri",
+        "sotto": [
+          "Costruzione dei terrazzamenti in assenza di pianura",
+          "Evoluzione dalle colture tradizionali al turismo",
+          "Borghi marinari e vincoli di edificazione costiera"
+        ]
+      },
+      {
+        "tema": "Esplorazioni storiche e navigazione nel Medioevo",
+        "sotto": [
+          "Espansione e rotte marittime di Normanni e Arabi",
+          "Orientamento mediante coordinate astronomiche e latitudine",
+          "I grandi viaggi transcontinentali di Ibn Battuta",
+          "Competizione globale per la conquista delle risorse"
+        ]
+      },
+      {
+        "tema": "Sistemi informativi geografici (GIS) e didattica attiva",
+        "sotto": [
+          "Gestione dei dati geografici mediante strati informativi",
+          "Selezione critica delle informazioni utili alla didattica",
+          "Elaborazione autonoma di mappe per la scuola primaria"
+        ]
+      }
+    ]
+  }
 }
