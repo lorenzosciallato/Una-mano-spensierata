@@ -893,6 +893,28 @@
       body.night-mode .ums-slide-toggle button{background:#20232b;color:#c9c9d2;border-color:#3a3f4b}
       body.night-mode .ums-slide-toggle button.on{background:#8FB4E8;color:#14161c;border-color:#8FB4E8}
       body.night-mode figure.ums-slide-fig{background:#20232b;border-color:#3a3f4b}
+
+      /* OPERE D'ARTE (Educazione all'immagine) — quando la "slide" e' un'opera
+         ritagliata dalle slide del docente: l'immagine si vede INTERA (niente
+         taglio a 16:9) e sotto compare la didascalia. Le slide normali non
+         cambiano di una virgola. */
+      figure.ums-slide-fig.opera img{aspect-ratio:auto;object-fit:contain;max-height:440px;background:#efeae0}
+      figure.ums-slide-fig.opera.caricando img{aspect-ratio:4/3}
+      figure.ums-slide-fig.opera figcaption{text-align:left;font-size:.84rem;line-height:1.4;
+        color:var(--navy,#22365f);margin:.55rem .2rem .15rem;letter-spacing:0}
+      figure.ums-slide-fig.opera figcaption .op-nota{display:block;margin-top:.35rem;padding-top:.35rem;
+        border-top:1px dashed var(--gold-lt,#e5d6bd);font-size:.7rem;color:var(--sub,#6b6b73)}
+      figure.ums-slide-fig.opera figcaption .op-nota:first-child{margin-top:0;padding-top:0;border-top:0}
+      .ums-riass-soloslide figure.ums-slide-fig.opera img{max-height:300px}
+      .ums-slide-lb.con-dida{flex-direction:column;gap:12px}
+      .ums-slide-lb.con-dida img{max-height:80vh}
+      .ums-slide-lb .lb-dida{display:none;max-width:min(900px,92vw);color:#fff;text-align:center;
+        font-family:var(--font-sans,'DM Sans',sans-serif);font-size:1rem;line-height:1.4}
+      .ums-slide-lb.con-dida .lb-dida{display:block}
+      .ums-slide-lb .lb-dida small{display:block;margin-top:.3rem;font-size:.75rem;color:#c9c9d2}
+      body.night-mode figure.ums-slide-fig.opera img{background:#171a21}
+      body.night-mode figure.ums-slide-fig.opera figcaption{color:#e3e3ea}
+      body.night-mode figure.ums-slide-fig.opera figcaption .op-nota{border-color:#3a3f4b;color:#a9a9b4}
     </style>
     <script>
     (function(){
@@ -907,7 +929,11 @@
         var slides = grezze.map(function(s){
           if(typeof s === 'string') return { url:s, titolo:'' };
           return { url:(s && s.url) || '', titolo:(s && s.titolo) || '',
-                   macro:(s && typeof s.macro === 'number') ? s.macro : null };
+                   macro:(s && typeof s.macro === 'number') ? s.macro : null,
+                   // opere d'arte: didascalia visibile + riga di avvertenza
+                   opera: !!(s && s.opera),
+                   didascalia:(s && s.opera && s.didascalia) || '',
+                   nota:(s && s.opera && s.nota) || '' };
         }).filter(function(s){ return s.url; });
         if(!slides.length) return;
         var tries=0;
@@ -949,8 +975,9 @@
         var box = document.createElement('div'); box.id='ums-slide-toggle-box';
         var tg = document.createElement('div'); tg.className='ums-slide-toggle';
         var bText  = document.createElement('button'); bText.textContent='Solo testo'; bText.className='ums-tg-vista';
-        var bSlide = document.createElement('button'); bSlide.textContent='Testo + slide'; bSlide.className='ums-tg-vista on';
-        var bOnly  = document.createElement('button'); bOnly.textContent='Solo slide'; bOnly.className='ums-tg-vista';
+        var sonoOpere = slides.some(function(s){ return s.opera; });
+        var bSlide = document.createElement('button'); bSlide.textContent = sonoOpere ? 'Testo + opere' : 'Testo + slide'; bSlide.className='ums-tg-vista on';
+        var bOnly  = document.createElement('button'); bOnly.textContent = sonoOpere ? 'Solo opere' : 'Solo slide'; bOnly.className='ums-tg-vista';
         tg.appendChild(bText); tg.appendChild(bSlide); tg.appendChild(bOnly);
         box.appendChild(tg);
         cont.parentElement.insertBefore(box, cont);
@@ -960,10 +987,22 @@
         lb.innerHTML='<button class="lb-x" aria-label="Chiudi">&times;</button>'+
                      '<button class="lb-nav lb-prev" aria-label="Precedente">&#8249;</button>'+
                      '<img alt="Slide">'+
+                     '<p class="lb-dida"></p>'+
                      '<button class="lb-nav lb-next" aria-label="Successiva">&#8250;</button>';
         document.body.appendChild(lb);
         var lbImg=lb.querySelector('img'), cur=0;
-        function mostra(i){ cur=(i+slides.length)%slides.length; lbImg.src=slides[cur].url; }
+        var lbDida=lb.querySelector('.lb-dida');
+        function mostra(i){
+          cur=(i+slides.length)%slides.length; lbImg.src=slides[cur].url;
+          var sc=slides[cur];
+          lbImg.alt = sc.didascalia || sc.titolo || 'Slide';
+          lbDida.textContent='';
+          if(sc.opera && (sc.didascalia || sc.nota)){
+            if(sc.didascalia) lbDida.appendChild(document.createTextNode(sc.didascalia));
+            if(sc.nota){ var sm=document.createElement('small'); sm.textContent=sc.nota; lbDida.appendChild(sm); }
+            lb.classList.add('con-dida');
+          } else { lb.classList.remove('con-dida'); }
+        }
         function apri(i){ mostra(i); lb.classList.add('on'); }
         function chiudi(){ lb.classList.remove('on'); }
         lb.querySelector('.lb-x').addEventListener('click', chiudi);
@@ -995,6 +1034,18 @@
           if(im.complete && im.naturalWidth>0){ pronto(); }
           else { im.addEventListener('load', pronto); im.addEventListener('error', pronto); }
           fig.appendChild(im);
+          // OPERE D'ARTE: qui la didascalia si vede (l'ha controllata una persona)
+          if(slide.opera){
+            fig.classList.add('opera');
+            fig.classList.remove('flo-full');          // un quadro a tutta colonna diventa enorme
+            if(!fig.classList.contains('flo-dx') && !fig.classList.contains('flo-sx')) fig.classList.add('flo-dx');
+            if(slide.didascalia || slide.nota){
+              var cap=document.createElement('figcaption');
+              if(slide.didascalia) cap.appendChild(document.createTextNode(slide.didascalia));
+              if(slide.nota){ var nt=document.createElement('span'); nt.className='op-nota'; nt.textContent=slide.nota; cap.appendChild(nt); }
+              fig.appendChild(cap);
+            }
+          }
           // Nessuna didascalia visibile: il titolo OCR serve SOLO ad abbinare
           // la slide al paragrafo giusto (l'OCR del testo piccolo è inaffidabile
           // e produceva didascalie troncate tipo "nte non è un recettore...").
@@ -3213,7 +3264,7 @@ body.night-mode .ums-menu-pop .vista-on{ background:rgba(143,180,232,.16); }
     function aggiungiViste(){
       if(mImp.pop.querySelector('.ums-vista-voce')) return true;   // già fatte
       var viste=Array.prototype.slice.call(tg.querySelectorAll('.ums-tg-vista'))
-        .filter(function(x){ return ['Solo testo','Testo + slide','Solo slide'].indexOf((x.textContent||'').trim())>=0; });
+        .filter(function(x){ return ['Solo testo','Testo + slide','Solo slide','Testo + opere','Solo opere'].indexOf((x.textContent||'').trim())>=0; });
       if(!viste.length) return false;   // non ancora pronte: riproverà l'osservatore
       var tit=document.createElement('div'); tit.className='voce-tit'; tit.textContent='Come vedere il riassunto';
       mImp.pop.insertBefore(tit, mImp.pop.firstChild);
@@ -3310,7 +3361,7 @@ body.night-mode .ums-menu-pop .vista-on{ background:rgba(143,180,232,.16); }
         var el=document.getElementById(id); if(el) el.style.display='none';
       });
       Array.prototype.forEach.call(document.querySelectorAll('#ums-slide-toggle-box .ums-tg-vista'), function(v){
-        if(['Solo testo','Testo + slide','Solo slide'].indexOf((v.textContent||'').trim())>=0) v.style.display='none';
+        if(['Solo testo','Testo + slide','Solo slide','Testo + opere','Solo opere'].indexOf((v.textContent||'').trim())>=0) v.style.display='none';
       });
       riordina();
       if(giri++<30) setTimeout(nascondiVecchi,300);
