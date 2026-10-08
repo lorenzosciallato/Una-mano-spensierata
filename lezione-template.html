@@ -244,6 +244,40 @@
             <div class="master-content" id="master-content" tabindex="-1">
                 <div class="master-content-inner">
 
+                    <!-- AVVISO GRANDE — solo per Educazione all'immagine: le opere viste
+                         a lezione non stanno sul sito, vanno prese dalle slide del docente.
+                         Nelle altre materie resta nascosto. -->
+                    <style>
+                      #ums-avviso-immagini{margin:0 0 1.6rem;padding:1.3rem 1.4rem 1.35rem;border-radius:16px;
+                        background:#FBF1DC;border:2px solid var(--gold-dk,#9A7A3F);border-left-width:10px;color:#1A2F4F}
+                      #ums-avviso-immagini[hidden]{display:none}
+                      #ums-avviso-immagini .av-occhiello{font-family:var(--font-sans,'DM Sans',sans-serif);font-size:.78rem;
+                        font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#7A5A1F;margin:0 0 .35rem}
+                      #ums-avviso-immagini .av-titolo{font-family:var(--font-display,'Playfair Display',serif);font-weight:700;
+                        font-size:clamp(1.45rem,4.2vw,2.1rem);line-height:1.15;margin:0 0 .6rem;color:#1A2F4F}
+                      #ums-avviso-immagini p.av-testo{font-family:var(--font-sans,'DM Sans',sans-serif);font-size:1.05rem;
+                        line-height:1.55;margin:.35rem 0 0;color:#1A2F4F;max-width:64ch}
+                      body.night-mode #ums-avviso-immagini{background:#2A2413;border-color:var(--gold,#C8A96E);color:#F3EBD8}
+                      body.night-mode #ums-avviso-immagini .av-occhiello{color:var(--gold,#C8A96E)}
+                      body.night-mode #ums-avviso-immagini .av-titolo,
+                      body.night-mode #ums-avviso-immagini p.av-testo{color:#F3EBD8}
+                    </style>
+                    <div id="ums-avviso-immagini" role="note" hidden>
+                      <p class="av-occhiello">Leggi prima di studiare</p>
+                      <p class="av-titolo">Qui mancano le opere viste a lezione</p>
+                      <p class="av-testo">Questa materia si studia guardando quadri, sculture e fotografie. Su questo sito quelle immagini <strong>non ci sono</strong>: trovi solo il testo.</p>
+                      <p class="av-testo"><strong>Scarica le slide dalla pagina del professore</strong> e tienile aperte mentre leggi, lezione per lezione.</p>
+                      <p class="av-testo">Le illustrazioni che compaiono nel riassunto sono schemi fatti con l’intelligenza artificiale: <strong>non sono le opere vere</strong> e non vanno studiate al loro posto.</p>
+                    </div>
+                    <script>
+                    (function(){
+                      try{
+                        var f = new URLSearchParams(location.search).get('file') || '';
+                        if(/immagine/i.test(f)) document.getElementById('ums-avviso-immagini').hidden = false;
+                      }catch(e){}
+                    })();
+                    </script>
+
                     <!-- 01. OBIETTIVI -->
                     <div class="accordion-item">
                         <h2 class="ums-acc-h">
@@ -1174,7 +1208,16 @@
                 g.forEach(function(x){ riga.appendChild(creaFigura(x.slide, x.i, true)); });
                 prima.parentNode.insertBefore(riga, prima);
               } else {
-                g.forEach(function(x){ prima.parentNode.insertBefore(creaFigura(x.slide, x.i), prima); });
+                // FIX CAPOLETTERA: davanti a un paragrafo ci va UNA sola immagine
+                // di fianco al testo. Le altre dello stesso gruppo vanno subito
+                // DOPO il paragrafo (l'ordine resta lo stesso). Con due immagini
+                // davanti, la seconda scendeva sotto la prima e si trascinava giu'
+                // la lettera grande d'inizio lezione, staccandola dalla sua parola.
+                var dopo = prima.nextSibling;
+                g.forEach(function(x, n){
+                  if(n === 0) prima.parentNode.insertBefore(creaFigura(x.slide, x.i), prima);
+                  else prima.parentNode.insertBefore(creaFigura(x.slide, x.i), dopo);
+                });
               }
             });
           });
