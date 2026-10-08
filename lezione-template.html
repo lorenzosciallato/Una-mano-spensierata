@@ -906,6 +906,19 @@
         border-top:1px dashed var(--gold-lt,#e5d6bd);font-size:.7rem;color:var(--sub,#6b6b73)}
       figure.ums-slide-fig.opera figcaption .op-nota:first-child{margin-top:0;padding-top:0;border-top:0}
       .ums-riass-soloslide figure.ums-slide-fig.opera img{max-height:300px}
+      /* riga di opere: affiancate, sopra il paragrafo a cui appartengono */
+      .ums-opere-riga{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:.8rem;
+        align-items:start;clear:both;margin:.6rem 0 1.3rem}
+      .ums-opere-riga figure.ums-slide-fig.flo-in{float:none;width:100%;margin:0}
+      .ums-opere-riga figure.ums-slide-fig.opera img{max-height:300px}
+      .ums-riass-solotesto .ums-opere-riga{display:none}
+      .ums-riass-soloslide > div.ums-opere-riga{display:contents !important}
+      /* NIENTE IMMAGINI NEL CHECK POINT: un'immagine di fianco al testo non puo'
+         piu' scendere oltre la fine della sua sezione. Il Check Point e il titolo
+         della sezione dopo ripartono sempre sotto. Vale per slide e opere. */
+      #dyn-riassuntone-container > .cornell-box,
+      #dyn-riassuntone-container > h3{clear:both}
+      #dyn-riassuntone-container:not(.ums-riass-soloslide)::after{content:"";display:block;clear:both}
       .ums-slide-lb.con-dida{flex-direction:column;gap:12px}
       .ums-slide-lb.con-dida img{max-height:80vh}
       .ums-slide-lb .lb-dida{display:none;max-width:min(900px,92vw);color:#fff;text-align:center;
@@ -969,18 +982,30 @@
       }
 
       function monta(cont, slides){
-        if(document.getElementById('ums-slide-toggle-box')) return;
+        // FIX "a volte ci sono, a volte no": la barra dei pulsanti puo' essere
+        // gia' stata creata da un altro pezzo della pagina (succede quando questo
+        // script riceve il file della lezione qualche istante dopo). Prima, se la
+        // barra c'era gia', qui si usciva e le immagini non venivano MAI montate.
+        // Ora ci si ferma solo se le immagini sono gia' state montate davvero;
+        // la barra, se esiste, si riusa.
+        if(window.__umsSlideMontate) return;
+        window.__umsSlideMontate = true;
 
         // Interruttore Solo testo / Testo + slide / Solo slide.
-        var box = document.createElement('div'); box.id='ums-slide-toggle-box';
-        var tg = document.createElement('div'); tg.className='ums-slide-toggle';
+        var box = document.getElementById('ums-slide-toggle-box');
+        var boxNuovo = !box;
+        if(boxNuovo){ box = document.createElement('div'); box.id='ums-slide-toggle-box'; }
+        var tg = box.querySelector('.ums-slide-toggle');
+        var tgNuovo = !tg;
+        if(tgNuovo){ tg = document.createElement('div'); tg.className='ums-slide-toggle'; }
         var bText  = document.createElement('button'); bText.textContent='Solo testo'; bText.className='ums-tg-vista';
         var sonoOpere = slides.some(function(s){ return s.opera; });
         var bSlide = document.createElement('button'); bSlide.textContent = sonoOpere ? 'Testo + opere' : 'Testo + slide'; bSlide.className='ums-tg-vista on';
         var bOnly  = document.createElement('button'); bOnly.textContent = sonoOpere ? 'Solo opere' : 'Solo slide'; bOnly.className='ums-tg-vista';
-        tg.appendChild(bText); tg.appendChild(bSlide); tg.appendChild(bOnly);
-        box.appendChild(tg);
-        cont.parentElement.insertBefore(box, cont);
+        // i tre pulsanti stanno sempre per primi, anche se la barra esisteva gia'
+        tg.insertBefore(bOnly, tg.firstChild); tg.insertBefore(bSlide, tg.firstChild); tg.insertBefore(bText, tg.firstChild);
+        if(tgNuovo) box.insertBefore(tg, box.firstChild);
+        if(boxNuovo) cont.parentElement.insertBefore(box, cont);
 
         // Lightbox condiviso.
         var lb=document.createElement('div'); lb.className='ums-slide-lb';
@@ -1016,7 +1041,7 @@
           else if(e.key==='ArrowRight') mostra(cur+1);
         });
 
-        function creaFigura(slide, i){
+        function creaFigura(slide, i, inRiga){
           var fig=document.createElement('figure');
           // ogni 4ª slide (la 4ª, l'8ª...) diventa GRANDE a piena colonna,
           // effetto libro di testo; le altre restano flottanti alternate dx/sx.
@@ -1038,7 +1063,8 @@
           if(slide.opera){
             fig.classList.add('opera');
             fig.classList.remove('flo-full');          // un quadro a tutta colonna diventa enorme
-            if(!fig.classList.contains('flo-dx') && !fig.classList.contains('flo-sx')) fig.classList.add('flo-dx');
+            if(inRiga){ fig.classList.remove('flo-dx','flo-sx'); fig.classList.add('flo-in'); }
+            else if(!fig.classList.contains('flo-dx') && !fig.classList.contains('flo-sx')) fig.classList.add('flo-dx');
             if(slide.didascalia || slide.nota){
               var cap=document.createElement('figcaption');
               if(slide.didascalia) cap.appendChild(document.createTextNode(slide.didascalia));
@@ -1131,9 +1157,25 @@
           });
           perSez.forEach(function(lista, si){
             var par = sezioni[si].paragrafi, k = lista.length, P = par.length;
+            // quante immagini toccano a ogni paragrafo (sempre in ordine)
+            var gruppi = par.map(function(){ return []; });
             lista.forEach(function(x, j){
-              var pi = Math.min(P - 1, Math.floor(j * P / k));
-              par[pi].el.parentNode.insertBefore(creaFigura(x.slide, x.i), par[pi].el);
+              gruppi[Math.min(P - 1, Math.floor(j * P / k))].push(x);
+            });
+            gruppi.forEach(function(g, pi){
+              if(!g.length) return;
+              var prima = par[pi].el;
+              // OPERE: se accanto allo stesso paragrafo ce ne sono 2 o piu', non
+              // si impilano di fianco al testo (finivano fin dentro il Check
+              // Point): vanno in una riga ordinata sopra il paragrafo.
+              if(g.length > 1 && g.every(function(x){ return x.slide.opera; })){
+                var riga = document.createElement('div');
+                riga.className = 'ums-slide-fig ums-opere-riga';
+                g.forEach(function(x){ riga.appendChild(creaFigura(x.slide, x.i, true)); });
+                prima.parentNode.insertBefore(riga, prima);
+              } else {
+                g.forEach(function(x){ prima.parentNode.insertBefore(creaFigura(x.slide, x.i), prima); });
+              }
             });
           });
         }
