@@ -473,5 +473,53 @@
       "titolo": "A",
       "macro": 4
     }
-  ]
+  ],
+  "mappa": {
+    "titolo": "Genetica Classica, Eredità Mendeliana ed Estensioni Fenotipiche",
+    "rami": [
+      {
+        "tema": "Genetica classica e principi mendeliani",
+        "sotto": [
+          "Esperimenti di Mendel sulla pianta del pisello",
+          "Alleli dominanti e recessivi nei caratteri",
+          "Omozigosi ed eterozigosi nel genotipo",
+          "Rapporto fenotipico tre a uno nella F2"
+        ]
+      },
+      {
+        "tema": "Segregazione e assortimento indipendente dei caratteri",
+        "sotto": [
+          "Separazione casuale degli alleli durante la meiosi",
+          "Formazione di gameti con combinazioni alleliche diverse",
+          "Assortimento indipendente tra geni su cromosomi differenti"
+        ]
+      },
+      {
+        "tema": "Dominanza incompleta e codominanza",
+        "sotto": [
+          "Fenotipo intermedio nella dominanza incompleta",
+          "Espressione simultanea degli alleli nella codominanza",
+          "Sistema dei gruppi sanguigni ABO umani"
+        ]
+      },
+      {
+        "tema": "Eredità poligenica e interazione con l'ambiente",
+        "sotto": [
+          "Controllo di un carattere da più geni",
+          "Variazione continua come nel colore della pelle",
+          "Luce solare e sintesi di vitamina D",
+          "Ambiente e temperatura modellano il fenotipo"
+        ]
+      },
+      {
+        "tema": "Caratteri legati al sesso e geni associati",
+        "sotto": [
+          "Eredità legata ai cromosomi sessuali X e Y",
+          "Studi di Morgan sul moscerino Drosophila",
+          "Geni associati localizzati sullo stesso cromosoma",
+          "Crossing over e ricombinazione genetica meiotica"
+        ]
+      }
+    ]
+  }
 }
