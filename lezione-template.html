@@ -2072,6 +2072,11 @@
   .night-mode #ums-read-bar .sep{background:#3a3f4b}
   .night-mode #ums-read-bar .vel{color:#c9c9d2}
   @media (prefers-reduced-motion:reduce){ .ums-lb,.ums-lb-cur{transition:none} }
+
+  /* ---- karaoke: la parola che la voce sta dicendo (non modifica il testo) ---- */
+  ::highlight(ums-voce){background-color:#C8A96E;color:#14161C}
+  .night-mode ::highlight(ums-voce){background-color:#8FB4E8;color:#14161C}
+  body.ums-read-on .ums-lb-cur.ums-kar{cursor:pointer}
 </style>
 <script>
 (function(){
@@ -2081,6 +2086,9 @@
   var velocita = 1.0;
   var autoplay = false;   // legge tutto di seguito; si attiva a mano
   var elBar, elPos, elPlay, elSchema, elVel, live;
+  // karaoke: tempi delle parole (file a parte, indicato da "ascolto_tempi" nel JSON)
+  var fileTempi = null, tempi = null, tempiBase = '', tempiChiesti = false, kar = null;
+  var HL = (window.CSS && CSS.highlights && window.Highlight) ? CSS.highlights : null;
 
   function param(k){ try{return new URLSearchParams(location.search).get(k);}catch(e){return null;} }
 
@@ -2097,6 +2105,7 @@
 
   function prepara(cont, data){
     var macro = (data && data.riassuntone) || [];
+    fileTempi = (data && data.ascolto_tempi) || null;
     // pulisce eventuali classi mie rimaste nell'innerHTML salvato
     cont.querySelectorAll('.ums-lb,.ums-lb-cur').forEach(function(el){ el.classList.remove('ums-lb','ums-lb-cur'); });
     // 2) abbina i blocchi renderizzati (h3 + p) all'audio del JSON, macro per macro
@@ -2224,6 +2233,7 @@
     document.body.classList.add('ums-read-on');
     elBar.classList.add('on');
     document.addEventListener('keydown', tasti, true);
+    caricaTempi();
     vaiA(0,true);
   }
   function esci(){
@@ -2234,7 +2244,7 @@
     blocchi.forEach(function(b){ b.el.classList.remove('ums-lb-cur'); });
     var e=document.getElementById('ums-ascolta-btn'); if(e) e.focus();
   }
-  function ferma(){ if(audioEl){ audioEl.pause(); audioEl=null; } mostraFermo(); }
+  function ferma(){ karaokeFermo(); if(audioEl){ audioEl.pause(); audioEl=null; } mostraFermo(); }
 
   function vai(d){ vaiA(idx+d, true); }
   function inizioMacro(){
@@ -2265,6 +2275,7 @@
   setInterval(garantisciEvidenza, 700);
 
   function fineBlocco(){
+    karaokeFermo();
     // autoplay: se c'è un paragrafo dopo, ci passo e lo leggo; altrimenti stop
     if(autoplay && idx < blocchi.length-1){ vaiA(idx+1, true); return; }
     if(autoplay && idx === blocchi.length-1){ autoplay=false;
@@ -2277,6 +2288,7 @@
     audioEl=new Audio(b.audio);
     audioEl.playbackRate=velocita;
     audioEl.onended=fineBlocco;
+    karaokeParti(audioEl, idx);
     audioEl.play().then(mostraLeggendo).catch(function(){ mostraFermo(); });
   }
   function playPausa(){
@@ -2292,6 +2304,124 @@
     elPlay.querySelector('.ic-pause').style.display = leggendo?'':'none';
     elPlay.querySelector('.ptxt').textContent       = leggendo?'Pausa':'Play';
   }
+
+  // 3b) KARAOKE — accende la parola che la voce sta dicendo.
+  //     Usa la "CSS Custom Highlight API": colora un intervallo di testo SENZA
+  //     aggiungere elementi alla pagina, quindi sottolineature e salvataggi
+  //     restano intatti. Dove il browser non la conosce, semplicemente non
+  //     compare (resta l'evidenza sul paragrafo, come prima).
+  function caricaTempi(){
+    if(tempiChiesti || !fileTempi || !HL) return;
+    tempiChiesti = true;
+    fetch(fileTempi).then(function(r){ return r.ok ? r.json() : null; }).then(function(j){
+      if(!j || !j.blocchi) return;
+      tempi = j.blocchi; tempiBase = j.base || '';
+      if(attivo && audioEl) karaokeParti(audioEl, idx);   // i tempi sono arrivati a lettura già partita
+    }).catch(function(){});
+  }
+  function liscio(s){
+    s = String(s).toLowerCase();
+    try{ s = s.normalize('NFKD'); }catch(e){}
+    return s.replace(/[^a-z0-9]/g,'');
+  }
+  // abbina ogni parola dei tempi al suo pezzetto di testo in pagina
+  function paroleInPagina(el, lista){
+    var nodi=[], inizi=[], testo='', n;
+    var w=document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
+    while((n=w.nextNode())){ nodi.push(n); inizi.push(testo.length); testo+=n.nodeValue; }
+    if(!nodi.length) return null;
+    function punto(pos, fine){
+      var lo=0, hi=nodi.length-1, m;
+      while(lo<hi){ m=(lo+hi+1)>>1; if(inizi[m]<=pos) lo=m; else hi=m-1; }
+      if(fine && lo>0 && inizi[lo]===pos) lo--;
+      return [nodi[lo], pos-inizi[lo]];
+    }
+    var pezzi=[], re=/\S+/g, m;
+    while((m=re.exec(testo))) pezzi.push({a:m.index, b:m.index+m[0].length, n:liscio(m[0])});
+    var out=[], j=0, agganciate=0, daDire=0;
+    for(var i=0;i<lista.length;i++){
+      var voce=liscio(lista[i][0]), trovato=-1, r=null;
+      if(voce){
+        daDire++;
+        for(var k=j; k<pezzi.length && k<j+8; k++){ if(pezzi[k].n===voce){ trovato=k; break; } }
+      }
+      if(trovato>=0){
+        try{
+          var A=punto(pezzi[trovato].a,false), B=punto(pezzi[trovato].b,true);
+          r=document.createRange(); r.setStart(A[0],A[1]); r.setEnd(B[0],B[1]);
+          agganciate++; j=trovato+1;
+        }catch(e){ r=null; }
+      }
+      out.push({t0:+lista[i][1], t1:+lista[i][2], r:r});
+    }
+    // pagina tradotta in un'altra lingua o testo cambiato: niente karaoke
+    return (daDire && agganciate >= daDire*0.6) ? out : null;
+  }
+  function karaokeParti(audio, i){
+    karaokeFermo();
+    if(!HL || !tempi || !blocchi[i]) return;
+    var b=blocchi[i];
+    if(tempiBase && String(b.audio).indexOf(tempiBase)!==0) return;   // tempi di un'altra registrazione
+    var chiave=(String(b.audio).split('/').pop()||'').replace(/\.mp3.*$/i,'');
+    var lista=tempi[chiave], el=elBlocco(i);
+    if(!lista || !lista.length || !el) return;
+    var parole=paroleInPagina(el, lista);
+    if(!parole) return;
+    el.classList.add('ums-kar');
+    kar={audio:audio, parole:parole, lista:lista, el:el, blocco:i, k:-2, visto:0, raf:0};
+    kar.raf=requestAnimationFrame(karaokeGiro);
+  }
+  function karaokeGiro(){
+    if(!kar) return;
+    var p=kar.parole, t=kar.audio.currentTime, lo=0, hi=p.length-1, k=-1, m;
+    while(lo<=hi){ m=(lo+hi)>>1; if(p[m].t0<=t){ k=m; lo=m+1; } else hi=m-1; }
+    while(k>=0 && !p[k].r) k--;                 // parola senza aggancio: resta accesa la precedente
+    if(k!==kar.k){
+      kar.k=k;
+      var r = k>=0 ? p[k].r : null;
+      // se la pagina ha ridisegnato il paragrafo (es. dopo una sottolineatura) riaggancio
+      if(r && (r.collapsed || !kar.el.isConnected)){
+        var el=elBlocco(kar.blocco), nuove = el && paroleInPagina(el, kar.lista);
+        if(nuove){ kar.el=el; el.classList.add('ums-kar'); kar.parole=p=nuove; r = p[k] ? p[k].r : null; } else r=null;
+      }
+      try{ if(r) HL.set('ums-voce', new Highlight(r)); else HL.delete('ums-voce'); }catch(e){}
+      if(r) karaokeInVista(r);
+    }
+    kar.raf=requestAnimationFrame(karaokeGiro);
+  }
+  // nei paragrafi più alti dello schermo la parola accesa non deve uscire di vista
+  function karaokeInVista(r){
+    var ora=Date.now(); if(ora-kar.visto<900) return;
+    var q; try{ q=r.getBoundingClientRect(); }catch(e){ return; }
+    if(!q || (!q.width && !q.height)) return;
+    var alto=window.innerHeight||0, barra=(elBar&&elBar.offsetHeight)||90;
+    if(q.bottom > alto-barra-12 || q.top < 70){
+      kar.visto=ora;
+      try{ kar.el.scrollIntoView({behavior:'smooth', block: q.top<70 ? 'start' : 'end'}); }catch(e){}
+    }
+  }
+  function karaokeFermo(){
+    if(kar){ cancelAnimationFrame(kar.raf); if(kar.el) kar.el.classList.remove('ums-kar'); kar=null; }
+    if(HL){ try{ HL.delete('ums-voce'); }catch(e){} }
+  }
+  // toccando una parola del paragrafo in lettura si ascolta da lì
+  document.addEventListener('click', function(e){
+    if(!attivo || !kar || !kar.el || !kar.el.contains(e.target)) return;
+    var sel=window.getSelection && String(window.getSelection()); if(sel) return;   // sta sottolineando
+    var nodo=null, off=0, c;
+    if(document.caretPositionFromPoint){ c=document.caretPositionFromPoint(e.clientX,e.clientY); if(c){ nodo=c.offsetNode; off=c.offset; } }
+    else if(document.caretRangeFromPoint){ c=document.caretRangeFromPoint(e.clientX,e.clientY); if(c){ nodo=c.startContainer; off=c.startOffset; } }
+    if(!nodo) return;
+    for(var i=0;i<kar.parole.length;i++){
+      var r=kar.parole[i].r, dentro=false;
+      try{ dentro = !!r && r.comparePoint(nodo,off)===0; }catch(err){}
+      if(dentro){
+        kar.audio.currentTime=kar.parole[i].t0+0.001;
+        if(kar.audio.paused){ kar.audio.play().then(mostraLeggendo).catch(function(){}); }
+        return;
+      }
+    }
+  });
 
   // 4) disegnatore SVG: riquadri + frecce dai concetti del paragrafo
   function mostraSchema(schema){
