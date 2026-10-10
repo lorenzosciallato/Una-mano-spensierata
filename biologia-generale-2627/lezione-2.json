@@ -69,7 +69,51 @@
           "domanda": "Quali differenze sussistono tra i processi di necrosi e di apoptosi?",
           "risposta": "La necrosi è una morte cellulare accidentale e incontrollata causata da insulti chimici, fisici o ambientali, che porta alla lisi cellulare e alla conseguente infiammazione dei tessuti. L'apoptosi è invece un processo fisiologico di suicidio cellulare altamente programmato ed energeticamente controllato, in cui la cellula frammenta il proprio DNA, si vescicola e viene fagocitata dalle cellule sane adiacenti senza innescare risposte infiammatorie."
         }
-      ]
+      ],
+      "ascolto": {
+        "titolo": {
+          "audio": "https://media.unamanospensierata.com/biologia-generale-2627/lezione-2/ascolto-1cc84a2dbb/m0-t.mp3",
+          "testo": "Il Ciclo Cellulare, la Mitosi e i Meccanismi di Morte Cellulare"
+        },
+        "paragrafi": [
+          {
+            "audio": "https://media.unamanospensierata.com/biologia-generale-2627/lezione-2/ascolto-1cc84a2dbb/m0-p0.mp3",
+            "testo": "Il ciclo cellulare rappresenta il ciclo vitale di una cellula dalla sua origine fino alla sua divisione. Si articola in due macro-fasi distinte: l'interfase e la fase mitotica."
+          },
+          {
+            "audio": "https://media.unamanospensierata.com/biologia-generale-2627/lezione-2/ascolto-1cc84a2dbb/m0-p1.mp3",
+            "testo": "L'interfase costituisce la quota maggioritaria della vita cellulare e si suddivide a sua volta nelle sottofasi G1, S e G2. Durante la fase G1 (Gap 1), la cellula accresce il proprio volume citoplasmatico, accumula nutrienti ed energia e svolge tutte le funzioni metaboliche caratteristiche del proprio tipo cellulare o dell'organismo unicellulare a cui appartiene."
+          },
+          {
+            "audio": "https://media.unamanospensierata.com/biologia-generale-2627/lezione-2/ascolto-1cc84a2dbb/m0-p2.mp3",
+            "testo": "Quando le dimensioni cellulari e le riserve energetiche superano una specifica soglia critica, la cellula intraprende la fase S (Sintesi), momento in cui avviene la duplicazione semiconservativa del DNA cellulare. La replicazione del materiale genetico produce una copia identica di ogni sequenza nucleotidica, trasformando ogni singolo cromosoma in una struttura a quattro braccia costituita da due cromatidi fratelli perfettamente uguali tra loro e uniti al centromero."
+          },
+          {
+            "audio": "https://media.unamanospensierata.com/biologia-generale-2627/lezione-2/ascolto-1cc84a2dbb/m0-p3.mp3",
+            "testo": "Segue la fase G2 (Gap 2), un breve intervallo preparatorio nel quale vengono sintetizzate le proteine dell'apparato mitotico e controllata l'integrità del DNA duplicato. Successivamente la cellula entra nella fase M, ovvero la mitosi vera e propria, che rappresenta la divisione del nucleo cellulare."
+          },
+          {
+            "audio": "https://media.unamanospensierata.com/biologia-generale-2627/lezione-2/ascolto-1cc84a2dbb/m0-p4.mp3",
+            "testo": "La mitosi è strutturata in quattro stadi sequenziali: profase, metafase, anafase e telofase. In profase la cromatina si condensa progressivamente rendendo visibili i cromosomi, mentre l'involucro nucleare si disgrega e i centrioli organizzano la struttura fusiforme del fuso mitotico composta da microtubuli."
+          },
+          {
+            "audio": "https://media.unamanospensierata.com/biologia-generale-2627/lezione-2/ascolto-1cc84a2dbb/m0-p5.mp3",
+            "testo": "Nella metafase i cromosomi doppi si allineano perfettamente su un unico piano equatoriale creando la piastra metafasica, agganciandosi alle fibre del fuso mitotico mediante i centromeri. In anafase le fibre tubulari si accorciano trascinando con forza e separando i due cromatidi fratelli verso i poli opposti della cellula."
+          },
+          {
+            "audio": "https://media.unamanospensierata.com/biologia-generale-2627/lezione-2/ascolto-1cc84a2dbb/m0-p6.mp3",
+            "testo": "In telofase i due set distinti di cromosomi giungono ai poli della cellula, la cromatina inizia a despiralizzarsi e attorno a ciascun gruppo cromosomico si ricostituisce una nuova membrana nucleare. Il ciclo cellulare si conclude con la citodieresi, la scissione fisica del citoplasma che dà origine a due cellule figlie geneticamente e morfologicamente identiche alla cellula madre, note come cloni."
+          },
+          {
+            "audio": "https://media.unamanospensierata.com/biologia-generale-2627/lezione-2/ascolto-1cc84a2dbb/m0-p7.mp3",
+            "testo": "La frequenza del ciclo cellulare varia enormemente tra i tessuti: le cellule dell'epidermide si rinnovano completamente ogni trenta giorni, quelle della cornea ogni venti-venticinque giorni a causa del costante logoramento meccanico e ambientale, mentre le cellule staminali ematopoietiche del midollo osseo mantengono un ciclo rapidissimo per sostituire i globuli rossi, aventi una vita media di circa novanta giorni. Al contrario, le cellule nervose altamente differenziate del sistema nervoso centrale arrestano la loro capacità riproduttiva."
+          },
+          {
+            "audio": "https://media.unamanospensierata.com/biologia-generale-2627/lezione-2/ascolto-1cc84a2dbb/m0-p8.mp3",
+            "testo": "Quando la cellula giunge al termine del proprio ciclo vitale o subisce danni irreparabili, va incontro a morte cellulare, che può avvenire per necrosi (morte violenta e incontrollata dovuta a traumi, tossine o lesioni ambientali) oppure per apoptosi, un processo ordinato di suicidio cellulare programmato attivato dal sistema immunitario o da segnali interni per eliminare cellule malate o tumorali mediante frammentazione e fagocitosi."
+          }
+        ]
+      }
     },
     {
       "titolo": "Organizzazione Molecolare della Cromatina e Struttura dei Cromosomi",
@@ -87,7 +131,43 @@
           "domanda": "Qual è la struttura anatomica di un cromosoma duplicato e a cosa serve il centromero?",
           "risposta": "Un cromosoma duplicato presenta quattro braccia organizzate in due cromatidi fratelli identici joined nella regione centrale della strozzatura centromerica. Il centromero serve a unire fisicamente i cromatidi e a fornire il punto d'aggancio essenziale per i microtubuli del fuso mitotico, consentendo la corretta separazione dei cromatidi durante la divisione cellulare."
         }
-      ]
+      ],
+      "ascolto": {
+        "titolo": {
+          "audio": "https://media.unamanospensierata.com/biologia-generale-2627/lezione-2/ascolto-1cc84a2dbb/m1-t.mp3",
+          "testo": "Organizzazione Molecolare della Cromatina e Struttura dei Cromosomi"
+        },
+        "paragrafi": [
+          {
+            "audio": "https://media.unamanospensierata.com/biologia-generale-2627/lezione-2/ascolto-1cc84a2dbb/m1-p0.mp3",
+            "testo": "All'interno del nucleo della cellula eucariotica l'acido desossiribonucleico non esiste mai sotto forma di molecola nuda e isolata, ma è intimamente ed indissolubilmente associato a specifiche macromolecole proteiche di natura basica denominate istoni. Questa interazione elettrostatica tra le cariche negative dei gruppi fosfato dell'ossatura del DNA e le cariche positive degli amminoacidi basiche degli istoni dà origine al complesso sovramolecolare noto come cromatina."
+          },
+          {
+            "audio": "https://media.unamanospensierata.com/biologia-generale-2627/lezione-2/ascolto-1cc84a2dbb/m1-p1.mp3",
+            "testo": "L'unità strutturale e funzionale di base della cromatina è il nucleosoma, una struttura cilindrica assimilabile a un rocchetto attorno a cui si avvolge la doppia elica. Ciascun nucleosoma è formato da un ottamero centrale di proteine istoniche attorno al quale la catena nucleotidica compie circa due avvolgimenti completi."
+          },
+          {
+            "audio": "https://media.unamanospensierata.com/biologia-generale-2627/lezione-2/ascolto-1cc84a2dbb/m1-p2.mp3",
+            "testo": "L'organizzazione nucleosomica consente di compattare notevolmente la massa del DNA, riducendo in modo drastico l'ingombro spaziale dell'informazione genetica all'interno del ristretto volume nucleare. Nelle cellule integre che svolgono la propria ordinaria attività metabolica nell'interfase, la cromatina si trova in uno stato despiralizzato e diffuso, apparendo come una sostanza disordinata ma funzionalmente accessibile agli enzimi della trascrizione e della duplicazione."
+          },
+          {
+            "audio": "https://media.unamanospensierata.com/biologia-generale-2627/lezione-2/ascolto-1cc84a2dbb/m1-p3.mp3",
+            "testo": "Quando la cellula entra nel processo divisorio della mitosi o della meiosi, la cromatina subisce una progressiva e drastica condensazione attraverso successivi livelli di superavvolgimento dei filamenti nucleosomici. Tale condensazione porta alla formazione di corpi nettamente definiti e colorabili al microscopio ottico, noti come cromosomi."
+          },
+          {
+            "audio": "https://media.unamanospensierata.com/biologia-generale-2627/lezione-2/ascolto-1cc84a2dbb/m1-p4.mp3",
+            "testo": "Un cromosoma duplicato appare tipicamente formato da quattro braccia distribuite a due a due in due strutture identiche denominate cromatidi fratelli. I cromatidi fratelli rappresentano le due copie esatte di DNA prodotte durante la fase S e rimangono fisicamente uniti tra loro in una regione ristretta chiamata centromero."
+          },
+          {
+            "audio": "https://media.unamanospensierata.com/biologia-generale-2627/lezione-2/ascolto-1cc84a2dbb/m1-p5.mp3",
+            "testo": "Il centromero è una struttura fondamentale non solo perché tiene coesi i cromatidi fratelli fino all'anafase, ma anche perché ospita complessi proteici denominati cinetocori che permettono l'inserimento e l'ancoraggio delle fibre del fuso mitotico. Senza centromero, le fibre tubulari del fuso non potrebbero agganciare i cromosomi e la ripartizione del materiale genetico nei due nuclei figli risulterebbe impossibile."
+          },
+          {
+            "audio": "https://media.unamanospensierata.com/biologia-generale-2627/lezione-2/ascolto-1cc84a2dbb/m1-p6.mp3",
+            "testo": "Benché la duplicazione del DNA sia dotata di un'elevatissima fedeltà esecutiva, durante il processo replicativo possono verificarsi imperfezioni o errori di copiatura. Analogamente a quanto accade quando si fotocopia ripetutamente una fotocopia, la fedeltà della sequenza nucleotidica rispetto all'originale primario tende impercettibilmente a ridursi nel corso delle generazioni cellulari, accumulando mutazioni fisiologiche che costituiscono il motore grezzo della variabilità genetica e dell'evoluzione molecolare."
+          }
+        ]
+      }
     },
     {
       "titolo": "La Meiosi, il Crossing Over e la Generazione della Variabilità Genetica",
@@ -105,7 +185,47 @@
           "domanda": "Qual è il significato biologico ed evolutivo della variabilità genetica generata dalla meiosi?",
           "risposta": "Il significato biologico fondamentale è la generazione di combinazioni geniche sempre nuove ed uniche in ciascun gamete. Questa variabilità assicura che la progenie sia geneticamente diversa dai genitori e dai fratelli, offrendo alla specie una maggiore capacità di adattamento e di sopravvivenza di fronte alle variazioni delle condizioni ambientali."
         }
-      ]
+      ],
+      "ascolto": {
+        "titolo": {
+          "audio": "https://media.unamanospensierata.com/biologia-generale-2627/lezione-2/ascolto-1cc84a2dbb/m2-t.mp3",
+          "testo": "La Meiosi, il Crossing Over e la Generazione della Variabilità Genetica"
+        },
+        "paragrafi": [
+          {
+            "audio": "https://media.unamanospensierata.com/biologia-generale-2627/lezione-2/ascolto-1cc84a2dbb/m2-p0.mp3",
+            "testo": "Mentre la mitosi garantisce la moltiplicazione delle cellule somatiche mantenendo inalterato il corredo genetico, la meiosi è un processo divisorio specializzato che avviene esclusivamente nelle cellule della linea germinale per consentire la riproduzione sessuata. La riproduzione sessuata richiede che i due gameti parental – lo spermatozoo maschile e la cellula uovo femminile – contengano ciascuno esattamente la metà del patrimonio genetico tipico della specie, ossia un corredo cromosomico aploide indicato con n."
+          },
+          {
+            "audio": "https://media.unamanospensierata.com/biologia-generale-2627/lezione-2/ascolto-1cc84a2dbb/m2-p1.mp3",
+            "testo": "Nell'essere umano, dove il numero diploide 2n equivale a quarantasei cromosomi distribuiti in ventitré coppie, la meiosi porta alla formazione di gameti contenenti ventitré cromosomi singoli. La meiosi si compone di una sola fase di duplicazione del DNA, che si verifica nell'interfase precedente, seguita da due divisioni cellulari e nucleari consecutive chiamate Meiosi I e Meiosi II."
+          },
+          {
+            "audio": "https://media.unamanospensierata.com/biologia-generale-2627/lezione-2/ascolto-1cc84a2dbb/m2-p2.mp3",
+            "testo": "La Meiosi I è definita divisione riduzionale ed è il momento chiave dell'intero processo. Durante la profase I, la cromatina si condensa ed i cromosomi omologhi – uno ereditato dal padre ed uno dalla madre – si cercano, si affiancano e si uniscono intimamente in una struttura a quattro cromatidi denominata tetrade."
+          },
+          {
+            "audio": "https://media.unamanospensierata.com/biologia-generale-2627/lezione-2/ascolto-1cc84a2dbb/m2-p3.mp3",
+            "testo": "In questa fase di stretta adesione si verifica il crossing over, un evento di straordinaria rilevanza biologica in cui segmenti corrispondenti di DNA appartenenti a cromatidi non fratelli dell'omologo paterno e materno si spezzano, si scambiano reciprocamente e si risaldano. Attraverso il crossing over si ottiene la ricombinazione genica: i cromosomi risultanti non sono più puramente paterni o materni, ma diventano strutture bicolori e chimeriche recanti nuove combinazioni di alleli."
+          },
+          {
+            "audio": "https://media.unamanospensierata.com/biologia-generale-2627/lezione-2/ascolto-1cc84a2dbb/m2-p4.mp3",
+            "testo": "Successivamente, nella metafase I le tetradi si dispongono sulla piastra equatoriale e nell'anafase I i due cromosomi omologhi interamente ricombinati si separano migrando verso i due poli opposti della cellula, riducendo il numero di cromosomi da 2n ad n. Segue una breve interfase senza duplicazione del DNA e si entra nella Meiosi II, definita divisione equazionale."
+          },
+          {
+            "audio": "https://media.unamanospensierata.com/biologia-generale-2627/lezione-2/ascolto-1cc84a2dbb/m2-p5.mp3",
+            "testo": "La Meiosi II si svolge con dinamiche del tutto analoghe a quelle di una normale mitosi: i cromosomi doppi si allineano sul piano equatoriale e durante l'anafase II i cromatidi fratelli si disgiungono definitivamente migrando ai poli opposti. Al termine della telofase II e della citodieresi si ottengono quattro cellule figlie aploidi, ciascuna dotata di un corredo cromosomico unico e irripetibile."
+          },
+          {
+            "audio": "https://media.unamanospensierata.com/biologia-generale-2627/lezione-2/ascolto-1cc84a2dbb/m2-p6.mp3",
+            "testo": "La logica profonda della meiosi consiste nell'introdurre una vastissima variabilità genetica nella progenie ancor prima che avvenga la fecondazione. A differenza della mitosi, il cui obiettivo è clonare la cellula genitrice, la meiosi mira a rimescolare l'informazione genetica affinché i figli siano geneticamente diversi tra loro e diversi da entrambi i genitori."
+          },
+          {
+            "audio": "https://media.unamanospensierata.com/biologia-generale-2627/lezione-2/ascolto-1cc84a2dbb/m2-p7.mp3",
+            "testo": "Questa diversità genetica rappresenta la risorsa fondamentale su cui agisce la selezione naturale: in un ambiente instabile o soggetto a mutamenti imprevedibili, produrre una progenie geneticamente variegata aumenta la probabilità che almeno alcuni individui possiedano le caratteristiche fisiologiche idonee per sopravvivere e riprodursi."
+          }
+        ]
+      }
     },
     {
       "titolo": "Determinazione del Sesso, Gametogenesi e Anomalie Cromosomiche",
@@ -123,7 +243,51 @@
           "domanda": "Che cos'è la non-disgiunzione meiotica e quali conseguenze comporta sul cariotipo?",
           "risposta": "La non-disgiunzione è il fallimento della corretta separazione dei cromosomi omologhi o dei cromatidi fratelli durante le anafasi meiotiche. Comporta la formazione di gameti con un numero anomalo di cromosomi che, al momento della fecondazione, generano zigoti affetti da polisomie come la trisomia 21."
         }
-      ]
+      ],
+      "ascolto": {
+        "titolo": {
+          "audio": "https://media.unamanospensierata.com/biologia-generale-2627/lezione-2/ascolto-1cc84a2dbb/m3-t.mp3",
+          "testo": "Determinazione del Sesso, Gametogenesi e Anomalie Cromosomiche"
+        },
+        "paragrafi": [
+          {
+            "audio": "https://media.unamanospensierata.com/biologia-generale-2627/lezione-2/ascolto-1cc84a2dbb/m3-p0.mp3",
+            "testo": "Nel cariotipo umano, composto da quarantasei cromosomi organizzati in ventitré coppie di omologhi, ventidue coppie sono costituite da autosomi, ossia cromosomi identici per struttura e funzione sia nei maschi che nelle femmine. La ventitreesima coppia è formata dai cromosomi sessuali o gonosomi, che determinano il sesso biologico dell'individuo."
+          },
+          {
+            "audio": "https://media.unamanospensierata.com/biologia-generale-2627/lezione-2/ascolto-1cc84a2dbb/m3-p1.mp3",
+            "testo": "Nelle femmine la coppia gonosomica è omomorfa ed è composta da due cromosomi X (XX), ciascuno fornito di quattro braccia evidenti e recante numerosi geni essenziali. Nel maschio la coppia gonosomica è eteromorfa e comprende un cromosoma X ed un cromosoma Y (XY), quest'ultimo di dimensioni notevolmente ridotte e provvisto di sole tre braccine visibili."
+          },
+          {
+            "audio": "https://media.unamanospensierata.com/biologia-generale-2627/lezione-2/ascolto-1cc84a2dbb/m3-p2.mp3",
+            "testo": "Poiché la femmina produce esclusivamente cellule uovo recanti il cromosoma X, la determinazione del sesso del nascituro dipende unicamente dallo spermatozzo fecondante fornito dal padre: se lo spermatozoo porta un cromosoma X si svilupperà un individuo di sesso femminile, mentre se reca il cromosoma Y si originerà un individuo di sesso maschile. Il processo che porta alla formazione delle cellule germinali mature è la gametogenesi, che si distingue in spermatogenesi nel maschio ed ovogenesi nella femmina."
+          },
+          {
+            "audio": "https://media.unamanospensierata.com/biologia-generale-2627/lezione-2/ascolto-1cc84a2dbb/m3-p3.mp3",
+            "testo": "Tra i due sessi sussistono differenze temporali e fisiologiche profonde. Nei maschi la spermatogenesi inizia alla pubertà e prosegue ininterrottamente per tutta la vita adulta: gli spermatozoi vengono continuamente prodotti ex novo nel tessuto ematopoietico e germinale dei testicoli, mentre le cellule più vecchie inutilizzate vengono riassorbite."
+          },
+          {
+            "audio": "https://media.unamanospensierata.com/biologia-generale-2627/lezione-2/ascolto-1cc84a2dbb/m3-p4.mp3",
+            "testo": "Nelle femmine, al contrario, l'ovogenesi si avvia molto precocemente durante lo sviluppo embrionale, circa tre-quattro mesi prima della nascita della bambina. Alla nascita, le ovaie contengono già un numero definitivo ed enorme di ovociti primari bloccati nella profase della Meiosi I."
+          },
+          {
+            "audio": "https://media.unamanospensierata.com/biologia-generale-2627/lezione-2/ascolto-1cc84a2dbb/m3-p5.mp3",
+            "testo": "Tali cellule uovo non vengono mai rinnovate e rimangono quiescenti nei tessuti ovarici per decenni, invecchiando insieme alla donna fino alla menopausa. Questa caratteristica espone le cellule uovo femminili a decenni di potenziali insulti ambientali, radiazioni ionizzanti, sostanze chimiche tossiche e lesioni fisiologiche umane."
+          },
+          {
+            "audio": "https://media.unamanospensierata.com/biologia-generale-2627/lezione-2/ascolto-1cc84a2dbb/m3-p6.mp3",
+            "testo": "Le evidenze statistiche dimostrano che, a partire dai trentatré anni di età materna, la probabilità di errori durante le divisioni meiotiche dell'ovogenesi aumenta in modo esponenziale. L'errore meiotico più comune è la non-disgiunzione cromosomica, un fenomeno in cui i due cromosomi omologhi o i due cromatidi fratelli non si separano correttamente durante l'anafase I o l'anafase II."
+          },
+          {
+            "audio": "https://media.unamanospensierata.com/biologia-generale-2627/lezione-2/ascolto-1cc84a2dbb/m3-p7.mp3",
+            "testo": "Di conseguenza, un cromosoma viene ereditato interamente in un unico gamete. Se una cellula uovo portatrice di un cromosoma in più a causa di una non-disgiunzione viene fecondata da uno spermatozoo normale, si origina uno zigote affetto da una trisomia."
+          },
+          {
+            "audio": "https://media.unamanospensierata.com/biologia-generale-2627/lezione-2/ascolto-1cc84a2dbb/m3-p8.mp3",
+            "testo": "L'esempio clinico più frequente è la Sindrome di Down o Trisomia 21, condizione in cui l'individuo eredita tre copie del cromosoma 21 anziché due, determinando alterazioni dello sviluppo morfologico e fisiologico."
+          }
+        ]
+      }
     },
     {
       "titolo": "Strategie Riproduttive, Partenogenesi ed Evoluzione della Sessualità",
@@ -141,7 +305,55 @@
           "domanda": "In che modo la coniugazione nel Paramecium dimostra l'autonomia della sessualità dalla riproduzione?",
           "risposta": "Dimostra l'autonomia della sessualità in quanto due parameci si uniscono per scambiarsi materiale genetico e ringiovanire il proprio DNA senza produrre alcun aumento del numero di individui. Il processo evidenzia come la sessualità sia nata per rigenerare il patrimonio genetico e non unicamente per moltiplicare le cellule."
         }
-      ]
+      ],
+      "ascolto": {
+        "titolo": {
+          "audio": "https://media.unamanospensierata.com/biologia-generale-2627/lezione-2/ascolto-1cc84a2dbb/m4-t.mp3",
+          "testo": "Strategie Riproduttive, Partenogenesi ed Evoluzione della Sessualità"
+        },
+        "paragrafi": [
+          {
+            "audio": "https://media.unamanospensierata.com/biologia-generale-2627/lezione-2/ascolto-1cc84a2dbb/m4-p0.mp3",
+            "testo": "Nel regno animale e vegetale si sono evolute diverse strategie riproduttive che bilanciano i costi energetici con la necessità di garantire la sopravvivenza della specie. La riproduzione asessuata si basa unicamente sul processo mitotico e consente a un singolo individuo genitore di generare una progenie numerosa ed identicalmente conforme al proprio patrimonio genetico."
+          },
+          {
+            "audio": "https://media.unamanospensierata.com/biologia-generale-2627/lezione-2/ascolto-1cc84a2dbb/m4-p1.mp3",
+            "testo": "Tra le modalità di riproduzione asessuata figurano la scissione binaria nei batteri e nei protozoi, la gemmazione nelle idre, la frammentazione e la partenogenesi. Un fenomeno strettamente legato alla mitosi è la capacità di rigenerazione tissutale e corporea, ampiamente sviluppata negli organismi inferiori e progressivamente ridotta negli organismi complessi."
+          },
+          {
+            "audio": "https://media.unamanospensierata.com/biologia-generale-2627/lezione-2/ascolto-1cc84a2dbb/m4-p2.mp3",
+            "testo": "Le planarie, le idre e le stelle di mare possiedono straordinarie capacità rigenerative: un singolo braccio amputato di una stella di mare è in grado di rigenerare per via mitotica un intero nuovo organismo. Le lucertole sfruttano la rigenerazione mitotica per ricostruire completamente la coda persa per autotomia a seguito di un attacco da parte di un predatore."
+          },
+          {
+            "audio": "https://media.unamanospensierata.com/biologia-generale-2627/lezione-2/ascolto-1cc84a2dbb/m4-p3.mp3",
+            "testo": "Negli organismi umani e nei mammiferi la rigenerazione è limitata ad alcuni tessuti specifici: le cellule epiteliali, le cellule ematopoietiche ed il fegato, l'unico organo interno capace di rigenerare e ricostruire fino a tre quarti del proprio volume mediante intensa proliferazione mitotica dei geni epatici. La partenogenesi rappresenta una forma particolare di riproduzione asessuata in cui lo sviluppo di un nuovo individuo avviene a partire da un uovo diploide non fecondato."
+          },
+          {
+            "audio": "https://media.unamanospensierata.com/biologia-generale-2627/lezione-2/ascolto-1cc84a2dbb/m4-p4.mp3",
+            "testo": "Osservata in rettili come alcune lucertole, insetti e rotiferi, la partenogenesi permette a popolazioni composte esclusivamente da femmine di riprodursi a ritmi estremamente rapidi senza richiedere la presenza del maschio. Sotto il profilo evolutivo, la scelta tra riproduzione asessuata e riproduzione sessuata risponde alla stabilità dell'ambiente in cui la specie vive."
+          },
+          {
+            "audio": "https://media.unamanospensierata.com/biologia-generale-2627/lezione-2/ascolto-1cc84a2dbb/m4-p5.mp3",
+            "testo": "Quando le condizioni ambientali, la disponibilità di cibo e la temperatura rimangono costanti ed ideali, la riproduzione asessuata è la strategia più vantaggiosa: conservare intatte le caratteristiche genetiche di un genitore perfettamente adattato all'ambiente evita di disperdere energia e tempo nella ricerca del partner. Al contrario, quando l'ambiente è mutevole, imprevedibile o instabile, la riproduzione asessuata diventa rischiosa, poiché un cambiamento sfavorevole dell'ambiente potrebbe estinguere una popolazione di cloni identici."
+          },
+          {
+            "audio": "https://media.unamanospensierata.com/biologia-generale-2627/lezione-2/ascolto-1cc84a2dbb/m4-p6.mp3",
+            "testo": "In ambienti variabili la riproduzione sessuata risulta vincente perché la meiosi e la ricombinazione genica generano individui diversificati, offrendo maggiore probabilità che qualcuno possieda i caratteri idonei alla sopravvivenza. L'evoluzione della sessualità trova la sua massima dimostrazione concettuale nei protozoi unicellulari come il Paramecium."
+          },
+          {
+            "audio": "https://media.unamanospensierata.com/biologia-generale-2627/lezione-2/ascolto-1cc84a2dbb/m4-p7.mp3",
+            "testo": "Quando le risorse idriche ed alimentari sono abbondanti, il paramecio si moltiplica asessualmente per scissione mitotica. Quando la pozza d'acqua comincia a prosciugarsi o le condizioni diventano critiche, due parameci mettono in atto la coniugazione: si affiancano, fondono parzialmente le membrane e si scambiano micronuclei aploidi contenenti DNA, per poi separarsi."
+          },
+          {
+            "audio": "https://media.unamanospensierata.com/biologia-generale-2627/lezione-2/ascolto-1cc84a2dbb/m4-p8.mp3",
+            "testo": "La coniugazione è un processo squisitamente sessuale ma del tutto privo di funzione riproduttiva numerica, poiché due cellule entrano nel processo e due ne escono. Il suo unico scopo è il completo rinnovamento del patrimonio genetico e il ripristino dell'età biologica cellulare."
+          },
+          {
+            "audio": "https://media.unamanospensierata.com/biologia-generale-2627/lezione-2/ascolto-1cc84a2dbb/m4-p9.mp3",
+            "testo": "Questo dimostra che nell'evoluzione dei viventi la sessualità è nata originariamente come meccanismo di ricombinazione e ringiovanimento genetico, e solo successivamente si è legata al processo riproduttivo negli organismi pluricellulari."
+          }
+        ]
+      }
     }
   ],
   "flashcards": [
@@ -542,5 +754,13 @@
         ]
       }
     ]
+  },
+  "ascolto_tempi": "biologia-generale-2627/lezione-2-ascolto.json",
+  "ascolto_info": {
+    "voce": "xtts_v2",
+    "impronta": "1cc84a2dbb",
+    "motore": 2,
+    "minuti": 19.8,
+    "fatto": "2026-10-10"
   }
 }
