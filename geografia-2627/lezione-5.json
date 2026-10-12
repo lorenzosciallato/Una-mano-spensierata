@@ -372,5 +372,329 @@
     "nome": "Assistente IA",
     "sottotesto": "Chatta con l'intera lezione",
     "url": "https://notebooklm.google.com/notebook/22adaea9-7673-4f5e-9f70-6f62ffcbea30"
+  },
+  "esercizi": {
+    "controllato": "2026-10-12",
+    "trovati": [
+      {
+        "id": "es1",
+        "tipo": "reticolo_coordinate",
+        "titolo": "Coordinate geografiche di latitudine e longitudine",
+        "punti_esame": "1 punto su 15",
+        "consegna": "L'esercizio richiede di determinare la latitudine e la longitudine di un punto collocato su un reticolo di paralleli e meridiani. Occorre ricavare la posizione esatta esprimendo i valori secondo il sistema sessagesimale con gradi, primi e secondi.",
+        "procedimento": [
+          "Individuare la posizione del punto all'interno del reticolo geografico di paralleli e meridiani",
+          "Calcolare la latitudine misurando la distanza dall'Equatore verso Nord o verso Sud",
+          "Calcolare la longitudine misurando la distanza dal meridiano di Greenwich verso Est o verso Ovest",
+          "Determinare le frazioni di grado utilizzando la conversione sessagesimale in primi e secondi"
+        ],
+        "consigli_docente": [
+          "Prestare particolare attenzione al sistema sessagesimale e ai calcoli con primi e secondi d'arco",
+          "Non sottovalutare l'esercizio ritenendolo banale, poiché richiede massima precisione all'esame"
+        ],
+        "errori_comuni": [
+          "Trattare con superficialità i gradi sessagesimali e commettere errori nel calcolo dei primi e dei secondi"
+        ],
+        "esempio_lezione": "",
+        "cause_discusse": [],
+        "serve_disegno": true
+      },
+      {
+        "id": "es2",
+        "tipo": "densita_popolamento",
+        "titolo": "Calcolo della densità e analisi della distribuzione della popolazione",
+        "punti_esame": "1 punto su 15",
+        "consegna": "L'esercizio richiede di calcolare la densità di popolamento dividendo il numero di abitanti per la superficie espressa in chilometri quadrati. Inoltre, chiede di analizzare la disposizione spaziale della popolazione per riconoscere se si tratta di una distribuzione sparsa, accentrata o regolare.",
+        "procedimento": [
+          "Ricavare dai dati forniti il totale degli abitanti e la superficie del territorio in chilometri quadrati",
+          "Calcolare la densità di popolazione dividendo il numero di abitanti per i chilometri quadrati (abitanti/km²)",
+          "Esaminare la trama territoriale per identificare la modalità di distribuzione (sparsa, accentrata, a gruppi o regolare)"
+        ],
+        "consigli_docente": [
+          "Ricordare che una distribuzione regolare o geometrica è solitamente frutto dell'intervento di un'autorità antropica",
+          "Valutare la dispersione o concentrazione delle risorse naturali e delle condizioni di sicurezza sul territorio"
+        ],
+        "errori_comuni": [
+          "Fermarsi al dato della densità media senza analizzare la reale concentrazione o dispersione degli abitanti sul territorio"
+        ],
+        "esempio_lezione": "Calcolo della densità con risultato costante di 9 abitanti per chilometro quadrato, evidenziando come la popolazione possa disporsi in modo del tutto sparso oppure accentrato.",
+        "cause_discusse": [
+          "Disponibilità e dispersione delle risorse naturali (come l'acqua e i terreni coltivabili)",
+          "Condizioni di sicurezza o insicurezza del territorio che spingono la popolazione a concentrarsi o disperdersi",
+          "Intervento e pianificazione antropica che creano disposizioni regolari o ordinate"
+        ],
+        "serve_disegno": true
+      },
+      {
+        "id": "es3",
+        "tipo": "altro",
+        "titolo": "Costruzione di grafici e istogrammi demografici",
+        "punti_esame": "1 punto su 15",
+        "consegna": "L'esercizio richiede di convertire una serie di dati numerici forniti in tabella in una rappresentazione grafica, come un grafico a linee o un istogramma. Occorre tracciare gli assi cartesiani definendo l'arco temporale e l'intensità del fenomeno.",
+        "procedimento": [
+          "Tracciare la struttura del grafico collocando l'arco temporale sull'asse delle ascisse e l'intensità del fenomeno sull'asse delle ordinate",
+          "Riportare i punti corrispondenti ai dati numerici della tabella",
+          "Se una rilevazione temporale è mancante, saltare l'annata e collegare i punti con una linea tratteggiata anziché continua",
+          "Costruire le canne verticali per gli istogrammi o posizionare le barre sui due lati per le piramidi della popolazione"
+        ],
+        "consigli_docente": [
+          "Utilizzare la linea tratteggiata per evidenziare le annate in cui i dati non sono stati rilevati",
+          "Disporre le canne su lati opposti se si confrontano due categorie come maschi e femmine"
+        ],
+        "errori_comuni": [
+          "Tracciare una linea continua collegando anche i periodi temporali in cui non sono state effettuate rilevazioni dei dati"
+        ],
+        "esempio_lezione": "Tabella contenente il numero di maschi e femmine in una scuola in anni differenti (es. 15 maschi e 18 femmine, poi 20 maschi e 16 femmine dopo 5 anni) con menzione dei dati saltati in Italia durante la Seconda Guerra Mondiale.",
+        "cause_discusse": [],
+        "serve_disegno": true,
+        "da_costruire": true
+      },
+      {
+        "id": "es4",
+        "tipo": "altro",
+        "titolo": "Calcolo dei tassi demografici e selezione dei dati utili",
+        "punti_esame": "1 punto su 15",
+        "consegna": "L'esercizio presenta un problema demografico basato sui dati di una città, includendo informazioni irrilevanti. Viene richiesto di individuare i dati corretti per calcolare il tasso di natalità, il tasso di mortalità oppure l'incremento/decremento naturale.",
+        "procedimento": [
+          "Leggere il testo del problema e separare i dati necessari per il calcolo da quelli inutili",
+          "Per il tasso di natalità: mettere i nati al numeratore e la popolazione totale al denominatore, moltiplicando per 100 o per 1000",
+          "Per il tasso di mortalità: mettere i morti al numeratore e la popolazione totale al denominatore, moltiplicando per 100 o per 1000",
+          "Per l'incremento o decremento naturale: calcolare la differenza tra il numero dei nati e quello dei morti (nati - morti)"
+        ],
+        "consigli_docente": [
+          "Individuare ed eliminare subito il dato superfluo fornito nel testo dell'esercizio",
+          "Considerare che in statistica demografica si moltiplica spesso per 1000 per evitare decimali troppo piccoli, anche se la percentuale va bene nella scuola primaria"
+        ],
+        "errori_comuni": [
+          "Inserire nella formula dati irrilevanti (come ad esempio il numero dei morti per il calcolo del tasso di natalità)",
+          "Limitarsi a calcolare il saldo naturale senza metterlo in rapporto con la popolazione totale di riferimento"
+        ],
+        "esempio_lezione": "Città di 100.000 abitanti con 1000 nati e 900 morti in 12 mesi: tasso di natalità = (1000 / 100.000) * 1000 = 10 per mille (dato superfluo: 900 morti); incremento naturale = 1000 - 900 = +100 persone.",
+        "cause_discusse": [],
+        "serve_disegno": false,
+        "banca": [
+          {
+            "domanda": "Nel comune di Ancona (100.000 abitanti), nell'arco di 12 mesi si registrano 1.000 nati e 900 morti. Calcola il tasso di natalità (espresso per mille, ‰) e individua il dato superfluo per questo calcolo.",
+            "opzioni": [
+              "10‰ (dato superfluo: 900 morti)",
+              "9‰ (dato superfluo: 1.000 nati)",
+              "1‰ (dato superfluo: 100.000 abitanti)",
+              "100‰ (dato superfluo: 900 morti)"
+            ],
+            "corretta": 0,
+            "spiegazione": "Secondo il metodo spiegato dal docente, il tasso di natalità si calcola mettendo al numeratore il numero dei nati (1.000) e al denominatore la popolazione totale (100.000), moltiplicando poi per 1.000: (1.000 / 100.000) * 1.000 = 10‰. Il numero dei morti (900) è il dato superfluo che non va inserito nella formula."
+          },
+          {
+            "domanda": "Nel comune di Pesaro (90.000 abitanti), nell'arco di un anno nascono 720 bambini e muoiono 990 persone. Qual è il tasso di mortalità espresso per mille (‰) e qual è il dato inutile?",
+            "opzioni": [
+              "8‰ (dato inutile: 990 morti)",
+              "3‰ (dato inutile: 90.000 abitanti)",
+              "11‰ (dato inutile: 720 nati)",
+              "91‰ (dato inutile: 720 nati)"
+            ],
+            "corretta": 2,
+            "spiegazione": "Per il tasso di mortalità il soggetto va al numeratore: si dividono i morti (990) per la popolazione totale (90.000) e si moltiplica per 1.000: (990 / 90.000) * 1.000 = 11‰. Il numero dei nati (720) è il dato irrilevante che gli studenti spesso sbagliano ad inserire."
+          },
+          {
+            "domanda": "A Macerata (40.000 abitanti) in un anno si verificano 320 nascite e 280 decessi. Si richiede di determinare l'incremento o decremento naturale della popolazione. Qual è il risultato e qual è il dato non utilizzato?",
+            "opzioni": [
+              "Tasso di natalità dell'8‰ (dato non utilizzato: 280 decessi)",
+              "Incremento naturale di +40 persone (dato non utilizzato: 40.000 abitanti)",
+              "Decremento naturale di -40 persone (dato non utilizzato: 40.000 abitanti)",
+              "Incremento naturale di +600 persone (dato non utilizzato: 40.000 abitanti)"
+            ],
+            "corretta": 1,
+            "spiegazione": "L'incremento naturale misura la dinamica naturale (nati - morti). Poiché i nati (320) superano i morti (280), si ha un incremento naturale di 320 - 280 = +40 persone. Il numero totale degli abitanti (40.000) è il dato non considerato per calcolare il valore assoluto del saldo naturale."
+          },
+          {
+            "domanda": "Il comune di Ascoli Piceno conta 45.000 abitanti. In un anno si registrano 270 nati e 405 morti. Qual è il saldo naturale della popolazione e qual è il dato superfluo?",
+            "opzioni": [
+              "Incremento naturale di +135 persone (dato superfluo: 45.000 abitanti)",
+              "Tasso di mortalità del 9‰ (dato superfluo: 270 nati)",
+              "Decremento naturale di -675 persone (dato superfluo: 45.000 abitanti)",
+              "Decremento naturale di -135 persone (dato superfluo: 45.000 abitanti)"
+            ],
+            "corretta": 3,
+            "spiegazione": "Essendo i morti (405) superiori ai nati (270), si verifica un decremento naturale: 270 - 405 = -135 persone. La popolazione totale (45.000 abitanti) non viene utilizzata per trovare il valore assoluto del decremento naturale."
+          },
+          {
+            "domanda": "A Civitanova Marche (42.000 abitanti) nell'ultimo anno sono nati 336 bambini e sono decedute 378 persone. Se la traccia dell'esame chiede di calcolare il tasso di natalità espresso in percentuale (%), qual è il valore corretto e l'errore di distrazione da evitare?",
+            "opzioni": [
+              "0,8% (errore: usare i 378 morti nel calcolo)",
+              "0,9% (errore: usare i 378 morti nel calcolo)",
+              "1,7% (errore: sommare nati e morti al numeratore)",
+              "125% (errore: dividere gli abitanti per i nati)"
+            ],
+            "corretta": 0,
+            "spiegazione": "Il tasso di natalità in percentuale si ottiene ponendo i nati al numeratore e gli abitanti al denominatore, moltiplicando per 100: (336 / 42.000) * 100 = 0,8%. L'errore tipico indicato dal docente è includere i 378 morti nella formula della natalità."
+          },
+          {
+            "domanda": "Nel comune di Urbino (14.000 abitanti) in 12 mesi si registrano 98 nati e 126 morti. Un alunno deve calcolare il tasso di mortalità in percentuale (%). Qual è il procedimento e il risultato esatto?",
+            "opzioni": [
+              "(98 / 14.000) * 100 = 0,7% (il numero dei morti 126 è irrilevante)",
+              "(14.000 / 126) * 100 = 111% (si invertono numeratore e denominatore)",
+              "(126 / 14.000) * 100 = 0,9% (il numero dei nati 98 è irrilevante)",
+              "(126 - 98) / 100 = 0,28% (si sottraggono i nati dai morti)"
+            ],
+            "corretta": 2,
+            "spiegazione": "Per il tasso di mortalità si mettono al numeratore i decessi (126) e al denominatore la popolazione (14.000), moltiplicando per 100 per la percentuale: (126 / 14.000) * 100 = 0,9%. Il numero dei nati (98) è il dato superfluo."
+          },
+          {
+            "domanda": "In un problema d'esame si legge: 'Nel comune di Jesi (40.000 abitanti) si registrano in un anno 320 nati, 440 morti e un'estensione territoriale di 108 km². Calcola il tasso di natalità per mille.' Quali dati sono del tutto superflui per rispondere al quesito?",
+            "opzioni": [
+              "Soltanto gli abitanti (40.000)",
+              "I morti (440) e la superficie (108 km²)",
+              "I nati (320) e la superficie (108 km²)",
+              "Nessun dato è superfluo, vanno usati tutti"
+            ],
+            "corretta": 1,
+            "spiegazione": "Per calcolare il tasso di natalità occorrono solo i nati (320) e la popolazione totale (40.000). Sia il numero dei decessi (440) sia la superficie territoriale (108 km²) sono dati di disturbo del tutto irrilevanti per questo specifico calcolo."
+          },
+          {
+            "domanda": "A Fano (60.000 abitanti, superficie di 121 km²) nascono 420 bambini e muoiono 540 persone in un anno. Qual è il tasso di natalità per mille (‰)?",
+            "opzioni": [
+              "9‰",
+              "3,47‰",
+              "2‰",
+              "7‰"
+            ],
+            "corretta": 3,
+            "spiegazione": "Formula del tasso di natalità: (Nati / Popolazione) * 1.000 = (420 / 60.000) * 1.000 = 7‰. La superficie (121 km²) e i morti (540) sono elementi di disturbo introdotti nel problema."
+          },
+          {
+            "domanda": "Nel comune di San Benedetto del Tronto (47.000 abitanti) in un anno si contano 282 nati e 470 morti. Un candidato all'esame applica la formula per il tasso di mortalità per mille (‰). Qual è il risultato e l'errore commesso dagli studenti che optano per 6‰?",
+            "opzioni": [
+              "10‰; chi sceglie 6‰ ha calcolato il tasso di natalità invece del tasso di mortalità",
+              "6‰; chi sceglie 10‰ ha sommato i nati ai morti",
+              "16‰; chi sceglie 6‰ ha sottratto i nati dai morti",
+              "4‰; chi sceglie 6‰ ha diviso la popolazione per i nati"
+            ],
+            "corretta": 0,
+            "spiegazione": "Tasso di mortalità = (Morti / Popolazione) * 1.000 = (470 / 47.000) * 1.000 = 10‰. Gli studenti che ottengono 6‰ commettono l'errore di usare i nati (282) al numeratore anziché i morti, calcolando così il tasso di natalità anziché di mortalità."
+          },
+          {
+            "domanda": "A Senigallia (44.000 abitanti) nascono 350 bambini e muoiono 310 persone nell'anno preso in esame. Il docente richiede di calcolare l'incremento naturale. Qual è la risposta corretta e la spiegazione del dato inutilizzato?",
+            "opzioni": [
+              "Incremento naturale = +660 persone; i nati sono il dato superfluo",
+              "Incremento naturale = +0,91‰; i morti sono il dato superfluo",
+              "Incremento naturale = +40 persone; la popolazione di 44.000 abitanti è il dato superfluo per la dinamica naturale assoluta",
+              "Decremento naturale = -40 persone; gli abitanti sono il dato superfluo"
+            ],
+            "corretta": 2,
+            "spiegazione": "L'incremento naturale è la differenza tra nati e morti: 350 - 310 = +40 persone. Il dato della popolazione totale (44.000) non serve per calcolare il saldo naturale in valore assoluto."
+          },
+          {
+            "domanda": "Nel comune montano di Fabriano (29.000 abitanti) in 12 mesi si verificano 145 nascite e 290 decessi. Qual è il valore del saldo naturale della popolazione?",
+            "opzioni": [
+              "Incremento naturale di +145 persone",
+              "Decremento naturale di -145 persone",
+              "Tasso di decremento del 5‰",
+              "Decremento naturale di -435 persone"
+            ],
+            "corretta": 1,
+            "spiegazione": "Saldo naturale = Nati - Morti = 145 - 290 = -145 persone. Trattandosi di un valore negativo (i morti superano i nati), si parla di decremento naturale di 145 persone. Il numero degli abitanti (29.000) non entra nel calcolo del saldo assoluto."
+          },
+          {
+            "domanda": "A Osimo (35.000 abitanti) nell'anno 2025 nascono 280 bambini, muoiono 310 persone e si registrano 150 nuovi immigrati da altri comuni. Per calcolare il tasso di natalità per mille (‰), quali dati sono irrilevanti?",
+            "opzioni": [
+              "Soltanto i 150 immigrati",
+              "Sia i 280 nati sia i 150 immigrati",
+              "Soltanto la popolazione di 35.000 abitanti",
+              "Sia i 310 morti sia i 150 immigrati"
+            ],
+            "corretta": 3,
+            "spiegazione": "Il tasso di natalità considera esclusivamente le nascite rispetto alla popolazione residente: (280 / 35.000) * 1.000 = 8‰. Sia i morti (310) sia la dinamica migratoria (150 immigrati, che attiene alla dinamica orizzontale) sono dati del tutto irrilevanti per il tasso di natalità."
+          },
+          {
+            "domanda": "Nel comune di Fermo (36.000 abitanti) si registrano 216 nati e 324 morti nell'anno. Quanto vale il tasso di mortalità per mille (‰) e qual è l'errore tipico di chi risponde 15‰?",
+            "opzioni": [
+              "9‰; chi risponde 15‰ ha sommato nati e morti (216 + 324 = 540) ponendoli al numeratore",
+              "6‰; chi risponde 15‰ ha diviso gli abitanti per 36.000",
+              "15‰; la risposta è corretta perché include sia i nati sia i morti",
+              "3‰; chi risponde 15‰ ha sottratto i nati dai morti"
+            ],
+            "corretta": 0,
+            "spiegazione": "Tasso di mortalità = (Morti / Popolazione) * 1.000 = (324 / 36.000) * 1.000 = 9‰. Chi ottiene 15‰ commette l'errore di sommare tutti i dati numerici forniti (216 nati + 324 morti = 540) credendo di doverli utilizzare tutti nella formula: (540 / 36.000) * 1.000 = 15‰."
+          },
+          {
+            "domanda": "A Tolentino (18.000 abitanti) in un anno nascono 126 bambini e muoiono 162 persone. Qual è il saldo naturale e come si giustifica la non inclusione della popolazione totale?",
+            "opzioni": [
+              "Incremento naturale di +36 persone; gli abitanti non servono mai in demografia",
+              "Tasso di mortalità del 9‰; gli abitanti sono il numeratore",
+              "Decremento naturale di -36 persone; gli abitanti servono solo se si chiede un tasso o quoziente relativo",
+              "Decremento naturale di -288 persone; gli abitanti vanno detratti dal totale"
+            ],
+            "corretta": 2,
+            "spiegazione": "Il saldo naturale misura la variazione assoluta tra entrate per nascita e uscite per morte: Nati - Morti = 126 - 162 = -36 persone (decremento naturale). La popolazione totale (18.000) non si utilizza perché non è stato richiesto il quoziente/tasso di variazione relativa."
+          },
+          {
+            "domanda": "Nel comune di Recanati (21.000 abitanti) si sono avuti 147 nati e 189 morti. Calcola il tasso di natalità espresso per mille (‰).",
+            "opzioni": [
+              "9‰",
+              "7‰",
+              "16‰",
+              "2‰"
+            ],
+            "corretta": 1,
+            "spiegazione": "Tasso di natalità = (Nati / Popolazione) * 1.000 = (147 / 21.000) * 1.000 = 7‰. Il numero dei morti (189) è il dato superfluo."
+          },
+          {
+            "domanda": "A Porto Sant'Elpidio (26.000 abitanti) nascono 182 bambini e muoiono 208 persone in 12 mesi. Calcola il tasso di mortalità per mille (‰) e indica il dato escluso dal calcolo.",
+            "opzioni": [
+              "7‰ (dato escluso: 208 morti)",
+              "15‰ (dato escluso: 26.000 abitanti)",
+              "1‰ (dato escluso: 182 nati)",
+              "8‰ (dato escluso: 182 nati)"
+            ],
+            "corretta": 3,
+            "spiegazione": "Tasso di mortalità = (Morti / Popolazione) * 1.000 = (208 / 26.000) * 1.000 = 8‰. Il dato escluso dal calcolo è il numero dei nati (182)."
+          },
+          {
+            "domanda": "A Camerino (6.000 abitanti, densità di 85 ab/km²) nel corso dell'anno nascono 36 bambini e muoiono 54 persone. Qual è l'incremento o decremento naturale della popolazione?",
+            "opzioni": [
+              "Decremento naturale di -18 persone",
+              "Incremento naturale di +18 persone",
+              "Decremento naturale di -31 persone",
+              "Tasso di mortalità del 9‰"
+            ],
+            "corretta": 0,
+            "spiegazione": "Saldo naturale = Nati - Morti = 36 - 54 = -18 persone (decremento naturale). Sia il numero di abitanti (6.000) sia la densità di popolazione (85 ab/km²) rappresentano dati non utili per determinare il saldo naturale assoluto."
+          },
+          {
+            "domanda": "A Castelfidardo (18.000 abitanti) si registrano in un anno 144 nati e 162 morti. Qual è il tasso di natalità espresso in percentuale (%)?",
+            "opzioni": [
+              "0,9%",
+              "1,7%",
+              "0,8%",
+              "8%"
+            ],
+            "corretta": 2,
+            "spiegazione": "Tasso di natalità (%) = (Nati / Popolazione) * 100 = (144 / 18.000) * 100 = 0,8%. Il numero di morti (162) è il dato irrilevante. La risposta 0,9% rappresenta il tasso di mortalità, mentre 1,7% deriva dal sommare nati e morti."
+          },
+          {
+            "domanda": "Nel comune di Chiaravalle (14.000 abitanti) nascono 84 bambini e muoiono 126 persone in un anno. Qual è il tasso di mortalità espresso in percentuale (%)?",
+            "opzioni": [
+              "0,6%",
+              "0,9%",
+              "1,5%",
+              "9%"
+            ],
+            "corretta": 1,
+            "spiegazione": "Tasso di mortalità (%) = (Morti / Popolazione) * 100 = (126 / 14.000) * 100 = 0,9%. I nati (84) costituiscono il dato superfluo. Scegliere 0,6% significherebbe calcolare il tasso di natalità."
+          },
+          {
+            "domanda": "A Falconara Marittima (25.000 abitanti) nascono 200 bambini e muoiono 175 persone nell'anno 2025. Determina l'incremento o decremento naturale della popolazione e indica il dato non utilizzato.",
+            "opzioni": [
+              "Decremento naturale di -25 persone (dato non utilizzato: 25.000 abitanti)",
+              "Incremento naturale di +375 persone (dato non utilizzato: 200 nati)",
+              "Tasso di incremento dell'8‰ (dato non utilizzato: 175 morti)",
+              "Incremento naturale di +25 persone (dato non utilizzato: 25.000 abitanti)"
+            ],
+            "corretta": 3,
+            "spiegazione": "Nati (200) - Morti (175) = +25 persone (incremento naturale, poiché i nati superano i morti). Il dato della popolazione residente (25.000 abitanti) non viene adoperato per il calcolo del valore assoluto del saldo naturale."
+          }
+        ]
+      }
+    ]
   }
 }
