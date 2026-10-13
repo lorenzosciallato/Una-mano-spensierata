@@ -189,10 +189,10 @@
             <a href="index.html" class="author-badge primary">
                 <span class="author-name" style="padding: 4px 6px;"><svg class="ums-ic" aria-hidden="true"><use href="#ic-home"/></svg> Torna alla Home</span>
             </a>
-            <a href="https://www.instagram.com/sciallato_lorenzo/" target="_blank" class="author-badge">
+            <span class="author-badge">
                 <img src="img/avatar-lorenzo.png" alt="Lorenzo Sciallato" class="author-img">
                 <span class="author-name">Creato da <strong>Lorenzo</strong> &copy; 2025</span>
-            </a>
+            </span>
             <a href="https://chat.whatsapp.com/EaX5kr14XxHL9o3qxdDVEP?mode=gi_t" target="_blank" class="author-badge">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="Gruppo WhatsApp" class="author-img" style="padding:10px;">
                 <span class="author-name">Entra nel <strong>Gruppo</strong></span>
@@ -383,87 +383,11 @@
                         </div>
                     </div>
 
-                    <!-- 04. FLASHCARDS -->
+                    <!-- 04. RIASSUNTONE -->
                     <div class="accordion-item">
                         <h2 class="ums-acc-h">
                         <button class="accordion-header">
                             <span class="ch-number">04</span>
-                            <span class="ch-text">
-                                <span class="ch-eyebrow">Ripasso Attivo</span>
-                                <span class="ch-title">Dritti al Sodo</span>
-                            </span>
-                            <span class="ch-icon">+</span>
-                        </button></h2>
-                        <div class="accordion-content">
-                            <!-- FOGLIO DI RIPASSO — domande a sinistra, risposte a destra:
-                                 si stampa e si copre la colonna col quaderno. Il pulsante
-                                 compare solo se la lezione ha davvero le flashcard. -->
-                            <div id="ums-fc-print-bar" hidden>
-                                <button id="ums-fc-print-btn" type="button" onclick="window.__umsStampa && window.__umsStampa('flash', false, false)">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg>
-                                    Stampa il foglio di ripasso
-                                </button>
-                            </div>
-                            <div class="media-notes-grid">
-                                <div>
-                                    <div id="fc-start-screen" style="text-align:center; padding: 1rem 0;">
-                                        <div class="flashcard-wrapper" style="cursor:default;">
-                                            <div class="flashcard-inner">
-                                                <div class="flashcard-front"></div>
-                                            </div>
-                                        </div>
-                                        <button class="btn-pop btn-start" onclick="startFlashcards()">Inizia il Ripasso</button>
-                                    </div>
-
-                                    <div id="fc-game-screen" style="display:none;">
-                                        <div class="fc-counter" id="fc-counter"></div>
-                                        <div id="flashcard-deck" class="flashcard-wrapper" onclick="handleWrapperClick(event)">
-                                            <div class="flashcard-inner">
-                                                <div class="flashcard-front">
-                                                    <h2 id="fc-front-text">Caricamento…</h2>
-                                                    <button class="btn-flip-mobile" onclick="forceFlip(event)">GIRA <svg class="ums-ic" aria-hidden="true"><use href="#ic-rotate"/></svg></button>
-                                                </div>
-                                                <div class="flashcard-back">
-                                                    <p id="fc-back-text">Caricamento…</p>
-                                                    <button class="btn-flip-mobile" onclick="forceFlip(event)">GIRA <svg class="ums-ic" aria-hidden="true"><use href="#ic-rotate"/></svg></button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="fc-controls" id="fc-controls-bar">
-                                            <button class="btn-pop btn-nav" onclick="navCard(-1)" aria-label="Carta precedente"><svg class="ums-ic" aria-hidden="true"><use href="#ic-chevron-left"/></svg></button>
-                                            <div class="fc-actions">
-                                                <button class="btn-pop btn-no" onclick="markUnknown()">Ripasso dopo :(</button>
-                                                <button class="btn-pop btn-yes" onclick="markKnown()">La so! :)</button>
-                                            </div>
-                                            <button class="btn-pop btn-nav" onclick="navCard(1)" aria-label="Carta successiva"><svg class="ums-ic" aria-hidden="true"><use href="#ic-chevron-right"/></svg></button>
-                                        </div>
-                                    </div>
-
-                                    <div id="win-screen">
-                                        <h2>Ma allora se le sai tutte io vado via!!</h2>
-                                        <p style="margin:20px 0; font-size:2.5rem; color:var(--gold-dk);"><svg class="ums-ic" aria-hidden="true"><use href="#ic-award"/></svg></p>
-                                        <button class="btn-pop btn-yes" onclick="resetDeck()">Ricomincia da capo</button>
-                                    </div>
-                                </div>
-
-                                <div class="notes-widget">
-                                    <div class="notes-toolbar">
-                                        <span class="notes-label">Appunti</span>
-                                        <button class="tool-btn copy-btn">Copia</button>
-                                        <button class="tool-btn download-btn"><svg class="ums-ic" aria-hidden="true"><use href="#ic-download"/></svg> .txt</button>
-                                    </div>
-                                    <textarea class="notes-area" placeholder="Annota quello che non ricordi…"></textarea>
-                                </div>
-                            </div>
-                            <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione <svg class="ums-ic" aria-hidden="true"><use href="#ic-chevron-up"/></svg></button>
-                        </div>
-                    </div>
-
-                    <!-- 05. RIASSUNTONE -->
-                    <div class="accordion-item">
-                        <h2 class="ums-acc-h">
-                        <button class="accordion-header">
-                            <span class="ch-number">05</span>
                             <span class="ch-text">
                                 <span class="ch-eyebrow">Studio Approfondito</span>
                                 <span class="ch-title">Il Riassuntone</span>
@@ -531,6 +455,82 @@
                                     <textarea class="notes-area" placeholder="Annota concetti da ricordare…"></textarea>
                                 </div>
 
+                            </div>
+                            <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione <svg class="ums-ic" aria-hidden="true"><use href="#ic-chevron-up"/></svg></button>
+                        </div>
+                    </div>
+
+                    <!-- 05. FLASHCARDS -->
+                    <div class="accordion-item">
+                        <h2 class="ums-acc-h">
+                        <button class="accordion-header">
+                            <span class="ch-number">05</span>
+                            <span class="ch-text">
+                                <span class="ch-eyebrow">Ripasso Attivo</span>
+                                <span class="ch-title">Dritti al Sodo</span>
+                            </span>
+                            <span class="ch-icon">+</span>
+                        </button></h2>
+                        <div class="accordion-content">
+                            <!-- FOGLIO DI RIPASSO — domande a sinistra, risposte a destra:
+                                 si stampa e si copre la colonna col quaderno. Il pulsante
+                                 compare solo se la lezione ha davvero le flashcard. -->
+                            <div id="ums-fc-print-bar" hidden>
+                                <button id="ums-fc-print-btn" type="button" onclick="window.__umsStampa && window.__umsStampa('flash', false, false)">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg>
+                                    Stampa il foglio di ripasso
+                                </button>
+                            </div>
+                            <div class="media-notes-grid">
+                                <div>
+                                    <div id="fc-start-screen" style="text-align:center; padding: 1rem 0;">
+                                        <div class="flashcard-wrapper" style="cursor:default;">
+                                            <div class="flashcard-inner">
+                                                <div class="flashcard-front"></div>
+                                            </div>
+                                        </div>
+                                        <button class="btn-pop btn-start" onclick="startFlashcards()">Inizia il Ripasso</button>
+                                    </div>
+
+                                    <div id="fc-game-screen" style="display:none;">
+                                        <div class="fc-counter" id="fc-counter"></div>
+                                        <div id="flashcard-deck" class="flashcard-wrapper" onclick="handleWrapperClick(event)">
+                                            <div class="flashcard-inner">
+                                                <div class="flashcard-front">
+                                                    <h2 id="fc-front-text">Caricamento…</h2>
+                                                    <button class="btn-flip-mobile" onclick="forceFlip(event)">GIRA <svg class="ums-ic" aria-hidden="true"><use href="#ic-rotate"/></svg></button>
+                                                </div>
+                                                <div class="flashcard-back">
+                                                    <p id="fc-back-text">Caricamento…</p>
+                                                    <button class="btn-flip-mobile" onclick="forceFlip(event)">GIRA <svg class="ums-ic" aria-hidden="true"><use href="#ic-rotate"/></svg></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="fc-controls" id="fc-controls-bar">
+                                            <button class="btn-pop btn-nav" onclick="navCard(-1)" aria-label="Carta precedente"><svg class="ums-ic" aria-hidden="true"><use href="#ic-chevron-left"/></svg></button>
+                                            <div class="fc-actions">
+                                                <button class="btn-pop btn-no" onclick="markUnknown()">Ripasso dopo :(</button>
+                                                <button class="btn-pop btn-yes" onclick="markKnown()">La so! :)</button>
+                                            </div>
+                                            <button class="btn-pop btn-nav" onclick="navCard(1)" aria-label="Carta successiva"><svg class="ums-ic" aria-hidden="true"><use href="#ic-chevron-right"/></svg></button>
+                                        </div>
+                                    </div>
+
+                                    <div id="win-screen">
+                                        <h2>Ma allora se le sai tutte io vado via!!</h2>
+                                        <p style="margin:20px 0; font-size:2.5rem; color:var(--gold-dk);"><svg class="ums-ic" aria-hidden="true"><use href="#ic-award"/></svg></p>
+                                        <button class="btn-pop btn-yes" onclick="resetDeck()">Ricomincia da capo</button>
+                                    </div>
+                                </div>
+
+                                <div class="notes-widget">
+                                    <div class="notes-toolbar">
+                                        <span class="notes-label">Appunti</span>
+                                        <button class="tool-btn copy-btn">Copia</button>
+                                        <button class="tool-btn download-btn"><svg class="ums-ic" aria-hidden="true"><use href="#ic-download"/></svg> .txt</button>
+                                    </div>
+                                    <textarea class="notes-area" placeholder="Annota quello che non ricordi…"></textarea>
+                                </div>
                             </div>
                             <button class="btn-close-section" onclick="closeThisSection(this)">Chiudi Sezione <svg class="ums-ic" aria-hidden="true"><use href="#ic-chevron-up"/></svg></button>
                         </div>
@@ -762,7 +762,7 @@
          · Desktop: rail verticale fissa a sinistra
          · Mobile:  barra fissa in basso
          Ordine: Lingua (icona+testo) · Home · Lorenzo (avatar → popup
-         "© 2025, tutti i diritti riservati" → Instagram) · WhatsApp.
+         "© 2025, tutti i diritti riservati") · WhatsApp.
          I vecchi badge nell'header vengono nascosti; il selettore
          lingua originale viene SPOSTATO (non duplicato) dentro la
          barra, così tutta la sua logica resta intatta.

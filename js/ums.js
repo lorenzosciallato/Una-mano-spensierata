@@ -3052,7 +3052,6 @@ if (!fileDaCaricare) {
 // SEZIONE 7 — ex <script id="ums-inav-script">
 // ====================================================================
         (function () {
-            const IG_URL = 'https://www.instagram.com/sciallato_lorenzo/';
             const WA_URL = 'https://chat.whatsapp.com/EaX5kr14XxHL9o3qxdDVEP?mode=gi_t';
             const HOME_URL = 'index.html';
             const AVATAR = 'img/avatar-lorenzo.png';
@@ -4219,7 +4218,6 @@ if (!fileDaCaricare) {
         const T = function (x) { return (window.umsT ? window.umsT(x) : x); };
 
         const SCRITTE = [
-            'Caffè sospeso?',
             'Una mano per Una Mano',
             'Sostieni il progetto',
             'Offrimi un caffè!',
@@ -4267,19 +4265,19 @@ if (!fileDaCaricare) {
                     '<span class="l1">Una Mano</span><span class="l2">Spensierata</span>' +
                 '</div>' +
                 '<div class="ums-bmc-tag"><span>Il tuo compagno di studi</span></div>' +
-                '<p class="ums-bmc-intro">Questo sito &egrave; <b>gratis</b>, e lo rester&agrave;: nessuna lezione dietro un abbonamento, niente riservato a chi paga. Chi sostiene <b>non compra un vantaggio</b> &mdash; tiene acceso il sito e, dalla seconda fascia in su, manda una parte della quota a <b>Still I Rise</b>, che apre scuole per bambini profughi e vulnerabili <a class="ums-sir-link" href="https://www.stillirise.org/" target="_blank" rel="noopener"><b>dove la scuola non c\'&egrave;</b></a>.</p>' +
+                '<p class="ums-bmc-intro">Questo sito &egrave; <b>gratis</b>, e lo rester&agrave;: nessuna lezione dietro un abbonamento, niente riservato a chi paga. Chi sostiene <b>non compra un vantaggio</b> &mdash; tiene acceso il sito e mi d&agrave; il tempo per farlo crescere: nuove lezioni, nuove materie, nuovi strumenti per studiare meglio.</p>' +
                 '<button class="ums-tier" type="button">' +
                     '<span class="ums-tier-top"><span class="ums-tier-nome">Un caff&egrave; al mese</span><span class="ums-tier-prezzo">1 &euro; / mese</span></span>' +
                     '<span class="ums-tier-desc">Copre le spese vive: dominio, server, le ore passate a scrivere lezioni e codice. Nulla di pi&ugrave;.</span>' +
                 '</button>' +
                 '<button class="ums-tier consigliato" type="button">' +
-                    '<span class="ums-tier-badge">Il pi&ugrave; scelto</span>' +
+                    '<span class="ums-tier-badge">Consigliato</span>' +
                     '<span class="ums-tier-top"><span class="ums-tier-nome">Sostenitore</span><span class="ums-tier-prezzo">5 &euro; / mese</span></span>' +
-                    '<span class="ums-tier-desc">Il <b>30%</b> va a Still I Rise. Mentre studi tu, studia anche chi questo diritto non ce l\'ha. Il corrispettivo di una colazione al mese.</span>' +
+                    '<span class="ums-tier-desc">Oltre alle spese, mette tempo per nuove lezioni e nuovi strumenti. Il corrispettivo di una colazione al mese.</span>' +
                 '</button>' +
                 '<button class="ums-tier" type="button">' +
                     '<span class="ums-tier-top"><span class="ums-tier-nome">Diritto allo studio</span><span class="ums-tier-prezzo">10 &euro; / mese</span></span>' +
-                    '<span class="ums-tier-desc">Il <b>50%</b> va a Still I Rise. Non sblocchi niente: qui &egrave; gi&agrave; tutto gratis. <b>Sblocchi che lo sia anche altrove.</b></span>' +
+                    '<span class="ums-tier-desc">Non sblocchi niente: qui &egrave; gi&agrave; tutto gratis, per tutti. <b>Sblocchi che lo resti.</b></span>' +
                 '</button>' +
                 '<p class="ums-bmc-nota">Il pagamento avviene su Buy Me a Coffee, che si apre in una nuova scheda: la lezione resta aperta qui. Puoi disdire quando vuoi, con un clic.</p>' +
             '</div>';

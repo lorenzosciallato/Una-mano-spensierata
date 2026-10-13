@@ -620,10 +620,10 @@ body.instant #appview, body.instant #topbar, body.instant #top-controls{transiti
     </button>
   </div>
   <div class="hero-badges">
-    <a href="https://www.instagram.com/sciallato_lorenzo/" target="_blank" class="author-badge">
+    <span class="author-badge">
       <img src="img/avatar-lorenzo.png" alt="Lorenzo Sciallato" class="author-img">
       <span class="author-name">Creato da <strong>Lorenzo</strong> &copy; 2025</span>
-    </a>
+    </span>
     <a href="https://chat.whatsapp.com/EaX5kr14XxHL9o3qxdDVEP?mode=gi_t" target="_blank" class="author-badge">
       <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="" class="author-img" style="padding:7px;">
       <span class="author-name">Entra nel <strong>Gruppo</strong></span>
@@ -738,10 +738,10 @@ body.instant #appview, body.instant #topbar, body.instant #top-controls{transiti
   </div>
 
   <div class="footer-badges">
-    <a href="https://www.instagram.com/sciallato_lorenzo/" target="_blank" class="author-badge">
+    <span class="author-badge">
       <img src="img/avatar-lorenzo.png" alt="Lorenzo Sciallato" class="author-img">
       <span class="author-name">Creato da <strong>Lorenzo</strong> &copy; 2025</span>
-    </a>
+    </span>
     <a href="https://chat.whatsapp.com/EaX5kr14XxHL9o3qxdDVEP?mode=gi_t" target="_blank" class="author-badge">
       <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="" class="author-img" style="padding:7px;">
       <span class="author-name">Entra nel <strong>Gruppo</strong></span>
@@ -1154,7 +1154,7 @@ renderCourses();
      INSTA-NAV — BLOCCO ADDITIVO (versione index)
      Stessa barra del template lezione: rail a sinistra su desktop,
      barra in basso su mobile. Ordine: Lingua · Home · Lorenzo
-     (avatar → popup © 2025 → Instagram) · WhatsApp.
+     (avatar → popup © 2025) · WhatsApp.
      Il selettore lingua di #top-controls viene SPOSTATO nella barra
      (logica intatta); i vecchi badge sotto INIZIA e i controlli in
      alto vengono nascosti. INIZIA viene alzato (63% → 56%).
@@ -1627,7 +1627,6 @@ renderCourses();
 
 <script id="ums-inav-script">
 (function () {
-  const IG_URL   = 'https://www.instagram.com/sciallato_lorenzo/';
   const WA_URL   = 'https://chat.whatsapp.com/EaX5kr14XxHL9o3qxdDVEP?mode=gi_t';
   const HOME_URL = 'index.html';
   const AVATAR   = 'img/avatar-lorenzo.png';
@@ -2376,7 +2375,6 @@ renderCourses();
     'Sostieni il progetto',
     'Offrimi un caffè!',
     'Un caffè alla volta...',
-    'Caffè sospeso?',
     'Per me macchiato, grazie',
     "'Na tazzullella 'e cafè"
   ];
@@ -2428,7 +2426,7 @@ renderCourses();
         '<span class="l1">Una Mano</span><span class="l2">Spensierata</span>' +
       '</div>' +
       '<div class="ums-bmc-tag"><span>Il tuo compagno di studi</span></div>' +
-      '<p class="ums-bmc-intro">Questo sito &egrave; <b>gratis</b>, e lo rester&agrave;: nessuna lezione dietro un abbonamento, niente riservato a chi paga. Chi sostiene <b>non compra un vantaggio</b> &mdash; tiene acceso il sito e, dalla seconda fascia in su, manda una parte della quota a <b>Still I Rise</b>, che apre scuole per bambini profughi e vulnerabili <a class="ums-sir-link" href="https://www.stillirise.org/" target="_blank" rel="noopener"><b>dove la scuola non c\'&egrave;</b></a>.</p>' +
+      '<p class="ums-bmc-intro">Questo sito &egrave; <b>gratis</b>, e lo rester&agrave;: nessuna lezione dietro un abbonamento, niente riservato a chi paga. Chi sostiene <b>non compra un vantaggio</b> &mdash; tiene acceso il sito e mi d&agrave; il tempo per farlo crescere: nuove lezioni, nuove materie, nuovi strumenti per studiare meglio.</p>' +
 
       '<button class="ums-tier" type="button" data-tier="1">' +
         '<span class="ums-tier-top"><span class="ums-tier-nome">Un caff&egrave; al mese</span><span class="ums-tier-prezzo">1 &euro; / mese</span></span>' +
@@ -2436,14 +2434,14 @@ renderCourses();
       '</button>' +
 
       '<button class="ums-tier consigliato" type="button" data-tier="2">' +
-        '<span class="ums-tier-badge">Il pi&ugrave; scelto</span>' +
+        '<span class="ums-tier-badge">Consigliato</span>' +
         '<span class="ums-tier-top"><span class="ums-tier-nome">Sostenitore</span><span class="ums-tier-prezzo">5 &euro; / mese</span></span>' +
-        '<span class="ums-tier-desc">Il <b>30%</b> va a Still I Rise. Mentre studi tu, studia anche chi questo diritto non ce l\'ha. Il corrispettivo di una colazione al mese.</span>' +
+        '<span class="ums-tier-desc">Oltre alle spese, mette tempo per nuove lezioni e nuovi strumenti. Il corrispettivo di una colazione al mese.</span>' +
       '</button>' +
 
       '<button class="ums-tier" type="button" data-tier="3">' +
         '<span class="ums-tier-top"><span class="ums-tier-nome">Diritto allo studio</span><span class="ums-tier-prezzo">10 &euro; / mese</span></span>' +
-        '<span class="ums-tier-desc">Il <b>50%</b> va a Still I Rise. Non sblocchi niente: qui &egrave; gi&agrave; tutto gratis. <b>Sblocchi che lo sia anche altrove.</b></span>' +
+        '<span class="ums-tier-desc">Non sblocchi niente: qui &egrave; gi&agrave; tutto gratis, per tutti. <b>Sblocchi che lo resti.</b></span>' +
       '</button>' +
 
       '<p class="ums-bmc-nota">Il pagamento avviene su Buy Me a Coffee, che si apre in una nuova scheda: il sito resta aperto qui. Puoi disdire quando vuoi, con un clic.</p>' +
