@@ -219,7 +219,7 @@ body.night-mode #night svg{stroke:var(--gold-lt);}
   #stampa .st-meta{font-size:9pt; margin:0 0 5mm;}
   #stampa h2{font-size:12.5pt; margin:5mm 0 2mm; border-bottom:1.5pt solid #000; padding-bottom:1mm; break-after:avoid;}
   #stampa h3{font-size:10.5pt; margin:3mm 0 1mm;}
-  #stampa table{width:100%; border-collapse:collapse; margin-bottom:2mm;}
+  #stampa table{width:100%; table-layout:fixed; border-collapse:collapse; margin-bottom:2mm;}
   #stampa th, #stampa td{border:.5pt solid #777; padding:1.2mm 1.6mm; text-align:left; vertical-align:top;}
   #stampa th{background:#eee;}
   #stampa tr{break-inside:avoid;}
@@ -607,18 +607,19 @@ body.night-mode #night svg{stroke:var(--gold-lt);}
       return G;
     });
     const lista=a=>a.length?a.join(', '):'—';
-    const tab=(arr,completa)=>'<table><thead><tr><th>Materia</th><th>Gruppo</th><th class="num">Totale</th><th>Spuntate</th>'+(completa?'':'<th>Mancano</th>')+'<th class="num">Ancora da fare</th></tr></thead><tbody>'+
-      arr.map(G=>'<tr><td>'+esc(G.m)+'</td><td>'+esc(gruppoLabel(G.g)||'—')+'</td><td class="num">'+G.tot+'</td><td>'+lista(G.si)+'</td>'+(completa?'':'<td><strong>'+lista(G.no)+'</strong></td>')+'<td class="num">'+G.fut+'</td></tr>').join('')+
+    const tab=arr=>'<table><colgroup><col style="width:30%"><col style="width:9%"><col style="width:8%"><col style="width:22%"><col style="width:22%"><col style="width:9%"></colgroup>'+
+      '<thead><tr><th>Materia</th><th>Gruppo</th><th class="num">Totale</th><th>Spuntate</th><th>Mancano</th><th class="num">Future</th></tr></thead><tbody>'+
+      arr.map(G=>'<tr><td>'+esc(G.m)+'</td><td>'+esc(gruppoLabel(G.g)||'—')+'</td><td class="num">'+G.tot+'</td><td>'+lista(G.si)+'</td><td><strong>'+lista(G.no)+'</strong></td><td class="num">'+G.fut+'</td></tr>').join('')+
       '</tbody></table>';
-    let html='<h1>Calendario delle lezioni · riepilogo</h1><p class="st-meta">'+esc(META.semestre||'')+' · stampato il '+fmtLong(today())+' '+today().getFullYear()+'. "Mancano" = lezioni già svolte non spuntate. "Ancora da fare" = lezioni future.</p>';
+    let html='<h1>Calendario delle lezioni · riepilogo</h1><p class="st-meta">'+esc(META.semestre||'')+' · stampato il '+fmtLong(today())+' '+today().getFullYear()+'. "Mancano" = lezioni già svolte non spuntate. "Future" = lezioni non ancora svolte.</p>';
     [1,2,3,4,5,0].forEach(a=>{
       const r=righe.filter(G=>G.anno===a).sort((x,y)=>x.m.localeCompare(y.m,'it')||x.g.localeCompare(y.g));
       if(!r.length) return;
       const ok=r.filter(G=>!G.no.length && G.si.length);
       const ko=r.filter(G=>G.no.length || !G.si.length);
       html+='<h2>'+(a?a+'° anno':'Altro')+'</h2>';
-      html+='<h3>Mancano ('+ko.length+')</h3>'+(ko.length?tab(ko,false):'<p>Nessuna.</p>');
-      html+='<h3>In pari ('+ok.length+')</h3>'+(ok.length?tab(ok,true):'<p>Nessuna.</p>');
+      html+='<h3>Mancano ('+ko.length+')</h3>'+(ko.length?tab(ko):'<p>Nessuna.</p>');
+      html+='<h3>In pari ('+ok.length+')</h3>'+(ok.length?tab(ok):'<p>Nessuna.</p>');
     });
     $('#stampa').innerHTML=html;
     document.body.classList.add('stampando');
