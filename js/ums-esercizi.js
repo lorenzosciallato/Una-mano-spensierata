@@ -13,7 +13,8 @@
    SOLO DISEGNI VETTORIALI: il disegno nasce dai numeri, quindi un
    luogo a 22°15′ sta esattamente a 22°15′. Niente immagini generate.
 
-   Tipi: reticolo_coordinate, densita_popolamento, altro (scorta di
+   Tipi: reticolo_coordinate, densita_popolamento, tassi_demografici,
+   grafico_dati, altro (scorta di
    varianti preparata dal server, oppure "da costruire").
 ============================================================ */
 (function () {
@@ -30,8 +31,14 @@
     var b = d && d.esercizi;
     var lista = (b && Array.isArray(b.trovati) ? b.trovati : []).filter(function (e) {
       if (!e || !e.tipo) return false;
+      // Le lezioni nuove arrivano dal server come "altro": si riconoscono dal titolo e vanno al loro motore.
+      if (e.tipo === 'altro') {
+        var tt = String(e.titolo || '') + ' ' + String(e.consegna || '');
+        if (/tass[oi]|natalit|mortalit|incremento naturale/i.test(tt)) e.tipo = 'tassi_demografici';
+        else if (/\bgrafic[oi]\b|istogramm/i.test(tt)) e.tipo = 'grafico_dati';
+      }
       if (e.tipo === 'altro') return e.da_costruire || (Array.isArray(e.banca) && e.banca.length > 0);
-      return e.tipo === 'reticolo_coordinate' || e.tipo === 'densita_popolamento';
+      return ['reticolo_coordinate', 'densita_popolamento', 'tassi_demografici', 'grafico_dati'].indexOf(e.tipo) >= 0;
     });
     if (lista.length) monta(lista);
   }).catch(function (err) { try { console.error('Esercizi d\u2019esame:', err); } catch (e) {} });
@@ -277,6 +284,7 @@
 
   function motoreDi(e) {
     return e.tipo === 'reticolo_coordinate' ? RETICOLO : e.tipo === 'densita_popolamento' ? DENSITA
+         : e.tipo === 'tassi_demografici' ? TASSI : e.tipo === 'grafico_dati' ? GRAFICO
          : e.da_costruire ? null : BANCA;
   }
   function esercizio(e, voci) {
@@ -352,6 +360,10 @@
       box.appendChild(b);
     });
     box.valore = function () { return valore; };
+    box.imposta = function (v) {
+      if (box.bloccato) return;
+      opzioni.forEach(function (o, i) { if (o.v === v) { valore = v; Array.prototype.forEach.call(box.children, function (x, j) { x.setAttribute('aria-pressed', j === i ? 'true' : 'false'); }); } });
+    };
     box.blocca = function () { box.bloccato = true; };
     return box;
   }
@@ -448,6 +460,7 @@
     prepara();
     var ferma = null;
     function salva() { scrivi(K, stato); }
+    salva();
     function nuova(soloSbagliati) {
       if (soloSbagliati) {
         var idx = [];
@@ -784,7 +797,9 @@
   function varianteReticolo(r, i, cols, rows, usate) {
     var livello = i < 5 ? 0 : i < 10 ? 1 : 2;
     var zero = i === 2 ? 'lat' : i === 7 ? 'lon' : null;
-    var trappola = false;   // l'errore di stampa visto in aula non fa parte dell'esercizio d'esame
+    // L'etichetta sbagliata (in aula: 150° al posto di 105°): il docente all'esame la mette apposta.
+    // Compare in 6 esercizi su 15, mai nei primi tre, così prima si impara a leggere il reticolo.
+    var trappola = !!CON_TRAPPOLA[i % N_PIANO];
     var conCitta = (i % 3) !== 1 && !zero;
     // Emisferi fissati per ogni serie da 15: 5 nord-est (per impratichirsi), poi 3 sud-est,
     // 3 nord-ovest e 4 sud-ovest. Così 7 esercizi hanno la latitudine sud, 7 la longitudine
@@ -821,18 +836,44 @@
     v.labLat = rmescola(r, lineeLat).slice(0, quante).sort(function (x, y) { return x - y; });
     v.labLon = rmescola(r, lineeLon).slice(0, quante).sort(function (x, y) { return x - y; });
     v.trappola = null;
-    if (trappola) {
-      var asse = r() < 0.5 ? 'lon' : 'lat';
-      var date = asse === 'lat' ? v.labLat : v.labLon, tutte = asse === 'lat' ? lineeLat : lineeLon;
-      var libere = tutte.filter(function (x) { return date.every(function (d) { return Math.abs(d - x) >= 2; }); });
-      if (libere.length) {
-        var vera = rpick(r, libere), s = String(vera).split('').reverse().join(''), falsa = Number(s);
-        var max = asse === 'lat' ? 89 : 180;
-        if (falsa === vera || s[0] === '0' || falsa > max || Math.abs(falsa - vera) < 5) falsa = vera + (vera + 10 <= max ? 10 : -10);
-        v.trappola = { asse: asse, vera: vera, falsa: falsa, trovata: false };
-      }
-    }
+    if (trappola) v.trappola = creaTrappola(r, v, lineeLat, lineeLon);
     return v;
+  }
+  var N_PIANO = 15;
+  var CON_TRAPPOLA = { 3: 1, 5: 1, 8: 1, 10: 1, 12: 1, 14: 1 };
+
+  // Sull'asse della trappola servono due etichette giuste: solo così si capisce quale delle tre è sbagliata.
+  function creaTrappola(r, v, lineeLat, lineeLon) {
+    var asse = r() < 0.5 ? 'lon' : 'lat';
+    var tutte = asse === 'lat' ? lineeLat : lineeLon, date = asse === 'lat' ? v.labLat : v.labLon;
+    if (date.length < 2) {
+      var altre = tutte.filter(function (x) { return date.every(function (d) { return Math.abs(d - x) >= 2; }); });
+      if (!altre.length) return null;
+      date.push(rpick(r, altre)); date.sort(function (x, y) { return x - y; });
+    }
+    var libere = tutte.filter(function (x) { return date.every(function (d) { return Math.abs(d - x) >= 2; }); });
+    if (!libere.length) libere = tutte.filter(function (x) { return date.indexOf(x) < 0; });
+    if (!libere.length) return null;
+    var vera = rpick(r, libere), max = asse === 'lat' ? 89 : 180;
+    var falsa = falsoCredibile(r, vera, max, tutte);
+    if (falsa === null) return null;
+    return { asse: asse, vera: vera, falsa: falsa, trovata: false };
+  }
+  // Errori di stampa verosimili: cifre scambiate (105 → 150), una cifra sbagliata, dieci gradi in più o in meno.
+  function falsoCredibile(r, vera, max, tutte) {
+    var s = String(vera), cand = [];
+    if (s.length >= 2) {
+      if (s[s.length - 1] !== '0') cand.push(Number(s.split('').reverse().join('')));
+      cand.push(Number(s.slice(0, -2) + s.slice(-1) + s.slice(-2, -1)));
+    }
+    if (s.length === 3) cand.push(Number(s[0] + s[2] + s[1]));
+    [10, -10, 20, -20, 30, -30].forEach(function (d) { cand.push(vera + d); });
+    var buone = cand.filter(function (x, i) {
+      return cand.indexOf(x) === i && x !== vera && x >= 1 && x <= max && Math.abs(x - vera) >= 3 && tutte.indexOf(x) < 0;
+    });
+    if (!buone.length) return null;
+    var scambi = buone.filter(function (x) { return Math.abs(x - vera) % 10 !== 0; });
+    return scambi.length && r() < 0.6 ? rpick(r, scambi) : rpick(r, buone);
   }
 
   function geometria(v, opz) {
@@ -885,31 +926,29 @@
     }
     function posLat(val) { return { x: G.SX - 10, y: G.y(val) + FS * 0.33 }; }
     function posLon(val) { return { x: G.x(val), y: G.gy1 + 12 + FS + (G.sfalsa && Math.abs(val - v.b0) % 2 ? FS + 4 : 0) }; }
-    var etic = { lat: {}, lon: {} };
-    v.labLat.forEach(function (val) {
-      var p = posLat(val);
-      etic.lat[val] = sv('text', { x: p.x, y: p.y, 'text-anchor': 'end', 'font-size': FS, 'font-style': 'italic' }, val + '\u00b0 ' + v.ns);
-      base.appendChild(etic.lat[val]);
-    });
-    v.labLon.forEach(function (val) {
-      var p = posLon(val);
-      etic.lon[val] = sv('text', { x: p.x, y: p.y, 'text-anchor': 'middle', 'font-size': FS, 'font-style': 'italic' }, val + '\u00b0 ' + v.eo);
-      base.appendChild(etic.lon[val]);
-    });
+    var etic = { lat: {}, lon: {} }, tocchi = [];
+    // In allenamento ogni etichetta si può toccare per dire «questa è sbagliata»: tutte, così toccarle non svela niente.
+    function etichettaTesto(asse, valVero, scritto) {
+      var p = asse === 'lat' ? posLat(valVero) : posLon(valVero), lw = FS * 4;
+      var t0 = sv('text', { x: p.x, y: p.y, 'text-anchor': asse === 'lat' ? 'end' : 'middle', 'font-size': FS, 'font-style': 'italic' }, scritto + '\u00b0 ' + (asse === 'lat' ? v.ns : v.eo));
+      if (!opz.interattivo) { base.appendChild(t0); return t0; }
+      var g = sv('g', { class: 'esx-etic-trappola', tabindex: '0', role: 'button', 'aria-label': 'Etichetta ' + scritto + ' gradi: toccala se \u00e8 sbagliata' });
+      g.appendChild(sv('rect', { x: asse === 'lon' ? p.x - lw / 2 : p.x - lw, y: p.y - FS, width: lw, height: FS + 8, rx: 5, fill: 'transparent', stroke: 'transparent' }));
+      g.appendChild(t0);
+      var tocca = function () { if (bloccate) return; if (opz.suEtichetta) opz.suEtichetta({ asse: asse, scritto: scritto, nodo: g }); };
+      g.addEventListener('click', tocca);
+      g.addEventListener('keydown', function (ev) { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); tocca(); } });
+      tocchi.push(g); base.appendChild(g);
+      return t0;
+    }
+    var bloccate = false;
+    v.labLat.forEach(function (val) { etic.lat[val] = etichettaTesto('lat', val, val); });
+    v.labLon.forEach(function (val) { etic.lon[val] = etichettaTesto('lon', val, val); });
     if (G.sfalsa) for (var jj = 0; jj <= v.cols; jj++) if (jj % 2) {
       var xv = G.gx0 + jj * G.CELL;
       base.appendChild(sv('line', { x1: xv, y1: G.gy1 + 6, x2: xv, y2: G.gy1 + 10 + FS, stroke: stampa ? '#999' : SEPPIA, 'stroke-width': .8, opacity: .6 }));
     }
-    var trap = null;
-    if (v.trappola) {
-      var tr0 = v.trappola, pt = tr0.asse === 'lon' ? posLon(tr0.vera) : posLat(tr0.vera);
-      trap = sv('g', { class: opz.interattivo ? 'esx-etic-trappola' : null, tabindex: opz.interattivo ? '0' : null, role: opz.interattivo ? 'button' : null,
-        'aria-label': opz.interattivo ? 'Etichetta ' + tr0.falsa + ' gradi: toccala se \u00e8 sbagliata' : null });
-      var lw = FS * 4;
-      trap.appendChild(sv('rect', { x: tr0.asse === 'lon' ? pt.x - lw / 2 : pt.x - lw, y: pt.y - FS, width: lw, height: FS + 8, rx: 5, fill: 'transparent', stroke: 'transparent' }));
-      trap.appendChild(sv('text', { x: pt.x, y: pt.y, 'text-anchor': tr0.asse === 'lon' ? 'middle' : 'end', 'font-size': FS, 'font-style': 'italic' }, tr0.falsa + '\u00b0 ' + (tr0.asse === 'lon' ? v.eo : v.ns)));
-      base.appendChild(trap);
-    }
+    if (v.trappola) etichettaTesto(v.trappola.asse, v.trappola.vera, v.trappola.falsa);
     var nx = G.gx1 - 2;
     base.appendChild(sv('path', { d: 'M ' + nx + ' ' + (G.SY - 32) + ' l -6 15 l 6 -4 l 6 4 z', fill: tinta }));
     base.appendChild(sv('text', { x: nx - 12, y: G.SY - 19, 'text-anchor': 'end', 'font-size': Math.max(12, FS - 3), 'font-style': 'italic' }, 'nord'));
@@ -950,6 +989,12 @@
           riga.setAttribute('stroke', ORO); riga.setAttribute('stroke-width', 3.4);
           sotto.appendChild(riga); traccia(riga, anim, t, 350, 800);
         });
+      },
+      sospetto: function (anim, t) {
+        if (!v.trappola) return;
+        var tr = v.trappola, p = tr.asse === 'lon' ? posLon(tr.vera) : posLat(tr.vera);
+        var e1 = sv('ellipse', { cx: tr.asse === 'lat' ? p.x - FS * 1.45 : p.x, cy: p.y - FS * 0.35, rx: tr.asse === 'lat' ? FS * 1.9 : FS * 2.3, ry: FS * 0.95, fill: 'none', stroke: ROSSO, 'stroke-width': 2.6 });
+        sopra.appendChild(e1); appariDopo(e1, anim, t, 80);
       },
       trappola: function (anim, t) {
         if (!v.trappola) return;
@@ -1042,16 +1087,10 @@
         });
       }
     };
-    if (trap && opz.interattivo) {
-      var scovata = function () {
-        if (v.trappola.trovata || trap.bloccata) return;
-        api.trappola(true, Orologio());
-        if (opz.suTrappola) opz.suTrappola();
-      };
-      trap.addEventListener('click', scovata);
-      trap.addEventListener('keydown', function (ev) { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); scovata(); } });
-      api.bloccaTrappola = function () { trap.bloccata = true; };
-    }
+    api.bloccaTrappola = function () { bloccate = true; tocchi.forEach(function (g) { g.removeAttribute('tabindex'); g.style.cursor = 'default'; }); };
+    api.segnaTocco = function (nodo) {
+      tocchi.forEach(function (g) { var rr = g.firstChild; rr.setAttribute('stroke', g === nodo ? ROSSO : 'transparent'); rr.setAttribute('stroke-width', g === nodo ? 2 : 0); });
+    };
     return { nodo: svg, api: api };
   }
 
@@ -1087,9 +1126,13 @@
       grado: 'Sbagliare il conto dei gradi partendo dall\u2019etichetta',
       primiVuoti: 'Dimenticare i primi (anche gli 00\u2032 vanno scritti)',
       primiOltre: 'Scrivere primi oltre 59',
-      stima: 'Stimare male la frazione del riquadro'
+      stima: 'Stimare male la frazione del riquadro',
+      trappola: 'Non accorgersi dell\u2019etichetta sbagliata',
+      trappolaValore: 'Correggere l\u2019etichetta sbagliata con il valore sbagliato',
+      trappolaInventata: 'Vedere un errore dove non c\u2019\u00e8'
     },
-    opzioni: function () { return stretto() ? { cols: 6, rows: 5 } : { cols: 8, rows: 6 }; },
+    // "v" cambia quando cambia il modo di generare la serie: le serie salvate prima ripartono da capo.
+    opzioni: function () { return stretto() ? { cols: 6, rows: 5, v: 2 } : { cols: 8, rows: 6, v: 2 }; },
     opzioniStampa: function () { return { cols: 8, rows: 6 }; },
     serie: function (seme, n, opz) {
       var r = rngDa(seme), usate = {}, out = [];
@@ -1097,14 +1140,26 @@
       return out;
     },
     domanda: function (v0) {
-      var v = JSON.parse(JSON.stringify(v0));         // copia: la trappola scovata si segna sulla copia
-      var foglio = el('div'), campi = [];
-      var trovataMsg = el('p', { class: 'esx-nota' });
-      var d = disegnaReticolo(v, { interattivo: true, suTrappola: function () {
-        trovataMsg.textContent = 'Esatto: quell\u2019etichetta rompeva la sequenza di un grado per linea. Il valore giusto \u00e8 ' + v.trappola.vera + '\u00b0.';
-        trovataMsg.style.color = BLU;
+      var v = JSON.parse(JSON.stringify(v0));
+      var foglio = el('div'), campi = [], et = {};
+      var d = disegnaReticolo(v, { interattivo: true, suEtichetta: function (x) {
+        et.scelta.imposta('si'); et.scritto.value = x.scritto; d.api.segnaTocco(x.nodo); et.giusto.focus();
       } });
-      foglio.appendChild(el('h4', { text: 'Scrivi le coordinate dei due luoghi' }));
+      // Prima domanda: le etichette. Il docente ne mette una sbagliata, come il 150° al posto di 105° visto in aula.
+      var blocco0 = el('div', { class: 'esx-luogo esx-etic' });
+      blocco0.appendChild(el('h5', { text: 'Le etichette dei gradi sono tutte giuste?' }));
+      blocco0.appendChild(el('p', { class: 'esx-nota', style: 'margin:-4px 0 10px', text: 'Se una \u00e8 sbagliata, scrivi che cosa c\u2019\u00e8 scritto e che cosa doveva esserci.' }));
+      et.scelta = segmentato([{ t: 'Tutte giuste', v: 'no' }, { t: 'Una \u00e8 sbagliata', v: 'si' }], 'Le etichette dei gradi sono tutte giuste?');
+      et.scritto = el('input', { class: 'esx-campo', inputmode: 'numeric', 'aria-label': 'Etichetta sbagliata: che cosa c\u2019\u00e8 scritto', autocomplete: 'off' });
+      et.giusto = el('input', { class: 'esx-campo', inputmode: 'numeric', 'aria-label': 'Etichetta sbagliata: che cosa doveva esserci', autocomplete: 'off' });
+      et.X = el('span', { class: 'esx-giusto' });
+      [et.scritto, et.giusto].forEach(function (c) { c.addEventListener('input', function () { if (c.value.trim()) et.scelta.imposta('si'); }); });
+      blocco0.appendChild(el('div', { class: 'esx-riga' }, [et.scelta]));
+      blocco0.appendChild(el('div', { class: 'esx-riga' }, [el('span', { class: 'esx-lab', text: 'C\u2019\u00e8 scritto' }), et.scritto, el('span', { class: 'esx-unita', text: '\u00b0' })]));
+      blocco0.appendChild(el('div', { class: 'esx-riga' }, [el('span', { class: 'esx-lab', text: 'Doveva esserci' }), et.giusto, el('span', { class: 'esx-unita', text: '\u00b0' }), et.X]));
+      blocco0.appendChild(el('p', { class: 'esx-nota', style: 'margin:0 0 4px', text: 'Puoi anche toccare l\u2019etichetta sbagliata sul reticolo.' }));
+      foglio.appendChild(blocco0);
+      foglio.appendChild(el('h4', { style: 'margin-top:16px', text: 'Scrivi le coordinate dei due luoghi' }));
       foglio.appendChild(el('p', { class: 'esx-nota', style: 'margin:-6px 0 12px', text: v.citta ? 'Citt\u00e0 reali, con le loro coordinate vere arrotondate ai 5 primi.' : 'Citt\u00e0 immaginarie: i punti non corrispondono a luoghi reali.' }));
       ordinaLuoghi(v).forEach(function (p) {
         var blocco = el('div', { class: 'esx-luogo' }), c = {};
@@ -1126,13 +1181,16 @@
         nodo: d.nodo, foglio: foglio,
         leggi: function () {
           if (campi.every(function (x) { return !x.c.latG.value.trim() && !x.c.lonG.value.trim(); })) { campi[0].c.latG.focus(); return null; }
-          return { trappola: !!(v.trappola && v.trappola.trovata), luoghi: campi.map(function (x) {
+          return { et: { scelta: et.scelta.valore(), scritto: numero(et.scritto.value), giusto: numero(et.giusto.value) }, luoghi: campi.map(function (x) {
             return { latG: numero(x.c.latG.value), latM: x.c.latM.value.trim(), ns: x.c.latD.valore(),
               lonG: numero(x.c.lonG.value), lonM: x.c.lonM.value.trim(), eo: x.c.lonD.valore() };
           }) };
         },
         segna: function (val) {
-          if (d.api.bloccaTrappola) d.api.bloccaTrappola();
+          d.api.bloccaTrappola();
+          et.scelta.blocca(); et.scelta.classList.add(val.etOk ? 'ok' : 'ko');
+          [et.scritto, et.giusto].forEach(function (c) { c.disabled = true; if (v.trappola || c.value.trim()) c.classList.add(val.etOk ? 'ok' : 'ko'); });
+          if (!val.etOk) et.X.textContent = v.trappola ? 'era ' + v.trappola.falsa + '\u00b0 \u2192 ' + v.trappola.vera + '\u00b0' : 'erano tutte giuste';
           campi.forEach(function (x, i) {
             var s = val.campi[i];
             ['latG', 'latM', 'lonG', 'lonM'].forEach(function (k) { x.c[k].disabled = true; x.c[k].classList.add(s[k] ? 'ok' : 'ko'); });
@@ -1175,8 +1233,19 @@
         if (!(a && b)) tuttoOk = false;
         campi.push(s);
       });
-      if (v.trappola && !r.trappola) { tuttoOk = false; err('trappola', 'L\u2019etichetta ' + v.trappola.falsa + '\u00b0 era sbagliata: nella sequenza doveva esserci ' + v.trappola.vera + '\u00b0.'); }
-      return { preso: tuttoOk, errori: errori, campi: campi,
+      var e0 = r.et || {}, etOk;
+      if (v.trappola) {
+        var tr = v.trappola;
+        if (e0.scelta !== 'si') { etOk = false; err('trappola', 'C\u2019era un\u2019etichetta sbagliata: ' + tr.falsa + '\u00b0. Contando un grado per linea dalle altre etichette, l\u00ec doveva esserci ' + tr.vera + '\u00b0.'); }
+        else if (e0.scritto !== tr.falsa) { etOk = false; err('trappolaValore', 'L\u2019etichetta sbagliata era ' + tr.falsa + '\u00b0, non ' + (isNaN(e0.scritto) ? 'quella che hai indicato' : e0.scritto + '\u00b0') + '. Le altre etichette sono coerenti tra loro: ' + tr.falsa + '\u00b0 no.'); }
+        else if (e0.giusto !== tr.vera) { etOk = false; err('trappolaValore', 'Hai trovato l\u2019etichetta sbagliata (' + tr.falsa + '\u00b0), ma il valore giusto \u00e8 ' + tr.vera + '\u00b0: conta un grado per linea partendo dall\u2019etichetta pi\u00f9 vicina.'); }
+        else etOk = true;
+      } else {
+        etOk = e0.scelta === 'no' || (e0.scelta == null && isNaN(e0.scritto));
+        if (!etOk) err('trappolaInventata', 'Qui le etichette erano tutte giuste. Controlla sempre che tra una linea e l\u2019altra il valore cambi di un grado.');
+      }
+      if (!etOk) tuttoOk = false;
+      return { preso: tuttoOk, errori: errori, campi: campi, etOk: etOk,
         nota: (v.citta ? 'Sono le coordinate reali dei due luoghi, arrotondate ai 5 primi. ' : 'Le citt\u00e0 sono immaginarie: conta solo leggere bene il reticolo. ') + 'La correzione accetta 5\u2032 in pi\u00f9 o in meno: \u00e8 una stima a occhio.' };
     },
     procedimento: function (v0) {
@@ -1184,8 +1253,13 @@
       if (v.trappola) v.trappola.trovata = false;
       function scena() { var vv = JSON.parse(JSON.stringify(v)); return disegnaReticolo(vv, {}); }
       var passi = [];
-      if (v.trappola) passi.push({ scena: 's', titolo: 'L\u2019etichetta sbagliata', testo: 'Tra una linea e l\u2019altra il valore cambia di un grado. ' + v.trappola.falsa + '\u00b0 non sta nella sequenza: \u00e8 un errore di stampa, il valore giusto \u00e8 ' + v.trappola.vera + '\u00b0.',
-        fai: function (a, an, t) { a.trappola(an, t); } });
+      if (v.trappola) {
+        var tr = v.trappola, dateT = tr.asse === 'lat' ? v.labLat : v.labLon;
+        passi.push({ scena: 's', titolo: 'Prima di tutto: controlla le etichette', testo: 'Le etichette ' + dateT.map(function (x) { return x + '\u00b0'; }).join(' e ') + ' sono coerenti: tra una linea e l\u2019altra cambiano di un grado. ' + tr.falsa + '\u00b0 invece non torna con la sua posizione.',
+          fai: function (a, an, t) { a.etichetta(tr.asse, an, t); a.sospetto(an, t); } });
+        passi.push({ scena: 's', titolo: 'L\u2019etichetta sbagliata', testo: 'Contando un grado per linea dall\u2019etichetta pi\u00f9 vicina, l\u00ec doveva esserci ' + tr.vera + '\u00b0. Si barra ' + tr.falsa + '\u00b0 e si scrive il valore giusto: all\u2019esame va segnalato.',
+          regola: 'C\u2019\u00e8 scritto ' + tr.falsa + '\u00b0, doveva esserci ' + tr.vera + '\u00b0.', fai: function (a, an, t) { a.trappola(an, t); } });
+      }
       passi.push({ scena: 's', titolo: 'Scrivi i valori di tutte le linee', testo: 'Si parte dalle etichette date. ' +
         (v.ns === 'N' ? 'Siamo a nord: salendo i numeri crescono. ' : 'Siamo a sud: scendendo i numeri crescono. ') + (v.eo === 'E' ? 'Siamo a est: verso destra crescono.' : 'Siamo a ovest: verso sinistra crescono.'),
         regola: 'Prima tutti i valori: cos\u00ec non si sbaglia il verso.', fai: function (a, an, t) { a.valori('lat', an, t); a.valori('lon', an, t); } });
@@ -1208,7 +1282,11 @@
         punti: [{ nome: 'Hanoi', latG: 21, latM: 0, lonG: 105, lonM: 50 }, { nome: 'Hong Kong', latG: 22, latM: 15, lonG: 114, lonM: 10 }] };
       var sud = { cols: 6, rows: 4, a0: 32, b0: 55, ns: 'S', eo: 'O', labLat: [34], labLon: [57], citta: true, trappola: null,
         punti: [{ nome: 'Buenos Aires', latG: 34, latM: 35, lonG: 58, lonM: 25 }, { nome: 'Montevideo', latG: 34, latM: 55, lonG: 56, lonM: 10 }] };
-      var scene = { aula: aula, sud: sud };
+      // L'errore visto in aula: sul libro, al posto di 105° E c'era scritto 150° E.
+      var errore = { cols: 11, rows: 6, a0: 18, b0: 104, ns: 'N', eo: 'E', labLat: [20], labLon: [108, 112], citta: true,
+        trappola: { asse: 'lon', vera: 105, falsa: 150, trovata: false },
+        punti: [{ nome: 'Hanoi', latG: 21, latM: 0, lonG: 105, lonM: 50 }, { nome: 'Hong Kong', latG: 22, latM: 15, lonG: 114, lonM: 10 }] };
+      var scene = { aula: aula, sud: sud, errore: errore };
       function scena(nome, opz) { return disegnaReticolo(JSON.parse(JSON.stringify(scene[nome])), opz || {}); }
       function ha(a) { return a.v.punti[0]; }
       function hk(a) { return a.v.punti[1]; }
@@ -1238,24 +1316,32 @@
           fai: function (a, an, t) { a.valori('lat', an, t); a.valori('lon', an, t); } },
         { scena: 'sud', stampa: true, titolo: 'Buenos Aires', testo: ['Tra 34\u00b0 e 35\u00b0 S: si parte da 34\u00b0, e scendendo il luogo \u00e8 poco oltre la met\u00e0, 35\u2032.', 'Tra 58\u00b0 e 59\u00b0 O: si parte da 58\u00b0, e verso sinistra \u00e8 poco prima della met\u00e0, 25\u2032.', 'Risposta: 34\u00b035\u2032 S, 58\u00b025\u2032 O.'],
           fai: function (a, an, t) { var p = a.v.punti[0]; a.fascia(p, 'lat', an, t); a.tratto(p, 'lat', an, t); a.fascia(p, 'lon', an, t); a.tratto(p, 'lon', an, t); a.cartellino(p, an, t); } },
-        { scena: 'aula', stampa: 'testo', titolo: 'Ricapitolando', testo: ['1. Scrivi i valori di tutte le linee. 2. Per ogni luogo prendi la linea con il valore pi\u00f9 basso. 3. Stima i primi come sull\u2019orologio. 4. Scrivi gradi, primi e direzione: N o S, E o O.', 'Ora prova tu: 15 reticoli sempre diversi.'],
+        { scena: 'errore', stampa: 'testo', momentaneo: true, titolo: 'Attenzione: un\u2019etichetta pu\u00f2 essere sbagliata', testo: ['All\u2019esame il docente pu\u00f2 stampare apposta un grado sbagliato. Va scovato e corretto, oltre a trovare le coordinate.', 'Guarda le etichette dei meridiani: 108\u00b0 E, 112\u00b0 E e 150\u00b0 E. Da 108 a 112 ci sono quattro spazi tra le linee, cio\u00e8 quattro gradi: tornano. E 150?'],
+          fai: function (a, an, t) { a.etichetta('lon', an, t); } },
+        { scena: 'errore', stampa: true, titolo: 'Conta le linee', testo: ['L\u2019etichetta 150\u00b0 E sta tre linee a sinistra di 108\u00b0 E: 108 \u2212 3 = 105. L\u00ec doveva esserci 105\u00b0 E.', '\u00c8 proprio l\u2019errore visto in aula: le cifre 0 e 5 scambiate. Si barra e si scrive accanto il valore giusto.'],
+          regola: 'C\u2019\u00e8 scritto 150\u00b0, doveva esserci 105\u00b0: va segnalato nella risposta.',
+          fai: function (a, an, t) { a.sospetto(an, t); a.trappola(an, t); } },
+        { scena: 'errore', stampa: 'testo', titolo: 'Come si riconosce', testo: ['Le etichette giuste vanno d\u2019accordo tra loro: tra due linee vicine c\u2019\u00e8 sempre un grado. Quella sbagliata no.', 'Gli errori tipici: cifre scambiate (105 \u2192 150), una cifra cambiata, dieci gradi in pi\u00f9 o in meno. Poi si va avanti come sempre, usando solo le etichette giuste.'],
+          regola: 'Prima di tutto controlla che le etichette siano coerenti.', fai: function (a, an, t) { a.valori('lon', an, t); } },
+        { scena: 'aula', stampa: 'testo', titolo: 'Ricapitolando', testo: ['1. Controlla le etichette: se una non torna, scrivi che cosa c\u2019\u00e8 scritto e che cosa doveva esserci. 2. Scrivi i valori di tutte le linee. 3. Per ogni luogo prendi la linea con il valore pi\u00f9 basso. 4. Stima i primi come sull\u2019orologio. 5. Scrivi gradi, primi e direzione: N o S, E o O.', 'Ora prova tu: 15 reticoli sempre diversi, e in alcuni c\u2019\u00e8 un\u2019etichetta sbagliata.'],
           dopo: function () { return docente(e); }, fai: function (a, an, t) { a.soluzione(false, t); } }
       ];
       return { scena: scena, passi: passi };
     },
-    istruzioniStampa: '<p style="margin:0 0 8px;font-size:10pt">Per ogni reticolo scrivi latitudine e longitudine dei due luoghi in gradi e primi, con la direzione (N o S, E o O). Il nord \u00e8 in alto; tra una linea e l\u2019altra c\u2019\u00e8 un grado.</p>',
+    istruzioniStampa: '<p style="margin:0 0 8px;font-size:10pt">Per ogni reticolo scrivi latitudine e longitudine dei due luoghi in gradi e primi, con la direzione (N o S, E o O). Il nord \u00e8 in alto; tra una linea e l\u2019altra c\u2019\u00e8 un grado. <b>Attenzione: in alcuni reticoli un\u2019etichetta \u00e8 sbagliata.</b> Se la trovi, scrivi che cosa c\u2019\u00e8 scritto e che cosa doveva esserci.</p>',
     stampa: function (v, n) {
       var d = disegnaReticolo(v, { stampa: true, fs: 16, larghezza: '90mm' });
       var risp = ordinaLuoghi(v).map(function (p) {
         return '<div><b>' + esc(p.nome) + '</b><br>Lat. _____\u00b0 _____\u2032 ____<br>Long. _____\u00b0 _____\u2032 ____</div>';
       }).join('<div style="height:8px"></div>');
-      return '<h3>' + n + '.</h3><div class="riga">' + d.nodo.outerHTML + '<div class="risp">' + risp + '</div></div>';
+      var etq = '<div style="margin-top:8px"><b>Etichette</b><br>tutte giuste &#9744; &nbsp; una sbagliata &#9744;<br>c\u2019\u00e8 scritto ____\u00b0 doveva esserci ____\u00b0</div>';
+      return '<h3>' + n + '.</h3><div class="riga">' + d.nodo.outerHTML + '<div class="risp">' + risp + etq + '</div></div>';
     },
     soluzioni: function (vs) {
-      return '<table><tr><th>N.</th><th>Primo luogo</th><th>Secondo luogo</th><th>Nota</th></tr>' + vs.map(function (v, i) {
+      return '<table><tr><th>N.</th><th>Primo luogo</th><th>Secondo luogo</th><th>Etichette</th></tr>' + vs.map(function (v, i) {
         return '<tr><td>' + (i + 1) + '</td>' + ordinaLuoghi(v).map(function (p) {
           return '<td><b>' + esc(p.nome) + '</b>: ' + coord(p.latG, p.latM, v.ns) + ', ' + coord(p.lonG, p.lonM, v.eo) + '</td>';
-        }).join('') + '<td>' + (v.trappola ? 'Etichetta ' + v.trappola.falsa + '\u00b0: era ' + v.trappola.vera + '\u00b0' : '') + '</td></tr>';
+        }).join('') + '<td>' + (v.trappola ? '<b>Etichetta sbagliata:</b> c\u2019\u00e8 scritto ' + v.trappola.falsa + '\u00b0, doveva esserci ' + v.trappola.vera + '\u00b0' : 'Etichette tutte giuste') + '</td></tr>';
       }).join('') + '</table><p style="font-size:9.5pt">Si accettano 5\u2032 in pi\u00f9 o in meno: \u00e8 una stima a occhio.</p>';
     }
   };
@@ -1644,6 +1730,642 @@
     }
   };
 
+  /* =================================================================
+     4. TASSI DEMOGRAFICI E DATO SUPERFLUO
+     Dalla lezione 5: un comune, i dati di 12 mesi, uno (o più) inutili.
+     Tasso di natalità = nati ÷ popolazione × 1000 (‰), mortalità con i
+     morti, incremento naturale = nati − morti, e il suo tasso = (nati −
+     morti) ÷ popolazione × 1000. Il soggetto va sempre al numeratore.
+     ================================================================= */
+  function migliaia(x) {
+    var neg = x < 0, s = String(Math.abs(Math.round(x)));
+    s = s.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    return (neg ? '−' : '') + s;
+  }
+  function permille(x) { return fmt(Math.round(x * 10) / 10).replace('-', '−') + '‰'; }
+  var DATI_T = {
+    pop: { t: 'Abitanti al 1° gennaio', u: '' },
+    nati: { t: 'Nati nei 12 mesi', u: '' },
+    morti: { t: 'Morti nei 12 mesi', u: '' },
+    imm: { t: 'Immigrati nei 12 mesi', u: '' },
+    emi: { t: 'Emigrati nei 12 mesi', u: '' },
+    sup: { t: 'Superficie del comune', u: ' km²' },
+    fam: { t: 'Famiglie residenti', u: '' }
+  };
+  var CHIEDI_T = {
+    nat: { t: 'il tasso di natalità', serve: ['nati', 'pop'], unita: '‰' },
+    mor: { t: 'il tasso di mortalità', serve: ['morti', 'pop'], unita: '‰' },
+    inc: { t: 'l’incremento (o decremento) naturale', serve: ['nati', 'morti'], unita: 'persone' },
+    tinc: { t: 'il tasso di incremento (o decremento) naturale', serve: ['nati', 'morti', 'pop'], unita: '‰' }
+  };
+  var PIANO_T = ['nat', 'mor', 'nat', 'inc', 'mor', 'tinc', 'nat', 'inc', 'tinc', 'mor', 'inc', 'nat', 'tinc', 'mor', 'tinc'];
+  var DECREMENTO_T = { 7: 1, 10: 1, 12: 1, 14: 1 };
+
+  function varianteTassi(r, i, usate) {
+    var chiede = PIANO_T[i % PIANO_T.length];
+    var nomi = IMMAGINARIE.filter(function (x) { return !usate[x]; });
+    var luogo = rpick(r, nomi.length ? nomi : IMMAGINARIE); usate[luogo] = true;
+    var k = rint(r, 2, 25), pop = k * 10000;
+    var tn = rint(r, 62, 118) / 10, tm;
+    if (DECREMENTO_T[i]) tm = tn + rint(r, 8, 30) / 10;
+    else tm = Math.max(5, tn - rint(r, 5, 30) / 10);
+    tm = Math.round(tm * 10) / 10;
+    var nati = Math.round(pop / 1000 * tn), morti = Math.round(pop / 1000 * tm);
+    var v = { luogo: luogo, chiede: chiede, pop: pop, nati: nati, morti: morti };
+    v.imm = Math.round(pop / 1000 * rint(r, 20, 140) / 10);
+    v.emi = Math.round(pop / 1000 * rint(r, 20, 140) / 10);
+    v.sup = rint(r, 18, 320);
+    v.fam = Math.round(pop / (rint(r, 210, 270) / 100));
+    // i dati in tabella: sempre popolazione, nati e morti, più uno o due inutili
+    var extra = rmescola(r, ['imm', 'emi', 'sup', 'fam']).slice(0, r() < 0.5 ? 1 : 2);
+    v.righe = rmescola(r, ['pop', 'nati', 'morti'].concat(extra));
+    v.superflui = v.righe.filter(function (k2) { return CHIEDI_T[chiede].serve.indexOf(k2) < 0; });
+    return v;
+  }
+  function rispostaTassi(v) {
+    var n = v.nati, m = v.morti, p = v.pop;
+    if (v.chiede === 'nat') return Math.round(n / p * 10000) / 10;
+    if (v.chiede === 'mor') return Math.round(m / p * 10000) / 10;
+    if (v.chiede === 'inc') return n - m;
+    return Math.round((n - m) / p * 10000) / 10;
+  }
+  function testoTassi(v) {
+    return 'Nel comune di ' + v.luogo + ' si raccolgono i dati di un anno (12 mesi). Calcola ' + CHIEDI_T[v.chiede].t + (v.chiede === 'inc' ? '' : ', espresso per mille') + ' e indica quali dati non servono.';
+  }
+
+  function disegnaTassi(v, opz) {
+    opz = opz || {};
+    var stampa = !!opz.stampa, FS = opz.fs || (stretto() ? 28 : 17), RIGA = FS * 2.3, W = 560;
+    var H = 70 + v.righe.length * RIGA + 26;
+    var svg = sv('svg', { viewBox: '0 0 ' + W + ' ' + H, role: 'img', width: opz.larghezza || null,
+      'aria-label': 'Scheda del comune di ' + v.luogo + ': ' + v.righe.map(function (k) { return DATI_T[k].t + ' ' + migliaia(v[k]) + DATI_T[k].u; }).join('; ') + '.' });
+    var sotto = sv('g'), base = sv('g'), sopra = sv('g');
+    svg.appendChild(sotto); svg.appendChild(base); svg.appendChild(sopra);
+    var inch = stampa ? '#000' : INCH;
+    base.appendChild(sv('rect', { x: 8, y: 8, width: W - 16, height: H - 16, rx: 10, fill: stampa ? '#fff' : 'rgba(255,255,255,.55)', stroke: stampa ? '#666' : SEPPIA, 'stroke-width': 1.4 }));
+    base.appendChild(sv('text', { x: 28, y: 46, 'font-size': FS + 4, 'font-weight': 700 }, 'Comune di ' + v.luogo));
+    base.appendChild(sv('text', { x: W - 28, y: 46, 'text-anchor': 'end', 'font-size': FS - 2, 'font-style': 'italic', fill: stampa ? '#444' : SEPPIA }, 'dati di 12 mesi'));
+    var pos = {};
+    v.righe.forEach(function (k, idx) {
+      var y = 70 + idx * RIGA;
+      pos[k] = y;
+      base.appendChild(sv('line', { x1: 24, y1: y, x2: W - 24, y2: y, stroke: stampa ? '#bbb' : 'rgba(139,110,75,.45)', 'stroke-width': 1 }));
+      base.appendChild(sv('text', { x: 28, y: y + RIGA * 0.66, 'font-size': FS, fill: inch }, DATI_T[k].t));
+      base.appendChild(sv('text', { x: W - 28, y: y + RIGA * 0.66, 'text-anchor': 'end', 'font-size': FS + 1, 'font-weight': 700, fill: inch }, migliaia(v[k]) + DATI_T[k].u));
+    });
+    var api = {
+      v: v,
+      serve: function (anim, t) {
+        CHIEDI_T[v.chiede].serve.forEach(function (k, i) {
+          if (pos[k] == null) return;
+          var rr = sv('rect', { x: 18, y: pos[k] + 3, width: W - 36, height: RIGA - 6, rx: 6, fill: 'rgba(200,169,110,.32)', stroke: ORO, 'stroke-width': 1.6 });
+          sotto.appendChild(rr); appariDopo(rr, anim, t, 100 + i * 350);
+        });
+      },
+      barra: function (anim, t) {
+        v.superflui.forEach(function (k, i) {
+          var y = pos[k] + RIGA * 0.5;
+          var l = sv('line', { x1: 22, y1: y, x2: W - 22, y2: y, stroke: ROSSO, 'stroke-width': 3 });
+          sopra.appendChild(l); traccia(l, anim, t, 100 + i * 400, 500);
+        });
+      },
+      soluzione: function (anim, t) { api.serve(false, t); api.barra(false, t); }
+    };
+    return { nodo: svg, api: api };
+  }
+
+  // la frazione con il × 1000
+  function formulaTasso(sopra, sotto, risultato, perMille) {
+    var s = sv('svg', { viewBox: '0 0 340 110', role: 'img', style: 'max-width:330px', 'aria-label': sopra + ' diviso ' + sotto + (perMille ? ' per mille' : '') + ' uguale ' + risultato });
+    var fsz = Math.max(18, 28 - Math.max(String(sopra).length, String(sotto).length) * 1.1);
+    s.appendChild(sv('text', { x: 70, y: 40, 'text-anchor': 'middle', 'font-size': fsz, 'font-weight': 700, fill: INCH, 'font-family': 'Georgia,serif' }, sopra));
+    s.appendChild(sv('line', { x1: 10, y1: 52, x2: 130, y2: 52, stroke: INCH, 'stroke-width': 2.5 }));
+    s.appendChild(sv('text', { x: 70, y: 86, 'text-anchor': 'middle', 'font-size': fsz, 'font-weight': 700, fill: INCH, 'font-family': 'Georgia,serif' }, sotto));
+    var x = 140;
+    if (perMille) { s.appendChild(sv('text', { x: x, y: 62, 'font-size': 24, 'font-weight': 700, fill: INCH, 'font-family': 'Georgia,serif' }, '× 1000')); x = 228; }
+    s.appendChild(sv('text', { x: perMille ? x + 50 : 230, y: 62, 'text-anchor': 'middle', 'font-size': 24, 'font-weight': 700, fill: BLU, 'font-family': 'Georgia,serif' }, '= ' + risultato));
+    return s;
+  }
+
+  function passiCalcoloTassi(v) {
+    var n = v.nati, m = v.morti, p = v.pop, ris = rispostaTassi(v), passi = [];
+    var etich = { nat: 'natalità', mor: 'mortalità' };
+    if (v.chiede === 'nat' || v.chiede === 'mor') {
+      var sop = v.chiede === 'nat' ? n : m;
+      passi.push({ titolo: 'Il calcolo', testo: 'Tasso di ' + etich[v.chiede] + ' = ' + (v.chiede === 'nat' ? 'nati' : 'morti') + ' ÷ popolazione × 1000 = ' + migliaia(sop) + ' ÷ ' + migliaia(p) + ' × 1000 = ' + permille(ris) + '.',
+        regola: 'Il soggetto (' + (v.chiede === 'nat' ? 'i nati' : 'i morti') + ') va al numeratore.', extra: function () { return formulaTasso(migliaia(sop), migliaia(p), permille(ris), true); } });
+    } else if (v.chiede === 'inc') {
+      passi.push({ titolo: 'Il calcolo', testo: 'Incremento naturale = nati − morti = ' + migliaia(n) + ' − ' + migliaia(m) + ' = ' + (ris > 0 ? '+' : '') + migliaia(ris) + ' persone.',
+        regola: ris >= 0 ? 'Nati più dei morti: è un incremento.' : 'Morti più dei nati: il risultato è negativo, è un decremento naturale.' });
+    } else {
+      passi.push({ titolo: 'Prima la differenza', testo: 'Nati − morti = ' + migliaia(n) + ' − ' + migliaia(m) + ' = ' + (n - m > 0 ? '+' : '') + migliaia(n - m) + ' persone. ' + (n - m >= 0 ? 'È un incremento.' : 'È un decremento.') });
+      passi.push({ titolo: 'Poi si rapporta alla popolazione', testo: 'Il saldo da solo non basta: va messo in rapporto con gli abitanti. ' + migliaia(n - m) + ' ÷ ' + migliaia(p) + ' × 1000 = ' + permille(ris) + '.',
+        regola: 'Il tasso è sempre un rapporto con la popolazione.', extra: function () { return formulaTasso(migliaia(n - m), migliaia(p), permille(ris), true); } });
+    }
+    return passi;
+  }
+
+  var TASSI = {
+    nomiErrori: {
+      superfluo: 'Non riconoscere il dato superfluo', scartato: 'Scartare un dato che serve',
+      morti: 'Usare i morti per la natalità (o i nati per la mortalità)', cento: 'Moltiplicare per 100 invece che per 1000',
+      mille: 'Dimenticare il × 1000', invertito: 'Mettere la popolazione al numeratore', saldo: 'Usare la differenza nati − morti al posto dei nati o dei morti',
+      nonRapportato: 'Fermarsi al saldo senza rapportarlo alla popolazione', segno: 'Sbagliare incremento e decremento',
+      tasso: 'Calcolare un tasso quando si chiede il numero di persone', calcolo: 'Sbagliare il calcolo'
+    },
+    opzioni: function () { return { v: 1 }; },
+    serie: function (seme, n) { var r = rngDa(seme), usate = {}, out = []; for (var i = 0; i < n; i++) out.push(varianteTassi(r, i, usate)); return out; },
+    domanda: function (v) {
+      var d = disegnaTassi(v, {}), foglio = el('div'), c = {}, C = CHIEDI_T[v.chiede];
+      foglio.appendChild(el('h4', { text: testoTassi(v) }));
+      c.val = el('input', { class: 'esx-campo largo', inputmode: 'decimal', 'aria-label': 'Risultato', autocomplete: 'off' });
+      c.X = el('span', { class: 'esx-giusto' });
+      foglio.appendChild(el('div', { class: 'esx-riga' }, [el('span', { class: 'esx-lab', text: v.chiede === 'inc' ? 'Incremento' : 'Tasso' }), c.val, el('span', { class: 'esx-unita', text: C.unita }), c.X]));
+      if (v.chiede === 'inc' || v.chiede === 'tinc') {
+        c.segno = segmentato([{ t: 'Incremento', v: '+' }, { t: 'Decremento', v: '-' }], 'È un incremento o un decremento?');
+        c.segnoX = el('span', { class: 'esx-giusto' });
+        foglio.appendChild(el('div', { class: 'esx-riga' }, [el('span', { class: 'esx-lab', text: 'È un' }), c.segno, c.segnoX]));
+        foglio.appendChild(el('p', { class: 'esx-nota', style: 'margin:-4px 0 10px', text: 'Se è un decremento, il numero è negativo: scrivi il segno meno.' }));
+      }
+      foglio.appendChild(el('p', { style: 'font-weight:600;color:var(--ink);margin:12px 0 4px;line-height:1.4', text: 'Quali dati non servono per questo calcolo?' }));
+      var chips = el('div', { class: 'esx-chips' }), righe = [];
+      v.righe.forEach(function (k) {
+        var cb = el('input', { type: 'checkbox' }), lab = el('label', null, [cb, el('span', { text: DATI_T[k].t })]);
+        righe.push({ k: k, cb: cb, lab: lab }); chips.appendChild(lab);
+      });
+      foglio.appendChild(chips);
+      return {
+        nodo: d.nodo, foglio: foglio,
+        leggi: function () {
+          if (!c.val.value.trim()) { c.val.focus(); return null; }
+          return { val: numero(c.val.value.replace('−', '-').replace(/\.(?=\d{3}(\D|$))/g, '')), segno: c.segno ? c.segno.valore() : null,
+            scarti: righe.filter(function (x) { return x.cb.checked; }).map(function (x) { return x.k; }) };
+        },
+        segna: function (val) {
+          c.val.disabled = true; c.val.classList.add(val.ok.val ? 'ok' : 'ko');
+          if (!val.ok.val) c.X.textContent = val.giusto;
+          if (c.segno) { c.segno.blocca(); c.segno.classList.add(val.ok.segno ? 'ok' : 'ko'); if (!val.ok.segno) c.segnoX.textContent = rispostaTassi(v) >= 0 ? 'incremento' : 'decremento'; }
+          righe.forEach(function (x) {
+            x.cb.disabled = true;
+            var inutile = v.superflui.indexOf(x.k) >= 0;
+            if (inutile) x.lab.classList.add('giusta'); else if (x.cb.checked) x.lab.classList.add('sbagliata');
+          });
+        },
+        soluzione: function (anim) { d.api.soluzione(anim, Orologio()); }
+      };
+    },
+    valuta: function (v, r) {
+      var ok = {}, errori = [], ris = rispostaTassi(v), n = v.nati, m = v.morti, p = v.pop, x = r.val;
+      function err(c, t) { errori.push({ c: c, t: t }); }
+      function vicino(a, b, tol) { return !isNaN(a) && a !== null && Math.abs(a - b) <= (tol == null ? 0.051 : tol); }
+      var tasso = v.chiede !== 'inc';
+      ok.val = tasso ? vicino(x, ris) : vicino(x, ris, 0.5);
+      var giusto = tasso ? permille(ris) : (ris > 0 ? '+' : '') + migliaia(ris);
+      if (!ok.val) {
+        var sop = v.chiede === 'nat' ? n : v.chiede === 'mor' ? m : n - m;
+        if (v.chiede === 'nat' && vicino(x, m / p * 1000)) err('morti', 'Hai messo i morti: per la natalità al numeratore vanno i nati. ' + migliaia(n) + ' ÷ ' + migliaia(p) + ' × 1000 = ' + giusto + '.');
+        else if (v.chiede === 'mor' && vicino(x, n / p * 1000)) err('morti', 'Hai messo i nati: per la mortalità al numeratore vanno i morti. ' + migliaia(m) + ' ÷ ' + migliaia(p) + ' × 1000 = ' + giusto + '.');
+        else if (tasso && vicino(x, sop / p * 100)) err('cento', 'Hai moltiplicato per 100: è la percentuale. Per i tassi demografici si usa il per mille, × 1000: ' + giusto + '.');
+        else if (tasso && vicino(x, sop / p, 0.0006)) err('mille', 'Manca il × 1000: ' + fmt(sop / p) + ' è un numero troppo piccolo da leggere. Moltiplicato per 1000 fa ' + giusto + '.');
+        else if (tasso && sop !== 0 && vicino(x, p / sop * 1000, 1)) err('invertito', 'Hai messo la popolazione sopra. Il soggetto va al numeratore, la popolazione al denominatore: ' + giusto + '.');
+        else if ((v.chiede === 'nat' || v.chiede === 'mor') && vicino(x, (n - m) / p * 1000)) err('saldo', 'Hai usato nati − morti: quello serve per l’incremento naturale. Qui basta ' + (v.chiede === 'nat' ? 'il numero dei nati' : 'il numero dei morti') + ': ' + giusto + '.');
+        else if (v.chiede === 'tinc' && vicino(x, n - m, 0.5)) err('nonRapportato', migliaia(n - m) + ' è il saldo in persone. Il tasso lo mette in rapporto con la popolazione: ' + migliaia(n - m) + ' ÷ ' + migliaia(p) + ' × 1000 = ' + giusto + '.');
+        else if (vicino(x, -ris, tasso ? 0.051 : 0.5) && ris !== 0) err('segno', 'Il numero è giusto ma il segno no: ' + (ris >= 0 ? 'i nati sono più dei morti, è positivo.' : 'i morti sono più dei nati, è negativo (decremento).'));
+        else if (v.chiede === 'inc' && vicino(x, (n - m) / p * 1000)) err('tasso', 'Questo è il tasso per mille. L’incremento naturale si chiede in persone: ' + migliaia(n) + ' − ' + migliaia(m) + ' = ' + giusto + '.');
+        else err('calcolo', tasso ? 'Il risultato è ' + giusto + '. Ricontrolla la divisione.' : 'Nati − morti = ' + migliaia(n) + ' − ' + migliaia(m) + ' = ' + giusto + '.');
+      }
+      ok.segno = true;
+      if (v.chiede === 'inc' || v.chiede === 'tinc') {
+        ok.segno = r.segno === (ris >= 0 ? '+' : '-');
+        if (!ok.segno) err('segno', ris >= 0 ? 'I nati sono più dei morti: è un incremento.' : 'I morti sono più dei nati: è un decremento naturale.');
+      }
+      var scarti = r.scarti || [], serve = CHIEDI_T[v.chiede].serve;
+      var scartatoUtile = scarti.filter(function (k) { return serve.indexOf(k) >= 0; });
+      var mancati = v.superflui.filter(function (k) { return scarti.indexOf(k) < 0; });
+      ok.scarti = !scartatoUtile.length && !mancati.length;
+      if (scartatoUtile.length) err('scartato', 'Hai scartato un dato che serve: ' + scartatoUtile.map(function (k) { return DATI_T[k].t.toLowerCase(); }).join(', ') + '.');
+      if (mancati.length) err('superfluo', 'Non servivano: ' + mancati.map(function (k) { return DATI_T[k].t.toLowerCase(); }).join(', ') + '. Vanno riconosciuti e lasciati da parte subito.');
+      return { preso: ok.val && ok.segno && ok.scarti, errori: errori, ok: ok, giusto: giusto,
+        nota: tasso ? 'Si accetta il risultato arrotondato a un decimale.' : '' };
+    },
+    procedimento: function (v) {
+      function scena() { return disegnaTassi(v, {}); }
+      var C = CHIEDI_T[v.chiede];
+      var passi = [
+        { scena: 's', titolo: 'Che cosa chiede', testo: 'Si chiede ' + C.t + '. Servono solo: ' + C.serve.map(function (k) { return DATI_T[k].t.toLowerCase(); }).join(', ') + '.', fai: function (a, an, t) { a.serve(an, t); } },
+        { scena: 's', titolo: 'Via il dato superfluo', testo: 'Il resto non serve: ' + v.superflui.map(function (k) { return DATI_T[k].t.toLowerCase(); }).join(', ') + '. Si barra subito, così non finisce nella formula.',
+          regola: 'Prima si scartano i dati inutili.', fai: function (a, an, t) { a.barra(an, t); } }
+      ];
+      passiCalcoloTassi(v).forEach(function (p) { p.scena = 's'; passi.push(p); });
+      return { scena: scena, passi: passi };
+    },
+    // Il tutorial: l'esempio di aula, 100.000 abitanti, 1.000 nati e 900 morti in 12 mesi.
+    tutorial: function (e) {
+      var base = { luogo: 'Topolinia', pop: 100000, nati: 1000, morti: 900, righe: ['pop', 'nati', 'morti'] };
+      function caso(chiede, righe, superflui) { var x = JSON.parse(JSON.stringify(base)); x.chiede = chiede; if (righe) x.righe = righe; x.superflui = superflui; return x; }
+      var scene = {
+        nat: caso('nat', null, ['morti']),
+        mor: caso('mor', null, ['nati']),
+        inc: caso('inc', null, ['pop']),
+        tinc: caso('tinc', null, []),
+        dec: { luogo: 'Paperopoli', pop: 50000, nati: 400, morti: 550, chiede: 'inc', righe: ['pop', 'nati', 'morti', 'sup'], sup: 84, superflui: ['pop', 'sup'] }
+      };
+      function scena(nome, opz) { return disegnaTassi(scene[nome], opz || {}); }
+      var passi = [
+        { scena: 'nat', stampa: 'testo', titolo: 'L’esercizio della prova', testo: ['Un comune, i dati di un anno, e una domanda: un tasso di natalità, di mortalità o l’incremento naturale.', 'Il trucco del docente: nel testo c’è sempre un dato che non serve. Va riconosciuto e lasciato da parte.'] },
+        { scena: 'nat', stampa: true, titolo: 'Il tasso di natalità: quali dati', testo: ['L’esempio di aula: 100.000 abitanti, 1.000 nati e 900 morti in 12 mesi.', 'Per la natalità servono i nati e la popolazione. I 900 morti sono il dato superfluo.'],
+          fai: function (a, an, t) { a.serve(an, t); a.barra(an, t); } },
+        { scena: 'nat', stampa: true, titolo: 'Il calcolo', testo: ['I nati, il soggetto, vanno al numeratore; la popolazione al denominatore.', '1.000 ÷ 100.000 = 0,01: troppo piccolo da leggere. Per questo si moltiplica per 1000: 10 nati ogni mille abitanti, 10‰.'],
+          regola: 'Tasso = soggetto ÷ popolazione × 1000.', extra: function () { return formulaTasso('1.000', '100.000', '10‰', true); }, fai: function (a, an, t) { a.soluzione(false, t); } },
+        { scena: 'mor', stampa: 'testo', titolo: 'La mortalità', testo: 'Stesso schema con i morti: 900 ÷ 100.000 × 1000 = 9‰. Qui il dato superfluo sono i nati.',
+          extra: function () { return formulaTasso('900', '100.000', '9‰', true); }, fai: function (a, an, t) { a.serve(an, t); a.barra(an, t); } },
+        { scena: 'inc', stampa: 'testo', titolo: 'L’incremento naturale', testo: ['Nati − morti: 1.000 − 900 = +100 persone. È un numero di persone, non un tasso.', 'Qui la popolazione non serve.'],
+          regola: 'Incremento naturale = nati − morti.', fai: function (a, an, t) { a.serve(an, t); a.barra(an, t); } },
+        { scena: 'tinc', stampa: 'testo', titolo: 'Non fermarti al saldo', testo: ['Se si chiede il tasso di incremento, il saldo va messo in rapporto con gli abitanti: 100 ÷ 100.000 × 1000 = 1‰.', 'È l’errore che il docente vede: calcolare +100 e fermarsi.'],
+          extra: function () { return formulaTasso('100', '100.000', '1‰', true); }, fai: function (a, an, t) { a.serve(an, t); } },
+        { scena: 'dec', stampa: true, titolo: 'Quando i morti sono di più', testo: ['A Paperopoli: 400 nati e 550 morti. 400 − 550 = −150: il segno meno dice che è un decremento naturale.', 'Superficie e popolazione qui non servono.'],
+          regola: 'Morti più dei nati: decremento, numero negativo.', fai: function (a, an, t) { a.serve(an, t); a.barra(an, t); } },
+        { scena: 'nat', stampa: 'testo', titolo: 'Ricapitolando', testo: ['1. Leggi che cosa chiede. 2. Scarta i dati che non servono. 3. Soggetto al numeratore, popolazione al denominatore, × 1000. 4. Per l’incremento: nati − morti, con il segno.', 'Ora prova tu: 15 comuni sempre diversi.'],
+          dopo: function () { return docente(e); }, fai: function (a, an, t) { a.soluzione(false, t); } }
+      ];
+      return { scena: scena, passi: passi };
+    },
+    istruzioniStampa: '<p style="margin:0 0 8px;font-size:10pt">Per ogni comune fai il calcolo richiesto e barra i dati che non servono. I tassi si esprimono per mille (‰). Se nati e morti danno un decremento, scrivi il segno meno.</p>',
+    stampa: function (v, n) {
+      var d = disegnaTassi(v, { stampa: true, fs: 17, larghezza: '86mm' }), C = CHIEDI_T[v.chiede];
+      return '<h3>' + n + '. ' + esc(testoTassi(v)) + '</h3><div class="riga">' + d.nodo.outerHTML + '<div class="risp">' +
+        (v.chiede === 'inc' ? 'Incremento naturale: ________ persone' : 'Tasso: ________ ‰') + '<br>' +
+        (v.chiede === 'inc' || v.chiede === 'tinc' ? 'Incremento &#9744; &nbsp; Decremento &#9744;<br>' : '') +
+        'Dati che non servono: ____________________<br>Calcolo: ____________________</div></div>';
+    },
+    soluzioni: function (vs) {
+      return '<table><tr><th>N.</th><th>Calcolo</th><th>Risultato</th><th>Dati che non servono</th></tr>' + vs.map(function (v, i) {
+        var ris = rispostaTassi(v), n = v.nati, m = v.morti, p = v.pop, calc;
+        if (v.chiede === 'nat') calc = migliaia(n) + ' ÷ ' + migliaia(p) + ' × 1000';
+        else if (v.chiede === 'mor') calc = migliaia(m) + ' ÷ ' + migliaia(p) + ' × 1000';
+        else if (v.chiede === 'inc') calc = migliaia(n) + ' − ' + migliaia(m);
+        else calc = '(' + migliaia(n) + ' − ' + migliaia(m) + ') ÷ ' + migliaia(p) + ' × 1000';
+        var rs = v.chiede === 'inc' ? (ris > 0 ? '+' : '') + migliaia(ris) + ' persone (' + (ris >= 0 ? 'incremento' : 'decremento') + ')'
+          : permille(ris) + (v.chiede === 'tinc' ? ' (' + (ris >= 0 ? 'incremento' : 'decremento') + ')' : '');
+        return '<tr><td>' + (i + 1) + '</td><td>' + calc + '</td><td><b>' + rs + '</b></td><td>' + v.superflui.map(function (k) { return esc(DATI_T[k].t); }).join(', ') + '</td></tr>';
+      }).join('') + '</table>';
+    }
+  };
+
+  /* =================================================================
+     5. DALLA TABELLA AL GRAFICO
+     Dalle lezioni 4 e 5: assi cartesiani con il tempo in orizzontale e
+     l'intensità in verticale; il grafico a linee, con l'annata senza
+     dato saltata e i punti uniti da una linea tratteggiata; l'istogramma
+     a canne verticali per confrontare maschi e femmine (esempio di aula:
+     15 maschi e 18 femmine, poi 20 maschi e 16 femmine dopo 5 anni).
+     ================================================================= */
+  var COL_M = '#2350A0', COL_F = '#B4634D';
+  var SOGGETTI_LIN = [
+    { t: 'Alunni iscritti alla scuola di ', u: [5, 10], unita: 'alunni' },
+    { t: 'Abitanti di ', u: [1, 2], unita: 'migliaia di abitanti', migliaia: true },
+    { t: 'Turisti arrivati a ', u: [1, 2], unita: 'migliaia di turisti', migliaia: true },
+    { t: 'Botteghe artigiane di ', u: [2, 5], unita: 'botteghe' },
+    { t: 'Ettari coltivati a grano a ', u: [10, 20], unita: 'ettari' }
+  ];
+  var PIANO_G = ['lin', 'ist', 'lin', 'lin', 'ist', 'lin', 'ist', 'lin', 'lin', 'ist', 'lin', 'ist', 'lin', 'lin', 'ist'];
+  var GAP_G = { 3: 1, 5: 1, 8: 1, 10: 1, 13: 1 };
+
+  function varianteGrafico(r, i, usate) {
+    var nomi = IMMAGINARIE.filter(function (x) { return !usate[x]; });
+    var luogo = rpick(r, nomi.length ? nomi : IMMAGINARIE); usate[luogo] = true;
+    var v = { tipo: PIANO_G[i % PIANO_G.length], luogo: luogo, gap: -1 };
+    if (v.tipo === 'lin') {
+      var S = rpick(r, SOGGETTI_LIN), u = rpick(r, S.u), passo = rpick(r, [5, 10]), n = rint(r, 5, 7);
+      var inizio = passo === 10 ? rint(r, 190, 196) * 10 + 1 : rint(r, 392, 400) * 5;
+      if (inizio + passo * (n - 1) > 2025) inizio = 2025 - passo * (n - 1);
+      v.anni = []; for (var k = 0; k < n; k++) v.anni.push(String(inizio + k * passo));
+      var x = rint(r, 6, 18), valori = [];
+      for (k = 0; k < n; k++) { x = Math.max(4, Math.min(28, x + rint(r, -4, 5))); valori.push(x * u); }
+      if (GAP_G[i]) v.gap = rint(r, 1, n - 2);
+      if (v.gap >= 0) valori[v.gap] = null;
+      v.titolo = S.t + luogo + (S.migliaia ? ' (in migliaia)' : '');
+      v.unita = S.unita; v.u = u;
+      v.serie = [{ nome: S.unita.charAt(0).toUpperCase() + S.unita.slice(1), col: COL_M, valori: valori }];
+    } else {
+      var m = rint(r, 3, 4), p5 = rint(r, 397, 401) * 5;
+      v.anni = []; for (var j = 0; j < m; j++) v.anni.push(String(p5 + j * 5));
+      function serie() { var a = []; for (var q = 0; q < m; q++) a.push(rint(r, 8, 28)); return a; }
+      var M = serie(), F = serie();
+      for (j = 0; j < m; j++) if (M[j] === F[j]) F[j] = M[j] + (F[j] < 28 ? 1 : -1);
+      v.titolo = 'Alunni della scuola di ' + luogo + ': maschi e femmine';
+      v.unita = 'alunni'; v.u = 1;
+      v.serie = [{ nome: 'Maschi', col: COL_M, valori: M }, { nome: 'Femmine', col: COL_F, valori: F }];
+    }
+    var tutti = []; v.serie.forEach(function (s) { s.valori.forEach(function (x) { if (x != null) tutti.push(x); }); });
+    v.max = Math.max(15 * v.u, Math.ceil((Math.max.apply(null, tutti) + v.u) / (5 * v.u)) * 5 * v.u);
+    return v;
+  }
+
+  // a schermo la tabella va in verticale (un anno per riga), su carta in orizzontale
+  function tabellaVerticale(v) {
+    var th = '<th style="text-align:left;padding:5px 10px;border-bottom:1px solid var(--dust);color:var(--ink)">';
+    var td = '<td style="padding:5px 10px;text-align:right;border-bottom:1px solid var(--dust);font-variant-numeric:tabular-nums">';
+    var h = '<table style="border-collapse:collapse;font-size:.95rem;margin:2px 0 12px"><tr>' + th + 'Anno</th>' + v.serie.map(function (s) { return th.replace('text-align:left', 'text-align:right') + esc(s.nome) + '</th>'; }).join('') + '</tr>';
+    v.anni.forEach(function (a, i) {
+      h += '<tr>' + td.replace('text-align:right', 'text-align:left') + a + '</td>' + v.serie.map(function (s) { var x = s.valori[i]; return td + (x == null ? '<i>non rilevato</i>' : migliaia(x)) + '</td>'; }).join('') + '</tr>';
+    });
+    return h + '</table>';
+  }
+  function tabellaGrafico(v, stampa) {
+    var th = '<th style="text-align:left;padding:4px 8px;border-bottom:1px solid ' + (stampa ? '#999' : 'var(--dust)') + '">';
+    var td = '<td style="padding:4px 8px;text-align:center;border-bottom:1px solid ' + (stampa ? '#ddd' : 'var(--dust)') + '">';
+    var h = '<table style="border-collapse:collapse;font-size:' + (stampa ? '9.5pt' : '.95rem') + ';margin:4px 0 10px"><tr>' + th + 'Anno</th>' +
+      v.anni.map(function (a) { return th.replace('text-align:left', 'text-align:center') + a + '</th>'; }).join('') + '</tr>';
+    v.serie.forEach(function (s) {
+      h += '<tr>' + th + esc(s.nome) + '</th>' + s.valori.map(function (x) { return td + (x == null ? '<i>non rilevato</i>' : migliaia(x)) + '</td>'; }).join('') + '</tr>';
+    });
+    return h + '</table>';
+  }
+
+  // Disegna gli assi e, se opz.valori, il grafico. Ritorna { nodo, api }.
+  function disegnaGrafico(v, opz) {
+    opz = opz || {};
+    var stampa = !!opz.stampa, FS = opz.fs || (stretto() ? 26 : 15);
+    var W = 620, H = !stampa && stretto() ? 640 : 400, L = FS * 4.2, R = 18, T = 34, B = FS * 3.6;
+    var PW = W - L - R, PH = H - T - B, n = v.anni.length, colW = PW / n, ist = v.tipo === 'ist';
+    var g = { L: L, T: T, PW: PW, PH: PH, colW: colW,
+      x: function (i, s) { var c = L + colW * (i + 0.5); return ist ? c + (s === 0 ? -1 : 1) * colW * 0.17 : c; },
+      y: function (val) { return T + PH - val / v.max * PH; } };
+    var svg = sv('svg', { viewBox: '0 0 ' + W + ' ' + H, role: 'img', width: opz.larghezza || null, tabindex: opz.interattivo ? '0' : null,
+      'aria-label': opz.interattivo ? 'Piano cartesiano da completare: ' + v.titolo + '. Tocca una colonna all’altezza del valore.' : 'Grafico: ' + v.titolo });
+    var griglia = sv('g'), sotto = sv('g'), assi = sv('g'), utente = sv('g'), sopra = sv('g');
+    [griglia, sotto, assi, utente, sopra].forEach(function (x) { svg.appendChild(x); });
+    var inch = stampa ? '#000' : INCH, fine = stampa ? '#ccc' : 'rgba(139,110,75,.28)', medio = stampa ? '#999' : 'rgba(139,110,75,.6)';
+    var minori = v.max / v.u <= 50;
+    for (var q = 0; q <= v.max; q += v.u) {
+      if (!minori && q % (5 * v.u)) continue;
+      var maggiore = q % (5 * v.u) === 0, yy = g.y(q);
+      griglia.appendChild(sv('line', { x1: L, y1: yy, x2: L + PW, y2: yy, stroke: maggiore ? medio : fine, 'stroke-width': maggiore ? 1 : .7 }));
+      if (maggiore && !opz.senzaEtichette) assi.appendChild(sv('text', { x: L - 8, y: yy + FS * 0.35, 'text-anchor': 'end', 'font-size': FS - 1, fill: inch }, migliaia(q)));
+    }
+    assi.appendChild(sv('line', { x1: L, y1: T - 14, x2: L, y2: T + PH, stroke: inch, 'stroke-width': 2 }));
+    assi.appendChild(sv('line', { x1: L, y1: T + PH, x2: L + PW + 8, y2: T + PH, stroke: inch, 'stroke-width': 2 }));
+    assi.appendChild(sv('path', { d: 'M ' + L + ' ' + (T - 20) + ' l -5 10 l 10 0 z', fill: inch }));
+    assi.appendChild(sv('path', { d: 'M ' + (L + PW + 14) + ' ' + (T + PH) + ' l -10 -5 l 0 10 z', fill: inch }));
+    var etAnni = [];
+    if (!opz.senzaEtichette) v.anni.forEach(function (a, i) {
+      var tx = sv('text', { x: L + colW * (i + 0.5), y: T + PH + FS + 8, 'text-anchor': 'middle', 'font-size': FS, fill: inch }, a);
+      assi.appendChild(tx); etAnni.push(tx);
+      assi.appendChild(sv('line', { x1: L + colW * (i + 0.5), y1: T + PH, x2: L + colW * (i + 0.5), y2: T + PH + 5, stroke: inch }));
+    });
+    if (!opz.senzaEtichette) {
+      assi.appendChild(sv('text', { x: L + PW, y: T + PH + FS * 2.6 + 6, 'text-anchor': 'end', 'font-size': FS - 2, 'font-style': 'italic', fill: stampa ? '#444' : SEPPIA }, 'tempo (anni) →'));
+      assi.appendChild(sv('text', { x: L + 6, y: T - 8, 'font-size': FS - 2, 'font-style': 'italic', fill: stampa ? '#444' : SEPPIA }, '↑ ' + v.unita));
+    }
+    if (ist && !opz.senzaEtichette) v.serie.forEach(function (s, k) {
+      var lx = L + PW - 190 + k * 100;
+      assi.appendChild(sv('rect', { x: lx, y: T - 26, width: 14, height: 14, fill: s.col }));
+      assi.appendChild(sv('text', { x: lx + 20, y: T - 14, 'font-size': FS - 2, fill: inch }, s.nome));
+    });
+
+    // il grafico di un insieme di valori: punti e linea, oppure canne
+    function traccia2(gruppo, valori, stile, anim, t, perPunto, conValori) {
+      var bw = colW * 0.3, k = 0;
+      valori.forEach(function (vs, s) {
+        var col = v.serie[s].col, prima = null;
+        vs.forEach(function (x, i) {
+          if (x == null) return;
+          var px = g.x(i, s), py = g.y(x), nodo;
+          if (ist) {
+            nodo = sv('rect', { x: px - bw / 2, y: py, width: bw, height: T + PH - py, fill: stile.vuoto ? 'none' : col, 'fill-opacity': stile.vuoto ? null : (stile.chiaro ? .35 : .9), stroke: col, 'stroke-width': stile.vuoto ? 2.4 : 1, 'stroke-dasharray': stile.vuoto ? '6 4' : null });
+          } else {
+            if (prima) {
+              var buco = i - prima.i > 1, tratt = buco && stile.gap === 'tratteggiata';
+              var seg = sv('line', { x1: prima.x, y1: prima.y, x2: px, y2: py, stroke: col, 'stroke-width': 3, 'stroke-dasharray': tratt ? '9 7' : (stile.vuoto ? '6 4' : null), opacity: stile.vuoto ? .8 : 1 });
+              gruppo.appendChild(seg); traccia(seg, anim, t, 120 + k * (perPunto || 0), 450);
+            }
+            nodo = sv('circle', { cx: px, cy: py, r: 7, fill: stile.vuoto ? '#fff' : col, stroke: col, 'stroke-width': 2.4 });
+            prima = { i: i, x: px, y: py };
+          }
+          gruppo.appendChild(nodo); appariDopo(nodo, anim, t, 80 + k * (perPunto || 0));
+          if (conValori) {
+            var lab = sv('text', { x: px, y: py - 12, 'text-anchor': 'middle', 'font-size': FS - 2, 'font-weight': 700, fill: col, stroke: stampa ? '#fff' : CARTA, 'stroke-width': 4, 'paint-order': 'stroke' }, migliaia(x));
+            gruppo.appendChild(lab); appariDopo(lab, anim, t, 160 + k * (perPunto || 0));
+          }
+          k++;
+        });
+      });
+    }
+    var giusti = v.serie.map(function (s) { return s.valori; });
+    var api = {
+      v: v, g: g, svg: svg,
+      assi: function (anim, t) {
+        var a = sv('line', { x1: L, y1: T + PH, x2: L + PW, y2: T + PH, stroke: ORO, 'stroke-width': 7, opacity: .8 });
+        var b = sv('line', { x1: L, y1: T + PH, x2: L, y2: T, stroke: ORO, 'stroke-width': 7, opacity: .8 });
+        sotto.appendChild(a); sotto.appendChild(b); traccia(a, anim, t, 80, 600); traccia(b, anim, t, 800, 600);
+      },
+      scala: function (anim, t) {
+        var y1 = g.y(0), y2 = g.y(v.u), x = L + 4;
+        var rr = sv('rect', { x: L, y: y2, width: PW, height: y1 - y2, fill: 'rgba(200,169,110,.35)' });
+        sotto.appendChild(rr); appariDopo(rr, anim, t, 100);
+        var tx = sv('text', { x: x + 6, y: y2 - 6, 'font-size': FS - 1, 'font-weight': 700, fill: SEPPIA, stroke: CARTA, 'stroke-width': 4, 'paint-order': 'stroke' }, 'ogni linea sottile = ' + migliaia(v.u));
+        sopra.appendChild(tx); appariDopo(tx, anim, t, 300);
+      },
+      buco: function (anim, t) {
+        if (v.gap < 0) return;
+        var c = sv('rect', { x: L + colW * v.gap + 4, y: T, width: colW - 8, height: PH, fill: 'rgba(179,38,30,.08)', stroke: ROSSO, 'stroke-width': 1.4, 'stroke-dasharray': '5 4' });
+        sotto.appendChild(c); appariDopo(c, anim, t, 100);
+        var tx = sv('text', { x: L + colW * (v.gap + 0.5), y: T + PH / 2, 'text-anchor': 'middle', 'font-size': FS - 2, 'font-style': 'italic', fill: ROSSO, stroke: CARTA, 'stroke-width': 4, 'paint-order': 'stroke' }, 'nessun dato');
+        sopra.appendChild(tx); appariDopo(tx, anim, t, 300);
+      },
+      riporta: function (anim, t) {
+        if (ist) traccia2(sopra, giusti, {}, anim, t, 380, true);
+        else v.serie.forEach(function (s) {
+            s.valori.forEach(function (x, i) {
+              if (x == null) return;
+              var c = sv('circle', { cx: g.x(i, 0), cy: g.y(x), r: 7, fill: s.col }), lab = sv('text', { x: g.x(i, 0), y: g.y(x) - 12, 'text-anchor': 'middle', 'font-size': FS - 2, 'font-weight': 700, fill: s.col, stroke: CARTA, 'stroke-width': 4, 'paint-order': 'stroke' }, migliaia(x));
+              var guida = sv('line', { x1: L, y1: g.y(x), x2: g.x(i, 0), y2: g.y(x), stroke: s.col, 'stroke-width': 1, 'stroke-dasharray': '3 4', opacity: .6 });
+              sotto.appendChild(guida); sopra.appendChild(c); sopra.appendChild(lab);
+              traccia(guida, anim, t, 100 + i * 380, 300); appariDopo(c, anim, t, 300 + i * 380); appariDopo(lab, anim, t, 380 + i * 380);
+            });
+          });
+      },
+      collega: function (anim, t) { if (!ist) traccia2(sotto, giusti, { gap: 'tratteggiata' }, anim, t, 300, false); },
+      soluzione: function (anim, t, vuoto) { traccia2(sopra, giusti, { gap: 'tratteggiata', vuoto: !!vuoto }, anim, t, 0, !vuoto); },
+      utente: function (valori, stile, sel) {
+        while (utente.firstChild) utente.removeChild(utente.firstChild);
+        traccia2(utente, valori, { gap: stile }, false, null, 0, false);
+        if (sel) {
+          var cx = ist ? g.x(sel.i, sel.s) : g.x(sel.i, 0), w = ist ? colW * 0.38 : colW * 0.6;
+          utente.appendChild(sv('rect', { x: cx - w / 2, y: T, width: w, height: PH, fill: 'rgba(200,169,110,.14)', stroke: ORO, 'stroke-width': 1.5, rx: 4 }));
+        }
+      },
+      punto: function (cx, cy) {
+        // da coordinate dello schermo a colonna, serie e valore
+        var pt = svg.createSVGPoint(); pt.x = cx; pt.y = cy;
+        var m = svg.getScreenCTM(); if (!m) return null;
+        var p = pt.matrixTransform(m.inverse());
+        if (p.x < L || p.x > L + PW || p.y < T - 10 || p.y > T + PH + 10) return null;
+        var i = Math.max(0, Math.min(n - 1, Math.floor((p.x - L) / colW)));
+        var s = ist ? (p.x < L + colW * (i + 0.5) ? 0 : 1) : 0;
+        var val = Math.round((T + PH - p.y) / PH * v.max / v.u) * v.u;
+        return { i: i, s: s, val: Math.max(0, Math.min(v.max, val)) };
+      }
+    };
+    if (opz.valori) traccia2(sopra, giusti, { gap: 'tratteggiata' }, false, null, 0, !!opz.conValori);
+    return { nodo: svg, api: api };
+  }
+
+  var GRAFICO = {
+    nomiErrori: {
+      assi: 'Mettere il tempo sull’asse verticale', mancante: 'Lasciare fuori un dato', valore: 'Riportare un valore all’altezza sbagliata',
+      lettura: 'Sbagliare di una linea nella lettura della scala', scambio: 'Scambiare le due serie (maschi e femmine)',
+      riempito: 'Inventare un valore per l’anno senza dato', continua: 'Unire con una linea continua anche dove manca il dato'
+    },
+    opzioni: function () { return { v: 1 }; },
+    serie: function (seme, n) { var r = rngDa(seme), usate = {}, out = []; for (var i = 0; i < n; i++) out.push(varianteGrafico(r, i, usate)); return out; },
+    domanda: function (v) {
+      var d = disegnaGrafico(v, { interattivo: true }), foglio = el('div'), c = {}, ist = v.tipo === 'ist';
+      var valori = v.serie.map(function (s) { return s.valori.map(function () { return null; }); });
+      var sel = null, bloccato = false;
+      foglio.appendChild(el('h4', { text: (ist ? 'Costruisci l’istogramma: ' : 'Costruisci il grafico a linee: ') + v.titolo }));
+      foglio.appendChild(el('div', { html: tabellaVerticale(v) }));
+      c.assi = segmentato([{ t: 'Il tempo (gli anni)', v: 'tempo' }, { t: 'L’intensità (i valori)', v: 'int' }], 'Che cosa va sull’asse orizzontale?');
+      foglio.appendChild(el('div', { class: 'esx-riga' }, [el('span', { class: 'esx-lab', text: 'In orizzontale' }), c.assi]));
+      if (v.gap >= 0) {
+        c.gap = segmentato([{ t: 'Linea continua', v: 'continua' }, { t: 'Linea tratteggiata', v: 'tratteggiata' }], 'Come unisci i punti attorno all’anno senza dato?');
+        c.gap.addEventListener('click', disegna);
+        foglio.appendChild(el('p', { style: 'font-weight:600;color:var(--ink);margin:10px 0 6px;line-height:1.4', text: 'Nel ' + v.anni[v.gap] + ' il dato non è stato rilevato. Come unisci il ' + v.anni[v.gap - 1] + ' con il ' + v.anni[v.gap + 1] + '?' }));
+        foglio.appendChild(el('div', { class: 'esx-riga' }, [c.gap]));
+      }
+      var stato = el('span', { class: 'esx-nota', style: 'margin:0;min-width:10em' });
+      var meno = el('button', { type: 'button', class: 'esx-btn sec pic', text: '−', 'aria-label': 'Abbassa di una linea' });
+      var piu = el('button', { type: 'button', class: 'esx-btn sec pic', text: '+', 'aria-label': 'Alza di una linea' });
+      var togli = el('button', { type: 'button', class: 'esx-btn sec pic', text: 'Togli' });
+      foglio.appendChild(el('div', { class: 'esx-comandi', style: 'margin-top:10px' }, [stato, meno, piu, togli]));
+      foglio.appendChild(el('p', { class: 'esx-nota', text: (ist ? 'Tocca la colonna dell’anno, a sinistra per i maschi e a destra per le femmine, ' : 'Tocca la colonna dell’anno ') +
+        'all’altezza del valore. Ogni linea sottile vale ' + migliaia(v.u) + '. Con − e + ritocchi l’ultimo che hai messo.' }));
+      function nomeSel() { return sel ? v.anni[sel.i] + (ist ? ' · ' + v.serie[sel.s].nome : '') + ': ' + (valori[sel.s][sel.i] == null ? 'vuoto' : migliaia(valori[sel.s][sel.i])) : 'Nessuna colonna scelta'; }
+      function disegna() { d.api.utente(valori, c.gap ? c.gap.valore() : 'continua', bloccato ? null : sel); stato.textContent = nomeSel(); }
+      function metti(s, i, val) { if (bloccato) return; sel = { s: s, i: i }; valori[s][i] = val; disegna(); }
+      d.nodo.addEventListener('click', function (ev) { var p = d.api.punto(ev.clientX, ev.clientY); if (p) metti(p.s, p.i, p.val); });
+      function ritocca(dx) {
+        if (!sel || bloccato) return;
+        var x = valori[sel.s][sel.i]; x = (x == null ? 0 : x) + dx * v.u;
+        metti(sel.s, sel.i, Math.max(0, Math.min(v.max, x)));
+      }
+      meno.addEventListener('click', function () { ritocca(-1); });
+      piu.addEventListener('click', function () { ritocca(1); });
+      togli.addEventListener('click', function () { if (sel && !bloccato) { valori[sel.s][sel.i] = null; disegna(); } });
+      d.nodo.addEventListener('keydown', function (ev) {
+        if (bloccato) return;
+        if (!sel) sel = { s: 0, i: 0 };
+        var k = ev.key, ser = v.serie.length;
+        if (k === 'ArrowUp') ritocca(1);
+        else if (k === 'ArrowDown') ritocca(-1);
+        else if (k === 'ArrowRight' || k === 'ArrowLeft') {
+          var idx = sel.i * ser + sel.s + (k === 'ArrowRight' ? 1 : -1), tot = v.anni.length * ser;
+          idx = (idx + tot) % tot; sel = { s: idx % ser, i: Math.floor(idx / ser) }; disegna();
+        } else if (k === 'Delete' || k === 'Backspace') { valori[sel.s][sel.i] = null; disegna(); }
+        else return;
+        ev.preventDefault(); ev.stopPropagation();
+      });
+      disegna();
+      return {
+        nodo: d.nodo, foglio: foglio,
+        leggi: function () {
+          var messi = 0; valori.forEach(function (vs) { vs.forEach(function (x) { if (x != null) messi++; }); });
+          if (!messi) { stato.textContent = 'Prima riporta i valori sul grafico.'; return null; }
+          return { assi: c.assi.valore(), gap: c.gap ? c.gap.valore() : null, valori: JSON.parse(JSON.stringify(valori)) };
+        },
+        segna: function (val) {
+          bloccato = true; disegna();
+          c.assi.blocca(); c.assi.classList.add(val.ok.assi ? 'ok' : 'ko');
+          if (c.gap) { c.gap.blocca(); c.gap.classList.add(val.ok.gap ? 'ok' : 'ko'); }
+          [meno, piu, togli].forEach(function (b) { b.disabled = true; });
+          stato.textContent = val.preso ? 'Grafico giusto.' : 'In blu tratteggiato il grafico giusto.';
+        },
+        soluzione: function (anim) { d.api.soluzione(anim, Orologio(), true); }
+      };
+    },
+    valuta: function (v, r) {
+      var ok = { assi: r.assi === 'tempo', gap: true }, errori = [], tuttiOk = true, visti = {};
+      function err(c, t) { if (!visti[t]) { errori.push({ c: c, t: t }); visti[t] = 1; } }
+      if (!ok.assi) err('assi', 'Il tempo va sempre sull’asse orizzontale, l’intensità del fenomeno su quello verticale.');
+      var ist = v.tipo === 'ist';
+      var scambiati = ist && v.anni.every(function (_a, i) { return r.valori[0][i] === v.serie[1].valori[i] && r.valori[1][i] === v.serie[0].valori[i]; });
+      if (scambiati) err('scambio', 'Hai scambiato maschi e femmine: a sinistra i maschi, a destra le femmine, come nella legenda.');
+      v.serie.forEach(function (s, k) {
+        s.valori.forEach(function (x, i) {
+          var u = r.valori[k][i], dove = v.anni[i] + (ist ? ' (' + s.nome.toLowerCase() + ')' : '');
+          if (x == null) {
+            if (u != null) { tuttiOk = false; err('riempito', 'Nel ' + v.anni[i] + ' il dato non c’è: quell’annata si salta, non si inventa un valore.'); }
+            return;
+          }
+          if (u == null) { tuttiOk = false; err('mancante', dove + ': manca il valore, ' + migliaia(x) + '.'); return; }
+          if (u !== x) {
+            tuttiOk = false;
+            if (scambiati) return;
+            if (Math.abs(u - x) === v.u) err('lettura', dove + ': ' + migliaia(x) + ', non ' + migliaia(u) + '. Conta le linee sottili: ognuna vale ' + migliaia(v.u) + '.');
+            else err('valore', dove + ': il valore è ' + migliaia(x) + ', l’hai messo a ' + migliaia(u) + '.');
+          }
+        });
+      });
+      if (v.gap >= 0) {
+        ok.gap = r.gap === 'tratteggiata';
+        if (!ok.gap) err('continua', 'Dove manca il dato i due punti si uniscono con una linea tratteggiata: una linea continua farebbe credere che il dato ci sia.');
+      }
+      return { preso: tuttiOk && ok.assi && ok.gap && !scambiati, errori: errori, ok: ok,
+        nota: 'Per il punto contano gli assi, ogni valore all’altezza giusta' + (v.gap >= 0 ? ' e la linea tratteggiata dove manca il dato.' : '.') };
+    },
+    procedimento: function (v) {
+      function scena() { return disegnaGrafico(v, {}); }
+      var ist = v.tipo === 'ist';
+      var passi = [
+        { scena: 's', titolo: 'Gli assi', testo: 'Il tempo, cioè gli anni, va in orizzontale. In verticale l’intensità del fenomeno: qui ' + v.unita + '.', regola: 'Tempo in orizzontale, intensità in verticale.', fai: function (a, an, t) { a.assi(an, t); } },
+        { scena: 's', titolo: 'La scala', testo: 'Ogni linea sottile vale ' + migliaia(v.u) + ', ogni linea più marcata ' + migliaia(5 * v.u) + '. Si conta da zero.', fai: function (a, an, t) { a.scala(an, t); } },
+        { scena: 's', titolo: ist ? 'Le canne' : 'I punti', testo: ist ? 'Per ogni anno due canne affiancate: maschi a sinistra, femmine a destra, con colori diversi e la legenda.' : 'Per ogni anno un punto all’altezza del valore.' + (v.gap >= 0 ? ' Nel ' + v.anni[v.gap] + ' il dato manca: niente punto.' : ''),
+          fai: function (a, an, t) { if (v.gap >= 0) a.buco(an, t); a.riporta(an, t); } }
+      ];
+      if (!ist) passi.push({ scena: 's', titolo: v.gap >= 0 ? 'Si uniscono i punti, e il buco si tratteggia' : 'Si uniscono i punti', testo: v.gap >= 0 ? 'I punti si uniscono in ordine. Tra il ' + v.anni[v.gap - 1] + ' e il ' + v.anni[v.gap + 1] + ' la linea è tratteggiata: chi legge capisce subito che il ' + v.anni[v.gap] + ' non è stato rilevato.' : 'I punti si uniscono in ordine di tempo: la linea mostra l’andamento.',
+        regola: v.gap >= 0 ? 'Dato mancante: si salta l’annata e si tratteggia.' : null, fai: function (a, an, t) { a.collega(an, t); } });
+      return { scena: scena, passi: passi };
+    },
+    // Il tutorial: l'esempio di aula (maschi e femmine di una scuola) e un censimento saltato per la guerra.
+    tutorial: function (e) {
+      var guerra = { tipo: 'lin', luogo: 'Paperopoli', titolo: 'Abitanti di Paperopoli (in migliaia)', unita: 'migliaia di abitanti', u: 1, max: 25,
+        anni: ['1911', '1921', '1931', '1941', '1951', '1961'], gap: 3, serie: [{ nome: 'Abitanti', col: COL_M, valori: [12, 14, 15, null, 17, 21] }] };
+      var aula = { tipo: 'ist', luogo: 'Topolinia', titolo: 'Alunni della scuola di Topolinia: maschi e femmine', unita: 'alunni', u: 1, max: 25, gap: -1,
+        anni: ['2020', '2025'], serie: [{ nome: 'Maschi', col: COL_M, valori: [15, 20] }, { nome: 'Femmine', col: COL_F, valori: [18, 16] }] };
+      var scene = { guerra: guerra, aula: aula };
+      function scena(nome, opz) { return disegnaGrafico(scene[nome], opz || {}); }
+      var passi = [
+        { scena: 'guerra', stampa: 'testo', momentaneo: true, titolo: 'Dalla tabella al grafico', testo: ['L’esercizio dà una tabella di numeri e chiede di trasformarla in un grafico: è il passaggio dal dato numerico alla forma visiva.', 'Qui gli abitanti di Paperopoli ai censimenti, in migliaia.'] },
+        { scena: 'guerra', stampa: true, titolo: 'Primo: gli assi', testo: ['Si traccia il quadrante degli assi cartesiani.', 'In orizzontale il tempo, gli anni. In verticale l’intensità del fenomeno, qui le migliaia di abitanti.'],
+          regola: 'Tempo in orizzontale, intensità in verticale.', fai: function (a, an, t) { a.assi(an, t); } },
+        { scena: 'guerra', stampa: 'testo', momentaneo: true, titolo: 'La scala', testo: 'Sull’asse verticale si parte da zero e si sceglie quanto vale ogni linea: qui ogni linea sottile vale mille abitanti, ogni linea marcata cinquemila.', fai: function (a, an, t) { a.scala(an, t); } },
+        { scena: 'guerra', stampa: true, titolo: 'Si riportano i dati', testo: ['Per ogni anno un punto all’altezza del suo valore: 12 nel 1911, 14 nel 1921, 15 nel 1931.', 'Nel 1941 il dato non c’è: come in Italia, dove quell’anno il censimento non si fece per la guerra. Niente punto.'],
+          fai: function (a, an, t) { a.buco(an, t); a.riporta(an, t); } },
+        { scena: 'guerra', stampa: true, titolo: 'Il buco si tratteggia', testo: ['I punti si uniscono in ordine. Tra il 1931 e il 1951 la linea è tratteggiata, non continua.', 'Una linea continua farebbe credere che il dato del 1941 esista. Il tratteggio dice: qui non è stato rilevato.'],
+          regola: 'Annata senza dato: si salta e si unisce con il tratteggio.', fai: function (a, an, t) { a.collega(an, t); } },
+        { scena: 'aula', stampa: true, titolo: 'L’istogramma: maschi e femmine', testo: ['L’esempio di aula: in una scuola 15 maschi e 18 femmine, cinque anni dopo 20 maschi e 16 femmine.', 'Per confrontare due gruppi nello stesso anno si usano canne verticali affiancate, di colore diverso, con la legenda.'],
+          fai: function (a, an, t) { a.assi(false, t); a.riporta(an, t); } },
+        { scena: 'aula', stampa: 'testo', titolo: 'Canne orizzontali? Solo per le piramidi', testo: ['Le canne orizzontali ai due lati di un asse, come nella piramide della popolazione, servono solo per confrontare due fenomeni simmetrici, come maschi e femmine per età.', 'Il docente consiglia grafici semplici, facili da rifare con una classe.'] },
+        { scena: 'guerra', stampa: 'testo', titolo: 'Ricapitolando', testo: ['1. Assi: tempo in orizzontale, intensità in verticale. 2. Scala da zero, con linee che valgono sempre lo stesso. 3. Riporta ogni dato. 4. Linea per l’andamento, canne affiancate per i confronti. 5. Annata senza dato: niente punto e tratteggio.', 'Ora prova tu: 15 tabelle sempre diverse.'],
+          dopo: function () { return docente(e); }, fai: function (a, an, t) { a.soluzione(false, t); } }
+      ];
+      return { scena: scena, passi: passi };
+    },
+    istruzioniStampa: '<p style="margin:0 0 8px;font-size:10pt">Per ogni tabella disegna gli assi (tempo in orizzontale, intensità in verticale), scegli la scala e costruisci il grafico: a linee se c’è una sola serie, a canne verticali affiancate per maschi e femmine. Se un anno non ha il dato, saltalo e unisci i punti con una linea tratteggiata.</p>',
+    stampa: function (v, n) {
+      var vuoto = JSON.parse(JSON.stringify(v));
+      var d = disegnaGrafico(vuoto, { stampa: true, fs: 15, larghezza: '100mm', senzaEtichette: true });
+      return '<h3>' + n + '. ' + esc(v.titolo) + (v.tipo === 'ist' ? ' (istogramma)' : ' (grafico a linee)') + '</h3>' + tabellaGrafico(v, true) + '<div class="riga">' + d.nodo.outerHTML + '</div>';
+    },
+    soluzioni: function (vs) {
+      return '<div style="display:flex;flex-wrap:wrap;gap:8px">' + vs.map(function (v, i) {
+        var d = disegnaGrafico(v, { stampa: true, fs: 15, larghezza: '86mm', valori: true, conValori: true });
+        return '<div style="break-inside:avoid;page-break-inside:avoid"><b>' + (i + 1) + '.</b>' + (v.gap >= 0 ? ' <small>' + v.anni[v.gap] + ': tratteggio</small>' : '') + d.nodo.outerHTML + '</div>';
+      }).join('') + '</div>';
+    }
+  };
+
   // per i collaudi automatici
-  try { window.UMS_ESERCIZI = { RETICOLO: RETICOLO, DENSITA: DENSITA, BANCA: BANCA, geometria: geometria, CITTA: CITTA, htmlScheda: htmlScheda, absLat: absLat, absLon: absLon }; } catch (e) {}
+  try { window.UMS_ESERCIZI = { RETICOLO: RETICOLO, DENSITA: DENSITA, BANCA: BANCA, TASSI: TASSI, GRAFICO: GRAFICO, rispostaTassi: rispostaTassi, geometria: geometria, CITTA: CITTA, htmlScheda: htmlScheda, absLat: absLat, absLon: absLon }; } catch (e) {}
 })();

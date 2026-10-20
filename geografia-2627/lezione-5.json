@@ -583,7 +583,7 @@
       },
       {
         "id": "es3",
-        "tipo": "altro",
+        "tipo": "grafico_dati",
         "titolo": "Costruzione di grafici e istogrammi demografici",
         "punti_esame": "1 punto su 15",
         "consegna": "L'esercizio richiede di convertire una serie di dati numerici forniti in tabella in una rappresentazione grafica, come un grafico a linee o un istogramma. Occorre tracciare gli assi cartesiani definendo l'arco temporale e l'intensità del fenomeno.",
@@ -602,12 +602,11 @@
         ],
         "esempio_lezione": "Tabella contenente il numero di maschi e femmine in una scuola in anni differenti (es. 15 maschi e 18 femmine, poi 20 maschi e 16 femmine dopo 5 anni) con menzione dei dati saltati in Italia durante la Seconda Guerra Mondiale.",
         "cause_discusse": [],
-        "serve_disegno": true,
-        "da_costruire": true
+        "serve_disegno": true
       },
       {
         "id": "es4",
-        "tipo": "altro",
+        "tipo": "tassi_demografici",
         "titolo": "Calcolo dei tassi demografici e selezione dei dati utili",
         "punti_esame": "1 punto su 15",
         "consegna": "L'esercizio presenta un problema demografico basato sui dati di una città, includendo informazioni irrilevanti. Viene richiesto di individuare i dati corretti per calcolare il tasso di natalità, il tasso di mortalità oppure l'incremento/decremento naturale.",
