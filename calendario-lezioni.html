@@ -214,18 +214,49 @@ body.night-mode #night svg{stroke:var(--gold-lt);}
 #stampa{display:none;}
 @media print{
   body.stampando > *:not(#stampa){display:none !important;}
-  body.stampando #stampa{display:block; color:#000; background:#fff; font-family:var(--font-body); font-size:10.5pt;}
-  #stampa h1{font-size:15pt; margin:0 0 2mm;}
-  #stampa .st-meta{font-size:9pt; margin:0 0 5mm;}
-  #stampa h2{font-size:12.5pt; margin:5mm 0 2mm; border-bottom:1.5pt solid #000; padding-bottom:1mm; break-after:avoid;}
-  #stampa h3{font-size:10.5pt; margin:3mm 0 1mm;}
-  #stampa table{width:100%; table-layout:fixed; border-collapse:collapse; margin-bottom:2mm;}
-  #stampa th, #stampa td{border:.5pt solid #777; padding:1.2mm 1.6mm; text-align:left; vertical-align:top;}
-  #stampa th{background:#eee;}
-  #stampa tr{break-inside:avoid;}
-  #stampa .num{white-space:nowrap; text-align:center;}
-  @page{size:A4; margin:12mm;}
+  body.stampando{background:#fff !important;}
+  body.stampando #stampa{display:block;}
+  @page{size:A4; margin:11mm 12mm;}
 }
+#stampa{color:#1a1a1a; font-family:'DM Sans',system-ui,sans-serif; font-size:9.5pt; line-height:1.35; -webkit-print-color-adjust:exact; print-color-adjust:exact;}
+#stampa .st-top{display:flex; justify-content:space-between; align-items:flex-end; border-bottom:2pt solid #1A2F4F; padding-bottom:3mm; margin-bottom:4mm;}
+#stampa .st-top h1{font-family:'Playfair Display',Georgia,serif; font-size:19pt; color:#1A2F4F; margin:0; line-height:1;}
+#stampa .st-top p{margin:1.5mm 0 0; color:#666; font-size:8.5pt;}
+#stampa .st-tot{display:flex; gap:3mm;}
+#stampa .st-tot div{border:1pt solid #ddd; border-radius:2.5mm; padding:1.5mm 3mm; text-align:center; min-width:20mm;}
+#stampa .st-tot b{display:block; font-size:15pt; line-height:1.1;}
+#stampa .st-tot span{font-size:7pt; text-transform:uppercase; letter-spacing:.06em; color:#666;}
+#stampa .st-tot .rosso b{color:#C0392B;}
+#stampa .st-leg{display:flex; gap:5mm; align-items:center; font-size:8pt; color:#444; margin:0 0 5mm;}
+#stampa .st-leg i{display:inline-block; vertical-align:middle; margin-right:1.2mm;}
+#stampa h2{font-family:'Playfair Display',Georgia,serif; font-size:13pt; color:#1A2F4F; margin:5mm 0 2.5mm; break-after:avoid; display:flex; align-items:baseline; gap:3mm;}
+#stampa h2 small{font-family:'DM Sans',sans-serif; font-size:8pt; color:#777; font-weight:400;}
+#stampa h3{font-size:7.5pt; text-transform:uppercase; letter-spacing:.12em; color:#888; margin:3mm 0 1.5mm; font-weight:700; break-after:avoid;}
+/* materie seguite: card grande colorata */
+#stampa .mia{background:#FBF4E4; border:1pt solid #C8A96E; border-left:3.5mm solid #C8A96E; border-radius:2.5mm; padding:2.5mm 3.5mm; margin-bottom:2.5mm; break-inside:avoid;}
+#stampa .mia.ok{background:#EEF5EF; border-color:#5F8A6A;}
+#stampa .riga{display:flex; justify-content:space-between; align-items:baseline; gap:4mm; margin-bottom:2mm;}
+#stampa .nome{font-weight:700; font-size:11pt;}
+#stampa .gr{display:inline-block; font-size:7.5pt; font-weight:700; background:#1A2F4F; color:#fff; border-radius:1.2mm; padding:.2mm 1.6mm; margin-left:1.5mm; vertical-align:2pt;}
+#stampa .stato{font-size:9.5pt; font-weight:700; white-space:nowrap;}
+#stampa .stato.ko{color:#C0392B;}
+#stampa .stato.ok{color:#3E6B4A;}
+#stampa .caselle{display:flex; flex-wrap:wrap; gap:1.2mm;}
+#stampa .c{width:7mm; height:7mm; border-radius:1.4mm; display:flex; align-items:center; justify-content:center; font-size:8pt; font-weight:700; box-sizing:border-box;}
+#stampa .c.si{background:#1A2F4F; color:#fff;}
+#stampa .c.no{background:#fff; color:#C0392B; border:1.4pt solid #C0392B;}
+#stampa .c.fu{background:transparent; color:#aaa; border:.8pt dashed #bbb;}
+/* altre materie: compatte, grigie */
+#stampa .altre{display:grid; grid-template-columns:1fr 1fr; gap:1.5mm 5mm;}
+#stampa .altra{display:flex; justify-content:space-between; align-items:center; gap:2mm; border-bottom:.5pt solid #e3e3e3; padding:1mm 0; break-inside:avoid; color:#555;}
+#stampa .altra .nome{font-size:8.5pt; font-weight:600;}
+#stampa .altra .gr{background:#999;}
+#stampa .altra .caselle{gap:.6mm; flex-wrap:nowrap;}
+#stampa .altra .c{width:3.6mm; height:3.6mm; border-radius:.7mm; font-size:0;}
+#stampa .altra .c.si{background:#888;}
+#stampa .altra .c.no{background:#e9e9e9; border:none;}
+#stampa .altra .c.fu{border:.5pt dashed #ccc;}
+#stampa .vuoto{color:#888; font-style:italic; font-size:8.5pt; margin:0 0 2mm;}
 </style>
 </head>
 <body>
@@ -597,29 +628,39 @@ body.night-mode #night svg{stroke:var(--gold-lt);}
       const k=e.m+'|'+(e.g||'');
       (gruppi[k]=gruppi[k]||{m:e.m, g:e.g||'', anno:e.anno||0, ev:[]}).ev.push(e);
     });
-    const righe=Object.values(gruppi).map(G=>{
+    const tutti=Object.values(gruppi).map(G=>{
       G.ev.sort((a,b)=>a.n-b.n);
-      const passate=G.ev.filter(e=>e.d<=oggi);
-      G.si=G.ev.filter(e=>SPUNTE[e.id]).map(e=>e.n);
-      G.no=passate.filter(e=>!SPUNTE[e.id]).map(e=>e.n);
-      G.fut=G.ev.filter(e=>e.d>oggi && !SPUNTE[e.id]).length;
-      G.tot=G.ev.length;
+      G.stati=G.ev.map(e=>SPUNTE[e.id]?'si':(e.d<=oggi?'no':'fu'));
+      G.nSi=G.stati.filter(x=>x==='si').length;
+      G.manc=G.ev.filter((e,i)=>G.stati[i]==='no').map(e=>e.n);
+      G.mia=G.nSi>0;
       return G;
     });
-    const lista=a=>a.length?a.join(', '):'—';
-    const tab=arr=>'<table><colgroup><col style="width:30%"><col style="width:9%"><col style="width:8%"><col style="width:22%"><col style="width:22%"><col style="width:9%"></colgroup>'+
-      '<thead><tr><th>Materia</th><th>Gruppo</th><th class="num">Totale</th><th>Spuntate</th><th>Mancano</th><th class="num">Future</th></tr></thead><tbody>'+
-      arr.map(G=>'<tr><td>'+esc(G.m)+'</td><td>'+esc(gruppoLabel(G.g)||'—')+'</td><td class="num">'+G.tot+'</td><td>'+lista(G.si)+'</td><td><strong>'+lista(G.no)+'</strong></td><td class="num">'+G.fut+'</td></tr>').join('')+
-      '</tbody></table>';
-    let html='<h1>Calendario delle lezioni · riepilogo</h1><p class="st-meta">'+esc(META.semestre||'')+' · stampato il '+fmtLong(today())+' '+today().getFullYear()+'. "Mancano" = lezioni già svolte non spuntate. "Future" = lezioni non ancora svolte.</p>';
+    const caselle=G=>'<div class="caselle">'+G.ev.map((e,i)=>'<span class="c '+G.stati[i]+'">'+e.n+'</span>').join('')+'</div>';
+    const gr=G=>G.g?'<span class="gr">'+esc(gruppoLabel(G.g))+'</span>':'';
+    const mie=tutti.filter(G=>G.mia);
+    const totManc=mie.reduce((t,G)=>t+G.manc.length,0);
+    const totSi=mie.reduce((t,G)=>t+G.nSi,0);
+    let html='<div class="st-top"><div><h1>Riepilogo lezioni</h1><p>'+esc(META.semestre||'')+' · '+cap(fmtLong(today()))+' '+today().getFullYear()+'</p></div>'+
+      '<div class="st-tot"><div><b>'+mie.length+'</b><span>materie mie</span></div><div><b>'+totSi+'</b><span>spuntate</span></div><div class="'+(totManc?'rosso':'')+'"><b>'+totManc+'</b><span>mancano</span></div></div></div>'+
+      '<div class="st-leg"><span><i class="c si" style="width:4mm;height:4mm;font-size:0"></i>spuntata</span><span><i class="c no" style="width:4mm;height:4mm;font-size:0"></i>svolta, da spuntare</span><span><i class="c fu" style="width:4mm;height:4mm;font-size:0"></i>non ancora svolta</span><span>In colore le materie con almeno una spunta.</span></div>';
+    if(!mie.length) html+='<p class="vuoto">Nessuna lezione spuntata: spunta almeno una lezione di una materia perché compaia qui in evidenza.</p>';
     [1,2,3,4,5,0].forEach(a=>{
-      const r=righe.filter(G=>G.anno===a).sort((x,y)=>x.m.localeCompare(y.m,'it')||x.g.localeCompare(y.g));
+      const r=tutti.filter(G=>G.anno===a).sort((x,y)=>x.m.localeCompare(y.m,'it')||x.g.localeCompare(y.g));
       if(!r.length) return;
-      const ok=r.filter(G=>!G.no.length && G.si.length);
-      const ko=r.filter(G=>G.no.length || !G.si.length);
-      html+='<h2>'+(a?a+'° anno':'Altro')+'</h2>';
-      html+='<h3>Mancano ('+ko.length+')</h3>'+(ko.length?tab(ko):'<p>Nessuna.</p>');
-      html+='<h3>In pari ('+ok.length+')</h3>'+(ok.length?tab(ok):'<p>Nessuna.</p>');
+      const m=r.filter(G=>G.mia).sort((x,y)=>(y.manc.length>0)-(x.manc.length>0)||x.m.localeCompare(y.m,'it'));
+      const o=r.filter(G=>!G.mia);
+      html+='<h2>'+(a?a+'° anno':'Altro')+'<small>'+(m.length?m.length+' mie · ':'')+o.length+' altre</small></h2>';
+      if(m.length){
+        html+=m.map(G=>{
+          const ok=!G.manc.length;
+          return '<div class="mia'+(ok?' ok':'')+'"><div class="riga"><span class="nome">'+esc(G.m)+gr(G)+'</span>'+
+            '<span class="stato '+(ok?'ok':'ko')+'">'+(ok?'In pari ✓':'Mancano: '+G.manc.join(', '))+'</span></div>'+caselle(G)+'</div>';
+        }).join('');
+      }
+      if(o.length){
+        html+='<h3>Altre materie</h3><div class="altre">'+o.map(G=>'<div class="altra"><span class="nome">'+esc(G.m)+gr(G)+'</span>'+caselle(G)+'</div>').join('')+'</div>';
+      }
     });
     $('#stampa').innerHTML=html;
     document.body.classList.add('stampando');
