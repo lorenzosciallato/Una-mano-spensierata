@@ -198,6 +198,34 @@ body.night-mode .ev:hover{background:#23262F;}
 body.night-mode #night svg{stroke:var(--gold-lt);}
 
 @media(prefers-reduced-motion:reduce){*{transition:none!important; scroll-behavior:auto!important;}}
+
+/* ---------- numero lezione + spunta ---------- */
+.ev{position:relative; padding-right:2.3rem;}
+.badge.n{background:var(--ivory-2); color:var(--ink); border:1px solid var(--dust); font-variant-numeric:tabular-nums;}
+.ev-chk{position:absolute; top:.45rem; right:.45rem; width:24px; height:24px; border-radius:7px; border:1.5px solid var(--mist); background:var(--card); display:flex; align-items:center; justify-content:center; padding:0; transition:.15s;}
+.ev-chk:hover{border-color:var(--gold);}
+.ev-chk svg{width:14px; height:14px; stroke:#fff; fill:none; stroke-width:3; stroke-linecap:round; stroke-linejoin:round; opacity:0;}
+.ev-chk.on{background:var(--navy); border-color:var(--navy);}
+.ev-chk.on svg{opacity:1;}
+.print-btn{display:inline-flex; align-items:center; gap:.4rem; border:1px solid var(--dust); background:var(--ivory); color:var(--navy); border-radius:var(--r-pill); padding:.4rem .8rem; font-weight:700; font-size:.8rem; transition:.18s;}
+.print-btn:hover{border-color:var(--gold); background:var(--card);}
+.print-btn svg{width:15px; height:15px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round;}
+.head-right{display:flex; align-items:center; gap:.5rem;}
+#stampa{display:none;}
+@media print{
+  body.stampando > *:not(#stampa){display:none !important;}
+  body.stampando #stampa{display:block; color:#000; background:#fff; font-family:var(--font-body); font-size:10.5pt;}
+  #stampa h1{font-size:15pt; margin:0 0 2mm;}
+  #stampa .st-meta{font-size:9pt; margin:0 0 5mm;}
+  #stampa h2{font-size:12.5pt; margin:5mm 0 2mm; border-bottom:1.5pt solid #000; padding-bottom:1mm; break-after:avoid;}
+  #stampa h3{font-size:10.5pt; margin:3mm 0 1mm;}
+  #stampa table{width:100%; border-collapse:collapse; margin-bottom:2mm;}
+  #stampa th, #stampa td{border:.5pt solid #777; padding:1.2mm 1.6mm; text-align:left; vertical-align:top;}
+  #stampa th{background:#eee;}
+  #stampa tr{break-inside:avoid;}
+  #stampa .num{white-space:nowrap; text-align:center;}
+  @page{size:A4; margin:12mm;}
+}
 </style>
 </head>
 <body>
@@ -280,7 +308,10 @@ body.night-mode #night svg{stroke:var(--gold-lt);}
         <button type="button" class="today-btn" id="go-today">Oggi</button>
       </div>
       <div class="panel-title" id="panel-title"></div>
-      <span class="count-chip" id="count"></span>
+      <div class="head-right">
+        <span class="count-chip" id="count"></span>
+        <button type="button" class="print-btn" id="stampa-btn" aria-label="Stampa"><svg viewBox="0 0 24 24"><path d="M6 9V3h12v6"/><rect x="6" y="14" width="12" height="7"/><path d="M6 18H4a1 1 0 0 1-1-1v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6a1 1 0 0 1-1 1h-2"/></svg>Stampa</button>
+      </div>
     </div>
     <div id="body"></div>
     <div class="legend">
@@ -304,6 +335,8 @@ body.night-mode #night svg{stroke:var(--gold-lt);}
 <footer class="site-footer">
   <p><strong class="notranslate" translate="no">Una Mano Spensierata</strong> &nbsp;&middot;&nbsp; Tutti i diritti riservati &nbsp;&middot;&nbsp; Lorenzo Sciallato &copy; 2025</p>
 </footer>
+
+<div id="stampa" aria-hidden="true"></div>
 
 <button id="night" type="button" aria-label="Attiva/disattiva modalità notte">
   <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -356,9 +389,11 @@ body.night-mode #night svg{stroke:var(--gold-lt);}
     const tipo=e.t==='LAB'?'<span class="badge t">Lab</span>':(e.t==='LET'?'<span class="badge t">Lettorato</span>':'');
     const gl=gruppoLabel(e.g);
     const hit=state.q?' hit':'';
+    const on=!!SPUNTE[e.id];
     return '<div class="ev'+hit+'" style="--c:'+c+'">'+
+      '<button type="button" class="ev-chk'+(on?' on':'')+'" data-id="'+esc(e.id)+'" aria-pressed="'+on+'" aria-label="Segna"><svg viewBox="0 0 24 24"><path d="m5 12 5 5 9-10"/></svg></button>'+
       '<div class="ev-time">'+e.i+'<small>–'+e.f+'</small></div>'+
-      '<div class="ev-mat">'+esc(e.m)+(gl?' <span class="badge g">'+gl+'</span>':'')+tipo+'</div>'+
+      '<div class="ev-mat">'+esc(e.m)+(gl?' <span class="badge g">'+gl+'</span>':'')+tipo+(e.n?'<span class="badge n">Lez. '+e.n+'</span>':'')+'</div>'+
       (e.doc?'<div class="ev-doc">'+esc(e.doc)+'</div>':'')+
       '<div class="ev-aula">'+(e.a?esc(e.a):'aula da definire')+'</div>'+
     '</div>';
@@ -503,10 +538,100 @@ body.night-mode #night svg{stroke:var(--gold-lt);}
   try{ if(localStorage.getItem('ums_night_mode')==='1') document.body.classList.add('night-mode'); }catch(e){}
   $('#night').addEventListener('click',()=>{const on=document.body.classList.toggle('night-mode'); try{localStorage.setItem('ums_night_mode',on?'1':'0');}catch(e){}});
 
+  /* ---------- numero progressivo: ogni materia+gruppo ha il suo conteggio ---------- */
+  function numera(){
+    const cont={};
+    EV.slice().sort((a,b)=>(a.d+a.i).localeCompare(b.d+b.i)).forEach(e=>{
+      const k=e.m+'|'+(e.g||'');
+      cont[k]=(cont[k]||0)+1;
+      e.n=cont[k];
+      e.id=e.m+'|'+(e.g||'')+'|'+e.d+'|'+e.i;
+    });
+  }
+
+  /* ---------- spunte: salvate sul dispositivo e, se connesso, sull'account ---------- */
+  const API='https://ums-backend.unamanospensierata.workers.dev';
+  const chiave=()=>{try{return localStorage.getItem('ums_chiave')||'';}catch(e){return '';}};
+  let SPUNTE={};
+  try{ SPUNTE=JSON.parse(localStorage.getItem('ums_cal_spunte')||'{}')||{}; }catch(e){ SPUNTE={}; }
+  let salvaTimer=null;
+  function salvaSpunte(){
+    try{ localStorage.setItem('ums_cal_spunte', JSON.stringify(SPUNTE)); }catch(e){}
+    if(!chiave()) return;
+    clearTimeout(salvaTimer);
+    salvaTimer=setTimeout(()=>{
+      fetch(API+'/save',{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({chiave:chiave(), items:[{kind:'cal', id:'spunte', content:SPUNTE}]})}).catch(()=>{});
+    },800);
+  }
+  async function caricaSpunte(){
+    if(!chiave()) return;
+    try{
+      const r=await fetch(API+'/load',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chiave:chiave()})});
+      const d=await r.json(); if(!d.ok) return;
+      const row=(d.dati||[]).find(x=>x.kind==='cal' && x.item_id==='spunte');
+      if(!row) { if(Object.keys(SPUNTE).length) salvaSpunte(); return; }
+      let c; try{ c=JSON.parse(row.content); }catch(e){ return; }
+      if(c && typeof c==='object'){
+        SPUNTE=Object.assign({}, SPUNTE, c);
+        try{ localStorage.setItem('ums_cal_spunte', JSON.stringify(SPUNTE)); }catch(e){}
+        render();
+      }
+    }catch(e){}
+  }
+  document.addEventListener('click',ev=>{
+    const b=ev.target.closest('.ev-chk'); if(!b) return;
+    ev.preventDefault(); ev.stopPropagation();
+    const id=b.dataset.id;
+    if(SPUNTE[id]) delete SPUNTE[id]; else SPUNTE[id]=1;
+    const on=!!SPUNTE[id];
+    document.querySelectorAll('.ev-chk').forEach(x=>{ if(x.dataset.id===id){ x.classList.toggle('on',on); x.setAttribute('aria-pressed',on); } });
+    salvaSpunte();
+  });
+
+  /* ---------- stampa: per anno, materia per materia, spuntate e mancanti ---------- */
+  function stampa(){
+    const oggi=iso(today());
+    const gruppi={};
+    EV.forEach(e=>{
+      const k=e.m+'|'+(e.g||'');
+      (gruppi[k]=gruppi[k]||{m:e.m, g:e.g||'', anno:e.anno||0, ev:[]}).ev.push(e);
+    });
+    const righe=Object.values(gruppi).map(G=>{
+      G.ev.sort((a,b)=>a.n-b.n);
+      const passate=G.ev.filter(e=>e.d<=oggi);
+      G.si=G.ev.filter(e=>SPUNTE[e.id]).map(e=>e.n);
+      G.no=passate.filter(e=>!SPUNTE[e.id]).map(e=>e.n);
+      G.fut=G.ev.filter(e=>e.d>oggi && !SPUNTE[e.id]).length;
+      G.tot=G.ev.length;
+      return G;
+    });
+    const lista=a=>a.length?a.join(', '):'—';
+    const tab=(arr,completa)=>'<table><thead><tr><th>Materia</th><th>Gruppo</th><th class="num">Totale</th><th>Spuntate</th>'+(completa?'':'<th>Mancano</th>')+'<th class="num">Ancora da fare</th></tr></thead><tbody>'+
+      arr.map(G=>'<tr><td>'+esc(G.m)+'</td><td>'+esc(gruppoLabel(G.g)||'—')+'</td><td class="num">'+G.tot+'</td><td>'+lista(G.si)+'</td>'+(completa?'':'<td><strong>'+lista(G.no)+'</strong></td>')+'<td class="num">'+G.fut+'</td></tr>').join('')+
+      '</tbody></table>';
+    let html='<h1>Calendario delle lezioni · riepilogo</h1><p class="st-meta">'+esc(META.semestre||'')+' · stampato il '+fmtLong(today())+' '+today().getFullYear()+'. "Mancano" = lezioni già svolte non spuntate. "Ancora da fare" = lezioni future.</p>';
+    [1,2,3,4,5,0].forEach(a=>{
+      const r=righe.filter(G=>G.anno===a).sort((x,y)=>x.m.localeCompare(y.m,'it')||x.g.localeCompare(y.g));
+      if(!r.length) return;
+      const ok=r.filter(G=>!G.no.length && G.si.length);
+      const ko=r.filter(G=>G.no.length || !G.si.length);
+      html+='<h2>'+(a?a+'° anno':'Altro')+'</h2>';
+      html+='<h3>Mancano ('+ko.length+')</h3>'+(ko.length?tab(ko,false):'<p>Nessuna.</p>');
+      html+='<h3>In pari ('+ok.length+')</h3>'+(ok.length?tab(ok,true):'<p>Nessuna.</p>');
+    });
+    $('#stampa').innerHTML=html;
+    document.body.classList.add('stampando');
+    const fine=()=>{document.body.classList.remove('stampando'); window.removeEventListener('afterprint',fine);};
+    window.addEventListener('afterprint',fine);
+    setTimeout(()=>window.print(),50);
+  }
+  $('#stampa-btn').addEventListener('click',stampa);
+
   /* ---------- caricamento ---------- */
   $('#body').innerHTML='<div class="empty-big">Carico il calendario…</div>';
   fetch('calendario-lezioni.json',{cache:'no-store'}).then(r=>r.json()).then(data=>{
-    EV=data.eventi||[]; META=data;
+    EV=data.eventi||[]; META=data; numera();
     META.inizio=EV.length?EV[0].d:'2026-09-28';
     if(data.aggiornato){
       const d=parse(data.aggiornato);
@@ -517,6 +642,7 @@ body.night-mode #night svg{stroke:var(--gold-lt);}
     $('#seg-anno').querySelectorAll('button').forEach(x=>x.classList.toggle('on',+x.dataset.a===state.anno));
     $('#seg-gruppo').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x.dataset.g===state.gruppo));
     setView(state.view);
+    caricaSpunte();
   }).catch(()=>{
     $('#body').innerHTML='<div class="empty-big">Non riesco a caricare il calendario.<br>Ricarica la pagina o controlla la connessione.</div>';
     $('#tre').innerHTML='';
