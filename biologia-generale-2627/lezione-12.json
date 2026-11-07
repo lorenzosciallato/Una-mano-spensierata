@@ -1,0 +1,376 @@
+{
+  "titolo_lezione": "Sistemi Sensoriali e Sistema Nervoso",
+  "sottotitolo": "Origine evolutiva dei recettori, fisiologia neuronale, cefalizzazione e regolazione viscerale autonoma",
+  "orientamento": {
+    "obiettivi": [
+      "Comprendere l'origine evolutiva della comunicazione biologica a partire dai feromoni dei protisti ciliati.",
+      "Descrivere struttura e funzione di chemiorecettori, meccanorecettori ciliati e fotorecettori nei metazoi.",
+      "Analizzare i meccanismi del potenziale d'azione, la conduzione saltatoria lungo l'assone mielinizzato e la trasmissione sinaptica.",
+      "Tracciare le tappe della cefalizzazione animale dalla rete diffusa degli cnidari all'encefalo dei vertebrati.",
+      "Confrontare l'azione antagonista del sistema nervoso simpatico e parasimpatico nella regolazione dell'omeostasi."
+    ],
+    "concetto_fondamentale": "I sistemi sensoriali e il sistema nervoso costituiscono un apparato integrato di coordinamento evolutosi da omologie molecolari e strutturali antichissime, capace di trasdurre stimoli fisici e chimici ambientali in impulsi elettrochimici millisecondici per elaborare risposte adattative rapide.",
+    "nota_extra": "Presta particolare attenzione al filo conduttore dell'omologia: osserva come le ciglia dei protisti siano alla base sia dell'udito sia dell'equilibrio e della linea laterale, e confronta la polarità strutturale della retina diretta nei cefalopodi con quella invertita dei vertebrati.",
+    "domande_autovalutazione": [
+      "Quale duplice ruolo svolgono i feromoni solubili nella moltiplicazione clonale e nella coniugazione sessuale dei protisti ciliati?",
+      "In che modo la struttura ciliare ancestrale è stata conservata e rifunzionalizzata nell'orecchio interno, nelle statocisti e nella linea laterale dei pesci?",
+      "Quali differenze anatomiche intercorrono tra la retina diretta dei cefalopodi e la retina invertita dei vertebrati, e quale ne è la conseguenza sul campo visivo?",
+      "Attraverso quale meccanismo la guaina mielinica e i nodi di Ranvier consentono una propagazione saltatoria del potenziale d'azione fino a cento metri al secondo?",
+      "Quali trasformazioni caratterizzano l'evoluzione del sistema nervoso dalla rete diffusa degli cnidari ai cordoni ventrali degli invertebrati e all'asse cerebrospinale dorsale dei vertebrati?",
+      "In che modo le branche simpatica e parasimpatica del sistema nervoso autonomo interagiscono in maniera antagonista su ghiandole salivari, apparato digerente e vescica urinaria?"
+    ]
+  },
+  "punti_chiave": [
+    {
+      "id": "chemioricezione-e-comunicazione-chimica",
+      "titolo_breve": "1. Origine evolutiva dei recettori e chemioricezione",
+      "sottotitolo": "Dalla segnalazione autocrina/paracrina dei protisti ai chemiorecettori di insetti e vertebrati",
+      "titolo_esteso": "1. Origine evolutiva dei recettori e chemioricezione",
+      "testo_modale": "<p>La sensibilità chimica rappresenta il più antico sistema di relazione biologica con l'ambiente, comparso oltre <strong>due miliardi di anni fa</strong> nei protisti unicellulari. Nei ciliati, la comunicazione intercellulare impiega <strong>feromoni proteici solubili</strong> e recettori di membrana in grado di coordinare il comportamento della popolazione:</p><ul><li><strong>Segnalazione autocrina:</strong> il riconoscimento di feromoni secreti da cellule del medesimo tipo stimola la moltiplicazione clonale asessuata per via mitotica;</li><li><strong>Segnalazione paracrina:</strong> il legame con molecole rilasciate da ceppi geneticamente compatibili ma distinti blocca la proliferazione vegetativa e induce la coniugazione sessuale con scambio di materiale genico;</li><li><strong>Discriminazione biologica:</strong> la chemioricezione si è affinata per consentire il riconoscimento vitale di conspecifici, prede alimentari e predatori pericolosi.</li></ul><p>Negli animali pluricellulari la chemioricezione si specializza in gusto e olfatto: nei <strong>ditteri</strong> (mosche), sensilli gustativi posti sui tarsi delle zampe analizzano le soluzioni zuccherine prima del pasto; nei <strong>lepidotteri</strong>, antenne piumate ricche di chemiorecettori captano feromoni volatili a grandi distanze; nei <strong>mammiferi</strong>, calici gustativi dotati di pori sulla lingua convertono i quattro sapori base in segnali nervosi corticali.</p>"
+    },
+    {
+      "id": "meccanorecezione-udito-ed-equilibrio",
+      "titolo_breve": "2. Meccanorecezione, ciglia ed equilibrio",
+      "sottotitolo": "Omologia delle cellule ciliate nell'organo del Corti, nelle statocisti e nella linea laterale",
+      "titolo_esteso": "2. Meccanorecezione, ciglia ed equilibrio",
+      "testo_modale": "<p>I meccanorecettori preposti alla percezione uditiva, pressoria e gravitazionale derivano filogeneticamente dalla <strong>rifunzionalizzazione delle ciglia</strong> dei protisti eucariotici, conservandone l'identica architettura molecolare di base:</p><ul><li><strong>Organo del Corti e coclea:</strong> nell'orecchio interno dei mammiferi, le vibrazioni trasmesse da timpano, martello, incudine e staffa generano onde fluide nella chiocciola che deflettono le stereociglia cellulari, discriminando frequenze acute, medie e gravi;</li><li><strong>Canali semicircolari e otoliti:</strong> granuli micrometrici di <strong>carbonato di calcio</strong> liberi nell'endolinfa si spostano per gravità a ogni inclinazione del capo, flettendo le cellule ciliate per segnalare l'orientamento posturale nello spazio;</li><li><strong>Statocisti degli invertebrati:</strong> capsule sferoidali con concrezioni minerali mobili (statoliti) orientano il nuoto gravitazionale di cnidari (cubomeduse) e platelminti (planarie);</li><li><strong>Linea laterale dei pesci:</strong> canali cutanei longitudinali provvisti di cellule ciliate misurano le asimmetrie di flusso idrico tra fianco destro e sinistro, codificando la traiettoria rettilinea o di virata.</li></ul><p>Sulla cute dei mammiferi operano inoltre meccanorecettori di pressione e corpuscoli associati alla radice pilifera per la ricezione tattile.</p>"
+    },
+    {
+      "id": "fotorecezione-e-divergenza-oculare",
+      "titolo_breve": "3. Fotorecezione e specializzazione visiva",
+      "sottotitolo": "Dalla fotoprotezione tossica di Blepharisma alla retina diretta e invertita",
+      "titolo_esteso": "3. Fotorecezione e specializzazione visiva",
+      "testo_modale": "<p>La risposta biologica alla luce trae origine da molecole fotosensibili ancestrali: nel protozoo <em>Blepharisma</em>, il pigmento rosso <strong>blefarispina</strong> si trasforma alla luce in un metabolita tossico, inducendo una reazione di fuga verso l'oscurità per sfuggire ai predatori:</p><ul><li><strong>Macchie oculari nelle planarie:</strong> ocelli a coppa pigmentata capaci di discriminare l'incidenza vettoriale della luce per guidare la fototassi negativa verso fessure protette;</li><li><strong>Occhi a camera delle cubomeduse:</strong> strutture ottiche complete di cornea, cristallino e retina alloggiate nei ropali marginali, operanti all'interno di un sistema nervoso ad anello privo di encefalo;</li><li><strong>Retina diretta dei cefalopodi:</strong> convergenza evolutiva in cui i fotorecettori sono disposti anteriormente verso il flusso luminoso senza ostacoli cellulari e gli assoni decorrono posteriormente, evitando il punto cieco;</li><li><strong>Retina invertita dei vertebrati:</strong> i fotorecettori sono disposti nello strato più profondo e la luce deve attraversare neuroni gangliari e bipolari; la convergenza degli assoni nel nervo ottico genera la papilla cieca.</li></ul><p>Nei vertebrati la trasduzione visiva è ripartita tra <strong>bastoncelli</strong> (altamente sensibili, per la visione notturna acromatica mediante scissione di rodopsina in opsina e retinale) e <strong>coni</strong> (visione fotopica diurna a colori, sintonizzati sulle bande spettrali di blu, verde e rosso).</p>"
+    },
+    {
+      "id": "conduzione-assonale-cefalizzazione-ed-encefalo",
+      "titolo_breve": "4. Fisiologia neuronale, cefalizzazione ed encefalo",
+      "sottotitolo": "Propagazione saltatoria del potenziale d'azione, architettura cerebrale e sistema autonomo",
+      "titolo_esteso": "4. Fisiologia neuronale, cefalizzazione ed encefalo",
+      "testo_modale": "<p>Il sistema nervoso coordina gli stimoli con rapidità millisecondica impiegando una trasmissione mista <strong>elettrochimica</strong>. L'unità fondamentale è il neurone, dotato di dendriti riceventi, soma integratore e assone conduttore:</p><ul><li><strong>Guaina mielinica e nodi di Ranvier:</strong> le cellule gliali di Schwann isolano elettricamente l'assone; il potenziale d'azione si propaga per via puramente elettrica e salta tra i nodi, aumentando la velocità da 1 m/s a 100 m/s;</li><li><strong>Sinapsi chimica:</strong> nello spazio intercellulare presinaptico vengono esocitati neurotrasmettitori (acetilcolina, noradrenalina) che si legano a recettori postsinaptici specifici;</li><li><strong>Tendenze evolutive:</strong> transizione dalla rete nervosa diffusa degli cnidari ai cordoni ventrali con gangli cefalici di planarie, anellidi e artropodi, fino all'asse cerebrospinale dorsale dei vertebrati;</li><li><strong>Organizzazione encefalica:</strong> prosencefalo (telencefalo e diencefalo con 90% del volume), mesencefalo, rombencefalo e sistema limbico (amigdala, ippocampo) per le emozioni istintive;</li><li><strong>Sistema nervoso autonomo:</strong> cooperazione antagonista tra <em>ortosimpatico</em> (adrenergico, eccitante, lotta o fuga) e <em>parasimpatico</em> (colinergico, assimilativo e di quiete).</li></ul>"
+    }
+  ],
+  "podcast_url": "",
+  "video_sintesi_url": "",
+  "riassuntone": [
+    {
+      "titolo": "Origine evolutiva della comunicazione biologica e sistemi di chemioricezione",
+      "testo": "La comunicazione biologica e la capacità di percepire l'ambiente circostante affondano le proprie radici evolutive nelle prime cellule eucariotiche moderne, comparse circa due miliardi di anni fa e riconducibili al vasto raggruppamento dei protisti. In questi organismi unicellulari si è sviluppata una sofisticata rete di segnalazione chimica basata sull'interazione stereospecifica tra molecole segnale solubili, identificate come feromoni o mediatori chimici peptidici, e specifici recettori proteici inseriti nella membrana plasmatica. L'esempio paradigmatico è fornito dai protisti ciliati, i quali adoperano tali messaggi molecolari per regolare in modo bifasico la propria dinamica di popolazione. Quando una cellula rileva nel mezzo acquoso feromoni rilasciati da individui appartenenti al medesimo tipo di accoppiamento (effetto autocrino), il legame recettoriale induce una stimolazione della proliferazione mitotica asessuata, accrescendo la densità numerica della colonia. Al contrario, quando i recettori di membrana intercettano feromoni secreti da cellule di tipo differente (effetto paracrino), la moltiplicazione clonale viene prontamente arrestata per innescare i processi sessuali di coniugazione: due cellule compatibili si fondono transitoriamente a livello delle membrane, attuano un reciproco scambio di materiale genico e si separano generando una discendenza ricombinata e geneticamente rinnovata. Questa originaria capacità di discriminazione molecolare ha risposto all'esigenza vitale di distinguere i partner conspecifici, le prede nutritive e i potenziali predatori. Nei metazoi pluricellulari, questa primitiva sensibilità chimica si è evoluta e specializzata nei sistemi di chemioricezione, distinti principalmente in senso del gusto e dell'olfatto. Nei ditteri, come mosche e moscerini, i chemiorecettori gustativi sono localizzati sui segmenti terminali delle zampe (i tarsi): sensilli setoliformi cavi racchiudono neuroni sensoriali le cui terminazioni dendritiche entrano in contatto diretto con le soluzioni alimentari, permettendo all'insetto di saggiare il substrato prima di estroflettere l'apparato boccale. Nei lepidotteri (farfalle e falene), le antenne recano migliaia di chemiorecettori olfattivi specializzati nell'intercettare minuscole tracce aeree di feromoni sessuali rilasciati a chilometri di distanza. Nei vertebrati, i chemiorecettori gustativi sono organizzati in calici o bottoncini gustativi situati a livello delle papille della mucosa linguale; attraverso pori gustativi, le sostanze disciolte nella saliva attivano selettivamente cellule chemocettrici specializzate nella trasduzione dei sapori fondamentali (dolce, salato, acido, amaro), trasmettendo l'informazione codificata ai centri nervosi.",
+      "check_points": [
+        {
+          "domanda": "Come funzionava il sistema di riconoscimento chimico nei protisti ciliati primordiali?",
+          "risposta": "Nei protisti ciliati il sistema operava mediante feromoni proteici solubili rilasciati nel mezzo acquoso e recettori di membrana dedicati. Il riconoscimento di feromoni del proprio tipo cellulare stimolava la proliferazione asessuata per via autocrina, mentre l'intercettazione di feromoni di tipi diversi attivava la coniugazione sessuale e lo scambio genico. Questo meccanismo ancestrale rappresentava la base per discriminare cellule conspecifiche, partner riproduttivi, prede o pericoli ambientali."
+        },
+        {
+          "domanda": "In quale modo gli insetti sfruttano i chemiorecettori per la nutrizione e la riproduzione?",
+          "risposta": "Nei ditteri i chemiorecettori gustativi sono alloggiati all'estremità distale delle zampe, consentendo di assaggiare chimicamente goccioline alimentari prima ancora di ingerirle. Nei lepidotteri, invece, le antenne piumate presentano una fitta rete di chemiorecettori olfattivi capaci di captare concentrazioni infinitesimali di feromoni sessuali dispersi nell'aria. Entrambi i sistemi impiegano sensilli cuticolari innervati da neuroni sensoriali che convertono il segnale chimico in impulsi nervosi."
+        },
+        {
+          "domanda": "Qual è l'organizzazione anatomica e funzionale dei recettori gustativi nei mammiferi?",
+          "risposta": "Nei mammiferi i chemiorecettori del gusto sono raggruppati all'interno di bottoncini o calici gustativi distribuiti lungo le papille della superficie linguale. Ciascun calice si apre all'esterno attraverso un poro gustativo che permette alle molecole disciolte nei fluidi orali di raggiungere i recettori cellulari. Questi ultimi trasducono selettivamente i quattro gusti fondamentali in segnali elettrici veicolati dai nervi cranici verso la corteccia gustativa cerebrale."
+        }
+      ]
+    },
+    {
+      "titolo": "Meccanorecezione e continuità evolutiva ciliare: udito, gravità ed equilibrio",
+      "testo": "I sistemi deputati alla percezione di stimoli meccanici, sonori e gravitazionali presentano una straordinaria omologia ultrastrutturale che riconduce direttamente alle ciglia degli antichi protisti eucariotici. La disposizione ciliare, originariamente evolutasi per consentire la locomozione idrodinamica e la cattura predatoria di particelle tramite la generazione di microvortici acquosi, è stata rifunzionalizzata nel corso della filogenesi animale per costituire la componente eccitabile dei meccanorecettori. Nei vertebrati terrestri, l'apparato uditivo integra componenti meccaniche accessorie ed elementi neurosensoriali altamente raffinati. L'orecchio esterno convoglia le onde di pressione sonora lungo il condotto uditivo fino alla membrana timpanica, la quale entra in vibrazione meccanica. Tale movimento oscillatorio viene trasferito e amplificato attraverso la catena degli ossicini dell'orecchio medio (martello, incudine e staffa), che preme sulla finestra ovale della coclea o chiocciola, situata nell'orecchio interno. La coclea è un condotto a spirale ricolmo di fluido, al cui interno risiede l'organo del Corti: le onde pressorie propagantesi nel liquido provocano la deflessione meccanica delle stereociglia appartenenti a cellule ciliate specializzate. In funzione della localizzazione lungo la spirale cocleare e del gradiente di rigidità della membrana, queste cellule ciliate discriminano con eccezionale precisione l'altezza tonale, traducendo le diverse frequenze (acute, medie e gravi) in treni di impulsi elettrici diretti al cervello. Parallelamente alla funzione uditiva, l'orecchio interno gestisce l'equilibrio e l'orientamento spaziale attraverso i tre canali semicircolari ortogonali e le cavità otolitiche. In queste strutture, liberi nel fluido endolinfatico, si trovano minuscoli granuli minerali di carbonato di calcio aventi diametro micrometrico, denominati otoliti. Quando il capo o il corpo subiscono una variazione di inclinazione rispetto al centro di gravità terrestre, gli otoliti scivolano per gravità verso la porzione declive, esercitando una trazione e piegando meccanicamente le ciglia dell'epitelio sensoriale sottostante. Tale compressione asimmetrica genera un potenziale recettoriale che informa istantaneamente i centri encefalici sulla postura corporea. Un principio biomeccanico analogo governa le statocisti degli invertebrati marini (meduse e planarie), capsule sferoidali contenenti concrezioni calcaree (statoliti) che a contatto con statorecettori ciliati regolano l'assetto del nuoto. Nei pesci, lo stesso meccanismo ciliare è incorporato nell'organo della linea laterale, formato da canali subepidermici longitudinali comunicanti con l'esterno: la differenza di scorrimento del flusso idrico tra il fianco destro e il fianco sinistro stimola le cellule ciliate interne, consentendo all'animale di registrare istante per istante la velocità di avanzamento e qualsiasi deviazione angolare della traiettoria.",
+      "check_points": [
+        {
+          "domanda": "Quale percorso compie l'onda sonora nell'orecchio dei mammiferi prima di essere trasdotta in segnale nervoso?",
+          "risposta": "L'onda di pressione sonora viene convogliata dal condotto uditivo esterno e fa vibrare la membrana timpanica. Questa vibrazione è trasmessa e amplificata meccanicamente dalla catena degli ossicini dell'orecchio medio (martello, incudine, staffa) fino alla finestra ovale della coclea. All'interno della coclea, i movimenti del fluido mettono in oscillazione le cellule ciliate dell'organo del Corti, le quali convertono la deflessione delle ciglia in impulsi nervosi differenziati per frequenza."
+        },
+        {
+          "domanda": "In che modo gli otoliti e i canali semicircolari permettono la percezione della gravità e dell'equilibrio?",
+          "risposta": "I canali semicircolari e le strutture annesse contengono endolinfa in cui sono sospesi otoliti, minuscole concrezioni di carbonato di calcio. Quando il capo varia la propria inclinazione rispetto al vettore gravitazionale terrestre, i sassolini scivolano verso il basso per gravità e flettono le ciglia delle cellule meccano-recettoriali sottostanti. La deformazione meccanica delle ciglia innesca un potenziale elettrico che comunica al cervello l'esatto orientamento tridimensionale del corpo."
+        },
+        {
+          "domanda": "Come funziona il sistema della linea laterale nei pesci e quale omologia condivide con l'orecchio interno?",
+          "risposta": "La linea laterale è costituita da canali longitudinali decorrenti lungo i fianchi del pesce, contenenti cellule sensoriali ciliate a contatto con l'acqua circostante. Se il pesce procede in linea retta l'acqua scorre a velocità simmetrica nei due canali, mentre una virata genera un gradiente di velocità e pressione che flette le ciglia in misura disuguale. Questo sistema deriva dalla medesima matrice evolutiva ciliare presente nell'orecchio interno dei vertebrati e nelle statocisti degli invertebrati."
+        }
+      ]
+    },
+    {
+      "titolo": "Fotorecezione e divergenza evolutiva degli organi visivi",
+      "testo": "La fotorecezione biologica rappresenta una delle più antiche e decisive innovazioni evolutive per la sopravvivenza degli organismi viventi. Le sue premesse molecolari risalgono nuovamente al mondo unicellulare dei protisti: nel protozoo ciliato eterotrofo Blepharisma, la presenza di una molecola fotosensibile pigmentata di colore rosso, la blefarispina, funge da primitivo fotocettore di difesa. Se irradiata dalla luce solare, la blefarispina subisce una reazione fotochimica che la degrada in un metabolita fortemente citotossico; tale danno intracellulare costringe la cellula a invertire immediatamente il battito ciliare allontanandosi dalle zone illuminate verso anfratti bui, evitandole di esporsi visivamente ai predatori. Negli animali pluricellulari basali, come i platelminti a vita libera (le planarie), la sensibilità luminosa è affidata a ocelli o macchie oculari a coppa pigmentata: queste strutture non formano immagini retiniche ma rilevano con precisione la direzione di provenienza del raggio luminoso, guidando comportamenti di fototassi negativa verso rifugi riparati. Un salto strutturale sorprendente si osserva nelle cubomeduse, organismi trasparenti e privi di un cervello centralizzato ma provvisti, lungo il perimetro dell'ombrella, di complessi organi sensoriali detti ropali. Ciascun ropalio integra occhi a camera dotati di cornea, lente cristallina e una retina funzionale capace di formare immagini nitide, sebbene rimanga tuttora un affascinante enigma biologico come un sistema nervoso rudimentale a semplice anello possa decodificare una simile ricchezza di dettagli visivi. Al vertice della complessità si collocano gli occhi a lente o a camera dei molluschi cefalopodi (polpi, seppie e calamari) e dei vertebrati, un caso emblematico di convergenza evolutiva guidata da pressioni selettive analoghe ma sviluppatasi su piani organizzativi opposti. Nei cefalopodi la retina è di tipo 'diretto': i fotorecettori sono disposti in prima linea sulla superficie anteriore della retina e ricevono i fotoni senza alcuna interposizione cellulare, con le fibre del nervo ottico che decorrono posteriormente senza creare interruzioni nel campo visivo. Nei vertebrati, al contrario, l'organogenesi embrionale ha determinato una retina 'invertita': la luce deve attraversare diversi strati di neuroni trasparenti (cellule gangliari, amacrine, bipolari e orizzontali) prima di raggiungere i segmenti esterni fotosensibili dei fotorecettori, addossati all'epitelio pigmentato. Inoltre, la convergenza degli assoni gangliari forma il nervo ottico che deve attraversare a ritroso la lamina retinica, determinando la comparsa di un'area cieca priva di fotorecettori (la papilla ottica o punto cieco). A livello cellulare, la visione dei vertebrati poggia sulla specializzazione di due classi di fotorecettori: i bastoncelli, cellule allungate e sensibilissime alla minima intensità luminosa, responsabili della visione notturna o scotopica in gradazioni di grigio grazie alla scissione fotochimica della rodopsina in opsina e retinale; e i coni, cellule più corte deputate alla visione diurna o fotopica e alla percezione cromatica ad alta risoluzione spaziale, operanti tramite tre distinte isoforme di fotopsine sintonizzate sulle lunghezze d'onda del blu, del verde e del rosso.",
+      "check_points": [
+        {
+          "domanda": "Quale funzione adattativa svolge la molecola blefarispina nel protista Blepharisma?",
+          "risposta": "Nel protista Blepharisma la blefarispina è un pigmento fotosensibile che, a contatto con la luce, si converte in una sostanza chimicamente tossica. Questo minuscolo danno cellulare agisce come segnale d'allarme inducendo l'organismo a nuotare prontamente verso zone oscure. Il meccanismo previene la permanenza in ambienti illuminati dove il protozoo risulterebbe facilmente individuabile e vulnerabile agli attacchi dei predatori."
+        },
+        {
+          "domanda": "In che cosa differisce la retina diretta dei cefalopodi rispetto alla retina invertita dei vertebrati?",
+          "risposta": "Nella retina diretta dei cefalopodi i fotorecettori sono rivolti frontalmente verso la luce in arrivo e gli assoni partono dalla base posteriore, garantendo un'intercettazione ottica immediata priva di punti ciechi. Nella retina invertita dei vertebrati, invece, i fotorecettori risiedono nello strato più profondo e la luce deve attraversare gli strati cellulari sovrastanti. Gli assoni convergono anteriormente per formare il nervo ottico, la cui fuoriuscita genera una zona priva di recettori nota come punto cieco."
+        },
+        {
+          "domanda": "Quali differenze morfologiche e funzionali distinguono i coni dai bastoncelli nella retina dei vertebrati?",
+          "risposta": "I bastoncelli possiedono un segmento esterno allungato ad altissima densità di rodopsina, pigmento che si scinde in opsina e retinale consentendo la visione in bianco e nero anche a bassissime intensità luminose. I coni sono dimensionalmente più corti e necessitano di illuminazione elevata, presiedendo alla visione diurna nitida e alla percezione cromatica. Essi contengono tre varianti di fotopsine tarate sulle frequenze della luce blu, verde e rossa."
+        }
+      ]
+    },
+    {
+      "titolo": "Fisiologia neuronale: potenziale d'azione, mielinizzazione e trasmissione sinaptica",
+      "testo": "L'integrazione degli stimoli sensoriali e il coordinamento delle risposte dell'organismo richiedono una velocità di elaborazione incompatibile con i soli messaggeri ormonali, la cui azione sistemica richiede minuti o ore. Il sistema nervoso adotta un meccanismo ibrido elettrochimico capace di operare nell'ordine dei millisecondi, basato sull'unità funzionale fondamentale: il neurone. Dal punto di vista citologico, il neurone presenta un corpo cellulare contenente il nucleo (soma o pirenoforo), dal quale si diramano prolungamenti citoplasmatici ramificati e relativamente brevi detti dendriti, deputati alla ricezione degli input provenienti da organi di senso o da cellule contigue. Dal polo opposto del soma si origina un singolo prolungamento cilindrico di notevole lunghezza, l'assone, il cui compito è condurre l'impulso nervoso in direzione centrifuga verso cellule effettrici o altri neuroni. Negli assoni non rivestiti da guaina lipidica protettiva, la depolarizzazione della membrana procede in modo continuo a una velocità limitata di circa un metro al secondo; in un organismo umano alto un metro e settanta centimetri, uno stimolo generato all'estremità del piede impiegherebbe quasi due secondi per raggiungere l'encefalo, un intervallo temporale insostenibile per la sopravvivenza. Nei vertebrati, questa limitazione biofisica è stata superata dall'evoluzione della guaina mielinica, un rivestimento isolante plurilamellare formato dall'avvolgimento concentrico di cellule gliali specializzate, identificate come cellule di Schwann nel sistema nervoso periferico e oligodendrociti nel sistema centrale. La guaina mielinica non è continua, ma risulta interrotta a intervalli regolari da zone prive di mielina denominate nodi di Ranvier. In virtù delle proprietà dielettriche della mielina, la corrente ionica transmembrana non può fluire attraverso i tratti mielinizzati: il potenziale d'azione si propaga pertanto in modalità 'saltatoria', saltando istantaneamente da un nodo di Ranvier all'altro. Nei tratti rivestiti la conduzione è puramente elettrica e priva di dispersione, mentre nei nodi si rigenera il processo elettrochimico con scambio ionico attraverso la membrana. Questa ingegnosa architettura incrementa la velocità di propagazione fino a cento metri al secondo, garantendo risposte riflesse praticamente istantanee. Quando l'onda di depolarizzazione raggiunge i bottoni terminali dell'assone, la trasmissione dell'informazione alla cellula bersaglio non avviene per continuità citoplasmatica diretta, bensì attraverso una discontinuità fisica ultramicroscopica: lo spazio o fessura sinaptica. All'arrivo del potenziale d'azione, la membrana presinaptica esocita vescicole cariche di molecole chimiche a basso peso molecolare, i neurotrasmettitori, tra i quali spiccano l'acetilcolina e la noradrenalina. Queste molecole diffondono rapidamente attraverso lo spazio sinaptico e si legano a recettori proteici specifici localizzati sulla membrana postsinaptica, provocando l'apertura di canali ionici che generano un nuovo evento elettrico nel neurone ricevente o innescano la risposta dell'organo bersaglio, come la contrazione di una fibra muscolare o la secrezione di ormoni metabolici (ad esempio il rilascio di insulina dalle isole pancreatiche stimolato da fibre nervose autonome).",
+      "check_points": [
+        {
+          "domanda": "Come è strutturato morfologicamente un neurone e quale polarità funzionale presenta?",
+          "risposta": "Il neurone comprende un corpo cellulare o soma, contenente il nucleo e gli organuli vitali, da cui si diramano dendriti ramificati specializzati nella ricezione di stimoli sensoriali o sinaptici. Dal corpo si estende l'assone, un lungo prolungamento cilindrico che conduce l'impulso nervoso verso la periferia o verso altri neuroni. Questa conformazione conferisce al neurone una rigida polarità funzionale centripeta per i dendriti e centrifuga per l'assone."
+        },
+        {
+          "domanda": "In che modo la guaina mielinica e i nodi di Ranvier consentono la conduzione saltatoria del potenziale d'azione?",
+          "risposta": "Le cellule di Schwann avvolgono l'assone formando manicotti isolanti di mielina separati da interruzioni scoperte chiamate nodi di Ranvier. Poiché la mielina impedisce il passaggio di correnti ioniche transmembrana, il potenziale d'azione è costretto a propagarsi per via elettrica pura all'interno del citoplasma, saltando da un nodo all'altro dove il segnale elettrochimico viene rigenerato. Tale modalità saltatoria accelera la velocità di trasmissione da un metro al secondo fino a cento metri al secondo."
+        },
+        {
+          "domanda": "Come avviene la trasmissione del segnale attraverso lo spazio sinaptico chimico?",
+          "risposta": "Al sopraggiungere del potenziale d'azione sul terminale assonale presinaptico, le vescicole sinaptiche riversano per esocitosi mediatori chimici nello spazio sinaptico intercellulare. Neurotrasmettitori cardine come l'acetilcolina e la noradrenalina diffondono attraverso la fessura e si legano a recettori della membrana postsinaptica. Questo legame recettoriale induce la trasduzione del segnale chimico in un nuovo potenziale elettrico o nella risposta funzionale di una ghiandola o di un muscolo."
+        }
+      ]
+    },
+    {
+      "titolo": "Evoluzione del sistema nervoso, encefalizzazione e sistema nervoso autonomo",
+      "testo": "La filogenesi dei metazoi evidenzia una transizione graduale da architetture nervose periferiche indifferenziate verso la centralizzazione e la cefalizzazione corporea. Negli cnidari sessili o pelagici, quali gli anemoni di mare, il sistema nervoso si presenta come una rete diffusa di neuroni priva di gangli gerarchici o centri di comando: la stimolazione tattile di un tentacolo scatena una risposta identica e indiscriminata in tutto l'organismo, provocando la ritrazione globale del corpo e la chiusura del disco boccale. Negli echinodermi a simmetria radiale, come le stelle di mare, compare un anello nervoso periorale da cui si diramano cordoni radiali lungo ciascun braccio, consentendo una mobilità articolata pur in assenza di un cervello cefalico. La comparsa della simmetria bilaterale nei platelminti (le planarie) segna l'avvento della cefalizzazione: all'estremità anteriore, prossima agli organi di senso (macchie oculari e statocisti), si differenziano due gangli cerebrali connessi a una coppia di cordoni longitudinali ventrali uniti da commessure trasversali (sistema a scaletta). Negli anellidi (lombrichi), il sistema si perfeziona con un ganglio cerebrale sopraesofageo anteriore e un cordone nervoso ventrale fuso metamerico, provvisto di un ganglio per ogni segmento corporeo. Negli artropodi (crostacei e insetti), il cervello cefalico raggiunge una notevole complessità suddiviso in lobi ottici, ganglio frontale e protocerebro, coordinato a una doppia catena ganglionare ventrale capace di gestire complesse risposte comportamentali e motorie a livello segmentale. Nei vertebrati si assiste a una radicale transizione anatomica: il cordone principale non è più ventrale ma risiede dorsalmente all'interno del canale scheletrico della colonna vertebrale (midollo spinale), culminando anteriormente in un encefalo tripartito: prosencefalo (suddiviso in telencefalo ed emisferi cerebrali, e diencefalo comprendente talamo e ipotalamo, che insieme costituiscono il 90% del volume encefalico), mesencefalo e rombencefalo (ponte, cervelletto e midollo allungato). Nelle profondità sottocorticali dei vertebrati, il sistema limbico (amigdala, ippocampo e corteccia cingolata) integra le funzioni cognitive superiori con pulsioni primarie arcaiche quali fame, piacere sessuale e reazioni di paura. La corteccia cerebrale (sostanza grigia) presenta una precisa compartimentazione funzionale in aree motorie, somatosensoriali, uditive, visive e linguistiche, con una asimmetria emisferica: l'emisfero sinistro analizza, calcola, misura e formula il linguaggio, mentre l'emisfero destro coordina la sintesi olistica, la percezione spaziale e le sensazioni musicali e visive. Sul piano comparativo, l'intelligenza non correla banalmente con il volume assoluto del cervello (la balena possiede un encefalo cinque volte più voluminoso di quello umano, ma pari allo 0,01% della sua massa corporea; l'uomo registra il 2%, mentre nel minuto toporagno il cervello raggiunge addirittura il 10% del peso corporeo), evidenziando come la densità e la specializzazione sinaptica corticale prevalgano sulle dimensioni grezze. A governare l'omeostasi viscerale interviene il sistema nervoso autonomo, organizzato in due divisioni anatomo-funzionali reciprocamente antagoniste: la divisione simpatica (ortosimpatica), a mediazione prevalente adrenergica (noradrenalina/adrenalina), mobilita le risposte di lotta o fuga, accelerando il ritmo cardiaco, stimolando la salivazione alla vista del cibo o favorendo la contrazione del muscolo detrusore vescicale durante la replezione urinaria; e la divisione parasimpatica, a mediazione colinergica (acetilcolina), favorisce la conservazione energetica, il riposo e i processi assimilativi, stimolando la motilità peristaltica e digestiva intestinale dopo un pasto e attenuando l'iperattività d'organo.",
+      "check_points": [
+        {
+          "domanda": "Come evolve la disposizione anatomica dei cordoni nervosi dagli invertebrati bilaterali ai vertebrati?",
+          "risposta": "Negli invertebrati a simmetria bilaterale, quali platelminti, anellidi e artropodi, i cordoni nervosi longitudinali e le catene gangliari presentano una rigorosa disposizione anatomica ventrale, situata al di sotto del canale digerente. Al contrario, nei vertebrati l'asse cerebrospinale subisce un fondamentale ribaltamento topografico, localizzandosi interamente in posizione dorsale all'interno delle cavità protette del cranio e della colonna vertebrale."
+        },
+        {
+          "domanda": "Quali strutture anatomiche compongono il sistema limbico e quale ruolo funzionale svolgono nell'encefalo?",
+          "risposta": "Il sistema limbico è collocato nelle regioni profonde situate al di sotto degli emisferi cerebrali e comprende strutture filogeneticamente antiche quali l'amigdala, l'ippocampo, il talamo, l'ipotalamo e la corteccia cingolata. Questa rete neurofunzionale integra le elaborazioni cognitive razionali della neocorteccia con le risposte emotive istintive di base, presiedendo alla regolazione di impulsi vitali quali la paura, l'appagamento del piacere, l'appetito e la memoria associativa."
+        },
+        {
+          "domanda": "In quale modo il sistema simpatico e il sistema parasimpatico regolano in modo antagonista le funzioni viscerali involontarie?",
+          "risposta": "Il sistema simpatico impiega l'adrenalina come neurotrasmettitore per preparare l'organismo all'azione e all'allerta, promuovendo risposte rapide e attivando organi specifici in base alle necessità (come la secrezione salivare appetitiva o lo stimolo minzionale a vescica piena). Il sistema parasimpatico agisce da antagonista mediante l'acetilcolina, inducendo uno stato di quiescenza fisiologica che riduce le secrezioni eccitatorie e promuove attivamente la motilità gastrointestinale durante la fase di riposo post-prandiale."
+        }
+      ]
+    }
+  ],
+  "flashcards": [
+    {
+      "front": "In che modo i protisti ciliati impiegano i feromoni e quale rilevanza evolutiva possiede questo meccanismo per i sistemi sensoriali ed endocrini?",
+      "back": "I protisti ciliati primordiali hanno sviluppato oltre due miliardi di anni fa un sistema di comunicazione chimica fondato sulla secrezione di feromoni proteici solubili nell'ambiente acquoso e sul loro riconoscimento tramite recettori specifici inseriti nella membrana plasmatica cellulare. Quando una cellula intercetta feromoni emessi da individui appartenenti al proprio identico ceppo cellulare, si instaura un circuito autocrino che stimola la crescita e la moltiplicazione mitotica asessuata. Al contrario, il contatto recettoriale con feromoni secreti da cellule geneticamente compatibili ma eterologhe innesca un'azione paracrina che sospende la proliferazione vegetativa e induce il processo di coniugazione sessuale, con temporanea fusione cellulare e scambio reciproco di materiale nucleare per originare individui ricombinati. Questo meccanismo ancestrale costituisce la matrice evolutiva comune sia della comunicazione ormonale a distanza, sia della chemioricezione sensoriale degli organismi pluricellulari complessi, avendo introdotto la capacità di discriminare con precisione molecolare i partner riproduttivi conspecifici, le fonti alimentari e le minacce ambientali."
+    },
+    {
+      "front": "Dove sono collocati e come operano i chemiorecettori gustativi e olfattivi negli insetti esaminati nella lezione?",
+      "back": "Negli insetti la localizzazione degli organi chemiorecettoriali riflette un'estrema specializzazione funzionale legata al comportamento ecologico. Nei ditteri, come mosche e moscerini, i chemiorecettori gustativi non risiedono nella cavità boccale ma sono distribuiti sulle porzioni distali delle zampe, in particolare a livello dei tarsi. Questi organi consistono in sensilli setoliformi cavi che ospitano prolungamenti dendritici di neuroni sensoriali esposti al contatto diretto con il substrato: posandosi su una superficie, l'insetto saggia chimicamente le sostanze nutrienti liquide prima di decidere se estroflettere la proboscide per alimentarsi. Nei lepidotteri, come falene notturne e farfalle diurne, la chemioricezione olfattiva aerea è affidata alle antenne, le quali presentano spesso una conformazione ampiamente piumata nei maschi. Ciascuna ramificazione antennale alloggia numerosissimi chemiorecettori protetti da sottili cuticole perforate, capaci di catturare concentrazioni minime di feromoni sessuali volatili emessi dalle femmine a chilometri di distanza, guidando il volo nuziale verso la sorgente."
+    },
+    {
+      "front": "Come viene trasdotta l'onda sonora in segnale nervoso all'interno dell'orecchio dei mammiferi?",
+      "back": "La trasduzione del suono nei mammiferi si realizza attraverso una sequenza coordinata di passaggi meccanici ed elettrochimici che collegano l'orecchio esterno a quello interno. Le onde sonore convogliate dal condotto uditivo provocano l'oscillazione elastica della membrana timpanica, la quale trasferisce il movimento meccanico alla catena degli ossicini dell'orecchio medio, costituita da martello, incudine e staffa. Questo complesso osteomuscolare agisce come una leva amplificatrice, trasmettendo la vibrazione alla finestra ovale della coclea o chiocciola, una struttura a spirale ricolma di fluido endolinfatico nell'orecchio interno. La propagazione ondosa del liquido mette in moto la membrana basilare dell'organo del Corti, provocando la deflessione tangenziale delle stereociglia appartenenti a cellule ciliate meccano-recettoriali. La deformazione meccanica delle ciglia determina l'apertura di canali ionici di membrana, convertendo l'energia fisica in una depolarizzazione graduata che rilascia neurotrasmettitore sulle terminazioni del nervo acustico, consentendo al cervello di discriminare frequenze sonore acute, intermedie e gravi lungo la mappa tonotopica."
+    },
+    {
+      "front": "In quale modo le cellule ciliate dell'orecchio interno e i canali semicircolari percepiscono l'equilibrio e il centro di gravità?",
+      "back": "La percezione dell'assetto gravitazionale e dell'equilibrio spaziale nei mammiferi è deputata al labirinto vestibolare dell'orecchio interno, costituito dai tre canali semicircolari orientati secondo i tre assi ortogonali dello spazio e dalle cavità dell'utricolo e del sacculo. All'interno di questi compartimenti endolinfatici risiedono epiteli sensoriali provvisti di cellule ciliate sovrastate da formazioni gelatinose in cui sono immerse concrezioni minerali microscopiche di carbonato di calcio, denominate otoliti. A ogni mutamento posturale o inclinazione angolare del capo, questi sassolini scivolano verso il basso seguendo la direzione del vettore di gravità terrestre, esercitando un'azione di compressione e sfregamento asimmetrico sulle ciglia sottostanti. La flessione meccanica delle ciglia modifica lo stato elettrico basale dei meccanorecettori, generando un potenziale d'azione che risale lungo le vie vestibolari fino ai centri encefalici. Il cervello riceve così una codifica vettoriale precisa e continua sull'inclinazione corporea rispetto al suolo, garantendo il mantenimento della stazione eretta e la correzione riflessa della postura."
+    },
+    {
+      "front": "Quale ruolo svolgono le statocisti negli invertebrati marini e qual è l'omologia funzionale con la linea laterale dei pesci?",
+      "back": "Le statocisti degli invertebrati, come meduse e planarie, sono vescicole sferoidali tappezzate internamente da cellule recettrici ciliate (statorecettori) e contenenti una massa mobile di carbonato di calcio detta statolite. Durante il nuoto o le oscillazioni idrodinamiche, lo statolite rotola verso la parete declive spinto dal proprio peso, comprimendo le ciglia e trasmettendo all'animale l'orientamento rispetto al centro della Terra, consentendogli di ristabilire la corretta postura verticale. Questa medesima organizzazione cellulare ciliare si ritrova perfettamente conservata nell'organo della linea laterale dei pesci, costituito da due canali longitudinali decorrenti lungo i fianchi del tronco. All'interno di questi dotti, ammassi di cellule ciliate bagnate dal flusso d'acqua rilevano le minime fluttuazioni idrodinamiche di pressione: se il pesce nuota dritto, la velocità di scorrimento è identica su ambo i lati, mentre in fase di virata la variazione asimmetrica di scorrimento deforma le ciglia, fornendo istantaneamente all'animale il senso della direzione e della traiettoria percorsa."
+    },
+    {
+      "front": "Cosa differenzia sul piano morfologico ed evolutivo la retina dei molluschi cefalopodi da quella dei vertebrati?",
+      "back": "L'apparato visivo dei molluschi cefalopodi e quello dei vertebrati rappresentano uno straordinario esempio di convergenza evolutiva, avendo prodotto in entrambi i lignaggi un occhio a camera perfezionato con cornea, iride e lente cristallina, ma poggiano su un'architettura retinica radicalmente divergente. Nei cefalopodi, quali polpi e seppie, la retina possiede un'organizzazione 'diretta': i fotorecettori sporgono anteriormente verso la cavità oculare, intercettando immediatamente i fotoni senza alcuna barriera biologica, mentre le fibre assoniche decorrono sul versante posteriore confluendo direttamente verso i gangli ottici. Nei vertebrati la retina è invece 'invertita': i segmenti fotosensibili dei fotorecettori sono alloggiati nello strato basale più profondo, a ridosso dell'epitelio pigmentato, per cui la radiazione luminosa deve preventivamente attraversare vari strati trasparenti formati da cellule gangliari, amacrine e bipolari. Inoltre, gli assoni delle cellule gangliari dei vertebrati corrono sulla superficie interna e devono perforare a ritroso la tonaca retinica per formare il nervo ottico, determinando un'area fisiologicamente cieca priva di coni e bastoncelli nota come papilla ottica."
+    },
+    {
+      "front": "Qual è il meccanismo biochimico alla base del funzionamento di coni e bastoncelli nella retina dei vertebrati?",
+      "back": "La fototrasduzione nella retina dei vertebrati è demandata a due categorie specializzate di fotorecettori provvisti di segmenti esterni ricchi di dischi membranosi fotosensibili: i bastoncelli e i coni. I bastoncelli sono cellule cilindriche allungate dotate di elevatissima sensibilità ottica, ideali per la visione crepuscolare e notturna scotopica in tonalità di grigio. Al loro interno contengono la rodopsina, un fotopigmento instabile che all'assorbimento anche di un singolo fotone si scinde istantaneamente nelle sub-unità opsina e retinale, innescando una cascata enzimatica che chiude i canali del sodio e iperpolarizza la membrana, generando l'impulso nervoso. I coni possiedono una morfologia conica più tozza e una soglia di attivazione superiore, operando nella visione fotopica diurna ad alto dettaglio spaziale. Essi alloggiano tre distinte isoforme proteiche di fotopsine, tarate selettivamente sull'assorbimento delle bande spettrali del blu, del verde e del rosso, permettendo al sistema visivo di decodificare l'intero spettro cromatico mediante combinazione ponderata dei tre segnali recettoriali."
+    },
+    {
+      "front": "In che modo la guaina mielinica e le cellule di Schwann rendono possibile la conduzione saltatoria del potenziale d'azione?",
+      "back": "Negli assoni privi di rivestimento mielinico la depolarizzazione elettrochimica della membrana procede in modo continuo e lento, avanzando a una velocità standard di appena un metro al secondo, il che comporterebbe latenze inaccettabili nei riflessi motori di animali di grande taglia corporea. Nei vertebrati, le cellule gliali di Schwann nel sistema periferico avvolgono concentricamente gli assoni con pluristrati membranosi ricchi di lipidi, formando manicotti isolanti denominati guaina mielinica. Questa guaina è interrotta a cadenza geometrica regolare da brevi segmenti di membrana nuda denominati nodi di Ranvier. Poiché le cariche ioniche non possono attraversare le porzioni assonali isolate dalla mielina, il flusso di corrente depolarizzante corre longitudinalmente all'interno del citoplasma per via puramente elettrica e passiva, saltando istantaneamente da un nodo di Ranvier a quello adiacente. Presso ciascun nodo scoperto, la concentrazione di canali ionici voltaggio-dipendenti rigenera il potenziale d'azione completo per via elettrochimica, consentendo all'impulso di raggiungere velocità di propagazione fulminee fino a cento metri al secondo con un minimo dispendio metabolico."
+    },
+    {
+      "front": "Quali passaggi avvengono a livello della fessura sinaptica chimica per trasmettere l'impulso da un neurone all'altro?",
+      "back": "La sinapsi chimica costituisce la giunzione funzionale specializzata attraverso cui il segnale nervoso valica lo spazio fisico reale che separa la cellula presinaptica da quella postsinaptica, definito fessura sinaptica. Quando il fronte del potenziale d'azione discende lungo l'assone e perviene ai bottoni terminali espansi, l'inversione di polarità di membrana provoca l'apertura di canali ionici che inducono la rapida fusione delle vescicole sinaptiche con la membrana plasmatica anteriore. Vengono così esocitati nello spazio intercellulare mediatori chimici solubili detti neurotrasmettitori, tra i quali assumono un'importanza primaria l'acetilcolina e la noradrenalina. Queste molecole diffondono per breve distanza attraverso il microambiente della fessura sinaptica e si legano a complessi proteici recettoriali disposti sulla membrana postsinaptica del neurone ricevente o della giunzione neuromuscolare. Il legame ligando-recettore provoca la conformazione aperta di canali ionici dedicati, innescando una nuova depolarizzazione elettrica nel neurone a valle o provocando l'attivazione funzionale della cellula bersaglio, quale la contrazione muscolare o una secrezione ghiandolare."
+    },
+    {
+      "front": "Quali sono le principali differenze funzionali e molecolari tra la branca simpatica e quella parasimpatica del sistema nervoso autonomo?",
+      "back": "Il sistema nervoso autonomo coordina l'attività involontaria degli organi viscerali, delle ghiandole e della muscolatura liscia attraverso due sottosistemi antagonisti che operano in costante equilibrio omeostatico. Il sistema simpatico (o ortosimpatico) è finalizzato all'attivazione dell'organismo in contesti di emergenza, allerta o sforzo, mediando le risposte di lotta o fuga attraverso il neurotrasmettitore adrenalina (o noradrenalina). Questa via neurale induce risposte quali l'accelerazione del battito cardiaco, la stimolazione della salivazione alla vista di un cibo gradito e la contrazione del muscolo vescicale quando la vescica è turgida per espellere l'urina. Al contrario, il sistema parasimpatico promuove il recupero energetico, la distensione e l'assimilazione metabolica nei periodi di riposo, utilizzando quale mediatore molecolare l'acetilcolina. Il parasimpatico attenua la secrezione salivare una volta terminato il pasto, rallenta l'attività cardiaca e attiva intensamente la peristalsi gastrica e la motilità intestinale, favorendo il transito del chimo e l'assorbimento digestivo lungo l'intero canale alimentare."
+    }
+  ],
+  "il_super_quiz": [
+    {
+      "domanda": "In una coltura liquida di protisti ciliati appartenenti a un unico ceppo clonale, un ricercatore osserva un rapido incremento numerico della popolazione senza alcuna coniugazione. Quale dinamica molecolare spiega questo comportamento?",
+      "opzioni": [
+        {
+          "testo": "La carenza di feromoni specifici nel mezzo induce una reazione di stress che accelera le divisioni mitotiche vegetative.",
+          "corretta": false
+        },
+        {
+          "testo": "I recettori di membrana legano i feromoni rilasciati dalle cellule identiche, stimolando la moltiplicazione asessuata per via autocrina.",
+          "corretta": true
+        },
+        {
+          "testo": "I chemio-recettori riconoscono le sostanze secrete come segnali eterologhi, avviando preventivamente la duplicazione del DNA.",
+          "corretta": false
+        }
+      ],
+      "spiegazione": "Nei ciliati il legame dei propri feromoni omologhi con i recettori di membrana attiva un circuito autocrino che stimola la crescita e la moltiplicazione cellulare asessuata. L'ipotesi di una reazione da stress per carenza di feromoni è insidiosa ma scorretta, poiché la proliferazione richiede la presenza attiva del mediatore proteico nel mezzo. L'opzione sul segnale eterologo è altrettanto errata perché il contatto con feromoni di ceppi differenti arresta la mitosi per avviare la coniugazione sessuale."
+    },
+    {
+      "domanda": "Uno sperimentatore applica una soluzione concentrata di saccarosio prima sulle zampe anteriori e poi sulle antenne di una mosca comune. In quale modo l'animale elabora questi due stimoli chimici?",
+      "opzioni": [
+        {
+          "testo": "Assaggia la soluzione tramite i chemio-recettori gustativi situati sui tarsi, decidendo a livello centrale se ingerirla.",
+          "corretta": true
+        },
+        {
+          "testo": "Rileva la natura nutritiva della goccia solo attraverso le antenne, usando i tarsi unicamente per orientarsi verso la sorgente.",
+          "corretta": false
+        },
+        {
+          "testo": "Attiva una risposta di ingestione immediata mediata da riflessi locali delle zampe senza coinvolgere il sistema nervoso centrale.",
+          "corretta": false
+        }
+      ],
+      "spiegazione": "I ditteri possiedono chemiorecettori gustativi localizzati all'estremità distale delle zampe, capaci di assaggiare il liquido e trasmettere l'informazione al sistema nervoso centrale prima dell'ingestione. L'opzione che limita la percezione alle sole antenne confonde il gusto con l'olfatto aereo, tipico dei lepidotteri per i feromoni volatili. L'idea di un riflesso puramente locale delle zampe è invece ingannevole, poiché la lezione evidenzia che spetta al sistema nervoso centrale elaborare lo stimolo e decidere se consumare il cibo."
+    },
+    {
+      "domanda": "Quale differenza anatomica e funzionale distingue in modo sostanziale la coclea dai canali semicircolari all'interno dell'orecchio interno dei mammiferi?",
+      "opzioni": [
+        {
+          "testo": "La coclea contiene un mezzo liquido per amplificare le onde, mentre i canali semicircolari operano a secco sfruttando la sola forza d'inerzia.",
+          "corretta": false
+        },
+        {
+          "testo": "La coclea percepisce esclusivamente frequenze gravi, mentre i canali semicircolari integrano la discriminazione delle frequenze medie e acute.",
+          "corretta": false
+        },
+        {
+          "testo": "La coclea trasduce le vibrazioni fluide in altezze tonali tramite ciglia, mentre i canali semicircolari usano otoliti per rilevare l'inclinazione gravitazionale.",
+          "corretta": true
+        }
+      ],
+      "spiegazione": "La coclea è specializzata nella trasduzione uditiva e scompone le frequenze sonore mediante le cellule ciliate dell'organo del Corti, mentre i canali semicircolari contengono otoliti calcarei per codificare l'equilibrio e l'assetto gravitazionale. L'idea che i canali semicircolari operino a secco è errata, poiché entrambi i compartimenti dell'orecchio interno contengono fluido endolinfatico. Inoltre, non è corretto attribuire ai canali semicircolari la percezione dei toni acuti, giacché l'intera gamma tonale viene discriminata unicamente lungo la spirale cocleare."
+    },
+    {
+      "domanda": "In un acquario, un pesce vira repentinamente verso sinistra per evitare un ostacolo. Come viene registrata questa manovra dall'organo della linea laterale?",
+      "opzioni": [
+        {
+          "testo": "La velocità di scorrimento del fluido diviene disuguale nei due canali laterali, stimolando in modo asimmetrico le cellule ciliate.",
+          "corretta": true
+        },
+        {
+          "testo": "L'aumento omogeneo della velocità dell'acqua lungo entrambi i lati del tronco segnala al cervello l'inizio della deviazione.",
+          "corretta": false
+        },
+        {
+          "testo": "I piccoli otoliti presenti nei canali laterali cadono sul lato sinistro, comprimendo l'epitelio sensoriale per effetto della gravità.",
+          "corretta": false
+        }
+      ],
+      "spiegazione": "L'organo della linea laterale registra la traiettoria tramite cellule ciliate che rilevano le differenze di velocità dell'acqua tra i due fianchi: una virata determina un flusso asimmetrico che piega le ciglia in misura disuguale. L'ipotesi dell'intervento di otoliti è il tipico errore di confusione concettuale, poiché le concrezioni di carbonato di calcio operano nell'orecchio interno e nelle statocisti, non nella linea laterale. Un flusso perfettamente omogeneo su entrambi i lati indicherebbe un nuoto rettilineo e non una deviazione."
+    },
+    {
+      "domanda": "Uno studente osserva al microscopio una coltura del protozoo ciliato Blepharisma ed espone un settore del vetrino a una sorgente di luce visibile. Quale comportamento manifestano le cellule e per quale ragione biochimica?",
+      "opzioni": [
+        {
+          "testo": "Nuotano verso il fascio di luce per massimizzare la sintesi energetica mediata dal pigmento rosso fotosintetico blefarispina.",
+          "corretta": false
+        },
+        {
+          "testo": "Fuggono verso l'oscurità poiché l'irradiazione trasforma la blefarispina in un composto citotossico, inducendo una reazione difensiva.",
+          "corretta": true
+        },
+        {
+          "testo": "Restano immobili sul posto perché le macchie oculari anteriori necessitano di buio completo per orientare il battito delle ciglia.",
+          "corretta": false
+        }
+      ],
+      "spiegazione": "Nel protozoo Blepharisma la blefarispina è un pigmento fotorecettore che, esposto alla luce, subisce una fotolisi tossica inducendo la cellula a fuggire verso l'oscurità per nascondersi dai predatori. La tesi di un pigmento fotosintetico è insidiosa ma errata, trattandosi di un protista eterotrofo che sfrutta la molecola come allarme difensivo. L'opzione che attribuisce al microrganismo macchie oculari anteriori sbaglia livello anatomico, dato che gli ocelli a coppa compaiono solo in metazoi come le planarie."
+    },
+    {
+      "domanda": "Mettendo a confronto la struttura retinica dei molluschi cefalopodi (come il polpo) con quella dei vertebrati, quale elemento architettonico rappresenta la differenza fondamentale?",
+      "opzioni": [
+        {
+          "testo": "I vertebrati possiedono coni e bastoncelli specializzati per colore e chiaroscuro, mentre i cefalopodi possiedono una retina priva di fotopigmenti.",
+          "corretta": false
+        },
+        {
+          "testo": "Nei cefalopodi la luce viene messa a fuoco direttamente sulla cornea senza cristallino, mentre nei vertebrati la lente proietta l'immagine sulla papilla.",
+          "corretta": false
+        },
+        {
+          "testo": "Nei cefalopodi i fotorecettori sono rivolti verso la luce e le fibre decorrono posteriormente, mentre nei vertebrati la retina è invertita con punto cieco.",
+          "corretta": true
+        }
+      ],
+      "spiegazione": "Nei cefalopodi la retina è diretta poiché i fotorecettori sono disposti anteriormente verso il cristallino e le fibre nervose partono posteriormente, evitando la formazione di zone cieche; nei vertebrati la retina è invertita e il passaggio del nervo ottico genera la papilla cieca. Sostenere che i cefalopodi siano privi di fotopigmenti è errato, poiché condividono i meccanismi di trasduzione biochimica della luce. Anche l'assenza di cristallino nei cefalopodi è un errore fattuale, dato che i loro occhi a camera possiedono lenti perfettamente sviluppate."
+    },
+    {
+      "domanda": "In una patologia neurodegenerativa si verifica la progressiva demielinizzazione degli assoni del sistema nervoso periferico. Quale conseguenza fisiologica si osserva nella conduzione dell'impulso nervoso?",
+      "opzioni": [
+        {
+          "testo": "Il potenziale d'azione passa da una propagazione saltatoria rapida a una conduzione continua molto più lenta lungo l'assone scoperto.",
+          "corretta": true
+        },
+        {
+          "testo": "La trasmissione elettrochimica si blocca completamente a livello dei dendriti prima di raggiungere il corpo cellulare del neurone.",
+          "corretta": false
+        },
+        {
+          "testo": "La velocità del segnale aumenta in modo incontrollato a causa dell'apertura continua dei canali ionici lungo tutta la membrana.",
+          "corretta": false
+        }
+      ],
+      "spiegazione": "La guaina mielinica formata dalle cellule di Schwann isola elettricamente l'assone, consentendo al potenziale d'azione di propagarsi per via saltatoria da un nodo di Ranvier all'altro a cento metri al secondo; la demielinizzazione costringe il segnale a una conduzione continua molto più lenta a circa un metro al secondo. L'ipotesi di un blocco sui dendriti è errata poiché i dendriti sono fisiologicamente privi di mielina. L'idea di un'accelerazione incontrollata è biologicamente contraria alla realtà, in quanto l'assenza di isolante disperde la corrente e deprime la velocità di conduzione."
+    },
+    {
+      "domanda": "Durante la trasmissione dell'impulso a livello di una sinapsi chimica interneuronale, cosa avviene nell'esatto istante in cui il potenziale d'azione raggiunge il terminale assonale?",
+      "opzioni": [
+        {
+          "testo": "La corrente elettrica salta direttamente attraverso lo spazio sinaptico depolarizzando la membrana del neurone post-sinaptico senza intermediari.",
+          "corretta": false
+        },
+        {
+          "testo": "Le cellule gliali circostanti assorbono le cariche ioniche per convertire il segnale in un gradiente osmotico di potassio.",
+          "corretta": false
+        },
+        {
+          "testo": "La cellula presinaptica esocita neurotrasmettitori che diffondono nella fessura legandosi ai recettori della cellula ricevente.",
+          "corretta": true
+        }
+      ],
+      "spiegazione": "All'arrivo del potenziale d'azione sul bottone presinaptico, le vescicole riversano per esocitosi neurotrasmettitori (come acetilcolina o noradrenalina) nella fessura, convertendo temporaneamente il segnale elettrico in chimico. L'ipotesi che la corrente salti direttamente lo spazio sinaptico descrive una giunzione elettrica, mentre la lezione insiste sull'interruzione fisica dello spazio sinaptico colmata da mediatori solubili. L'attribuzione del passaggio di segnale alle cellule gliali tramite gradienti di potassio è priva di riscontro, poiché la trasduzione è mediata esclusivamente dai recettori post-sinaptici."
+    },
+    {
+      "domanda": "Confrontando il piano strutturale del sistema nervoso di un anellide (lombrico) o di un artropode con quello di un vertebrato, quale polarità anatomica evidenzia la transizione evolutiva?",
+      "opzioni": [
+        {
+          "testo": "Negli invertebrati il sistema nervoso è privo di gangli anteriori, mentre nei vertebrati compaiono i primi centri cefalizzati.",
+          "corretta": false
+        },
+        {
+          "testo": "Negli invertebrati complessi i cordoni nervosi gangliari sono ventrali, mentre nei vertebrati l'asse cerebrospinale è dorsale.",
+          "corretta": true
+        },
+        {
+          "testo": "Negli invertebrati la trasmissione lungo i cordoni è ormonale, mentre nei vertebrati l'integrazione avviene tramite sinapsi elettriche.",
+          "corretta": false
+        }
+      ],
+      "spiegazione": "Negli invertebrati a simmetria bilaterale (anellidi e artropodi) i cordoni nervosi longitudinali e le catene gangliari decorrono lungo il versante ventrale, mentre nei vertebrati l'asse formato da midollo spinale ed encefalo è dorsale. Affermare che gli invertebrati manchino di gangli anteriori è un errore sostanziale, poiché lombrichi e insetti possiedono un cervello cefalico ben differenziato. Anche l'idea di una conduzione ormonale lungo i cordoni è fuorviante, dato che la trasmissione assonale negli invertebrati è interamente bioelettrica."
+    },
+    {
+      "domanda": "Una persona si siede a tavola e osserva un piatto molto appetitoso; mezz'ora dopo aver consumato il pasto, si rilassa sul divano. Come si alternano i due rami del sistema nervoso autonomo in queste fasi?",
+      "opzioni": [
+        {
+          "testo": "Il parasimpatico blocca ogni secrezione durante l'attesa del pasto, mentre il simpatico rilascia acetilcolina per digerire gli alimenti.",
+          "corretta": false
+        },
+        {
+          "testo": "Entrambi i rami rilasciano contemporaneamente adrenalina per mantenere una frequenza cardiaca costante durante tutto il processo nutritivo.",
+          "corretta": false
+        },
+        {
+          "testo": "Il simpatico stimola inizialmente la salivazione appetitiva con adrenalina, mentre nel post-prandiale il parasimpatico attiva la motilità intestinale con acetilcolina.",
+          "corretta": true
+        }
+      ],
+      "spiegazione": "Alla vista di un cibo invitante il sistema simpatico stimola prontamente la secrezione salivare tramite adrenalina, mentre nel periodo post-prandiale il parasimpatico interviene con acetilcolina per promuovere la motilità gastrica e intestinale. L'opzione che inverte i ruoli o i neurotrasmettitori è ingannevole, poiché associa l'acetilcolina al simpatico anziché al parasimpatico. Ipotizzare un'attivazione sinergica e simultanea con adrenalina contraddice il principio cardine dell'azione antagonista che regola le due branche del sistema autonomo."
+    }
+  ],
+  "assistente_ia": {
+    "nome": "Assistente IA",
+    "sottotesto": "Chatta con l'intera lezione",
+    "url": "https://notebooklm.google.com/notebook/b42710d3-35fb-4b61-810a-4ccbba453dcc"
+  }
+}
