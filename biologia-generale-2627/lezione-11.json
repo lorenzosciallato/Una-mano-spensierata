@@ -572,5 +572,72 @@
     "motore": 2,
     "minuti": 23.1,
     "fatto": "2026-11-08"
+  },
+  "mappa": {
+    "titolo": "Sistema Immunitario e Sistema Endocrino",
+    "rami": [
+      {
+        "tema": "Origine evolutiva e difese aspecifiche",
+        "sotto": [
+          "Riconoscimento self e non-self nei protisti",
+          "Barriere passive cutanee e mucose protettive",
+          "Secrezioni chimiche con enzimi e lisozima",
+          "Risposta infiammatoria e sistema del complemento"
+        ]
+      },
+      {
+        "tema": "Organi e cellule del sistema immunitario",
+        "sotto": [
+          "Maturazione cellulare in midollo e timo",
+          "Fagocitosi operata da macrofagi e neutrofili",
+          "Azione citotossica delle cellule natural killer",
+          "Filtrazione e difesa nei linfonodi e milza"
+        ]
+      },
+      {
+        "tema": "Immunità specifica e memoria immunologica",
+        "sotto": [
+          "Immunità umorale guidata da linfociti B",
+          "Secrezione di immunoglobuline dalle plasmacellule",
+          "Immunità cellulare mediata da linfociti T",
+          "Cellule di memoria per risposte secondarie rapide"
+        ]
+      },
+      {
+        "tema": "Evoluzione e basi del sistema endocrino",
+        "sotto": [
+          "Comunicazione chimica derivata dai protisti",
+          "Mantenimento dell'omeostasi corporea a lungo termine",
+          "Regolazione della metamorfosi negli invertebrati",
+          "Integrazione funzionale con il sistema nervoso"
+        ]
+      },
+      {
+        "tema": "Meccanismi ormonali e circuiti di regolazione",
+        "sotto": [
+          "Ormoni steroidei con recettori citoplasmatici e nucleari",
+          "Ormoni peptidici legati a recettori di membrana",
+          "Meccanismi di retroazione a feedback negativo"
+        ]
+      },
+      {
+        "tema": "Ghiandole endocrine e coordinamento metabolico",
+        "sotto": [
+          "Regolazione centrale tramite asse ipotalamo-ipofisi",
+          "Tiroide e paratiroidi per metabolismo e calcio",
+          "Ghiandole surrenali per gestione dello stress",
+          "Regolazione della glicemia con insulina e glucagone"
+        ]
+      },
+      {
+        "tema": "Controllo ormonale del ciclo riproduttivo",
+        "sotto": [
+          "Gonadotropine ipofisarie per maturazione follicolare e ovulazione",
+          "Azione ciclica di estrogeni e progesterone",
+          "Preparazione e sfaldamento della mucosa uterina",
+          "Mantenimento ormonale della gravidanza dopo fecondazione"
+        ]
+      }
+    ]
   }
 }
