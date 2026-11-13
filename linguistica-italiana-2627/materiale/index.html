@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Linguistica Italiana · Materiale aggiuntivo — Una Mano Spensierata</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,600;1,700;1,900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700&display=swap" rel="stylesheet">
+<style>
+/* Materiale aggiuntivo di Linguistica Italiana — stesso design system di UMS
+   (avorio, navy, oro · Playfair Display + DM Sans · modalità notte condivisa). */
+:root{
+  --ivory:#F7F4EF; --ivory-dk:#EDE9E0; --card:#FFFDF9; --dust:#E8E4DC; --mist:#C5C1B8;
+  --gold:#C8A96E; --gold-lt:#E8D5AA; --gold-dk:#9A7A3F; --navy:#1A2F4F; --navy-lt:#2A4A72;
+  --ink:#1C1C22; --body:#3D3C3A; --sub:#7A7770; --blu-it:#2A4A72;
+  --ok:#2E7D32; --ko:#C62828;
+  --font-display:'Playfair Display',Georgia,serif; --font-body:'DM Sans',system-ui,sans-serif;
+  --shadow-card:0 4px 24px rgba(15,17,23,.08),0 1px 4px rgba(15,17,23,.04);
+  --shadow-lift:0 12px 40px rgba(15,17,23,.14),0 2px 8px rgba(15,17,23,.06);
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+body.night-mode{
+  --ivory:#14161C; --ivory-dk:#1B1E26; --card:#1C1F27; --dust:#2B2E38; --mist:#5C5F6A;
+  --gold-dk:#D9BC85; --gold-lt:#3A3222; --navy:#2A4A72; --navy-lt:#8FB4E8;
+  --ink:#F2EFE8; --body:#CFCAC0; --sub:#918E86; --blu-it:#8FB4E8;
+  --ok:#7FD39A; --ko:#F08A80;
+  --shadow-card:0 4px 24px rgba(0,0,0,.35); --shadow-lift:0 12px 40px rgba(0,0,0,.45);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+body{margin:0;background:var(--ivory);color:var(--body);font-family:var(--font-body);font-size:17px;line-height:1.7;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
+a{color:var(--blu-it)}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:6px}
+img{max-width:100%}
+[hidden]{display:none!important}
+
+.pagina{max-width:860px;margin:0 auto;padding:calc(28px + env(safe-area-inset-top,0px)) max(20px,env(safe-area-inset-right,0px)) 120px max(20px,env(safe-area-inset-left,0px))}
+.indietro{display:inline-flex;align-items:center;gap:8px;font-size:.72rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--sub);text-decoration:none;transition:gap .2s var(--ease),color .2s}
+.indietro:hover{gap:12px;color:var(--navy)}
+body.night-mode .indietro:hover{color:var(--navy-lt)}
+.indietro svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* intestazione (come il cv-header di UMS) */
+.kicker{display:flex;align-items:center;gap:12px;font-size:.66rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:var(--gold-dk)}
+.kicker.righe::before,.kicker.righe::after{content:"";height:1px;width:32px;background:var(--gold)}
+.kicker.centro{justify-content:center}
+h1,h2,h3{font-family:var(--font-display);color:var(--ink);margin:0;text-wrap:balance}
+h1{font-weight:900;font-size:clamp(2.3rem,6vw,3.5rem);line-height:1.06;letter-spacing:-.01em;margin-top:14px}
+h1 i,h2 i{font-weight:700;color:var(--blu-it)}
+h2{font-weight:700;font-size:clamp(1.45rem,3.4vw,1.85rem);line-height:1.15}
+h3{font-weight:700;font-size:1.18rem;line-height:1.25}
+.sottotitolo{font-size:1.08rem;color:var(--sub);margin:12px 0 0;max-width:60ch}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:.68rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:5px 12px;border-radius:999px;background:var(--gold-lt);color:var(--gold-dk)}
+body.night-mode .chip{color:#D9BC85}
+.filetto{border:none;border-top:1px solid var(--dust);margin:28px 0 8px}
+
+/* hero della home */
+.hero{text-align:center;padding:40px 0 18px}
+.hero h1{font-size:clamp(2.8rem,9vw,4.8rem);margin-top:18px}
+.hero h1 .seconda{display:block;font-style:italic;font-weight:700;color:var(--blu-it)}
+.hero .sottotitolo{margin:18px auto 0}
+
+/* elenchi a righe (come la vista corso di UMS) */
+.sezione{margin-top:46px}
+.sezione-testa{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.sezione-testa p{margin:6px 0 0;color:var(--sub);font-size:.95rem}
+.righe-lista{margin-top:14px;border-top:1px solid var(--dust)}
+.riga{display:flex;align-items:center;gap:18px;width:100%;padding:18px 6px;background:none;border:0;border-bottom:1px solid var(--dust);text-align:left;text-decoration:none;color:inherit;transition:background .2s}
+.riga:hover{background:var(--ivory-dk)}
+.riga .num{font-family:var(--font-display);font-weight:900;font-size:1.9rem;min-width:46px;text-align:center;color:var(--dust);line-height:1;transition:color .2s}
+.riga:hover .num,.riga.vista .num{color:var(--gold)}
+.riga .corpo{flex:1;min-width:0}
+.riga .tit{display:block;font-family:var(--font-display);font-weight:700;font-size:1.15rem;color:var(--ink);line-height:1.25}
+.riga .desc{display:block;font-size:.92rem;color:var(--sub);margin-top:3px;line-height:1.45}
+.riga .stato{display:block;font-size:.7rem;font-weight:600;color:var(--gold-dk);margin-top:5px}
+.riga .stato.vuoto{color:var(--mist);font-weight:500}
+.riga .freccia{color:var(--mist);transition:transform .2s var(--ease),color .2s}
+.riga:hover .freccia{color:var(--gold-dk);transform:translateX(3px)}
+.riga .freccia svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;display:block}
+.nota-box{margin-top:40px;padding:20px 22px;border-radius:16px;background:var(--ivory-dk);font-size:.95rem}
+.nota-box strong{color:var(--ink)}
+
+/* barra fissa: schede + stampa */
+.barra{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:12px 0;margin-top:22px;background:var(--ivory);border-bottom:1px solid var(--dust)}
+.schede{display:inline-flex;gap:4px;padding:4px;border-radius:999px;background:var(--ivory-dk);flex-wrap:wrap}
+.schede button{border:0;background:none;padding:9px 18px;border-radius:999px;font-size:.8rem;font-weight:700;letter-spacing:.06em;color:var(--sub)}
+.schede button[aria-selected="true"]{background:var(--navy);color:#F7F4EF;box-shadow:0 4px 14px rgba(26,47,79,.25)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:12px 22px;border-radius:999px;border:0;font-weight:700;font-size:.74rem;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;transition:transform .2s var(--ease),box-shadow .2s}
+.btn:hover{transform:translateY(-1px)}
+.btn svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.btn-navy{background:var(--navy);color:#F7F4EF;box-shadow:0 6px 20px rgba(26,47,79,.28)}
+.btn-oro{background:var(--gold);color:#1C1C22;box-shadow:0 6px 20px rgba(200,169,110,.32)}
+.btn-chiaro{background:var(--card);color:var(--ink);border:1px solid var(--dust)}
+.btn-chiaro:hover{border-color:var(--gold)}
+.btn-piccolo{padding:9px 16px;font-size:.68rem}
+
+/* guida alla lezione */
+.guida{margin-top:34px}
+.blocco{display:grid;grid-template-columns:48px 1fr;gap:6px 14px;padding:22px 0;border-bottom:1px solid var(--dust)}
+.blocco:last-child{border-bottom:0}
+.blocco .n{font-family:var(--font-display);font-weight:900;font-size:1.9rem;color:var(--gold);line-height:1;text-align:center;padding-top:2px}
+.blocco h3{font-size:1.22rem}
+.blocco p{margin:8px 0 0;max-width:66ch}
+.vai-slide{display:inline-flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.vai-slide button{border:1px solid var(--dust);background:var(--card);border-radius:999px;padding:5px 12px;font-size:.74rem;font-weight:700;color:var(--blu-it)}
+.vai-slide button:hover{border-color:var(--gold)}
+
+/* slide */
+.slide-testa{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-top:48px;flex-wrap:wrap}
+.slide-flusso{display:flex;flex-direction:column;gap:26px;margin-top:20px}
+.slide{margin:0;scroll-margin-top:84px}
+.slide button{position:relative;display:block;width:100%;padding:0;border:1px solid var(--dust);border-radius:14px;overflow:hidden;background:#fff;box-shadow:var(--shadow-card);cursor:zoom-in;transition:box-shadow .2s,transform .2s var(--ease)}
+.slide button:hover{box-shadow:var(--shadow-lift)}
+.slide img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:contain;background:#fff}
+.slide .tag{position:absolute;left:12px;top:12px;font-size:.66rem;font-weight:700;letter-spacing:.12em;padding:4px 10px;border-radius:999px;background:rgba(26,47,79,.88);color:#F7F4EF}
+.slide.lampeggia button{box-shadow:0 0 0 3px var(--gold),var(--shadow-lift)}
+
+/* riquadro scuro (come "Dritti al sodo") */
+.scuro{margin-top:44px;padding:28px;border-radius:22px;background:#1A2F4F;color:#E9E4DA}
+body.night-mode .scuro{background:#1F2B40}
+.scuro .kicker{color:var(--gold)}
+.scuro h2{color:#F7F4EF;margin-top:8px;font-size:1.5rem}
+.scuro ul{list-style:none;margin:16px 0 0;padding:0;display:flex;flex-direction:column;gap:10px}
+.scuro li{display:grid;grid-template-columns:18px 1fr;gap:10px}
+.scuro li::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--gold);margin-top:10px}
+.prosegui{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-top:30px;padding:22px 24px;border-radius:18px;border:1px solid var(--gold);background:var(--card)}
+
+/* mappa del canale scritto */
+.mappa{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:14px;margin-top:18px}
+.mappa article{padding:20px;border-radius:16px;background:var(--card);border:1px solid var(--dust);box-shadow:var(--shadow-card);display:flex;flex-direction:column;gap:8px}
+.mappa p{margin:0;font-size:.93rem;color:var(--sub);line-height:1.55;flex:1}
+.mappa button{align-self:flex-start;border:0;background:none;padding:0;font-size:.78rem;font-weight:700;color:var(--blu-it)}
+
+/* attività e esercizi */
+.scheda{margin-top:26px;padding:26px;border-radius:20px;background:var(--card);border:1px solid var(--dust);box-shadow:var(--shadow-card)}
+.scheda>h3{font-size:1.3rem}
+.fonte{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px;font-size:.84rem;color:var(--sub)}
+.fonte button{border:0;background:none;padding:0;font-size:.84rem;font-weight:700;color:var(--blu-it)}
+ol.passi{margin:14px 0 0;padding:0;list-style:none;counter-reset:p;display:flex;flex-direction:column;gap:10px}
+ol.passi li{counter-increment:p;display:grid;grid-template-columns:30px 1fr;gap:10px}
+ol.passi li::before{content:counter(p);font-family:var(--font-display);font-weight:900;color:var(--gold);font-size:1.15rem;line-height:1.5}
+.articolo{white-space:pre-wrap;margin-top:16px;padding:20px;border-radius:14px;background:var(--ivory-dk);font-size:.98rem;line-height:1.75;max-height:460px;overflow:auto}
+.articolo small{display:block;margin-top:10px;color:var(--sub)}
+.avviso{margin-top:16px;padding:12px 16px;border-radius:12px;background:var(--ivory-dk);font-size:.9rem;color:var(--sub)}
+.campo{margin-top:20px}
+.campo label{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-weight:700;font-size:.92rem;color:var(--ink)}
+.conta{font-size:.72rem;font-weight:700;color:var(--sub);white-space:nowrap;font-variant-numeric:tabular-nums}
+.conta.ok{color:var(--ok)} .conta.ko{color:var(--ko)}
+textarea,input[type=text]{width:100%;margin-top:8px;padding:14px 16px;border:1px solid var(--dust);border-radius:14px;background:var(--ivory);color:var(--ink);font:inherit;font-size:16px;line-height:1.65;transition:border-color .2s,box-shadow .2s}
+textarea{resize:vertical}
+textarea:focus,input[type=text]:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-lt)}
+.nomi{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:0 16px}
+.controlli{margin-top:24px;padding-top:18px;border-top:1px solid var(--dust)}
+.spunta{display:flex;gap:12px;align-items:flex-start;padding:7px 0;cursor:pointer}
+.spunta input{width:19px;height:19px;margin-top:4px;flex:none;accent-color:#2A4A72}
+.azioni{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:24px}
+.salvataggio{font-size:.78rem;color:var(--sub)}
+.salvataggio b{color:var(--ok)}
+
+.es{margin-top:16px;border-radius:20px;background:var(--card);border:1px solid var(--dust);box-shadow:var(--shadow-card);overflow:hidden}
+.es>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:16px;padding:20px 22px}
+.es>summary::-webkit-details-marker{display:none}
+.es>summary .n{font-family:var(--font-display);font-weight:900;font-size:1.7rem;color:var(--gold);min-width:30px}
+.es>summary .t{flex:1;min-width:0}
+.es>summary .t span{display:block;font-size:.85rem;color:var(--sub);margin-top:2px}
+.es>summary .freccia{color:var(--mist);transition:transform .25s var(--ease)}
+.es>summary .freccia svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;display:block}
+.es[open]>summary .freccia{transform:rotate(90deg)}
+.es .dentro{padding:0 22px 26px;display:flex;flex-direction:column;gap:20px}
+.etichetta{font-size:.64rem;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--gold-dk);margin-bottom:6px}
+.testo-es{white-space:pre-wrap;padding:18px;border-radius:14px;background:var(--ivory-dk);font-size:.97rem;line-height:1.7}
+ul.punti{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+.apri{border:1px solid var(--dust);border-radius:14px;overflow:hidden}
+.apri>summary{cursor:pointer;list-style:none;padding:14px 18px;font-weight:700;color:var(--blu-it);display:flex;justify-content:space-between;gap:10px}
+.apri>summary::-webkit-details-marker{display:none}
+.apri>summary::after{content:"+";font-size:1.2rem;line-height:1}
+.apri[open]>summary::after{content:"–"}
+.apri>div{padding:0 18px 18px;display:flex;flex-direction:column;gap:12px}
+.soluz{white-space:pre-wrap;padding:16px;border-radius:12px;border:1px dashed var(--gold);font-size:.96rem;line-height:1.7}
+
+/* GISCEL */
+.tesi{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:12px;margin-top:18px}
+.tesi article{padding:18px;border-radius:16px;background:var(--card);border:1px solid var(--dust)}
+.tesi .rom{font-family:var(--font-display);font-weight:900;font-size:1.6rem;color:var(--gold)}
+.tesi h3{font-size:1rem;margin-top:2px}
+.tesi p{margin:6px 0 8px;font-size:.9rem;color:var(--sub);line-height:1.5}
+.tesi a{font-size:.78rem;font-weight:700}
+.richiamo{margin-top:22px;padding:20px 22px;border-left:3px solid var(--gold);background:var(--card);border-radius:0 16px 16px 0}
+.richiamo p{margin:6px 0 0}
+.caso{margin-top:20px;padding:24px;border-radius:20px;background:var(--card);border:1px solid var(--dust)}
+.caso blockquote{margin:14px 0;padding:14px 18px;border-left:3px solid var(--gold);background:var(--ivory-dk);border-radius:0 12px 12px 0;font-style:italic}
+.testo-lungo p,.testo-lungo ol,.testo-lungo ul{margin:14px 0 0;max-width:68ch}
+.testo-lungo ol,.testo-lungo ul{padding-left:22px;display:flex;flex-direction:column;gap:6px}
+
+/* passi della consegna */
+.passi-consegna{list-style:none;padding:0;margin:20px 0 0;counter-reset:c;display:flex;flex-direction:column;gap:12px}
+.passi-consegna li{counter-increment:c;display:grid;grid-template-columns:46px 1fr;gap:14px;padding:18px 20px;border-radius:16px;background:var(--card);border:1px solid var(--dust)}
+.passi-consegna li::before{content:counter(c);font-family:var(--font-display);font-weight:900;font-size:1.8rem;color:var(--gold);line-height:1}
+
+/* tasto notte (come UMS) */
+#notte{position:fixed;right:calc(18px + env(safe-area-inset-right,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:50;width:48px;height:48px;border-radius:50%;border:0;background:#FFFDF9;box-shadow:var(--shadow-lift);font-size:20px;display:grid;place-items:center}
+body.night-mode #notte{background:#2B2E38}
+
+/* visore slide */
+#visore{position:fixed;inset:0;z-index:200;background:rgba(10,12,18,.94);display:flex;align-items:center;justify-content:center;padding:calc(60px + env(safe-area-inset-top,0px)) 14px calc(76px + env(safe-area-inset-bottom,0px))}
+#visore img{max-width:min(1440px,100%);max-height:100%;object-fit:contain;border-radius:8px;background:#fff}
+#visore .x{position:absolute;top:calc(14px + env(safe-area-inset-top,0px));right:calc(14px + env(safe-area-inset-right,0px));width:46px;height:46px;border-radius:50%;border:0;background:rgba(255,255,255,.14);color:#fff;font-size:26px}
+#visore .nav{position:absolute;bottom:calc(16px + env(safe-area-inset-bottom,0px));left:0;right:0;display:flex;justify-content:center;align-items:center;gap:16px;color:#fff;font-size:.9rem;font-variant-numeric:tabular-nums}
+#visore .nav button{width:46px;height:46px;border-radius:50%;border:0;background:rgba(255,255,255,.14);color:#fff;font-size:20px}
+
+@media (max-width:600px){
+  body{font-size:16.5px}
+  .blocco{grid-template-columns:34px 1fr}
+  .blocco .n{font-size:1.5rem}
+  .scheda{padding:20px}
+  .barra{gap:8px}
+  .schede button{padding:8px 14px}
+}
+
+/* stampa: si stampa solo il contenitore preparato apposta */
+#area-stampa{display:none}
+@media print{
+  @page{size:A4;margin:16mm 15mm}
+  body{background:#fff!important;color:#222!important;font-size:11pt;line-height:1.55}
+  body.in-stampa > *:not(#area-stampa){display:none!important}
+  #area-stampa{display:block!important;color:#222}
+  #area-stampa .p-marchio{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid #C8A96E;padding-bottom:6px;margin-bottom:16px;font-size:9pt;color:#9A7A3F;letter-spacing:.12em;text-transform:uppercase;font-weight:700}
+  #area-stampa .p-marchio b{font-family:var(--font-display);font-size:13pt;letter-spacing:0;text-transform:none;color:#1C1C22}
+  #area-stampa .p-marchio b i{color:#2A4A72}
+  #area-stampa h1{font-size:24pt;color:#1C1C22;margin:4px 0 6px}
+  #area-stampa h2{font-size:15pt;color:#1C1C22;margin:18px 0 6px;break-after:avoid}
+  #area-stampa h3{font-size:12pt;color:#1C1C22;margin:12px 0 4px;break-after:avoid}
+  #area-stampa .p-kick{font-size:8pt;letter-spacing:.2em;text-transform:uppercase;color:#9A7A3F;font-weight:700}
+  #area-stampa .p-sub{color:#666;margin:0 0 8px}
+  #area-stampa p{margin:4px 0 8px}
+  #area-stampa .p-blocco{break-inside:avoid;margin-bottom:8px}
+  #area-stampa .p-box{border:1px solid #ddd;border-radius:6px;padding:8px 10px;white-space:pre-wrap;background:#FAF8F4;margin:4px 0 10px}
+  #area-stampa .p-righe{height:var(--h);background:repeating-linear-gradient(to bottom,transparent 0,transparent 8.5mm,#ccc 8.5mm,#ccc 8.7mm);margin:4px 0 12px}
+  #area-stampa .p-slide{break-inside:avoid;margin:0 0 7mm}
+  #area-stampa .p-slide img{width:100%;border:1px solid #ddd;display:block}
+  #area-stampa .p-slide span{font-size:8pt;color:#777}
+  #area-stampa .p-salto{break-before:page}
+  #area-stampa ul,#area-stampa ol{margin:4px 0 10px;padding-left:18px}
+}
+</style>
+</head>
+<body>
+<script>try{if(localStorage.getItem('ums_night_mode')==='1')document.body.classList.add('night-mode');}catch(e){}</script>
+<main id="app" class="pagina" tabindex="-1"></main>
+<button id="notte" type="button" aria-label="Modalità notte on/off" title="Modalità notte on/off">🌙</button>
+<div id="visore" hidden role="dialog" aria-modal="true" aria-label="Slide a schermo intero">
+  <button class="x" id="v-x" aria-label="Chiudi">×</button>
+  <img id="v-img" alt="">
+  <div class="nav"><button id="v-p" aria-label="Slide precedente">←</button><span id="v-n"></span><button id="v-s" aria-label="Slide successiva">→</button></div>
+</div>
+<div id="area-stampa"></div>
+<script>
+const PERCORSI = {
+  email: {
+    titolo: "Le e-mail all'università",
+    sottotitolo: "Scrivere a una docente, formulare una richiesta, scegliere le informazioni pertinenti.",
+    deck: "email", slide: 29, durata: "60 minuti", simbolo: "@",
+    lezione: [
+      ["Una situazione comunicativa", "Prima di scrivere individua destinatario, relazione, scopo e conoscenze condivise. Una mail alla docente crea aspettative diverse da un messaggio a un amico. Genere testuale e tipo testuale non coincidono: qui osserviamo un genere della comunicazione universitaria.", [5, 8]],
+      ["Oggetto, apertura, richiesta", "L'oggetto anticipa lo scopo. Nell'apertura scegli appellativo e titolo adeguati, per esempio «Gentile Professoressa Rossi,». Dopo la virgola e l'a capo, «le scrivo…» può iniziare con la minuscola perché il periodo continua. Presentati con le informazioni necessarie e rendi riconoscibile la richiesta.", [[3, 4], [15, 18]]],
+      ["Cooperare con chi legge", "Le aspettative di cooperazione aiutano a valutare quantità, qualità, pertinenza e chiarezza delle informazioni. Non sono soltanto regole per la mail: riguardano la comunicazione in generale. Evita dettagli che non aiutano il destinatario a capire e a rispondere.", [9, 9]],
+      ["Con le parole compiamo azioni", "Informare, chiedere, ringraziare e scusarsi sono atti linguistici. Una frase grammaticalmente corretta può essere poco adeguata alla relazione. Controlla la forza della richiesta, l'ordine delle informazioni, la chiusura e la firma.", [10, 10]]
+    ],
+    criteri: [
+      "L'oggetto rende riconoscibile la richiesta.",
+      "Destinatario, appellativo e registro sono coerenti.",
+      "Le informazioni permettono di rispondere senza indovinare.",
+      "La richiesta è chiara, pertinente e rispettosa.",
+      "Chiusura, firma e revisione linguistica sono curate."
+    ],
+    aula: {
+      titolo: "Una mail alla docente",
+      fonte: "Attività dalle presentazioni della docente · Slide 29; revisione: slide 25",
+      slideFonte: 29,
+      blocchi: [{
+        titolo: "Scrittura individuale",
+        testo: "Scrivete una mail alla docente per chiedere un'informazione o chiarire un dubbio sul corso.",
+        passi: ["La situazione deve essere verosimile: un dubbio che potreste avere davvero.", "Compilate il modulo con oggetto, apertura, corpo, chiusura e firma.", "Prima di consegnare, rileggete con le domande di «Prima dell'invio»."],
+        campi: [["oggetto", "Oggetto", 2], ["apertura", "Apertura", 2], ["corpo", "Corpo", 10], ["chiusura", "Chiusura", 3], ["firma", "Firma", 2]],
+        controlliTitolo: "Prima dell'invio",
+        controlli: ["La domanda è riconoscibile?", "Oggetto e corpo corrispondono?", "I riferimenti sono chiari?", "Il registro è coerente?", "Allegati e firma sono presenti quando servono?", "Ho riletto ortografia e punteggiatura?"]
+      }]
+    }
+  },
+  riassunto: {
+    titolo: "Il riassunto",
+    sottotitolo: "Comprendere il testo, gerarchizzare le unità informative, riformulare entro un limite.",
+    deck: "riassunto", slide: 35, durata: "75 minuti", simbolo: "≋",
+    lezione: [
+      ["Fedeltà, brevità e autonomia", "Il riassunto riduce il testo conservando informazioni essenziali, ordine logico e punto di vista. Non aggiunge commenti; si comprende senza leggere l'originale e rispetta lo spazio assegnato. La lezione propone la terza persona e la riformulazione con parole proprie, mantenendo distinte le voci dell'autore e delle fonti (pp. 2–4).", [2, 4]],
+      ["Che cosa si può comprimere", "Nei testi narrativi ed espositivi è possibile selezionare e ridurre le informazioni. Nei testi regolativi un taglio può compromettere la funzione: chiediti se ciò che elimini modifica istruzioni o condizioni essenziali (p. 5).", [5, 5]],
+      ["Le unità informative e la gerarchia E/I/M", "Una UI è un blocco di contenuto autonomo: non coincide necessariamente con una frase o un paragrafo. Le essenziali (E) costituiscono il nucleo, le importanti (I) lo spiegano o precisano, le marginali (M) aggiungono colore o dettagli sacrificabili. La classificazione dipende da scopo, destinatario e spazio (pp. 6–7).", [6, 7]],
+      ["Quattro passaggi prima della consegna", "Leggi e segmenta; pianifica quante parole destinare alle UI; snellisci i dettagli; infine riformula. Cancellare, generalizzare, condensare e passare dal discorso diretto all'indiretto sono operazioni diverse. Non costruire un collage di frasi copiate (pp. 8 e 12).", [[8, 8], [12, 12]]],
+      ["L'esempio: Come ti svelo il bugiardo", "L'esempio tratto da «L'Espresso» del 23 maggio 2002 distingue sette UI. La UI 2 riguarda il dispositivo (passaggi 2a e 2b), la UI 3 il fenomeno fisiologico. Tutta la UI 5, compresa la spiegazione del poligrafo, è classificata I: è ridotta nella sintesi di 170 parole, condensata in quella di 97 e omessa in quella di 63. L'attacco su Pinocchio (UI 1, M) è eliminato in tutti e tre i riassunti (pp. 9–16).", [9, 16]],
+      ["Le 5 W aiutano, ma non sostituiscono le UI", "Chi, che cosa, quando, dove, perché e come orientano la lettura delle notizie. Il loro peso cambia: non ogni nome o data è essenziale. Adatta le domande alla gerarchia informativa e controlla ciò che il testo dice davvero (p. 17).", [17, 17]],
+      ["La consegna unica: 200, 50, 8", "Individua e classifica autonomamente le UI dell'articolo di Massimo Lugli, poi scrivi un riassunto di 200 parole, uno di 50 e un titolo di massimo 8 parole. Il testo di partenza non è segmentato. I tre conteggi sono separati: UI, sigle e titolo non entrano nel numero di parole dei riassunti (consegna a p. 20; testo alle pp. 21–22).", [20, 22]],
+      ["Briefing e consegna", "Pianifica lo spazio e conserva la catena causale della notizia. Il briefing a p. 23 accompagna la stessa consegna: UI, 200 parole, 50 parole, titolo massimo 8. Si consegna un unico PDF generato dal modulo.", [23, 23]],
+      ["Debriefing e revisione", "Un compagno legge il riassunto di 50 parole e prova a ricostruire la vicenda. Confrontate la ricostruzione con la fonte e discutete tagli, condensazioni e titolo. Rivedete i testi già scritti: non sono richiesti ulteriori elaborati (debriefing a p. 24; titolo originale a p. 25). La dimostrazione finale occupa le pp. 26–35.", [[24, 25], [26, 35]]]
+    ],
+    criteri: [
+      "Ho individuato autonomamente le UI e assegnato E/I/M.",
+      "I due riassunti conservano informazioni essenziali, nessi logici e grado di certezza.",
+      "I testi sono autonomi, riformulati e senza aggiunte.",
+      "I riassunti contengono rispettivamente 200 e 50 parole, escluso il titolo.",
+      "Il titolo è fedele e non supera 8 parole."
+    ],
+    aula: {
+      titolo: "Una notizia: 200 parole, 50 parole, un titolo",
+      fonte: "Consegna unica: p. 20; articolo non segmentato: pp. 21–22; briefing e debriefing: pp. 23–24; titolo originale: p. 25; dimostrazione: pp. 26–35",
+      slideFonte: 20,
+      coppia: true,
+      blocchi: [{
+        titolo: "Individua le UI, scrivi due riassunti e un titolo",
+        articolo: true,
+        passi: [
+          "Leggi l'articolo e individua autonomamente le UI. Numerale e assegna a ciascuna E, I o M. Puoi indicarne i confini citando le parole iniziali e finali.",
+          "Scrivi un riassunto di 200 parole e un riassunto di 50 parole, autonomi e fedeli. Conserva la catena furto, localizzazione, intervento, arresti, esito.",
+          "Scrivi un titolo di massimo 8 parole. Il titolo non entra nel conteggio dei due riassunti.",
+          "Conta gli elementi separati da spazi: apostrofi e trattini interni non separano parole. UI e sigle sono escluse dai conteggi dei riassunti."
+        ],
+        campi: [["ui", "Unità informative individuate e classificate E/I/M", 12], ["200", "Riassunto di 200 parole", 14, 200], ["50", "Riassunto di 50 parole", 7, 50], ["titolo8", "Titolo · massimo 8 parole", 2, -8]],
+        controlliTitolo: "Criteri",
+        controlli: null
+      }]
+    }
+  },
+  argomentativo: {
+    titolo: "Il testo argomentativo",
+    sottotitolo: "Dalla tesi alla confutazione: ragionare sui testi e discutere il linguaggio inclusivo a scuola.",
+    deck: "argomentativo", slide: 35, durata: "80 minuti", simbolo: "∴",
+    lezione: [
+      ["Argomentare: una tesi per un destinatario", "Il dialogo sul motorino apre la lezione: che cosa vuole ottenere Andrea e con quali ragioni? Un testo argomentativo sostiene una posizione per convincere chi legge o ascolta. Editoriali, recensioni, saggi, tesine e tesi di laurea hanno forme diverse, ma richiedono una tesi e argomenti che la sostengano (pp. 2–4).", [2, 4]],
+      ["Tema, premessa e posizione della tesi", "La premessa delimita il campo, contestualizza il problema o parte da un fatto di attualità: non coincide con la tesi. La tesi può essere all'inizio, nelle pieghe del testo o alla fine. Le tre recensioni costruite sul bar del campus mostrano la stessa posizione espressa direttamente, affidata all'ironia o raggiunta per gradi (pp. 8–9 e 14–17).", [[8, 9], [14, 17]]],
+      ["Il titolo orienta la lettura", "Il titolo può informare sul tema, esprimere la posizione oppure combinare le due funzioni; può anche intervenire sul metodo o usare risorse stilistiche. Per tesine e tesi, parti da titoli referenziali e rivedili dopo aver definito il ragionamento (pp. 10–13).", [10, 13]],
+      ["Argomenti e prove: due funzioni diverse", "L'argomento è il passaggio logico; la prova lo sostiene. La presentazione distingue argomenti pragmatici, di valore, per analogia e per assurdo, e prove d'autorità e oggettive. Dati, esempi e citazioni vanno collegati alla tesi, non soltanto elencati. Indicare le fonti permette di verificarli e discuterli (pp. 18–20).", [18, 20]],
+      ["Antitesi, concessione e confutazione", "Esponi l'obiezione in modo riconoscibile, concedi ciò che ha di fondato e spiega perché non basta a rovesciare la tua tesi. Puoi discutere il ragionamento, la forza delle prove o distinguere i casi. Nel testo guida, riconoscere il rischio di distrazione non equivale ad accettare la conclusione del divieto totale (pp. 5–7 e 21).", [[5, 7], [21, 21]]],
+      ["Conclusioni e connettivi", "Nel testo circolare la conclusione riprende la tesi, arricchita dal ragionamento; nel testo progressivo la tesi si esplicita alla fine. I connettivi segnalano le relazioni: anzitutto ordina, si obietta che introduce un'antitesi, è vero che concede, tuttavia oppone, quindi deduce, in conclusione chiude. Sceglili per la funzione, non per abbellire il testo (pp. 22–23).", [22, 23]],
+      ["Tre domande per valutare", "Sul testo «Smartphone in classe: sì, ma con regole chiare» chiediti: che cosa vuole dimostrare chi scrive? Come lo dimostra? Riesce a dimostrarlo? Distingui i fatti richiamati nella premessa dalla proposta sostenuta e valuta se prove e conclusioni bastano a sostenerla (pp. 5–7 e 24).", [[5, 7], [24, 24]]],
+      ["Dal dibattito alla scrittura: lo schwa, che idea", "Linguaggio inclusivo non significa soltanto schwa: distingui femminili professionali, doppie forme, riformulazioni e segni grafici. Nei gruppi da dieci dai voce anche alle posizioni intermedie. Annota tesi, argomenti e prove; riconosci le presupposizioni delle domande e presenta le fonti indicando chi parla, quando e con quale ruolo. Gli argomenti che non condividi serviranno per costruire le antitesi del testo individuale (pp. 25–33).", [25, 33]]
+    ],
+    criteri: [
+      "La tesi è precisa e il tema è distinto dalla posizione sostenuta.",
+      "Gli argomenti hanno nessi espliciti e prove pertinenti, verificabili e non inventate.",
+      "Le fonti sono riconoscibili: chi parla, quando e con quale ruolo.",
+      "Le obiezioni sono rappresentate correttamente; concessione e confutazione sono distinte.",
+      "Titolo, connettivi e conclusioni sono coerenti con il ragionamento."
+    ],
+    aula: {
+      titolo: "Lo schwa, che idea: il linguaggio inclusivo a scuola",
+      fonte: "Testo guida: pp. 5–7 e 24; laboratorio: pp. 25–35",
+      slideFonte: 25,
+      blocchi: [{
+        titolo: "Unica consegna · Il testo argomentativo finale",
+        testo: "Scrivi individualmente una pagina di testo argomentativo su «Il linguaggio inclusivo a scuola: sì o no?», con un titolo. Definisci la tua tesi, sostienila con argomenti, confrontati con le possibili obiezioni e formula una conclusione. Consegna soltanto titolo e testo finale.",
+        passi: ["Definisci la tua tesi.", "Argomentala.", "Trova controargomentazioni (antitesi) e contestale.", "Traccia le tue conclusioni.", "Scegli un titolo."],
+        campi: [["v2-inclusivo-titolo", "Titolo", 2], ["v2-inclusivo-testo", "Testo individuale · una pagina", 18]],
+        controlliTitolo: "Prima di consegnare",
+        controlli: ["Ho precisato di quali strategie inclusive sto parlando?", "Ho usato gli argomenti emersi nel gruppo, comprese le posizioni diverse dalla mia?", "Ho collegato le prove agli argomenti e reso riconoscibili le fonti?", "Le confutazioni rispondono alle obiezioni?", "Titolo, conclusione e connettivi accompagnano il ragionamento?"]
+      }]
+    }
+  }
+};
+
+const TEORIA = [
+  [2, "Lo spazio della scrittura", "Spazi, partizioni e capoversi rendono visibili i nuclei informativi e guidano la lettura. La presentazione collega questi aspetti anche alle prime fasi di apprendimento della scrittura."],
+  [9, "Che cosa rende un testo un testo", "Coerenza e coesione, intenzionalità e accettabilità, informatività, situazionalità, intertestualità e appropriatezza: i concetti con cui leggere e rivedere ogni produzione."],
+  [14, "Le funzioni dei testi", "Testi narrativi, descrittivi, argomentativi, informativi e regolativi: gli esempi mostrano le caratteristiche dei diversi tipi e come si intrecciano nei testi reali."],
+  [33, "I vincoli interpretativi", "La classificazione di Sabatini considera funzione, pubblico e linguaggio: testi molto, mediamente e poco vincolanti lasciano a chi legge diversi margini di interpretazione."],
+  [35, "Dalla teoria alle tre scritture", "L'e-mail allena registro e situazione; il riassunto, comprensione e sintesi; il testo argomentativo, sviluppo logico delle idee e orientamento verso una tesi."]
+];
+
+const GISCEL_URL = "https://giscel.it/dieci-tesi-per-leducazione-linguistica-democratica/";
+const GISCEL_TESI = [
+  ["I", "Linguaggio e partecipazione", "Le parole permettono di comunicare, conoscere e intervenire sull'esperienza."],
+  ["II", "La persona nella sua interezza", "Lo sviluppo linguistico coinvolge condizioni materiali, affetti, relazioni e crescita."],
+  ["III", "Competenze visibili e meno visibili", "Comprendere e pensare linguisticamente contano quanto parlare e scrivere."],
+  ["IV", "Uguaglianza e differenze", "I diritti linguistici richiedono di contrastare gli ostacoli alla partecipazione."],
+  ["V", "Le pratiche messe in discussione", "La critica riguarda una didattica concentrata su norme, classificazioni e correzioni."],
+  ["VI", "La questione dei risultati", "Quella didattica fallisce anche rispetto agli obiettivi che dichiara."],
+  ["VII", "La questione degli obiettivi", "Restano trascurati comprensione, oralità, varietà linguistiche e usi concreti."],
+  ["VIII", "Le proposte", "Ampliare i repertori, integrare le abilità, riflettere sulla lingua e sull'efficacia comunicativa."],
+  ["IX", "La preparazione docente", "Occorre integrare conoscenze linguistiche e competenze educative."],
+  ["X", "Le responsabilità collettive", "La trasformazione richiede formazione, risorse e scelte istituzionali."]
+];
+const GISCEL_CASI = [
+  { t: "Leggere bene: che cosa osserviamo?", liv: "Classe seconda · Comprensione", ref: "III e VIII",
+    testo: "Durante la lettura di un racconto, Marta legge velocemente e senza esitazioni. Quando le si chiede perché la protagonista abbia nascosto una lettera, ripete l'ultima frase del testo. Amir legge più lentamente, ma ricostruisce il motivo e indica due indizi.",
+    compito: "Quali informazioni abbiamo sulle due letture? Progetta due domande che aiutino a osservare la comprensione senza trasformare la velocità nell'unico criterio.",
+    risposta: "Le osservazioni riguardano aspetti diversi: fluidità e ricostruzione del significato. Non bastano per una valutazione complessiva dei due bambini. Si può chiedere: «Che cosa teme la protagonista? Quale punto del racconto te lo fa pensare?» e «Se la lettera venisse trovata subito, che cosa cambierebbe?». Le risposte vanno discusse tornando al testo. Una seconda lettura, anche condivisa, permette di osservare come cambia la comprensione.",
+    osserva: "Annota separatamente decodifica, individuazione degli indizi e spiegazione dei legami. Confronta più occasioni di lettura, non una sola prestazione." },
+  { t: "Dal racconto alla relazione", liv: "Classe quarta · Scienze e scrittura", ref: "VII e VIII",
+    testo: "Dopo un esperimento di germinazione un gruppo scrive: «Poi abbiamo messo quello lì vicino e dopo è venuto fuori». Chi ha partecipato capisce; una classe assente non riesce a ricostruire l'esperimento.",
+    compito: "Prepara una revisione per rendere il testo comprensibile alla classe assente. Scegli tre domande da rivolgere al gruppo prima di proporre tu una riscrittura.",
+    risposta: "Si può chiedere: «Che cosa avete messo?», «Dove, esattamente?» e «Che cosa avete osservato, e dopo quanto tempo?». La revisione deve usare i dati realmente raccolti: recipiente, materiali, posizione, durata e cambiamenti osservati. Il gruppo può costruire una sequenza con etichette e fotografie e poi trasformarla in frasi. Un'altra coppia prova a ricostruire il procedimento leggendo soltanto la relazione.",
+    osserva: "Verifica se un lettore esterno identifica materiali, passaggi e osservazioni. Valuta anche se i bambini sanno spiegare perché hanno sostituito «quello» e «lì»." },
+  { t: "Una richiesta, due destinatari", liv: "Classe quinta · Registro e destinatario", ref: "IV e VIII",
+    testo: "La classe vuole usare il cortile per una lettura all'aperto. A un compagno viene spontaneo dire: «Ci troviamo fuori a leggere?». Ora occorre chiedere l'autorizzazione alla dirigente.",
+    compito: "Scrivi una richiesta alla dirigente e confrontala con quella rivolta al compagno. Individua ciò che cambia e ciò che resta uguale.",
+    risposta: "Una possibile formulazione: «Gentile dirigente, la classe quinta B vorrebbe svolgere un'attività di lettura nel cortile. Possiamo utilizzarlo martedì dalle 10 alle 11, con la nostra insegnante? Grazie per l'attenzione. Le alunne e gli alunni della quinta B». Data, orario e classe sono dati costruiti per l'esempio. Nel confronto si osservano apertura, informazioni esplicite e forma della richiesta. La frase tra compagni si valuta nella sua situazione; la nuova formulazione serve a un destinatario e a uno scopo diversi.",
+    osserva: "Chiedi di motivare due scelte. Una richiesta è riuscita se permette al destinatario di capire chi scrive, che cosa chiede e quali informazioni servono per rispondere." },
+  { t: "Le parole di casa entrano in classe", liv: "Classi terza–quinta · Repertori linguistici", ref: "II, IV e VIII",
+    testo: "Nel raccontare un gioco fatto con i nonni, una bambina usa una parola dialettale. Un compagno ride: «Questa parola non esiste». La bambina interrompe il racconto.",
+    compito: "Progetta la risposta dell'insegnante e una breve attività successiva. Come permettere alla bambina di continuare e rendere il racconto comprensibile a tutti?",
+    risposta: "L'insegnante può chiedere, senza obbligare a esporsi: «Ci aiuti a capire che cosa indica questa parola? Puoi anche mostrarcelo o descriverlo». Dopo il racconto, il gruppo cerca una formulazione comprensibile anche a chi non conosce quel termine. Una raccolta volontaria di parole dei giochi, in italiano, dialetti e altre lingue conosciute, può accostare descrizioni, disegni e contesti d'uso. Nessun bambino deve diventare il rappresentante obbligato di una lingua o di un paese.",
+    osserva: "Osserva se tutti possono intervenire e se il gruppo sa spiegare parole nuove. Non attribuire a una sola parola il valore di una diagnosi sulle competenze dell'alunna." }
+];
+
+const MODULO_UNIMC = "https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=SLHOGiqi-0mw-BgxnCVqdFXTRTA5mqRFp0KcnNrR0iVUMEgySVUxS1pGRUdOMkw3U1dBQkswN0NBNS4u";
+
+const ATTIVITA = {
+  email: {
+    titolo: "Una mail alla docente",
+    fonte: "Slide 29; per la revisione, slide 25",
+    intro: "Scrivete una mail alla docente per chiedere un'informazione o chiarire un dubbio sul corso.",
+    passi: [
+      "La situazione deve essere verosimile: un dubbio che potreste avere davvero.",
+      "Compilate oggetto, apertura, corpo, chiusura e firma.",
+      "Prima di consegnare, rileggete con le domande di «Prima dell'invio»."
+    ],
+    campi: [["oggetto", "Oggetto", 2], ["apertura", "Apertura", 2], ["corpo", "Corpo", 10], ["chiusura", "Chiusura", 3], ["firma", "Firma", 2]],
+    controlli: ["La domanda è riconoscibile?", "Oggetto e corpo corrispondono?", "I riferimenti sono chiari?", "Il registro è coerente?", "Allegati e firma sono presenti quando servono?", "Ho riletto ortografia e punteggiatura?"]
+  },
+  riassunto: {
+    titolo: "Una notizia: 200 parole, 50 parole, un titolo",
+    fonte: "Consegna: slide 20; articolo: slide 21–22; briefing e debriefing: slide 23–24",
+    intro: "Leggi l'articolo, individua da solo le unità informative, poi scrivi due riassunti e un titolo.",
+    articolo: "Appassionato di computer, è riuscito a localizzare l'iPhone che gli era stato rubato e ha fatto arrestare i due ladri che avevano svaligiato l'appartamento dove vive coi genitori. Un'indagine telematica quella di Giacomo, 15 anni, studente di un liceo di Monteverde che, seguendo la traccia del Gps, ha portato gli uomini del vicequestore Mario Viola fino a un casolare sulla Cassia dove i due, M.B., italiano, e D.K., albanese, si erano rifugiati. Gli agenti hanno recuperato anche la refurtiva di altri colpi messi a segno, nella zona, dalla coppia di ladri.\n«Ad accorgersi del furto è stato mio zio, che è venuto a trovarci e ha trovato la porta aperta – racconta Giacomo, un ragazzo che, oltre alla tecnologia, ha la passione delle moto anche se, per ora, deve accontentarsi di un modesto “cinquantino”. Noi dormivamo tutti e i ladri si erano portati via un pc, un iPhone e circa 300 euro in contanti. I due cani non hanno neanche abbaiato. Fatto sta che, mentre mia madre andava al commissariato a sporgere denuncia, io ho attivato, da un altro tablet (che non era stato rubato perché era custodito in un cassetto del mio comodino) la funzione che serve a localizzare il dispositivo e che avevo istallato in precedenza. L'iPhone era a una quindicina di chilometri di distanza, in un casolare abusivo sulla Cassia che non risultava nemmeno sulle mappe. Ho portato tutto al commissariato e gli agenti hanno deciso di andare sul posto».\nIl vicequestore Viola e i suoi uomini sono arrivati sulla Cassia in mattinata ma il casolare era deserto. La seconda volta, si sono portati dietro Giacomo, emozionatissimo, che sfoggiava un cappellino della polizia e si sentiva perfettamente calato nella parte: un detective di 15 anni. Il ruolo del ragazzo, in realtà, è stato decisivo perché il giovane ha attivato, a distanza, un comando che ha fatto suonare l'iPhone, nascosto tra il letto e la parete della stanza dove si trovava il ladro italiano. L'uomo è finito subito in manette e, nella perquisizione successiva, è saltato fuori anche il resto della refurtiva. Il complice albanese è stato rintracciato e ammanettato qualche ora dopo e a questo punto Giacomo si era già guadagnato abbondantemente la nomina a poliziotto onorario.\n«In realtà è stato abbastanza semplice, oggi chiunque attiva la funzione di localizzazione – minimizza l'adolescente che, come tutti i coetanei, non capisce le difficoltà tecnologiche di chi ha imparato a scrivere con penna e calamaio –. Io ho solo pensato di fare più in fretta possibile e gli agenti del commissariato, gentilissimi, mi hanno dato retta». La bravura del quindicenne col computer, probabilmente, servirà anche a risolvere altri casi di furto in cui i due arrestati erano stati coinvolti in passato. Quanto a Giacomo, l'adolescente sostiene di non essere poi un gran che, alla tastiera del pc («appassionato è un parolone, me la cavo, tutto qui»), ma in futuro ha già deciso di studiare informatica.",
+    articoloFonte: "Massimo Lugli, «la Repubblica», 26 aprile 2012. Titolo nascosto fino alla fine.",
+    passi: [
+      "Individua da solo le UI: numerale e assegna a ciascuna E, I o M. Puoi indicarne i confini citando le parole iniziali e finali.",
+      "Scrivi un riassunto di 200 parole e uno di 50, autonomi e fedeli. Conserva la catena furto → localizzazione → intervento → arresti → esito.",
+      "Scrivi un titolo di massimo 8 parole: non entra nel conteggio dei riassunti.",
+      "Conta gli elementi separati da spazi: apostrofi e trattini interni non dividono. Numeri delle UI e sigle sono esclusi."
+    ],
+    campi: [["ui", "Unità informative, classificate E/I/M", 12, null], ["r200", "Riassunto di 200 parole", 14, 200], ["r50", "Riassunto di 50 parole", 7, 50], ["titolo8", "Titolo · massimo 8 parole", 2, -8]],
+    controlli: ["Ho individuato da solo le UI e assegnato E/I/M.", "I riassunti conservano informazioni essenziali, nessi logici e grado di certezza.", "I testi sono autonomi, riformulati e senza aggiunte.", "I riassunti hanno 200 e 50 parole, escluso il titolo.", "Il titolo è fedele e non supera 8 parole."]
+  },
+  argomentativo: {
+    titolo: "Il linguaggio inclusivo a scuola: sì o no?",
+    fonte: "Testo guida: slide 5–7 e 24; laboratorio: slide 25–35",
+    intro: "Scrivi individualmente una pagina di testo argomentativo, con un titolo. Definisci la tesi, sostienila, confrontati con le obiezioni e chiudi con una conclusione. Si consegnano soltanto titolo e testo.",
+    passi: ["Definisci la tua tesi.", "Argomentala.", "Trova le controargomentazioni (antitesi) e contestale.", "Traccia le tue conclusioni.", "Scegli un titolo."],
+    campi: [["titolo", "Titolo", 2], ["testo", "Testo · una pagina", 18]],
+    controlli: ["Ho precisato di quali strategie inclusive sto parlando?", "Ho usato gli argomenti emersi nel gruppo, comprese le posizioni diverse dalla mia?", "Ho collegato le prove agli argomenti e reso riconoscibili le fonti?", "Le confutazioni rispondono alle obiezioni?", "Titolo, conclusione e connettivi accompagnano il ragionamento?"]
+  }
+};
+
+const PALESTRA = {
+  email: [
+    { titolo: "Il ricevimento", tempo: "20 minuti", obiettivo: "Rendere una richiesta precisa e negoziare un appuntamento.",
+      testo: "Oggetto: ricevimento\nBuongiorno professoressa,\nsono Luca, seguo il suo corso di Linguistica. Vorrei parlarle del programma, perché non ho capito bene la parte da preparare. Martedì non riesco a venire al ricevimento: posso passare mercoledì alle 10? Le avevo già scritto la settimana scorsa.\nGrazie, a mercoledì.\nLuca",
+      consegna: "Individua almeno quattro punti da rivedere e riscrivi la mail in 80–120 parole. Luca Ferri segue Linguistica e vuole sapere se il capitolo 4, indicato tra le letture di approfondimento, rientra nel programma d'esame. Il ricevimento del martedì coincide con il tirocinio obbligatorio. È disponibile mercoledì dalle 10 alle 12 e giovedì dopo le 15. Formula una richiesta di appuntamento senza darlo per confermato.",
+      min: 80, max: 120,
+      prima: ["Distingui ciò che il destinatario sa già da ciò che deve sapere per rispondere.", "Sottolinea le espressioni che danno per scontata la disponibilità della docente.", "Prepara un oggetto che permetta di riconoscere il motivo del messaggio."],
+      revisione: ["La richiesta permette di rispondere senza chiedere altre informazioni?", "Le due disponibilità sono proposte, non appuntamenti già decisi?", "Il registro rimane coerente dall'apertura alla firma?"],
+      guida: "La prima versione indica in modo generico il problema e conclude come se l'appuntamento fosse già concordato. Il rinvio alla mail precedente non permette di ricostruirne il contenuto. Nella revisione specifica il capitolo e il dubbio, presenta le disponibilità come proposte e chiedi conferma. Usa un oggetto pertinente e una firma riconoscibile.",
+      rilancio: "Riscrivi il messaggio in non più di 60 parole, conservando le informazioni necessarie. Confronta le due versioni: quali tagli migliorano il testo e quali lo rendono meno chiaro?",
+      analisi: "Quattro problemi: l'oggetto non precisa il motivo; «la parte da preparare» non identifica il dubbio; il rinvio alla mail precedente non ne ricostruisce il contenuto; «a mercoledì» presenta come confermato un appuntamento ancora da concordare.",
+      soluzioni: [{ t: "Una possibile riscrittura · 97 parole", x: "Oggetto: Linguistica – chiarimento sul capitolo 4 e richiesta di ricevimento\n\nGentile Professoressa,\nsono Luca Ferri e seguo il suo corso di Linguistica. Le scrivo per sapere se il capitolo 4, indicato tra le letture di approfondimento, rientri nel programma d'esame.\nVorrei inoltre chiederle un appuntamento: il ricevimento del martedì coincide con il mio tirocinio obbligatorio. Sarei disponibile mercoledì dalle 10 alle 12 oppure giovedì dopo le 15. Uno di questi orari potrebbe andare bene? Se necessario, posso concordare un'altra disponibilità.\nLa ringrazio per l'attenzione e resto in attesa di una sua conferma.\nCordiali saluti,\nLuca Ferri" }],
+      commento: "Il dubbio è circoscritto e l'appuntamento resta una richiesta. Le informazioni permettono alla docente di rispondere senza recuperare la mail precedente.",
+      extra: "Versione breve: «Gentile Professoressa, sono Luca Ferri, del corso di Linguistica. Il capitolo 4 rientra nel programma d'esame? Per un ricevimento, sarei disponibile mercoledì dalle 10 alle 12 o giovedì dopo le 15: il martedì ho tirocinio. Potrebbe confermarmi un orario? La ringrazio. Cordiali saluti, Luca Ferri». La riduzione conserva il necessario, ma rende il passaggio tra le due richieste più brusco." },
+    { titolo: "Un allegato che manca", tempo: "20 minuti", obiettivo: "Rispondere a una richiesta amministrativa senza informazioni superflue.",
+      testo: "Oggetto: Integrazione documentazione – riconoscimento crediti\nGentile studentessa,\nnella domanda di riconoscimento crediti relativa all'esame di Linguistica generale non risulta allegato il programma dell'insegnamento. La invitiamo a inviare il documento in risposta a questa comunicazione entro venerdì, indicando nome, cognome e numero di matricola.\nCordiali saluti\nSegreteria studenti\n\nIl programma è disponibile in PDF e puoi inviarlo oggi.",
+      consegna: "Scrivi una risposta di 70–100 parole, comprensiva di oggetto, riferimento alla pratica, indicazione dell'allegato e chiusura. Per i dati identificativi usa i segnaposto [Nome Cognome] e [Matricola]. Aggiungi due righe per spiegare quali informazioni hai escluso perché non pertinenti.",
+      min: 70, max: 100,
+      prima: ["Individua documento richiesto, pratica a cui si riferisce e scadenza.", "Separa le informazioni necessarie alla segreteria dai dettagli della tua carriera che qui non servono.", "Decidi come nominare l'allegato perché sia riconoscibile."],
+      revisione: ["Il messaggio chiarisce quale documento accompagna la risposta?", "Il destinatario può associare il file alla pratica corretta?", "Hai evitato di ripetere tutta la comunicazione ricevuta?"],
+      guida: "Riprendi l'oggetto o rendi riconoscibile la pratica. Il testo deve permettere di associare il programma all'esame e alla domanda. Sono sufficienti i dati richiesti; non occorre raccontare l'intera carriera universitaria. Nell'uso reale controlla sempre che il documento indicato sia effettivamente allegato.",
+      rilancio: "Il documento non sarà disponibile prima di lunedì. Scrivi una nuova risposta: comunica il problema, chiedi come procedere e proponi una data senza dare per concessa la proroga.",
+      analisi: "Servono riferimento alla pratica, esame interessato, dati identificativi e indicazione del documento. Non sono pertinenti l'elenco degli altri esami o una spiegazione dei motivi del trasferimento.",
+      soluzioni: [{ t: "Una possibile risposta · 77 parole", x: "Oggetto: Re: Integrazione documentazione – riconoscimento crediti\n\nGentile Segreteria,\nin risposta alla vostra comunicazione, invio in allegato il programma dell'insegnamento di Linguistica generale, richiesto per integrare la mia domanda di riconoscimento crediti.\nRiporto i dati necessari per associare il documento alla pratica: [Nome Cognome], matricola [Matricola]. Il programma è allegato in formato PDF.\nResto a disposizione qualora fossero necessarie ulteriori informazioni o integrazioni della documentazione.\nVi ringrazio per la segnalazione e per l'attenzione.\nCordiali saluti,\n[Nome Cognome]" }],
+      commento: "La risposta collega documento, insegnamento e pratica. I segnaposto evitano di inventare dati personali. Nella situazione reale, la frase sull'allegato va verificata prima dell'invio.",
+      extra: "Se il programma arriva lunedì: «Gentile Segreteria, sto acquisendo il programma richiesto, che sarà disponibile lunedì. Sarebbe possibile integrare la domanda in quella data? Vi chiedo cortesemente come procedere rispetto alla scadenza di venerdì. Grazie per l'attenzione. Cordiali saluti, [Nome Cognome], matricola [Matricola]»." },
+    { titolo: "Chiedere una proroga", tempo: "25 minuti", obiettivo: "Motivare una richiesta e graduarne la forza.",
+      testo: "La relazione di tirocinio va consegnata lunedì. Hai già completato la stesura, ma la revisione richiede ancora un confronto con il tutor, che ha spostato l'incontro a mercoledì. Puoi consegnare la versione rivista entro giovedì. Nel corso non è stata prevista una procedura per le proroghe.",
+      consegna: "Scrivi una mail di 100–140 parole: comunica la situazione senza dettagli personali superflui, formula una richiesta motivata e precisa una nuova data. Poi riscrivi soltanto la richiesta con una diversa formulazione cortese e confronta le due versioni.",
+      min: 100, max: 140,
+      prima: ["Quale informazione sull'impedimento serve davvero alla docente?", "Distingui la scadenza prevista dalla nuova data che proponi.", "Formula la richiesta in modo che possa ricevere anche una risposta negativa."],
+      revisione: ["Il motivo è comprensibile senza dettagli personali inutili?", "Hai indicato il lavoro e una nuova scadenza precisa?", "Le due formulazioni differiscono per cortesia o anche per significato?"],
+      guida: "La proroga resta una richiesta che la docente può rifiutare. Specifica lavoro e scadenze, evita pressioni o giustificazioni inventate. Valuta chiarezza, pertinenza e adeguatezza delle due formulazioni.",
+      rilancio: "La docente risponde che la scadenza non può essere spostata. Scrivi una risposta di 40–60 parole che prenda atto della decisione e chiarisca il passo successivo.",
+      analisi: "La motivazione utile è lo spostamento del confronto con il tutor. La richiesta deve distinguere la scadenza prevista, lunedì, dalla nuova data proposta, giovedì.",
+      soluzioni: [{ t: "Una possibile richiesta · 109 parole", x: "Oggetto: Relazione di tirocinio – richiesta di proroga a giovedì\n\nGentile Professoressa,\nle scrivo in merito alla relazione di tirocinio da consegnare lunedì. Ho completato la stesura, ma per concludere la revisione devo ancora confrontarmi con il tutor, che ha spostato il nostro incontro a mercoledì.\nVorrei chiederle se fosse possibile consegnare la versione rivista entro giovedì. Comprendo che questa richiesta comporta una modifica della scadenza prevista e che non è stata annunciata una procedura per le proroghe. Per questo attendo una sua indicazione prima di considerare confermata la nuova data.\nLa ringrazio per l'attenzione e resto a disposizione per eventuali chiarimenti sul lavoro svolto.\nCordiali saluti,\n[Nome Cognome]" }],
+      commento: "Il testo comunica lo stato del lavoro, motiva la richiesta e non presume che venga accolta. Variante: «Le sarebbe possibile autorizzare la consegna entro giovedì?». La variante rende esplicito il ruolo della docente nell'autorizzazione; entrambe le formule sono cortesi.",
+      extra: "In caso di rifiuto: «Gentile Professoressa, la ringrazio per il chiarimento. Prendo atto che la scadenza di lunedì resta confermata e procederò alla consegna entro quella data. Nel frattempo completerò i controlli che posso svolgere autonomamente sul testo già preparato. Grazie per la risposta. Cordiali saluti, [Nome Cognome]»." }
+  ],
+  riassunto: [
+    { titolo: "Una cronaca", tempo: "25 minuti", obiettivo: "Selezionare le informazioni utili al destinatario di una notizia.",
+      testo: "Nel quartiere delle Rose, una perdita ha allagato la sala di lettura del centro civico nella notte tra lunedì e martedì. Il custode ha scoperto il guasto prima dell'apertura e ha avvisato i tecnici. La rottura di un raccordo, individuata nel locale accanto, ha richiesto la chiusura dell'acqua per tutta la mattina. Le attività previste nella sala sono state trasferite al piano superiore. Nessuno è rimasto ferito. I volontari hanno spostato i libri dagli scaffali più bassi, evitando che molti volumi si bagnassero. Alcune riviste sono state danneggiate e dovranno essere sostituite. Mercoledì i tecnici hanno concluso la riparazione, ma la sala resterà chiusa fino a venerdì per consentire l'asciugatura e i controlli. Il laboratorio di lettura del giovedì si terrà nella scuola vicina. All'ingresso del centro un cartello giallo indica il percorso alternativo. Il coordinatore ha ringraziato i volontari e ha annunciato una verifica degli altri raccordi dell'edificio per prevenire guasti simili.",
+      consegna: "Elenca le UI con E/I/M. Scrivi un riassunto di 55–70 parole per informare gli utenti. Conserva la catena causa–intervento–conseguenze e le informazioni utili sulle attività.",
+      min: 55, max: 70,
+      prima: ["Separa il fatto principale dalle conseguenze e dai dettagli di contorno.", "Costruisci una linea del tempo: scoperta del guasto, riparazione, riapertura.", "Segna E/I/M considerando che scrivi per chi frequenta la sala."],
+      revisione: ["Hai distinto la fine della riparazione dalla riapertura al pubblico?", "Il lettore capisce dove si svolgono le attività nel frattempo?", "Hai mantenuto le condizioni e i limiti presenti nel testo?"],
+      guida: "Conserva perdita e chiusura della sala, riparazione conclusa, riapertura prevista dopo i controlli e trasferimento delle attività. Non confondere riparazione con riapertura. Il colore del cartello è marginale.",
+      rilancio: "Riduci il testo a un avviso di 30–40 parole da collocare all'ingresso. Spiega quali informazioni diventano essenziali quando cambia lo scopo.",
+      analisi: "E: perdita e allagamento; chiusura della sala; tempi distinti di riparazione e riapertura; sedi alternative delle attività. I: intervento dei tecnici e salvataggio dei libri; verifica preventiva dei raccordi. M rispetto all'avviso agli utenti: colore del cartello e ringraziamento del coordinatore. La gerarchia dipende dal destinatario, non soltanto dall'ordine del testo.",
+      soluzioni: [{ t: "Riassunto per gli utenti · 60 parole", x: "Una perdita ha allagato la sala di lettura del centro civico, imponendone la chiusura. La riparazione è terminata mercoledì, ma la sala resterà chiusa fino a venerdì per asciugatura e controlli. Le attività sono state trasferite al piano superiore; il laboratorio di lettura di giovedì si svolgerà nella scuola vicina. I volontari hanno salvato molti libri; alcune riviste risultano danneggiate." }],
+      commento: "La sintesi distingue la riparazione dalla disponibilità della sala e conserva le informazioni che consentono agli utenti di orientarsi.",
+      extra: "Avviso breve: «La sala di lettura resta chiusa fino a venerdì per asciugatura e controlli dopo un allagamento. Le attività si svolgono al piano superiore; il laboratorio di giovedì è trasferito nella scuola vicina». Il salvataggio dei libri perde priorità rispetto a luoghi e tempi." },
+    { titolo: "Un testo espositivo", tempo: "30 minuti", obiettivo: "Ridurre un testo espositivo senza trasformare possibilità in certezze.",
+      testo: "Un orto condiviso è uno spazio coltivato da più persone che concordano l'uso delle aiuole, degli strumenti e dell'acqua. Può nascere in una scuola, in un quartiere o in un'associazione. Non basta assegnare un terreno: il gruppo deve stabilire turni, responsabilità e modalità di decisione. Le piante richiedono cure anche durante le vacanze, quando molti partecipanti sono assenti. Per questo alcuni gruppi scelgono colture adatte al clima e organizzano un calendario comune. L'orto può offrire occasioni di incontro e di osservazione dei cicli naturali, ma questi risultati non sono automatici. Se il lavoro ricade sempre sulle stesse persone, possono emergere conflitti. Riunioni brevi e registri delle attività aiutano a rendere visibili i compiti. Anche la distribuzione del raccolto richiede un accordo: c'è chi divide i prodotti tra i partecipanti e chi ne destina una parte a iniziative del quartiere. Non esiste una soluzione valida per tutti. La continuità dell'esperienza dipende soprattutto dalla capacità di adeguare gli impegni alle risorse disponibili e di rivedere insieme le regole quando cambiano le esigenze.",
+      consegna: "Produci due riassunti: 75–90 parole e 35–45 parole. Spiega in 3–4 righe quali informazioni hai mantenuto nella versione più breve e perché.",
+      min: 75, max: 90,
+      prima: ["Ricostruisci la relazione tra organizzazione, collaborazione e continuità dell'orto.", "Distingui le idee generali dagli esempi che le illustrano.", "Prima di scrivere la versione breve, scegli i tre nuclei che non puoi eliminare."],
+      revisione: ["Hai mantenuto le condizioni da cui dipendono i benefici?", "La versione breve ha una struttura leggibile e non è un elenco di frammenti?", "Il testo più breve contiene informazioni assenti in quello più lungo? Se sì, controlla la coerenza delle scelte."],
+      guida: "Mantieni definizione, necessità di organizzazione e dipendenza dei risultati dalla collaborazione. Non presentare i benefici come garantiti. Nella versione breve riduci gli esempi conservando i rapporti logici.",
+      rilancio: "Confronta i due incipit: «Gli orti condivisi migliorano i rapporti tra le persone» e «Un orto condiviso richiede accordi e continuità nella cura». Quale rispetta meglio il testo di partenza? Motiva la scelta.",
+      analisi: "E: definizione dell'orto condiviso; necessità di accordi e responsabilità; continuità legata alla collaborazione. I: cure durante le assenze, distribuzione del raccolto e prevenzione dei conflitti. M nella sintesi breve: elenco dei contesti e degli strumenti organizzativi.",
+      soluzioni: [
+        { t: "Versione estesa · 76 parole", x: "Un orto condiviso è uno spazio coltivato da più persone, che concordano l'uso delle risorse e la distribuzione dei compiti. La sua gestione richiede turni, responsabilità e decisioni comuni, anche durante le vacanze. Può favorire incontri e conoscenza dei cicli naturali, ma questi benefici dipendono dalla collaborazione. Una ripartizione squilibrata del lavoro può infatti generare conflitti. Occorre accordarsi anche sul raccolto. La continuità dell'esperienza richiede impegni sostenibili e regole modificabili quando cambiano le esigenze del gruppo." },
+        { t: "Versione breve · 37 parole", x: "Un orto condiviso richiede accordi sull'uso delle risorse, sulla cura delle piante e sul raccolto. I possibili benefici dipendono dalla collaborazione: per garantire continuità, il gruppo deve distribuire responsabilità sostenibili e adattare le regole alle proprie esigenze." }
+      ],
+      commento: "La versione breve conserva definizione implicita, organizzazione e condizione dei benefici. Elimina gli esempi delle vacanze e dei conflitti senza cancellare il rapporto tra collaborazione e continuità.",
+      extra: "È più fedele il secondo incipit, «Un orto condiviso richiede accordi e continuità nella cura»: esprime una condizione centrale. Il primo trasforma un beneficio possibile in un risultato garantito." },
+    { titolo: "Un breve racconto", tempo: "25 minuti", obiettivo: "Ricostruire la catena causale di un racconto e distinguere fatti e interpretazioni.",
+      testo: "Quando arrivò alla fermata, Marta vide l'autobus allontanarsi. Aveva dimenticato a casa la cartellina con i disegni e, tornando a prenderla, aveva perso dieci minuti. Quel mattino doveva presentare il suo progetto a una commissione. Guardò l'orologio e chiamò il fratello, che però era già al lavoro. Poi si ricordò della bicicletta lasciata il giorno prima da un'amica nel cortile. Le telefonò e ottenne il permesso di usarla. Durante il tragitto iniziò a piovere. Marta riparò la cartellina sotto la giacca e proseguì più lentamente. Arrivò con qualche minuto di ritardo e trovò la commissione ancora impegnata con il candidato precedente. Si sedette in corridoio, asciugò la cartellina e ricontrollò l'ordine dei disegni. Quando la chiamarono, si accorse che il foglio con gli appunti era bagnato e quasi illeggibile. Decise allora di spiegare il progetto seguendo direttamente le immagini. Uscendo, si rese conto che conosceva il proprio lavoro meglio di quanto avesse creduto.",
+      consegna: "Scrivi un riassunto di 55–70 parole in terza persona. Mantieni il problema iniziale, le azioni decisive e l'esito, senza aggiungere un giudizio sulla protagonista.",
+      min: 55, max: 70,
+      prima: ["Distingui il motivo del ritardo dagli ostacoli incontrati lungo il tragitto.", "Elenca le decisioni che consentono alla protagonista di affrontare la situazione.", "Separa ciò che il racconto dice sull'esito della presentazione da ciò che non dice."],
+      revisione: ["I passaggi sono collegati da nessi temporali e causali chiari?", "Il punto di vista resta in terza persona?", "Hai evitato di aggiungere una valutazione della commissione?"],
+      guida: "Autobus perso dopo il recupero della cartellina, bicicletta prestata, pioggia e appunti rovinati, presentazione attraverso le immagini e consapevolezza finale costituiscono la sequenza. Non inventare l'esito della valutazione della commissione.",
+      rilancio: "Riscrivi il riassunto in 35–45 parole. Conserva il cambiamento finale nella percezione della protagonista, senza formulare una morale.",
+      analisi: "E: ritardo dovuto al recupero dei disegni; scelta della bicicletta; pioggia e appunti illeggibili; esposizione attraverso le immagini; nuova consapevolezza. I: commissione ancora occupata. M nella sintesi: telefonata al fratello e riordino dei disegni, se non necessari a spiegare la sequenza.",
+      soluzioni: [{ t: "Riassunto del racconto · 58 parole", x: "Marta perde l'autobus dopo essere tornata a prendere i disegni per una presentazione. Ottiene in prestito una bicicletta e raggiunge la sede sotto la pioggia, mentre la commissione è ancora occupata. Al momento di parlare trova gli appunti quasi illeggibili e decide di seguire le immagini. Dopo l'esposizione, capisce di conoscere il proprio progetto meglio di quanto pensasse." }],
+      commento: "Il riassunto conserva le decisioni della protagonista e il cambiamento finale. Non afferma che la commissione abbia approvato il progetto: il racconto non lo dice.",
+      extra: "Versione più breve: «Dopo aver perso l'autobus, Marta raggiunge in bicicletta una presentazione sotto la pioggia. Gli appunti rovinati la costringono a esporre seguendo i disegni. Al termine si accorge di conoscere il progetto meglio di quanto credesse». Il cambiamento è riferito alla sua percezione, non alla valutazione esterna." }
+  ],
+  argomentativo: [
+    { titolo: "Individuare e valutare", tempo: "25 minuti", obiettivo: "Riconoscere una tesi e valutare la pertinenza del suo sostegno.",
+      testo: "I manuali del corso dovrebbero essere disponibili anche in formato digitale accessibile. Un file ben strutturato permette di cercare termini e di adattare la visualizzazione alle esigenze del lettore. Per esempio, una studentessa può ingrandire i caratteri senza perdere l'ordine dei paragrafi. Si potrebbe obiettare che leggere a lungo su schermo affatica e rende più difficile annotare. L'obiezione sostiene l'utilità di mantenere il cartaceo, ma non giustifica l'assenza di un'alternativa digitale. Tutti imparano meglio con i file, perché la tecnologia è il futuro. Offrire entrambi i formati consentirebbe invece di scegliere in base al compito e alle esigenze personali.",
+      consegna: "Individua tesi, argomenti, esempio, obiezione e risposta. Spiega perché una frase indebolisce il ragionamento e riscrivila senza generalizzazioni. Proponi un titolo che mostri la posizione.",
+      prima: ["Distingui la proposta di affiancare il digitale al cartaceo da quella di sostituirlo.", "Segna con etichette diverse argomento, esempio, obiezione e risposta.", "Individua il passaggio che estende a tutti un beneficio non dimostrato."],
+      revisione: ["La frase riscritta sostiene ancora la tesi, ma con una portata più precisa?", "Hai distinto un esempio plausibile da una prova generale?", "Il titolo esprime la posizione senza renderla più radicale?"],
+      guida: "La tesi riguarda un'alternativa digitale accessibile, non l'abolizione della carta. L'esempio illustra una possibilità, non dimostra un vantaggio per tutti. La frase sull'apprendimento universale e sul futuro richiede revisione.",
+      rilancio: "Scrivi un'obiezione più forte di quella presente nel testo e una risposta di 60–80 parole. Non limitarti a liquidare l'obiezione come sbagliata.",
+      analisi: "Tesi: affiancare ai manuali cartacei una versione digitale accessibile. Argomento: ricerca nel testo e adattamento della visualizzazione. Esempio: ingrandimento dei caratteri. Obiezione: affaticamento e difficoltà di annotazione. Risposta: queste ragioni sostengono il mantenimento della carta, non l'esclusione del digitale.",
+      soluzioni: [{ t: "Titolo e revisione del passaggio debole", x: "Titolo: Manuali accessibili: offrire una scelta, ampliare le possibilità\n\nAl posto di «Tutti imparano meglio con i file, perché la tecnologia è il futuro»: «Una versione digitale accessibile può rispondere a esigenze di lettura diverse e affiancare utilmente il manuale cartaceo; la scelta del supporto dipende anche dal compito e dalle preferenze del lettore»." }],
+      commento: "La nuova frase elimina sia la generalizzazione sull'apprendimento sia l'appello generico al futuro. Conserva una ragione pertinente alla tesi senza presentarla come risultato sperimentale.",
+      extra: "Obiezione e risposta: «Predisporre una versione digitale accessibile richiede lavoro e competenze: un semplice file non garantisce accessibilità. L'obiezione è pertinente e impone di definire requisiti e responsabilità. Tuttavia, non dimostra che l'alternativa digitale sia inutile. Si può prevedere un'introduzione graduale, cominciando dai materiali più utilizzati e verificandone la fruibilità con chi li consulta. La proposta riguarda dunque la qualità dell'offerta, non la sola presenza di un file»." },
+    { titolo: "Prenotare un posto in biblioteca", tempo: "40 minuti", obiettivo: "Costruire una proposta tenendo conto di esigenze in conflitto.",
+      testo: "Durante la sessione d'esami trovare un posto in biblioteca può richiedere tempo. Chi arriva in treno vorrebbe sapere, prima di partire, se potrà sedersi. Altri studenti entrano solo per un'ora, tra due lezioni, e preferiscono l'accesso libero. La prenotazione potrebbe aiutare a organizzarsi, ma una postazione prenotata e non occupata rimarrebbe inutilizzata.\n\nLa biblioteca dovrebbe rendere prenotabile una parte dei posti? Valuta anche come gestire ritardi, rinunce e accesso senza prenotazione.",
+      consegna: "Formula una tesi precisa. Prepara una scaletta con due argomenti, un'obiezione e una risposta. Scrivi 220–280 parole e scegli un titolo. Segnala nel testo eventuali ipotesi e, alla fine, indica quali dati raccoglieresti per verificare la proposta.",
+      min: 220, max: 280,
+      prima: ["Individua chi trae vantaggio dalla prenotazione e chi potrebbe esserne penalizzato.", "Distingui gli effetti possibili dai risultati che richiederebbero dati.", "Formula una tesi delimitata: quali posti, quali regole, quali eccezioni?"],
+      revisione: ["Ogni argomento spiega perché la proposta sarebbe utile o problematica?", "L'obiezione rappresenta correttamente un'esigenza diversa dalla tua?", "Hai evitato percentuali, sondaggi o risultati non disponibili?"],
+      guida: "Sono sostenibili posizioni diverse. Una proposta convincente considera sia chi deve programmare il viaggio sia chi usa la biblioteca per brevi periodi. Se proponi una sperimentazione o un limite di tempo per occupare il posto, spiega a quale problema rispondono. Distingui gli effetti attesi dai risultati da verificare.",
+      rilancio: "Riduci il testo a una proposta di 100–120 parole per i rappresentanti degli studenti: mantieni la decisione richiesta, la ragione principale e una condizione di attuazione.",
+      analisi: "Tesi: sperimentare una quota prenotabile, mantenendo accesso libero. Argomento 1: programmare il viaggio. Argomento 2: conciliare usi differenti. Obiezione: prenotazioni inutilizzate. Risposta: conferma all'arrivo, rinuncia semplice e rilascio del posto. I risultati restano da verificare.",
+      soluzioni: [{ t: "Una possibile argomentazione · 253 parole", x: "Posti in biblioteca: prenotare una parte, garantire accesso libero\n\nLa biblioteca universitaria dovrebbe sperimentare la prenotazione di una parte dei posti, mantenendone altri ad accesso libero. Una soluzione mista potrebbe conciliare le esigenze di chi programma una giornata di studio e di chi entra per un intervallo breve.\nPer gli studenti che arrivano in treno, sapere di avere una postazione renderebbe più prevedibile l'organizzazione del viaggio. Questo vantaggio non dimostra che tutti userebbero il servizio, ma identifica un bisogno al quale la prenotazione potrebbe rispondere.\nD'altra parte, chi ha un'ora libera tra due lezioni deve poter accedere senza pianificare ogni spostamento. Per questo sarebbe poco opportuno riservare tutti i posti: la quota libera tutelerebbe un uso diverso, ma altrettanto legittimo, della biblioteca.\nL'obiezione più forte riguarda le prenotazioni inutilizzate. Se un posto rimanesse vuoto mentre altri studenti aspettano, il sistema peggiorerebbe l'accesso. Occorrerebbe quindi prevedere la conferma all'arrivo, un tempo massimo di attesa e una procedura semplice per rinunciare. Le modalità andrebbero comunicate chiaramente prima dell'avvio.\nLa proposta dovrebbe essere verificata durante un periodo di prova. Sarebbe utile raccogliere dati sull'occupazione effettiva, sulle rinunce e sulle richieste rimaste insoddisfatte, ascoltando anche chi preferisce l'accesso libero. Prima di fissare le quote, andrebbero inoltre considerate le diverse fasce orarie, perché il bisogno di posti può variare durante la giornata.\nPrenotare una parte dei posti sarebbe dunque una scelta ragionevole solo se accompagnata da regole comprensibili e dalla possibilità di correggerle. Lo scopo è utilizzare meglio gli spazi, non introdurre un vincolo fine a sé stesso." }],
+      commento: "La tesi delimita la proposta. I vantaggi sono formulati come possibilità, l'obiezione riceve una risposta concreta e la sperimentazione non viene presentata come già riuscita.",
+      extra: "Proposta ai rappresentanti: «Chiediamo di sperimentare la prenotazione di una parte dei posti in biblioteca, mantenendo una quota ad accesso libero. Chi arriva da lontano potrebbe così organizzare il viaggio sapendo di avere una postazione, mentre chi entra tra due lezioni conserverebbe la possibilità di accedere senza prenotare. Per evitare posti inutilizzati, proponiamo una conferma all'arrivo e il rilascio delle prenotazioni non confermate entro un intervallo stabilito. La rinuncia dovrebbe essere semplice e immediata. Al termine della prova, andrebbero esaminati occupazione effettiva, rinunce e richieste insoddisfatte, raccogliendo anche le osservazioni degli studenti. Chiediamo quindi di discutere modalità e durata della sperimentazione prima di estendere il servizio». La sintesi conserva proposta, motivazione, condizioni e verifica." },
+    { titolo: "Lezioni registrate e partecipazione", tempo: "40 minuti", obiettivo: "Confrontare posizioni senza attribuire loro affermazioni che non contengono.",
+      testo: "A: «Le registrazioni delle lezioni dovrebbero restare disponibili per tutto il semestre. Quando riascolto un passaggio difficile posso fermarmi, controllare gli appunti e ripartire. Sono utili anche se perdo un incontro.»\n\nB: «Riascoltare è utile, ma la registrazione non dovrebbe diventare un sostituto della partecipazione. In aula le domande e il confronto cambiano il modo in cui si sviluppa la lezione: il video non restituisce tutta questa esperienza.»",
+      consegna: "Spiega se le posizioni sono necessariamente incompatibili. Poi scrivi un testo di 220–280 parole con una tua tesi sull'uso delle registrazioni, due argomenti, un'obiezione e una risposta. Distingui esempi possibili da prove e chiudi con una conclusione coerente.",
+      min: 220, max: 280,
+      prima: ["Riformula ciascuna posizione in una frase neutra, prima di esprimere il tuo giudizio.", "Distingui la disponibilità delle registrazioni dal valore della partecipazione.", "Individua un punto di accordo e una questione che rimane aperta."],
+      revisione: ["Hai evitato di attribuire ad A l'inutilità della frequenza e a B un divieto assoluto?", "La tua tesi precisa come usare le registrazioni?", "La conclusione deriva dagli argomenti e non aggiunge una nuova tesi?"],
+      guida: "Le posizioni possono coesistere: disponibilità delle registrazioni e valore della partecipazione riguardano aspetti diversi. Evita di attribuire a B un divieto assoluto o ad A l'inutilità della frequenza. Sono ammesse tesi diverse se sostenute.",
+      rilancio: "Scrivi una conclusione alternativa che introduca una concessione alla posizione opposta. Spiega se la concessione indebolisce o rende più precisa la tua tesi.",
+      analisi: "A sostiene la disponibilità delle registrazioni; B difende il valore della partecipazione. Le posizioni non si escludono necessariamente. Restano da discutere funzione delle registrazioni, forme di accesso e rapporto con le attività svolte in presenza.",
+      soluzioni: [{ t: "Una possibile argomentazione · 253 parole", x: "Registrare le lezioni per integrare la partecipazione\n\nLe registrazioni dovrebbero restare disponibili durante il semestre come supporto allo studio. Questa scelta può convivere con il riconoscimento del valore della partecipazione, purché sia chiaro che riascoltare e intervenire in aula sono attività diverse.\nUn primo argomento riguarda il lavoro sui passaggi difficili. Una registrazione permette di fermarsi, confrontare quanto ascoltato con gli appunti e riprendere un ragionamento. Non ne consegue che garantisca una comprensione migliore a chiunque: offre però una possibilità concreta di controllo del proprio studio.\nUn secondo argomento riguarda la continuità. Chi perde un incontro può ricostruire almeno una parte del percorso della lezione. Per esempio, potrebbe utilizzare il video per individuare i concetti da approfondire e arrivare all'incontro successivo con domande precise. Si tratta di un uso possibile, non di un risultato che possiamo dare per acquisito.\nSi può obiettare che la disponibilità del video incoraggi a rinunciare alla frequenza. Il problema merita attenzione, ma non rende incompatibili accesso alle registrazioni e partecipazione. La docente potrebbe chiarire quali attività richiedono confronto e produzione condivisa, rendendo riconoscibile ciò che il video non sostituisce.\nAnche gli studenti avrebbero una responsabilità: organizzare il riascolto, selezionare i dubbi e non limitarsi ad accumulare lezioni da recuperare alla fine. Il materiale sarebbe utile nella misura in cui entrasse in un metodo di studio attivo.\nLa disponibilità delle registrazioni andrebbe quindi accompagnata da indicazioni sul loro uso. Difendere la partecipazione non impone di rinunciare al riascolto; richiede piuttosto di spiegare che cosa ciascuna modalità permette di fare." }],
+      commento: "Il testo riconosce il punto di accordo, considera l'obiezione e distingue possibilità, esempi e risultati. Non attribuisce a nessuna delle due posizioni una tesi estrema.",
+      extra: "Conclusione con concessione: «Anche ammettendo che qualcuno possa usare le registrazioni per rinviare lo studio, il riascolto resta una risorsa utile. Perciò ne sosterrei la disponibilità, accompagnata da attività e indicazioni che favoriscano un uso regolare». La concessione restringe la tesi e ne esplicita le condizioni." }
+  ]
+};
+
+</script>
+<script>
+(function(){
+const app = document.getElementById('app');
+const HOME_UMS = '../../index.html';
+
+/* ---------- memoria nel browser ---------- */
+const mem = {
+  get(k, d){ try { const v = localStorage.getItem('ums_ling_' + k); return v === null ? d : JSON.parse(v); } catch(e){ return d; } },
+  set(k, v){ try { localStorage.setItem('ums_ling_' + k, JSON.stringify(v)); } catch(e){} }
+};
+
+/* ---------- notte (stessa chiave di UMS) ---------- */
+const btnNotte = document.getElementById('notte');
+const segnaNotte = () => { const on = document.body.classList.contains('night-mode'); btnNotte.textContent = on ? '☀️' : '🌙'; };
+segnaNotte();
+btnNotte.onclick = () => {
+  const on = !document.body.classList.contains('night-mode');
+  document.body.classList.toggle('night-mode', on);
+  try { localStorage.setItem('ums_night_mode', on ? '1' : '0'); } catch(e){}
+  segnaNotte();
+};
+
+/* ---------- utilità ---------- */
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const parole = t => (t || '').trim().split(/\s+/).filter(Boolean).length;
+const pad = n => String(n).padStart(2, '0');
+const src = (deck, n) => 'slide/' + deck + '-' + pad(n) + '.jpg';
+const FRECCIA = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>';
+const INDIETRO = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5"/><path d="m11 18-6-6 6-6"/></svg>';
+const STAMPA_ICO = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 9V3h10v6M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"/><rect x="7" y="14" width="10" height="7" rx="1"/></svg>';
+const MESI = ['gennaio','febbraio','marzo','aprile','maggio','giugno','luglio','agosto','settembre','ottobre','novembre','dicembre'];
+function fraseVisita(iso){ const d = new Date(iso + 'T00:00:00'); const g = d.getDate(); return 'visitata ' + ((g === 8 || g === 11) ? "l'" : 'il ') + g + ' ' + MESI[d.getMonth()]; }
+function segnaVisita(k){ const v = mem.get('visite', {}); const o = new Date(); v[k] = o.getFullYear() + '-' + pad(o.getMonth() + 1) + '-' + pad(o.getDate()); mem.set('visite', v); }
+const intervalli = r => !r ? [] : (Array.isArray(r[0]) ? r : [r]);
+const etichettaIntervallo = ([a, b]) => a === b ? 'Slide ' + a : 'Slide ' + a + '–' + b;
+
+/* ---------- visore delle slide ---------- */
+const visore = document.getElementById('visore'), vImg = document.getElementById('v-img'), vN = document.getElementById('v-n');
+let vDeck = null, vTot = 0, vI = 1;
+function vMostra(){ vImg.src = src(vDeck, vI); vImg.alt = 'Slide ' + vI; vN.textContent = 'Slide ' + vI + ' di ' + vTot; }
+function apriVisore(deck, tot, n){ vDeck = deck; vTot = tot; vI = n; vMostra(); visore.hidden = false; document.body.style.overflow = 'hidden'; document.getElementById('v-x').focus(); }
+function chiudiVisore(){ visore.hidden = true; document.body.style.overflow = ''; }
+document.getElementById('v-x').onclick = chiudiVisore;
+document.getElementById('v-p').onclick = () => { vI = vI > 1 ? vI - 1 : vTot; vMostra(); };
+document.getElementById('v-s').onclick = () => { vI = vI < vTot ? vI + 1 : 1; vMostra(); };
+visore.addEventListener('click', e => { if (e.target === visore) chiudiVisore(); });
+document.addEventListener('keydown', e => {
+  if (visore.hidden) return;
+  if (e.key === 'Escape') chiudiVisore();
+  if (e.key === 'ArrowLeft') document.getElementById('v-p').click();
+  if (e.key === 'ArrowRight') document.getElementById('v-s').click();
+});
+let sx = null;
+visore.addEventListener('touchstart', e => { sx = e.touches[0].clientX; }, { passive: true });
+visore.addEventListener('touchend', e => { if (sx === null) return; const dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 50) document.getElementById(dx < 0 ? 'v-s' : 'v-p').click(); sx = null; });
+
+function flussoSlide(deck, tot){
+  let h = '<div class="slide-flusso">';
+  for (let i = 1; i <= tot; i++) h += `<figure class="slide" id="slide-${i}"><button type="button" data-v="${i}" aria-label="Apri la slide ${i} a schermo intero"><img src="${src(deck, i)}" alt="Slide ${i}" loading="lazy" width="1440" height="810"><span class="tag">${i} / ${tot}</span></button></figure>`;
+  return h + '</div>';
+}
+function collegaSlide(deck, tot){
+  app.querySelectorAll('[data-v]').forEach(b => b.onclick = () => apriVisore(deck, tot, +b.dataset.v));
+  app.querySelectorAll('[data-vai]').forEach(b => b.onclick = () => vaiASlide(+b.dataset.vai));
+  app.querySelectorAll('[data-guarda]').forEach(b => b.onclick = () => apriVisore(deck, tot, +b.dataset.guarda));
+}
+function vaiASlide(n){
+  const el = document.getElementById('slide-' + n);
+  if (!el) return;
+  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  el.classList.add('lampeggia'); setTimeout(() => el.classList.remove('lampeggia'), 1600);
+}
+
+/* ---------- stampa (finestra di stampa del browser) ---------- */
+const areaStampa = document.getElementById('area-stampa');
+const MARCHIO = '<div class="p-marchio"><b>Una Mano <i>Spensierata</i></b><span>Linguistica Italiana · Materiale aggiuntivo</span></div>';
+function stampa(html){
+  areaStampa.innerHTML = MARCHIO + html;
+  document.body.classList.add('in-stampa');
+  const imgs = [...areaStampa.querySelectorAll('img')];
+  Promise.all(imgs.map(i => i.complete ? 1 : new Promise(r => { i.onload = i.onerror = r; }))).then(() => setTimeout(() => window.print(), 60));
+}
+addEventListener('afterprint', () => { document.body.classList.remove('in-stampa'); areaStampa.innerHTML = ''; });
+const pSlide = (deck, a, b) => { let h = ''; for (let i = a; i <= b; i++) h += `<div class="p-slide"><img src="${src(deck, i)}" alt=""><span>Slide ${i}</span></div>`; return h; };
+const pTesto = v => v && v.trim() ? `<div class="p-box">${esc(v)}</div>` : '';
+const pRighe = n => `<div class="p-righe" style="--h:${Math.max(3, n) * 8.7}mm"></div>`;
+
+/* ---------- campi di scrittura ---------- */
+function contatore(t, ob){
+  const n = parole(t);
+  if (ob > 0) return { t: n + ' / ' + ob + ' parole', c: n === 0 ? '' : n === ob ? 'ok' : n > ob ? 'ko' : '' };
+  if (ob < 0) return { t: n + ' / max ' + (-ob) + ' parole', c: n === 0 ? '' : n <= -ob ? 'ok' : 'ko' };
+  return { t: n + ' parole', c: '' };
+}
+function contatoreMinMax(t, min, max){
+  const n = parole(t);
+  if (!min) return { t: n + ' parole', c: '' };
+  return { t: n + ' parole · ' + min + '–' + max, c: n === 0 ? '' : (n >= min && n <= max ? 'ok' : 'ko') };
+}
+function collegaCampi(radice, salvato){
+  radice.querySelectorAll('textarea[data-k], input[type=text][data-k]').forEach(el => {
+    el.value = mem.get(el.dataset.k, '');
+    const out = radice.querySelector('[data-conta="' + el.dataset.k + '"]');
+    const agg = () => {
+      if (!out) return;
+      const r = el.dataset.min ? contatoreMinMax(el.value, +el.dataset.min, +el.dataset.max) : contatore(el.value, +el.dataset.ob || 0);
+      out.textContent = r.t; out.className = 'conta ' + r.c;
+    };
+    agg();
+    el.addEventListener('input', () => { mem.set(el.dataset.k, el.value); agg(); salvato && salvato(); });
+  });
+  radice.querySelectorAll('input[type=checkbox][data-k]').forEach(cb => {
+    cb.checked = !!mem.get(cb.dataset.k, false);
+    cb.addEventListener('change', () => { mem.set(cb.dataset.k, cb.checked); salvato && salvato(); });
+  });
+}
+
+/* ================= HOME ================= */
+function home(){
+  const v = mem.get('visite', {});
+  const riga = (n, href, tit, desc, chiave) => `<a class="riga ${v[chiave] ? 'vista' : ''}" href="${href}">
+      <span class="num" aria-hidden="true">${n}</span>
+      <span class="corpo"><span class="tit">${tit}</span><span class="desc">${desc}</span>
+      <span class="stato ${v[chiave] ? '' : 'vuoto'}">${v[chiave] ? fraseVisita(v[chiave]) : 'Non ancora aperta'}</span></span>
+      <span class="freccia">${FRECCIA}</span></a>`;
+  app.innerHTML = `
+    <a class="indietro" href="${HOME_UMS}">${INDIETRO} Una Mano Spensierata</a>
+    <header class="hero">
+      <div class="kicker righe centro">Linguistica Italiana · a.a. 2026/27</div>
+      <h1>Materiali e laboratorio<span class="seconda">di scrittura</span></h1>
+      <p class="sottotitolo">Scegli un materiale. Nei tre percorsi di scrittura trovi prima la lezione e poi l'attività in aula; gli esercizi a casa hanno una sezione dedicata.</p>
+      <div class="meta" style="justify-content:center"><span class="chip">Prof.ssa Beatrice Perrone</span><span class="chip">LM-85bis UniMC</span></div>
+    </header>
+
+    <section class="sezione">
+      <div class="sezione-testa"><div><div class="kicker">Supporto al manuale</div><h2 style="margin-top:6px">La cornice teorica</h2><p>La base comune del laboratorio.</p></div></div>
+      <div class="righe-lista">${riga('§', '#canale-scritto', 'Il canale scritto', 'Che cos’è un testo, come si classifica, come si scrive e si riscrive · 40 slide', 'canale-scritto')}</div>
+    </section>
+
+    <section class="sezione">
+      <div class="sezione-testa"><div><div class="kicker">Materiali aggiuntivi per l'esame</div><h2 style="margin-top:6px">I percorsi</h2><p>Presentazione, guida alla lettura e attività sono collegate nello stesso spazio.</p></div></div>
+      <div class="righe-lista">
+        ${Object.entries(PERCORSI).map(([id, p], i) => riga(i + 1, '#' + id, esc(p.titolo), esc(p.sottotitolo) + ' · ' + p.slide + ' slide', id)).join('')}
+        ${riga(4, '#giscel', 'Le tesi GISCEL', 'Il testo originale, una mappa di lettura e una lezione con casi per la scuola primaria.', 'giscel')}
+      </div>
+    </section>
+
+    <section class="sezione">
+      <div class="sezione-testa"><div><div class="kicker">Esercitarsi e consegnare</div><h2 style="margin-top:6px">Il laboratorio</h2></div></div>
+      <div class="righe-lista">
+        ${riga('✎', '#casa', 'Esercizi a casa', 'Tre esercizi per ogni scrittura, con guida alla revisione ed esempio commentato.', 'casa')}
+        ${riga('↗', '#consegna', 'Consegna su UniMC', 'Come preparare il PDF e caricarlo nel modulo dell’università.', 'consegna')}
+      </div>
+    </section>
+
+    <div class="nota-box"><strong>Conserva il lavoro.</strong> Le risposte restano in questo browser e puoi stamparle o salvarle in PDF dalle pagine delle attività. Le consegne sono facoltative; gli elaborati inviati saranno utilizzati per analisi statistiche su cui basare feedback didattici.</div>`;
+}
+
+/* ================= IL CANALE SCRITTO ================= */
+function canaleScritto(){
+  segnaVisita('canale-scritto');
+  const deck = 'canale-scritto', tot = 40;
+  app.innerHTML = `
+    <a class="indietro" href="#">${INDIETRO} Materiale aggiuntivo</a>
+    <div class="kicker" style="margin-top:26px">Supporto al manuale</div>
+    <h1>Il canale <i>scritto</i></h1>
+    <p class="sottotitolo">Che cos’è un testo, come si classifica, come si scrive e si riscrive. Presentazione tratta dal manuale: la base comune per il lavoro sull’e-mail, sul riassunto e sul testo argomentativo.</p>
+    <div class="meta"><span class="chip">40 slide</span><span class="chip">Cornice teorica</span></div>
+    <div class="barra"><span class="kicker" style="letter-spacing:.2em">Una mappa per orientarsi</span>
+      <button type="button" class="btn btn-chiaro btn-piccolo" id="stampa">${STAMPA_ICO} Stampa</button></div>
+    <p class="avviso" style="margin-top:20px">Sintesi di accompagnamento alla presentazione originale. Tocca «Vai alla slide» per saltare al punto giusto.</p>
+    <div class="mappa">${TEORIA.map(([n, t, d]) => `<article><h3>${esc(t)}</h3><p>${esc(d)}</p><button type="button" data-vai="${n}">Vai alla slide ${n} →</button></article>`).join('')}</div>
+    <div class="slide-testa"><div><div class="kicker">La presentazione della docente</div><h2 style="margin-top:6px">Le slide</h2></div><span class="chip">Tocca una slide per ingrandirla</span></div>
+    ${flussoSlide(deck, tot)}
+    <section class="scuro"><div class="kicker">Dalla teoria al laboratorio</div><h2>Scegli il percorso</h2>
+      <p style="margin:12px 0 0">Ritrova questi criteri quando scegli il registro, selezioni le informazioni e organizzi i capoversi.</p>
+      <div class="azioni">${Object.entries(PERCORSI).map(([id, p]) => `<a class="btn btn-oro btn-piccolo" href="#${id}">${esc(p.titolo)} →</a>`).join('')}</div></section>`;
+  collegaSlide(deck, tot);
+  document.getElementById('stampa').onclick = () => stampa(`<div class="p-kick">Supporto al manuale</div><h1>Il canale scritto</h1><p class="p-sub">Che cos’è un testo, come si classifica, come si scrive e si riscrive.</p>
+    <h2>Una mappa per orientarsi</h2>${TEORIA.map(([n, t, d]) => `<div class="p-blocco"><h3>${esc(t)} · slide ${n}</h3><p>${esc(d)}</p></div>`).join('')}
+    <h2 class="p-salto">Le slide</h2>${pSlide(deck, 1, tot)}`);
+}
+
+/* ================= PERCORSO (lezione + in aula) ================= */
+function percorso(id, scheda){
+  const p = PERCORSI[id];
+  segnaVisita(id);
+  scheda = scheda === 'aula' ? 'aula' : 'lezione';
+  app.innerHTML = `
+    <a class="indietro" href="#">${INDIETRO} Materiale aggiuntivo</a>
+    <div class="kicker" style="margin-top:26px">Materiale aggiuntivo per l'esame</div>
+    <h1>${esc(p.titolo)}</h1>
+    <p class="sottotitolo">${esc(p.sottotitolo)}</p>
+    <div class="meta"><span class="chip">${p.slide} slide</span><span class="chip">${esc(p.durata)}</span></div>
+    <div class="barra">
+      <div class="schede" role="tablist" aria-label="Sezioni del percorso">
+        <button type="button" role="tab" aria-selected="${scheda === 'lezione'}" data-s="lezione">La lezione</button>
+        <button type="button" role="tab" aria-selected="${scheda === 'aula'}" data-s="aula">In aula</button>
+      </div>
+      <button type="button" class="btn btn-chiaro btn-piccolo" id="stampa">${STAMPA_ICO} Stampa</button>
+    </div>
+    <div id="corpo"></div>`;
+  app.querySelectorAll('[data-s]').forEach(b => b.onclick = () => { location.hash = id + (b.dataset.s === 'aula' ? '/aula' : ''); });
+  if (scheda === 'lezione') lezione(id, p); else aula(id, p);
+}
+
+function lezione(id, p){
+  const corpo = document.getElementById('corpo');
+  corpo.innerHTML = `
+    <section class="guida">
+      <div class="kicker">Guida alla lezione</div>
+      <p style="margin:8px 0 0;color:var(--sub)">Leggi un punto e salta alle slide che lo spiegano.</p>
+      ${p.lezione.map(([t, d, r], i) => `<div class="blocco"><span class="n">${i + 1}</span><div><h3>${esc(t)}</h3><p>${esc(d)}</p>
+        <div class="vai-slide">${intervalli(r).map(iv => `<button type="button" data-vai="${iv[0]}">${etichettaIntervallo(iv)} →</button>`).join('')}</div></div></div>`).join('')}
+    </section>
+    <div class="slide-testa"><div><div class="kicker">La lezione della docente</div><h2 style="margin-top:6px">Le slide</h2></div><span class="chip">Tocca una slide per ingrandirla</span></div>
+    ${flussoSlide(p.deck, p.slide)}
+    <section class="scuro"><div class="kicker">Criteri</div><h2>Per rivedere il lavoro</h2><ul>${p.criteri.map(c => `<li><span>${esc(c)}</span></li>`).join('')}</ul></section>
+    <div class="prosegui"><div><div class="kicker">In aula</div><h3 style="margin-top:6px">${esc(p.aula.titolo)}</h3></div><a class="btn btn-navy" href="#${id}/aula">Vai all'attività →</a></div>
+    <p style="margin-top:22px"><a href="#canale-scritto">Riprendi la cornice comune: Il canale scritto →</a></p>`;
+  collegaSlide(p.deck, p.slide);
+  document.getElementById('stampa').onclick = () => stampa(`<div class="p-kick">Materiale aggiuntivo per l'esame</div><h1>${esc(p.titolo)}</h1><p class="p-sub">${esc(p.sottotitolo)}</p>
+    <h2>Guida alla lezione</h2>${p.lezione.map(([t, d], i) => `<div class="p-blocco"><h3>${i + 1}. ${esc(t)}</h3><p>${esc(d)}</p></div>`).join('')}
+    <h2>Criteri</h2><ul>${p.criteri.map(c => `<li>${esc(c)}</li>`).join('')}</ul>
+    <h2 class="p-salto">Le slide</h2>${pSlide(p.deck, 1, p.slide)}`);
+}
+
+function aula(id, p){
+  const a = p.aula, pref = 'aula-' + id + '-';
+  const corpo = document.getElementById('corpo');
+  corpo.innerHTML = `
+    <div class="scheda">
+      <div class="kicker">In aula</div>
+      <h3 style="margin-top:6px;font-size:1.5rem">${esc(a.titolo)}</h3>
+      <div class="fonte"><span>${esc(a.fonte)}</span><button type="button" data-guarda="${a.slideFonte}">Consulta la consegna originale →</button></div>
+      <p class="avviso">Compila soltanto ciò che serve all'attività assegnata. Puoi salvare il PDF e accedere alla consegna anche con campi vuoti; le caselle di revisione sono promemoria facoltativi.</p>
+      ${a.blocchi.map(b => `
+        <h3 style="margin-top:26px">${esc(b.titolo)}</h3>
+        ${b.testo ? `<p style="margin:8px 0 0">${esc(b.testo)}</p>` : ''}
+        <div class="etichetta" style="margin-top:18px">La consegna</div>
+        <ol class="passi" style="margin-top:6px">${b.passi.map(x => `<li>${esc(x)}</li>`).join('')}</ol>
+        ${b.articolo ? `<div class="etichetta" style="margin-top:22px">L'articolo</div><div class="articolo">${esc(ATTIVITA.riassunto.articolo)}<small>Massimo Lugli, «la Repubblica», 26 aprile 2012. Il titolo originale si scopre alla fine (slide 25).</small></div>` : ''}
+        <div class="nomi" style="margin-top:8px">
+          <div class="campo"><label for="${pref}nome1">${a.coppia ? 'Nome e cognome · componente 1' : 'Nome e cognome'}</label><input type="text" id="${pref}nome1" data-k="${pref}nome1" autocomplete="name"></div>
+          ${a.coppia ? `<div class="campo"><label for="${pref}nome2">Nome e cognome · componente 2</label><input type="text" id="${pref}nome2" data-k="${pref}nome2"></div>` : ''}
+        </div>
+        ${b.campi.map(([k, et, r, ob]) => `<div class="campo"><label for="${pref + k}">${esc(et)}<span class="conta" data-conta="${pref + k}"></span></label><textarea id="${pref + k}" data-k="${pref + k}" rows="${r}" ${ob ? `data-ob="${ob}"` : ''}></textarea></div>`).join('')}
+        <div class="controlli"><div class="etichetta">${esc(b.controlliTitolo)}</div>
+          ${(b.controlli || p.criteri).map((c, i) => `<label class="spunta"><input type="checkbox" id="${pref}c${i}" data-k="${pref}c${i}"><span>${esc(c)}</span></label>`).join('')}</div>`).join('')}
+      <div class="azioni">
+        <button type="button" class="btn btn-navy" id="pdf">${STAMPA_ICO} Salva in PDF</button>
+        <a class="btn btn-oro" href="#consegna">Vai alla consegna →</a>
+        <span class="salvataggio" id="salv">Salvataggio automatico in questo browser</span>
+      </div>
+    </div>`;
+  collegaSlide(p.deck, p.slide);
+  const salv = document.getElementById('salv');
+  let t = null;
+  collegaCampi(corpo, () => { salv.innerHTML = '<b>Salvato</b> in questo browser'; clearTimeout(t); t = setTimeout(() => salv.textContent = 'Salvataggio automatico in questo browser', 1800); });
+  const fai = () => {
+    const b = a.blocchi[0];
+    const nomi = [mem.get(pref + 'nome1', ''), mem.get(pref + 'nome2', '')].filter(x => x.trim());
+    stampa(`<div class="p-kick">${esc(p.titolo)} · In aula</div><h1>${esc(a.titolo)}</h1>
+      ${nomi.length ? `<p><strong>${a.coppia ? 'Componenti della coppia' : 'Nome e cognome'}:</strong> ${esc(nomi.join(' · '))}</p>` : ''}
+      ${b.testo ? `<p>${esc(b.testo)}</p>` : ''}
+      <ol>${b.passi.map(x => `<li>${esc(x)}</li>`).join('')}</ol>
+      ${b.campi.map(([k, et, r, ob]) => { const v = mem.get(pref + k, ''); return `<div class="p-blocco"><h3>${esc(et)}${v.trim() ? ' · ' + parole(v) + ' parole' : ''}</h3>${v.trim() ? pTesto(v) : pRighe(r)}</div>`; }).join('')}
+      <h3>${esc(b.controlliTitolo)}</h3><ul style="list-style:none;padding-left:0">${(b.controlli || p.criteri).map((c, i) => `<li>${mem.get(pref + 'c' + i, false) ? '☑' : '☐'} ${esc(c)}</li>`).join('')}</ul>`);
+  };
+  document.getElementById('pdf').onclick = fai;
+  document.getElementById('stampa').onclick = fai;
+}
+
+/* ================= ESERCIZI A CASA ================= */
+function casa(){
+  segnaVisita('casa');
+  const tab = mem.get('tabCasa', 'email');
+  const nomi = { email: 'E-mail', riassunto: 'Riassunto', argomentativo: 'Testo argomentativo' };
+  const lista = PALESTRA[tab];
+  app.innerHTML = `
+    <a class="indietro" href="#">${INDIETRO} Materiale aggiuntivo</a>
+    <div class="kicker" style="margin-top:26px">Esercitarsi</div>
+    <h1>Esercizi <i>a casa</i></h1>
+    <p class="sottotitolo">Per ogni esercizio: prepara, scrivi, rivedi. La guida e l'esempio commentato sono in fondo, da aprire dopo.</p>
+    <div class="barra"><div class="schede" role="tablist" aria-label="Scrittura">${Object.keys(nomi).map(k => `<button type="button" role="tab" data-t="${k}" aria-selected="${k === tab}">${nomi[k]}</button>`).join('')}</div></div>
+    <div id="es">${lista.map((e, i) => {
+      const k = 'casa-' + tab + '-' + i;
+      return `<details class="es"${i === 0 ? ' open' : ''}>
+      <summary><span class="n">${i + 1}</span><span class="t"><h3>${esc(e.titolo)}</h3><span>${esc(e.tempo)} · ${esc(e.obiettivo)}</span></span><span class="freccia">${FRECCIA}</span></summary>
+      <div class="dentro">
+        <div><div class="etichetta">Il testo</div><div class="testo-es">${esc(e.testo)}</div></div>
+        <div><div class="etichetta">La consegna</div><p style="margin:0">${esc(e.consegna)}</p></div>
+        <div><div class="etichetta">Prima di scrivere</div><ul class="punti">${e.prima.map(x => `<li>${esc(x)}</li>`).join('')}</ul></div>
+        <div class="campo" style="margin-top:0"><label for="${k}">La tua risposta<span class="conta" data-conta="${k}"></span></label><textarea id="${k}" data-k="${k}" rows="9" ${e.min ? `data-min="${e.min}" data-max="${e.max}"` : ''}></textarea></div>
+        <div><div class="etichetta">Revisione</div>${e.revisione.map((r, j) => `<label class="spunta"><input type="checkbox" id="${k}-r${j}" data-k="${k}-r${j}"><span>${esc(r)}</span></label>`).join('')}</div>
+        <div><div class="etichetta">Rilancio</div><p style="margin:0">${esc(e.rilancio)}</p></div>
+        <details class="apri"><summary>Guida alla revisione</summary><div><p style="margin:0">${esc(e.guida)}</p></div></details>
+        <details class="apri"><summary>Un esempio commentato</summary><div>
+          <p style="margin:0">${esc(e.analisi)}</p>
+          ${e.soluzioni.map(s => `<div><div class="etichetta" style="margin-top:4px">${esc(s.t)}</div><div class="soluz">${esc(s.x)}</div></div>`).join('')}
+          <p style="margin:0">${esc(e.commento)}</p><p style="margin:0;color:var(--sub)">${esc(e.extra)}</p></div></details>
+        <div class="azioni" style="margin-top:0"><button type="button" class="btn btn-chiaro btn-piccolo" data-p="${i}">${STAMPA_ICO} Stampa l'esercizio</button></div>
+      </div></details>`;
+    }).join('')}</div>`;
+  app.querySelectorAll('[data-t]').forEach(b => b.onclick = () => { mem.set('tabCasa', b.dataset.t); casa(); });
+  collegaCampi(document.getElementById('es'));
+  app.querySelectorAll('[data-p]').forEach(b => b.onclick = () => {
+    const i = +b.dataset.p, e = lista[i], k = 'casa-' + tab + '-' + i, v = mem.get(k, '');
+    stampa(`<div class="p-kick">Esercizi a casa · ${nomi[tab]} · ${esc(e.tempo)}</div><h1>${esc(e.titolo)}</h1><p class="p-sub">${esc(e.obiettivo)}</p>
+      <h3>Il testo</h3>${pTesto(e.testo)}<h3>La consegna</h3><p>${esc(e.consegna)}</p>
+      <h3>Prima di scrivere</h3><ul>${e.prima.map(x => `<li>${esc(x)}</li>`).join('')}</ul>
+      <h3>La tua risposta${v.trim() ? ' · ' + parole(v) + ' parole' : ''}</h3>${v.trim() ? pTesto(v) : pRighe(14)}
+      <h3>Revisione</h3><ul style="list-style:none;padding-left:0">${e.revisione.map((r, j) => `<li>${mem.get(k + '-r' + j, false) ? '☑' : '☐'} ${esc(r)}</li>`).join('')}</ul>
+      <h3>Rilancio</h3><p>${esc(e.rilancio)}</p>`);
+  });
+}
+
+/* ================= GISCEL ================= */
+function giscel(){
+  segnaVisita('giscel');
+  const NUM = ['uno','due','tre','quattro','cinque','sei','sette','otto','nove','dieci'];
+  const corpo = `
+    <div class="richiamo"><strong>Documento originale e accompagnamento</strong><p>Il testo integrale si legge sul sito ufficiale GISCEL. La mappa, i casi e le domande qui sotto sono materiali didattici di accompagnamento: non fanno parte del documento.</p>
+      <div class="azioni" style="margin-top:14px"><a class="btn btn-navy btn-piccolo" href="${GISCEL_URL}" target="_blank" rel="noopener">Leggi il testo integrale sul sito GISCEL ↗</a></div></div>
+    <div class="testo-lungo">
+      <h2 style="margin-top:40px">1. Collocare il documento</h2>
+      <p>Il GISCEL si costituisce nel 1973 nell’ambito della Società di Linguistica Italiana. Le Dieci tesi sono un documento collettivo approvato a Roma il 26 aprile 1975.</p>
+      <p>Per leggere un documento storico, distingui tre piani: che cosa afferma, quale problema affronta nel proprio tempo, quale domanda suggerisce al lettore di oggi. I riferimenti all’«oggi», i dati e le formulazioni del testo vanno collocati nel 1975, senza assumerli automaticamente come descrizioni attuali o indicazioni diagnostiche.</p>
+      <h2 style="margin-top:40px">2. Orientarsi nelle dieci tesi</h2>
+      <p>I titoli brevi e le frasi seguenti sono parafrasi di orientamento. Leggi ciascuna tesi per intero nella fonte prima di discuterla.</p>
+    </div>
+    <div class="tesi">${GISCEL_TESI.map(([n, t, s], i) => `<article><span class="rom">${n}</span><h3>${esc(t)}</h3><p>${esc(s)}</p><a href="${GISCEL_URL}#${NUM[i]}" target="_blank" rel="noopener">Leggi la tesi ${n} ↗</a></article>`).join('')}</div>
+    <div class="richiamo"><strong>Attenzione alla struttura</strong><p>La tesi VIII contiene a sua volta dieci principi. Distingui il numero della tesi da quello del principio quando prendi appunti: per esempio, VIII.5.</p></div>
+    <div class="testo-lungo">
+      <h2 style="margin-top:40px">3. Leggere con una domanda</h2>
+      <p>Lavora in coppia su una tesi. Uno studente individua un’affermazione; l’altro cerca nel testo il passaggio che la sostiene. Poi scambiate i ruoli.</p>
+      <ol><li>Quale problema viene messo a fuoco?</li><li>Quali ragioni vengono date? Dove le riconosci nel testo?</li><li>Quale osservazione in classe ti servirebbe per discutere quel problema?</li><li>Quale domanda resta aperta dopo la lettura?</li></ol>
+      <p>Nel confronto separa ciò che il documento dice dalla tua interpretazione e dalla proposta che vuoi sperimentare.</p>
+      <h2 style="margin-top:40px">4. Quattro casi per la scuola primaria</h2>
+      <p style="color:var(--sub)">Situazioni verosimili costruite per questa lezione. Gli svolgimenti sono proposte possibili, da confrontare e motivare; non sono citazioni GISCEL né protocolli di valutazione.</p>
+    </div>
+    ${GISCEL_CASI.map((c, i) => `<section class="caso"><div class="kicker">${esc(c.liv)}</div><h3 style="margin-top:6px">${i + 1}. ${esc(c.t)}</h3><blockquote>${esc(c.testo)}</blockquote>
+      <p style="margin:0"><strong>Il compito.</strong> ${esc(c.compito)}</p>
+      <p style="margin:8px 0 14px;font-size:.88rem;color:var(--sub)">Rileggi le tesi ${esc(c.ref)} nella <a href="${GISCEL_URL}" target="_blank" rel="noopener">fonte originale ↗</a>.</p>
+      <details class="apri"><summary>Confronta con una possibile proposta</summary><div><p style="margin:0">${esc(c.risposta)}</p><p style="margin:0"><strong>Che cosa osservare.</strong> ${esc(c.osserva)}</p></div></details></section>`).join('')}
+    <div class="testo-lungo">
+      <h2 style="margin-top:40px">5. Dal caso a una piccola progettazione</h2>
+      <p>Scegli uno dei casi e prepara una proposta di 20 minuti. Non occorre risolvere ogni difficoltà: rendi chiari l’obiettivo e le evidenze da osservare.</p>
+      <ol><li><strong>Punto di partenza:</strong> quali elementi conosci e quali devi ancora raccogliere?</li><li><strong>Obiettivo:</strong> quale azione linguistica vuoi che gli alunni imparino a compiere?</li><li><strong>Attività:</strong> chi parla, ascolta, legge e scrive? Per quale destinatario?</li><li><strong>Supporti:</strong> quali esempi, immagini, riletture o lavori in coppia rendono accessibile il compito?</li><li><strong>Osservazione:</strong> quale produzione raccogli? Che cosa ti farebbe modificare la proposta?</li></ol>
+    </div>
+    <details class="apri" style="margin-top:16px"><summary>Un esempio di obiettivo osservabile</summary><div><p style="margin:0">Per il caso della relazione di scienze: «Al termine del confronto con una coppia di lettori, il gruppo sostituisce tre riferimenti poco chiari con informazioni ricavate dall’esperimento e spiega le proprie scelte». Si confrontano prima versione, domande dei lettori e revisione. Non basta contare le correzioni: occorre capire se il testo consente di ricostruire il procedimento.</p></div></details>
+    <div class="testo-lungo">
+      <h2 style="margin-top:40px">6. Discussione conclusiva</h2>
+      <ul><li>Quale tua abitudine di correzione metteresti alla prova, e come?</li><li>Che differenza c’è tra riconoscere ciò che un alunno sa già e progettare ciò che deve ancora imparare?</li><li>Quali evidenze cercheresti prima di dire che un’attività ha funzionato?</li><li>Come collegheresti uno dei casi al lavoro su e-mail, riassunto o argomentazione?</li></ul>
+    </div>
+    <details class="apri" style="margin-top:16px"><summary>Controlla la tua lettura</summary><div><p style="margin:0">Prima di chiudere, prova a distinguere una critica ai risultati da una critica agli obiettivi, a riconoscere la struttura della tesi VIII e a motivare un intervento didattico citando una tesi pertinente. Se non trovi il passaggio che sostiene la tua interpretazione, riapri il documento.</p></div></details>`;
+  app.innerHTML = `
+    <a class="indietro" href="#">${INDIETRO} Materiale aggiuntivo</a>
+    <div class="kicker" style="margin-top:26px">Materiale aggiuntivo per l'esame · GISCEL</div>
+    <h1>Le tesi <i>GISCEL</i></h1>
+    <p class="sottotitolo">Leggere un documento sull’educazione linguistica e usarlo per interrogare le scelte didattiche nella scuola primaria.</p>
+    <div class="meta"><span class="chip">Testo del 1975</span><span class="chip">Lezione guidata</span><span class="chip">Casi e discussione</span></div>
+    <div class="barra"><span class="kicker" style="letter-spacing:.2em">Lezione guidata</span><button type="button" class="btn btn-chiaro btn-piccolo" id="stampa">${STAMPA_ICO} Stampa</button></div>
+    ${corpo}`;
+  document.getElementById('stampa').onclick = () => {
+    const d = document.createElement('div'); d.innerHTML = corpo;
+    d.querySelectorAll('details').forEach(x => x.setAttribute('open', ''));
+    d.querySelectorAll('.azioni').forEach(x => x.remove());
+    stampa(`<div class="p-kick">Materiale aggiuntivo per l'esame · GISCEL</div><h1>Le tesi GISCEL</h1><p class="p-sub">Fonte: ${GISCEL_URL}</p>` + d.innerHTML);
+  };
+}
+
+/* ================= CONSEGNA ================= */
+function consegna(){
+  segnaVisita('consegna');
+  app.innerHTML = `
+    <a class="indietro" href="#">${INDIETRO} Materiale aggiuntivo</a>
+    <div class="kicker" style="margin-top:26px">Laboratorio di scrittura</div>
+    <h1>Consegna su <i>UniMC</i></h1>
+    <p class="sottotitolo">Un unico modulo per e-mail, riassunto e testo argomentativo. Effettua un invio separato per ciascun esercizio.</p>
+    <ol class="passi-consegna">
+      <li><div>Completa e rileggi il lavoro nella scheda «In aula»: <a href="#email/aula">e-mail</a>, <a href="#riassunto/aula">riassunto</a>, <a href="#argomentativo/aula">testo argomentativo</a>.</div></li>
+      <li><div>Premi «Salva in PDF» e, nella finestra di stampa, scegli «Salva come PDF». Il file contiene nome, consegna e lavoro svolto. Controllalo prima di inviarlo.</div></li>
+      <li><div>Apri il modulo UniMC e accedi con le credenziali istituzionali. Scegli l’esercizio e segui le indicazioni del modulo.
+        <div class="azioni" style="margin-top:12px"><a class="btn btn-navy btn-piccolo" href="${MODULO_UNIMC}" target="_blank" rel="noopener">Apri il modulo di consegna UniMC ↗</a></div></div></li>
+      <li><div>Allega il PDF: un solo file per invio, fino a 10 MB.</div></li>
+      <li><div>Premi Invia e attendi la conferma del modulo.</div></li>
+    </ol>
+    <div class="nota-box">Per il riassunto indica entrambi i componenti della coppia; per il testo argomentativo indica il nome di chi scrive.</div>`;
+}
+
+/* ================= percorsi della pagina ================= */
+function rotta(){
+  const h = decodeURIComponent(location.hash.slice(1));
+  const [a, b] = h.split('/');
+  if (!a) home();
+  else if (a === 'canale-scritto') canaleScritto();
+  else if (PERCORSI[a]) percorso(a, b);
+  else if (a === 'casa') casa();
+  else if (a === 'giscel') giscel();
+  else if (a === 'consegna') consegna();
+  else home();
+  if (!visore.hidden) chiudiVisore();
+  scrollTo(0, 0);
+}
+addEventListener('hashchange', rotta);
+rotta();
+})();
+
+</script>
+</body>
+</html>

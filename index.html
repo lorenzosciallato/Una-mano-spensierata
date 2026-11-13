@@ -442,6 +442,14 @@ body.night-mode .bacheca-card.cal-card{background:#7E6533; border-color:#A88A4F;
 .cv-row-title{font-family:var(--font-display); font-weight:700; font-size:1.12rem; color:var(--ink); line-height:1.2;}
 .cv-row-meta{display:block; font-size:.7rem; font-weight:600; letter-spacing:.02em; color:var(--gold-dk); margin-top:3px;}
 .cv-row-meta.empty{color:var(--mist); font-weight:500;}
+.cv-sezione{display:flex; align-items:baseline; justify-content:space-between; gap:12px; padding:2rem 4px .7rem; border-bottom:1px solid var(--dust);}
+.cv-sezione:first-child{padding-top:.6rem;}
+.cv-sezione-tit{font-size:.66rem; font-weight:700; letter-spacing:.28em; text-transform:uppercase; color:var(--gold-dk);}
+.cv-sezione-nota{font-size:.7rem; color:var(--sub);}
+.cv-row-mat .cv-num{font-size:1.5rem;}
+body.night-mode .cv-sezione{border-color:#2B2E38;}
+body.night-mode .cv-sezione-tit{color:#D9BC85;}
+body.night-mode .cv-sezione-nota{color:#918E86;}
 .cv-dot{width:10px; height:10px; min-width:10px; border-radius:50%; border:1.5px solid var(--mist); background:transparent; transition:.2s;}
 .cv-dot.on{background:var(--gold); border-color:var(--gold); box-shadow:0 0 0 4px rgba(200,169,110,.16);}
 .cv-chevron{color:var(--mist); flex-shrink:0; transition:transform .2s var(--ease), color .2s;}
@@ -1038,6 +1046,29 @@ function fraseVisita(iso){
   return `visitata ${art}${g} ${MESI[d.getMonth()]}`;
 }
 
+// MATERIALE AGGIUNTIVO — materie che, oltre agli appunti dalle lezioni,
+// hanno una seconda sezione con il materiale della docente. Chiave = cartella.
+const MATERIALE_AGGIUNTIVO = {
+  'linguistica-italiana-2627': {
+    url: 'linguistica-italiana-2627/materiale/index.html',
+    voci: [
+      { h: 'canale-scritto', t: 'Il canale scritto', d: 'Supporto al manuale · 40 slide' },
+      { h: 'email', t: "Le e-mail all'università", d: 'Lezione e attività in aula · 29 slide' },
+      { h: 'riassunto', t: 'Il riassunto', d: 'Lezione e attività in aula · 35 slide' },
+      { h: 'argomentativo', t: 'Il testo argomentativo', d: 'Lezione e attività in aula · 35 slide' },
+      { h: 'giscel', t: 'Le tesi GISCEL', d: 'Il documento del 1975 e quattro casi per la primaria' },
+      { h: 'casa', t: 'Esercizi a casa', d: 'Tre esercizi per ogni scrittura' },
+      { h: 'consegna', t: 'Consegna su UniMC', d: 'Come preparare e caricare il PDF' }
+    ]
+  }
+};
+function cvSezione(list, kicker, nota){
+  const h = document.createElement('div');
+  h.className = 'cv-sezione';
+  h.innerHTML = `<span class="cv-sezione-tit">${kicker}</span>${nota ? `<span class="cv-sezione-nota">${nota}</span>` : ''}`;
+  list.appendChild(h);
+}
+
 let currentCourse = null;
 
 function openCourse(course){
@@ -1050,6 +1081,8 @@ function openCourse(course){
   const list = document.getElementById('cv-list');
   list.innerHTML = '';
   let fatte = 0;
+  const materiale = MATERIALE_AGGIUNTIVO[key];
+  if (materiale) cvSezione(list, 'Appunti dalle lezioni', course.lezioni.count + ' lezioni');
 
   for (let i = 1; i <= course.lezioni.count; i++){
     const iso = visits[key + '#' + i];
@@ -1087,6 +1120,38 @@ function openCourse(course){
     });
 
     list.appendChild(row);
+  }
+
+  if (materiale) {
+    cvSezione(list, 'Materiale aggiuntivo', 'Slide e laboratorio della docente');
+    materiale.voci.forEach((m, j) => {
+      const iso = visits[key + '#mat-' + m.h];
+      const row = document.createElement('button');
+      row.type = 'button';
+      row.className = 'cv-row cv-row-mat';
+      row.style.animationDelay = ((course.lezioni.count + j + 1) * 0.04) + 's';
+      row.innerHTML = `
+        <span class="cv-num" aria-hidden="true">${String.fromCharCode(65 + j)}</span>
+        <span class="cv-row-body">
+          <span class="cv-row-title">${m.t}</span>
+          <span class="cv-row-meta ${iso ? '' : 'empty'}">${iso ? fraseVisita(iso) : m.d}</span>
+        </span>
+        <span class="cv-dot ${iso ? 'on' : ''}" aria-hidden="true"></span>
+        <span class="cv-chevron" aria-hidden="true">${chevronSVG}</span>`;
+      row.addEventListener('click', () => {
+        window.open(materiale.url + '#' + m.h, '_blank', 'noopener');
+        const oggi = new Date();
+        const isoOggi = oggi.getFullYear() + '-' + String(oggi.getMonth()+1).padStart(2,'0') + '-' + String(oggi.getDate()).padStart(2,'0');
+        const v = loadVisits();
+        v[key + '#mat-' + m.h] = isoOggi;
+        saveVisits(v);
+        row.querySelector('.cv-dot').classList.add('on');
+        const meta = row.querySelector('.cv-row-meta');
+        meta.classList.remove('empty');
+        meta.textContent = fraseVisita(isoOggi);
+      });
+      list.appendChild(row);
+    });
   }
 
   aggiornaProgresso(course, key, fatte);
