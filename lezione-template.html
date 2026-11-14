@@ -3589,5 +3589,203 @@ body.night-mode .ums-menu-pop .vista-on{ background:rgba(143,180,232,.16); }
 </script>
 <!-- ================= FINE · BARRA UNIFICATA ================= -->
 
+<!-- ================= UMS · VIDEO PER ARGOMENTO =================
+     Blocco additivo. Se il JSON della lezione ha il campo "video_argomenti"
+     (un indirizzo per ogni macroargomento del riassuntone, null = non pronto):
+       - sotto ogni titolo del riassuntone compare «Video di questo argomento»;
+       - sotto la Video Sintesi compare l'indice «Oppure un argomento alla volta»;
+       - il video si apre in un pop-up sopra la pagina, con ← → tra gli argomenti.
+     Senza quel campo non fa assolutamente nulla (tutte le altre materie). -->
+<style id="ums-va-style">
+.ums-va-btn{display:inline-flex;align-items:center;gap:8px;margin:.15rem 0 1.1rem;padding:8px 16px 8px 10px;
+  border-radius:999px;border:1px solid var(--gold,#C8A96E);background:transparent;color:var(--gold-dk,#9A7A3F);
+  font-family:'DM Sans',system-ui,sans-serif;font-size:.8rem;font-weight:700;letter-spacing:.04em;cursor:pointer;
+  user-select:none;-webkit-user-select:none;transition:background .15s ease,transform .15s ease}
+.ums-va-btn:hover{background:rgba(200,169,110,.14);transform:translateY(-1px)}
+.ums-va-btn .ums-va-play{width:24px;height:24px;border-radius:50%;background:var(--navy,#1A2F4F);display:grid;place-items:center;flex:none}
+.ums-va-btn .ums-va-play svg{width:10px;height:10px;fill:#F7F4EF;margin-left:2px}
+.night-mode .ums-va-btn{color:#D9BC85;border-color:#8a7449}
+.night-mode .ums-va-btn .ums-va-play{background:#2A4A72}
+
+#ums-va-indice{margin-top:18px;padding-top:16px;border-top:1px solid var(--dust,#E8E4DC)}
+.night-mode #ums-va-indice{border-color:#2B2E38}
+#ums-va-indice .ums-va-kick{display:block;font-size:.64rem;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--gold-dk,#9A7A3F);margin-bottom:8px}
+.night-mode #ums-va-indice .ums-va-kick{color:#D9BC85}
+.ums-va-riga{display:flex;align-items:center;gap:12px;width:100%;padding:10px 6px;border:0;border-bottom:1px solid var(--dust,#E8E4DC);
+  background:none;text-align:left;color:inherit;font:inherit;cursor:pointer;border-radius:0}
+.ums-va-riga:last-child{border-bottom:0}
+.ums-va-riga:hover{background:rgba(200,169,110,.1)}
+.night-mode .ums-va-riga{border-color:#2B2E38}
+.ums-va-riga .ums-va-n{font-family:'Playfair Display',Georgia,serif;font-weight:900;font-size:1.25rem;color:var(--gold,#C8A96E);min-width:22px;text-align:center}
+.ums-va-riga .ums-va-t{flex:1;min-width:0;font-size:.92rem;line-height:1.35}
+.ums-va-riga .ums-va-s{font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-dk,#9A7A3F);white-space:nowrap}
+.ums-va-riga[disabled]{cursor:default;opacity:.5}
+.ums-va-riga[disabled]:hover{background:none}
+
+#ums-va-overlay{display:none;position:fixed;inset:0;z-index:99999999;background:rgba(10,12,18,.88);
+  -webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);align-items:center;justify-content:center;
+  padding:max(16px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(16px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left))}
+#ums-va-overlay.show{display:flex}
+.ums-va-card{width:min(1100px,100%);max-height:100%;display:flex;flex-direction:column;gap:14px}
+.ums-va-testa{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;color:#F7F4EF}
+.ums-va-testa small{display:block;font-family:'DM Sans',system-ui,sans-serif;font-size:.64rem;font-weight:700;letter-spacing:.26em;text-transform:uppercase;color:#C8A96E;margin-bottom:6px}
+.ums-va-testa strong{display:block;font-family:'Playfair Display',Georgia,serif;font-size:clamp(1.05rem,2.6vw,1.45rem);line-height:1.25;font-weight:700}
+.ums-va-x{width:44px;height:44px;flex:none;border-radius:50%;border:0;background:rgba(255,255,255,.14);color:#fff;font-size:26px;line-height:1;cursor:pointer}
+.ums-va-schermo{border-radius:14px;overflow:hidden;background:#000;aspect-ratio:16/9;max-height:calc(100vh - 190px);width:100%}
+.ums-va-schermo video{display:block;width:100%;height:100%;background:#000}
+.ums-va-piede{display:flex;justify-content:space-between;align-items:center;gap:10px;color:#C5C1B8;font-family:'DM Sans',system-ui,sans-serif;font-size:.85rem}
+.ums-va-piede button{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:999px;border:0;background:rgba(255,255,255,.14);color:#fff;font:inherit;font-weight:700;cursor:pointer}
+.ums-va-piede button[disabled]{opacity:.35;cursor:default}
+@media (max-width:600px){.ums-va-piede span{display:none}}
+@media print{.ums-va-btn,#ums-va-indice,#ums-va-overlay{display:none!important}}
+</style>
+<script>
+(function(){
+  var lista = [], titoli = [], numLezione = '', corrente = 0;
+  var PLAY = '<svg viewBox="0 0 10 12" aria-hidden="true"><path d="M0 0l10 6-10 6z"/></svg>';
+
+  function param(n){ try { return new URLSearchParams(location.search).get(n); } catch(e){ return null; } }
+  function pulisci(s){ var d = document.createElement('div'); d.innerHTML = s || ''; return (d.textContent || '').replace(/^\s*\d+[\.\)]\s*/, '').trim(); }
+  function pronti(){ var n = 0; lista.forEach(function(u){ if (u) n++; }); return n; }
+
+  /* ---------- pop-up ---------- */
+  var ov = document.createElement('div');
+  ov.id = 'ums-va-overlay';
+  ov.setAttribute('role', 'dialog');
+  ov.setAttribute('aria-modal', 'true');
+  ov.setAttribute('aria-label', 'Video dell’argomento');
+  ov.className = 'notranslate';
+  ov.innerHTML =
+    '<div class="ums-va-card">' +
+      '<div class="ums-va-testa"><div><small id="ums-va-kick"></small><strong id="ums-va-tit" class="translate"></strong></div>' +
+      '<button type="button" class="ums-va-x" id="ums-va-x" aria-label="Chiudi il video">×</button></div>' +
+      '<div class="ums-va-schermo"><video id="ums-va-video" controls playsinline preload="metadata"></video></div>' +
+      '<div class="ums-va-piede"><button type="button" id="ums-va-prec">← <span>Argomento precedente</span></button>' +
+      '<button type="button" id="ums-va-succ"><span>Argomento successivo</span> →</button></div>' +
+    '</div>';
+
+  function vicino(da, passo){
+    for (var i = da + passo; i >= 0 && i < lista.length; i += passo) if (lista[i]) return i;
+    return -1;
+  }
+  function mostra(i){
+    if (!lista[i]) return;
+    corrente = i;
+    var v = document.getElementById('ums-va-video');
+    document.getElementById('ums-va-kick').textContent = 'Lezione ' + numLezione + ' · Argomento ' + (i + 1) + ' di ' + lista.length;
+    document.getElementById('ums-va-tit').textContent = titoli[i] || '';
+    v.src = lista[i];
+    document.getElementById('ums-va-prec').disabled = vicino(i, -1) < 0;
+    document.getElementById('ums-va-succ').disabled = vicino(i, 1) < 0;
+  }
+  function apri(i){
+    document.querySelectorAll('audio, video').forEach(function(m){ if (m.id !== 'ums-va-video') try { m.pause(); } catch(e){} });
+    if (!ov.parentNode) document.body.appendChild(ov);
+    mostra(i);
+    ov.classList.add('show');
+    document.documentElement.style.overflow = 'hidden';
+    document.getElementById('ums-va-x').focus();
+    var v = document.getElementById('ums-va-video');
+    try { var p = v.play(); if (p && p.catch) p.catch(function(){}); } catch(e){}
+  }
+  function chiudi(){
+    var v = document.getElementById('ums-va-video');
+    try { v.pause(); } catch(e){}
+    ov.classList.remove('show');
+    document.documentElement.style.overflow = '';
+  }
+  ov.addEventListener('click', function(e){
+    if (e.target === ov) chiudi();
+    if (e.target.closest('#ums-va-x')) chiudi();
+    if (e.target.closest('#ums-va-prec')) { var p = vicino(corrente, -1); if (p >= 0) mostra(p); }
+    if (e.target.closest('#ums-va-succ')) { var s = vicino(corrente, 1); if (s >= 0) mostra(s); }
+  });
+  /* il pop-up ha la precedenza su tutte le altre scorciatoie da tastiera */
+  document.addEventListener('keydown', function(e){
+    if (!ov.classList.contains('show')) return;
+    if (e.key === 'Escape') { chiudi(); }
+    else if (e.key === 'ArrowLeft') { var p = vicino(corrente, -1); if (p >= 0) mostra(p); }
+    else if (e.key === 'ArrowRight') { var s = vicino(corrente, 1); if (s >= 0) mostra(s); }
+    else return;
+    e.preventDefault(); e.stopImmediatePropagation();
+  }, true);
+
+  /* un solo ascoltatore per tutti i pulsanti, anche se il riassuntone viene ridisegnato */
+  document.addEventListener('click', function(e){
+    var b = e.target.closest('[data-ums-va]');
+    if (!b || b.disabled) return;
+    e.preventDefault();
+    apri(+b.getAttribute('data-ums-va'));
+  });
+
+  /* ---------- pulsanti sotto i titoli del riassuntone ---------- */
+  var cont = null, osservatore = null;
+  function pulsanti(){
+    if (!cont) return;
+    if (osservatore) osservatore.disconnect();
+    var h3 = cont.querySelectorAll(':scope > h3');
+    h3.forEach(function(h, i){
+      var dopo = h.nextElementSibling;
+      var cè = dopo && dopo.classList && dopo.classList.contains('ums-va-btn');
+      if (!lista[i]) { if (cè) dopo.remove(); return; }
+      if (cè) { dopo.setAttribute('data-ums-va', i); return; }
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'ums-va-btn';
+      b.setAttribute('data-ums-va', i);
+      b.setAttribute('contenteditable', 'false');
+      b.innerHTML = '<span class="ums-va-play">' + PLAY + '</span><span>Video di questo argomento</span>';
+      h.insertAdjacentElement('afterend', b);
+    });
+    if (osservatore) osservatore.observe(cont, { childList: true });
+  }
+
+  /* ---------- indice sotto la Video Sintesi ---------- */
+  function indice(){
+    if (document.getElementById('ums-va-indice')) return;
+    var ancora = document.getElementById('dyn-video-link');
+    if (!ancora) return;
+    var box = document.createElement('div');
+    box.id = 'ums-va-indice';
+    var h = '<span class="ums-va-kick">Oppure un argomento alla volta · ' + pronti() + ' video su ' + lista.length + '</span>';
+    lista.forEach(function(u, i){
+      h += '<button type="button" class="ums-va-riga"' + (u ? ' data-ums-va="' + i + '"' : ' disabled') + '>' +
+        '<span class="ums-va-n">' + (i + 1) + '</span><span class="ums-va-t"></span>' +
+        '<span class="ums-va-s">' + (u ? '▶ Guarda' : 'In arrivo') + '</span></button>';
+    });
+    box.innerHTML = h;
+    box.querySelectorAll('.ums-va-t').forEach(function(t, i){ t.textContent = titoli[i] || ('Argomento ' + (i + 1)); });
+    ancora.insertAdjacentElement('afterend', box);
+  }
+
+  function avvia(){
+    var f = param('file');
+    if (!f) return;
+    var m = f.match(/lezione-(\d+)\.json/);
+    numLezione = m ? m[1] : '';
+    fetch(f, { cache: 'no-store' }).then(function(r){ return r.json(); }).then(function(d){
+      if (!Array.isArray(d.video_argomenti) || !d.video_argomenti.some(Boolean)) return;
+      lista = d.video_argomenti.slice(0, (d.riassuntone || []).length);
+      while (lista.length < (d.riassuntone || []).length) lista.push(null);
+      titoli = (d.riassuntone || []).map(function(x){ return pulisci(x.titolo); });
+      var giri = 0;
+      (function aspetta(){
+        cont = document.getElementById('dyn-riassuntone-container');
+        if (cont && cont.querySelector(':scope > h3')) {
+          osservatore = new MutationObserver(function(){ clearTimeout(aspetta.t); aspetta.t = setTimeout(pulsanti, 120); });
+          pulsanti();
+          indice();
+          return;
+        }
+        if (giri++ < 100) setTimeout(aspetta, 200);
+      })();
+    }).catch(function(){ /* nessun JSON, nessun problema */ });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', avvia);
+  else avvia();
+})();
+</script>
+<!-- ================= FINE · VIDEO PER ARGOMENTO ================= -->
+
 </body>
 </html>
