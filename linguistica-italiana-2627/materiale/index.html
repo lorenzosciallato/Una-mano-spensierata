@@ -203,6 +203,19 @@ ul.punti{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
 .passi-consegna li{counter-increment:c;display:grid;grid-template-columns:46px 1fr;gap:14px;padding:18px 20px;border-radius:16px;background:var(--card);border:1px solid var(--dust)}
 .passi-consegna li::before{content:counter(c);font-family:var(--font-display);font-weight:900;font-size:1.8rem;color:var(--gold);line-height:1}
 
+
+/* videosintesi */
+.videosintesi{margin-top:28px;padding:22px;border-radius:22px;background:var(--card);border:1px solid var(--dust);box-shadow:var(--shadow-card)}
+.vs-testa{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.vs-schermo{margin-top:16px;border-radius:14px;overflow:hidden;background:#0F1117;aspect-ratio:16/9;max-width:100%}
+.vs-schermo video{display:block;width:100%;height:100%;background:#0F1117}
+.vs-attesa{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;padding:20px;color:#C5C1B8;font-size:.95rem}
+.vs-attesa strong{color:#F7F4EF;font-family:var(--font-display);font-size:1.2rem}
+.videosintesi.vuota .vs-schermo{aspect-ratio:auto;min-height:150px;background:var(--ivory-dk)}
+.videosintesi.vuota .vs-attesa{color:var(--sub)}
+.videosintesi.vuota .vs-attesa strong{color:var(--ink)}
+.barra + .videosintesi{margin-top:24px}
+
 /* tasto notte (come UMS) */
 #notte{position:fixed;right:calc(18px + env(safe-area-inset-right,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:50;width:48px;height:48px;border-radius:50%;border:0;background:#FFFDF9;box-shadow:var(--shadow-lift);font-size:20px;display:grid;place-items:center}
 body.night-mode #notte{background:#2B2E38}
@@ -693,6 +706,28 @@ function collegaCampi(radice, salvato){
   });
 }
 
+/* ---------- videosintesi (file su R2, creati dal server) ---------- */
+const VIDEO_BASE = 'https://media.unamanospensierata.com/linguistica-italiana-2627/materiale/videosintesi/';
+function bloccoVideo(chiave, titolo){
+  return `<section class="videosintesi" data-video="${chiave}">
+    <div class="vs-testa"><div><div class="kicker">Videosintesi</div><h2 style="margin-top:6px">${esc(titolo)} <i>in video</i></h2></div>
+      <span class="chip vs-chip">Al posto delle slide</span></div>
+    <div class="vs-schermo"><video controls playsinline preload="metadata" src="${VIDEO_BASE}${chiave}.mp4"></video>
+      <div class="vs-attesa" hidden><strong>La videosintesi è in preparazione.</strong><span>Intanto studia la guida e le slide qui sotto.</span></div></div>
+  </section>`;
+}
+function collegaVideo(){
+  app.querySelectorAll('.videosintesi video').forEach(v => {
+    const sez = v.closest('.videosintesi');
+    v.addEventListener('error', () => {
+      v.remove();
+      sez.querySelector('.vs-attesa').hidden = false;
+      sez.classList.add('vuota');
+      const c = sez.querySelector('.vs-chip'); if (c) c.textContent = 'In arrivo';
+    });
+  });
+}
+
 /* ================= HOME ================= */
 function home(){
   const v = mem.get('visite', {});
@@ -744,6 +779,7 @@ function canaleScritto(){
     <h1>Il canale <i>scritto</i></h1>
     <p class="sottotitolo">Che cos’è un testo, come si classifica, come si scrive e si riscrive. Presentazione tratta dal manuale: la base comune per il lavoro sull’e-mail, sul riassunto e sul testo argomentativo.</p>
     <div class="meta"><span class="chip">40 slide</span><span class="chip">Cornice teorica</span></div>
+    ${bloccoVideo('canale-scritto', 'Il canale scritto')}
     <div class="barra"><span class="kicker" style="letter-spacing:.2em">Una mappa per orientarsi</span>
       <button type="button" class="btn btn-chiaro btn-piccolo" id="stampa">${STAMPA_ICO} Stampa</button></div>
     <p class="avviso" style="margin-top:20px">Sintesi di accompagnamento alla presentazione originale. Tocca «Vai alla slide» per saltare al punto giusto.</p>
@@ -754,6 +790,7 @@ function canaleScritto(){
       <p style="margin:12px 0 0">Ritrova questi criteri quando scegli il registro, selezioni le informazioni e organizzi i capoversi.</p>
       <div class="azioni">${Object.entries(PERCORSI).map(([id, p]) => `<a class="btn btn-oro btn-piccolo" href="#${id}">${esc(p.titolo)} →</a>`).join('')}</div></section>`;
   collegaSlide(deck, tot);
+  collegaVideo();
   document.getElementById('stampa').onclick = () => stampa(`<div class="p-kick">Supporto al manuale</div><h1>Il canale scritto</h1><p class="p-sub">Che cos’è un testo, come si classifica, come si scrive e si riscrive.</p>
     <h2>Una mappa per orientarsi</h2>${TEORIA.map(([n, t, d]) => `<div class="p-blocco"><h3>${esc(t)} · slide ${n}</h3><p>${esc(d)}</p></div>`).join('')}
     <h2 class="p-salto">Le slide</h2>${pSlide(deck, 1, tot)}`);
@@ -785,6 +822,7 @@ function percorso(id, scheda){
 function lezione(id, p){
   const corpo = document.getElementById('corpo');
   corpo.innerHTML = `
+    ${bloccoVideo(id, p.titolo)}
     <section class="guida">
       <div class="kicker">Guida alla lezione</div>
       <p style="margin:8px 0 0;color:var(--sub)">Leggi un punto e salta alle slide che lo spiegano.</p>
@@ -797,6 +835,7 @@ function lezione(id, p){
     <div class="prosegui"><div><div class="kicker">In aula</div><h3 style="margin-top:6px">${esc(p.aula.titolo)}</h3></div><a class="btn btn-navy" href="#${id}/aula">Vai all'attività →</a></div>
     <p style="margin-top:22px"><a href="#canale-scritto">Riprendi la cornice comune: Il canale scritto →</a></p>`;
   collegaSlide(p.deck, p.slide);
+  collegaVideo();
   document.getElementById('stampa').onclick = () => stampa(`<div class="p-kick">Materiale aggiuntivo per l'esame</div><h1>${esc(p.titolo)}</h1><p class="p-sub">${esc(p.sottotitolo)}</p>
     <h2>Guida alla lezione</h2>${p.lezione.map(([t, d], i) => `<div class="p-blocco"><h3>${i + 1}. ${esc(t)}</h3><p>${esc(d)}</p></div>`).join('')}
     <h2>Criteri</h2><ul>${p.criteri.map(c => `<li>${esc(c)}</li>`).join('')}</ul>
@@ -939,7 +978,9 @@ function giscel(){
     <p class="sottotitolo">Leggere un documento sull’educazione linguistica e usarlo per interrogare le scelte didattiche nella scuola primaria.</p>
     <div class="meta"><span class="chip">Testo del 1975</span><span class="chip">Lezione guidata</span><span class="chip">Casi e discussione</span></div>
     <div class="barra"><span class="kicker" style="letter-spacing:.2em">Lezione guidata</span><button type="button" class="btn btn-chiaro btn-piccolo" id="stampa">${STAMPA_ICO} Stampa</button></div>
+    ${bloccoVideo('giscel', 'Le tesi GISCEL')}
     ${corpo}`;
+  collegaVideo();
   document.getElementById('stampa').onclick = () => {
     const d = document.createElement('div'); d.innerHTML = corpo;
     d.querySelectorAll('details').forEach(x => x.setAttribute('open', ''));
