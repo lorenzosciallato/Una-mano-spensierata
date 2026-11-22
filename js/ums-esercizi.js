@@ -27,7 +27,11 @@
   var RIDUCI = false;
   try { RIDUCI = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
 
-  fetch(file).then(function (r) { return r.json(); }).then(function (d) {
+  var COPIONI = null;
+  // i copioni dei video tutorial (voce e sottotitoli): se mancano, resta "Impara il metodo"
+  var copioniPronti = fetch('esercizi-video/copioni.json', { cache: 'no-cache' }).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; });
+  Promise.all([fetch(file).then(function (r) { return r.json(); }), copioniPronti]).then(function (ris) {
+    var d = ris[0]; COPIONI = ris[1];
     var b = d && d.esercizi;
     var lista = (b && Array.isArray(b.trovati) ? b.trovati : []).filter(function (e) {
       if (!e || !e.tipo) return false;
@@ -317,8 +321,9 @@
     if (!T) { box.appendChild(inArrivo(e)); return { nodo: box, ferma: null }; }
     var contenuto = el('div');
     var conTutorial = !!T.tutorial;
+    var conVideo = conTutorial && !!(COPIONI && COPIONI.video && COPIONI.video[e.tipo]);
     var modi = [
-      { k: 'impara', n: '1', t: 'Impara il metodo', s: 'Animazione passo passo', ok: conTutorial },
+      { k: 'impara', n: '1', t: conVideo ? 'Guarda il video' : 'Impara il metodo', s: conVideo ? 'Si ferma sugli esempi e ti fa rispondere' : 'Animazione passo passo', ok: conTutorial },
       { k: 'allena', n: conTutorial ? '2' : '1', t: 'Allenati', s: '15 esercizi sempre diversi', ok: true },
       { k: 'stampa', n: conTutorial ? '3' : '2', t: 'Stampa la scheda', s: voci.length > 1 ? 'Tutti gli esercizi, con il metodo' : 'Il metodo e 15 esercizi', ok: true }
     ].filter(function (m) { return m.ok; });
@@ -336,7 +341,7 @@
       if (ferma) { ferma(); ferma = null; }
       Object.keys(bottoni).forEach(function (x) { bottoni[x].setAttribute('aria-pressed', x === k ? 'true' : 'false'); });
       contenuto.innerHTML = '';
-      if (k === 'impara') ferma = Tutorial(contenuto, T, e, function () { vai('allena'); });
+      if (k === 'impara') ferma = conVideo ? Video(contenuto, T, e, function () { vai('allena'); }) : Tutorial(contenuto, T, e, function () { vai('allena'); });
       else if (k === 'allena') ferma = Serie(contenuto, T, e, function () { vai('stampa'); });
       else PannelloStampa(contenuto, voci);
       riapriPannello();
@@ -3715,6 +3720,304 @@
     }
   };
 
+
+  /* =================================================================
+     VIDEO TUTORIAL — al posto di "Impara il metodo"
+     I disegni sono quelli animati del tutorial (sempre in scala); la
+     voce e i sottotitoli vengono da esercizi-video/copioni.json. Le
+     battute con "chiedi" fermano il video: lo studente risponde come
+     all'esame, poi la voce dice sì o no e spiega. Gli mp3 li mette il
+     server nel campo "audio" del copione; finché mancano, il video va
+     avanti a tempo con i soli sottotitoli.
+     ================================================================= */
+  function stileVideo() {
+    if (document.getElementById('esx-video-stile')) return;
+    var css = [
+      '.esx-video{max-width:980px;margin:0 auto}',
+      '.esx-v-palco{position:relative;border-radius:16px;overflow:hidden;background:' + CARTA + ';box-shadow:inset 0 0 0 1px rgba(139,110,75,.35),0 18px 40px -26px rgba(53,42,31,.55)}',
+      '.esx-v-palco .esx-tavola{border-radius:0;box-shadow:none;padding:12px 12px 96px;min-height:280px}',
+      '.esx-v-palco .esx-tavola svg{max-height:min(60vh,540px);width:auto;max-width:100%;margin:0 auto}',
+      '.esx-v-giusta{margin:2px 0 0;color:var(--body);font-size:.95rem}.esx-v-giusta b{color:var(--ink)}',
+      '.esx-v-extra{position:absolute;top:12px;right:12px;width:min(30%,210px);background:rgba(255,255,255,.92);border-radius:12px;padding:8px;box-shadow:0 6px 18px rgba(0,0,0,.12);',
+      'opacity:0;transform:translateY(-6px);transition:opacity .4s,transform .4s;pointer-events:none}',
+      '.esx-v-extra.su{opacity:1;transform:none}.esx-v-extra svg{width:100%;height:auto;display:block}',
+      '.esx-v-cc{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);width:min(92%,760px);text-align:center;pointer-events:none}',
+      '.esx-v-cc span{display:inline;background:rgba(18,20,26,.86);color:#fff;font:500 clamp(.98rem,2.1vw,1.2rem)/1.55 var(--font-body);padding:4px 10px;',
+      'border-radius:6px;-webkit-box-decoration-break:clone;box-decoration-break:clone}',
+      '.esx-v-cc.via{display:none}',
+      '.esx-v-grande{position:absolute;inset:0;display:grid;place-items:center;background:rgba(243,234,214,.55);cursor:pointer;border:0;width:100%;-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}',
+      '.esx-v-grande span{display:flex;align-items:center;gap:14px;background:var(--navy);color:#fff;font:600 1.05rem var(--font-body);padding:16px 26px 16px 18px;border-radius:999px;box-shadow:0 14px 30px -10px rgba(26,47,79,.6);transition:transform .2s}',
+      '.esx-v-grande:hover span{transform:scale(1.04)}',
+      '.esx-v-grande svg{width:34px;height:34px}',
+      '.esx-v-barra{display:flex;align-items:center;gap:10px;margin:12px 2px 0;flex-wrap:wrap}',
+      '.esx-v-tasto{width:44px;height:44px;border-radius:50%;border:1px solid var(--dust);background:transparent;color:var(--ink);display:grid;place-items:center;cursor:pointer;flex:none}',
+      '.esx-v-tasto.prim{background:var(--navy);border-color:var(--navy);color:#fff;width:50px;height:50px}',
+      '.night-mode .esx-v-tasto.prim{background:var(--gold);border-color:var(--gold);color:#14161C}',
+      '.esx-v-tasto svg{width:20px;height:20px;fill:currentColor}',
+      '.esx-v-tasto:focus-visible{outline:2px solid var(--gold);outline-offset:2px}',
+      '.esx-v-tasto[disabled]{opacity:.4;cursor:default}',
+      '.esx-v-pista{flex:1 1 200px;display:flex;gap:3px;align-items:center;min-width:160px}',
+      '.esx-v-pista button{flex:1;height:8px;border:0;padding:0;border-radius:3px;background:var(--dust);cursor:pointer;position:relative}',
+      '.esx-v-pista button.fatto{background:var(--gold)}.esx-v-pista button.ora{background:var(--navy)}',
+      '.night-mode .esx-v-pista button.ora{background:#E8D5AA}',
+      '.esx-v-pista button.dom::after{content:"";position:absolute;left:50%;top:-6px;width:6px;height:6px;margin-left:-3px;border-radius:50%;background:#B4573E}',
+      '.esx-v-pista button i{position:absolute;inset:0;border-radius:3px;background:var(--gold);transform-origin:left;transform:scaleX(0)}',
+      '.esx-v-info{font-size:.82rem;color:var(--sub);white-space:nowrap}',
+      '.esx-v-pillola{font:600 .8rem var(--font-body);padding:7px 11px;border-radius:999px;border:1px solid var(--dust);background:transparent;color:var(--ink);cursor:pointer}',
+      '.esx-v-pillola[aria-pressed=true]{background:var(--ink);color:var(--paper,#fff);border-color:var(--ink)}',
+      '.esx-v-dom{margin-top:14px;border-radius:16px;border:1.5px solid #B4573E;background:linear-gradient(180deg,rgba(180,87,62,.07),transparent);padding:18px 18px 16px;',
+      'animation:esxSu .35s ease both}',
+      '@keyframes esxSu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}',
+      '.esx-v-dom h4{margin:0 0 4px;font:700 .72rem var(--font-body);letter-spacing:.2em;text-transform:uppercase;color:#B4573E}',
+      '.night-mode .esx-v-dom h4{color:#E39A82}',
+      '.esx-v-dom p.q{margin:0 0 12px;font:600 1.08rem/1.45 var(--font-display);color:var(--ink)}',
+      '.esx-v-esito{font:700 1.5rem/1.2 var(--font-display);margin:12px 0 2px}',
+      '.esx-v-esito.si{color:' + BLU + '}.esx-v-esito.no{color:' + ROSSO + '}',
+      '.night-mode .esx-v-esito.si{color:#8FB4E8}.night-mode .esx-v-esito.no{color:#EF9A9A}',
+      '.esx-v-fine{position:absolute;inset:0;display:grid;place-items:center;background:rgba(243,234,214,.9);text-align:center;padding:20px}',
+      '.esx-v-fine h4{font:700 1.6rem var(--font-display);color:' + INCH + ';margin:0 0 6px}',
+      '.esx-v-fine p{color:' + SEPPIA + ';margin:0 0 16px}',
+      '.esx-v-fine .esx-comandi{justify-content:center}',
+      '@media (max-width:640px){.esx-v-palco .esx-tavola{padding:8px 8px 120px}.esx-v-extra{width:38%}.esx-v-info{display:none}}'
+    ].join('');
+    document.head.appendChild(el('style', { id: 'esx-video-stile', text: css }));
+  }
+  var ICO = {
+    play: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.4-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5Z"/></svg>',
+    pausa: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="5" width="4.2" height="14" rx="1.2"/><rect x="13.8" y="5" width="4.2" height="14" rx="1.2"/></svg>',
+    indietro: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h2v14H6zM20 6.2v11.6a.8.8 0 0 1-1.2.7L9.6 12.7a.8.8 0 0 1 0-1.4l9.2-5.8a.8.8 0 0 1 1.2.7Z"/></svg>',
+    avanti: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 5h2v14h-2zM4 6.2v11.6a.8.8 0 0 0 1.2.7l9.2-5.8a.8.8 0 0 0 0-1.4L5.2 5.5A.8.8 0 0 0 4 6.2Z"/></svg>',
+    ripeti: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5V2L7 6l5 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7Z"/></svg>'
+  };
+  function frasiDi(testo) {
+    return (String(testo || '').match(/[^.!?…]+[.!?…]*\s*/g) || []).map(function (s) { return s.trim(); }).filter(Boolean);
+  }
+
+  function Video(dove, T, e, versoAllenamento) {
+    stileVideo();
+    var cop = COPIONI.video[e.tipo], audioMappa = COPIONI.audio || {}, def = T.tutorial(e), passi = def.passi, bat = cop.battute;
+    var t = Orologio(), i = 0, suona = false, finito = false, cc = true, vel = 1, ultimoP = null, ultimaNascosta = null;
+    var voce = null;          // { audio } oppure { simulata: {dur, pass, ultimo} }
+    var dopoVoce = null;      // che cosa fare quando la voce finisce
+    var attesaRisposta = false;
+    var box = el('div', { class: 'esx-video' });
+    var tav = el('div', { class: 'esx-tavola' });
+    var extra = el('div', { class: 'esx-v-extra', 'aria-hidden': 'true' });
+    var ccBox = el('div', { class: 'esx-v-cc', 'aria-live': 'polite' }), ccTesto = el('span');
+    ccBox.appendChild(ccTesto);
+    var grande = el('button', { type: 'button', class: 'esx-v-grande', 'aria-label': 'Avvia il video' });
+    grande.innerHTML = '<span>' + ICO.play.replace('<svg', '<svg fill="currentColor"') + 'Guarda il video</span>';
+    var palco = el('div', { class: 'esx-v-palco' }, [tav, extra, ccBox, grande]);
+    box.appendChild(palco);
+    // la barra dei comandi
+    function tasto(ico, et, prim) { var b = el('button', { type: 'button', class: 'esx-v-tasto' + (prim ? ' prim' : ''), 'aria-label': et, title: et }); b.innerHTML = ico; return b; }
+    var bPlay = tasto(ICO.play, 'Riproduci', true), bInd = tasto(ICO.indietro, 'Passo precedente'), bAv = tasto(ICO.avanti, 'Passo successivo'), bRip = tasto(ICO.ripeti, 'Riascolta la frase');
+    var pista = el('div', { class: 'esx-v-pista', role: 'group', 'aria-label': 'Avanzamento del video' });
+    var tacche = bat.map(function (b, k) {
+      var x = el('button', { type: 'button', class: b.chiedi ? 'dom' : '', 'aria-label': (b.chiedi ? 'Domanda, ' : 'Passo ') + (k + 1) });
+      var riempi = el('i'); x.appendChild(riempi);
+      x.addEventListener('click', function () { salta(k); });
+      pista.appendChild(x); return { b: x, i: riempi };
+    });
+    var info = el('span', { class: 'esx-v-info' });
+    var bCC = el('button', { type: 'button', class: 'esx-v-pillola', 'aria-pressed': 'true', text: 'Sottotitoli' });
+    var bVel = el('button', { type: 'button', class: 'esx-v-pillola', 'aria-pressed': 'false', text: '1×' });
+    box.appendChild(el('div', { class: 'esx-v-barra' }, [bInd, bPlay, bAv, bRip, pista, info, bCC, bVel]));
+    var domanda = el('div'); box.appendChild(domanda);
+    var conVoce = bat.some(function (b) { return audioMappa[b.id]; });
+    if (!conVoce) box.appendChild(el('p', { class: 'esx-nota', style: 'text-align:center;margin-top:10px', text: 'La voce sta arrivando: per ora il video scorre con i sottotitoli.' }));
+    dove.appendChild(box);
+
+    /* ---------- il disegno ---------- */
+    function scena(p, nascondi, anim) {
+      if (p == null) return;
+      var chiaveScena = p + (nascondi ? '-n' : '');
+      if (chiaveScena === ultimoP) return;
+      ultimoP = chiaveScena;
+      t.ferma();
+      var pp = passi[p], sc = def.scena(pp.scena);
+      var inizio = p; while (inizio > 0 && passi[inizio - 1].scena === pp.scena) inizio--;
+      for (var j = inizio; j < p; j++) if (passi[j].fai && !passi[j].momentaneo) passi[j].fai(sc.api, false, t);
+      if (pp.fai && !nascondi) pp.fai(sc.api, anim && !RIDUCI, t);
+      tav.innerHTML = ''; tav.appendChild(sc.nodo);
+      extra.classList.remove('su'); extra.innerHTML = '';
+      if (pp.extra && !nascondi) { var ex = pp.extra(t); if (ex) { extra.appendChild(ex); setTimeout(function () { extra.classList.add('su'); }, 500); } }
+      riapriPannello();
+    }
+
+    /* ---------- la voce ---------- */
+    function fermaVoce() {
+      if (voce && voce.audio) { voce.audio.onended = null; voce.audio.ontimeupdate = null; voce.audio.pause(); }
+      if (voce && voce.simulata) clearInterval(voce.simulata.giro);
+      voce = null;
+    }
+    function sottotitolo(frasi, frac) {
+      var tot = frasi.reduce(function (s, f) { return s + f.length; }, 0) || 1, acc = 0, k = 0;
+      for (; k < frasi.length; k++) { acc += frasi[k].length; if (frac * tot <= acc) break; }
+      ccTesto.textContent = frasi[Math.min(k, frasi.length - 1)] || '';
+    }
+    function parla(id, testo, fine) {
+      fermaVoce();
+      var frasi = frasiDi(testo);
+      sottotitolo(frasi, 0);
+      dopoVoce = fine;
+      var a = audioMappa[id];
+      if (a && a.url) {
+        var au = new Audio(a.url); au.playbackRate = vel; au.preload = 'auto';
+        voce = { audio: au };
+        au.ontimeupdate = function () { if (au.duration) sottotitolo(frasi, au.currentTime / au.duration); barraOra(au.currentTime / au.duration); };
+        au.onended = function () { sottotitolo(frasi, 1); voce = null; var f = dopoVoce; dopoVoce = null; if (f) f(); };
+        if (suona) au.play().catch(function () { pausa(); });
+      } else {
+        // senza mp3: tempo stimato sulla lunghezza del testo
+        var dur = Math.max(2.4, testo.length / 15) * 1000;
+        voce = { simulata: { dur: dur, pass: 0, ultimo: Date.now(), giro: null } };
+        var s = voce.simulata;
+        s.giro = setInterval(function () {
+          if (!suona) { s.ultimo = Date.now(); return; }
+          var ora = Date.now(); s.pass += (ora - s.ultimo) * vel; s.ultimo = ora;
+          var f = Math.min(1, s.pass / s.dur);
+          sottotitolo(frasi, f); barraOra(f);
+          if (f >= 1) { clearInterval(s.giro); voce = null; var g = dopoVoce; dopoVoce = null; if (g) g(); }
+        }, 80);
+      }
+    }
+    function barraOra(f) { var x = tacche[i]; if (x) x.i.style.transform = 'scaleX(' + Math.max(0, Math.min(1, f || 0)) + ')'; }
+
+    /* ---------- lo scorrere delle battute ---------- */
+    function aggiornaBarra() {
+      tacche.forEach(function (x, k) { x.b.className = (bat[k].chiedi ? 'dom ' : '') + (k < i ? 'fatto' : k === i ? 'ora' : ''); x.i.style.transform = 'scaleX(' + (k < i ? 1 : 0) + ')'; });
+      info.textContent = (i + 1) + ' / ' + bat.length;
+      bInd.disabled = i === 0; bAv.disabled = i >= bat.length - 1;
+    }
+    function mostra(k) {
+      i = Math.max(0, Math.min(bat.length - 1, k));
+      finito = false;
+      var vecchia = palco.querySelector('.esx-v-fine'); if (vecchia) vecchia.remove();
+      domanda.innerHTML = ''; attesaRisposta = false;
+      var b = bat[i];
+      scena(b.p, !!b.nascondi, true);
+      aggiornaBarra();
+      if (b.chiedi) parla(b.id, b.voce, function () { chiedi(b); });
+      else parla(b.id, b.voce, function () { setTimeout(function () { if (suona && !attesaRisposta) prossima(); }, 450); });
+    }
+    function prossima() { if (i >= bat.length - 1) fine(); else mostra(i + 1); }
+    function salta(k) { fermaVoce(); mostra(k); }
+    function chiedi(b) {
+      attesaRisposta = true;
+      var q = b.chiedi, card = el('div', { class: 'esx-v-dom', role: 'group', 'aria-label': 'Tocca a te' });
+      card.appendChild(el('h4', { text: 'Tocca a te' }));
+      var fr = frasiDi(b.voce), ultima = fr[fr.length - 1] || '';
+      card.appendChild(el('p', { class: 'q', text: ultima.length < 70 && fr.length > 1 ? fr.slice(-2).join(' ') : ultima }));
+      var leggiRisposta, segna;
+      if (q.scelte) {
+        var seg = segmentato(q.scelte.map(function (s, k2) { return { t: s, v: k2 }; }), 'Scegli la risposta');
+        card.appendChild(el('div', { class: 'esx-riga' }, [seg]));
+        leggiRisposta = function () { var v = seg.valore(); return v == null ? null : v; };
+        segna = function (giusto) { seg.blocca(); seg.classList.add(giusto ? 'ok' : 'ko'); };
+      } else {
+        var campi = q.campi.map(function (cp) {
+          var inp = el('input', { class: 'esx-campo largo', inputmode: 'text', autocomplete: 'off', 'aria-label': cp.lab, style: 'width:6em' });
+          card.appendChild(el('div', { class: 'esx-riga' }, [el('span', { class: 'esx-lab', text: cp.lab }), inp, cp.unita ? el('span', { class: 'esx-unita', text: cp.unita }) : null]));
+          inp.addEventListener('keydown', function (ev) { if (ev.key === 'Enter') { ev.preventDefault(); rispondi.click(); } });
+          return { cp: cp, inp: inp };
+        });
+        leggiRisposta = function () {
+          var vuoto = campi.filter(function (c) { return !c.inp.value.trim(); })[0];
+          if (vuoto) { vuoto.inp.focus(); return null; }
+          return campi.map(function (c) { return numIt(c.inp.value); });
+        };
+        segna = function () { campi.forEach(function (c) { c.inp.disabled = true; c.inp.classList.add(c.ok ? 'ok' : 'ko'); }); };
+        q._campi = campi;
+      }
+      var rispondi = el('button', { type: 'button', class: 'esx-btn', text: 'Rispondi' });
+      var salto = el('button', { type: 'button', class: 'esx-btn sec', text: 'Non lo so, spiegamelo' });
+      card.appendChild(el('div', { class: 'esx-comandi' }, [rispondi, salto]));
+      domanda.appendChild(card);
+      riapriPannello();
+      var primo = card.querySelector('input'); if (primo && !stretto()) primo.focus({ preventScroll: true });
+      try { card.scrollIntoView({ behavior: RIDUCI ? 'auto' : 'smooth', block: 'nearest' }); } catch (e0) {}
+      function esito(giusto, saltata) {
+        segna(giusto);
+        rispondi.remove(); salto.remove();
+        card.appendChild(el('p', { class: 'esx-v-esito ' + (giusto ? 'si' : 'no'), text: saltata ? 'Ecco come si fa.' : giusto ? 'Sì!' : 'No.' }));
+        if (!giusto) {
+          var rg = q.scelte ? q.scelte[q.giusta] : q._campi.map(function (c) { var g = c.cp.giusto; return c.cp.lab + ' ' + (Math.abs(g) >= 1000 ? migliaia(g) : String(g).replace('.', ',').replace('-', '\u2212')) + (c.cp.unita && c.cp.unita.length < 6 ? c.cp.unita : ''); }).join(' \u00b7 ');
+          var pg = el('p', { class: 'esx-v-giusta' }); pg.appendChild(document.createTextNode('Risposta giusta: ')); pg.appendChild(el('b', { text: rg }));
+          card.appendChild(pg);
+        }
+        attesaRisposta = false;
+        if (!suona) { suona = true; aggiornaPlay(); }
+        parla(b.id + (giusto ? '-si' : '-no'), giusto ? q.si : q.no, function () {
+          parla(b.id + '-spiega', q.spiega, function () {
+            var av = el('button', { type: 'button', class: 'esx-btn', text: i >= bat.length - 1 ? 'Fine' : 'Continua' });
+            av.addEventListener('click', function () { prossima(); });
+            card.appendChild(el('div', { class: 'esx-comandi' }, [av]));
+            setTimeout(function () { if (suona && domanda.contains(av)) prossima(); }, 2200);
+          });
+        });
+      }
+      rispondi.addEventListener('click', function () {
+        var r = leggiRisposta(); if (r === null) return;
+        var giusto;
+        if (q.scelte) giusto = r === q.giusta;
+        else {
+          giusto = true;
+          q._campi.forEach(function (c, k2) {
+            var x = r[k2], cp = c.cp;
+            c.ok = vicinoA(x, cp.giusto, cp.tol || 0) || (cp.alt || []).some(function (y) { return vicinoA(x, y, cp.altTol || 0); });
+            if (!c.ok) giusto = false;
+          });
+        }
+        esito(giusto, false);
+      });
+      salto.addEventListener('click', function () { if (q.scelte) segna(false); else { q._campi.forEach(function (c) { c.ok = false; c.inp.value = String(c.cp.giusto).replace('.', ','); }); segna(false); } esito(false, true); });
+    }
+    function fine() {
+      finito = true; suona = false; aggiornaPlay();
+      scrivi(chiave(e, 'tutorial'), true);
+      tacche.forEach(function (x) { x.b.className = (x.b.className.indexOf('dom') >= 0 ? 'dom ' : '') + 'fatto'; x.i.style.transform = 'scaleX(1)'; });
+      var f = el('div', { class: 'esx-v-fine' });
+      var rivedi = el('button', { type: 'button', class: 'esx-btn sec', text: 'Rivedi il video' });
+      var allena = el('button', { type: 'button', class: 'esx-btn', text: 'Allenati: 15 esercizi' });
+      rivedi.addEventListener('click', function () { suona = true; aggiornaPlay(); salta(0); });
+      allena.addEventListener('click', versoAllenamento);
+      f.appendChild(el('div', null, [el('h4', { text: 'Fine del video' }), el('p', { text: 'Ora prova da solo, con numeri sempre diversi.' }), el('div', { class: 'esx-comandi' }, [rivedi, allena])]));
+      palco.appendChild(f);
+      ccTesto.textContent = '';
+    }
+
+    /* ---------- comandi ---------- */
+    function aggiornaPlay() { bPlay.innerHTML = suona ? ICO.pausa : ICO.play; bPlay.setAttribute('aria-label', suona ? 'Pausa' : 'Riproduci'); bPlay.title = suona ? 'Pausa' : 'Riproduci'; }
+    function avvia() {
+      if (grande.parentNode) { grande.remove(); suona = true; aggiornaPlay(); mostra(0); return; }
+      if (finito) { suona = true; aggiornaPlay(); salta(0); return; }
+      suona = true; aggiornaPlay();
+      if (voce && voce.audio) voce.audio.play().catch(function () {});
+      else if (!voce && !attesaRisposta) prossima();
+    }
+    function pausa() { suona = false; aggiornaPlay(); if (voce && voce.audio) voce.audio.pause(); }
+    grande.addEventListener('click', avvia);
+    bPlay.addEventListener('click', function () { if (suona) pausa(); else avvia(); });
+    bInd.addEventListener('click', function () { if (grande.parentNode) { grande.remove(); } salta(i - 1); });
+    bAv.addEventListener('click', function () { if (grande.parentNode) { grande.remove(); } salta(i + 1); });
+    bRip.addEventListener('click', function () { if (grande.parentNode) { grande.remove(); suona = true; aggiornaPlay(); } ultimoP = null; salta(i); });
+    bCC.addEventListener('click', function () { cc = !cc; bCC.setAttribute('aria-pressed', cc ? 'true' : 'false'); ccBox.classList.toggle('via', !cc); });
+    bVel.addEventListener('click', function () { vel = vel === 1 ? 1.25 : vel === 1.25 ? 1.5 : 1; bVel.textContent = String(vel).replace('.', ',') + '×'; bVel.setAttribute('aria-pressed', vel !== 1 ? 'true' : 'false'); if (voce && voce.audio) voce.audio.playbackRate = vel; });
+    function tasti(ev) {
+      if (!document.body.contains(box)) { document.removeEventListener('keydown', tasti); return; }
+      var tag = (ev.target && ev.target.tagName) || '';
+      if (/INPUT|TEXTAREA|SELECT|BUTTON/.test(tag)) return;
+      var r = palco.getBoundingClientRect(); if (r.bottom < 0 || r.top > window.innerHeight) return;
+      if (ev.key === ' ' || ev.key === 'k') { ev.preventDefault(); if (suona) pausa(); else avvia(); }
+    }
+    document.addEventListener('keydown', tasti);
+    // prima schermata: il disegno della prima battuta, fermo, con il pulsante grande
+    scena(bat[0].p, false, false);
+    ccTesto.textContent = '';
+    aggiornaBarra(); aggiornaPlay();
+    return function () { suona = false; fermaVoce(); t.ferma(); document.removeEventListener('keydown', tasti); };
+  }
   // per i collaudi automatici
   try { window.UMS_ESERCIZI = { POSIZIONA: POSIZIONA, INDICI: INDICI, DENSITA_S: DENSITA_S, COMBINATO: COMBINATO, risposteI: risposteI, numIt: numIt, RETICOLO: RETICOLO, DENSITA: DENSITA, BANCA: BANCA, TASSI: TASSI, GRAFICO: GRAFICO, rispostaTassi: rispostaTassi, geometria: geometria, CITTA: CITTA, htmlScheda: htmlScheda, absLat: absLat, absLon: absLon }; } catch (e) {}
 })();

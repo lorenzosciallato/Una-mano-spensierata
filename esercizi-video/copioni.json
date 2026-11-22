@@ -1,0 +1,735 @@
+{
+  "nota": "Copioni dei video tutorial degli esercizi d'esame. 'p' = passo del tutorial animato da mostrare; 'voce' = testo letto dalla voce e mostrato nei sottotitoli. Le battute con 'chiedi' fermano il video: lo studente risponde, poi la voce legge 'si' o 'no' e infine 'spiega'. Il campo 'audio' lo riempie il server (id battuta -> mp3): id, id-si, id-no, id-spiega.",
+  "versione": 1,
+  "video": {
+    "reticolo_coordinate": {
+      "battute": [
+        {
+          "id": "rc01",
+          "p": 0,
+          "voce": "Questo è il primo esercizio di tutte le prove scritte. Trovi un reticolo di linee orizzontali e verticali, a un grado l'una dall'altra, e dei luoghi da localizzare. È proprio il reticolo visto in aula, con Hanoi e Hong Kong. All'esame cambieranno i numeri, non il metodo."
+        },
+        {
+          "id": "rc02",
+          "p": 1,
+          "voce": "Le linee orizzontali sono i paralleli. Dicono quanto un luogo è a nord o a sud dell'equatore: è la latitudine."
+        },
+        {
+          "id": "rc03",
+          "p": 2,
+          "voce": "Le linee verticali sono i meridiani. Dicono quanto un luogo è a est o a ovest del meridiano di Greenwich: è la longitudine."
+        },
+        {
+          "id": "rc04",
+          "p": 3,
+          "voce": "Attenzione: l'etichetta venti gradi nord non vuol dire che il nord è a sinistra. Il nord è sempre in alto, e il foglio non si gira. Vuol dire che tutta quella linea sta a venti gradi dall'equatore."
+        },
+        {
+          "id": "rc05",
+          "p": 4,
+          "voce": "Il trucco del professore: prima di tutto si scrivono i numeri su tutte le linee, su due lati. Siamo a nord, quindi salendo i numeri crescono. Siamo a est, quindi verso destra crescono."
+        },
+        {
+          "id": "rc06",
+          "p": 4,
+          "voce": "Hanoi sta proprio sopra il parallelo dei ventuno gradi. Tocca a te: scrivi la latitudine di Hanoi, in gradi e primi.",
+          "chiedi": {
+            "campi": [
+              {
+                "lab": "Gradi",
+                "giusto": 21,
+                "tol": 0,
+                "unita": "°"
+              },
+              {
+                "lab": "Primi",
+                "giusto": 0,
+                "tol": 0,
+                "unita": "′ N"
+              }
+            ],
+            "si": "Esatto: ventuno gradi e zero zero primi nord.",
+            "no": "No. Hanoi sta proprio sulla linea dei ventuno gradi: ventuno gradi e zero zero primi nord.",
+            "spiega": "Quando il punto sta sulla linea, gli zero zero si scrivono sempre. Senza, come dice il professore, è battaglia navale: indichi un'area, non un punto."
+          }
+        },
+        {
+          "id": "rc07",
+          "p": 5,
+          "voce": "Ora la longitudine di Hanoi. Sta tra il meridiano dei centocinque gradi e quello dei centosei: si parte sempre dalla linea con il numero più basso."
+        },
+        {
+          "id": "rc08",
+          "p": 5,
+          "voce": "Un grado sono sessanta primi, come un'ora sono sessanta minuti. Guarda dove sta Hanoi nel riquadro e scrivi la longitudine, in gradi e primi.",
+          "chiedi": {
+            "campi": [
+              {
+                "lab": "Gradi",
+                "giusto": 105,
+                "tol": 0,
+                "unita": "°"
+              },
+              {
+                "lab": "Primi",
+                "giusto": 50,
+                "tol": 5,
+                "unita": "′ E"
+              }
+            ],
+            "si": "Giusto: centocinque gradi e cinquanta primi est.",
+            "no": "Non proprio. La risposta è centocinque gradi e cinquanta primi est.",
+            "spiega": "Dividiamo il riquadro in sesti, dieci primi ciascuno: Hanoi è a cinque sesti, cioè cinquanta primi. Va bene anche una stima vicina, ma mai sessanta o settantacinque: sessanta primi non esistono, sono già il grado dopo."
+          }
+        },
+        {
+          "id": "rc09",
+          "p": 6,
+          "voce": "Ecco il conto, sul disegno: cinque sesti del riquadro, cinquanta primi."
+        },
+        {
+          "id": "rc10",
+          "p": 6,
+          "voce": "Adesso Hong Kong. Sta tra i paralleli dei ventidue e dei ventitré gradi. Scrivi la latitudine.",
+          "chiedi": {
+            "campi": [
+              {
+                "lab": "Gradi",
+                "giusto": 22,
+                "tol": 0,
+                "unita": "°"
+              },
+              {
+                "lab": "Primi",
+                "giusto": 15,
+                "tol": 5,
+                "unita": "′ N"
+              }
+            ],
+            "si": "Esatto: ventidue gradi e quindici primi nord.",
+            "no": "No: ventidue gradi e quindici primi nord.",
+            "spiega": "Dividiamo il riquadro in quarti, come i quarti d'ora. Hong Kong è a un quarto sopra la linea dei ventidue: quindici primi. La metà sarebbe trenta, tre quarti quarantacinque."
+          }
+        },
+        {
+          "id": "rc11",
+          "p": 7,
+          "voce": "Lo vedi sul disegno: un quarto del riquadro, quindici primi."
+        },
+        {
+          "id": "rc12",
+          "p": 8,
+          "voce": "La longitudine di Hong Kong: poco dopo il meridiano dei centoquattordici gradi, un sesto del riquadro. Centoquattordici gradi e dieci primi est."
+        },
+        {
+          "id": "rc13",
+          "p": 9,
+          "voce": "Le risposte si scrivono così: gradi con il tondino, primi con l'apice, e sempre la direzione, nord o sud, est o ovest."
+        },
+        {
+          "id": "rc14",
+          "p": 10,
+          "voce": "E se siamo a sud o a ovest? Il metodo è lo stesso, ma i numeri crescono nell'altro verso: a sud scendendo, a ovest verso sinistra. Per questo si scrivono prima tutti i numeri."
+        },
+        {
+          "id": "rc15",
+          "p": 10,
+          "voce": "Buenos Aires sta tra i trentaquattro e i trentacinque gradi sud, poco oltre la metà scendendo. Scrivi la latitudine.",
+          "chiedi": {
+            "campi": [
+              {
+                "lab": "Gradi",
+                "giusto": 34,
+                "tol": 0,
+                "unita": "°"
+              },
+              {
+                "lab": "Primi",
+                "giusto": 35,
+                "tol": 5,
+                "unita": "′ S"
+              }
+            ],
+            "si": "Giusto: trentaquattro gradi e trentacinque primi sud.",
+            "no": "No: trentaquattro gradi e trentacinque primi sud.",
+            "spiega": "A sud si parte dalla linea con il numero più basso, i trentaquattro, e si scende. Poco oltre la metà: trentacinque primi."
+          }
+        },
+        {
+          "id": "rc16",
+          "p": 11,
+          "voce": "E la longitudine: cinquantotto gradi e venticinque primi ovest. Verso sinistra i numeri crescono."
+        },
+        {
+          "id": "rc17",
+          "p": 12,
+          "voce": "Ultima cosa, importantissima. All'esame il professore può stampare apposta un grado sbagliato, come l'errore che ha trovato sul libro. Guarda le etichette dei meridiani: ce n'è una che non torna con le altre.",
+          "chiedi": {
+            "campi": [
+              {
+                "lab": "C'è scritto",
+                "giusto": 150,
+                "tol": 0,
+                "unita": "°"
+              },
+              {
+                "lab": "Doveva esserci",
+                "giusto": 105,
+                "tol": 0,
+                "unita": "°"
+              }
+            ],
+            "si": "Bravo: c'è scritto centocinquanta, doveva esserci centocinque.",
+            "no": "No. L'etichetta sbagliata è centocinquanta: doveva esserci centocinque.",
+            "spiega": "Tra due linee vicine c'è sempre un grado. L'etichetta centocinquanta sta tre linee a sinistra della centootto: centootto meno tre fa centocinque. Le cifre erano scambiate."
+          }
+        },
+        {
+          "id": "rc18",
+          "p": 13,
+          "voce": "Si barra l'etichetta sbagliata e si scrive accanto quella giusta. Poi si va avanti come sempre, usando solo le etichette giuste."
+        },
+        {
+          "id": "rc19",
+          "p": 15,
+          "voce": "Ricapitolando: controlla le etichette, scrivi i numeri su tutte le linee, parti dalla linea con il valore più basso, stima i primi come sull'orologio e scrivi sempre la direzione. Ora allenati: quindici reticoli sempre diversi."
+        }
+      ]
+    },
+    "reticolo_posiziona": {
+      "battute": [
+        {
+          "id": "rp01",
+          "p": 0,
+          "voce": "L'esercizio delle coordinate arriva in due modi. O c'è un punto e scrivi latitudine e longitudine, oppure ci sono le coordinate e devi mettere tu il punto. Qui vediamo il secondo modo."
+        },
+        {
+          "id": "rp02",
+          "p": 1,
+          "voce": "Sono date solo due etichette: cinquantaquattro gradi nord e tre gradi ovest. Prima cosa: si scrivono i numeri su tutte le linee. I paralleli salgono verso l'alto, quindi siamo a nord. I meridiani crescono verso sinistra, quindi siamo a ovest."
+        },
+        {
+          "id": "rp03",
+          "p": 1,
+          "voce": "Il punto A è a cinquantaquattro gradi e quarantacinque primi nord. A che punto del riquadro sta, tra i cinquantaquattro e i cinquantacinque gradi?",
+          "chiedi": {
+            "scelte": [
+              "A un quarto",
+              "A metà",
+              "A tre quarti",
+              "A 0,45 del riquadro"
+            ],
+            "giusta": 2,
+            "si": "Esatto: quarantacinque primi sono tre quarti di grado.",
+            "no": "No: quarantacinque primi sono tre quarti di grado.",
+            "spiega": "I primi si contano come i minuti dell'orologio: sessanta è l'intero, trenta la metà, quindici un quarto, quarantacinque tre quarti. Quarantacinque primi non sono zero virgola quarantacinque."
+          }
+        },
+        {
+          "id": "rp04",
+          "p": 2,
+          "voce": "Quindi la fascia tra cinquantaquattro e cinquantacinque, a tre quarti, verso il cinquantacinque."
+        },
+        {
+          "id": "rp05",
+          "p": 2,
+          "voce": "Ora la longitudine: due gradi e quarantacinque primi ovest. Il punto va verso il meridiano dei tre gradi. Da che parte, sul foglio?",
+          "chiedi": {
+            "scelte": [
+              "Verso destra",
+              "Verso sinistra"
+            ],
+            "giusta": 1,
+            "si": "Giusto: a ovest i numeri crescono verso sinistra.",
+            "no": "No: a ovest i numeri crescono verso sinistra, quindi il tre è a sinistra del due.",
+            "spiega": "Per questo il professore insiste: prima si scrivono tutti i numeri, poi si cerca il punto. Così non si sbaglia mai il verso."
+          }
+        },
+        {
+          "id": "rp06",
+          "p": 3,
+          "voce": "All'incrocio delle due linee c'è il punto A."
+        },
+        {
+          "id": "rp07",
+          "p": 3,
+          "voce": "Paperopoli è a cinquantatré gradi e zero zero primi nord. Dove sta il punto?",
+          "chiedi": {
+            "scelte": [
+              "Proprio sul parallelo dei 53°",
+              "A metà tra 53° e 54°",
+              "Proprio sul parallelo dei 54°"
+            ],
+            "giusta": 0,
+            "si": "Esatto: zero zero primi vuol dire proprio sulla linea.",
+            "no": "No: zero zero primi vuol dire proprio sulla linea dei cinquantatré gradi.",
+            "spiega": "E quando si scrivono le coordinate, gli zero zero vanno sempre messi."
+          }
+        },
+        {
+          "id": "rp08",
+          "p": 4,
+          "voce": "Ecco Paperopoli: sulla linea dei cinquantatré gradi, e a metà tra i cinque e i sei gradi ovest."
+        },
+        {
+          "id": "rp09",
+          "p": 5,
+          "voce": "Gli errori che il professore vede ogni anno: partire senza aver numerato i margini, girare il foglio e confondere il nord con l'est, scrivere sessanta o settantacinque primi."
+        },
+        {
+          "id": "rp10",
+          "p": 6,
+          "voce": "Ricapitolando: numera tutte le linee, guarda il verso dei numeri, prima la latitudine e poi la longitudine, e i primi come l'orologio. Ora allenati: quindici reticoli sempre diversi."
+        }
+      ]
+    },
+    "indici_demografici": {
+      "battute": [
+        {
+          "id": "id01",
+          "p": 0,
+          "voce": "Nella prova ci sono sempre dei calcoli di tassi, indici e incrementi. Il testo dà i dati, e dentro c'è sempre un dato inutile messo apposta. La regola che vale per tutti: il soggetto della domanda va al numeratore, la popolazione di riferimento al denominatore."
+        },
+        {
+          "id": "id02",
+          "p": 1,
+          "voce": "L'esempio di aula: 23 milioni 618 mila 420 abitanti al primo gennaio 2009, e 22 milioni 86 mila 560 al 30 giugno 2016. Si chiede l'incremento medio annuo. Primo passo: la variazione, fine meno inizio.",
+          "chiedi": {
+            "campi": [
+              {
+                "lab": "Variazione",
+                "giusto": -1531860,
+                "tol": 0.5,
+                "unita": "abitanti"
+              }
+            ],
+            "si": "Esatto: meno un milione 531 mila 860.",
+            "no": "No: la variazione è meno un milione 531 mila 860.",
+            "spiega": "Fine meno inizio. La popolazione è calata, quindi è un decremento: ci vuole un bel meno davanti."
+          }
+        },
+        {
+          "id": "id03",
+          "p": 2,
+          "voce": "Secondo passo: quanto tempo è passato. Dal primo gennaio 2009 al 30 giugno 2016. Scrivi gli anni, con i decimali.",
+          "chiedi": {
+            "campi": [
+              {
+                "lab": "Anni",
+                "giusto": 7.5,
+                "tol": 0.01,
+                "unita": "anni"
+              }
+            ],
+            "si": "Giusto: 7 anni e mezzo, cioè 7 virgola 5.",
+            "no": "No: sono 7 anni e 6 mesi, cioè 7 virgola 5.",
+            "spiega": "I mesi sono dodicesimi di anno: sei mesi sono sei dodicesimi, mezzo anno. Chi divide per 7, dice il professore, non ha considerato che ci sono dei mesi in mezzo. Se fosse novembre, sarebbe 7 più undici dodicesimi."
+          }
+        },
+        {
+          "id": "id04",
+          "p": 3,
+          "voce": "Terzo passo: la media all'anno. Dividi la variazione per gli anni.",
+          "chiedi": {
+            "campi": [
+              {
+                "lab": "Media annua",
+                "giusto": -204248,
+                "tol": 2,
+                "unita": "abitanti all'anno"
+              }
+            ],
+            "si": "Esatto: meno 204 mila 248 abitanti all'anno.",
+            "no": "No: meno un milione 531 mila 860 diviso 7 virgola 5 fa meno 204 mila 248.",
+            "spiega": "È il numero di abitanti persi, in media, ogni anno."
+          }
+        },
+        {
+          "id": "id05",
+          "p": 4,
+          "voce": "Ultimo passo: in percentuale. Dividi la media annua per la popolazione iniziale e moltiplica per cento.",
+          "chiedi": {
+            "campi": [
+              {
+                "lab": "Percentuale",
+                "giusto": -0.86,
+                "tol": 0.011,
+                "unita": "%"
+              }
+            ],
+            "si": "Giusto: meno zero virgola 86 per cento all'anno.",
+            "no": "No: il risultato è meno zero virgola 86 per cento all'anno.",
+            "spiega": "Al denominatore va sempre la popolazione iniziale, mai quella finale. Puoi dividere prima per gli anni o prima per la popolazione: va bene, ma tutti e due i passaggi vanno fatti."
+          }
+        },
+        {
+          "id": "id06",
+          "p": 5,
+          "voce": "Ecco il conto completo. Se moltiplichi per mille invece che per cento, scrivi meno 8 virgola 6 per mille: va bene lo stesso."
+        },
+        {
+          "id": "id07",
+          "p": 6,
+          "voce": "Secondo esempio: nel 2012 ci sono 220 mila 350 abitanti, di cui 78 mila 560 femmine, e 140 mila 550 persone in età lavorativa. Si chiede l'indice di maschilità. Prima: quanti sono i maschi?",
+          "chiedi": {
+            "campi": [
+              {
+                "lab": "Maschi",
+                "giusto": 141790,
+                "tol": 0.5,
+                "unita": ""
+              }
+            ],
+            "si": "Esatto: 141 mila 790 maschi.",
+            "no": "No: 220 mila 350 meno 78 mila 560 fa 141 mila 790.",
+            "spiega": "I maschi non sono dati: si ricavano togliendo le femmine dal totale. La popolazione in età lavorativa qui è il dato inutile: non dice niente sul sesso."
+          }
+        },
+        {
+          "id": "id08",
+          "p": 6,
+          "voce": "Ora l'indice: i maschi, il soggetto, sopra. Le femmine sotto. Scrivi l'indice.",
+          "chiedi": {
+            "campi": [
+              {
+                "lab": "Indice",
+                "giusto": 1.8,
+                "tol": 0.011,
+                "alt": [
+                  180
+                ],
+                "altTol": 1.1,
+                "unita": ""
+              }
+            ],
+            "si": "Giusto: uno virgola 80.",
+            "no": "No: 141 mila 790 diviso 78 mila 560 fa uno virgola 80.",
+            "spiega": "Vuol dire che per ogni femmina ci sono uno virgola 80 maschi. È un rapporto, basta una divisione: resta un numero puro. Se lo scrivi in percentuale, 180, va bene lo stesso."
+          }
+        },
+        {
+          "id": "id09",
+          "p": 8,
+          "voce": "L'indice di dipendenza. Chi è fuori dall'età lavorativa, prima e dopo, dipende da chi lavora. Calcola l'indice: dipendenti diviso popolazione in età lavorativa.",
+          "chiedi": {
+            "campi": [
+              {
+                "lab": "Indice",
+                "giusto": 0.57,
+                "tol": 0.011,
+                "alt": [
+                  57
+                ],
+                "altTol": 1.1,
+                "unita": ""
+              }
+            ],
+            "si": "Esatto: zero virgola 57.",
+            "no": "No: il risultato è zero virgola 57.",
+            "spiega": "220 mila 350 meno 140 mila 550 fa 79 mila 800 dipendenti. 79 mila 800 diviso 140 mila 550 fa zero virgola 57. Qui il dato inutile sono le femmine."
+          }
+        },
+        {
+          "id": "id10",
+          "p": 9,
+          "voce": "Il tasso di mortalità. Nel 2012 sono nati 2 mila 200 bambini e sono morte mille e 500 persone. Calcola il tasso in percentuale.",
+          "chiedi": {
+            "campi": [
+              {
+                "lab": "Tasso",
+                "giusto": 0.68,
+                "tol": 0.011,
+                "alt": [
+                  6.8
+                ],
+                "altTol": 0.11,
+                "unita": "% (o ‰)"
+              }
+            ],
+            "si": "Giusto: zero virgola 68 per cento.",
+            "no": "No: mille e 500 diviso 220 mila 350, per cento, fa zero virgola 68 per cento.",
+            "spiega": "Sotto va chi era vivo all'inizio dell'anno. I nati qui sono il dato inutile. Per cento o per mille, a vostra discrezione: 6 virgola 8 per mille va bene lo stesso."
+          }
+        },
+        {
+          "id": "id11",
+          "p": 10,
+          "voce": "Il tasso di natalità, con gli stessi dati: 2 mila 200 diviso 220 mila 350, per cento. Circa l'uno per cento."
+        },
+        {
+          "id": "id12",
+          "p": 11,
+          "voce": "Ultimi due: l'incremento naturale è nati meno morti, più 700. Il saldo migratorio è immigrati meno emigrati: 750 meno mille e 200. Quanto fa?",
+          "chiedi": {
+            "campi": [
+              {
+                "lab": "Saldo migratorio",
+                "giusto": -450,
+                "tol": 0.5,
+                "unita": "persone"
+              }
+            ],
+            "si": "Esatto: meno 450.",
+            "no": "No: 750 meno mille e 200 fa meno 450.",
+            "spiega": "Partono più persone di quante ne arrivano: il saldo è negativo, e il meno si scrive sempre. Davanti agli incrementi, invece, il più mostra che hai le idee chiare."
+          }
+        },
+        {
+          "id": "id13",
+          "p": 12,
+          "voce": "Come si scrive: i tassi con il per cento o il per mille, gli indici come numeri puri. Bastano due decimali. E in aula portate la calcolatrice, con le pile cariche."
+        },
+        {
+          "id": "id14",
+          "p": 13,
+          "voce": "Ricapitolando: leggi che cosa si chiede, barra il dato inutile, soggetto sopra e popolazione iniziale sotto, i mesi in dodicesimi, e sempre segno e simbolo. Ora allenati: quindici esercizi, ogni volta un calcolo diverso."
+        }
+      ]
+    },
+    "densita_simboli": {
+      "battute": [
+        {
+          "id": "ds01",
+          "p": 0,
+          "voce": "Un quadrato con il lato in chilometri, dei simboli, e una legenda che dice quanto vale ogni simbolo. Si chiede la densità di popolamento e il modello di distribuzione. Compare in tutte le prove."
+        },
+        {
+          "id": "ds02",
+          "p": 1,
+          "voce": "Il primo quadrato dell'aula: lato un chilometro, nove pallini, ogni pallino vale un abitante. Calcola la densità.",
+          "chiedi": {
+            "campi": [
+              {
+                "lab": "Densità",
+                "giusto": 9,
+                "tol": 0.01,
+                "unita": "ab/km²"
+              }
+            ],
+            "si": "Esatto: 9 abitanti per chilometro quadrato.",
+            "no": "No: 9 abitanti diviso un chilometro quadrato fa 9.",
+            "spiega": "Al numeratore sempre il numero di abitanti, al denominatore sempre l'area in chilometri quadrati. Il risultato si scrive con l'unità: abitanti per chilometro quadrato."
+          }
+        },
+        {
+          "id": "ds03",
+          "p": 2,
+          "voce": "Secondo quadrato: lato due chilometri. Prima di tutto l'area. Quanto fa?",
+          "chiedi": {
+            "campi": [
+              {
+                "lab": "Area",
+                "giusto": 4,
+                "tol": 0.01,
+                "unita": "km²"
+              }
+            ],
+            "si": "Giusto: due per due, quattro chilometri quadrati.",
+            "no": "No: l'area è lato per lato, due per due, quattro chilometri quadrati.",
+            "spiega": "L'errore che il professore vede ogni anno è scrivere otto: due più due più due più due. Quello è il perimetro, la lunghezza del bordo."
+          },
+          "nascondi": true
+        },
+        {
+          "id": "ds04",
+          "p": 3,
+          "voce": "Il bordo rosso è il perimetro. Non c'entra niente con la densità."
+        },
+        {
+          "id": "ds05",
+          "p": 2,
+          "voce": "Nove pallini, e ognuno vale due abitanti. Calcola la densità.",
+          "chiedi": {
+            "campi": [
+              {
+                "lab": "Densità",
+                "giusto": 4.5,
+                "tol": 0.01,
+                "unita": "ab/km²"
+              }
+            ],
+            "si": "Esatto: 18 diviso 4, quattro virgola 5.",
+            "no": "No: nove per due fa 18 abitanti, diviso 4 chilometri quadrati, quattro virgola 5.",
+            "spiega": "Sopra vanno gli abitanti, non i simboli: simboli per valore della legenda."
+          }
+        },
+        {
+          "id": "ds06",
+          "p": 4,
+          "voce": "Terzo quadrato: lato tre chilometri, nove pallini da tre virgola 5. Calcola la densità.",
+          "chiedi": {
+            "campi": [
+              {
+                "lab": "Densità",
+                "giusto": 3.5,
+                "tol": 0.01,
+                "unita": "ab/km²"
+              }
+            ],
+            "si": "Giusto: 31 virgola 5 diviso 9, tre virgola 5.",
+            "no": "No: nove per tre virgola 5 fa 31 virgola 5 abitanti. L'area è tre per tre, nove. 31 virgola 5 diviso 9 fa tre virgola 5.",
+            "spiega": "Sempre gli stessi tre passi: abitanti, area, divisione."
+          }
+        },
+        {
+          "id": "ds07",
+          "p": 5,
+          "voce": "Poi il modello di distribuzione. Qui i pallini coprono tutto il quadrato: distribuzione sparsa. E non scrivete mai casuale, perché in geografia il caso non esiste."
+        },
+        {
+          "id": "ds08",
+          "p": 6,
+          "voce": "Guarda questo quadrato. Come descrivi la distribuzione?",
+          "chiedi": {
+            "scelte": [
+              "Sparsa",
+              "Sparsa, in basso a destra",
+              "Accentrata al centro",
+              "Casuale"
+            ],
+            "giusta": 1,
+            "si": "Esatto: sparsa, ma solo in basso a destra, a sud-est.",
+            "no": "No: è sparsa, ma solo in basso a destra, a sud-est.",
+            "spiega": "Non basta dire sparsa: il professore vuole che si dica l'asimmetria, dove stanno i simboli."
+          },
+          "nascondi": true
+        },
+        {
+          "id": "ds09",
+          "p": 7,
+          "voce": "Qui invece tutti raccolti in un punto: accentrata, o accorpata, aggregata. E anche qui si dice dove: aggregata al centro."
+        },
+        {
+          "id": "ds10",
+          "p": 8,
+          "voce": "I pallini seguono una linea che fa delle curve, come un fiume o una strada di valle: distribuzione lineare sinuosa."
+        },
+        {
+          "id": "ds11",
+          "p": 9,
+          "voce": "E questo?",
+          "chiedi": {
+            "scelte": [
+              "Lineare sinuosa",
+              "Lineare regolare, a T",
+              "Accentrata"
+            ],
+            "giusta": 1,
+            "si": "Giusto: lineare regolare, a T.",
+            "no": "No: è lineare regolare, a T.",
+            "spiega": "Linee dritte e pallini equidistanti, come le case lungo due strade che si incrociano."
+          },
+          "nascondi": true
+        },
+        {
+          "id": "ds12",
+          "p": 10,
+          "voce": "Ricapitolando: abitanti uguale simboli per legenda, area uguale lato per lato, densità uguale abitanti diviso area. Poi il modello: sparso e dove, accentrato e dove, oppure lineare. Mai casuale. Ora allenati: quindici quadrati sempre diversi."
+        }
+      ]
+    },
+    "grafico_combinato": {
+      "battute": [
+        {
+          "id": "gc01",
+          "p": 0,
+          "voce": "L'ultimo esercizio della prova: costruisci un istogramma per maschi e femmine e raffigura sullo stesso diagramma anche il totale. L'esempio di aula va dal 1975 al 2015, ogni cinque anni. Mancano il 1985 e il 2010."
+        },
+        {
+          "id": "gc02",
+          "p": 0,
+          "voce": "Prima di disegnare, i totali. Nel 1975 ci sono 56 maschi e 60 femmine. Il totale?",
+          "chiedi": {
+            "campi": [
+              {
+                "lab": "Totale 1975",
+                "giusto": 116,
+                "tol": 0,
+                "unita": ""
+              }
+            ],
+            "si": "Esatto: 116.",
+            "no": "No: 56 più 60 fa 116.",
+            "spiega": "Così per ogni anno. Il totale più alto è quello del 2015: 60 più 58, 118."
+          }
+        },
+        {
+          "id": "gc03",
+          "p": 1,
+          "voce": "Ora la scala. Il valore più alto del grafico non è un maschio o una femmina: è il totale, 118. Fin dove deve arrivare l'asse verticale?",
+          "chiedi": {
+            "scelte": [
+              "Fino a 60",
+              "Fino a 100",
+              "Fino a 120"
+            ],
+            "giusta": 2,
+            "si": "Esatto: fino a 120.",
+            "no": "No: con l'asse fino a 60 o a 100 il totale non ci sta. Fino a 120.",
+            "spiega": "Il professore lo dice chiaro: deve arrivare a 120, per stare tranquilli. E il diagramma va fatto grande."
+          }
+        },
+        {
+          "id": "gc04",
+          "p": 3,
+          "voce": "Ora l'asse orizzontale. Se metti solo gli anni con i dati, l'asse salta dal 1980 al 1990 come se fossero cinque anni: il tempo è falsato."
+        },
+        {
+          "id": "gc05",
+          "p": 3,
+          "voce": "Allora: quante posizioni metti sull'asse orizzontale, dal 1975 al 2015?",
+          "chiedi": {
+            "campi": [
+              {
+                "lab": "Posizioni",
+                "giusto": 9,
+                "tol": 0,
+                "unita": "anni"
+              }
+            ],
+            "si": "Esatto: nove.",
+            "no": "No: nove posizioni, anche se i dati sono sette.",
+            "spiega": "Io non faccio finta che non ci siano, dice il professore: divido quella linea non per sette, ma per nove. Il 1985 e il 2010 hanno il loro posto, e lo spazio resta vuoto."
+          }
+        },
+        {
+          "id": "gc06",
+          "p": 4,
+          "voce": "Ecco l'asse giusto, con gli spazi vuoti al loro posto."
+        },
+        {
+          "id": "gc07",
+          "p": 5,
+          "voce": "Per ogni anno due canne verticali affiancate, maschi e femmine, con colori diversi. Va benissimo una bianca e una colorata con la penna."
+        },
+        {
+          "id": "gc08",
+          "p": 5,
+          "voce": "In alto, per ogni anno, un pallino per il totale, e i pallini si uniscono con una linea. Tra il 1980 e il 1990 manca un anno. Come li unisci?",
+          "chiedi": {
+            "scelte": [
+              "Linea continua",
+              "Linea tratteggiata",
+              "Non li unisco"
+            ],
+            "giusta": 1,
+            "si": "Esatto: tratteggiata.",
+            "no": "No: si uniscono con il tratteggio.",
+            "spiega": "Se delle annate vengono saltate bisogna darne evidenza: per collegare i punti attorno al buco si usa il tratteggio, per il resto la linea continua."
+          }
+        },
+        {
+          "id": "gc09",
+          "p": 6,
+          "voce": "Ed ecco il diagramma completo: canne, pallini, e la linea tratteggiata dove manca l'anno."
+        },
+        {
+          "id": "gc10",
+          "p": 7,
+          "voce": "Ricapitolando: calcola i totali, tara la scala sul totale più alto, metti tutti gli anni sull'asse anche quelli senza dato, canne affiancate per maschi e femmine, pallini per il totale uniti dalla linea, tratteggiata dove manca l'anno. Ora allenati: lo costruisci tu, quindici volte."
+        }
+      ]
+    }
+  },
+  "audio": {}
+}
