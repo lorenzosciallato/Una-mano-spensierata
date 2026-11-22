@@ -372,5 +372,40 @@
     "nome": "Assistente IA",
     "sottotesto": "Chatta con l'intera lezione",
     "url": "https://notebooklm.google.com/notebook/22adaea9-7673-4f5e-9f70-6f62ffcbea30"
+  },
+  "esercizi": {
+    "controllato": "2026-11-22",
+    "trovati": [
+      {
+        "id": "es1",
+        "tipo": "densita_popolamento",
+        "titolo": "Calcolo della densità di popolazione e indici demografici",
+        "punti_esame": "",
+        "consegna": "Svolgere calcoli matematici applicati allo spazio geografico, calcolando la densità di popolazione e indici demografici come i tassi di natalità e mortalità, collegandoli a specifiche argomentazioni geografiche.",
+        "procedimento": [],
+        "consigli_docente": [],
+        "errori_comuni": [],
+        "esempio_lezione": "",
+        "cause_discusse": [],
+        "serve_disegno": true
+      },
+      {
+        "id": "es2",
+        "tipo": "reticolo_coordinate",
+        "titolo": "Georeferenziazione e coordinate geografiche",
+        "punti_esame": "",
+        "consegna": "Determinare le coordinate geografiche di un punto calcolando latitudine e longitudine in termini di gradi rispetto all'Equatore e al meridiano di Greenwich. All'esame le coordinate devono essere espresse obbligatoriamente nel sistema sessagesimale, indicando gradi e primi.",
+        "procedimento": [],
+        "consigli_docente": [
+          "Esprimere le coordinate in gradi e primi (sistema sessagesimale, come l'orologio) e non in gradi decimali"
+        ],
+        "errori_comuni": [
+          "Fornire o inserire coordinate in gradi decimali (come quelle predefinite di Google Maps) anziché in gradi e primi: utilizzare il sistema di riferimento decimale invece di quello sessagesimale sballa la geolocalizzazione, portando a posizionare il punto in tutt'altro luogo (ad esempio in mezzo al mare)"
+        ],
+        "esempio_lezione": "",
+        "cause_discusse": [],
+        "serve_disegno": true
+      }
+    ]
   }
 }
