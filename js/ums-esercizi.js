@@ -242,6 +242,16 @@
       '.esx-docente h5{font:600 .95rem var(--font-body);color:var(--ink);margin:10px 0 4px}',
       '.esx-docente ul{margin:0;padding-left:1.2em;line-height:1.55;font-size:.95rem}',
       '.esx-etic-trappola{cursor:pointer}.esx-etic-trappola:focus{outline:none}',
+      '.esx-gc-testa{padding:2px 2px 8px}',
+      '.esx-gc-strumenti{display:flex;flex-wrap:wrap;gap:6px}',
+      '.esx-gc-strumenti button{display:inline-flex;align-items:center;gap:8px;font:600 .95rem/1 var(--font-body);padding:10px 14px;border-radius:999px;cursor:pointer;',
+      'border:1.5px solid rgba(139,110,75,.45);background:#fff;color:' + INCH + '}',
+      '.esx-gc-strumenti button[aria-pressed=true]{border-color:' + INCH + ';background:' + INCH + ';color:#fff;box-shadow:0 6px 14px -8px rgba(0,0,0,.5)}',
+      '.esx-gc-strumenti button[aria-pressed=true] i{outline:2px solid #fff;outline-offset:1px}',
+      '.esx-gc-strumenti.piccoli{margin-top:6px}.esx-gc-strumenti.piccoli button{padding:7px 12px;font-size:.85rem}',
+      '.esx-gc-riga{display:flex;align-items:center;gap:6px;margin-top:8px;flex-wrap:wrap}',
+      '.esx-gc-stato{flex:1;min-width:9em;font:700 .95rem var(--font-display);color:' + INCH + '}',
+      '.esx-gc-guida{margin:6px 0 0;font-size:.85rem;color:' + SEPPIA + ';line-height:1.4}',
       '.esx-etic-trappola:focus rect,.esx-etic-trappola:hover rect{stroke:' + ORO + ';stroke-width:2}'
     ].join('');
     document.head.appendChild(el('style', { id: 'esx-stile', text: css }));
@@ -3537,27 +3547,46 @@
       if (v.anni[0] % 2) ordineSlot.reverse();
       c.slot = segmentato(ordineSlot, 'Quanti anni sull’asse orizzontale');
       foglio.appendChild(el('div', { class: 'esx-riga' }, [c.slot]));
-      // 4. costruisci: canne, pallini e linea, tutto a mano
-      foglio.appendChild(el('p', { style: 'font-weight:600;color:var(--ink);margin:10px 0 6px', text: '4. Costruisci il diagramma' }));
-      c.modo = segmentato([{ t: 'Maschi', v: 'M' }, { t: 'Femmine', v: 'F' }, { t: 'Totale', v: 'T' }, { t: 'Linea', v: 'L' }], 'Che cosa stai disegnando');
-      c.modo.imposta('M');
-      foglio.appendChild(el('div', { class: 'esx-riga' }, [el('span', { class: 'esx-lab', text: 'Disegni' }), c.modo]));
-      c.tratto = segmentato([{ t: 'Continua', v: 'continua' }, { t: 'Tratteggiata', v: 'tratteggiata' }], 'Che linea tracci');
-      c.tratto.imposta('continua');
-      var rigaTratto = el('div', { class: 'esx-riga', style: 'display:none' }, [el('span', { class: 'esx-lab', text: 'Tratto' }), c.tratto]);
-      foglio.appendChild(rigaTratto);
-      c.modo.addEventListener('click', function () { modo = c.modo.valore() || 'M'; sel = null; scelto = null; rigaTratto.style.display = modo === 'L' ? '' : 'none'; aiuto(); disegna(); });
-      var stato = el('span', { class: 'esx-nota', style: 'margin:0;min-width:9em' });
+      // 4. costruisci: i comandi stanno SOPRA il diagramma, grandi, con i colori della legenda
+      foglio.appendChild(el('p', { style: 'font-weight:600;color:var(--ink);margin:10px 0 6px', text: '4. Costruisci il diagramma qui a fianco' }));
+      foglio.appendChild(el('p', { class: 'esx-nota', style: 'margin:0 0 6px', text: 'Sopra il diagramma scegli che cosa disegni: canne dei maschi, canne delle femmine, pallini del totale o la linea.' }));
+      var strumenti = el('div', { class: 'esx-gc-strumenti', role: 'group', 'aria-label': 'Che cosa stai disegnando' });
+      var bottoniModo = {};
+      [['M', 'Maschi', COL_M, 'canna'], ['F', 'Femmine', COL_F, 'canna'], ['T', 'Totale', COL_T, 'pallino'], ['L', 'Linea', COL_T, 'linea']].forEach(function (x) {
+        var ic = x[3] === 'canna' ? '<i style="display:inline-block;width:12px;height:16px;background:' + x[2] + ';border-radius:2px"></i>'
+          : x[3] === 'pallino' ? '<i style="display:inline-block;width:13px;height:13px;background:' + x[2] + ';border-radius:50%"></i>'
+          : '<i style="display:inline-block;width:20px;height:0;border-top:3px solid ' + x[2] + '"></i>';
+        var b = el('button', { type: 'button', 'aria-pressed': x[0] === 'M' ? 'true' : 'false', html: ic + '<span>' + x[1] + '</span>' });
+        b.addEventListener('click', function () { if (bloccato) return; scegliModo(x[0]); });
+        bottoniModo[x[0]] = b; strumenti.appendChild(b);
+      });
+      var tratti = el('div', { class: 'esx-gc-strumenti piccoli', role: 'group', 'aria-label': 'Che linea tracci', style: 'display:none' }), trattoScelto = 'continua', bottoniTratto = {};
+      [['continua', 'Continua'], ['tratteggiata', 'Tratteggiata']].forEach(function (x) {
+        var b = el('button', { type: 'button', 'aria-pressed': x[0] === 'continua' ? 'true' : 'false', html: '<i style="display:inline-block;width:22px;height:0;border-top:3px ' + (x[0] === 'continua' ? 'solid' : 'dashed') + ' ' + COL_T + '"></i><span>' + x[1] + '</span>' });
+        b.addEventListener('click', function () { if (bloccato) return; trattoScelto = x[0]; Object.keys(bottoniTratto).forEach(function (k) { bottoniTratto[k].setAttribute('aria-pressed', k === x[0] ? 'true' : 'false'); }); });
+        bottoniTratto[x[0]] = b; tratti.appendChild(b);
+      });
+      c.tratto = { valore: function () { return trattoScelto; }, blocca: function () {} };
+      c.modo = { valore: function () { return modo; }, imposta: function (k) { scegliModo(k); }, blocca: function () {} };
+      function scegliModo(k) {
+        modo = k; sel = null; scelto = null;
+        Object.keys(bottoniModo).forEach(function (q) { bottoniModo[q].setAttribute('aria-pressed', q === k ? 'true' : 'false'); });
+        tratti.style.display = k === 'L' ? '' : 'none';
+        aiuto(); if (d) disegna();
+      }
+      var stato = el('span', { class: 'esx-gc-stato', 'aria-live': 'polite' });
       var meno = el('button', { type: 'button', class: 'esx-btn sec pic', text: '−', 'aria-label': 'Abbassa di una linea' });
       var piu = el('button', { type: 'button', class: 'esx-btn sec pic', text: '+', 'aria-label': 'Alza di una linea' });
       var togli = el('button', { type: 'button', class: 'esx-btn sec pic', text: 'Togli' });
-      foglio.appendChild(el('div', { class: 'esx-comandi', style: 'margin-top:6px' }, [stato, meno, piu, togli]));
-      var guida = el('p', { class: 'esx-nota' });
-      foglio.appendChild(guida);
+      var guida = el('p', { class: 'esx-gc-guida' });
+      var piano = el('div');
+      tav.appendChild(el('div', { class: 'esx-gc-testa' }, [strumenti, tratti, el('div', { class: 'esx-gc-riga' }, [stato, meno, piu, togli]), guida]));
+      tav.appendChild(piano);
       function aiuto() {
         guida.textContent = modo === 'L'
-          ? 'Tocca un pallino del totale, poi quello dell’anno vicino: li unisci con il tratto scelto. Toccando di nuovo due pallini già uniti, togli la linea.'
-          : 'Premi sulla colonna dell’anno e trascina su o giù fino al valore: a sinistra la canna dei maschi, a destra quella delle femmine. Ogni linea sottile vale 2; con − e + ritocchi di una linea.';
+          ? 'Tocca un pallino del totale, poi quello dell’anno vicino: li unisci con il tratto scelto. Ritoccandoli, togli la linea.'
+          : modo === 'T' ? 'Premi sulla colonna dell’anno e trascina il pallino su o giù fino al totale.'
+          : 'Premi sulla colonna dell’anno e trascina su o giù: la canna ' + (modo === 'M' ? 'dei maschi' : 'delle femmine') + ' cresce con te. Ogni linea sottile vale 2.';
       }
       aiuto();
       function nomeSel() {
@@ -3578,14 +3607,13 @@
         var sc = c.scala.valore() || (v.scalaOk + 40), sl = c.slot.valore() || 'dati';
         if (!d || d.max !== sc || d.slot !== sl) {
           d = disegnaCombinato(v, { interattivo: true, max: sc, slot: sl }); d.max = sc; d.slot = sl;
-          tav.innerHTML = ''; tav.appendChild(d.nodo);
+          piano.innerHTML = ''; piano.appendChild(d.nodo);
           d.nodo.style.cursor = 'ns-resize';
           d.nodo.style.touchAction = 'none';
           // si costruisce TRASCINANDO, col mouse o col dito: premi sulla colonna e tira su o giù
           var tiro = null;
           var punta = function (ev) {
             var p = d.api.punto(ev.clientX, ev.clientY); if (!p) return null;
-            if (modo === 'M' || modo === 'F') { var s = p.lato; if (s !== modo) { modo = s; c.modo.imposta(s); aiuto(); } }
             return p;
           };
           d.nodo.addEventListener('pointerdown', function (ev) {
