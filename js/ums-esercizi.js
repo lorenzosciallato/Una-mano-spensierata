@@ -3770,7 +3770,10 @@
       '.esx-v-info{font-size:.82rem;color:var(--sub);white-space:nowrap}',
       '.esx-v-pillola{font:600 .8rem var(--font-body);padding:7px 11px;border-radius:999px;border:1px solid var(--dust);background:transparent;color:var(--ink);cursor:pointer}',
       '.esx-v-pillola[aria-pressed=true]{background:var(--ink);color:var(--paper,#fff);border-color:var(--ink)}',
-      '.esx-v-dom{margin-top:14px;border-radius:16px;border:1.5px solid #B4573E;background:linear-gradient(180deg,rgba(180,87,62,.07),transparent);padding:18px 18px 16px;',
+      '.esx-v-dock{position:absolute;left:12px;right:12px;bottom:12px;z-index:4}.esx-v-dock:empty{display:none}',
+      '.esx-v-dom{border-radius:16px;border:1.5px solid #B4573E;background:#fff;padding:16px 18px 14px;box-shadow:0 14px 34px -14px rgba(53,42,31,.45);',
+      '.night-mode .esx-v-dom{background:var(--ivory-dk)}',
+      '.esx-v-dom .esx-riga{margin-bottom:8px}.esx-v-dom .esx-comandi{margin-top:10px}',
       'animation:esxSu .35s ease both}',
       '@keyframes esxSu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}',
       '.esx-v-dom h4{margin:0 0 4px;font:700 .72rem var(--font-body);letter-spacing:.2em;text-transform:uppercase;color:#B4573E}',
@@ -3838,7 +3841,15 @@
     var inizi = [], totale = 0;
     bat.forEach(function (_b, k) { inizi.push(totale); totale += durata(k); });
     function mmss(s) { s = Math.max(0, Math.round(s)); return Math.floor(s / 60) + ':' + pad2(s % 60); }
-    var domanda = el('div'); box.appendChild(domanda);
+    // la domanda compare DENTRO il video, in basso: il disegno resta sopra, niente da scorrere
+    var domanda = el('div', { class: 'esx-v-dock' }); palco.appendChild(domanda);
+    function sistemaDock() {
+      var h = domanda.firstChild ? domanda.offsetHeight : 0;
+      tav.style.paddingBottom = h ? (h + 36) + 'px' : '';
+      ccBox.style.bottom = h ? (h + 22) + 'px' : '';
+    }
+    try { new ResizeObserver(sistemaDock).observe(domanda); } catch (e0) {}
+    new MutationObserver(sistemaDock).observe(domanda, { childList: true, subtree: true });
     var conVoce = bat.some(function (b) { return audioMappa[b.id]; });
     if (!conVoce) box.appendChild(el('p', { class: 'esx-nota', style: 'text-align:center;margin-top:10px', text: 'La voce sta arrivando: per ora il video scorre con i sottotitoli.' }));
     dove.appendChild(box);
@@ -3856,7 +3867,7 @@
       if (pp.fai && !nascondi) pp.fai(sc.api, anim && !RIDUCI, t);
       tav.innerHTML = ''; tav.appendChild(sc.nodo);
       extra.classList.remove('su'); extra.innerHTML = '';
-      if (pp.extra && !nascondi) { var ex = pp.extra(t); if (ex) { extra.appendChild(ex); setTimeout(function () { extra.classList.add('su'); }, 500); } }
+      if (pp.extra && !nascondi && !(bat[i] && bat[i].chiedi)) { var ex = pp.extra(t); if (ex) { extra.appendChild(ex); setTimeout(function () { extra.classList.add('su'); }, 500); } }
       riapriPannello();
     }
 
@@ -3930,7 +3941,7 @@
       i = Math.max(0, Math.min(bat.length - 1, k));
       finito = false;
       var vecchia = palco.querySelector('.esx-v-fine'); if (vecchia) vecchia.remove();
-      domanda.innerHTML = ''; attesaRisposta = false;
+      domanda.innerHTML = ''; attesaRisposta = false; ccBox.style.visibility = '';
       var b = bat[i];
       scena(b.p, !!b.nascondi, true);
       aggiornaBarra();
@@ -3941,6 +3952,7 @@
     function salta(k) { fermaVoce(); mostra(k); }
     function chiedi(b) {
       attesaRisposta = true;
+      ccBox.style.visibility = 'hidden';
       var q = b.chiedi, card = el('div', { class: 'esx-v-dom', role: 'group', 'aria-label': 'Tocca a te' });
       card.appendChild(el('h4', { text: 'Tocca a te' }));
       var fr = frasiDi(b.voce), ultima = fr[fr.length - 1] || '';
@@ -3953,7 +3965,7 @@
         var cD = el('input', { class: 'esx-campo', autocomplete: 'off', autocapitalize: 'characters', 'aria-label': C.lab === 'Latitudine' ? 'Lettera: N o S' : 'Lettera: E oppure O (o W)', maxlength: '1', style: 'width:1.6em;text-transform:uppercase' });
         var segno = function (s) { return el('span', { text: s, 'aria-hidden': 'true', style: 'font:700 1.7rem/1 Georgia,serif;color:var(--ink);margin:0 6px 0 2px;align-self:flex-start;padding-top:2px' }); };
         card.appendChild(el('div', { class: 'esx-riga', style: 'align-items:stretch;flex-wrap:nowrap' }, [el('span', { class: 'esx-lab', text: C.lab, style: 'align-self:center' }), cG, segno('\u00b0'), cP, segno('\u2032'), cD]));
-        card.appendChild(el('p', { class: 'esx-nota', style: 'margin:-2px 0 8px', text: 'Gradi, primi (anche 00) e la lettera: N o S, E oppure O (va bene anche W).' }));
+        card.appendChild(el('p', { class: 'esx-nota', style: 'margin:-2px 0 8px', text: 'Gradi, primi e la lettera: N o S, E oppure O (va bene anche W).' }));
         [cG, cP, cD].forEach(function (inp, k3, tutti) {
           inp.addEventListener('input', function () { if (k3 < 2 && inp.value.length >= Number(inp.getAttribute('maxlength')) && tutti[k3 + 1]) tutti[k3 + 1].focus(); });
           inp.addEventListener('keydown', function (ev) { if (ev.key === 'Enter') { ev.preventDefault(); rispondi.click(); } });
@@ -3994,7 +4006,7 @@
       domanda.appendChild(card);
       riapriPannello();
       var primo = card.querySelector('input'); if (primo && !stretto()) primo.focus({ preventScroll: true });
-      try { card.scrollIntoView({ behavior: RIDUCI ? 'auto' : 'smooth', block: 'nearest' }); } catch (e0) {}
+      setTimeout(function () { sistemaDock(); try { palco.scrollIntoView({ behavior: RIDUCI ? 'auto' : 'smooth', block: 'nearest' }); } catch (e0) {} }, 30);
       function esito(giusto, saltata) {
         segna(giusto);
         rispondi.remove(); salto.remove();
@@ -4005,6 +4017,7 @@
           card.appendChild(pg);
         }
         attesaRisposta = false;
+        ccBox.style.visibility = '';
         if (!suona) { suona = true; aggiornaPlay(); }
         parla(b.id + (giusto ? '-si' : '-no'), giusto ? q.si : q.no, function () {
           parla(b.id + '-spiega', q.spiega, function () {
