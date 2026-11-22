@@ -3471,7 +3471,7 @@
           var a = dove(sg.a), b = dove(sg.b); if (!a || !b) return;
           disegno.appendChild(sv('line', { x1: a.x, y1: a.y, x2: b.x, y2: b.y, stroke: COL_T, 'stroke-width': 3, 'stroke-dasharray': sg.s === 'tratteggiata' ? '9 7' : null }));
         });
-        traccia3(disegno, val, { senzaLinea: true }, false, null);
+        traccia3(disegno, val, { senzaLinea: true, valori: true }, false, null);
         if (scelto != null) { var p0 = dove(scelto); if (p0) disegno.appendChild(sv('circle', { cx: p0.x, cy: p0.y, r: 14, fill: 'rgba(200,169,110,.25)', stroke: ORO, 'stroke-width': 2.4 })); }
         if (sel) {
           var j = anniCol.indexOf(v.anni[sel.i]); if (j < 0) return;
@@ -3486,7 +3486,7 @@
         if (p.x < L || p.x > L + PW || p.y < T - 16 || p.y > T + PH + 10) return null;
         var j = Math.max(0, Math.min(n - 1, Math.floor((p.x - L) / colW)));
         var val = Math.round((T + PH - p.y) / PH * max / u) * u;
-        return { i: v.anni.indexOf(anniCol[j]), val: Math.max(0, Math.min(max, val)) };
+        return { i: v.anni.indexOf(anniCol[j]), val: Math.max(0, Math.min(max, val)), lato: p.x < xc(j) ? 'M' : 'F' };
       }
     };
     if (opz.valori) traccia3(sopra, giusti, { valori: !!opz.conValori, gap: 'tratteggiata' }, false, null);
@@ -3557,7 +3557,7 @@
       function aiuto() {
         guida.textContent = modo === 'L'
           ? 'Tocca un pallino del totale, poi quello dell’anno vicino: li unisci con il tratto scelto. Toccando di nuovo due pallini già uniti, togli la linea.'
-          : 'Tocca la colonna dell’anno all’altezza del valore. Ogni linea sottile della griglia vale 2; con − e + ritocchi l’ultimo che hai messo.';
+          : 'Premi sulla colonna dell’anno e trascina su o giù fino al valore: a sinistra la canna dei maschi, a destra quella delle femmine. Ogni linea sottile vale 2; con − e + ritocchi di una linea.';
       }
       aiuto();
       function nomeSel() {
@@ -3574,21 +3574,36 @@
         scelto = null; disegna();
       }
       function disegna() {
-        var sc = c.scala.valore(), sl = c.slot.valore();
-        if (!sc || !sl) {
-          // il piano c'è già, vuoto: gli assi si numerano dopo aver scelto scala e anni
-          var vuoto = disegnaCombinato(v, { max: v.scalaOk, slot: 'tutti', senzaEtichette: true });
-          var W2 = vuoto.nodo.viewBox.baseVal.width, H2 = vuoto.nodo.viewBox.baseVal.height;
-          vuoto.nodo.appendChild(sv('text', { x: W2 / 2, y: H2 / 2 - 10, 'text-anchor': 'middle', 'font-size': stretto() ? 26 : 17, 'font-style': 'italic', fill: SEPPIA }, 'Prima scegli la scala (2) e gli anni (3):'));
-          vuoto.nodo.appendChild(sv('text', { x: W2 / 2, y: H2 / 2 + 22, 'text-anchor': 'middle', 'font-size': stretto() ? 26 : 17, 'font-style': 'italic', fill: SEPPIA }, 'poi qui costruisci il diagramma.'));
-          tav.innerHTML = ''; tav.appendChild(vuoto.nodo);
-          d = null; stato.textContent = ''; riapriPannello(); return;
-        }
+        // il piano è attivo da subito; finché non scegli scala e anni ne uso di provvisori (che non suggeriscono la risposta)
+        var sc = c.scala.valore() || (v.scalaOk + 40), sl = c.slot.valore() || 'dati';
         if (!d || d.max !== sc || d.slot !== sl) {
           d = disegnaCombinato(v, { interattivo: true, max: sc, slot: sl }); d.max = sc; d.slot = sl;
           tav.innerHTML = ''; tav.appendChild(d.nodo);
-          d.nodo.style.cursor = 'crosshair';
-          d.nodo.addEventListener('click', function (ev) { if (bloccato) return; var p = d.api.punto(ev.clientX, ev.clientY); if (!p) return; if (modo === 'L') linea(p.i); else metti(modo, p.i, p.val); });
+          d.nodo.style.cursor = 'ns-resize';
+          d.nodo.style.touchAction = 'none';
+          // si costruisce TRASCINANDO, col mouse o col dito: premi sulla colonna e tira su o giù
+          var tiro = null;
+          var punta = function (ev) {
+            var p = d.api.punto(ev.clientX, ev.clientY); if (!p) return null;
+            if (modo === 'M' || modo === 'F') { var s = p.lato; if (s !== modo) { modo = s; c.modo.imposta(s); aiuto(); } }
+            return p;
+          };
+          d.nodo.addEventListener('pointerdown', function (ev) {
+            if (bloccato) return;
+            var p = punta(ev); if (!p) return;
+            ev.preventDefault();
+            if (modo === 'L') { linea(p.i); return; }
+            tiro = { id: ev.pointerId, i: p.i, s: modo };
+            try { d.nodo.setPointerCapture(ev.pointerId); } catch (e0) {}
+            metti(modo, p.i, p.val);
+          });
+          d.nodo.addEventListener('pointermove', function (ev) {
+            if (!tiro || ev.pointerId !== tiro.id || bloccato) return;
+            var p = d.api.punto(ev.clientX, ev.clientY); if (!p) return;
+            if (val[tiro.s][tiro.i] !== p.val) metti(tiro.s, tiro.i, p.val);
+          });
+          var lascia = function () { tiro = null; };
+          d.nodo.addEventListener('pointerup', lascia); d.nodo.addEventListener('pointercancel', lascia);
           d.nodo.addEventListener('keydown', tasto);
         }
         d.api.utente(val, segmenti, bloccato || modo === 'L' ? null : sel, bloccato ? null : scelto);
