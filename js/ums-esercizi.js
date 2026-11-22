@@ -2600,7 +2600,7 @@
       var base = { cols: 6, rows: 4, ns: 'N', eo: 'O', a0: 52, b0: 1, punti: [A, B], citta: false, labLat: [54], labLon: [3], trappola: null };
       function scena() { return disegnaReticolo(base, { senzaLuoghi: true }); }
       var passi = [
-        { scena: 's', stampa: 'testo', momentaneo: true, titolo: 'Il primo esercizio della prova', testo: ['Vale un punto, è il primo in tutte le prove: «un punto sicuro, se imparate a farlo».', 'Arriva in due modi: c’è un punto e si scrivono le coordinate, oppure ci sono le coordinate e si mette il punto. Qui il secondo modo.'] },
+        { scena: 's', stampa: 'testo', momentaneo: true, titolo: 'Il primo esercizio della prova', testo: ['È il primo esercizio in tutte le prove.', 'Arriva in due modi: c’è un punto e si scrivono le coordinate, oppure ci sono le coordinate e si mette il punto. Qui il secondo modo.'] },
         { scena: 's', stampa: true, titolo: 'Prima i numeri, su due lati', testo: ['Sono date solo due etichette: 54°00′ N e 3°00′ O. Si numerano tutte le linee, prima di tutto.', 'I paralleli salgono verso l’alto: 53, 54, 55… siamo a nord. I meridiani crescono verso sinistra: 2, 3, 4… siamo a ovest.'],
           regola: 'Se il numero sale andando in su, è nord. Se sale andando a sinistra, è ovest.', fai: function (a, an, t) { a.etichetta('lat', an, t); a.etichetta('lon', an, t); a.valori('lat', an, t); a.valori('lon', an, t); } },
         { scena: 's', stampa: true, titolo: 'A: prima la latitudine', testo: ['A è a 54°45′ N. Si prende la fascia tra 54° e 55°.', 'I primi si contano come i minuti dell’orologio: 60 è l’intero, 30 la metà, 15 un quarto, 45 tre quarti. Quindi 45′ è a tre quarti, verso il 55.'],
@@ -2953,7 +2953,7 @@
       function scena(nome, opz) { return disegnaIndici(scene[nome], opz || {}); }
       var pm = passiIndici(medio);
       var passi = [
-        { scena: 'medio', stampa: 'testo', momentaneo: true, titolo: 'Due o tre esercizi, un punto ciascuno', testo: ['Nella prova ci sono di solito due o tre calcoli di tassi, indici e incrementi. Il testo dà i dati, e dentro c’è sempre un dato inutile messo apposta.', 'La regola che vale per tutti: il soggetto della domanda va al numeratore, la popolazione di riferimento al denominatore.'],
+        { scena: 'medio', stampa: 'testo', momentaneo: true, titolo: 'Tassi, indici e incrementi', testo: ['Il testo dà i dati, e dentro c’è sempre un dato inutile messo apposta.', 'La regola che vale per tutti: il soggetto della domanda va al numeratore, la popolazione di riferimento al denominatore.'],
           regola: 'Soggetto sopra, popolazione sotto.' },
         { scena: 'medio', stampa: true, titolo: 'Incremento medio annuo: i dati', testo: ['L’esempio di aula: 23.618.420 abitanti al 1° gennaio 2009, 22.086.560 al 30 giugno 2016.', 'Servono solo le due popolazioni.'], fai: function (a, an, t) { a.serve(an, t); a.barra(an, t); } },
         { scena: 'medio', stampa: 'testo', titolo: pm[0].titolo, testo: pm[0].testo },
@@ -3284,7 +3284,7 @@
       var scene = { q1: q(1, 1, 'sparso', 'C', 9), q2: q(2, 2, 'sparso', 'C', 9), q3: q(3, 3.5, 'sparso', 'C', 9), se: q(2, 5, 'sparso', 'SE', 11), acc: q(2, 10, 'accentrato', 'C', 12), sin: q(3, 2, 'lineare', 'sinuoso', 12), tt: q(2, 4, 'lineare', 'T', 12) };
       function scena(nome, opz) { return disegnaDensitaS(scene[nome], opz || {}); }
       var passi = [
-        { scena: 'q1', stampa: 'testo', momentaneo: true, titolo: '«Un altro punto sicuro»', testo: ['Un quadrato con il lato in chilometri, dei simboli e una legenda che dice quanto vale ogni simbolo.', 'Si chiede la densità e il modello di distribuzione. Compare in tutte le prove.'] },
+        { scena: 'q1', stampa: 'testo', momentaneo: true, titolo: 'Densità e distribuzione', testo: ['Un quadrato con il lato in chilometri, dei simboli e una legenda che dice quanto vale ogni simbolo.', 'Si chiede la densità e il modello di distribuzione. Compare in tutte le prove.'] },
         { scena: 'q1', stampa: true, titolo: 'Il primo quadrato dell’aula', testo: ['Lato 1 km, 9 pallini, ogni pallino vale 1 abitante.', 'Sopra: 9 × 1 = 9 abitanti. Sotto: 1 × 1 = 1 km². Densità: 9 ÷ 1 = 9 ab/km².'],
           regola: '«Al numeratore sempre il numero di abitanti, al denominatore sempre l’area in km².»', fai: function (a, an, t) { a.conta(an, t); a.legenda(an, t); } },
         { scena: 'q2', stampa: true, titolo: 'Lato 2: l’area è 4, non 8', testo: ['Lato 2 km, 9 pallini, ognuno vale 2: 9 × 2 = 18 abitanti.', 'Area 2 × 2 = 4 km²: quattro quadratini. Chi scrive 8 ha fatto 2 + 2 + 2 + 2, il perimetro. 18 ÷ 4 = 4,5 ab/km².'],
@@ -3643,7 +3643,7 @@
       completaCombinato(aula);
       function scena(nome, opz) { return disegnaCombinato(aula, Object.assign({ slot: nome === 'sette' ? 'dati' : 'tutti' }, opz || {})); }
       var passi = [
-        { scena: 'nove', stampa: 'testo', momentaneo: true, titolo: 'L’ultimo esercizio della prova', testo: ['«Costruisci un istogramma per maschi e femmine e raffigura sullo stesso diagramma cartesiano anche il totale della popolazione.» Vale un punto.', 'L’esempio di aula: dal 1975 al 2015, ogni cinque anni. Mancano il 1985 e il 2010.'] },
+        { scena: 'nove', stampa: 'testo', momentaneo: true, titolo: 'L’ultimo esercizio della prova', testo: ['«Costruisci un istogramma per maschi e femmine e raffigura sullo stesso diagramma cartesiano anche il totale della popolazione.» È l’ultimo esercizio della prova.', 'L’esempio di aula: dal 1975 al 2015, ogni cinque anni. Mancano il 1985 e il 2010.'] },
         { scena: 'nove', stampa: true, titolo: 'Prima i totali', testo: ['1975: 56 + 60 = 116. 1980: 90. 1990: 76. 1995: 76. 2000: 88. 2005: 106. 2015: 60 + 58 = 118.', 'Il valore più alto non è un maschio o una femmina: è il totale, 118.'], fai: function (a, an, t) { a.scala(an, t); } },
         { scena: 'nove', stampa: 'testo', titolo: 'La scala: fino a 120', testo: ['Se tari l’asse sui maschi e le femmine (fino a 60), «non ci sta il totale».', '«Deve arrivare a 120, per stare tranquilli.» E il diagramma va fatto grande: non un francobollo.'], regola: 'La scala si tara sul totale.', fai: function (a, an, t) { a.scala(false, t); } },
         { scena: 'sette', stampa: true, momentaneo: true, titolo: 'Sette posizioni? No', testo: ['Mettendo solo gli anni con i dati, l’asse salta dal 1980 al 1990 e dal 2005 al 2015 come se fossero cinque anni: il tempo è falsato.'] },
