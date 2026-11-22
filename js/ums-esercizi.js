@@ -3910,7 +3910,29 @@
       var fr = frasiDi(b.voce), ultima = fr[fr.length - 1] || '';
       card.appendChild(el('p', { class: 'q', text: ultima.length < 70 && fr.length > 1 ? fr.slice(-2).join(' ') : ultima }));
       var leggiRisposta, segna;
-      if (q.scelte) {
+      if (q.coord) {
+        var C = q.coord;
+        var cG = el('input', { class: 'esx-campo', inputmode: 'numeric', autocomplete: 'off', 'aria-label': 'Gradi', maxlength: '3', style: 'width:2.6em' });
+        var cP = el('input', { class: 'esx-campo', inputmode: 'numeric', autocomplete: 'off', 'aria-label': 'Primi', maxlength: '2', style: 'width:2.1em' });
+        var cD = el('input', { class: 'esx-campo', autocomplete: 'off', autocapitalize: 'characters', 'aria-label': C.lab === 'Latitudine' ? 'Lettera: N o S' : 'Lettera: E oppure O (o W)', maxlength: '1', style: 'width:1.6em;text-transform:uppercase' });
+        var segno = function (s) { return el('span', { text: s, 'aria-hidden': 'true', style: 'font:700 1.7rem/1 Georgia,serif;color:var(--ink);margin:0 6px 0 2px;align-self:flex-start;padding-top:2px' }); };
+        card.appendChild(el('div', { class: 'esx-riga', style: 'align-items:stretch;flex-wrap:nowrap' }, [el('span', { class: 'esx-lab', text: C.lab, style: 'align-self:center' }), cG, segno('\u00b0'), cP, segno('\u2032'), cD]));
+        card.appendChild(el('p', { class: 'esx-nota', style: 'margin:-2px 0 8px', text: 'Gradi, primi (anche 00) e la lettera: N o S, E oppure O (va bene anche W).' }));
+        [cG, cP, cD].forEach(function (inp, k3, tutti) {
+          inp.addEventListener('input', function () { if (k3 < 2 && inp.value.length >= Number(inp.getAttribute('maxlength')) && tutti[k3 + 1]) tutti[k3 + 1].focus(); });
+          inp.addEventListener('keydown', function (ev) { if (ev.key === 'Enter') { ev.preventDefault(); rispondi.click(); } });
+        });
+        leggiRisposta = function () {
+          var vuoto = [cG, cP, cD].filter(function (x) { return !x.value.trim(); })[0];
+          if (vuoto) { vuoto.focus(); return null; }
+          return { g: numIt(cG.value), p: numIt(cP.value), d: cD.value.trim().toUpperCase().replace('W', 'O') };
+        };
+        segna = function () {
+          cG.classList.add(q._ok.g ? 'ok' : 'ko'); cP.classList.add(q._ok.p ? 'ok' : 'ko'); cD.classList.add(q._ok.d ? 'ok' : 'ko');
+          [cG, cP, cD].forEach(function (x) { x.disabled = true; });
+        };
+        q._coord = [cG, cP, cD];
+      } else if (q.scelte) {
         var seg = segmentato(q.scelte.map(function (s, k2) { return { t: s, v: k2 }; }), 'Scegli la risposta');
         card.appendChild(el('div', { class: 'esx-riga' }, [seg]));
         leggiRisposta = function () { var v = seg.valore(); return v == null ? null : v; };
@@ -3942,7 +3964,7 @@
         rispondi.remove(); salto.remove();
         card.appendChild(el('p', { class: 'esx-v-esito ' + (giusto ? 'si' : 'no'), text: saltata ? 'Ecco come si fa.' : giusto ? 'Sì!' : 'No.' }));
         if (!giusto) {
-          var rg = q.scelte ? q.scelte[q.giusta] : q._campi.map(function (c) { var g = c.cp.giusto; return c.cp.lab + ' ' + (Math.abs(g) >= 1000 ? migliaia(g) : String(g).replace('.', ',').replace('-', '\u2212')) + (c.cp.unita && c.cp.unita.length < 6 ? c.cp.unita : ''); }).join(' \u00b7 ');
+          var rg = q.coord ? coord(q.coord.gradi, q.coord.primi, q.coord.dir) : q.scelte ? q.scelte[q.giusta] : q._campi.map(function (c) { var g = c.cp.giusto; return c.cp.lab + ' ' + (Math.abs(g) >= 1000 ? migliaia(g) : String(g).replace('.', ',').replace('-', '\u2212')) + (c.cp.unita && c.cp.unita.length < 6 ? c.cp.unita : ''); }).join(' \u00b7 ');
           var pg = el('p', { class: 'esx-v-giusta' }); pg.appendChild(document.createTextNode('Risposta giusta: ')); pg.appendChild(el('b', { text: rg }));
           card.appendChild(pg);
         }
@@ -3960,7 +3982,10 @@
       rispondi.addEventListener('click', function () {
         var r = leggiRisposta(); if (r === null) return;
         var giusto;
-        if (q.scelte) giusto = r === q.giusta;
+        if (q.coord) {
+          q._ok = { g: r.g === q.coord.gradi, p: vicinoA(r.p, q.coord.primi, q.coord.tolPrimi || 0) && r.p < 60, d: r.d === q.coord.dir };
+          giusto = q._ok.g && q._ok.p && q._ok.d;
+        } else if (q.scelte) giusto = r === q.giusta;
         else {
           giusto = true;
           q._campi.forEach(function (c, k2) {
@@ -3971,7 +3996,7 @@
         }
         esito(giusto, false);
       });
-      salto.addEventListener('click', function () { if (q.scelte) segna(false); else { q._campi.forEach(function (c) { c.ok = false; c.inp.value = String(c.cp.giusto).replace('.', ','); }); segna(false); } esito(false, true); });
+      salto.addEventListener('click', function () { if (q.coord) { q._ok = { g: false, p: false, d: false }; q._coord[0].value = q.coord.gradi; q._coord[1].value = pad2(q.coord.primi); q._coord[2].value = q.coord.dir; segna(false); } else if (q.scelte) segna(false); else { q._campi.forEach(function (c) { c.ok = false; c.inp.value = String(c.cp.giusto).replace('.', ','); }); segna(false); } esito(false, true); });
     }
     function fine() {
       finito = true; suona = false; aggiornaPlay();

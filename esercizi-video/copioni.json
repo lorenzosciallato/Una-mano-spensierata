@@ -34,23 +34,16 @@
           "p": 4,
           "voce": "Hanoi sta proprio sopra il parallelo dei ventuno gradi. Tocca a te: scrivi la latitudine di Hanoi, in gradi e primi.",
           "chiedi": {
-            "campi": [
-              {
-                "lab": "Gradi",
-                "giusto": 21,
-                "tol": 0,
-                "unita": "°"
-              },
-              {
-                "lab": "Primi",
-                "giusto": 0,
-                "tol": 0,
-                "unita": "′ N"
-              }
-            ],
             "si": "Esatto: ventuno gradi e zero zero primi nord.",
             "no": "No. Hanoi sta proprio sulla linea dei ventuno gradi: ventuno gradi e zero zero primi nord.",
-            "spiega": "Quando il punto sta sulla linea, gli zero zero si scrivono sempre. Senza, come dice il professore, è battaglia navale: indichi un'area, non un punto."
+            "spiega": "Quando il punto sta sulla linea, gli zero zero si scrivono sempre. Senza, come dice il professore, è battaglia navale: indichi un'area, non un punto.",
+            "coord": {
+              "lab": "Latitudine",
+              "gradi": 21,
+              "primi": 0,
+              "dir": "N",
+              "tolPrimi": 0
+            }
           }
         },
         {
@@ -63,23 +56,16 @@
           "p": 5,
           "voce": "Un grado sono sessanta primi, come un'ora sono sessanta minuti. Guarda dove sta Hanoi nel riquadro e scrivi la longitudine, in gradi e primi.",
           "chiedi": {
-            "campi": [
-              {
-                "lab": "Gradi",
-                "giusto": 105,
-                "tol": 0,
-                "unita": "°"
-              },
-              {
-                "lab": "Primi",
-                "giusto": 50,
-                "tol": 5,
-                "unita": "′ E"
-              }
-            ],
             "si": "Giusto: centocinque gradi e cinquanta primi est.",
             "no": "Non proprio. La risposta è centocinque gradi e cinquanta primi est.",
-            "spiega": "Dividiamo il riquadro in sesti, dieci primi ciascuno: Hanoi è a cinque sesti, cioè cinquanta primi. Va bene anche una stima vicina, ma mai sessanta o settantacinque: sessanta primi non esistono, sono già il grado dopo."
+            "spiega": "Dividiamo il riquadro in sesti, dieci primi ciascuno: Hanoi è a cinque sesti, cioè cinquanta primi. Va bene anche una stima vicina, ma mai sessanta o settantacinque: sessanta primi non esistono, sono già il grado dopo.",
+            "coord": {
+              "lab": "Longitudine",
+              "gradi": 105,
+              "primi": 50,
+              "dir": "E",
+              "tolPrimi": 5
+            }
           }
         },
         {
@@ -92,23 +78,16 @@
           "p": 6,
           "voce": "Adesso Hong Kong. Sta tra i paralleli dei ventidue e dei ventitré gradi. Scrivi la latitudine.",
           "chiedi": {
-            "campi": [
-              {
-                "lab": "Gradi",
-                "giusto": 22,
-                "tol": 0,
-                "unita": "°"
-              },
-              {
-                "lab": "Primi",
-                "giusto": 15,
-                "tol": 5,
-                "unita": "′ N"
-              }
-            ],
             "si": "Esatto: ventidue gradi e quindici primi nord.",
             "no": "No: ventidue gradi e quindici primi nord.",
-            "spiega": "Dividiamo il riquadro in quarti, come i quarti d'ora. Hong Kong è a un quarto sopra la linea dei ventidue: quindici primi. La metà sarebbe trenta, tre quarti quarantacinque."
+            "spiega": "Dividiamo il riquadro in quarti, come i quarti d'ora. Hong Kong è a un quarto sopra la linea dei ventidue: quindici primi. La metà sarebbe trenta, tre quarti quarantacinque.",
+            "coord": {
+              "lab": "Latitudine",
+              "gradi": 22,
+              "primi": 15,
+              "dir": "N",
+              "tolPrimi": 5
+            }
           }
         },
         {
@@ -136,23 +115,16 @@
           "p": 10,
           "voce": "Buenos Aires sta tra i trentaquattro e i trentacinque gradi sud, poco oltre la metà scendendo. Scrivi la latitudine.",
           "chiedi": {
-            "campi": [
-              {
-                "lab": "Gradi",
-                "giusto": 34,
-                "tol": 0,
-                "unita": "°"
-              },
-              {
-                "lab": "Primi",
-                "giusto": 35,
-                "tol": 5,
-                "unita": "′ S"
-              }
-            ],
             "si": "Giusto: trentaquattro gradi e trentacinque primi sud.",
             "no": "No: trentaquattro gradi e trentacinque primi sud.",
-            "spiega": "A sud si parte dalla linea con il numero più basso, i trentaquattro, e si scende. Poco oltre la metà: trentacinque primi."
+            "spiega": "A sud si parte dalla linea con il numero più basso, i trentaquattro, e si scende. Poco oltre la metà: trentacinque primi.",
+            "coord": {
+              "lab": "Latitudine",
+              "gradi": 34,
+              "primi": 35,
+              "dir": "S",
+              "tolPrimi": 5
+            }
           }
         },
         {
