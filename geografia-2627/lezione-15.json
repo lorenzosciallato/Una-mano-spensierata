@@ -372,5 +372,129 @@
     "nome": "Assistente IA",
     "sottotesto": "Chatta con l'intera lezione",
     "url": "https://notebooklm.google.com/notebook/22adaea9-7673-4f5e-9f70-6f62ffcbea30"
+  },
+  "esercizi": {
+    "controllato": "2026-11-22",
+    "trovati": [
+      {
+        "id": "es1",
+        "tipo": "reticolo_coordinate",
+        "titolo": "Coordinate: trova latitudine e longitudine",
+        "punti_esame": "1 punto",
+        "consegna": "C'è un punto sul reticolo: si scrivono latitudine e longitudine in gradi e primi.",
+        "procedimento": [
+          "Scrivere i numeri su tutte le linee, su due lati",
+          "Guardare il verso dei numeri: nord o sud, est o ovest",
+          "Prima la latitudine, poi la longitudine",
+          "Stimare i primi come sull'orologio: 15, 30, 45"
+        ],
+        "consigli_docente": [
+          "È il primo esercizio in tutte le prove: «un punto sicuro, se imparate a farlo»",
+          "«Prima cosa da fare: scrivete i numeri attorno, su due lati»",
+          "Gradi con il tondino (°), primi con l'apice (′), sempre N o S, E o O (va bene anche W)",
+          "Se il punto è sulla linea, gli 00 vanno sempre scritti: «altrimenti è battaglia navale»"
+        ],
+        "errori_comuni": [
+          "Partire senza aver numerato i margini (49° invece di 50° nel compito corretto in aula)",
+          "«Girare il foglio» e confondere il nord con l'est",
+          "Scrivere 60 o 75 primi: «60 non esiste, è di nuovo 0»"
+        ],
+        "serve_disegno": true
+      },
+      {
+        "id": "es2",
+        "tipo": "reticolo_posiziona",
+        "titolo": "Coordinate: metti il punto",
+        "punti_esame": "1 punto",
+        "consegna": "Sono date latitudine e longitudine: si mette il punto sul reticolo.",
+        "procedimento": [
+          "Numerare tutte le linee",
+          "Trovare la fascia della latitudine e la frazione dei primi",
+          "Trovare la fascia della longitudine",
+          "Segnare il punto all'incrocio"
+        ],
+        "consigli_docente": [
+          "«Questo esercizio nel compito arriva in due modi»: leggere le coordinate di un punto, oppure mettere il punto date le coordinate",
+          "Prima la latitudine, poi la longitudine"
+        ],
+        "errori_comuni": [
+          "Contare i gradi nel verso sbagliato",
+          "Trattare i primi come decimali"
+        ],
+        "serve_disegno": true
+      },
+      {
+        "id": "es3",
+        "tipo": "indici_demografici",
+        "titolo": "Tassi, indici e incrementi",
+        "punti_esame": "1 punto ciascuno (2 o 3 nella prova)",
+        "consegna": "Un testo con dati demografici: si calcolano incremento medio annuo, tassi di natalità e mortalità, saldi, indice di maschilità o di dipendenza. C'è sempre un dato inutile.",
+        "procedimento": [
+          "Leggere che cosa si chiede",
+          "Barrare il dato inutile",
+          "Soggetto al numeratore, popolazione iniziale al denominatore",
+          "Per gli incrementi medi: i mesi in dodicesimi, poi ÷ anni e ÷ popolazione iniziale",
+          "Scrivere segno e simbolo (% o ‰)"
+        ],
+        "consigli_docente": [
+          "Il soggetto della domanda va sempre al numeratore",
+          "Al denominatore SEMPRE la popolazione iniziale",
+          "Tassi per 100 o per 1000 «a vostra discrezione»; gli indici restano numeri puri",
+          "Bastano due decimali; il meno per i decrementi, il più davanti agli incrementi",
+          "Portare la calcolatrice, con le pile cariche: «portatene due»"
+        ],
+        "errori_comuni": [
+          "Usare il dato inutile («lo lasci stare buono lì dov'è»)",
+          "Dividere per 7 invece che per 7,5: «non hai considerato che ci sono dei mesi in mezzo»"
+        ],
+        "serve_disegno": false
+      },
+      {
+        "id": "es4",
+        "tipo": "densita_simboli",
+        "titolo": "Densità e modello di distribuzione",
+        "punti_esame": "1 punto",
+        "consegna": "Un quadrato con il lato in km e dei simboli con la legenda: si calcola la densità e si descrive il modello di distribuzione.",
+        "procedimento": [
+          "Abitanti = simboli × valore della legenda",
+          "Area = lato × lato",
+          "Densità = abitanti ÷ area, in ab/km²",
+          "Modello: sparso (e dove), accentrato (e dove), lineare (sinuoso o a T)"
+        ],
+        "consigli_docente": [
+          "«Al denominatore sempre l'area in chilometri quadrati, al numeratore sempre il numero di abitanti»",
+          "Dire le asimmetrie: «sparso in basso a destra, a sud-est»"
+        ],
+        "errori_comuni": [
+          "Calcolare il perimetro: «ho fatto 2 + 2 + 2 + 2»",
+          "Scrivere «casuale»: «in geografia non esiste il caso»"
+        ],
+        "serve_disegno": true
+      },
+      {
+        "id": "es5",
+        "tipo": "grafico_combinato",
+        "titolo": "Istogramma maschi e femmine con il totale",
+        "punti_esame": "1 punto (ultimo esercizio)",
+        "consegna": "«Costruisci un istogramma per maschi e femmine e raffigura sullo stesso diagramma cartesiano anche il totale della popolazione.»",
+        "procedimento": [
+          "Calcolare i totali",
+          "Asse verticale tarato sul totale più alto",
+          "Tutti gli anni sull'asse orizzontale, anche quelli senza dato",
+          "Canne affiancate per maschi e femmine",
+          "Pallini del totale uniti da una linea, tratteggiata dove manca l'anno"
+        ],
+        "consigli_docente": [
+          "«Deve arrivare a 120, per stare tranquilli»: la scala si tara sul totale",
+          "«Divido quella linea non per sette ma per nove»: gli anni mancanti restano",
+          "Canne con colori diversi: «una interna bianca, l'altra colorata con la penna»"
+        ],
+        "errori_comuni": [
+          "Grafico troppo piccolo, «non ci sta il totale»",
+          "Ignorare gli anni mancanti"
+        ],
+        "serve_disegno": true
+      }
+    ]
   }
 }

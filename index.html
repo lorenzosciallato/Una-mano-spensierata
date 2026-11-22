@@ -447,6 +447,33 @@ body.night-mode .bacheca-card.cal-card{background:#7E6533; border-color:#A88A4F;
 .cv-sezione-tit{font-size:.66rem; font-weight:700; letter-spacing:.28em; text-transform:uppercase; color:var(--gold-dk);}
 .cv-sezione-nota{font-size:.7rem; color:var(--sub);}
 .cv-row-mat .cv-num{font-size:1.5rem;}
+/* ESERCIZI PER L'ESAME — blocco in cima alla materia, color terracotta */
+.cv-esame{position:relative; margin:.2rem 0 1.2rem; padding:1.35rem 1.15rem .35rem; border-radius:18px; overflow:hidden;
+  background:linear-gradient(155deg,#B4573E 0%,#9A4430 60%,#7E3524 100%); color:#FBF1EA;
+  box-shadow:0 14px 34px -18px rgba(126,53,36,.75); opacity:0; animation:rowIn .55s var(--ease) both;}
+.cv-esame::after{content:""; position:absolute; right:-40px; top:-40px; width:170px; height:170px; border-radius:50%;
+  border:1.5px solid rgba(255,255,255,.14); box-shadow:0 0 0 22px rgba(255,255,255,.04), 0 0 0 46px rgba(255,255,255,.03); pointer-events:none;}
+.cv-esame-kick{display:block; font-size:.62rem; font-weight:700; letter-spacing:.28em; text-transform:uppercase; color:#F6D6C6;}
+.cv-esame-tit{font-family:var(--font-display); font-style:italic; font-weight:700; font-size:clamp(1.45rem,4.6vw,2rem); line-height:1.1; margin:.35rem 0 .45rem; color:#fff;}
+.cv-esame-sub{font-size:.82rem; line-height:1.5; color:#F3DCD0; max-width:54ch; margin:0 0 .5rem;}
+.cv-esame .cv-row{border-bottom-color:rgba(255,255,255,.16); position:relative; z-index:1;}
+.cv-esame .cv-row:last-child{border-bottom:none;}
+.cv-esame .cv-num{color:rgba(255,255,255,.38); font-size:1.6rem;}
+.cv-esame .cv-row:hover .cv-num, .cv-esame .cv-row:focus-visible .cv-num{color:#fff;}
+.cv-esame .cv-row-title{color:#fff;}
+.cv-esame .cv-row-meta, .cv-esame .cv-row-meta.empty{color:#F3CDBA; font-weight:600;}
+.cv-esame .cv-dot{border-color:rgba(255,255,255,.55);}
+.cv-esame .cv-dot.on{background:#fff; border-color:#fff; box-shadow:0 0 0 4px rgba(255,255,255,.18);}
+.cv-esame .cv-chevron, .cv-esame .cv-row:hover .cv-chevron{color:#fff;}
+.cv-esame .cv-row:focus-visible{outline:2px solid #fff; outline-offset:2px; border-radius:8px;}
+@media (max-width:520px){.cv-esame{padding:1.1rem .8rem .15rem;} .cv-esame .cv-row{gap:.7rem;} .cv-esame .cv-num{width:24px; min-width:24px; font-size:1.3rem;} .cv-esame .cv-row-title{font-size:1.02rem;}}
+body.night-mode .cv-esame{background:linear-gradient(155deg,#9C4A35 0%,#7F3828 60%,#652B1E 100%);}
+body.night-mode .cv-esame .cv-row{border-color:rgba(255,255,255,.12);}
+body.night-mode .cv-esame .cv-num{color:rgba(255,255,255,.32);}
+body.night-mode .cv-esame .cv-row-title{color:#fff;}
+body.night-mode .cv-esame .cv-row-meta{color:#F3CDBA;}
+body.night-mode .cv-esame .cv-dot{border-color:rgba(255,255,255,.55);}
+body.night-mode .cv-esame .cv-num{color:rgba(255,255,255,.45);}
 body.night-mode .cv-sezione{border-color:#2B2E38;}
 body.night-mode .cv-sezione-tit{color:#D9BC85;}
 body.night-mode .cv-sezione-nota{color:#918E86;}
@@ -1062,6 +1089,59 @@ const MATERIALE_AGGIUNTIVO = {
     ]
   }
 };
+// ESERCIZI PER L'ESAME — materie che hanno una lezione in cui il docente svolge
+// la prova scritta: in cima all'elenco, un blocco che porta dritto a ogni
+// esercizio (tutorial, 15 esercizi sempre diversi, scheda da stampare).
+const ESERCIZI_ESAME = {
+  'geografia-2627': {
+    lezione: 15,
+    sotto: 'I cinque esercizi della prova scritta, come li ha svolti il docente nella lezione 15. Per ognuno: il metodo passo passo, 15 esercizi sempre diversi e la scheda da stampare.',
+    voci: [
+      { id: 'es1', t: 'Coordinate: trova latitudine e longitudine', d: '1 punto · il primo esercizio della prova' },
+      { id: 'es2', t: 'Coordinate: metti il punto', d: '1 punto · l\u2019altro modo in cui arriva' },
+      { id: 'es3', t: 'Tassi, indici e incrementi', d: '1 punto ciascuno · 2 o 3 nella prova' },
+      { id: 'es4', t: 'Densit\u00e0 e modello di distribuzione', d: '1 punto · con la legenda dei simboli' },
+      { id: 'es5', t: 'Istogramma maschi e femmine con il totale', d: '1 punto · l\u2019ultimo esercizio' }
+    ]
+  }
+};
+function cvEsame(list, course, key, visits){
+  const esame = ESERCIZI_ESAME[key];
+  const box = document.createElement('section');
+  box.className = 'cv-esame';
+  box.setAttribute('aria-label', 'Esercizi per l\u2019esame');
+  box.innerHTML = `<span class="cv-esame-kick">Prova scritta</span>
+    <h2 class="cv-esame-tit">Esercizi per l\u2019esame</h2>
+    <p class="cv-esame-sub">${esame.sotto}</p>`;
+  esame.voci.forEach((m, j) => {
+    const iso = visits[key + '#esame-' + m.id];
+    const row = document.createElement('button');
+    row.type = 'button';
+    row.className = 'cv-row';
+    row.style.animationDelay = (0.08 + j * 0.05) + 's';
+    row.innerHTML = `
+      <span class="cv-num" aria-hidden="true">${j + 1}</span>
+      <span class="cv-row-body">
+        <span class="cv-row-title">${m.t}</span>
+        <span class="cv-row-meta">${iso ? fraseVisita(iso) : m.d}</span>
+      </span>
+      <span class="cv-dot ${iso ? 'on' : ''}" aria-hidden="true"></span>
+      <span class="cv-chevron" aria-hidden="true">${chevronSVG}</span>`;
+    row.addEventListener('click', () => {
+      const url = course.lezioni.urlTemplate.replace('{n}', esame.lezione) + '&es=' + m.id;
+      window.open(url, '_blank', 'noopener');
+      const oggi = new Date();
+      const isoOggi = oggi.getFullYear() + '-' + String(oggi.getMonth()+1).padStart(2,'0') + '-' + String(oggi.getDate()).padStart(2,'0');
+      const v = loadVisits();
+      v[key + '#esame-' + m.id] = isoOggi;
+      saveVisits(v);
+      row.querySelector('.cv-dot').classList.add('on');
+      row.querySelector('.cv-row-meta').textContent = fraseVisita(isoOggi);
+    });
+    box.appendChild(row);
+  });
+  list.appendChild(box);
+}
 function cvSezione(list, kicker, nota){
   const h = document.createElement('div');
   h.className = 'cv-sezione';
@@ -1082,7 +1162,8 @@ function openCourse(course){
   list.innerHTML = '';
   let fatte = 0;
   const materiale = MATERIALE_AGGIUNTIVO[key];
-  if (materiale) cvSezione(list, 'Appunti dalle lezioni', course.lezioni.count + ' lezioni');
+  if (ESERCIZI_ESAME[key]) cvEsame(list, course, key, visits);
+  if (materiale || ESERCIZI_ESAME[key]) cvSezione(list, 'Appunti dalle lezioni', course.lezioni.count + ' lezioni');
 
   for (let i = 1; i <= course.lezioni.count; i++){
     const iso = visits[key + '#' + i];

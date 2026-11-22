@@ -38,7 +38,8 @@
         else if (/\bgrafic[oi]\b|istogramm/i.test(tt)) e.tipo = 'grafico_dati';
       }
       if (e.tipo === 'altro') return e.da_costruire || (Array.isArray(e.banca) && e.banca.length > 0);
-      return ['reticolo_coordinate', 'densita_popolamento', 'tassi_demografici', 'grafico_dati'].indexOf(e.tipo) >= 0;
+      return ['reticolo_coordinate', 'densita_popolamento', 'tassi_demografici', 'grafico_dati',
+        'reticolo_posiziona', 'indici_demografici', 'densita_simboli', 'grafico_combinato'].indexOf(e.tipo) >= 0;
     });
     if (lista.length) monta(lista);
   }).catch(function (err) { try { console.error('Esercizi d\u2019esame:', err); } catch (e) {} });
@@ -254,10 +255,14 @@
     var n = document.getElementById('esx-conteggio');
     if (n) n.textContent = lista.length === 1 ? 'Un esercizio della prova scritta.' : lista.length + ' esercizi della prova scritta.';
     var palco = el('div');
+    // ?es=es3: si arriva da "Esercizi per l'esame" dell'indice, con l'esercizio già scelto
+    var vuole = null, iniziale = 0;
+    try { vuole = new URLSearchParams(location.search).get('es'); } catch (e0) {}
+    lista.forEach(function (e, i) { if (vuole && e.id === vuole) iniziale = i; });
     if (lista.length > 1) {
       var scelta = el('div', { class: 'esx-scelta', role: 'group', 'aria-label': 'Scegli l\u2019esercizio' });
       lista.forEach(function (e, i) {
-        var b = el('button', { type: 'button', 'aria-pressed': i === 0 ? 'true' : 'false' },
+        var b = el('button', { type: 'button', 'aria-pressed': i === iniziale ? 'true' : 'false' },
           [e.titolo || ('Esercizio ' + (i + 1)), e.punti_esame ? el('small', { text: 'Vale ' + e.punti_esame }) : null]);
         b.addEventListener('click', function () {
           Array.prototype.forEach.call(scelta.children, function (x) { x.setAttribute('aria-pressed', 'false'); });
@@ -279,12 +284,27 @@
       palco.appendChild(x.nodo);
       riapriPannello();
     }
-    apri(lista[0]);
+    apri(lista[iniziale]);
+    if (vuole) setTimeout(function () { apriDaFuori(acc); }, 500);
+  }
+  // apre la lezione e la sezione 09, poi ci scorre sopra
+  function apriDaFuori(acc) {
+    var master = document.getElementById('master-toggle-btn'), cont = document.getElementById('master-content');
+    if (master && cont && !cont.classList.contains('open')) master.click();
+    setTimeout(function () {
+      var h = acc.querySelector('.accordion-header');
+      var pan = h && (h.closest('.ums-acc-h') || h).nextElementSibling;
+      if (h && pan && !pan.classList.contains('active')) h.click();
+      acc.style.scrollMarginTop = '84px';
+      setTimeout(function () { acc.scrollIntoView({ behavior: RIDUCI ? 'auto' : 'smooth', block: 'start' }); }, 450);
+    }, 300);
   }
 
   function motoreDi(e) {
     return e.tipo === 'reticolo_coordinate' ? RETICOLO : e.tipo === 'densita_popolamento' ? DENSITA
          : e.tipo === 'tassi_demografici' ? TASSI : e.tipo === 'grafico_dati' ? GRAFICO
+         : e.tipo === 'reticolo_posiziona' ? POSIZIONA : e.tipo === 'indici_demografici' ? INDICI
+         : e.tipo === 'densita_simboli' ? DENSITA_S : e.tipo === 'grafico_combinato' ? COMBINATO
          : e.da_costruire ? null : BANCA;
   }
   function esercizio(e, voci) {
@@ -582,7 +602,7 @@
     var seme = nuovoSeme();
     var box = el('div', { class: 'esx-stampa' });
     box.appendChild(el('h4', { style: 'font:700 1.15rem var(--font-display);color:var(--ink);margin:0 0 10px', text: 'Scheda da stampare' }));
-    box.appendChild(el('p', { text: 'Tutti gli esercizi d\u2019esame di questa lezione (' + voci.map(function (x) { return x.e.titolo; }).join(' e ') + '). ' +
+    box.appendChild(el('p', { text: 'Tutti gli esercizi d\u2019esame di questa lezione (' + elencoE(voci.map(function (x) { return x.e.titolo; })) + '). ' +
       'Per ognuno: il metodo spiegato passo passo con i disegni, poi 15 esercizi nuovi con lo spazio per le risposte. Le soluzioni sono nelle ultime pagine.' }));
     var numeroScheda = el('p', { class: 'esx-nota' });
     function scriviNumero() { numeroScheda.textContent = 'Scheda n. ' + seme + '. Ristampando la stessa scheda, gli esercizi restano gli stessi.'; }
@@ -659,9 +679,10 @@
       'table{border-collapse:collapse;width:100%;font-size:9.5pt}td,th{border:1px solid #aaa;padding:4px 6px;text-align:left;vertical-align:top}th{background:#eee}' +
       '</style></head><body>' +
       '<header><h1>Esercizi d\u2019esame</h1><p>' + voci.map(function (x) { return esc(x.e.titolo); }).join(' \u2014 ') +
-      '<br><b>Soluzioni in fondo al documento, ' + (voci.length > 1 ? 'sia per ' + voci.map(function (x) { return esc(minuscola(x.e.titolo)); }).join(' sia per ') : 'per ' + esc(minuscola(voci[0].e.titolo))) + '.</b></p></header>' + corpo + sol +
+      '<br><b>Soluzioni in fondo al documento, ' + (voci.length > 2 ? 'per tutti gli esercizi' : voci.length > 1 ? 'sia per ' + voci.map(function (x) { return esc(minuscola(x.e.titolo)); }).join(' sia per ') : 'per ' + esc(minuscola(voci[0].e.titolo))) + '.</b></p></header>' + corpo + sol +
       '<script>window.onload=function(){setTimeout(function(){window.print()},400)}<\/script></body></html>';
   }
+  function elencoE(a) { return a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + ' e ' + a[a.length - 1]; }
   function minuscola(t) { t = String(t || ''); return t.charAt(0).toLowerCase() + t.slice(1); }
   function stampaScheda(voci, seme) {
     var w = window.open('', '_blank');
@@ -880,10 +901,10 @@
     opz = opz || {};
     var CELL = opz.cella || (v.cols > 8 ? 52 : 64);
     var FS = opz.fs || (stretto() ? (v.cols > 8 ? 24 : 19) : 15);
-    var SX = FS * 4.2, SY = 42;
+    var SX = FS * 5.4, SY = 42;
     // se le etichette dei meridiani non stanno in una cella, si alternano su due righe
-    var sfalsa = FS * 2.6 > CELL;
-    var W = SX + v.cols * CELL + 22, H = SY + v.rows * CELL + 22 + FS * 2 + 14 + (sfalsa ? FS + 4 : 0);
+    var sfalsa = FS * 4.4 > CELL;
+    var W = SX + v.cols * CELL + FS * 2.8, H = SY + v.rows * CELL + 22 + FS * 2 + 14 + (sfalsa ? FS + 4 : 0);
     var g = { CELL: CELL, SX: SX, SY: SY, W: W, H: H, FS: FS, sfalsa: sfalsa,
       y: function (abs) { return v.ns === 'N' ? SY + (v.a0 + v.rows - abs) * CELL : SY + (abs - v.a0) * CELL; },
       x: function (abs) { return v.eo === 'E' ? SX + (abs - v.b0) * CELL : SX + (v.b0 + v.cols - abs) * CELL; } };
@@ -911,6 +932,8 @@
     }
     var sotto = sv('g'), base = sv('g'), sopra = sv('g'), luoghi = sv('g');
     svg.appendChild(sotto); svg.appendChild(base); svg.appendChild(sopra); svg.appendChild(luoghi);
+    // "Metti il punto" (lezione 15): i luoghi restano nascosti finché non si mostra la soluzione
+    if (opz.senzaLuoghi) luoghi.setAttribute('visibility', 'hidden');
     var tinta = stampa ? '#333' : '#5C4A36';
     base.appendChild(sv('rect', { x: G.gx0 - 5, y: G.gy0 - 5, width: G.gx1 - G.gx0 + 10, height: G.gy1 - G.gy0 + 10, fill: 'none', stroke: stampa ? '#666' : SEPPIA, 'stroke-width': 1 }));
     var lineeH = {}, lineeV = {};
@@ -929,8 +952,8 @@
     var etic = { lat: {}, lon: {} }, tocchi = [];
     // In allenamento ogni etichetta si può toccare per dire «questa è sbagliata»: tutte, così toccarle non svela niente.
     function etichettaTesto(asse, valVero, scritto) {
-      var p = asse === 'lat' ? posLat(valVero) : posLon(valVero), lw = FS * 4;
-      var t0 = sv('text', { x: p.x, y: p.y, 'text-anchor': asse === 'lat' ? 'end' : 'middle', 'font-size': FS, 'font-style': 'italic' }, scritto + '\u00b0 ' + (asse === 'lat' ? v.ns : v.eo));
+      var p = asse === 'lat' ? posLat(valVero) : posLon(valVero), lw = FS * 5.4;
+      var t0 = sv('text', { x: p.x, y: p.y, 'text-anchor': asse === 'lat' ? 'end' : 'middle', 'font-size': FS, 'font-style': 'italic' }, scritto + '\u00b000\u2032 ' + (asse === 'lat' ? v.ns : v.eo));
       if (!opz.interattivo) { base.appendChild(t0); return t0; }
       var g = sv('g', { class: 'esx-etic-trappola', tabindex: '0', role: 'button', 'aria-label': 'Etichetta ' + scritto + ' gradi: toccala se \u00e8 sbagliata' });
       g.appendChild(sv('rect', { x: asse === 'lon' ? p.x - lw / 2 : p.x - lw, y: p.y - FS, width: lw, height: FS + 8, rx: 5, fill: 'transparent', stroke: 'transparent' }));
@@ -966,6 +989,7 @@
 
     var api = {
       svg: svg, G: G, v: v,
+      mostraLuoghi: function (anim, t) { luoghi.removeAttribute('visibility'); appariDopo(luoghi, anim, t, 100); },
       linee: function (tipo, anim, t) {
         var set = tipo === 'paralleli' ? lineeH : lineeV;
         Object.keys(set).forEach(function (k, idx) {
@@ -983,7 +1007,7 @@
       etichetta: function (asse, anim, t) {
         (asse === 'lat' ? v.labLat : v.labLon).forEach(function (val) {
           var p = asse === 'lat' ? posLat(val) : posLon(val);
-          var cer = sv('ellipse', { cx: asse === 'lat' ? p.x - FS * 1.45 : p.x, cy: p.y - FS * 0.35, rx: asse === 'lat' ? FS * 1.9 : FS * 2.3, ry: FS * 0.95, fill: 'none', stroke: ORO, 'stroke-width': 2.6 });
+          var cer = sv('ellipse', { cx: asse === 'lat' ? p.x - FS * 2 : p.x, cy: p.y - FS * 0.35, rx: asse === 'lat' ? FS * 2.5 : FS * 2.9, ry: FS * 0.95, fill: 'none', stroke: ORO, 'stroke-width': 2.6 });
           sopra.appendChild(cer); appariDopo(cer, anim, t, 50);
           var riga = (asse === 'lat' ? lineeH[val] : lineeV[val]).cloneNode();
           riga.setAttribute('stroke', ORO); riga.setAttribute('stroke-width', 3.4);
@@ -993,18 +1017,18 @@
       sospetto: function (anim, t) {
         if (!v.trappola) return;
         var tr = v.trappola, p = tr.asse === 'lon' ? posLon(tr.vera) : posLat(tr.vera);
-        var e1 = sv('ellipse', { cx: tr.asse === 'lat' ? p.x - FS * 1.45 : p.x, cy: p.y - FS * 0.35, rx: tr.asse === 'lat' ? FS * 1.9 : FS * 2.3, ry: FS * 0.95, fill: 'none', stroke: ROSSO, 'stroke-width': 2.6 });
+        var e1 = sv('ellipse', { cx: tr.asse === 'lat' ? p.x - FS * 2 : p.x, cy: p.y - FS * 0.35, rx: tr.asse === 'lat' ? FS * 2.5 : FS * 2.9, ry: FS * 0.95, fill: 'none', stroke: ROSSO, 'stroke-width': 2.6 });
         sopra.appendChild(e1); appariDopo(e1, anim, t, 80);
       },
       trappola: function (anim, t) {
         if (!v.trappola) return;
-        var tr = v.trappola, p = tr.asse === 'lon' ? posLon(tr.vera) : posLat(tr.vera), w2 = FS * 3.4;
+        var tr = v.trappola, p = tr.asse === 'lon' ? posLon(tr.vera) : posLat(tr.vera), w2 = FS * 4.6;
         var x1 = tr.asse === 'lon' ? p.x - w2 / 2 : p.x - w2, x2 = tr.asse === 'lon' ? p.x + w2 / 2 : p.x;
         var barra = sv('line', { x1: x1, y1: p.y - FS * 0.35, x2: x2, y2: p.y - FS * 0.35, stroke: ROSSO, 'stroke-width': 2.6 });
         sopra.appendChild(barra); traccia(barra, anim, t, 100, 400);
         var giusto = tr.asse === 'lon'
-          ? sv('text', { x: p.x, y: p.y + FS + 4, 'text-anchor': 'middle', 'font-size': FS, fill: BLU, 'font-style': 'italic', 'font-weight': 700 }, tr.vera + '\u00b0')
-          : sv('text', { x: p.x, y: p.y - FS - 2, 'text-anchor': 'end', 'font-size': FS, fill: BLU, 'font-style': 'italic', 'font-weight': 700 }, tr.vera + '\u00b0');
+          ? sv('text', { x: p.x, y: p.y + FS + 4, 'text-anchor': 'middle', 'font-size': FS, fill: BLU, 'font-style': 'italic', 'font-weight': 700 }, tr.vera + '\u00b000\u2032')
+          : sv('text', { x: p.x, y: p.y - FS - 2, 'text-anchor': 'end', 'font-size': FS, fill: BLU, 'font-style': 'italic', 'font-weight': 700 }, tr.vera + '\u00b000\u2032');
         sopra.appendChild(giusto); appariDopo(giusto, anim, t, 550);
         tr.trovata = true;
       },
@@ -1016,7 +1040,7 @@
         tutte.sort(function (a, b) { return Math.abs(a - da) - Math.abs(b - da) || a - b; });
         tutte.forEach(function (val, idx) {
           var p = asse === 'lat' ? posLat(val) : posLon(val);
-          var n = sv('text', { x: p.x, y: p.y, 'text-anchor': asse === 'lat' ? 'end' : 'middle', 'font-size': FS - 1, fill: BLU, 'font-style': 'italic' }, val + '\u00b0');
+          var n = sv('text', { x: p.x, y: p.y, 'text-anchor': asse === 'lat' ? 'end' : 'middle', 'font-size': FS - 1, fill: BLU, 'font-style': 'italic' }, val + '\u00b000\u2032 ' + (asse === 'lat' ? v.ns : v.eo));
           sopra.appendChild(n); appariDopo(n, anim, t, 150 + idx * 260);
         });
       },
@@ -2366,6 +2390,1285 @@
     }
   };
 
+
+  /* =================================================================
+     LEZIONE 15 — «GLI ESERCIZI SONO TUTTI QUA»
+     La lezione in cui il docente svolge la prova scritta: cinque
+     esercizi, un punto ciascuno. Coordinate (1), densità (1), grafico
+     (1) e due o tre calcoli di tassi, indici e incrementi.
+     Qui i tipi nuovi:
+       reticolo_posiziona   date le coordinate, si mette il punto
+       indici_demografici   incremento medio annuo, tassi (% o ‰),
+                            saldi, maschilità, dipendenza
+       densita_simboli      un quadrato, la legenda dei simboli e il
+                            modello di distribuzione
+       grafico_combinato    canne maschi/femmine e linea del totale,
+                            con gli anni mancanti
+     ================================================================= */
+
+  // nei tutorial i passi precedenti si riapplicano: ogni evidenziazione si disegna una volta sola
+  function unaVolta(api, nomi) {
+    var fatti = {};
+    nomi.forEach(function (k) { var f = api[k]; api[k] = function () { if (fatti[k]) return; fatti[k] = 1; return f.apply(null, arguments); }; });
+    return api;
+  }
+  // numeri scritti all'italiana: 1.531.860  −204.248  0,86  +700
+  function numIt(v) {
+    if (v == null) return NaN;
+    var s = String(v).trim().replace(/\s+/g, '').replace(/[−–]/g, '-').replace(/^\+/, '').replace(/[%‰]$/, '');
+    if (s === '' || s === '-') return NaN;
+    if (s.indexOf(',') >= 0) s = s.replace(/\./g, '').replace(',', '.');
+    else if (/^-?\d{1,3}(\.\d{3})+$/.test(s)) s = s.replace(/\./g, '');
+    return /^-?\d*\.?\d+$/.test(s) ? Number(s) : NaN;
+  }
+  function dec2(x) {
+    var y = Math.round(x * 100) / 100, neg = y < 0, a = Math.abs(y);
+    var intero = Math.floor(a + 1e-9), cent = Math.round((a - intero) * 100);
+    if (cent === 100) { intero++; cent = 0; }
+    return (neg ? '−' : '') + migliaia(intero) + ',' + pad2(cent);
+  }
+  function conSegno(x, testo) { return (x > 0 ? '+' : '') + testo; }
+  function vicinoA(x, y, tol) { return typeof x === 'number' && !isNaN(x) && Math.abs(x - y) <= tol; }
+
+  // la frazione, con il × 100 se serve
+  function frazione(sopra, sotto, per, risultato) {
+    var lungo = Math.max(String(sopra).length, String(sotto).length);
+    var fsz = Math.max(17, 28 - lungo * 1.05), larg = Math.max(130, lungo * fsz * 0.62 + 20);
+    var W = larg + (per ? 110 : 20) + Math.max(120, String(risultato).length * 15 + 40);
+    var s = sv('svg', { viewBox: '0 0 ' + Math.round(W) + ' 110', role: 'img', style: 'max-width:' + Math.min(440, Math.round(W)) + 'px',
+      'aria-label': sopra + ' diviso ' + sotto + (per ? ' ' + per : '') + ' uguale ' + risultato });
+    s.appendChild(sv('text', { x: larg / 2, y: 40, 'text-anchor': 'middle', 'font-size': fsz, 'font-weight': 700, fill: INCH, 'font-family': 'Georgia,serif' }, sopra));
+    s.appendChild(sv('line', { x1: 8, y1: 52, x2: larg - 8, y2: 52, stroke: INCH, 'stroke-width': 2.5 }));
+    s.appendChild(sv('text', { x: larg / 2, y: 86, 'text-anchor': 'middle', 'font-size': fsz, 'font-weight': 700, fill: INCH, 'font-family': 'Georgia,serif' }, sotto));
+    var x = larg + 6;
+    if (per) { s.appendChild(sv('text', { x: x, y: 62, 'font-size': 23, 'font-weight': 700, fill: INCH, 'font-family': 'Georgia,serif' }, per)); x += 100; }
+    s.appendChild(sv('text', { x: x, y: 62, 'font-size': 23, 'font-weight': 700, fill: BLU, 'font-family': 'Georgia,serif' }, '= ' + risultato));
+    return s;
+  }
+  // i mesi in dodicesimi: una barra di 12 caselle
+  function barraMesi(m) {
+    var s = sv('svg', { viewBox: '0 0 300 74', role: 'img', style: 'max-width:300px', 'aria-label': m + ' mesi su 12: ' + m + ' dodicesimi di anno' });
+    for (var k = 0; k < 12; k++) s.appendChild(sv('rect', { x: 6 + k * 24, y: 8, width: 22, height: 26, rx: 3, fill: k < m ? 'rgba(35,80,160,.55)' : '#fff', stroke: INCH, 'stroke-width': 1.2 }));
+    s.appendChild(sv('text', { x: 150, y: 62, 'text-anchor': 'middle', 'font-size': 18, 'font-weight': 700, fill: BLU, 'font-family': 'Georgia,serif' },
+      m + ' mesi = ' + m + '/12 = ' + fmt(Math.round(m / 12 * 100) / 100) + ' di anno'));
+    return s;
+  }
+
+  /* -----------------------------------------------------------------
+     A. METTI IL PUNTO SUL RETICOLO
+     «Questo esercizio nel compito arriva in due modi»: si leggono le
+     coordinate di un punto, oppure sono date le coordinate e si mette
+     il punto. Stessa griglia, stessa regola: prima i numeri sui margini.
+     ----------------------------------------------------------------- */
+  function inversa(v, G) {
+    return {
+      lat: function (y) { return v.ns === 'N' ? v.a0 + v.rows - (y - G.SY) / G.CELL : v.a0 + (y - G.SY) / G.CELL; },
+      lon: function (x) { return v.eo === 'E' ? v.b0 + (x - G.SX) / G.CELL : v.b0 + v.cols - (x - G.SX) / G.CELL; }
+    };
+  }
+  function scatta5(abs) { var m = Math.round(abs * 12) / 12; return { g: Math.floor(m + 1e-9), m: Math.round((m - Math.floor(m + 1e-9)) * 60) }; }
+  function testoCoord(p, v) { return coord(p.latG, p.latM, v.ns) + '  ·  ' + coord(p.lonG, p.lonM, v.eo); }
+
+  var POSIZIONA = {
+    nomiErrori: {
+      dir: 'Contare i gradi nel verso sbagliato (nord/sud o est/ovest)', decimali: 'Trattare i primi come decimali (45′ non è 0,45°)',
+      grado: 'Sbagliare di un grado', scambio: 'Scambiare latitudine e longitudine', stima: 'Stimare male la frazione del riquadro', posizione: 'Mettere il punto nel posto sbagliato'
+    },
+    opzioni: function () { return stretto() ? { cols: 6, rows: 5, v: 1 } : { cols: 8, rows: 6, v: 1 }; },
+    opzioniStampa: function () { return { cols: 8, rows: 6 }; },
+    serie: function (seme, n, opz) {
+      var r = rngDa(seme), usate = {}, out = [];
+      for (var i = 0; i < n; i++) { var v = varianteReticolo(r, i, opz.cols || 8, opz.rows || 6, usate); v.trappola = null; out.push(v); }
+      return out;
+    },
+    domanda: function (v) {
+      var d = disegnaReticolo(v, { senzaLuoghi: true }), G = d.api.G, inv = inversa(v, G), foglio = el('div');
+      var messi = v.punti.map(function () { return null; }), sel = 0, bloccato = false;
+      var segni = sv('g'); d.nodo.appendChild(segni);
+      foglio.appendChild(el('h4', { text: 'Metti i due luoghi sul reticolo. Scegli il luogo, poi tocca il punto giusto.' }));
+      var righe = v.punti.map(function (p, k) {
+        var stato = el('small', { text: 'da mettere' });
+        var b = el('button', { type: 'button', 'aria-pressed': k === 0 ? 'true' : 'false' }, [p.nome + ': ' + testoCoord(p, v), stato]);
+        b.addEventListener('click', function () { if (bloccato) return; sel = k; aggiorna(); });
+        return { b: b, stato: stato };
+      });
+      var scelta = el('div', { class: 'esx-scelta', role: 'group', 'aria-label': 'Quale luogo metti' }, righe.map(function (x) { return x.b; }));
+      foglio.appendChild(scelta);
+      foglio.appendChild(el('p', { class: 'esx-nota', text: 'Il punto si aggancia ogni 5 primi. Puoi rimetterlo quante volte vuoi: vale l’ultimo tocco.' }));
+      if (!stretto()) foglio.appendChild(el('p', { class: 'esx-nota', text: 'Da tastiera: scegli il luogo, poi frecce per spostarlo di 5 primi.' }));
+      function disegnaSegni() {
+        while (segni.firstChild) segni.removeChild(segni.firstChild);
+        messi.forEach(function (m, k) {
+          if (!m) return;
+          var px = G.x(m.lon), py = G.y(m.lat), col = k === sel && !bloccato ? '#C2571A' : '#8A5A2B';
+          segni.appendChild(sv('circle', { cx: px, cy: py, r: 9, fill: 'rgba(194,87,26,.18)', stroke: col, 'stroke-width': 2.4 }));
+          segni.appendChild(sv('circle', { cx: px, cy: py, r: 3.4, fill: col }));
+          var aDestra = px < G.gx1 - G.FS * 7;
+          segni.appendChild(sv('text', { x: px + (aDestra ? 13 : -13), y: py - 12, 'text-anchor': aDestra ? 'start' : 'end', 'font-size': G.FS - 1, 'font-weight': 700,
+            fill: col, stroke: CARTA, 'stroke-width': 4, 'paint-order': 'stroke' }, v.punti[k].nome));
+        });
+      }
+      function aggiorna() {
+        righe.forEach(function (x, k) { x.b.setAttribute('aria-pressed', k === sel ? 'true' : 'false'); x.stato.textContent = messi[k] ? 'messo ✓' : 'da mettere'; });
+        disegnaSegni();
+      }
+      function metti(lat, lon) {
+        if (bloccato) return;
+        var a = Math.max(v.a0, Math.min(v.a0 + v.rows, Math.round(lat * 12) / 12));
+        var o = Math.max(v.b0, Math.min(v.b0 + v.cols, Math.round(lon * 12) / 12));
+        messi[sel] = { lat: a, lon: o };
+        var libero = messi.indexOf(null);
+        aggiorna();
+        if (libero >= 0 && libero !== sel) setTimeout(function () { sel = libero; aggiorna(); }, 350);
+      }
+      d.nodo.style.cursor = 'crosshair';
+      d.nodo.setAttribute('tabindex', '0');
+      d.nodo.addEventListener('click', function (ev) {
+        var pt = d.nodo.createSVGPoint(); pt.x = ev.clientX; pt.y = ev.clientY;
+        var m = d.nodo.getScreenCTM(); if (!m) return;
+        var q = pt.matrixTransform(m.inverse());
+        if (q.x < G.gx0 - 8 || q.x > G.gx1 + 8 || q.y < G.gy0 - 8 || q.y > G.gy1 + 8) return;
+        metti(inv.lat(q.y), inv.lon(q.x));
+      });
+      d.nodo.addEventListener('keydown', function (ev) {
+        if (bloccato) return;
+        var m = messi[sel] || { lat: v.a0 + v.rows / 2, lon: v.b0 + v.cols / 2 }, k = ev.key, su = v.ns === 'N' ? 1 : -1, dx = v.eo === 'E' ? 1 : -1;
+        if (k === 'ArrowUp') metti(m.lat + su / 12, m.lon);
+        else if (k === 'ArrowDown') metti(m.lat - su / 12, m.lon);
+        else if (k === 'ArrowRight') metti(m.lat, m.lon + dx / 12);
+        else if (k === 'ArrowLeft') metti(m.lat, m.lon - dx / 12);
+        else return;
+        ev.preventDefault(); ev.stopPropagation();
+      });
+      aggiorna();
+      return {
+        nodo: d.nodo, foglio: foglio,
+        leggi: function () {
+          var manca = messi.indexOf(null);
+          if (manca >= 0) { sel = manca; aggiorna(); return null; }
+          return { messi: JSON.parse(JSON.stringify(messi)) };
+        },
+        segna: function (val) {
+          bloccato = true; aggiorna();
+          righe.forEach(function (x, k) { x.stato.textContent = val.ok[k] ? 'giusto ✓' : 'da correggere'; x.b.style.borderColor = val.ok[k] ? BLU : ROSSO; });
+        },
+        soluzione: function (anim) {
+          var t = Orologio();
+          d.api.valori('lat', anim, t); d.api.valori('lon', anim, t);
+          d.api.mostraLuoghi(anim, t);
+          v.punti.forEach(function (p) { d.api.cartellino(p, anim, t); });
+        }
+      };
+    },
+    valuta: function (v, r) {
+      var ok = [], errori = [];
+      function err(c, t) { errori.push({ c: c, t: t }); }
+      v.punti.forEach(function (p, k) {
+        var m = r.messi[k], la = absLat(p), lo = absLon(p);
+        var dLa = Math.abs(m.lat - la) * 60, dLo = Math.abs(m.lon - lo) * 60, tol = 7.6;
+        ok[k] = dLa <= tol && dLo <= tol;
+        if (ok[k]) return;
+        var giusto = p.nome + ' va a ' + testoCoord(p, v) + '.';
+        var ref = v.labLat[0], refO = v.labLon[0];
+        if (dLo <= tol && Math.abs(m.lat - (2 * ref - la)) * 60 <= tol) err('dir', p.nome + ': hai contato i gradi di latitudine nel verso sbagliato. ' + (v.ns === 'N' ? 'A nord i numeri crescono salendo.' : 'A sud i numeri crescono scendendo.') + ' ' + giusto);
+        else if (dLa <= tol && Math.abs(m.lon - (2 * refO - lo)) * 60 <= tol) err('dir', p.nome + ': hai contato i gradi di longitudine nel verso sbagliato. ' + (v.eo === 'E' ? 'A est i numeri crescono verso destra.' : 'A ovest i numeri crescono verso sinistra.') + ' ' + giusto);
+        else if (Math.abs(m.lat - (p.latG + p.latM / 100)) * 60 <= 3 && Math.abs(m.lon - (p.lonG + p.lonM / 100)) * 60 <= 3 && (p.latM || p.lonM)) err('decimali', p.nome + ': hai trattato i primi come decimali. Un grado sono 60 primi, come un’ora: metà è 30, un quarto 15, tre quarti 45. ' + giusto);
+        else if (Math.abs(m.lat - lo) * 60 <= tol && Math.abs(m.lon - la) * 60 <= tol) err('scambio', p.nome + ': hai scambiato latitudine e longitudine. ' + giusto);
+        else if ((Math.abs(dLa - 60) <= tol && dLo <= tol) || (Math.abs(dLo - 60) <= tol && dLa <= tol)) err('grado', p.nome + ': sei fuori di un grado. Scrivi prima tutti i numeri sui margini, poi conta. ' + giusto);
+        else if (dLa <= 25 && dLo <= 25) err('stima', p.nome + ': il riquadro è giusto, ma la frazione no. Dividi il riquadro come l’orologio: ' + (p.latM ? p.latM + '′ di latitudine è ' + FRAZ[p.latM] : 'latitudine proprio sulla linea') + ', ' + (p.lonM ? p.lonM + '′ di longitudine è ' + FRAZ[p.lonM] : 'longitudine proprio sulla linea') + '.');
+        else err('posizione', p.nome + ': il punto è lontano. ' + giusto + ' Prima la latitudine, poi la longitudine.');
+      });
+      return { preso: ok.every(Boolean), errori: errori, ok: ok, nota: 'Si accetta uno scarto di 5 primi: è la precisione di un disegno a mano.' };
+    },
+    procedimento: function (v) {
+      function scena() { return disegnaReticolo(v, { senzaLuoghi: true }); }
+      var passi = [
+        { scena: 's', titolo: 'Prima i numeri sui margini', testo: '«Prima cosa da fare: scrivete i numeri attorno, su due lati.» Partendo dalle etichette date, si numera ogni linea. ' + (v.ns === 'N' ? 'A nord i numeri crescono salendo' : 'A sud i numeri crescono scendendo') + ', ' + (v.eo === 'E' ? 'a est verso destra.' : 'a ovest verso sinistra.'),
+          regola: 'Si numerano tutte le linee prima di cercare il punto.', fai: function (a, an, t) { a.valori('lat', an, t); a.valori('lon', an, t); } }
+      ];
+      v.punti.forEach(function (p) {
+        passi.push({ scena: 's', titolo: p.nome + ': la latitudine', testo: 'Prima la latitudine: ' + coord(p.latG, p.latM, v.ns) + '. Si trova il parallelo dei ' + p.latG + '°' + (p.latM ? ', poi ' + p.latM + ' primi: ' + FRAZ[p.latM] + ' del riquadro.' : ', e il punto sta proprio sulla linea: 00 primi.'),
+          fai: function (a, an, t) { a.fascia(p, 'lat', an, t); if (p.latM) a.dividi(p, 'lat', partiPer(p.latM) || 4, an, t); a.tratto(p, 'lat', an, t); } });
+        passi.push({ scena: 's', titolo: p.nome + ': la longitudine', testo: 'Poi la longitudine: ' + coord(p.lonG, p.lonM, v.eo) + '. Il meridiano dei ' + p.lonG + '°' + (p.lonM ? ', poi ' + p.lonM + ' primi: ' + FRAZ[p.lonM] + ' del riquadro.' : ', e il punto sta proprio sulla linea.') + ' All’incrocio c’è il punto.',
+          fai: function (a, an, t) { a.fascia(p, 'lon', an, t); a.tratto(p, 'lon', an, t); a.mostraLuoghi(an, t); a.cartellino(p, an, t); } });
+      });
+      return { scena: scena, passi: passi };
+    },
+    // Il tutorial: il punto A dell'aula, 54°45′ N e 2°45′ O, e un punto proprio su una linea.
+    tutorial: function (e) {
+      var A = { nome: 'A', latG: 54, latM: 45, lonG: 2, lonM: 45 }, B = { nome: 'Paperopoli', latG: 53, latM: 0, lonG: 5, lonM: 30 };
+      var base = { cols: 6, rows: 4, ns: 'N', eo: 'O', a0: 52, b0: 1, punti: [A, B], citta: false, labLat: [54], labLon: [3], trappola: null };
+      function scena() { return disegnaReticolo(base, { senzaLuoghi: true }); }
+      var passi = [
+        { scena: 's', stampa: 'testo', momentaneo: true, titolo: 'Il primo esercizio della prova', testo: ['Vale un punto, è il primo in tutte le prove: «un punto sicuro, se imparate a farlo».', 'Arriva in due modi: c’è un punto e si scrivono le coordinate, oppure ci sono le coordinate e si mette il punto. Qui il secondo modo.'] },
+        { scena: 's', stampa: true, titolo: 'Prima i numeri, su due lati', testo: ['Sono date solo due etichette: 54°00′ N e 3°00′ O. Si numerano tutte le linee, prima di tutto.', 'I paralleli salgono verso l’alto: 53, 54, 55… siamo a nord. I meridiani crescono verso sinistra: 2, 3, 4… siamo a ovest.'],
+          regola: 'Se il numero sale andando in su, è nord. Se sale andando a sinistra, è ovest.', fai: function (a, an, t) { a.etichetta('lat', an, t); a.etichetta('lon', an, t); a.valori('lat', an, t); a.valori('lon', an, t); } },
+        { scena: 's', stampa: true, titolo: 'A: prima la latitudine', testo: ['A è a 54°45′ N. Si prende la fascia tra 54° e 55°.', 'I primi si contano come i minuti dell’orologio: 60 è l’intero, 30 la metà, 15 un quarto, 45 tre quarti. Quindi 45′ è a tre quarti, verso il 55.'],
+          regola: '45′ non è 0,45: è tre quarti di grado.', extra: function (t) { return quadrante(45, t); }, fai: function (a, an, t) { a.fascia(A, 'lat', an, t); a.dividi(A, 'lat', 4, an, t); a.tratto(A, 'lat', an, t); } },
+        { scena: 's', stampa: true, titolo: 'Poi la longitudine', testo: ['2°45′ O: tra il meridiano dei 2° e quello dei 3°, a tre quarti verso il 3.', 'Attenzione al verso: a ovest i numeri crescono verso sinistra, quindi «verso il 3» è verso sinistra.'],
+          fai: function (a, an, t) { a.fascia(A, 'lon', an, t); a.dividi(A, 'lon', 4, an, t); a.tratto(A, 'lon', an, t); a.mostraLuoghi(false, t); a.cartellino(A, an, t); } },
+        { scena: 's', stampa: true, titolo: 'Un punto proprio sulla linea', testo: ['Paperopoli è a 53°00′ N: sta proprio sul parallelo dei 53°. E a 5°30′ O, a metà tra 5 e 6.', 'Quando si scrivono le coordinate, gli 00 vanno sempre messi: «altrimenti è battaglia navale».'],
+          regola: 'Sulla linea: 00′, scritto sempre.', fai: function (a, an, t) { a.fascia(B, 'lon', an, t); a.tratto(B, 'lon', an, t); a.cartellino(B, an, t); } },
+        { scena: 's', stampa: 'testo', titolo: 'Gli errori del docente', testo: ['Partire senza aver numerato i margini: nel compito corretto in aula lo studente aveva scritto 49° invece di 50°.', '«Girare il foglio» e confondere il nord con l’est. Scrivere 60 o 75 primi: «60 non esiste, è di nuovo 0».', 'Si scrive il tondino per i gradi (°), l’apice per i primi (′), e sempre N o S, E o O (va bene anche W).'],
+          dopo: function () { return docente(e); } },
+        { scena: 's', stampa: 'testo', titolo: 'Ricapitolando', testo: ['1. Numera tutte le linee, su due lati. 2. Guarda il verso dei numeri: nord o sud, est o ovest. 3. Prima la latitudine, poi la longitudine. 4. I primi come l’orologio: 15, 30, 45.', 'Ora prova tu: 15 reticoli sempre diversi.'],
+          fai: function (a, an, t) { a.mostraLuoghi(false, t); } }
+      ];
+      return { scena: scena, passi: passi };
+    },
+    istruzioniStampa: '<p style="margin:0 0 8px;font-size:10pt">Per ogni reticolo numera tutte le linee, poi segna con un punto e il nome i due luoghi alle coordinate date.</p>',
+    stampa: function (v, n) {
+      var d = disegnaReticolo(v, { stampa: true, fs: 13, larghezza: '112mm', senzaLuoghi: true });
+      return '<h3>' + n + '. Metti i luoghi sul reticolo</h3><div class="riga">' + d.nodo.outerHTML + '<div class="risp">' +
+        v.punti.map(function (p) { return '<b>' + esc(p.nome) + '</b>: ' + testoCoord(p, v); }).join('<br>') + '</div></div>';
+    },
+    soluzioni: function (vs) {
+      return '<div style="display:flex;flex-wrap:wrap;gap:8px">' + vs.map(function (v, i) {
+        var d = disegnaReticolo(v, { stampa: true, fs: 13, larghezza: '86mm' });
+        d.api.valori('lat', false, null); d.api.valori('lon', false, null);
+        return '<div style="break-inside:avoid;page-break-inside:avoid"><b>' + (i + 1) + '.</b>' + d.nodo.outerHTML + '</div>';
+      }).join('') + '</div>';
+    }
+  };
+
+  /* -----------------------------------------------------------------
+     B. TASSI, INDICI E INCREMENTI
+     «Di solito ci sono due o tre esercizi che riguardano tassi, indici
+     demografici»: un punto ciascuno. Sempre un dato inutile messo apposta.
+     Il soggetto al numeratore, la popolazione INIZIALE al denominatore;
+     i tassi × 100 o × 1000 «a vostra discrezione»; gli indici restano
+     numeri puri (in percentuale va bene lo stesso); due decimali bastano.
+     ----------------------------------------------------------------- */
+  var MESI_IT = ['gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno', 'luglio', 'agosto', 'settembre', 'ottobre', 'novembre', 'dicembre'];
+  var FINE_MESE = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  function etichettaI(v, k) {
+    return {
+      pop0: 'Abitanti al 1° gennaio ' + v.anno0, pop1: 'Abitanti al ' + v.data1, nati: 'Nati nel ' + v.annoD, morti: 'Morti nel ' + v.annoD,
+      imm: 'Immigrati nel ' + v.annoD, emi: 'Emigrati nel ' + v.annoD, fem: 'Femmine al 1° gennaio ' + v.anno0,
+      lav: 'Popolazione in età lavorativa', sup: 'Superficie', fam: 'Famiglie'
+    }[k];
+  }
+  function valoreI(v, k) { return migliaia(v[k]) + (k === 'sup' ? ' km²' : ''); }
+  var CHIEDI_I = {
+    medio: { t: 'l’incremento (o decremento) medio annuo, in abitanti all’anno e in percentuale', breve: 'Incremento medio annuo', serve: ['pop0', 'pop1'] },
+    nat: { t: 'il tasso di natalità', breve: 'Tasso di natalità', serve: ['nati', 'pop0'] },
+    mor: { t: 'il tasso di mortalità', breve: 'Tasso di mortalità', serve: ['morti', 'pop0'] },
+    incnat: { t: 'l’incremento (o decremento) naturale', breve: 'Incremento naturale', serve: ['nati', 'morti'] },
+    migr: { t: 'il saldo migratorio', breve: 'Saldo migratorio', serve: ['imm', 'emi'] },
+    masc: { t: 'l’indice di maschilità', breve: 'Indice di maschilità', serve: ['pop0', 'fem'] },
+    dip: { t: 'l’indice di dipendenza', breve: 'Indice di dipendenza', serve: ['pop0', 'lav'] }
+  };
+  // la trappola classica per ogni domanda, più i dati di contorno
+  var TRAPPOLA_I = { medio: ['nati', 'sup', 'fam'], nat: ['morti'], mor: ['nati'], incnat: ['imm', 'pop0'], migr: ['nati', 'morti'], masc: ['lav'], dip: ['fem'] };
+  var CONTORNO_I = { medio: ['nati', 'sup', 'fam', 'lav'], nat: ['imm', 'emi', 'sup', 'lav'], mor: ['imm', 'emi', 'fam', 'sup'], incnat: ['emi', 'sup', 'fam'], migr: ['pop0', 'sup', 'fam'], masc: ['nati', 'sup', 'fam'], dip: ['morti', 'sup', 'fam'] };
+  var PIANO_I = ['nat', 'masc', 'medio', 'mor', 'dip', 'incnat', 'medio', 'migr', 'masc', 'nat', 'dip', 'medio', 'mor', 'migr', 'dip'];
+  var MESI_FINE_I = [6, 3, 9, 6, 4, 8, 11, 2, 10, 6, 3, 9, 5, 7, 1];
+
+  function varianteIndici(r, i, usate) {
+    var chiede = PIANO_I[i % PIANO_I.length];
+    var liberi = IMMAGINARIE.filter(function (x) { return !usate[x]; });
+    var luogo = rpick(r, liberi.length ? liberi : IMMAGINARIE); usate[luogo] = true;
+    var grande = chiede === 'medio' && r() < 0.5;
+    var pop0 = grande ? rint(r, 8, 240) * 100000 + rint(r, 0, 99999) : rint(r, 18, 420) * 1000 + rint(r, 0, 999);
+    var v = { chiede: chiede, luogo: luogo, pop0: pop0, anno0: rint(r, 1995, 2016) };
+    v.annoD = v.anno0;
+    if (chiede === 'medio') {
+      var Y = rint(r, 3, 9), m = MESI_FINE_I[i % MESI_FINE_I.length];
+      var anno1 = v.anno0 + Y;
+      v.Y = Y; v.m = m; v.data1 = FINE_MESE[m - 1] + ' ' + MESI_IT[m - 1] + ' ' + anno1; v.annoD = v.anno0;
+      var ritmo = (r() < 0.45 ? -1 : 1) * rint(r, 18, 140) / 10000;
+      v.pop1 = Math.round(pop0 * (1 + ritmo * (Y + m / 12))) + rint(r, -40, 40);
+      if (v.pop1 === pop0) v.pop1 += 37;
+    }
+    v.nati = Math.round(pop0 * rint(r, 62, 118) / 10000);
+    v.morti = Math.round(pop0 * rint(r, 68, 132) / 10000);
+    if (v.morti === v.nati) v.morti += 3;
+    v.imm = Math.round(pop0 * rint(r, 18, 95) / 10000);
+    v.emi = Math.round(pop0 * rint(r, 18, 95) / 10000);
+    if (v.imm === v.emi) v.emi += 7;
+    v.fem = Math.round(pop0 * rint(r, 400, 545) / 1000);
+    v.lav = Math.round(pop0 * rint(r, 54, 69) / 100);
+    v.sup = rint(r, 24, 860);
+    v.fam = Math.round(pop0 / (rint(r, 21, 27) / 10));
+    var serve = CHIEDI_I[chiede].serve;
+    var extra = [rpick(r, TRAPPOLA_I[chiede])];
+    var altri = CONTORNO_I[chiede].filter(function (k) { return extra.indexOf(k) < 0 && serve.indexOf(k) < 0; });
+    if (r() < 0.6 && altri.length) extra.push(rpick(r, altri));
+    var righe = rmescola(r, serve.concat(extra));
+    // l'ordine naturale delle date: prima il 1° gennaio, poi la data finale
+    if (righe.indexOf('pop1') >= 0 && righe.indexOf('pop1') < righe.indexOf('pop0')) { righe.splice(righe.indexOf('pop1'), 1); righe.splice(righe.indexOf('pop0') + 1, 0, 'pop1'); }
+    v.righe = righe;
+    v.superflui = righe.filter(function (k) { return serve.indexOf(k) < 0; });
+    return v;
+  }
+  function risposteI(v) {
+    var c = v.chiede, R = {};
+    if (c === 'medio') { R.delta = v.pop1 - v.pop0; R.anni = v.Y + v.m / 12; R.media = R.delta / R.anni; R.perc = R.media / v.pop0 * 100; }
+    else if (c === 'nat') R.perc = v.nati / v.pop0 * 100;
+    else if (c === 'mor') R.perc = v.morti / v.pop0 * 100;
+    else if (c === 'incnat') R.n = v.nati - v.morti;
+    else if (c === 'migr') R.n = v.imm - v.emi;
+    else if (c === 'masc') { R.parte = v.pop0 - v.fem; R.indice = R.parte / v.fem; }
+    else if (c === 'dip') { R.parte = v.pop0 - v.lav; R.indice = R.parte / v.lav; }
+    return R;
+  }
+  function testoIndici(v) {
+    var C = CHIEDI_I[v.chiede];
+    return 'Il territorio di ' + v.luogo + '. Con i dati della scheda calcola ' + C.t + '. Attenzione: non tutti i dati servono.';
+  }
+
+  function disegnaIndici(v, opz) {
+    opz = opz || {};
+    var stampa = !!opz.stampa, FS = opz.fs || (stretto() ? 27 : 17), RIGA = FS * 2.3, W = 600;
+    var H = 72 + v.righe.length * RIGA + 24;
+    var svg = sv('svg', { viewBox: '0 0 ' + W + ' ' + H, role: 'img', width: opz.larghezza || null,
+      'aria-label': 'Scheda di ' + v.luogo + ': ' + v.righe.map(function (k) { return etichettaI(v, k) + ' ' + valoreI(v, k); }).join('; ') + '.' });
+    var sotto = sv('g'), base = sv('g'), sopra = sv('g');
+    svg.appendChild(sotto); svg.appendChild(base); svg.appendChild(sopra);
+    var inch = stampa ? '#000' : INCH;
+    base.appendChild(sv('rect', { x: 8, y: 8, width: W - 16, height: H - 16, rx: 10, fill: stampa ? '#fff' : 'rgba(255,255,255,.55)', stroke: stampa ? '#666' : SEPPIA, 'stroke-width': 1.4 }));
+    base.appendChild(sv('text', { x: 28, y: 47, 'font-size': FS + 4, 'font-weight': 700 }, v.luogo));
+    base.appendChild(sv('text', { x: W - 28, y: 47, 'text-anchor': 'end', 'font-size': FS - 2, 'font-style': 'italic', fill: stampa ? '#444' : SEPPIA }, 'i dati'));
+    var pos = {};
+    v.righe.forEach(function (k, idx) {
+      var y = 70 + idx * RIGA; pos[k] = y;
+      base.appendChild(sv('line', { x1: 24, y1: y, x2: W - 24, y2: y, stroke: stampa ? '#bbb' : 'rgba(139,110,75,.45)', 'stroke-width': 1 }));
+      base.appendChild(sv('text', { x: 28, y: y + RIGA * 0.66, 'font-size': FS - (FS > 20 ? 3 : 0), fill: inch }, etichettaI(v, k)));
+      base.appendChild(sv('text', { x: W - 28, y: y + RIGA * 0.66, 'text-anchor': 'end', 'font-size': FS + 1, 'font-weight': 700, fill: inch }, valoreI(v, k)));
+    });
+    var api = {
+      v: v,
+      serve: function (anim, t) {
+        CHIEDI_I[v.chiede].serve.forEach(function (k, i) {
+          if (pos[k] == null) return;
+          var rr = sv('rect', { x: 18, y: pos[k] + 3, width: W - 36, height: RIGA - 6, rx: 6, fill: 'rgba(200,169,110,.32)', stroke: ORO, 'stroke-width': 1.6 });
+          sotto.appendChild(rr); appariDopo(rr, anim, t, 100 + i * 350);
+        });
+      },
+      barra: function (anim, t) {
+        v.superflui.forEach(function (k, i) {
+          var y = pos[k] + RIGA * 0.5, l = sv('line', { x1: 22, y1: y, x2: W - 22, y2: y, stroke: ROSSO, 'stroke-width': 3 });
+          sopra.appendChild(l); traccia(l, anim, t, 100 + i * 400, 500);
+        });
+      },
+      soluzione: function (anim, t) { api.serve(false, t); api.barra(false, t); }
+    };
+    unaVolta(api, ['serve', 'barra']);
+    return { nodo: svg, api: api };
+  }
+
+  // i passi del calcolo, uguali per tutorial, soluzione e scheda
+  function passiIndici(v) {
+    var R = risposteI(v), c = v.chiede, P = [];
+    if (c === 'medio') {
+      P.push({ titolo: 'La variazione', testo: 'Fine meno inizio: ' + migliaia(v.pop1) + ' − ' + migliaia(v.pop0) + ' = ' + conSegno(R.delta, migliaia(R.delta)) + ' abitanti. ' + (R.delta < 0 ? 'È un decremento: ci vuole «un bel meno».' : 'È un incremento.') });
+      P.push({ titolo: 'Il tempo, con i mesi', testo: 'Dal 1° gennaio ' + v.anno0 + ' al ' + v.data1 + ' passano ' + v.Y + ' anni e ' + v.m + (v.m === 1 ? ' mese' : ' mesi') + '. I mesi sono dodicesimi: ' + v.m + '/12 = ' + fmt(Math.round(v.m / 12 * 100) / 100) + '. In tutto ' + fmt(Math.round(R.anni * 100) / 100) + ' anni.',
+        regola: 'Mai dividere solo per gli anni interi.', extra: function () { return barraMesi(v.m); } });
+      P.push({ titolo: 'La media all’anno', testo: migliaia(R.delta) + ' ÷ ' + fmt(Math.round(R.anni * 100) / 100) + ' = ' + conSegno(R.media, migliaia(R.media)) + ' abitanti all’anno.',
+        extra: function () { return frazione(migliaia(R.delta), fmt(Math.round(R.anni * 100) / 100), '', conSegno(R.media, migliaia(R.media))); } });
+      P.push({ titolo: 'In percentuale', testo: 'Si rapporta alla popolazione iniziale: ' + migliaia(R.media) + ' ÷ ' + migliaia(v.pop0) + ' × 100 = ' + conSegno(R.perc, dec2(R.perc)) + '% all’anno (oppure ' + conSegno(R.perc, dec2(R.perc * 10)) + '‰).',
+        regola: 'Al denominatore SEMPRE la popolazione iniziale.', extra: function () { return frazione(migliaia(R.media), migliaia(v.pop0), '× 100', conSegno(R.perc, dec2(R.perc)) + '%'); } });
+    } else if (c === 'nat' || c === 'mor') {
+      var s = c === 'nat' ? v.nati : v.morti;
+      P.push({ titolo: 'Il calcolo', testo: (c === 'nat' ? 'I nati' : 'I morti') + ', il soggetto, vanno sopra; sotto chi era vivo all’inizio dell’anno. ' + migliaia(s) + ' ÷ ' + migliaia(v.pop0) + ' × 100 = ' + dec2(R.perc) + '%. Con il × 1000: ' + dec2(R.perc * 10) + '‰. Vanno bene tutti e due.',
+        regola: 'Soggetto ÷ popolazione iniziale, × 100 o × 1000.', extra: function () { return frazione(migliaia(s), migliaia(v.pop0), '× 100', dec2(R.perc) + '%'); } });
+    } else if (c === 'incnat') {
+      P.push({ titolo: 'Il calcolo', testo: 'Nati meno morti: ' + migliaia(v.nati) + ' − ' + migliaia(v.morti) + ' = ' + conSegno(R.n, migliaia(R.n)) + ' persone.', regola: R.n < 0 ? 'Più morti che nati: decremento, con il meno.' : 'Più nati che morti: incremento, con il più.' });
+    } else if (c === 'migr') {
+      P.push({ titolo: 'Il calcolo', testo: 'Immigrati meno emigrati: ' + migliaia(v.imm) + ' − ' + migliaia(v.emi) + ' = ' + conSegno(R.n, migliaia(R.n)) + ' persone.', regola: R.n < 0 ? 'Partono più persone di quante ne arrivano: saldo negativo.' : 'Arrivano più persone di quante ne partono: saldo positivo.' });
+    } else if (c === 'masc') {
+      P.push({ titolo: 'Prima i maschi', testo: 'La scheda dà le femmine, non i maschi: si ricavano. ' + migliaia(v.pop0) + ' − ' + migliaia(v.fem) + ' = ' + migliaia(R.parte) + ' maschi.' });
+      P.push({ titolo: 'L’indice', testo: 'I maschi, il soggetto, sopra; le femmine sotto. ' + migliaia(R.parte) + ' ÷ ' + migliaia(v.fem) + ' = ' + dec2(R.indice) + ': ' + dec2(R.indice) + ' maschi per ogni femmina. È un numero puro (in percentuale, ' + dec2(R.indice * 100) + ', va bene lo stesso).',
+        regola: 'Un rapporto: basta una divisione.', extra: function () { return frazione(migliaia(R.parte), migliaia(v.fem), '', dec2(R.indice)); } });
+    } else if (c === 'dip') {
+      P.push({ titolo: 'Chi dipende da chi', testo: 'Chi è fuori dall’età lavorativa, prima e dopo, dipende da chi lavora. ' + migliaia(v.pop0) + ' − ' + migliaia(v.lav) + ' = ' + migliaia(R.parte) + ' persone dipendenti.' });
+      P.push({ titolo: 'L’indice', testo: 'I dipendenti sopra, la popolazione in età lavorativa sotto. ' + migliaia(R.parte) + ' ÷ ' + migliaia(v.lav) + ' = ' + dec2(R.indice) + '. Numero puro (in percentuale, ' + dec2(R.indice * 100) + ', va bene lo stesso).',
+        regola: 'Dipendenti ÷ lavoratori.', extra: function () { return frazione(migliaia(R.parte), migliaia(v.lav), '', dec2(R.indice)); } });
+    }
+    return P;
+  }
+
+  var INDICI = {
+    nomiErrori: {
+      superfluo: 'Non riconoscere il dato inutile', scartato: 'Scartare un dato che serve', mesi: 'Non contare i mesi (dividere per gli anni interi)',
+      decimi: 'Contare i mesi in decimi invece che in dodicesimi', nonDiviso: 'Non dividere per gli anni', finale: 'Mettere la popolazione finale al denominatore',
+      totale: 'Fermarsi alla variazione totale', segno: 'Sbagliare o dimenticare il segno', simbolo: 'Simbolo sbagliato (% o ‰)', perCento: 'Dimenticare il × 100 (o × 1000)',
+      scambio: 'Usare i nati per la mortalità (o i morti per la natalità)', invertito: 'Mettere il soggetto al denominatore', perTotale: 'Dividere per tutta la popolazione',
+      inutile: 'Usare il dato inutile', sottrazione: 'Sbagliare la sottrazione', calcolo: 'Sbagliare il calcolo', dato: 'Usare i dati di un altro calcolo'
+    },
+    opzioni: function () { return { v: 1 }; },
+    serie: function (seme, n) { var r = rngDa(seme), usate = {}, out = []; for (var i = 0; i < n; i++) out.push(varianteIndici(r, i, usate)); return out; },
+    domanda: function (v) {
+      var d = disegnaIndici(v, {}), foglio = el('div'), c = {}, ch = v.chiede;
+      foglio.appendChild(el('h4', { text: testoIndici(v) }));
+      function campo(k, lab, unita, conSimbolo) {
+        c[k] = el('input', { class: 'esx-campo largo', inputmode: 'text', 'aria-label': lab, autocomplete: 'off', style: 'width:6.2em' });
+        c[k + 'X'] = el('span', { class: 'esx-giusto' });
+        var pezzi = [el('span', { class: 'esx-lab', text: lab }), c[k]];
+        if (conSimbolo) { c[k + 'S'] = segmentato([{ t: '%', v: '%' }, { t: '‰', v: '‰' }], 'Simbolo'); pezzi.push(c[k + 'S']); }
+        else if (unita) pezzi.push(el('span', { class: 'esx-unita', text: unita }));
+        pezzi.push(c[k + 'X']);
+        foglio.appendChild(el('div', { class: 'esx-riga' }, pezzi));
+      }
+      if (ch === 'medio') { campo('anni', 'Anni trascorsi', 'anni'); campo('media', 'Media annua', 'abitanti all’anno'); campo('perc', 'In percentuale', null, true); }
+      else if (ch === 'nat' || ch === 'mor') campo('perc', 'Tasso', null, true);
+      else if (ch === 'incnat' || ch === 'migr') campo('n', CHIEDI_I[ch].breve, 'persone');
+      else { campo('parte', ch === 'masc' ? 'Maschi' : 'Dipendenti', 'persone'); campo('indice', 'Indice', ''); }
+      if (ch === 'medio' || ch === 'incnat' || ch === 'migr') foglio.appendChild(el('p', { class: 'esx-nota', style: 'margin:-4px 0 10px', text: 'Se è un decremento scrivi il segno meno davanti. Bastano due decimali, con la virgola.' }));
+      else foglio.appendChild(el('p', { class: 'esx-nota', style: 'margin:-4px 0 10px', text: 'Bastano due decimali, con la virgola.' }));
+      foglio.appendChild(el('p', { style: 'font-weight:600;color:var(--ink);margin:12px 0 4px;line-height:1.4', text: 'Quali dati non servono?' }));
+      var chips = el('div', { class: 'esx-chips' }), righe = [];
+      v.righe.forEach(function (k) {
+        var cb = el('input', { type: 'checkbox' }), lab = el('label', null, [cb, el('span', { text: etichettaI(v, k) })]);
+        righe.push({ k: k, cb: cb, lab: lab }); chips.appendChild(lab);
+      });
+      foglio.appendChild(chips);
+      var campi = ['anni', 'media', 'perc', 'n', 'parte', 'indice'].filter(function (k) { return c[k]; });
+      return {
+        nodo: d.nodo, foglio: foglio,
+        leggi: function () {
+          var vuoto = campi.filter(function (k) { return !c[k].value.trim(); })[0];
+          if (vuoto) { c[vuoto].focus(); return null; }
+          var out = { scarti: righe.filter(function (x) { return x.cb.checked; }).map(function (x) { return x.k; }) };
+          campi.forEach(function (k) { out[k] = numIt(c[k].value); out[k + '_txt'] = c[k].value; });
+          if (c.percS) out.simbolo = c.percS.valore();
+          return out;
+        },
+        segna: function (val) {
+          campi.forEach(function (k) { c[k].disabled = true; c[k].classList.add(val.ok[k] ? 'ok' : 'ko'); if (!val.ok[k]) c[k + 'X'].textContent = val.giusti[k]; });
+          if (c.percS) { c.percS.blocca(); c.percS.classList.add(val.ok.perc ? 'ok' : 'ko'); }
+          righe.forEach(function (x) {
+            x.cb.disabled = true;
+            if (v.superflui.indexOf(x.k) >= 0) x.lab.classList.add('giusta'); else if (x.cb.checked) x.lab.classList.add('sbagliata');
+          });
+        },
+        soluzione: function (anim) { d.api.soluzione(anim, Orologio()); }
+      };
+    },
+    valuta: function (v, r) {
+      var R = risposteI(v), ch = v.chiede, ok = {}, giusti = {}, errori = [];
+      function err(cc, t) { errori.push({ c: cc, t: t }); }
+      // percentuale: si accetta % o ‰; il numero si riporta in %
+      function percentuale(x, simbolo, atteso, nomi) {
+        if (!simbolo) { err('simbolo', 'Manca il simbolo: % se hai moltiplicato per 100, ‰ se per 1000.'); return false; }
+        var inPerc = simbolo === '‰' ? x / 10 : x, tol = simbolo === '‰' ? 0.011 : 0.0105;
+        if (vicinoA(inPerc, atteso, tol)) return true;
+        if (simbolo === '%' && vicinoA(x, atteso * 10, 0.11)) { err('simbolo', 'Il numero è per mille: se moltiplichi per 1000 il simbolo è ‰, non %.'); return false; }
+        if (simbolo === '‰' && vicinoA(x, atteso, 0.0105)) { err('simbolo', 'Il numero è per cento: se moltiplichi per 100 il simbolo è %, non ‰.'); return false; }
+        if (vicinoA(-inPerc, atteso, tol) && atteso !== 0) { err('segno', 'Il numero è giusto, il segno no: ' + (atteso < 0 ? 'è un decremento, ci vuole il meno.' : 'è un incremento, niente meno.')); return false; }
+        if (vicinoA(Math.abs(x), Math.abs(atteso / 100), 0.00011)) { err('perCento', 'Manca il × 100: ' + dec2(atteso / 100).replace(',00', '') + ' è il rapporto, troppo piccolo da leggere. Per cento: ' + dec2(atteso) + '%.'); return false; }
+        (nomi || []).some(function (n) { if (vicinoA(Math.abs(inPerc), Math.abs(n.val), tol)) { err(n.c, n.t); return true; } return false; }) || err('calcolo', 'Il risultato è ' + dec2(atteso) + '% (o ' + dec2(atteso * 10) + '‰). Ricontrolla la divisione.');
+        return false;
+      }
+      if (ch === 'medio') {
+        giusti.anni = fmt(Math.round(R.anni * 100) / 100) + ' anni';
+        ok.anni = vicinoA(r.anni, R.anni, 0.011);
+        if (!ok.anni) {
+          if (vicinoA(r.anni, v.Y, 0.001)) err('mesi', 'Hai contato solo gli anni interi. Dal 1° gennaio ' + v.anno0 + ' al ' + v.data1 + ' ci sono anche ' + v.m + ' mesi: ' + v.Y + ' + ' + v.m + '/12 = ' + giusti.anni + '.');
+          else if (vicinoA(r.anni, v.Y + v.m / 10, 0.001)) err('decimi', 'I mesi non sono decimi: sono dodicesimi. ' + v.m + ' mesi = ' + v.m + '/12 = ' + fmt(Math.round(v.m / 12 * 100) / 100) + ', quindi ' + giusti.anni + '.');
+          else err('mesi', 'Dal 1° gennaio ' + v.anno0 + ' al ' + v.data1 + ': ' + v.Y + ' anni e ' + v.m + ' mesi, cioè ' + giusti.anni + '.');
+        }
+        giusti.media = conSegno(R.media, migliaia(R.media));
+        ok.media = vicinoA(r.media, R.media, Math.max(1.5, Math.abs(R.media) * 0.004));
+        if (!ok.media) {
+          if (vicinoA(-r.media, R.media, Math.max(1.5, Math.abs(R.media) * 0.004))) err('segno', 'Media annua: il numero è giusto ma ' + (R.media < 0 ? 'la popolazione cala, ci vuole il meno.' : 'la popolazione cresce, niente meno.'));
+          else if (vicinoA(Math.abs(r.media), Math.abs(R.delta / v.Y), Math.abs(R.delta / v.Y) * 0.004)) { if (ok.anni) err('mesi', 'Media annua: hai diviso per ' + v.Y + ', gli anni interi. Si divide per ' + giusti.anni + '.'); }
+          else if (vicinoA(Math.abs(r.media), Math.abs(R.delta / (v.Y + v.m / 10)), Math.abs(R.delta) * 0.0004)) { if (ok.anni) err('decimi', 'Media annua: i mesi sono dodicesimi, non decimi.'); }
+          else if (vicinoA(Math.abs(r.media), Math.abs(R.delta), 1)) err('nonDiviso', 'Media annua: ' + migliaia(R.delta) + ' è la variazione di tutto il periodo. All’anno: ÷ ' + giusti.anni + ' = ' + giusti.media + '.');
+          else err('calcolo', 'Media annua: ' + migliaia(R.delta) + ' ÷ ' + fmt(Math.round(R.anni * 100) / 100) + ' = ' + giusti.media + '.');
+        }
+        giusti.perc = conSegno(R.perc, dec2(R.perc)) + '%';
+        ok.perc = percentuale(r.perc, r.simbolo, R.perc, [
+          { val: R.media / v.pop1 * 100, c: 'finale', t: 'In percentuale: hai diviso per la popolazione finale. Al denominatore va SEMPRE quella iniziale, ' + migliaia(v.pop0) + '.' },
+          { val: R.delta / v.pop0 * 100, c: 'totale', t: 'In percentuale: questa è la variazione di tutto il periodo. Va divisa anche per gli anni: «dovete fare tutti e due i passaggi».' },
+          { val: R.delta / v.Y / v.pop0 * 100, c: 'mesi', t: 'In percentuale: hai diviso per gli anni interi. Con i mesi: ' + giusti.perc + '.' }
+        ]);
+      } else if (ch === 'nat' || ch === 'mor') {
+        var altro = ch === 'nat' ? v.morti : v.nati;
+        giusti.perc = dec2(R.perc) + '% (' + dec2(R.perc * 10) + '‰)';
+        ok.perc = percentuale(r.perc, r.simbolo, R.perc, [
+          { val: altro / v.pop0 * 100, c: 'scambio', t: ch === 'nat' ? 'Hai usato i morti: per la natalità sopra vanno i nati.' : 'Hai usato i nati: per la mortalità sopra vanno i morti. I nati qui sono il dato inutile.' },
+          { val: Math.abs(v.nati - v.morti) / v.pop0 * 100, c: 'dato', t: 'Hai usato nati − morti: serve per l’incremento naturale, non per ' + CHIEDI_I[ch].t + '.' }
+        ]);
+        if (!ok.perc && r.simbolo && vicinoA(r.perc, v.pop0 / (ch === 'nat' ? v.nati : v.morti) * (r.simbolo === '‰' ? 1000 : 100), 1)) { errori.pop(); err('invertito', 'Hai messo la popolazione sopra. Il soggetto va al numeratore: ' + giusti.perc + '.'); }
+      } else if (ch === 'incnat' || ch === 'migr') {
+        giusti.n = conSegno(R.n, migliaia(R.n));
+        ok.n = vicinoA(r.n, R.n, 0.5);
+        if (!ok.n) {
+          if (vicinoA(r.n, -R.n, 0.5)) err('segno', (ch === 'incnat' ? 'Nati meno morti' : 'Immigrati meno emigrati') + ', in quest’ordine: ' + giusti.n + '. ' + (R.n < 0 ? 'Ci vuole «un bel meno».' : 'È positivo.'));
+          else if (ch === 'incnat' && (vicinoA(Math.abs(r.n), Math.abs(v.imm - v.emi), 0.5))) err('dato', 'Hai usato immigrati ed emigrati: quello è il saldo migratorio. Qui nati − morti = ' + giusti.n + '.');
+          else if (ch === 'migr' && (vicinoA(Math.abs(r.n), Math.abs(v.nati - v.morti), 0.5))) err('dato', 'Hai usato nati e morti: quello è l’incremento naturale. Qui immigrati − emigrati = ' + giusti.n + '.');
+          else err('calcolo', 'Il risultato è ' + giusti.n + '.');
+        }
+      } else {
+        var baseN = ch === 'masc' ? v.fem : v.lav, trappola = ch === 'masc' ? v.lav : v.fem;
+        giusti.parte = migliaia(R.parte);
+        ok.parte = vicinoA(r.parte, R.parte, 0.5);
+        if (!ok.parte) {
+          if (vicinoA(r.parte, trappola, 0.5)) err('inutile', (ch === 'masc' ? 'La popolazione in età lavorativa non dice nulla sul sesso: è il dato inutile.' : 'Le femmine non c’entrano con la dipendenza: sono il dato inutile.') + ' ' + migliaia(v.pop0) + ' − ' + migliaia(baseN) + ' = ' + giusti.parte + '.');
+          else err('sottrazione', migliaia(v.pop0) + ' − ' + migliaia(baseN) + ' = ' + giusti.parte + '.');
+        }
+        giusti.indice = dec2(R.indice);
+        var x = r.indice;
+        ok.indice = vicinoA(x, R.indice, 0.0105) || vicinoA(x, R.indice * 100, 1.05);
+        if (!ok.indice) {
+          var cmp = function (val) { return vicinoA(x, val, 0.0105) || vicinoA(x, val * 100, 1.05); };
+          if (cmp(baseN / R.parte)) err('invertito', 'Indice: hai messo ' + (ch === 'masc' ? 'le femmine' : 'i lavoratori') + ' sopra. Il soggetto (' + (ch === 'masc' ? 'i maschi' : 'chi dipende') + ') va al numeratore: ' + giusti.indice + '.');
+          else if (cmp(v.pop0 / baseN)) err('perTotale', 'Indice: hai usato tutta la popolazione sopra. Sopra va solo ' + (ch === 'masc' ? 'il numero dei maschi' : 'chi dipende') + ': ' + giusti.indice + '.');
+          else if (cmp(R.parte / v.pop0)) err('perTotale', 'Indice: hai diviso per tutta la popolazione. Sotto va ' + (ch === 'masc' ? 'il numero delle femmine' : 'la popolazione in età lavorativa') + ': ' + giusti.indice + '.');
+          else if (cmp((v.pop0 - trappola) / baseN) || cmp(trappola / baseN)) err('inutile', 'Indice: hai usato il dato inutile. ' + migliaia(R.parte) + ' ÷ ' + migliaia(baseN) + ' = ' + giusti.indice + '.');
+          else err('calcolo', 'Indice: ' + migliaia(R.parte) + ' ÷ ' + migliaia(baseN) + ' = ' + giusti.indice + '.');
+        }
+      }
+      var scarti = r.scarti || [], serve = CHIEDI_I[ch].serve;
+      var scartatoUtile = scarti.filter(function (k) { return serve.indexOf(k) >= 0; });
+      var mancati = v.superflui.filter(function (k) { return scarti.indexOf(k) < 0; });
+      ok.scarti = !scartatoUtile.length && !mancati.length;
+      if (scartatoUtile.length) err('scartato', 'Hai scartato un dato che serve: ' + scartatoUtile.map(function (k) { return etichettaI(v, k).toLowerCase(); }).join(', ') + '.');
+      if (mancati.length) err('superfluo', 'Non servivano: ' + mancati.map(function (k) { return etichettaI(v, k).toLowerCase(); }).join(', ') + '. «Lo lasci stare buono lì dov’è.»');
+      var tuttiOk = Object.keys(ok).every(function (k) { return ok[k]; });
+      return { preso: tuttiOk, errori: errori, ok: ok, giusti: giusti, nota: 'Due decimali bastano; i tassi vanno bene sia in % sia in ‰, gli indici come numero puro o in percentuale.' };
+    },
+    procedimento: function (v) {
+      function scena() { return disegnaIndici(v, {}); }
+      var C = CHIEDI_I[v.chiede];
+      var passi = [
+        { scena: 's', titolo: 'Che cosa chiede', testo: 'Si chiede ' + C.t + '. Servono: ' + C.serve.map(function (k) { return etichettaI(v, k).toLowerCase(); }).join(' e ') + '.', fai: function (a, an, t) { a.serve(an, t); } },
+        { scena: 's', titolo: 'Via il dato inutile', testo: 'Non servono: ' + v.superflui.map(function (k) { return etichettaI(v, k).toLowerCase(); }).join(', ') + '. Si barrano subito, così non finiscono nella formula.', regola: '«Lo lasci stare buono lì dov’è.»', fai: function (a, an, t) { a.barra(an, t); } }
+      ];
+      passiIndici(v).forEach(function (p) { p.scena = 's'; passi.push(p); });
+      return { scena: scena, passi: passi };
+    },
+    // Il tutorial: gli esempi di aula, numero per numero.
+    tutorial: function (e) {
+      var medio = { chiede: 'medio', luogo: 'Esempio di aula', pop0: 23618420, pop1: 22086560, anno0: 2009, annoD: 2009, Y: 7, m: 6, data1: '30 giugno 2016', righe: ['pop0', 'pop1', 'nati'], nati: 198410 };
+      var anno = { luogo: 'Esempio di aula (2012)', pop0: 220350, anno0: 2012, annoD: 2012, fem: 78560, lav: 140550, nati: 2200, morti: 1500, imm: 750, emi: 1200 };
+      function caso(ch, righe) { var x = JSON.parse(JSON.stringify(anno)); x.chiede = ch; x.righe = righe; return x; }
+      var scene = {
+        medio: medio, masc: caso('masc', ['pop0', 'fem', 'lav']), dip: caso('dip', ['pop0', 'fem', 'lav']),
+        mor: caso('mor', ['pop0', 'nati', 'morti']), nat: caso('nat', ['pop0', 'nati', 'morti']),
+        incnat: caso('incnat', ['pop0', 'nati', 'morti', 'imm', 'emi']), migr: caso('migr', ['pop0', 'nati', 'morti', 'imm', 'emi'])
+      };
+      Object.keys(scene).forEach(function (k) { var x = scene[k]; x.superflui = x.righe.filter(function (q) { return CHIEDI_I[x.chiede].serve.indexOf(q) < 0; }); });
+      function scena(nome, opz) { return disegnaIndici(scene[nome], opz || {}); }
+      var pm = passiIndici(medio);
+      var passi = [
+        { scena: 'medio', stampa: 'testo', momentaneo: true, titolo: 'Due o tre esercizi, un punto ciascuno', testo: ['Nella prova ci sono di solito due o tre calcoli di tassi, indici e incrementi. Il testo dà i dati, e dentro c’è sempre un dato inutile messo apposta.', 'La regola che vale per tutti: il soggetto della domanda va al numeratore, la popolazione di riferimento al denominatore.'],
+          regola: 'Soggetto sopra, popolazione sotto.' },
+        { scena: 'medio', stampa: true, titolo: 'Incremento medio annuo: i dati', testo: ['L’esempio di aula: 23.618.420 abitanti al 1° gennaio 2009, 22.086.560 al 30 giugno 2016.', 'Servono solo le due popolazioni.'], fai: function (a, an, t) { a.serve(an, t); a.barra(an, t); } },
+        { scena: 'medio', stampa: 'testo', titolo: pm[0].titolo, testo: pm[0].testo },
+        { scena: 'medio', stampa: true, titolo: 'Il tempo: 7,5 anni, non 7', testo: ['Dal 1° gennaio 2009 al 30 giugno 2016 sono 7 anni e 6 mesi: 7,5 anni.', 'I mesi sono dodicesimi: «se fosse novembre, 7 più 11 dodicesimi; se fosse marzo, 3/12, un quarto». Chi divide per 7 «non ha considerato che ci sono dei mesi in mezzo».'],
+          regola: 'Mesi = dodicesimi di anno.', extra: function () { return barraMesi(6); }, fai: function (a, an, t) { a.serve(false, t); a.barra(false, t); } },
+        { scena: 'medio', stampa: 'testo', titolo: 'La media all’anno', testo: '−1.531.860 ÷ 7,5 = −204.248 abitanti all’anno.', extra: pm[2].extra },
+        { scena: 'medio', stampa: 'testo', titolo: 'In percentuale', testo: ['−204.248 ÷ 23.618.420 = −0,0086. Per 100: −0,86% all’anno (oppure −8,6‰).', 'Si può dividere prima per 7,5 o prima per la popolazione iniziale: va bene, ma «dovete fare tutti e due i passaggi».'],
+          regola: 'Al denominatore SEMPRE la popolazione iniziale.', extra: pm[3].extra },
+        { scena: 'masc', stampa: true, titolo: 'Indice di maschilità', testo: ['Nel 2012: 220.350 abitanti, di cui 78.560 femmine; 140.550 in età lavorativa.', 'I lavoratori qui non servono: è il dato inutile. I maschi si ricavano: 220.350 − 78.560 = 141.790.'],
+          fai: function (a, an, t) { a.serve(an, t); a.barra(an, t); } },
+        { scena: 'masc', stampa: 'testo', titolo: '1,80 maschi per ogni femmina', testo: ['I maschi, il soggetto, sopra: 141.790 ÷ 78.560 = 1,80.', '«È un rapporto e basta solo una divisione.» Resta un numero puro; in percentuale (180) va bene lo stesso.'],
+          extra: function () { return frazione('141.790', '78.560', '', '1,80'); }, fai: function (a, an, t) { a.serve(false, t); a.barra(false, t); } },
+        { scena: 'dip', stampa: true, titolo: 'Indice di dipendenza', testo: ['«Chi è fuori dall’età lavorativa dipende da qualcun altro»: chi è prima e chi è dopo. 220.350 − 140.550 = 79.800 dipendenti.', '79.800 ÷ 140.550 = 0,57. Qui le femmine sono il dato inutile.'],
+          extra: function () { return frazione('79.800', '140.550', '', '0,57'); }, fai: function (a, an, t) { a.serve(an, t); a.barra(an, t); } },
+        { scena: 'mor', stampa: true, titolo: 'Tasso di mortalità', testo: ['Nel 2012 sono morte 1.500 persone. I 2.200 nati non servono.', 'Sotto va chi era vivo all’inizio dell’anno: 1.500 ÷ 220.350 × 100 = 0,68%. «Per 100 o per 1000, a vostra discrezione»: 6,8‰ va bene lo stesso.'],
+          regola: 'Tasso: × 100 (%) o × 1000 (‰).', extra: function () { return frazione('1.500', '220.350', '× 100', '0,68%'); }, fai: function (a, an, t) { a.serve(an, t); a.barra(an, t); } },
+        { scena: 'nat', stampa: 'testo', titolo: 'Tasso di natalità', testo: '2.200 ÷ 220.350 × 100 = 1,00%, circa l’1%. Qui il dato inutile sono i morti.',
+          extra: function () { return frazione('2.200', '220.350', '× 100', '1,00%'); }, fai: function (a, an, t) { a.serve(an, t); a.barra(an, t); } },
+        { scena: 'incnat', stampa: true, titolo: 'Incremento naturale e saldo migratorio', testo: ['Nati meno morti: 2.200 − 1.500 = +700.', 'Immigrati meno emigrati: 750 − 1.200 = −450. Quando è negativo ci vuole «un bel meno»; il più davanti agli incrementi mostra che hai le idee chiare.'],
+          regola: 'Il segno si scrive sempre.', fai: function (a, an, t) { a.serve(an, t); } },
+        { scena: 'nat', stampa: 'testo', titolo: 'Come si scrive', testo: ['Tassi con % o ‰ («la barra con lo zero sopra e due zeri sotto»). Indici come numeri puri. Bastano due decimali, arrotondare non è obbligatorio.', 'E in aula la calcolatrice: «portatene due, porta le batterie».'] },
+        { scena: 'nat', stampa: 'testo', titolo: 'Ricapitolando', testo: ['1. Leggi che cosa chiede. 2. Barra il dato inutile. 3. Soggetto sopra, popolazione iniziale sotto. 4. Per gli incrementi medi: i mesi in dodicesimi, poi ÷ anni e ÷ popolazione iniziale. 5. Segno e simbolo.', 'Ora prova tu: 15 esercizi, ogni volta un calcolo diverso.'],
+          dopo: function () { return docente(e); } }
+      ];
+      return { scena: scena, passi: passi };
+    },
+    istruzioniStampa: '<p style="margin:0 0 8px;font-size:10pt">Per ogni scheda fai il calcolo richiesto e barra i dati che non servono. Tassi in % o in ‰, indici come numeri puri; bastano due decimali. Scrivi il segno meno se è un decremento.</p>',
+    stampa: function (v, n) {
+      var d = disegnaIndici(v, { stampa: true, fs: 17, larghezza: '92mm' }), ch = v.chiede, righe;
+      if (ch === 'medio') righe = 'Anni trascorsi: ________<br>Media annua: ________ ab./anno<br>In percentuale: ________';
+      else if (ch === 'nat' || ch === 'mor') righe = 'Tasso: ________ (% o ‰)';
+      else if (ch === 'incnat' || ch === 'migr') righe = CHIEDI_I[ch].breve + ': ________ persone';
+      else righe = (ch === 'masc' ? 'Maschi' : 'Dipendenti') + ': ________<br>Indice: ________';
+      return '<h3>' + n + '. ' + esc(testoIndici(v)) + '</h3><div class="riga">' + d.nodo.outerHTML + '<div class="risp">' + righe + '<br>Dati che non servono: ______________<br>Calcolo: ______________</div></div>';
+    },
+    soluzioni: function (vs) {
+      return '<table><tr><th>N.</th><th>Calcolo</th><th>Risultato</th><th>Dati inutili</th></tr>' + vs.map(function (v, i) {
+        var R = risposteI(v), ch = v.chiede, calc, ris;
+        if (ch === 'medio') { calc = '(' + migliaia(v.pop1) + ' − ' + migliaia(v.pop0) + ') ÷ ' + fmt(Math.round(R.anni * 100) / 100) + ' = ' + conSegno(R.media, migliaia(R.media)) + '; ÷ ' + migliaia(v.pop0) + ' × 100'; ris = conSegno(R.media, migliaia(R.media)) + ' ab./anno; ' + conSegno(R.perc, dec2(R.perc)) + '%'; }
+        else if (ch === 'nat' || ch === 'mor') { calc = migliaia(ch === 'nat' ? v.nati : v.morti) + ' ÷ ' + migliaia(v.pop0) + ' × 100'; ris = dec2(R.perc) + '% (' + dec2(R.perc * 10) + '‰)'; }
+        else if (ch === 'incnat') { calc = migliaia(v.nati) + ' − ' + migliaia(v.morti); ris = conSegno(R.n, migliaia(R.n)); }
+        else if (ch === 'migr') { calc = migliaia(v.imm) + ' − ' + migliaia(v.emi); ris = conSegno(R.n, migliaia(R.n)); }
+        else { var b = ch === 'masc' ? v.fem : v.lav; calc = '(' + migliaia(v.pop0) + ' − ' + migliaia(b) + ') ÷ ' + migliaia(b); ris = migliaia(R.parte) + '; indice ' + dec2(R.indice); }
+        return '<tr><td>' + (i + 1) + '</td><td>' + esc(CHIEDI_I[ch].breve) + ': ' + calc + '</td><td><b>' + ris + '</b></td><td>' + v.superflui.map(function (k) { return esc(etichettaI(v, k)); }).join(', ') + '</td></tr>';
+      }).join('') + '</table>';
+    }
+  };
+
+  /* -----------------------------------------------------------------
+     C. DENSITÀ CON LA LEGENDA E MODELLO DI DISTRIBUZIONE
+     Un quadrato con il lato in km e dei simboli; la legenda dice quanto
+     vale ogni simbolo. Numeratore: simboli × valore. Denominatore: lato ×
+     lato, «sempre l'area in chilometri quadrati». Poi il modello: sparso
+     (dicendo dove, se è asimmetrico), accentrato, lineare (sinuoso o
+     regolare a T). Mai «casuale».
+     ----------------------------------------------------------------- */
+  var DIR_S = ['NO', 'N', 'NE', 'O', 'C', 'E', 'SO', 'S', 'SE'];
+  var DIR_NOMI = { N: 'a nord (in alto)', S: 'a sud (in basso)', E: 'a est (a destra)', O: 'a ovest (a sinistra)', NE: 'a nord-est (in alto a destra)', NO: 'a nord-ovest (in alto a sinistra)',
+    SE: 'a sud-est (in basso a destra)', SO: 'a sud-ovest (in basso a sinistra)', C: 'al centro' };
+  var DIR_XY = { NO: [.2, .2], N: [.5, .2], NE: [.8, .2], O: [.2, .5], C: [.5, .5], E: [.8, .5], SO: [.2, .8], S: [.5, .8], SE: [.8, .8] };
+  var PIANO_DS = ['sparso:C', 'accentrato:C', 'lineare:sinuoso', 'sparso:SE', 'accentrato:NO', 'lineare:T', 'sparso:N', 'accentrato:E', 'sparso:C', 'lineare:sinuoso', 'accentrato:SO', 'sparso:O', 'lineare:T', 'accentrato:C', 'sparso:NE'];
+  var LEGENDE_DS = [1, 2, 2.5, 3, 3.5, 4, 5, 10, 20, 50];
+  function nomeModello(mod, sub) {
+    if (mod === 'lineare') return sub === 'T' ? 'lineare regolare (a T)' : 'lineare sinuoso';
+    if (mod === 'sparso') return sub === 'C' ? 'sparso, su tutto il territorio' : 'sparso ' + DIR_NOMI[sub];
+    return 'accentrato ' + DIR_NOMI[sub];
+  }
+  function adiacente(a, b) {
+    var ia = DIR_S.indexOf(a), ib = DIR_S.indexOf(b);
+    return a !== 'C' && b !== 'C' && Math.abs(ia % 3 - ib % 3) <= 1 && Math.abs(Math.floor(ia / 3) - Math.floor(ib / 3)) <= 1;
+  }
+  function puntiModello(r, mod, sub, N) {
+    var out = [], g;
+    function lontano(p, dmin) { return out.every(function (q) { return Math.hypot(p[0] - q[0], p[1] - q[1]) >= dmin; }); }
+    if (mod === 'sparso') {
+      var dentro = {
+        C: function () { return true; }, N: function (x, y) { return y < 0.46; }, S: function (x, y) { return y > 0.54; }, E: function (x) { return x > 0.54; }, O: function (x) { return x < 0.46; },
+        NE: function (x, y) { return x - y > 0.18; }, NO: function (x, y) { return x + y < 0.82; }, SE: function (x, y) { return x + y > 1.18; }, SO: function (x, y) { return y - x > 0.18; }
+      }[sub];
+      var dmin = sub === 'C' ? 0.19 : 0.15;
+      for (g = 0; g < 6000 && out.length < N; g++) {
+        var p = [0.08 + r() * 0.84, 0.08 + r() * 0.84];
+        if (dentro(p[0], p[1]) && lontano(p, dmin)) out.push(p);
+        if (g === 4000) dmin *= 0.85;
+      }
+    } else if (mod === 'accentrato') {
+      var c = DIR_XY[sub], rag = 0.15;
+      c = [c[0] + (r() - .5) * .04, c[1] + (r() - .5) * .04];
+      for (g = 0; g < 6000 && out.length < N; g++) {
+        var a = r() * 2 * Math.PI, d = Math.sqrt(r()) * rag, q = [c[0] + Math.cos(a) * d, c[1] + Math.sin(a) * d];
+        if (q[0] > .05 && q[0] < .95 && q[1] > .05 && q[1] < .95 && lontano(q, 0.055)) out.push(q);
+        if (g === 3000) rag *= 1.15;
+      }
+    } else if (sub === 'sinuoso') {
+      var fase = r() * Math.PI * 2, amp = 0.18 + r() * 0.07, giri = 1.2 + r() * 0.5, verticale = r() < 0.4;
+      for (var k = 0; k < N; k++) {
+        var tt = 0.08 + 0.84 * k / (N - 1), yy = 0.5 + amp * Math.sin(fase + tt * giri * 2 * Math.PI);
+        out.push(verticale ? [yy, tt] : [tt, yy]);
+      }
+    } else {
+      // a T: una riga e una colonna, punti equidistanti
+      var nb = Math.round(N / 2), nv = N - nb, rot = rint(r, 0, 3);
+      for (var b = 0; b < nb; b++) out.push([0.12 + 0.76 * b / (nb - 1), 0.2]);
+      for (var w = 1; w <= nv; w++) out.push([0.5, 0.2 + 0.68 * w / nv]);
+      out = out.map(function (p) { var x = p[0] - .5, y = p[1] - .5; for (var z = 0; z < rot; z++) { var t2 = x; x = -y; y = t2; } return [x + .5, y + .5]; });
+    }
+    return out;
+  }
+  function varianteDensitaS(r, i) {
+    var parti = PIANO_DS[i % PIANO_DS.length].split(':'), mod = parti[0], sub = parti[1];
+    var L = i < 3 ? rpick(r, [1, 2]) : rpick(r, [1, 2, 2, 3, 3, 4]);
+    var val = i < 2 ? rpick(r, [1, 2]) : rpick(r, LEGENDE_DS);
+    var N = mod === 'lineare' ? rint(r, 10, 14) : rint(r, 8, 15);
+    var v = { mod: mod, sub: sub, L: L, val: val, N: N };
+    v.punti = puntiModello(r, mod, sub, N); v.N = v.punti.length;
+    v.ab = v.N * val; v.A = L * L; v.d = v.ab / v.A;
+    return v;
+  }
+
+  function disegnaDensitaS(v, opz) {
+    opz = opz || {};
+    var stampa = !!opz.stampa, FS = opz.fs || (stretto() ? 24 : 16);
+    var Q = 360, X0 = FS * 3.4, Y0 = 46, W = X0 + Q + 30, H = Y0 + Q + FS * 5.4;
+    var svg = sv('svg', { viewBox: '0 0 ' + W + ' ' + H, role: 'img', width: opz.larghezza || null,
+      'aria-label': 'Quadrato di lato ' + v.L + ' km con ' + v.N + ' simboli; legenda: ogni simbolo vale ' + fmt(v.val) + (v.val === 1 ? ' abitante.' : ' abitanti.') });
+    var sotto = sv('g'), base = sv('g'), punti = sv('g'), sopra = sv('g');
+    [sotto, base, punti, sopra].forEach(function (x) { svg.appendChild(x); });
+    var inch = stampa ? '#000' : INCH, cella = Q / v.L;
+    base.appendChild(sv('rect', { x: X0, y: Y0, width: Q, height: Q, fill: stampa ? '#fff' : 'rgba(255,255,255,.35)', stroke: inch, 'stroke-width': 2 }));
+    for (var k = 1; k < v.L; k++) {
+      base.appendChild(sv('line', { x1: X0 + k * cella, y1: Y0, x2: X0 + k * cella, y2: Y0 + Q, stroke: stampa ? '#bbb' : 'rgba(139,110,75,.4)', 'stroke-width': 1, 'stroke-dasharray': '4 5' }));
+      base.appendChild(sv('line', { x1: X0, y1: Y0 + k * cella, x2: X0 + Q, y2: Y0 + k * cella, stroke: stampa ? '#bbb' : 'rgba(139,110,75,.4)', 'stroke-width': 1, 'stroke-dasharray': '4 5' }));
+    }
+    // lato: quota sotto e a sinistra
+    var yq = Y0 + Q + FS * 0.9;
+    base.appendChild(sv('line', { x1: X0, y1: yq, x2: X0 + Q, y2: yq, stroke: inch, 'stroke-width': 1.2 }));
+    base.appendChild(sv('line', { x1: X0, y1: yq - 5, x2: X0, y2: yq + 5, stroke: inch })); base.appendChild(sv('line', { x1: X0 + Q, y1: yq - 5, x2: X0 + Q, y2: yq + 5, stroke: inch }));
+    base.appendChild(sv('text', { x: X0 + Q / 2, y: yq + FS * 1.25, 'text-anchor': 'middle', 'font-size': FS, 'font-weight': 700, fill: inch, stroke: stampa ? '#fff' : CARTA, 'stroke-width': 4, 'paint-order': 'stroke' }, 'lato ' + v.L + ' km'));
+    // legenda
+    var yl = Y0 + Q + FS * 4.3;
+    base.appendChild(sv('circle', { cx: X0 + 10, cy: yl - FS * 0.33, r: 6, fill: inch }));
+    base.appendChild(sv('text', { x: X0 + 24, y: yl, 'font-size': FS, fill: inch }, '= ' + fmt(v.val) + (v.val === 1 ? ' abitante' : ' abitanti')));
+    // nord
+    base.appendChild(sv('path', { d: 'M ' + (X0 + Q - 6) + ' ' + (Y0 - 34) + ' l -6 15 l 6 -4 l 6 4 z', fill: inch }));
+    base.appendChild(sv('text', { x: X0 + Q - 18, y: Y0 - 21, 'text-anchor': 'end', 'font-size': Math.max(12, FS - 3), 'font-style': 'italic', fill: inch }, 'nord'));
+    v.punti.forEach(function (p) { punti.appendChild(sv('circle', { cx: X0 + p[0] * Q, cy: Y0 + p[1] * Q, r: 7, fill: inch })); });
+    function X(p) { return X0 + p[0] * Q; } function Y(p) { return Y0 + p[1] * Q; }
+    var api = {
+      v: v,
+      conta: function (anim, t) {
+        v.punti.forEach(function (p, i) {
+          var tx = sv('text', { x: X(p) + 9, y: Y(p) - 8, 'font-size': FS - 3, 'font-weight': 700, fill: BLU, stroke: CARTA, 'stroke-width': 3, 'paint-order': 'stroke' }, String(i + 1));
+          sopra.appendChild(tx); appariDopo(tx, anim, t, 80 + i * 140);
+        });
+      },
+      legenda: function (anim, t) {
+        var rr = sv('rect', { x: X0 - 6, y: yl - FS * 1.25, width: FS * 9.5, height: FS * 1.7, rx: 6, fill: 'rgba(200,169,110,.35)', stroke: ORO, 'stroke-width': 1.6 });
+        sotto.appendChild(rr); appariDopo(rr, anim, t, 100);
+      },
+      celle: function (anim, t) {
+        for (var a = 0; a < v.L; a++) for (var b = 0; b < v.L; b++) {
+          var idx = a * v.L + b, rc = sv('rect', { x: X0 + b * cella + 3, y: Y0 + a * cella + 3, width: cella - 6, height: cella - 6, rx: 4, fill: 'rgba(35,80,160,.10)', stroke: BLU, 'stroke-width': 1.2 });
+          sotto.appendChild(rc); appariDopo(rc, anim, t, 80 + idx * 160);
+          var tx = sv('text', { x: X0 + b * cella + cella / 2, y: Y0 + a * cella + cella / 2 + FS * 0.35, 'text-anchor': 'middle', 'font-size': Math.min(FS + 6, cella / 3), 'font-weight': 700, fill: BLU, opacity: .55 }, String(idx + 1));
+          sotto.appendChild(tx); appariDopo(tx, anim, t, 120 + idx * 160);
+        }
+      },
+      perimetro: function (anim, t) {
+        var bordo = sv('rect', { x: X0, y: Y0, width: Q, height: Q, fill: 'none', stroke: ROSSO, 'stroke-width': 5, 'stroke-dasharray': (4 * Q) + ' ' + (4 * Q), 'stroke-dashoffset': 4 * Q });
+        sopra.appendChild(bordo);
+        if (anim && !RIDUCI) { bordo.style.transition = 'stroke-dashoffset 1.6s ease'; t.dopo(60, function () { bordo.setAttribute('stroke-dashoffset', 0); }); } else bordo.setAttribute('stroke-dashoffset', 0);
+      },
+      modello: function (anim, t) {
+        var forma;
+        if (v.mod === 'sparso') {
+          var zone = { C: [0, 0, 1, 1], N: [0, 0, 1, .5], S: [0, .5, 1, .5], E: [.5, 0, .5, 1], O: [0, 0, .5, 1] };
+          if (zone[v.sub]) { var z = zone[v.sub]; forma = sv('rect', { x: X0 + z[0] * Q + 4, y: Y0 + z[1] * Q + 4, width: z[2] * Q - 8, height: z[3] * Q - 8, rx: 10 }); }
+          else {
+            var tri = { NE: [[0, 0], [1, 0], [1, 1]], NO: [[0, 0], [1, 0], [0, 1]], SE: [[1, 0], [1, 1], [0, 1]], SO: [[0, 0], [1, 1], [0, 1]] }[v.sub];
+            forma = sv('path', { d: 'M ' + tri.map(function (p) { return (X0 + p[0] * Q) + ' ' + (Y0 + p[1] * Q); }).join(' L ') + ' Z' });
+          }
+        } else if (v.mod === 'accentrato') {
+          var cx = 0, cy = 0; v.punti.forEach(function (p) { cx += p[0]; cy += p[1]; }); cx /= v.N; cy /= v.N;
+          var rr = 0; v.punti.forEach(function (p) { rr = Math.max(rr, Math.hypot(p[0] - cx, p[1] - cy)); });
+          forma = sv('circle', { cx: X0 + cx * Q, cy: Y0 + cy * Q, r: rr * Q + 16 });
+        } else {
+          var d;
+          if (v.sub === 'T') {
+            var met = Math.round(v.N / 2), p0 = v.punti[0], p1 = v.punti[met - 1], c1 = v.punti[v.N - 1], mx = (p0[0] + p1[0]) / 2, my = (p0[1] + p1[1]) / 2;
+            d = 'M ' + X(p0) + ' ' + Y(p0) + ' L ' + X(p1) + ' ' + Y(p1) + ' M ' + X([mx, my]) + ' ' + Y([mx, my]) + ' L ' + X(c1) + ' ' + Y(c1);
+          } else d = 'M ' + v.punti.map(function (p) { return X(p) + ' ' + Y(p); }).join(' L ');
+          forma = sv('path', { d: d, fill: 'none', 'stroke-width': 22, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' });
+          forma.setAttribute('stroke', 'rgba(35,80,160,.18)');
+          sotto.appendChild(forma); appariDopo(forma, anim, t, 100);
+          return;
+        }
+        forma.setAttribute('fill', 'rgba(35,80,160,.12)'); forma.setAttribute('stroke', BLU); forma.setAttribute('stroke-width', 2); forma.setAttribute('stroke-dasharray', '7 5');
+        sotto.appendChild(forma); appariDopo(forma, anim, t, 100);
+      },
+      soluzione: function (anim, t) { api.legenda(false, t); api.modello(anim, t); }
+    };
+    unaVolta(api, ['conta', 'legenda', 'celle', 'perimetro', 'modello']);
+    return { nodo: svg, api: api };
+  }
+
+  // il selettore della posizione: una rosa 3 × 3
+  function rosa(etichetta) {
+    var box = el('div', { role: 'group', 'aria-label': etichetta, style: 'display:inline-grid;grid-template-columns:repeat(3,auto);gap:4px' }), valore = null, bloccata = false, centro = 'Al centro', bottoni = {};
+    DIR_S.forEach(function (k) {
+      var b = el('button', { type: 'button', 'aria-pressed': 'false', class: 'esx-btn sec pic', style: 'min-width:3.4em;padding:8px 6px;border-radius:8px', text: k === 'C' ? centro : k, 'aria-label': DIR_NOMI[k] });
+      b.addEventListener('click', function () { if (bloccata) return; valore = k; Object.keys(bottoni).forEach(function (q) { bottoni[q].setAttribute('aria-pressed', q === k ? 'true' : 'false'); bottoni[q].style.background = q === k ? SEPPIA : ''; bottoni[q].style.color = q === k ? '#fff' : ''; }); });
+      bottoni[k] = b; box.appendChild(b);
+    });
+    box.valore = function () { return valore; };
+    box.centro = function (t) { bottoni.C.textContent = t; };
+    box.blocca = function () { bloccata = true; };
+    box.segna = function (ok) { box.style.outline = '2px solid ' + (ok ? BLU : ROSSO); box.style.outlineOffset = '3px'; box.style.borderRadius = '10px'; };
+    return box;
+  }
+
+  var DENSITA_S = {
+    nomiErrori: {
+      legenda: 'Dimenticare il valore della legenda', conta: 'Contare male i simboli', perimetro: 'Calcolare il perimetro invece dell’area', lati: 'Sommare i lati', lato: 'Usare il lato al posto dell’area',
+      area: 'Sbagliare l’area', invertita: 'Mettere l’area al numeratore', nonDiviso: 'Dimenticare di dividere per l’area', densita: 'Sbagliare la densità',
+      casuale: 'Scrivere «casuale»', modello: 'Sbagliare il modello', generico: 'Dire solo «sparso» senza dire dove', dove: 'Sbagliare la posizione', forma: 'Confondere lineare sinuoso e regolare'
+    },
+    opzioni: function () { return { v: 1 }; },
+    serie: function (seme, n) { var r = rngDa(seme), out = []; for (var i = 0; i < n; i++) out.push(varianteDensitaS(r, i)); return out; },
+    domanda: function (v) {
+      var d = disegnaDensitaS(v, {}), foglio = el('div'), c = {};
+      foglio.appendChild(el('h4', { text: 'Calcola la densità di popolamento e descrivi il modello di distribuzione.' }));
+      function campo(k, lab, unita) {
+        c[k] = el('input', { class: 'esx-campo largo', inputmode: 'decimal', 'aria-label': lab, autocomplete: 'off' });
+        c[k + 'X'] = el('span', { class: 'esx-giusto' });
+        foglio.appendChild(el('div', { class: 'esx-riga' }, [el('span', { class: 'esx-lab', text: lab }), c[k], el('span', { class: 'esx-unita', text: unita }), c[k + 'X']]));
+      }
+      campo('ab', 'Abitanti', 'ab'); campo('area', 'Area', 'km²'); campo('dens', 'Densità', 'ab/km²');
+      c.mod = segmentato([{ t: 'Sparso', v: 'sparso' }, { t: 'Accentrato', v: 'accentrato' }, { t: 'Lineare', v: 'lineare' }, { t: 'Casuale', v: 'casuale' }], 'Modello di distribuzione');
+      c.modX = el('span', { class: 'esx-giusto' });
+      foglio.appendChild(el('div', { class: 'esx-riga' }, [el('span', { class: 'esx-lab', text: 'Modello' }), c.mod]));
+      c.dove = rosa('Dove si trovano gli abitanti');
+      c.forma = segmentato([{ t: 'Sinuoso', v: 'sinuoso' }, { t: 'Regolare, a T', v: 'T' }], 'Che forma ha la linea');
+      var rigaDove = el('div', { class: 'esx-riga', style: 'display:none;align-items:flex-start' }, [el('span', { class: 'esx-lab', text: 'Dove?' }), c.dove]);
+      var rigaForma = el('div', { class: 'esx-riga', style: 'display:none' }, [el('span', { class: 'esx-lab', text: 'Che linea?' }), c.forma]);
+      var spiega = el('p', { class: 'esx-nota', style: 'margin:-2px 0 8px;display:none' });
+      foglio.appendChild(rigaDove); foglio.appendChild(rigaForma); foglio.appendChild(spiega); foglio.appendChild(el('div', { class: 'esx-riga' }, [c.modX]));
+      c.mod.addEventListener('click', function () {
+        var m = c.mod.valore();
+        rigaDove.style.display = m === 'sparso' || m === 'accentrato' ? '' : 'none';
+        rigaForma.style.display = m === 'lineare' ? '' : 'none';
+        c.dove.centro(m === 'sparso' ? 'Ovunque' : 'Al centro');
+        spiega.style.display = m === 'sparso' || m === 'accentrato' ? '' : 'none';
+        spiega.textContent = m === 'sparso' ? 'Se i simboli coprono tutto il quadrato scegli «Ovunque»; se stanno solo in una parte, scegli quale.' : 'Dove sono raccolti i simboli?';
+        riapriPannello();
+      });
+      return {
+        nodo: d.nodo, foglio: foglio,
+        leggi: function () {
+          if (!c.ab.value.trim() && !c.area.value.trim() && !c.dens.value.trim()) { c.ab.focus(); return null; }
+          return { ab: numIt(c.ab.value), area: numIt(c.area.value), dens: numIt(c.dens.value), mod: c.mod.valore(), dove: c.dove.valore(), forma: c.forma.valore() };
+        },
+        segna: function (val) {
+          ['ab', 'area', 'dens'].forEach(function (k) { c[k].disabled = true; c[k].classList.add(val.ok[k] ? 'ok' : 'ko'); if (!val.ok[k]) c[k + 'X'].textContent = val.giusti[k]; });
+          c.mod.blocca(); c.mod.classList.add(val.ok.mod ? 'ok' : 'ko'); c.dove.blocca(); c.forma.blocca();
+          if (rigaDove.style.display !== 'none') c.dove.segna(val.ok.dove);
+          if (rigaForma.style.display !== 'none') c.forma.classList.add(val.ok.dove ? 'ok' : 'ko');
+          if (!val.ok.mod || !val.ok.dove) c.modX.textContent = 'Giusto: ' + nomeModello(v.mod, v.sub);
+        },
+        soluzione: function (anim) { d.api.soluzione(anim, Orologio()); }
+      };
+    },
+    valuta: function (v, r) {
+      var ok = {}, giusti = {}, errori = [], L = v.L, A = v.A;
+      function err(cc, t) { errori.push({ c: cc, t: t }); }
+      giusti.ab = fmt(v.ab);
+      ok.ab = vicinoA(r.ab, v.ab, 0.01);
+      if (!ok.ab) {
+        if (vicinoA(r.ab, v.N, 0.01) && v.val !== 1) err('legenda', 'Ogni simbolo vale ' + fmt(v.val) + ' abitanti (la legenda): ' + v.N + ' × ' + fmt(v.val) + ' = ' + fmt(v.ab) + '.');
+        else if (Math.abs(r.ab / v.val - v.N) <= 2 && Math.abs(r.ab / v.val - Math.round(r.ab / v.val)) < 0.01) err('conta', 'I simboli sono ' + v.N + ': ' + v.N + ' × ' + fmt(v.val) + ' = ' + fmt(v.ab) + ' abitanti. Contali numerandoli.');
+        else err('legenda', 'Abitanti = simboli × valore della legenda = ' + v.N + ' × ' + fmt(v.val) + ' = ' + fmt(v.ab) + '.');
+      }
+      giusti.area = A + ' km²';
+      ok.area = vicinoA(r.area, A, 0.001);
+      if (!ok.area) {
+        if (vicinoA(r.area, 4 * L, 0.001)) err('perimetro', '«Ho fatto 2 + 2 + 2 + 2»: ' + (4 * L) + ' è il perimetro. L’area del quadrato è lato × lato: ' + L + ' × ' + L + ' = ' + A + ' km².');
+        else if (vicinoA(r.area, 2 * L, 0.001) && L !== 2) err('lati', 'Hai sommato due lati. L’area è lato × lato: ' + A + ' km².');
+        else if (vicinoA(r.area, L, 0.001) && L > 1) err('lato', 'Questo è il lato. L’area è lato × lato: ' + A + ' km².');
+        else err('area', 'Area = lato × lato = ' + L + ' × ' + L + ' = ' + A + ' km².');
+      }
+      giusti.dens = dec2(v.d).replace(/,00$/, '') + ' ab/km²';
+      ok.dens = vicinoA(r.dens, v.d, 0.0105);
+      if (!ok.dens) {
+        var x = r.dens;
+        if (vicinoA(x, v.N / A, 0.0105) && v.val !== 1) err('legenda', 'Densità: hai diviso i simboli, non gli abitanti. Sopra vanno gli abitanti, ' + fmt(v.ab) + ': ' + fmt(v.ab) + ' ÷ ' + A + ' = ' + giusti.dens + '.');
+        else if (vicinoA(x, A / v.ab, 0.0105)) err('invertita', 'Densità: l’area va sotto, gli abitanti sopra: ' + giusti.dens + '.');
+        else if (vicinoA(x, v.ab / (4 * L), 0.0105) && L !== 1) err('perimetro', 'Densità: hai diviso per il perimetro. Si divide per l’area, ' + A + ' km².');
+        else if (vicinoA(x, v.ab / L, 0.0105) && L > 1) err('lato', 'Densità: hai diviso per il lato. Si divide per l’area, ' + A + ' km².');
+        else if (vicinoA(x, v.ab, 0.0105) && A > 1) err('nonDiviso', 'Densità: ' + fmt(v.ab) + ' sono gli abitanti, vanno divisi per l’area: ' + giusti.dens + '.');
+        else err('densita', 'Densità = abitanti ÷ area = ' + fmt(v.ab) + ' ÷ ' + A + ' = ' + giusti.dens + '.');
+      }
+      ok.mod = r.mod === v.mod; ok.dove = true;
+      var nota = '';
+      if (!r.mod) { ok.mod = false; err('modello', 'Manca il modello: ' + nomeModello(v.mod, v.sub) + '.'); }
+      else if (r.mod === 'casuale') err('casuale', '«Non scrivete casuale, perché in geografia non esiste il caso.» Qui è ' + nomeModello(v.mod, v.sub) + '.');
+      else if (!ok.mod) err('modello', 'Il modello è ' + nomeModello(v.mod, v.sub) + '.');
+      else if (v.mod === 'lineare') { ok.dove = r.forma === v.sub; if (!ok.dove) err('forma', 'Lineare sì, ma ' + (v.sub === 'T' ? 'regolare: linee dritte e punti equidistanti, a T.' : 'sinuoso: la linea fa delle curve.')); }
+      else {
+        if (!r.dove) { ok.dove = false; err(v.mod === 'sparso' && v.sub !== 'C' ? 'generico' : 'dove', 'Manca dove: ' + nomeModello(v.mod, v.sub) + '.'); }
+        else if (v.mod === 'sparso' && v.sub !== 'C' && r.dove === 'C') { ok.dove = false; err('generico', 'Non basta «sparso»: i simboli stanno solo nella parte ' + DIR_NOMI[v.sub].replace(/^a /, '') + '. Va detto: ' + nomeModello(v.mod, v.sub) + '.'); }
+        else if (v.mod === 'sparso' && r.dove !== v.sub && adiacente(r.dove, v.sub)) nota = 'Sulla posizione: ' + DIR_NOMI[r.dove] + ' va bene, il più preciso è ' + DIR_NOMI[v.sub] + '. ';
+        else if (r.dove !== v.sub) { ok.dove = false; err('dove', 'Posizione: ' + nomeModello(v.mod, v.sub) + '.'); }
+      }
+      return { preso: ok.ab && ok.area && ok.dens && ok.mod && ok.dove, errori: errori, ok: ok, giusti: giusti, nota: nota + 'La densità si scrive sempre con l’unità: ab/km².' };
+    },
+    procedimento: function (v) {
+      function scena() { return disegnaDensitaS(v, {}); }
+      return { scena: scena, passi: [
+        { scena: 's', titolo: 'Gli abitanti', testo: 'Si contano i simboli: ' + v.N + '. La legenda dice che ognuno vale ' + fmt(v.val) + ': ' + v.N + ' × ' + fmt(v.val) + ' = ' + fmt(v.ab) + ' abitanti.', regola: 'Numeratore = simboli × legenda.', fai: function (a, an, t) { a.conta(an, t); a.legenda(an, t); } },
+        { scena: 's', titolo: 'L’area', testo: 'Lato × lato = ' + v.L + ' × ' + v.L + ' = ' + v.A + ' km²' + (v.L > 1 ? ', non ' + v.L + ' + ' + v.L + ' + ' + v.L + ' + ' + v.L + ' (quello è il perimetro).' : '.'), regola: 'Denominatore = lato × lato.', fai: function (a, an, t) { a.celle(an, t); } },
+        { scena: 's', titolo: 'La densità', testo: fmt(v.ab) + ' ÷ ' + v.A + ' = ' + dec2(v.d).replace(/,00$/, '') + ' ab/km².', extra: function () { return frazione(fmt(v.ab), String(v.A), '', dec2(v.d).replace(/,00$/, '') + ' ab/km²'); } },
+        { scena: 's', titolo: 'Il modello', testo: 'Come stanno i simboli? ' + nomeModello(v.mod, v.sub).charAt(0).toUpperCase() + nomeModello(v.mod, v.sub).slice(1) + '.', regola: 'Mai «casuale»: in geografia il caso non esiste.', fai: function (a, an, t) { a.modello(an, t); } }
+      ] };
+    },
+    // Il tutorial: i tre quadrati dell'aula e i modelli.
+    tutorial: function (e) {
+      var r = rngDa(20261122);
+      function q(L, val, mod, sub, N) { var v = { mod: mod, sub: sub, L: L, val: val, N: N }; v.punti = puntiModello(r, mod, sub, N); v.N = v.punti.length; v.ab = v.N * val; v.A = L * L; v.d = v.ab / v.A; return v; }
+      var scene = { q1: q(1, 1, 'sparso', 'C', 9), q2: q(2, 2, 'sparso', 'C', 9), q3: q(3, 3.5, 'sparso', 'C', 9), se: q(2, 5, 'sparso', 'SE', 11), acc: q(2, 10, 'accentrato', 'C', 12), sin: q(3, 2, 'lineare', 'sinuoso', 12), tt: q(2, 4, 'lineare', 'T', 12) };
+      function scena(nome, opz) { return disegnaDensitaS(scene[nome], opz || {}); }
+      var passi = [
+        { scena: 'q1', stampa: 'testo', momentaneo: true, titolo: '«Un altro punto sicuro»', testo: ['Un quadrato con il lato in chilometri, dei simboli e una legenda che dice quanto vale ogni simbolo.', 'Si chiede la densità e il modello di distribuzione. Compare in tutte le prove.'] },
+        { scena: 'q1', stampa: true, titolo: 'Il primo quadrato dell’aula', testo: ['Lato 1 km, 9 pallini, ogni pallino vale 1 abitante.', 'Sopra: 9 × 1 = 9 abitanti. Sotto: 1 × 1 = 1 km². Densità: 9 ÷ 1 = 9 ab/km².'],
+          regola: '«Al numeratore sempre il numero di abitanti, al denominatore sempre l’area in km².»', fai: function (a, an, t) { a.conta(an, t); a.legenda(an, t); } },
+        { scena: 'q2', stampa: true, titolo: 'Lato 2: l’area è 4, non 8', testo: ['Lato 2 km, 9 pallini, ognuno vale 2: 9 × 2 = 18 abitanti.', 'Area 2 × 2 = 4 km²: quattro quadratini. Chi scrive 8 ha fatto 2 + 2 + 2 + 2, il perimetro. 18 ÷ 4 = 4,5 ab/km².'],
+          extra: function () { return frazione('18', '4', '', '4,5 ab/km²'); }, fai: function (a, an, t) { a.legenda(false, t); a.celle(an, t); } },
+        { scena: 'q2', stampa: 'testo', momentaneo: true, titolo: 'L’errore di ogni anno', testo: 'Il bordo rosso è il perimetro: 8 km. Non c’entra niente con la densità. «L’area del quadrato bisogna che la sappiate fare.»', fai: function (a, an, t) { a.perimetro(an, t); } },
+        { scena: 'q3', stampa: true, titolo: 'Lato 3, legenda 3,5', testo: ['9 pallini da 3,5: 9 × 3,5 = 31,5 abitanti. Area 3 × 3 = 9 km².', '31,5 ÷ 9 = 3,5 ab/km². Il risultato si scrive sempre con l’unità.'],
+          extra: function () { return frazione('31,5', '9', '', '3,5 ab/km²'); }, fai: function (a, an, t) { a.legenda(an, t); a.celle(an, t); } },
+        { scena: 'q1', stampa: true, titolo: 'Il modello: sparso', testo: ['I pallini coprono tutto il quadrato: distribuzione sparsa.', '«Non scrivete casuale, perché in geografia non esiste il caso.»'], regola: 'Mai «casuale».', fai: function (a, an, t) { a.modello(an, t); } },
+        { scena: 'se', stampa: true, titolo: 'Sparso, ma dove?', testo: ['Qui i pallini sono sparsi, ma solo in basso a destra. Non basta dire «sparso»: si dice l’asimmetria.', '«Sparso in basso a destra, a sud-est.»'], fai: function (a, an, t) { a.modello(an, t); } },
+        { scena: 'acc', stampa: true, titolo: 'Accentrato', testo: ['Tutti raccolti in un punto: accentrato (o accorpato, aggregato).', 'Anche qui si dice dove: «aggregato al centro», oppure in un angolo.'], fai: function (a, an, t) { a.modello(an, t); } },
+        { scena: 'sin', stampa: true, titolo: 'Lineare sinuoso', testo: 'I pallini seguono una linea che fa delle curve, come un fiume o una strada di valle: «una linearità sinuosa».', fai: function (a, an, t) { a.modello(an, t); } },
+        { scena: 'tt', stampa: true, titolo: 'Lineare regolare, a T', testo: 'Linee dritte e pallini equidistanti, come le case lungo due strade che si incrociano: «un lineare a T».', fai: function (a, an, t) { a.modello(an, t); } },
+        { scena: 'q3', stampa: 'testo', titolo: 'Ricapitolando', testo: ['1. Abitanti = simboli × legenda. 2. Area = lato × lato. 3. Densità = abitanti ÷ area, in ab/km². 4. Modello: sparso (e dove), accentrato (e dove), lineare (sinuoso o a T). Mai casuale.', 'Ora prova tu: 15 quadrati sempre diversi.'],
+          dopo: function () { return docente(e); } }
+      ];
+      return { scena: scena, passi: passi };
+    },
+    istruzioniStampa: '<p style="margin:0 0 8px;font-size:10pt">Per ogni quadrato calcola gli abitanti (simboli × legenda), l’area (lato × lato) e la densità in ab/km². Poi descrivi il modello: sparso (dicendo dove, se sta in una parte), accentrato (dove), lineare (sinuoso o regolare). Mai «casuale».</p>',
+    stampa: function (v, n) {
+      var d = disegnaDensitaS(v, { stampa: true, fs: 15, larghezza: '72mm' });
+      return '<h3>' + n + '.</h3><div class="riga">' + d.nodo.outerHTML + '<div class="risp">Abitanti: ______<br>Area: ______ km²<br>Densità: ______ ab/km²<br>Modello: ______________________<br>______________________________</div></div>';
+    },
+    soluzioni: function (vs) {
+      return '<table><tr><th>N.</th><th>Abitanti</th><th>Area</th><th>Densità</th><th>Modello</th></tr>' + vs.map(function (v, i) {
+        return '<tr><td>' + (i + 1) + '</td><td>' + v.N + ' × ' + fmt(v.val) + ' = ' + fmt(v.ab) + '</td><td>' + v.L + ' × ' + v.L + ' = ' + v.A + ' km²</td><td><b>' + dec2(v.d).replace(/,00$/, '') + ' ab/km²</b></td><td>' + esc(nomeModello(v.mod, v.sub)) + '</td></tr>';
+      }).join('') + '</table>';
+    }
+  };
+
+  /* -----------------------------------------------------------------
+     D. ISTOGRAMMA MASCHI/FEMMINE E LINEA DEL TOTALE
+     «Costruisci un istogramma per maschi e femmine e raffigura sullo
+     stesso diagramma cartesiano anche il totale.» L'ultimo esercizio
+     della prova. La scala si tara sul totale; gli anni senza dato
+     restano al loro posto sull'asse («dividerò quella linea non per
+     sette ma per nove») e i pallini si uniscono con il tratteggio.
+     ----------------------------------------------------------------- */
+  var COL_T = '#2E6B3A';
+  function varianteCombinato(r, i, usate) {
+    var liberi = IMMAGINARIE.filter(function (x) { return !usate[x]; });
+    var luogo = rpick(r, liberi.length ? liberi : IMMAGINARIE); usate[luogo] = true;
+    var n = rint(r, 7, 9), passo = i % 4 === 3 ? 10 : 5;
+    var inizio = passo === 5 ? rint(r, 388, 397) * 5 : rint(r, 193, 197) * 10;
+    if (inizio + passo * (n - 1) > 2025) inizio = 2025 - passo * (n - 1) - ((2025 - passo * (n - 1)) % passo);
+    var anni = []; for (var k = 0; k < n; k++) anni.push(inizio + k * passo);
+    var quanti = i < 2 ? 1 : (r() < 0.55 ? 2 : 1), buchi = [];
+    for (var g = 0; g < 200 && buchi.length < quanti; g++) {
+      var b = rint(r, 1, n - 2);
+      if (buchi.every(function (x) { return Math.abs(x - b) >= 2; })) buchi.push(b);
+    }
+    buchi.sort(function (a, b2) { return a - b2; });
+    var M = [], F = [];
+    anni.forEach(function (_a, j) {
+      if (buchi.indexOf(j) >= 0) { M.push(null); F.push(null); return; }
+      var m = rint(r, 14, 34) * 2, f = rint(r, 14, 34) * 2;
+      if (m === f) f += 2;
+      M.push(m); F.push(f);
+    });
+    var v = { luogo: luogo, anni: anni, buchi: buchi, M: M, F: F, u: 2 };
+    completaCombinato(v);
+    return v;
+  }
+  function completaCombinato(v) {
+    v.T = v.M.map(function (m, j) { return m == null ? null : m + v.F[j]; });
+    var maxT = Math.max.apply(null, v.T.filter(function (x) { return x != null; }));
+    var maxMF = Math.max.apply(null, v.M.concat(v.F).filter(function (x) { return x != null; }));
+    v.maxT = maxT;
+    v.scalaOk = Math.ceil((maxT + 1) / 10) * 10;
+    v.scalaMF = Math.ceil((maxMF + 1) / 10) * 10;
+    // tre scale: quella di maschi e femmine (sbagliata), una appena sotto il totale (sbagliata) e quella giusta
+    var sotto = maxT % 10 ? Math.floor(maxT / 10) * 10 : maxT - 10;
+    if (sotto <= v.scalaMF) sotto = v.scalaOk + 20;
+    v.scale = [v.scalaMF, sotto, v.scalaOk];
+    var giro = (maxT + v.anni[0]) % 3;
+    v.scale = v.scale.slice(giro).concat(v.scale.slice(0, giro));
+    v.datiAnni = v.anni.filter(function (_a, j) { return v.T[j] != null; });
+  }
+  // colonne: 'tutti' = ogni anno al suo posto; 'dati' = solo gli anni con il dato
+  function disegnaCombinato(v, opz) {
+    opz = opz || {};
+    var stampa = !!opz.stampa, FS = opz.fs || (stretto() ? 24 : 15), max = opz.max || v.scalaOk, slot = opz.slot || 'tutti';
+    var anniCol = slot === 'tutti' ? v.anni.slice() : v.datiAnni.slice();
+    var W = 640, H = !stampa && stretto() ? 660 : 420, L = FS * 3.6, R = 16, T = 46, B = FS * 3.4;
+    var PW = W - L - R, PH = H - T - B, n = anniCol.length, colW = PW / n, u = v.u;
+    var svg = sv('svg', { viewBox: '0 0 ' + W + ' ' + H, role: 'img', width: opz.larghezza || null, tabindex: opz.interattivo ? '0' : null,
+      'aria-label': opz.interattivo ? 'Diagramma da costruire. Scegli maschi, femmine o totale e tocca la colonna dell’anno all’altezza del valore.' : 'Istogramma di maschi e femmine con la linea del totale' });
+    var griglia = sv('g'), sotto = sv('g'), assi = sv('g'), disegno = sv('g'), sopra = sv('g');
+    [griglia, sotto, assi, disegno, sopra].forEach(function (x) { svg.appendChild(x); });
+    var inch = stampa ? '#000' : INCH, fine = stampa ? '#ddd' : 'rgba(139,110,75,.22)', medio = stampa ? '#999' : 'rgba(139,110,75,.6)';
+    function y(val) { return T + PH - val / max * PH; }
+    function xc(j) { return L + colW * (j + 0.5); }
+    var bw = Math.min(colW * 0.27, 30);
+    function xs(j, s) { return s === 0 ? xc(j) - bw * 0.55 : s === 1 ? xc(j) + bw * 0.55 : xc(j); }
+    if (!opz.senzaEtichette) {
+      for (var q = 0; q <= max; q += u) {
+        var mag = q % 10 === 0;
+        if (!mag && max > 160) continue;
+        griglia.appendChild(sv('line', { x1: L, y1: y(q), x2: L + PW, y2: y(q), stroke: mag ? medio : fine, 'stroke-width': mag ? 1 : .6 }));
+        if (mag && (max <= 160 || q % 20 === 0)) assi.appendChild(sv('text', { x: L - 7, y: y(q) + FS * 0.35, 'text-anchor': 'end', 'font-size': FS - 1, fill: inch }, String(q)));
+      }
+    }
+    assi.appendChild(sv('line', { x1: L, y1: T - 14, x2: L, y2: T + PH, stroke: inch, 'stroke-width': 2 }));
+    assi.appendChild(sv('line', { x1: L, y1: T + PH, x2: L + PW + 6, y2: T + PH, stroke: inch, 'stroke-width': 2 }));
+    assi.appendChild(sv('path', { d: 'M ' + L + ' ' + (T - 20) + ' l -5 10 l 10 0 z', fill: inch }));
+    assi.appendChild(sv('path', { d: 'M ' + (L + PW + 12) + ' ' + (T + PH) + ' l -10 -5 l 0 10 z', fill: inch }));
+    if (!opz.senzaEtichette) {
+      anniCol.forEach(function (a, j) {
+        var manca = v.T[v.anni.indexOf(a)] == null;
+        assi.appendChild(sv('text', { x: xc(j), y: T + PH + FS + 7, 'text-anchor': 'middle', 'font-size': FS - (n > 8 ? 2 : 0), fill: manca ? (stampa ? '#777' : SEPPIA) : inch, 'font-style': manca ? 'italic' : null }, String(a)));
+        assi.appendChild(sv('line', { x1: xc(j), y1: T + PH, x2: xc(j), y2: T + PH + 5, stroke: inch }));
+      });
+      assi.appendChild(sv('text', { x: L + PW, y: T + PH + FS * 2.5 + 4, 'text-anchor': 'end', 'font-size': FS - 2, 'font-style': 'italic', fill: stampa ? '#444' : SEPPIA }, 'tempo (anni) →'));
+      var leg = [['Maschi', COL_M, 'r'], ['Femmine', COL_F, 'r'], ['Totale', COL_T, 'c']], lx = L + 14;
+      leg.forEach(function (x) {
+        if (x[2] === 'r') assi.appendChild(sv('rect', { x: lx, y: T - 34, width: 13, height: 13, fill: x[1] }));
+        else { assi.appendChild(sv('line', { x1: lx - 3, y1: T - 27, x2: lx + 16, y2: T - 27, stroke: x[1], 'stroke-width': 2.4 })); assi.appendChild(sv('circle', { cx: lx + 6, cy: T - 27, r: 5, fill: x[1] })); }
+        assi.appendChild(sv('text', { x: lx + 20, y: T - 22, 'font-size': FS - 2, fill: inch }, x[0]));
+        lx += (x[0].length + 4) * (FS - 2) * 0.62;
+      });
+    }
+    // disegna un insieme di valori {M:[],F:[],T:[]} indicizzati come v.anni
+    function traccia3(gruppo, val, stile, anim, t) {
+      var k = 0, prima = null;
+      anniCol.forEach(function (a, j) {
+        var idx = v.anni.indexOf(a);
+        [['M', 0, COL_M], ['F', 1, COL_F]].forEach(function (s) {
+          var x = val[s[0]][idx]; if (x == null) return;
+          var h = Math.min(x, max), r0 = sv('rect', { x: xs(j, s[1]) - bw / 2, y: y(h), width: bw, height: T + PH - y(h), fill: stile.vuoto ? 'none' : s[2], 'fill-opacity': stile.vuoto ? null : .85,
+            stroke: s[2], 'stroke-width': stile.vuoto ? 2.2 : 1, 'stroke-dasharray': stile.vuoto ? '6 4' : null });
+          gruppo.appendChild(r0); appariDopo(r0, anim, t, 80 + k * 90); k++;
+          if (stile.valori) { var lb = sv('text', { x: xs(j, s[1]), y: y(h) - 5, 'text-anchor': 'middle', 'font-size': FS - 4, fill: s[2], stroke: stampa ? '#fff' : CARTA, 'stroke-width': 3, 'paint-order': 'stroke' }, String(x)); gruppo.appendChild(lb); appariDopo(lb, anim, t, 120 + k * 90); }
+        });
+      });
+      anniCol.forEach(function (a, j) {
+        var idx = v.anni.indexOf(a), x = val.T[idx]; if (x == null) return;
+        var h = Math.min(x, max), px = xc(j), py = y(h);
+        if (prima) {
+          var buco = j - prima.j > 1 || anniCol.length < v.anni.length && v.anni.indexOf(a) - v.anni.indexOf(anniCol[prima.j]) > 1;
+          var tipo = buco ? (stile.gap || 'tratteggiata') : 'continua';
+          if (tipo !== 'nessuna') {
+            var seg = sv('line', { x1: prima.x, y1: prima.y, x2: px, y2: py, stroke: COL_T, 'stroke-width': 3, 'stroke-dasharray': tipo === 'tratteggiata' ? '9 7' : (stile.vuoto ? '5 4' : null) });
+            gruppo.appendChild(seg); traccia(seg, anim, t, 300 + k * 90, 400);
+          }
+        }
+        var c = sv('circle', { cx: px, cy: py, r: 7, fill: stile.vuoto ? '#fff' : COL_T, stroke: COL_T, 'stroke-width': 2.4 });
+        gruppo.appendChild(c); appariDopo(c, anim, t, 250 + k * 90); k++;
+        if (stile.valori) { var lb2 = sv('text', { x: px, y: py - 12, 'text-anchor': 'middle', 'font-size': FS - 2, 'font-weight': 700, fill: COL_T, stroke: stampa ? '#fff' : CARTA, 'stroke-width': 4, 'paint-order': 'stroke' }, String(x)); gruppo.appendChild(lb2); appariDopo(lb2, anim, t, 300 + k * 90); }
+        prima = { j: j, x: px, y: py };
+      });
+    }
+    var giusti = { M: v.M, F: v.F, T: v.T }, fatto = {};
+    var api = {
+      v: v, svg: svg,
+      scala: function (anim, t) {
+        if (fatto.scala) return; fatto.scala = 1;
+        var rr = sv('rect', { x: L, y: y(v.maxT) - 2, width: PW, height: 4, fill: ROSSO, opacity: .7 });
+        sotto.appendChild(rr); appariDopo(rr, anim, t, 100);
+        var tx = sv('text', { x: L + PW - 4, y: y(v.maxT) - 8, 'text-anchor': 'end', 'font-size': FS - 1, 'font-weight': 700, fill: ROSSO, stroke: CARTA, 'stroke-width': 4, 'paint-order': 'stroke' }, 'totale più alto: ' + v.maxT);
+        sopra.appendChild(tx); appariDopo(tx, anim, t, 300);
+      },
+      buchi: function (anim, t) {
+        if (fatto.buchi) return; fatto.buchi = 1;
+        anniCol.forEach(function (a, j) {
+          if (v.T[v.anni.indexOf(a)] != null) return;
+          var c = sv('rect', { x: L + colW * j + 3, y: T, width: colW - 6, height: PH, fill: 'rgba(179,38,30,.07)', stroke: ROSSO, 'stroke-width': 1.3, 'stroke-dasharray': '5 4' });
+          sotto.appendChild(c); appariDopo(c, anim, t, 100);
+          var tx = sv('text', { x: xc(j), y: T + PH / 2, 'text-anchor': 'middle', 'font-size': FS - 3, 'font-style': 'italic', fill: ROSSO, stroke: CARTA, 'stroke-width': 4, 'paint-order': 'stroke' }, 'nessun dato');
+          sopra.appendChild(tx); appariDopo(tx, anim, t, 250);
+        });
+      },
+      canne: function (anim, t) { if (fatto.canne) return; fatto.canne = 1; traccia3(disegno, { M: v.M, F: v.F, T: v.T.map(function () { return null; }) }, { valori: true }, anim, t); },
+      totale: function (anim, t) { if (fatto.totale) return; fatto.totale = 1; traccia3(disegno, { M: v.M.map(function () { return null; }), F: v.F.map(function () { return null; }), T: v.T }, { valori: true, gap: 'tratteggiata' }, anim, t); },
+      soluzione: function (anim, t, vuoto) { traccia3(sopra, giusti, { vuoto: !!vuoto, valori: !vuoto, gap: 'tratteggiata' }, anim, t); },
+      utente: function (val, gap, sel) {
+        while (disegno.firstChild) disegno.removeChild(disegno.firstChild);
+        traccia3(disegno, val, { gap: gap || 'continua' }, false, null);
+        if (sel) {
+          var j = anniCol.indexOf(v.anni[sel.i]); if (j < 0) return;
+          var w = sel.s === 'T' ? colW * 0.5 : bw * 1.3, cx = sel.s === 'M' ? xs(j, 0) : sel.s === 'F' ? xs(j, 1) : xc(j);
+          disegno.appendChild(sv('rect', { x: cx - w / 2, y: T, width: w, height: PH, fill: 'rgba(200,169,110,.14)', stroke: ORO, 'stroke-width': 1.5, rx: 4 }));
+        }
+      },
+      punto: function (cx, cy) {
+        var pt = svg.createSVGPoint(); pt.x = cx; pt.y = cy;
+        var m = svg.getScreenCTM(); if (!m) return null;
+        var p = pt.matrixTransform(m.inverse());
+        if (p.x < L || p.x > L + PW || p.y < T - 16 || p.y > T + PH + 10) return null;
+        var j = Math.max(0, Math.min(n - 1, Math.floor((p.x - L) / colW)));
+        var val = Math.round((T + PH - p.y) / PH * max / u) * u;
+        return { i: v.anni.indexOf(anniCol[j]), val: Math.max(0, Math.min(max, val)) };
+      }
+    };
+    if (opz.valori) traccia3(sopra, giusti, { valori: !!opz.conValori, gap: 'tratteggiata' }, false, null);
+    return { nodo: svg, api: api };
+  }
+  function tabellaCombinato(v, stampa) {
+    var b = stampa ? '#999' : 'var(--dust)';
+    var th = '<th style="padding:4px 8px;border-bottom:1px solid ' + b + ';text-align:left">', td = '<td style="padding:4px 8px;border-bottom:1px solid ' + b + ';text-align:right;font-variant-numeric:tabular-nums">';
+    var h = '<table style="border-collapse:collapse;font-size:' + (stampa ? '9.5pt' : '.95rem') + ';margin:2px 0 12px"><tr>' + th + 'Anno</th>' + th.replace('left', 'right') + 'Maschi</th>' + th.replace('left', 'right') + 'Femmine</th></tr>';
+    v.anni.forEach(function (a, j) { if (v.T[j] == null) return; h += '<tr>' + td.replace('right', 'left') + a + '</td>' + td + v.M[j] + '</td>' + td + v.F[j] + '</td></tr>'; });
+    return h + '</table>';
+  }
+
+  var COMBINATO = {
+    nomiErrori: {
+      somma: 'Sbagliare la somma del totale', scala: 'Tarare la scala su maschi e femmine invece che sul totale', anni: 'Togliere gli anni senza dato dall’asse',
+      collega: 'Unire i pallini con la linea continua (o non unirli) dove manca il dato', valore: 'Riportare un valore all’altezza sbagliata', mancante: 'Lasciare fuori un dato',
+      scambio: 'Scambiare maschi e femmine', riempito: 'Inventare un valore per l’anno senza dato'
+    },
+    opzioni: function () { return { v: 1 }; },
+    serie: function (seme, n) { var r = rngDa(seme), usate = {}, out = []; for (var i = 0; i < n; i++) out.push(varianteCombinato(r, i, usate)); return out; },
+    domanda: function (v) {
+      var tav = el('div'), foglio = el('div'), c = {}, sel = null, bloccato = false, modo = 'M';
+      var val = { M: v.anni.map(function () { return null; }), F: v.anni.map(function () { return null; }), T: v.anni.map(function () { return null; }) };
+      var d = null;
+      foglio.appendChild(el('h4', { text: 'Costruisci un istogramma per maschi e femmine di ' + v.luogo + ' e raffigura sullo stesso diagramma anche il totale.' }));
+      // 1. la tabella con i totali da scrivere
+      var tab = el('table', { style: 'border-collapse:collapse;font-size:.95rem;margin:2px 0 12px' });
+      tab.appendChild(el('tr', null, ['Anno', 'Maschi', 'Femmine', 'Totale'].map(function (x, k) { return el('th', { style: 'padding:5px 9px;border-bottom:1px solid var(--dust);text-align:' + (k ? 'right' : 'left'), text: x }); })));
+      c.tot = {};
+      v.anni.forEach(function (a, j) {
+        if (v.T[j] == null) return;
+        var inp = el('input', { class: 'esx-campo', inputmode: 'numeric', 'aria-label': 'Totale ' + a, autocomplete: 'off', style: 'width:3.4em;font-size:1rem;padding:4px 2px' });
+        c.tot[j] = inp;
+        var td = 'padding:4px 9px;border-bottom:1px solid var(--dust);text-align:right;font-variant-numeric:tabular-nums';
+        tab.appendChild(el('tr', null, [el('td', { style: td.replace('right', 'left'), text: String(a) }), el('td', { style: td, text: String(v.M[j]) }), el('td', { style: td, text: String(v.F[j]) }), el('td', { style: td }, [inp])]));
+      });
+      foglio.appendChild(el('p', { style: 'font-weight:600;color:var(--ink);margin:0 0 4px', text: '1. Scrivi i totali' }));
+      foglio.appendChild(tab);
+      // 2. la scala
+      foglio.appendChild(el('p', { style: 'font-weight:600;color:var(--ink);margin:6px 0 6px', text: '2. Fin dove arriva l’asse verticale?' }));
+      c.scala = segmentato(v.scale.map(function (s) { return { t: 'Fino a ' + s, v: s }; }), 'Fin dove arriva l’asse verticale');
+      foglio.appendChild(el('div', { class: 'esx-riga' }, [c.scala]));
+      // 3. gli anni sull'asse
+      var nd = v.datiAnni.length, nt = v.anni.length;
+      foglio.appendChild(el('p', { style: 'font-weight:600;color:var(--ink);margin:6px 0 6px', text: '3. Quanti anni metti sull’asse orizzontale?' }));
+      var ordineSlot = [{ t: 'Solo i ' + nd + ' con i dati', v: 'dati' }, { t: 'Tutti i ' + nt, v: 'tutti' }];
+      if (v.anni[0] % 2) ordineSlot.reverse();
+      c.slot = segmentato(ordineSlot, 'Quanti anni sull’asse orizzontale');
+      foglio.appendChild(el('div', { class: 'esx-riga' }, [c.slot]));
+      // 4. il collegamento
+      foglio.appendChild(el('p', { style: 'font-weight:600;color:var(--ink);margin:6px 0 6px', text: '4. Dove manca un anno, come unisci i pallini del totale?' }));
+      c.gap = segmentato([{ t: 'Linea continua', v: 'continua' }, { t: 'Tratteggiata', v: 'tratteggiata' }, { t: 'Non li unisco', v: 'nessuna' }], 'Come unisci i pallini attorno all’anno mancante');
+      foglio.appendChild(el('div', { class: 'esx-riga' }, [c.gap]));
+      // 5. costruisci
+      foglio.appendChild(el('p', { style: 'font-weight:600;color:var(--ink);margin:10px 0 6px', text: '5. Costruisci il diagramma' }));
+      c.modo = segmentato([{ t: 'Maschi', v: 'M' }, { t: 'Femmine', v: 'F' }, { t: 'Totale', v: 'T' }], 'Che cosa stai disegnando');
+      c.modo.imposta('M');
+      c.modo.addEventListener('click', function () { modo = c.modo.valore() || 'M'; sel = null; disegna(); });
+      foglio.appendChild(el('div', { class: 'esx-riga' }, [c.modo]));
+      var stato = el('span', { class: 'esx-nota', style: 'margin:0;min-width:9em' });
+      var meno = el('button', { type: 'button', class: 'esx-btn sec pic', text: '−', 'aria-label': 'Abbassa di una linea' });
+      var piu = el('button', { type: 'button', class: 'esx-btn sec pic', text: '+', 'aria-label': 'Alza di una linea' });
+      var togli = el('button', { type: 'button', class: 'esx-btn sec pic', text: 'Togli' });
+      foglio.appendChild(el('div', { class: 'esx-comandi', style: 'margin-top:6px' }, [stato, meno, piu, togli]));
+      foglio.appendChild(el('p', { class: 'esx-nota', text: 'Scegli che cosa disegni, poi tocca la colonna dell’anno all’altezza del valore: le canne per maschi e femmine, il pallino per il totale. Ogni linea sottile vale 2.' }));
+      function nomeSel() { if (!sel) return 'Scegli e tocca'; var x = val[sel.s][sel.i]; return v.anni[sel.i] + ' · ' + { M: 'maschi', F: 'femmine', T: 'totale' }[sel.s] + ': ' + (x == null ? 'vuoto' : x); }
+      function disegna() {
+        var sc = c.scala.valore(), sl = c.slot.valore();
+        if (!sc || !sl) {
+          tav.innerHTML = '';
+          tav.appendChild(el('div', { style: 'padding:48px 18px;text-align:center;color:' + SEPPIA + ';font-family:var(--font-display);font-size:1.1rem;line-height:1.5', text: 'Prima scegli fin dove arriva l’asse verticale (2) e quanti anni metti in orizzontale (3): il diagramma si prepara così.' }));
+          d = null; stato.textContent = ''; riapriPannello(); return;
+        }
+        if (!d || d.max !== sc || d.slot !== sl) {
+          d = disegnaCombinato(v, { interattivo: true, max: sc, slot: sl }); d.max = sc; d.slot = sl;
+          tav.innerHTML = ''; tav.appendChild(d.nodo);
+          d.nodo.style.cursor = 'crosshair';
+          d.nodo.addEventListener('click', function (ev) { var p = d.api.punto(ev.clientX, ev.clientY); if (p) metti(modo, p.i, p.val); });
+          d.nodo.addEventListener('keydown', tasto);
+        }
+        d.api.utente(val, c.gap.valore() || 'continua', bloccato ? null : sel);
+        stato.textContent = nomeSel(); riapriPannello();
+      }
+      function metti(s, i, x) { if (bloccato) return; sel = { s: s, i: i }; val[s][i] = x; disegna(); }
+      function ritocca(dx) { if (!sel || bloccato || !d) return; var x = val[sel.s][sel.i]; x = (x == null ? 0 : x) + dx * v.u; metti(sel.s, sel.i, Math.max(0, Math.min(d.max, x))); }
+      function tasto(ev) {
+        if (bloccato) return;
+        var k = ev.key;
+        if (!sel) sel = { s: modo, i: 0 };
+        if (k === 'ArrowUp') ritocca(1); else if (k === 'ArrowDown') ritocca(-1);
+        else if (k === 'ArrowRight' || k === 'ArrowLeft') { var i2 = sel.i + (k === 'ArrowRight' ? 1 : -1); sel = { s: modo, i: (i2 + v.anni.length) % v.anni.length }; disegna(); }
+        else return;
+        ev.preventDefault(); ev.stopPropagation();
+      }
+      meno.addEventListener('click', function () { ritocca(-1); });
+      piu.addEventListener('click', function () { ritocca(1); });
+      togli.addEventListener('click', function () { if (sel && !bloccato) { val[sel.s][sel.i] = null; disegna(); } });
+      [c.scala, c.slot, c.gap].forEach(function (x) { x.addEventListener('click', disegna); });
+      disegna();
+      return {
+        nodo: tav, foglio: foglio,
+        leggi: function () {
+          var vuoto = Object.keys(c.tot).filter(function (j) { return !c.tot[j].value.trim(); })[0];
+          if (vuoto != null) { c.tot[vuoto].focus(); return null; }
+          if (!c.scala.valore() || !c.slot.valore()) { stato.textContent = 'Scegli la scala e gli anni (punti 2 e 3).'; return null; }
+          var messi = 0; ['M', 'F', 'T'].forEach(function (s) { val[s].forEach(function (x) { if (x != null) messi++; }); });
+          if (!messi) { stato.textContent = 'Prima disegna il diagramma.'; return null; }
+          var tot = {}; Object.keys(c.tot).forEach(function (j) { tot[j] = numIt(c.tot[j].value); });
+          return { tot: tot, scala: c.scala.valore(), slot: c.slot.valore(), gap: c.gap.valore(), val: JSON.parse(JSON.stringify(val)) };
+        },
+        segna: function (r) {
+          bloccato = true;
+          Object.keys(c.tot).forEach(function (j) { c.tot[j].disabled = true; var ok = r.ok.tot[j]; c.tot[j].classList.add(ok ? 'ok' : 'ko'); if (!ok) c.tot[j].value = c.tot[j].value + ' → ' + v.T[j]; });
+          [['scala', 'scala'], ['slot', 'slot'], ['gap', 'gap']].forEach(function (x) { c[x[0]].blocca(); c[x[0]].classList.add(r.ok[x[1]] ? 'ok' : 'ko'); });
+          c.modo.blocca(); [meno, piu, togli].forEach(function (b) { b.disabled = true; });
+          disegna();
+          stato.textContent = r.preso ? 'Diagramma giusto.' : 'In tratteggio il diagramma giusto.';
+        },
+        soluzione: function (anim) { if (d) d.api.soluzione(anim, Orologio(), true); }
+      };
+    },
+    valuta: function (v, r) {
+      var ok = { tot: {} }, errori = [], visti = {}, tuttiTot = true;
+      function err(cc, t) { if (!visti[t]) { errori.push({ c: cc, t: t }); visti[t] = 1; } }
+      Object.keys(r.tot).forEach(function (j) {
+        ok.tot[j] = r.tot[j] === v.T[j];
+        if (!ok.tot[j]) { tuttiTot = false; err('somma', 'Totale del ' + v.anni[j] + ': ' + v.M[j] + ' + ' + v.F[j] + ' = ' + v.T[j] + '.'); }
+      });
+      ok.scala = r.scala >= v.maxT;
+      if (!ok.scala) err('scala', 'Con l’asse fino a ' + r.scala + ' «non ci sta il totale»: arriva a ' + v.maxT + '. La scala si tara sul valore più alto, cioè il totale: fino a ' + v.scalaOk + ' per stare tranquilli.');
+      ok.slot = r.slot === 'tutti';
+      if (!ok.slot) err('anni', 'Mancano i dati del ' + v.buchi.map(function (b) { return v.anni[b]; }).join(' e del ') + ', ma quegli anni restano sull’asse: «non faccio finta che non ci siano». ' + v.anni.length + ' posizioni, non ' + v.datiAnni.length + '.');
+      ok.gap = r.gap === 'tratteggiata';
+      if (!ok.gap) err('collega', r.gap === 'continua' || !r.gap ? 'Dove manca l’anno i pallini si uniscono con il tratteggio: la linea continua farebbe credere che il dato ci sia.' : 'I pallini del totale vanno uniti anche attorno all’anno mancante, ma con il tratteggio: «se delle annate vengono saltate bisogna darne evidenza».');
+      var tuttiVal = true;
+      var scambiati = v.anni.every(function (_a, j) { return v.M[j] == null || (r.val.M[j] === v.F[j] && r.val.F[j] === v.M[j]); });
+      if (scambiati) { tuttiVal = false; err('scambio', 'Hai scambiato maschi e femmine: segui la legenda.'); }
+      ['M', 'F', 'T'].forEach(function (s) {
+        var nome = { M: 'maschi', F: 'femmine', T: 'totale' }[s], giusti = { M: v.M, F: v.F, T: v.T }[s];
+        v.anni.forEach(function (a, j) {
+          var x = giusti[j], u2 = r.val[s][j];
+          if (x == null) { if (u2 != null) { tuttiVal = false; err('riempito', 'Nel ' + a + ' il dato non c’è: lo spazio resta vuoto.'); } return; }
+          if (u2 == null) { tuttiVal = false; err('mancante', a + ' (' + nome + '): manca, è ' + x + '.'); return; }
+          if (u2 !== x && !(scambiati && s !== 'T')) { tuttiVal = false; err('valore', a + ' (' + nome + '): è ' + x + ', l’hai messo a ' + u2 + '.' + (x > r.scala ? ' Con questa scala non ci sta.' : '')); }
+        });
+      });
+      return { preso: tuttiTot && ok.scala && ok.slot && ok.gap && tuttiVal, errori: errori.slice(0, 6), ok: ok,
+        nota: 'Per il punto contano i totali, la scala, gli anni al loro posto, ogni canna e ogni pallino all’altezza giusta e il tratteggio dove manca il dato.' };
+    },
+    procedimento: function (v) {
+      function scena() { return disegnaCombinato(v, {}); }
+      var mancanti = v.buchi.map(function (b) { return v.anni[b]; });
+      return { scena: scena, passi: [
+        { scena: 's', titolo: 'Prima i totali', testo: 'Maschi più femmine, anno per anno: ' + v.anni.map(function (a, j) { return v.T[j] == null ? null : a + ': ' + v.T[j]; }).filter(Boolean).join(', ') + '.' },
+        { scena: 's', titolo: 'La scala', testo: 'Il valore più alto è il totale, ' + v.maxT + ': l’asse verticale deve superarlo. Fino a ' + v.scalaOk + '.', regola: 'La scala si tara sul totale, non su maschi e femmine.', fai: function (a, an, t) { a.scala(an, t); } },
+        { scena: 's', titolo: 'Gli anni, anche quelli che mancano', testo: 'Il ' + mancanti.join(' e il ') + ' non hanno dati, ma restano al loro posto: ' + v.anni.length + ' posizioni, non ' + v.datiAnni.length + '. Lo spazio resta vuoto.', fai: function (a, an, t) { a.buchi(an, t); } },
+        { scena: 's', titolo: 'Le canne', testo: 'Per ogni anno due canne affiancate: maschi e femmine, di colore diverso, con la legenda.', fai: function (a, an, t) { a.buchi(false, t); a.canne(an, t); } },
+        { scena: 's', titolo: 'Il totale', testo: 'In alto, un pallino per il totale di ogni anno; i pallini si uniscono con la linea. Attorno agli anni mancanti la linea è tratteggiata.', regola: 'Anno senza dato: spazio vuoto e tratteggio.', fai: function (a, an, t) { a.buchi(false, t); a.canne(false, t); a.totale(an, t); } }
+      ] };
+    },
+    // Il tutorial: i dati di aula, dal 1975 al 2015, senza il 1985 e il 2010.
+    tutorial: function (e) {
+      var aula = { luogo: 'aula', anni: [1975, 1980, 1985, 1990, 1995, 2000, 2005, 2010, 2015], buchi: [2, 7], u: 2,
+        M: [56, 50, null, 32, 44, 48, 52, null, 60], F: [60, 40, null, 44, 32, 40, 54, null, 58] };
+      completaCombinato(aula);
+      function scena(nome, opz) { return disegnaCombinato(aula, Object.assign({ slot: nome === 'sette' ? 'dati' : 'tutti' }, opz || {})); }
+      var passi = [
+        { scena: 'nove', stampa: 'testo', momentaneo: true, titolo: 'L’ultimo esercizio della prova', testo: ['«Costruisci un istogramma per maschi e femmine e raffigura sullo stesso diagramma cartesiano anche il totale della popolazione.» Vale un punto.', 'L’esempio di aula: dal 1975 al 2015, ogni cinque anni. Mancano il 1985 e il 2010.'] },
+        { scena: 'nove', stampa: true, titolo: 'Prima i totali', testo: ['1975: 56 + 60 = 116. 1980: 90. 1990: 76. 1995: 76. 2000: 88. 2005: 106. 2015: 60 + 58 = 118.', 'Il valore più alto non è un maschio o una femmina: è il totale, 118.'], fai: function (a, an, t) { a.scala(an, t); } },
+        { scena: 'nove', stampa: 'testo', titolo: 'La scala: fino a 120', testo: ['Se tari l’asse sui maschi e le femmine (fino a 60), «non ci sta il totale».', '«Deve arrivare a 120, per stare tranquilli.» E il diagramma va fatto grande: non un francobollo.'], regola: 'La scala si tara sul totale.', fai: function (a, an, t) { a.scala(false, t); } },
+        { scena: 'sette', stampa: true, momentaneo: true, titolo: 'Sette posizioni? No', testo: ['Mettendo solo gli anni con i dati, l’asse salta dal 1980 al 1990 e dal 2005 al 2015 come se fossero cinque anni: il tempo è falsato.'] },
+        { scena: 'nove', stampa: true, titolo: 'Nove posizioni', testo: ['«Io non faccio finta che non ci siano. Dividerò quella linea non per sette, che sono i dati effettivi, ma per nove.»', 'Il 1985 e il 2010 hanno il loro posto, e lo spazio resta vuoto.'], regola: 'Gli anni mancanti restano sull’asse.', fai: function (a, an, t) { a.buchi(an, t); } },
+        { scena: 'nove', stampa: true, titolo: 'Le canne di maschi e femmine', testo: ['Per ogni anno due «canne verticali» affiancate, con colori diversi: «una interna bianca, l’altra colorata con la penna» va benissimo.'], fai: function (a, an, t) { a.buchi(false, t); a.canne(an, t); } },
+        { scena: 'nove', stampa: true, titolo: 'Il totale: pallini e linea', testo: ['In alto, in corrispondenza dell’anno, un pallino per il totale. I pallini si uniscono con una linea.', 'Dove l’anno manca, «per collegare i punti uso il tratteggio; per l’altro la linea continua».'],
+          regola: 'Anno mancante: si tratteggia.', fai: function (a, an, t) { a.buchi(false, t); a.canne(false, t); a.totale(an, t); } },
+        { scena: 'nove', stampa: 'testo', titolo: 'Ricapitolando', testo: ['1. Calcola i totali. 2. Asse verticale fino oltre il totale più alto. 3. Asse orizzontale con tutti gli anni, anche quelli senza dato. 4. Canne affiancate per maschi e femmine, con la legenda. 5. Pallini per il totale, uniti dalla linea, tratteggiata dove manca l’anno.', 'Ora prova tu: 15 tabelle sempre diverse.'],
+          dopo: function () { return docente(e); }, fai: function (a, an, t) { a.soluzione(false, t); } }
+      ];
+      return { scena: scena, passi: passi };
+    },
+    istruzioniStampa: '<p style="margin:0 0 8px;font-size:10pt">Per ogni tabella calcola i totali, poi su un diagramma cartesiano disegna le canne verticali affiancate di maschi e femmine e i pallini del totale uniti da una linea. Tara la scala sul totale; lascia al loro posto gli anni senza dato e unisci i pallini con il tratteggio.</p>',
+    stampa: function (v, n) {
+      var d = disegnaCombinato(v, { stampa: true, fs: 15, larghezza: '118mm', senzaEtichette: true, slot: 'tutti' });
+      return '<h3>' + n + '. Maschi, femmine e totale a ' + esc(v.luogo) + '</h3><div class="riga">' + tabellaCombinato(v, true) + d.nodo.outerHTML + '</div>';
+    },
+    soluzioni: function (vs) {
+      return '<div style="display:flex;flex-wrap:wrap;gap:8px">' + vs.map(function (v, i) {
+        var d = disegnaCombinato(v, { stampa: true, fs: 15, larghezza: '88mm', valori: true, conValori: true });
+        return '<div style="break-inside:avoid;page-break-inside:avoid"><b>' + (i + 1) + '.</b> <small>scala fino a ' + v.scalaOk + '; senza dato: ' + v.buchi.map(function (b) { return v.anni[b]; }).join(', ') + '</small>' + d.nodo.outerHTML + '</div>';
+      }).join('') + '</div>';
+    }
+  };
+
   // per i collaudi automatici
-  try { window.UMS_ESERCIZI = { RETICOLO: RETICOLO, DENSITA: DENSITA, BANCA: BANCA, TASSI: TASSI, GRAFICO: GRAFICO, rispostaTassi: rispostaTassi, geometria: geometria, CITTA: CITTA, htmlScheda: htmlScheda, absLat: absLat, absLon: absLon }; } catch (e) {}
+  try { window.UMS_ESERCIZI = { POSIZIONA: POSIZIONA, INDICI: INDICI, DENSITA_S: DENSITA_S, COMBINATO: COMBINATO, risposteI: risposteI, numIt: numIt, RETICOLO: RETICOLO, DENSITA: DENSITA, BANCA: BANCA, TASSI: TASSI, GRAFICO: GRAFICO, rispostaTassi: rispostaTassi, geometria: geometria, CITTA: CITTA, htmlScheda: htmlScheda, absLat: absLat, absLon: absLon }; } catch (e) {}
 })();
