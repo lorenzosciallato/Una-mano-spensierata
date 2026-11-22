@@ -1,5 +1,5 @@
 {
-  "nota": "Copioni dei video tutorial degli esercizi d'esame. 'p' = passo del tutorial animato da mostrare; 'voce' = testo letto dalla voce e mostrato nei sottotitoli. Le battute con 'chiedi' fermano il video: lo studente risponde, poi la voce legge 'si' o 'no' e infine 'spiega'. Il campo 'audio' lo riempie il server (id battuta -> mp3): id, id-si, id-no, id-spiega.",
+  "nota": "Copioni dei video tutorial degli esercizi d'esame. 'p' = passo del tutorial animato da mostrare; 'voce' = testo letto dalla voce e mostrato nei sottotitoli. Le battute con 'chiedi' fermano il video: lo studente risponde, poi la voce legge 'si' o 'no' e infine 'spiega'. Il campo 'audio' collega ogni frase al suo mp3 in esercizi-video/voce (voce ElevenLabs); 'musica' è il sottofondo che va in loop a volume basso.",
   "versione": 1,
   "video": {
     "reticolo_coordinate": {
@@ -7,36 +7,36 @@
         {
           "id": "rc01",
           "p": 0,
-          "voce": "Questo è il primo esercizio di tutte le prove scritte. Trovi un reticolo di linee orizzontali e verticali, a un grado l'una dall'altra, e dei luoghi da localizzare. È proprio il reticolo visto in aula, con Hanoi e Hong Kong. All'esame cambieranno i numeri, non il metodo."
+          "voce": "In questo esercizio hai un reticolo: tante linee orizzontali e verticali, distanti un grado l'una dall'altra. Sopra ci sono alcuni luoghi, e per ognuno devi scrivere latitudine e longitudine. Vediamo come si fa con due città: Hanoi e Hong Kong."
         },
         {
           "id": "rc02",
           "p": 1,
-          "voce": "Le linee orizzontali sono i paralleli. Dicono quanto un luogo è a nord o a sud dell'equatore: è la latitudine."
+          "voce": "Partiamo dalle linee orizzontali. Si chiamano paralleli e ti dicono quanto un luogo è lontano dall'equatore, verso nord o verso sud. Questa distanza è la latitudine."
         },
         {
           "id": "rc03",
           "p": 2,
-          "voce": "Le linee verticali sono i meridiani. Dicono quanto un luogo è a est o a ovest del meridiano di Greenwich: è la longitudine."
+          "voce": "Le linee verticali invece sono i meridiani. Ti dicono quanto un luogo è lontano dal meridiano di Greenwich, verso est o verso ovest. Questa è la longitudine."
         },
         {
           "id": "rc04",
           "p": 3,
-          "voce": "Attenzione: l'etichetta venti gradi nord non vuol dire che il nord è a sinistra. Il nord è sempre in alto, e il foglio non si gira. Vuol dire che tutta quella linea sta a venti gradi dall'equatore."
+          "voce": "Guarda l'etichetta venti gradi nord. Non vuol dire che il nord sta da quella parte del foglio: il nord è sempre in alto. Vuol dire che tutta quella linea si trova a venti gradi a nord dell'equatore. L'etichetta è il valore della linea."
         },
         {
           "id": "rc05",
           "p": 4,
-          "voce": "Il trucco del professore: prima di tutto si scrivono i numeri su tutte le linee, su due lati. Siamo a nord, quindi salendo i numeri crescono. Siamo a est, quindi verso destra crescono."
+          "voce": "Prima di cercare qualsiasi città, conviene scrivere il valore di ogni linea, partendo dalle etichette che ti danno. Così non rischi di contare male dopo. Qui siamo a nord, quindi salendo i numeri aumentano. E siamo a est, quindi aumentano andando verso destra."
         },
         {
           "id": "rc06",
           "p": 4,
-          "voce": "Hanoi sta proprio sopra il parallelo dei ventuno gradi. Tocca a te: scrivi la latitudine di Hanoi, in gradi e primi.",
+          "voce": "Hanoi sta proprio sopra il parallelo dei ventuno gradi. Prova tu: scrivi la latitudine di Hanoi, in gradi e primi.",
           "chiedi": {
-            "si": "Esatto: ventuno gradi e zero zero primi nord.",
-            "no": "No. Hanoi sta proprio sulla linea dei ventuno gradi: ventuno gradi e zero zero primi nord.",
-            "spiega": "Quando il punto sta sulla linea, gli zero zero si scrivono sempre. Senza, come dice il professore, è battaglia navale: indichi un'area, non un punto.",
+            "si": "Giusto: ventuno gradi, zero zero primi, nord.",
+            "no": "La risposta giusta è ventuno gradi, zero zero primi, nord.",
+            "spiega": "Quando un punto sta esattamente sulla linea, i primi sono zero, e si scrivono lo stesso: zero zero. Se scrivessi solo ventuno gradi, potresti indicare un punto qualsiasi tra il ventuno e il ventidue.",
             "coord": {
               "lab": "Latitudine",
               "gradi": 21,
@@ -49,16 +49,16 @@
         {
           "id": "rc07",
           "p": 5,
-          "voce": "Ora la longitudine di Hanoi. Sta tra il meridiano dei centocinque gradi e quello dei centosei: si parte sempre dalla linea con il numero più basso."
+          "voce": "Passiamo alla longitudine di Hanoi. La città sta tra il meridiano dei centocinque gradi e quello dei centosei. Si parte sempre dalla linea con il numero più piccolo, quindi da centocinque."
         },
         {
           "id": "rc08",
           "p": 5,
-          "voce": "Un grado sono sessanta primi, come un'ora sono sessanta minuti. Guarda dove sta Hanoi nel riquadro e scrivi la longitudine, in gradi e primi.",
+          "voce": "Adesso devi capire quanto Hanoi è lontana da quella linea. Ricorda che un grado si divide in sessanta primi, proprio come un'ora in sessanta minuti. Guarda il riquadro e scrivi la longitudine, in gradi e primi.",
           "chiedi": {
             "si": "Giusto: centocinque gradi e cinquanta primi est.",
-            "no": "Non proprio. La risposta è centocinque gradi e cinquanta primi est.",
-            "spiega": "Dividiamo il riquadro in sesti, dieci primi ciascuno: Hanoi è a cinque sesti, cioè cinquanta primi. Va bene anche una stima vicina, ma mai sessanta o settantacinque: sessanta primi non esistono, sono già il grado dopo.",
+            "no": "La risposta giusta è centocinque gradi e cinquanta primi est.",
+            "spiega": "Se dividi il riquadro in sei parti uguali, ogni parte vale dieci primi. Hanoi è alla quinta parte, quindi cinquanta primi. Non serve essere precisissimi, va bene una stima vicina. L'unica cosa da evitare è scrivere sessanta primi: sessanta primi sono già un grado intero.",
             "coord": {
               "lab": "Longitudine",
               "gradi": 105,
@@ -71,16 +71,16 @@
         {
           "id": "rc09",
           "p": 6,
-          "voce": "Ecco il conto, sul disegno: cinque sesti del riquadro, cinquanta primi."
+          "voce": "Eccolo sul disegno: cinque parti su sei, cioè cinquanta primi."
         },
         {
           "id": "rc10",
           "p": 6,
-          "voce": "Adesso Hong Kong. Sta tra i paralleli dei ventidue e dei ventitré gradi. Scrivi la latitudine.",
+          "voce": "Ora tocca a Hong Kong. Sta tra il parallelo dei ventidue gradi e quello dei ventitré. Scrivi la latitudine.",
           "chiedi": {
-            "si": "Esatto: ventidue gradi e quindici primi nord.",
-            "no": "No: ventidue gradi e quindici primi nord.",
-            "spiega": "Dividiamo il riquadro in quarti, come i quarti d'ora. Hong Kong è a un quarto sopra la linea dei ventidue: quindici primi. La metà sarebbe trenta, tre quarti quarantacinque.",
+            "si": "Giusto: ventidue gradi e quindici primi nord.",
+            "no": "La risposta giusta è ventidue gradi e quindici primi nord.",
+            "spiega": "Qui conviene dividere il riquadro in quattro parti, come i quarti d'ora: ogni parte vale quindici primi. Hong Kong è a un quarto sopra la linea dei ventidue, quindi quindici primi. A metà sarebbero trenta, a tre quarti quarantacinque.",
             "coord": {
               "lab": "Latitudine",
               "gradi": 22,
@@ -93,31 +93,31 @@
         {
           "id": "rc11",
           "p": 7,
-          "voce": "Lo vedi sul disegno: un quarto del riquadro, quindici primi."
+          "voce": "Sul disegno si vede bene: un quarto del riquadro, quindici primi."
         },
         {
           "id": "rc12",
           "p": 8,
-          "voce": "La longitudine di Hong Kong: poco dopo il meridiano dei centoquattordici gradi, un sesto del riquadro. Centoquattordici gradi e dieci primi est."
+          "voce": "Per la longitudine di Hong Kong il ragionamento è lo stesso. È poco dopo il meridiano dei centoquattordici gradi, circa a un sesto del riquadro. Quindi centoquattordici gradi e dieci primi est."
         },
         {
           "id": "rc13",
           "p": 9,
-          "voce": "Le risposte si scrivono così: gradi con il tondino, primi con l'apice, e sempre la direzione, nord o sud, est o ovest."
+          "voce": "Quando scrivi la risposta, metti il simbolo del grado dopo i gradi e l'apice dopo i primi. E non dimenticare la direzione: nord o sud per la latitudine, est o ovest per la longitudine. Senza direzione la coordinata non è completa."
         },
         {
           "id": "rc14",
           "p": 10,
-          "voce": "E se siamo a sud o a ovest? Il metodo è lo stesso, ma i numeri crescono nell'altro verso: a sud scendendo, a ovest verso sinistra. Per questo si scrivono prima tutti i numeri."
+          "voce": "E se il reticolo è a sud o a ovest? Il metodo non cambia, cambia solo il verso in cui crescono i numeri. A sud aumentano scendendo, a ovest aumentano andando verso sinistra. Anche per questo conviene scrivere subito il valore di tutte le linee."
         },
         {
           "id": "rc15",
           "p": 10,
-          "voce": "Buenos Aires sta tra i trentaquattro e i trentacinque gradi sud, poco oltre la metà scendendo. Scrivi la latitudine.",
+          "voce": "Proviamo con Buenos Aires. Sta tra i trentaquattro e i trentacinque gradi sud, un po' oltre la metà del riquadro. Scrivi la latitudine.",
           "chiedi": {
             "si": "Giusto: trentaquattro gradi e trentacinque primi sud.",
-            "no": "No: trentaquattro gradi e trentacinque primi sud.",
-            "spiega": "A sud si parte dalla linea con il numero più basso, i trentaquattro, e si scende. Poco oltre la metà: trentacinque primi.",
+            "no": "La risposta giusta è trentaquattro gradi e trentacinque primi sud.",
+            "spiega": "Anche a sud si parte dalla linea con il numero più piccolo, cioè trentaquattro. Visto che i numeri crescono scendendo, conti verso il basso: poco oltre la metà vuol dire circa trentacinque primi.",
             "coord": {
               "lab": "Latitudine",
               "gradi": 34,
@@ -130,12 +130,12 @@
         {
           "id": "rc16",
           "p": 11,
-          "voce": "E la longitudine: cinquantotto gradi e venticinque primi ovest. Verso sinistra i numeri crescono."
+          "voce": "La longitudine di Buenos Aires è cinquantotto gradi e venticinque primi ovest. Qui i numeri crescono verso sinistra, quindi si conta in quella direzione."
         },
         {
           "id": "rc17",
           "p": 12,
-          "voce": "Ultima cosa, importantissima. All'esame il professore può stampare apposta un grado sbagliato, come l'errore che ha trovato sul libro. Guarda le etichette dei meridiani: ce n'è una che non torna con le altre.",
+          "voce": "Un'ultima cosa. Nella prova può capitare che un'etichetta sia sbagliata di proposito, e la devi trovare. Guarda le etichette dei meridiani: ce n'è una che non va d'accordo con le altre.",
           "chiedi": {
             "campi": [
               {
@@ -151,20 +151,20 @@
                 "unita": "°"
               }
             ],
-            "si": "Bravo: c'è scritto centocinquanta, doveva esserci centocinque.",
-            "no": "No. L'etichetta sbagliata è centocinquanta: doveva esserci centocinque.",
-            "spiega": "Tra due linee vicine c'è sempre un grado. L'etichetta centocinquanta sta tre linee a sinistra della centootto: centootto meno tre fa centocinque. Le cifre erano scambiate."
+            "si": "Giusto: c'è scritto centocinquanta, ma doveva esserci centocinque.",
+            "no": "L'etichetta sbagliata è centocinquanta: doveva esserci centocinque.",
+            "spiega": "Tra due linee vicine c'è sempre un grado. L'etichetta centocinquanta sta tre linee a sinistra del centootto, quindi il suo valore deve essere centootto meno tre, cioè centocinque. Qualcuno ha invertito le cifre."
           }
         },
         {
           "id": "rc18",
           "p": 13,
-          "voce": "Si barra l'etichetta sbagliata e si scrive accanto quella giusta. Poi si va avanti come sempre, usando solo le etichette giuste."
+          "voce": "Quando trovi un'etichetta sbagliata, la barri e accanto scrivi il valore giusto. Poi vai avanti normalmente, usando solo le etichette corrette."
         },
         {
           "id": "rc19",
           "p": 15,
-          "voce": "Ricapitolando: controlla le etichette, scrivi i numeri su tutte le linee, parti dalla linea con il valore più basso, stima i primi come sull'orologio e scrivi sempre la direzione. Ora allenati: quindici reticoli sempre diversi."
+          "voce": "Ricapitolando. Controlla che le etichette siano coerenti. Scrivi il valore di tutte le linee. Per ogni luogo parti dalla linea con il numero più piccolo, dividi il riquadro per stimare i primi, e scrivi sempre la direzione. Adesso prova da solo nell'allenamento."
         }
       ]
     },
@@ -173,17 +173,17 @@
         {
           "id": "rp01",
           "p": 0,
-          "voce": "L'esercizio delle coordinate arriva in due modi. O c'è un punto e scrivi latitudine e longitudine, oppure ci sono le coordinate e devi mettere tu il punto. Qui vediamo il secondo modo."
+          "voce": "Questo esercizio è il contrario del precedente. Prima avevi il punto e dovevi trovare le coordinate. Adesso hai le coordinate e devi mettere tu il punto sul reticolo."
         },
         {
           "id": "rp02",
           "p": 1,
-          "voce": "Sono date solo due etichette: cinquantaquattro gradi nord e tre gradi ovest. Prima cosa: si scrivono i numeri su tutte le linee. I paralleli salgono verso l'alto, quindi siamo a nord. I meridiani crescono verso sinistra, quindi siamo a ovest."
+          "voce": "Ti danno solo due etichette: cinquantaquattro gradi nord e tre gradi ovest. Come sempre, la prima cosa è scrivere il valore di tutte le linee. I paralleli crescono salendo, quindi siamo a nord. I meridiani crescono verso sinistra, quindi siamo a ovest."
         },
         {
           "id": "rp03",
           "p": 1,
-          "voce": "Il punto A è a cinquantaquattro gradi e quarantacinque primi nord. A che punto del riquadro sta, tra i cinquantaquattro e i cinquantacinque gradi?",
+          "voce": "Il punto A è a cinquantaquattro gradi e quarantacinque primi nord. Quindi sta tra la linea dei cinquantaquattro e quella dei cinquantacinque. Ma in che punto del riquadro?",
           "chiedi": {
             "scelte": [
               "A un quarto",
@@ -192,20 +192,20 @@
               "A 0,45 del riquadro"
             ],
             "giusta": 2,
-            "si": "Esatto: quarantacinque primi sono tre quarti di grado.",
-            "no": "No: quarantacinque primi sono tre quarti di grado.",
-            "spiega": "I primi si contano come i minuti dell'orologio: sessanta è l'intero, trenta la metà, quindici un quarto, quarantacinque tre quarti. Quarantacinque primi non sono zero virgola quarantacinque."
+            "si": "Giusto: quarantacinque primi sono tre quarti di grado.",
+            "no": "Quarantacinque primi sono tre quarti di grado.",
+            "spiega": "Pensa all'orologio: un grado sono sessanta primi, come un'ora sono sessanta minuti. Trenta primi sono mezzo grado, quindici un quarto, quarantacinque tre quarti. Attenzione a non leggerlo come zero virgola quarantacinque: i primi non sono decimali."
           }
         },
         {
           "id": "rp04",
           "p": 2,
-          "voce": "Quindi la fascia tra cinquantaquattro e cinquantacinque, a tre quarti, verso il cinquantacinque."
+          "voce": "Quindi il punto va nella fascia tra cinquantaquattro e cinquantacinque, a tre quarti della distanza, verso il cinquantacinque."
         },
         {
           "id": "rp05",
           "p": 2,
-          "voce": "Ora la longitudine: due gradi e quarantacinque primi ovest. Il punto va verso il meridiano dei tre gradi. Da che parte, sul foglio?",
+          "voce": "Ora la longitudine: due gradi e quarantacinque primi ovest. Il punto quindi va verso il meridiano dei tre gradi. Ma da che parte del foglio si trova?",
           "chiedi": {
             "scelte": [
               "Verso destra",
@@ -213,19 +213,19 @@
             ],
             "giusta": 1,
             "si": "Giusto: a ovest i numeri crescono verso sinistra.",
-            "no": "No: a ovest i numeri crescono verso sinistra, quindi il tre è a sinistra del due.",
-            "spiega": "Per questo il professore insiste: prima si scrivono tutti i numeri, poi si cerca il punto. Così non si sbaglia mai il verso."
+            "no": "A ovest i numeri crescono verso sinistra, quindi il tre sta a sinistra del due.",
+            "spiega": "Ecco perché conviene scrivere subito i valori su tutte le linee: così il verso lo vedi direttamente sul foglio e non devi ragionarci ogni volta."
           }
         },
         {
           "id": "rp06",
           "p": 3,
-          "voce": "All'incrocio delle due linee c'è il punto A."
+          "voce": "Dove si incrociano la latitudine e la longitudine, c'è il punto A."
         },
         {
           "id": "rp07",
           "p": 3,
-          "voce": "Paperopoli è a cinquantatré gradi e zero zero primi nord. Dove sta il punto?",
+          "voce": "Proviamo con Paperopoli, a cinquantatré gradi e zero zero primi nord. Dove si trova il punto?",
           "chiedi": {
             "scelte": [
               "Proprio sul parallelo dei 53°",
@@ -233,9 +233,9 @@
               "Proprio sul parallelo dei 54°"
             ],
             "giusta": 0,
-            "si": "Esatto: zero zero primi vuol dire proprio sulla linea.",
-            "no": "No: zero zero primi vuol dire proprio sulla linea dei cinquantatré gradi.",
-            "spiega": "E quando si scrivono le coordinate, gli zero zero vanno sempre messi."
+            "si": "Giusto: zero zero primi vuol dire che sta proprio sulla linea.",
+            "no": "Zero zero primi vuol dire che il punto sta proprio sulla linea dei cinquantatré gradi.",
+            "spiega": "Quando i primi sono zero, il punto non sta dentro il riquadro ma proprio sopra la linea. E quando scrivi le coordinate, quei due zeri si scrivono sempre."
           }
         },
         {
@@ -246,12 +246,12 @@
         {
           "id": "rp09",
           "p": 5,
-          "voce": "Gli errori che il professore vede ogni anno: partire senza aver numerato i margini, girare il foglio e confondere il nord con l'est, scrivere sessanta o settantacinque primi."
+          "voce": "Gli errori più comuni sono tre. Cercare il punto senza aver prima scritto i valori delle linee. Confondere il nord con l'est perché si gira il foglio. E scrivere sessanta o settantacinque primi, che non esistono: oltre i cinquantanove si passa al grado dopo."
         },
         {
           "id": "rp10",
           "p": 6,
-          "voce": "Ricapitolando: numera tutte le linee, guarda il verso dei numeri, prima la latitudine e poi la longitudine, e i primi come l'orologio. Ora allenati: quindici reticoli sempre diversi."
+          "voce": "Ricapitolando. Scrivi il valore di tutte le linee e guarda in che verso crescono. Poi trova prima la latitudine e dopo la longitudine, ricordando che i primi si contano come i minuti dell'orologio. Adesso allenati."
         }
       ]
     },
@@ -260,12 +260,12 @@
         {
           "id": "id01",
           "p": 0,
-          "voce": "Nella prova ci sono sempre dei calcoli di tassi, indici e incrementi. Il testo dà i dati, e dentro c'è sempre un dato inutile messo apposta. La regola che vale per tutti: il soggetto della domanda va al numeratore, la popolazione di riferimento al denominatore."
+          "voce": "In questo esercizio hai un breve testo con dei dati sulla popolazione, e devi calcolare tassi, indici o incrementi. Attenzione: tra i dati ce n'è sempre uno che non serve, messo lì per confonderti. La regola che vale sempre è questa: sopra, al numeratore, metti quello che ti chiedono; sotto, al denominatore, la popolazione di riferimento."
         },
         {
           "id": "id02",
           "p": 1,
-          "voce": "L'esempio di aula: 23 milioni 618 mila 420 abitanti al primo gennaio 2009, e 22 milioni 86 mila 560 al 30 giugno 2016. Si chiede l'incremento medio annuo. Primo passo: la variazione, fine meno inizio.",
+          "voce": "Primo esempio. Il primo gennaio 2009 ci sono 23 milioni 618 mila 420 abitanti. Il 30 giugno 2016 sono 22 milioni 86 mila 560. Ti chiedono l'incremento medio annuo. Per prima cosa calcola di quanto è cambiata la popolazione: quella finale meno quella iniziale.",
           "chiedi": {
             "campi": [
               {
@@ -275,15 +275,15 @@
                 "unita": "abitanti"
               }
             ],
-            "si": "Esatto: meno un milione 531 mila 860.",
-            "no": "No: la variazione è meno un milione 531 mila 860.",
-            "spiega": "Fine meno inizio. La popolazione è calata, quindi è un decremento: ci vuole un bel meno davanti."
+            "si": "Giusto: meno un milione 531 mila 860.",
+            "no": "La variazione è meno un milione 531 mila 860.",
+            "spiega": "Si fa sempre finale meno iniziale. Qui la popolazione è diminuita, quindi il risultato è negativo: è un decremento, e il segno meno va scritto."
           }
         },
         {
           "id": "id03",
           "p": 2,
-          "voce": "Secondo passo: quanto tempo è passato. Dal primo gennaio 2009 al 30 giugno 2016. Scrivi gli anni, con i decimali.",
+          "voce": "Adesso serve sapere quanto tempo è passato, dal primo gennaio 2009 al 30 giugno 2016. Scrivi il numero di anni, con i decimali.",
           "chiedi": {
             "campi": [
               {
@@ -293,15 +293,15 @@
                 "unita": "anni"
               }
             ],
-            "si": "Giusto: 7 anni e mezzo, cioè 7 virgola 5.",
-            "no": "No: sono 7 anni e 6 mesi, cioè 7 virgola 5.",
-            "spiega": "I mesi sono dodicesimi di anno: sei mesi sono sei dodicesimi, mezzo anno. Chi divide per 7, dice il professore, non ha considerato che ci sono dei mesi in mezzo. Se fosse novembre, sarebbe 7 più undici dodicesimi."
+            "si": "Giusto: sette virgola cinque anni.",
+            "no": "Sono sette anni e sei mesi, cioè sette virgola cinque.",
+            "spiega": "Gli anni interi sono sette, ma ci sono anche sei mesi in più. Un mese è un dodicesimo di anno, quindi sei mesi sono sei dodicesimi, cioè mezzo anno. Se dividessi solo per sette, quei sei mesi andrebbero persi."
           }
         },
         {
           "id": "id04",
           "p": 3,
-          "voce": "Terzo passo: la media all'anno. Dividi la variazione per gli anni.",
+          "voce": "Ora calcola la media per ogni anno: dividi la variazione per il numero di anni.",
           "chiedi": {
             "campi": [
               {
@@ -311,15 +311,15 @@
                 "unita": "abitanti all'anno"
               }
             ],
-            "si": "Esatto: meno 204 mila 248 abitanti all'anno.",
-            "no": "No: meno un milione 531 mila 860 diviso 7 virgola 5 fa meno 204 mila 248.",
-            "spiega": "È il numero di abitanti persi, in media, ogni anno."
+            "si": "Giusto: meno 204 mila 248 abitanti all'anno.",
+            "no": "Meno un milione 531 mila 860 diviso sette virgola cinque fa meno 204 mila 248.",
+            "spiega": "Questo numero ti dice quanti abitanti ha perso il paese, in media, ogni anno."
           }
         },
         {
           "id": "id05",
           "p": 4,
-          "voce": "Ultimo passo: in percentuale. Dividi la media annua per la popolazione iniziale e moltiplica per cento.",
+          "voce": "Infine trasforma il risultato in percentuale: dividi la media annua per la popolazione iniziale e moltiplica per cento.",
           "chiedi": {
             "campi": [
               {
@@ -329,20 +329,20 @@
                 "unita": "%"
               }
             ],
-            "si": "Giusto: meno zero virgola 86 per cento all'anno.",
-            "no": "No: il risultato è meno zero virgola 86 per cento all'anno.",
-            "spiega": "Al denominatore va sempre la popolazione iniziale, mai quella finale. Puoi dividere prima per gli anni o prima per la popolazione: va bene, ma tutti e due i passaggi vanno fatti."
+            "si": "Giusto: meno zero virgola ottantasei per cento all'anno.",
+            "no": "Il risultato è meno zero virgola ottantasei per cento all'anno.",
+            "spiega": "Al denominatore va sempre la popolazione iniziale, cioè quella da cui si parte, non quella finale. Puoi dividere prima per gli anni e poi per la popolazione, o al contrario: il risultato è lo stesso, basta fare tutti e due i passaggi."
           }
         },
         {
           "id": "id06",
           "p": 5,
-          "voce": "Ecco il conto completo. Se moltiplichi per mille invece che per cento, scrivi meno 8 virgola 6 per mille: va bene lo stesso."
+          "voce": "Ecco il calcolo completo. Se invece di moltiplicare per cento moltiplichi per mille, ottieni meno otto virgola sei per mille, ed è giusto lo stesso."
         },
         {
           "id": "id07",
           "p": 6,
-          "voce": "Secondo esempio: nel 2012 ci sono 220 mila 350 abitanti, di cui 78 mila 560 femmine, e 140 mila 550 persone in età lavorativa. Si chiede l'indice di maschilità. Prima: quanti sono i maschi?",
+          "voce": "Secondo esempio. Nel 2012 ci sono 220 mila 350 abitanti: 78 mila 560 sono femmine e 140 mila 550 sono in età lavorativa. Ti chiedono l'indice di maschilità. Però il numero dei maschi non c'è. Quanti sono?",
           "chiedi": {
             "campi": [
               {
@@ -352,15 +352,15 @@
                 "unita": ""
               }
             ],
-            "si": "Esatto: 141 mila 790 maschi.",
-            "no": "No: 220 mila 350 meno 78 mila 560 fa 141 mila 790.",
-            "spiega": "I maschi non sono dati: si ricavano togliendo le femmine dal totale. La popolazione in età lavorativa qui è il dato inutile: non dice niente sul sesso."
+            "si": "Giusto: 141 mila 790 maschi.",
+            "no": "220 mila 350 meno 78 mila 560 fa 141 mila 790.",
+            "spiega": "I maschi si ricavano togliendo le femmine dal totale. Il dato sulle persone in età lavorativa qui non serve: non dice niente su quanti sono maschi o femmine."
           }
         },
         {
           "id": "id08",
           "p": 6,
-          "voce": "Ora l'indice: i maschi, il soggetto, sopra. Le femmine sotto. Scrivi l'indice.",
+          "voce": "Adesso calcola l'indice di maschilità. I maschi sono quello che ti chiedono, quindi vanno sopra. Le femmine vanno sotto.",
           "chiedi": {
             "campi": [
               {
@@ -374,15 +374,15 @@
                 "unita": ""
               }
             ],
-            "si": "Giusto: uno virgola 80.",
-            "no": "No: 141 mila 790 diviso 78 mila 560 fa uno virgola 80.",
-            "spiega": "Vuol dire che per ogni femmina ci sono uno virgola 80 maschi. È un rapporto, basta una divisione: resta un numero puro. Se lo scrivi in percentuale, 180, va bene lo stesso."
+            "si": "Giusto: uno virgola ottanta.",
+            "no": "141 mila 790 diviso 78 mila 560 fa uno virgola ottanta.",
+            "spiega": "Vuol dire che per ogni femmina ci sono uno virgola ottanta maschi. Un indice è un semplice rapporto, quindi basta una divisione e il risultato è un numero senza unità. Se preferisci scriverlo in percentuale, centottanta, va bene lo stesso."
           }
         },
         {
           "id": "id09",
           "p": 8,
-          "voce": "L'indice di dipendenza. Chi è fuori dall'età lavorativa, prima e dopo, dipende da chi lavora. Calcola l'indice: dipendenti diviso popolazione in età lavorativa.",
+          "voce": "Con gli stessi dati puoi calcolare l'indice di dipendenza. Le persone che non sono in età lavorativa, cioè i più giovani e i più anziani, dipendono da chi lavora. L'indice si ottiene dividendo i dipendenti per le persone in età lavorativa. Prova.",
           "chiedi": {
             "campi": [
               {
@@ -396,15 +396,15 @@
                 "unita": ""
               }
             ],
-            "si": "Esatto: zero virgola 57.",
-            "no": "No: il risultato è zero virgola 57.",
-            "spiega": "220 mila 350 meno 140 mila 550 fa 79 mila 800 dipendenti. 79 mila 800 diviso 140 mila 550 fa zero virgola 57. Qui il dato inutile sono le femmine."
+            "si": "Giusto: zero virgola cinquantasette.",
+            "no": "Il risultato è zero virgola cinquantasette.",
+            "spiega": "Prima trovi i dipendenti: 220 mila 350 meno 140 mila 550 fa 79 mila 800. Poi dividi 79 mila 800 per 140 mila 550 e ottieni zero virgola cinquantasette. Qui il dato che non serve è il numero delle femmine."
           }
         },
         {
           "id": "id10",
           "p": 9,
-          "voce": "Il tasso di mortalità. Nel 2012 sono nati 2 mila 200 bambini e sono morte mille e 500 persone. Calcola il tasso in percentuale.",
+          "voce": "Passiamo al tasso di mortalità. Nel 2012 sono nati 2 mila 200 bambini e sono morte mille 500 persone. Calcola il tasso di mortalità in percentuale.",
           "chiedi": {
             "campi": [
               {
@@ -418,20 +418,20 @@
                 "unita": "% (o ‰)"
               }
             ],
-            "si": "Giusto: zero virgola 68 per cento.",
-            "no": "No: mille e 500 diviso 220 mila 350, per cento, fa zero virgola 68 per cento.",
-            "spiega": "Sotto va chi era vivo all'inizio dell'anno. I nati qui sono il dato inutile. Per cento o per mille, a vostra discrezione: 6 virgola 8 per mille va bene lo stesso."
+            "si": "Giusto: zero virgola sessantotto per cento.",
+            "no": "Mille 500 diviso 220 mila 350, per cento, fa zero virgola sessantotto per cento.",
+            "spiega": "Sopra metti i morti, sotto la popolazione che c'era a inizio anno. I nati qui non servono. Un tasso si può esprimere per cento oppure per mille: sei virgola otto per mille è la stessa cosa."
           }
         },
         {
           "id": "id11",
           "p": 10,
-          "voce": "Il tasso di natalità, con gli stessi dati: 2 mila 200 diviso 220 mila 350, per cento. Circa l'uno per cento."
+          "voce": "Il tasso di natalità si calcola allo stesso modo, con i nati al posto dei morti: 2 mila 200 diviso 220 mila 350, per cento. Viene circa l'uno per cento."
         },
         {
           "id": "id12",
           "p": 11,
-          "voce": "Ultimi due: l'incremento naturale è nati meno morti, più 700. Il saldo migratorio è immigrati meno emigrati: 750 meno mille e 200. Quanto fa?",
+          "voce": "Restano due calcoli. L'incremento naturale è nati meno morti, quindi più settecento. Il saldo migratorio è immigrati meno emigrati: settecentocinquanta meno mille 200. Quanto viene?",
           "chiedi": {
             "campi": [
               {
@@ -441,20 +441,20 @@
                 "unita": "persone"
               }
             ],
-            "si": "Esatto: meno 450.",
-            "no": "No: 750 meno mille e 200 fa meno 450.",
-            "spiega": "Partono più persone di quante ne arrivano: il saldo è negativo, e il meno si scrive sempre. Davanti agli incrementi, invece, il più mostra che hai le idee chiare."
+            "si": "Giusto: meno quattrocentocinquanta.",
+            "no": "Settecentocinquanta meno mille 200 fa meno quattrocentocinquanta.",
+            "spiega": "Sono andate via più persone di quante ne sono arrivate, quindi il saldo è negativo e il meno va scritto. Quando invece il risultato è positivo, scrivi il più davanti: così si capisce subito se è una crescita o un calo."
           }
         },
         {
           "id": "id13",
           "p": 12,
-          "voce": "Come si scrive: i tassi con il per cento o il per mille, gli indici come numeri puri. Bastano due decimali. E in aula portate la calcolatrice, con le pile cariche."
+          "voce": "Due consigli su come scrivere i risultati. I tassi vanno con il simbolo del per cento o del per mille, gli indici sono numeri senza simbolo. Bastano due cifre dopo la virgola. E porta la calcolatrice."
         },
         {
           "id": "id14",
           "p": 13,
-          "voce": "Ricapitolando: leggi che cosa si chiede, barra il dato inutile, soggetto sopra e popolazione iniziale sotto, i mesi in dodicesimi, e sempre segno e simbolo. Ora allenati: quindici esercizi, ogni volta un calcolo diverso."
+          "voce": "Ricapitolando. Leggi bene cosa ti chiedono e barra il dato che non serve. Sopra metti quello che ti chiedono, sotto la popolazione iniziale. Conta i mesi in dodicesimi di anno, e scrivi sempre il segno e il simbolo. Adesso allenati: ogni esercizio ti chiede un calcolo diverso."
         }
       ]
     },
@@ -463,12 +463,12 @@
         {
           "id": "ds01",
           "p": 0,
-          "voce": "Un quadrato con il lato in chilometri, dei simboli, e una legenda che dice quanto vale ogni simbolo. Si chiede la densità di popolamento e il modello di distribuzione. Compare in tutte le prove."
+          "voce": "In questo esercizio hai un quadrato con la misura del lato in chilometri, dentro alcuni simboli, e una legenda che ti dice quante persone vale ogni simbolo. Devi calcolare la densità di popolazione e descrivere come sono distribuiti i simboli."
         },
         {
           "id": "ds02",
           "p": 1,
-          "voce": "Il primo quadrato dell'aula: lato un chilometro, nove pallini, ogni pallino vale un abitante. Calcola la densità.",
+          "voce": "Primo quadrato: il lato è un chilometro, ci sono nove pallini e ogni pallino vale un abitante. Calcola la densità.",
           "chiedi": {
             "campi": [
               {
@@ -478,15 +478,15 @@
                 "unita": "ab/km²"
               }
             ],
-            "si": "Esatto: 9 abitanti per chilometro quadrato.",
-            "no": "No: 9 abitanti diviso un chilometro quadrato fa 9.",
-            "spiega": "Al numeratore sempre il numero di abitanti, al denominatore sempre l'area in chilometri quadrati. Il risultato si scrive con l'unità: abitanti per chilometro quadrato."
+            "si": "Giusto: nove abitanti per chilometro quadrato.",
+            "no": "Nove abitanti diviso un chilometro quadrato fa nove.",
+            "spiega": "La densità ti dice quante persone vivono, in media, in ogni chilometro quadrato. Quindi dividi gli abitanti per l'area, e scrivi il risultato con l'unità: abitanti per chilometro quadrato."
           }
         },
         {
           "id": "ds03",
           "p": 2,
-          "voce": "Secondo quadrato: lato due chilometri. Prima di tutto l'area. Quanto fa?",
+          "voce": "Secondo quadrato: il lato è di due chilometri. Prima di tutto calcola l'area.",
           "chiedi": {
             "campi": [
               {
@@ -497,20 +497,20 @@
               }
             ],
             "si": "Giusto: due per due, quattro chilometri quadrati.",
-            "no": "No: l'area è lato per lato, due per due, quattro chilometri quadrati.",
-            "spiega": "L'errore che il professore vede ogni anno è scrivere otto: due più due più due più due. Quello è il perimetro, la lunghezza del bordo."
+            "no": "L'area si calcola lato per lato: due per due, quattro chilometri quadrati.",
+            "spiega": "Un errore frequente è scrivere otto, cioè due più due più due più due. Ma quello è il perimetro, la lunghezza del bordo. Per la densità ti serve l'area, cioè la superficie."
           },
           "nascondi": true
         },
         {
           "id": "ds04",
           "p": 3,
-          "voce": "Il bordo rosso è il perimetro. Non c'entra niente con la densità."
+          "voce": "Il bordo colorato di rosso è il perimetro. Per la densità non serve."
         },
         {
           "id": "ds05",
           "p": 2,
-          "voce": "Nove pallini, e ognuno vale due abitanti. Calcola la densità.",
+          "voce": "In questo quadrato ci sono nove pallini, ma ognuno vale due abitanti. Calcola la densità.",
           "chiedi": {
             "campi": [
               {
@@ -520,15 +520,15 @@
                 "unita": "ab/km²"
               }
             ],
-            "si": "Esatto: 18 diviso 4, quattro virgola 5.",
-            "no": "No: nove per due fa 18 abitanti, diviso 4 chilometri quadrati, quattro virgola 5.",
-            "spiega": "Sopra vanno gli abitanti, non i simboli: simboli per valore della legenda."
+            "si": "Giusto: diciotto diviso quattro, quattro virgola cinque.",
+            "no": "Nove per due fa diciotto abitanti. Diviso quattro chilometri quadrati, fa quattro virgola cinque.",
+            "spiega": "Sopra vanno gli abitanti, non i pallini. Per sapere quanti sono gli abitanti moltiplichi il numero dei simboli per il valore della legenda."
           }
         },
         {
           "id": "ds06",
           "p": 4,
-          "voce": "Terzo quadrato: lato tre chilometri, nove pallini da tre virgola 5. Calcola la densità.",
+          "voce": "Terzo quadrato: lato tre chilometri, nove pallini, e ogni pallino vale tre virgola cinque abitanti. Calcola la densità.",
           "chiedi": {
             "campi": [
               {
@@ -538,20 +538,20 @@
                 "unita": "ab/km²"
               }
             ],
-            "si": "Giusto: 31 virgola 5 diviso 9, tre virgola 5.",
-            "no": "No: nove per tre virgola 5 fa 31 virgola 5 abitanti. L'area è tre per tre, nove. 31 virgola 5 diviso 9 fa tre virgola 5.",
-            "spiega": "Sempre gli stessi tre passi: abitanti, area, divisione."
+            "si": "Giusto: trentuno virgola cinque diviso nove, tre virgola cinque.",
+            "no": "Nove per tre virgola cinque fa trentuno virgola cinque abitanti. L'area è tre per tre, nove. Trentuno virgola cinque diviso nove fa tre virgola cinque.",
+            "spiega": "Come vedi, i passaggi sono sempre gli stessi tre: calcoli gli abitanti, calcoli l'area, e dividi."
           }
         },
         {
           "id": "ds07",
           "p": 5,
-          "voce": "Poi il modello di distribuzione. Qui i pallini coprono tutto il quadrato: distribuzione sparsa. E non scrivete mai casuale, perché in geografia il caso non esiste."
+          "voce": "Ora la seconda parte: come sono distribuiti i simboli. In questo quadrato i pallini sono un po' dappertutto: la distribuzione si chiama sparsa. Non scrivere mai casuale: in geografia si cerca sempre una ragione per cui le persone vivono in un posto."
         },
         {
           "id": "ds08",
           "p": 6,
-          "voce": "Guarda questo quadrato. Come descrivi la distribuzione?",
+          "voce": "Guarda questo quadrato. Come descriveresti la distribuzione?",
           "chiedi": {
             "scelte": [
               "Sparsa",
@@ -560,26 +560,26 @@
               "Casuale"
             ],
             "giusta": 1,
-            "si": "Esatto: sparsa, ma solo in basso a destra, a sud-est.",
-            "no": "No: è sparsa, ma solo in basso a destra, a sud-est.",
-            "spiega": "Non basta dire sparsa: il professore vuole che si dica l'asimmetria, dove stanno i simboli."
+            "si": "Giusto: sparsa, ma solo in basso a destra, cioè a sud-est.",
+            "no": "È sparsa, ma solo in basso a destra, cioè a sud-est.",
+            "spiega": "Quando i simboli occupano solo una parte del quadrato, dire sparsa non basta: devi dire anche dove si trovano."
           },
           "nascondi": true
         },
         {
           "id": "ds09",
           "p": 7,
-          "voce": "Qui invece tutti raccolti in un punto: accentrata, o accorpata, aggregata. E anche qui si dice dove: aggregata al centro."
+          "voce": "Qui invece i pallini sono tutti raccolti in un punto. Questa distribuzione si chiama accentrata, oppure aggregata. Anche in questo caso dici dove: per esempio, al centro."
         },
         {
           "id": "ds10",
           "p": 8,
-          "voce": "I pallini seguono una linea che fa delle curve, come un fiume o una strada di valle: distribuzione lineare sinuosa."
+          "voce": "In questo quadrato i pallini seguono una linea che fa delle curve, come le case lungo un fiume o una strada di montagna. È una distribuzione lineare sinuosa."
         },
         {
           "id": "ds11",
           "p": 9,
-          "voce": "E questo?",
+          "voce": "E questa come la descriveresti?",
           "chiedi": {
             "scelte": [
               "Lineare sinuosa",
@@ -587,16 +587,16 @@
               "Accentrata"
             ],
             "giusta": 1,
-            "si": "Giusto: lineare regolare, a T.",
-            "no": "No: è lineare regolare, a T.",
-            "spiega": "Linee dritte e pallini equidistanti, come le case lungo due strade che si incrociano."
+            "si": "Giusto: lineare regolare, a forma di T.",
+            "no": "È lineare regolare, a forma di T.",
+            "spiega": "Le linee sono dritte e i pallini sono tutti alla stessa distanza, come le case lungo due strade che si incrociano."
           },
           "nascondi": true
         },
         {
           "id": "ds12",
           "p": 10,
-          "voce": "Ricapitolando: abitanti uguale simboli per legenda, area uguale lato per lato, densità uguale abitanti diviso area. Poi il modello: sparso e dove, accentrato e dove, oppure lineare. Mai casuale. Ora allenati: quindici quadrati sempre diversi."
+          "voce": "Ricapitolando. Gli abitanti sono i simboli per il valore della legenda. L'area è lato per lato. La densità è abitanti diviso area. Poi descrivi la distribuzione: sparsa, accentrata o lineare, e quando serve dici anche dove. Adesso allenati."
         }
       ]
     },
@@ -605,12 +605,12 @@
         {
           "id": "gc01",
           "p": 0,
-          "voce": "L'ultimo esercizio della prova: costruisci un istogramma per maschi e femmine e raffigura sullo stesso diagramma anche il totale. L'esempio di aula va dal 1975 al 2015, ogni cinque anni. Mancano il 1985 e il 2010."
+          "voce": "In questo esercizio devi costruire un istogramma con i maschi e le femmine e, sullo stesso grafico, anche il totale della popolazione. Nell'esempio i dati vanno dal 1975 al 2015, ogni cinque anni. Mancano però due anni: il 1985 e il 2010."
         },
         {
           "id": "gc02",
           "p": 0,
-          "voce": "Prima di disegnare, i totali. Nel 1975 ci sono 56 maschi e 60 femmine. Il totale?",
+          "voce": "Prima di disegnare, calcola i totali. Nel 1975 ci sono cinquantasei maschi e sessanta femmine. Quanto fa il totale?",
           "chiedi": {
             "campi": [
               {
@@ -620,15 +620,15 @@
                 "unita": ""
               }
             ],
-            "si": "Esatto: 116.",
-            "no": "No: 56 più 60 fa 116.",
-            "spiega": "Così per ogni anno. Il totale più alto è quello del 2015: 60 più 58, 118."
+            "si": "Giusto: centosedici.",
+            "no": "Cinquantasei più sessanta fa centosedici.",
+            "spiega": "Fai lo stesso per tutti gli anni. Il totale più alto è quello del 2015: sessanta più cinquantotto, centodiciotto."
           }
         },
         {
           "id": "gc03",
           "p": 1,
-          "voce": "Ora la scala. Il valore più alto del grafico non è un maschio o una femmina: è il totale, 118. Fin dove deve arrivare l'asse verticale?",
+          "voce": "Ora scegli la scala dell'asse verticale. Il valore più alto da disegnare non è quello dei maschi o delle femmine, ma il totale: centodiciotto. Fino a che numero deve arrivare l'asse?",
           "chiedi": {
             "scelte": [
               "Fino a 60",
@@ -636,20 +636,20 @@
               "Fino a 120"
             ],
             "giusta": 2,
-            "si": "Esatto: fino a 120.",
-            "no": "No: con l'asse fino a 60 o a 100 il totale non ci sta. Fino a 120.",
-            "spiega": "Il professore lo dice chiaro: deve arrivare a 120, per stare tranquilli. E il diagramma va fatto grande."
+            "si": "Giusto: fino a centoventi.",
+            "no": "Se l'asse arriva a sessanta o a cento, il totale non ci sta. Deve arrivare a centoventi.",
+            "spiega": "La scala si sceglie guardando il valore più grande da disegnare, che qui è il totale. Centoventi lo contiene e lascia un po' di spazio sopra. Disegna il grafico bello grande, così si legge bene."
           }
         },
         {
           "id": "gc04",
           "p": 3,
-          "voce": "Ora l'asse orizzontale. Se metti solo gli anni con i dati, l'asse salta dal 1980 al 1990 come se fossero cinque anni: il tempo è falsato."
+          "voce": "Adesso l'asse orizzontale. Se mettessi solo gli anni che hanno i dati, tra il 1980 e il 1990 ci sarebbe lo stesso spazio che tra due anni vicini. Il grafico farebbe sembrare che sia passato meno tempo."
         },
         {
           "id": "gc05",
           "p": 3,
-          "voce": "Allora: quante posizioni metti sull'asse orizzontale, dal 1975 al 2015?",
+          "voce": "Allora, quante posizioni devi segnare sull'asse orizzontale, dal 1975 al 2015?",
           "chiedi": {
             "campi": [
               {
@@ -659,25 +659,25 @@
                 "unita": "anni"
               }
             ],
-            "si": "Esatto: nove.",
-            "no": "No: nove posizioni, anche se i dati sono sette.",
-            "spiega": "Io non faccio finta che non ci siano, dice il professore: divido quella linea non per sette, ma per nove. Il 1985 e il 2010 hanno il loro posto, e lo spazio resta vuoto."
+            "si": "Giusto: nove.",
+            "no": "Servono nove posizioni, anche se gli anni con i dati sono solo sette.",
+            "spiega": "Ogni anno della serie deve avere il suo posto, anche quelli senza dati. Il 1985 e il 2010 restano sull'asse, solo che sopra non disegni niente."
           }
         },
         {
           "id": "gc06",
           "p": 4,
-          "voce": "Ecco l'asse giusto, con gli spazi vuoti al loro posto."
+          "voce": "Ecco l'asse giusto, con le posizioni vuote al loro posto."
         },
         {
           "id": "gc07",
           "p": 5,
-          "voce": "Per ogni anno due canne verticali affiancate, maschi e femmine, con colori diversi. Va benissimo una bianca e una colorata con la penna."
+          "voce": "Per ogni anno disegni due canne verticali, una accanto all'altra: una per i maschi e una per le femmine, di colore diverso. E aggiungi la legenda, così si capisce quale è quale."
         },
         {
           "id": "gc08",
           "p": 5,
-          "voce": "In alto, per ogni anno, un pallino per il totale, e i pallini si uniscono con una linea. Tra il 1980 e il 1990 manca un anno. Come li unisci?",
+          "voce": "Sopra le canne, per ogni anno, segni un punto all'altezza del totale, e poi unisci i punti con una linea. Ma tra il 1980 e il 1990 manca un anno. Che tipo di linea usi?",
           "chiedi": {
             "scelte": [
               "Linea continua",
@@ -685,23 +685,610 @@
               "Non li unisco"
             ],
             "giusta": 1,
-            "si": "Esatto: tratteggiata.",
-            "no": "No: si uniscono con il tratteggio.",
-            "spiega": "Se delle annate vengono saltate bisogna darne evidenza: per collegare i punti attorno al buco si usa il tratteggio, per il resto la linea continua."
+            "si": "Giusto: tratteggiata.",
+            "no": "Dove manca un anno la linea si fa tratteggiata.",
+            "spiega": "Il tratteggio serve a far capire che in quel tratto mancano dei dati. Tra due anni vicini, invece, la linea è continua."
           }
         },
         {
           "id": "gc09",
           "p": 6,
-          "voce": "Ed ecco il diagramma completo: canne, pallini, e la linea tratteggiata dove manca l'anno."
+          "voce": "Ecco il grafico finito: le canne, i punti del totale e la linea, tratteggiata dove manca l'anno."
         },
         {
           "id": "gc10",
           "p": 7,
-          "voce": "Ricapitolando: calcola i totali, tara la scala sul totale più alto, metti tutti gli anni sull'asse anche quelli senza dato, canne affiancate per maschi e femmine, pallini per il totale uniti dalla linea, tratteggiata dove manca l'anno. Ora allenati: lo costruisci tu, quindici volte."
+          "voce": "Ricapitolando. Calcola i totali e scegli la scala in base al totale più alto. Metti sull'asse tutti gli anni, anche quelli senza dati. Disegna le canne affiancate per maschi e femmine, poi i punti del totale uniti da una linea, tratteggiata dove mancano dati. Adesso prova a costruirlo tu."
         }
       ]
     }
   },
-  "audio": {}
+  "audio": {
+    "rc01": {
+      "url": "esercizi-video/voce/rc01.mp3",
+      "durata": 15.57
+    },
+    "rc02": {
+      "url": "esercizi-video/voce/rc02.mp3",
+      "durata": 9.25
+    },
+    "rc03": {
+      "url": "esercizi-video/voce/rc03.mp3",
+      "durata": 9.22
+    },
+    "rc04": {
+      "url": "esercizi-video/voce/rc04.mp3",
+      "durata": 12.23
+    },
+    "rc05": {
+      "url": "esercizi-video/voce/rc05.mp3",
+      "durata": 15.26
+    },
+    "rc06": {
+      "url": "esercizi-video/voce/rc06.mp3",
+      "durata": 6.24
+    },
+    "rc06-si": {
+      "url": "esercizi-video/voce/rc06-si.mp3",
+      "durata": 4.23
+    },
+    "rc06-no": {
+      "url": "esercizi-video/voce/rc06-no.mp3",
+      "durata": 3.84
+    },
+    "rc06-spiega": {
+      "url": "esercizi-video/voce/rc06-spiega.mp3",
+      "durata": 11.15
+    },
+    "rc07": {
+      "url": "esercizi-video/voce/rc07.mp3",
+      "durata": 10.58
+    },
+    "rc08": {
+      "url": "esercizi-video/voce/rc08.mp3",
+      "durata": 11.49
+    },
+    "rc08-si": {
+      "url": "esercizi-video/voce/rc08-si.mp3",
+      "durata": 3.32
+    },
+    "rc08-no": {
+      "url": "esercizi-video/voce/rc08-no.mp3",
+      "durata": 3.37
+    },
+    "rc08-spiega": {
+      "url": "esercizi-video/voce/rc08-spiega.mp3",
+      "durata": 15.52
+    },
+    "rc09": {
+      "url": "esercizi-video/voce/rc09.mp3",
+      "durata": 4.65
+    },
+    "rc10": {
+      "url": "esercizi-video/voce/rc10.mp3",
+      "durata": 6.09
+    },
+    "rc10-si": {
+      "url": "esercizi-video/voce/rc10-si.mp3",
+      "durata": 3.6
+    },
+    "rc10-no": {
+      "url": "esercizi-video/voce/rc10-no.mp3",
+      "durata": 3.24
+    },
+    "rc10-spiega": {
+      "url": "esercizi-video/voce/rc10-spiega.mp3",
+      "durata": 13.77
+    },
+    "rc11": {
+      "url": "esercizi-video/voce/rc11.mp3",
+      "durata": 4.0
+    },
+    "rc12": {
+      "url": "esercizi-video/voce/rc12.mp3",
+      "durata": 11.08
+    },
+    "rc13": {
+      "url": "esercizi-video/voce/rc13.mp3",
+      "durata": 13.82
+    },
+    "rc14": {
+      "url": "esercizi-video/voce/rc14.mp3",
+      "durata": 14.42
+    },
+    "rc15": {
+      "url": "esercizi-video/voce/rc15.mp3",
+      "durata": 7.55
+    },
+    "rc15-si": {
+      "url": "esercizi-video/voce/rc15-si.mp3",
+      "durata": 3.24
+    },
+    "rc15-no": {
+      "url": "esercizi-video/voce/rc15-no.mp3",
+      "durata": 3.5
+    },
+    "rc15-spiega": {
+      "url": "esercizi-video/voce/rc15-spiega.mp3",
+      "durata": 10.63
+    },
+    "rc16": {
+      "url": "esercizi-video/voce/rc16.mp3",
+      "durata": 9.9
+    },
+    "rc17": {
+      "url": "esercizi-video/voce/rc17.mp3",
+      "durata": 9.95
+    },
+    "rc17-si": {
+      "url": "esercizi-video/voce/rc17-si.mp3",
+      "durata": 4.36
+    },
+    "rc17-no": {
+      "url": "esercizi-video/voce/rc17-no.mp3",
+      "durata": 4.36
+    },
+    "rc17-spiega": {
+      "url": "esercizi-video/voce/rc17-spiega.mp3",
+      "durata": 12.17
+    },
+    "rc18": {
+      "url": "esercizi-video/voce/rc18.mp3",
+      "durata": 8.57
+    },
+    "rc19": {
+      "url": "esercizi-video/voce/rc19.mp3",
+      "durata": 15.73
+    },
+    "rp01": {
+      "url": "esercizi-video/voce/rp01.mp3",
+      "durata": 9.46
+    },
+    "rp02": {
+      "url": "esercizi-video/voce/rp02.mp3",
+      "durata": 14.63
+    },
+    "rp03": {
+      "url": "esercizi-video/voce/rp03.mp3",
+      "durata": 9.67
+    },
+    "rp03-si": {
+      "url": "esercizi-video/voce/rp03-si.mp3",
+      "durata": 3.19
+    },
+    "rp03-no": {
+      "url": "esercizi-video/voce/rp03-no.mp3",
+      "durata": 2.53
+    },
+    "rp03-spiega": {
+      "url": "esercizi-video/voce/rp03-spiega.mp3",
+      "durata": 16.69
+    },
+    "rp04": {
+      "url": "esercizi-video/voce/rp04.mp3",
+      "durata": 7.11
+    },
+    "rp05": {
+      "url": "esercizi-video/voce/rp05.mp3",
+      "durata": 9.17
+    },
+    "rp05-si": {
+      "url": "esercizi-video/voce/rp05-si.mp3",
+      "durata": 3.63
+    },
+    "rp05-no": {
+      "url": "esercizi-video/voce/rp05-no.mp3",
+      "durata": 4.57
+    },
+    "rp05-spiega": {
+      "url": "esercizi-video/voce/rp05-spiega.mp3",
+      "durata": 9.22
+    },
+    "rp06": {
+      "url": "esercizi-video/voce/rp06.mp3",
+      "durata": 3.97
+    },
+    "rp07": {
+      "url": "esercizi-video/voce/rp07.mp3",
+      "durata": 5.8
+    },
+    "rp07-si": {
+      "url": "esercizi-video/voce/rp07-si.mp3",
+      "durata": 3.5
+    },
+    "rp07-no": {
+      "url": "esercizi-video/voce/rp07-no.mp3",
+      "durata": 4.31
+    },
+    "rp07-spiega": {
+      "url": "esercizi-video/voce/rp07-spiega.mp3",
+      "durata": 7.94
+    },
+    "rp08": {
+      "url": "esercizi-video/voce/rp08.mp3",
+      "durata": 6.53
+    },
+    "rp09": {
+      "url": "esercizi-video/voce/rp09.mp3",
+      "durata": 16.22
+    },
+    "rp10": {
+      "url": "esercizi-video/voce/rp10.mp3",
+      "durata": 13.53
+    },
+    "id01": {
+      "url": "esercizi-video/voce/id01.mp3",
+      "durata": 20.74
+    },
+    "id02": {
+      "url": "esercizi-video/voce/id02.mp3",
+      "durata": 22.88
+    },
+    "id02-si": {
+      "url": "esercizi-video/voce/id02-si.mp3",
+      "durata": 5.3
+    },
+    "id02-no": {
+      "url": "esercizi-video/voce/id02-no.mp3",
+      "durata": 3.92
+    },
+    "id02-spiega": {
+      "url": "esercizi-video/voce/id02-spiega.mp3",
+      "durata": 7.0
+    },
+    "id03": {
+      "url": "esercizi-video/voce/id03.mp3",
+      "durata": 9.01
+    },
+    "id03-si": {
+      "url": "esercizi-video/voce/id03-si.mp3",
+      "durata": 2.19
+    },
+    "id03-no": {
+      "url": "esercizi-video/voce/id03-no.mp3",
+      "durata": 3.74
+    },
+    "id03-spiega": {
+      "url": "esercizi-video/voce/id03-spiega.mp3",
+      "durata": 11.28
+    },
+    "id04": {
+      "url": "esercizi-video/voce/id04.mp3",
+      "durata": 4.05
+    },
+    "id04-si": {
+      "url": "esercizi-video/voce/id04-si.mp3",
+      "durata": 4.73
+    },
+    "id04-no": {
+      "url": "esercizi-video/voce/id04-no.mp3",
+      "durata": 8.15
+    },
+    "id04-spiega": {
+      "url": "esercizi-video/voce/id04-spiega.mp3",
+      "durata": 4.62
+    },
+    "id05": {
+      "url": "esercizi-video/voce/id05.mp3",
+      "durata": 6.43
+    },
+    "id05-si": {
+      "url": "esercizi-video/voce/id05-si.mp3",
+      "durata": 4.02
+    },
+    "id05-no": {
+      "url": "esercizi-video/voce/id05-no.mp3",
+      "durata": 3.84
+    },
+    "id05-spiega": {
+      "url": "esercizi-video/voce/id05-spiega.mp3",
+      "durata": 14.26
+    },
+    "id06": {
+      "url": "esercizi-video/voce/id06.mp3",
+      "durata": 8.91
+    },
+    "id07": {
+      "url": "esercizi-video/voce/id07.mp3",
+      "durata": 19.36
+    },
+    "id07-si": {
+      "url": "esercizi-video/voce/id07-si.mp3",
+      "durata": 3.97
+    },
+    "id07-no": {
+      "url": "esercizi-video/voce/id07-no.mp3",
+      "durata": 6.66
+    },
+    "id07-spiega": {
+      "url": "esercizi-video/voce/id07-spiega.mp3",
+      "durata": 9.04
+    },
+    "id08": {
+      "url": "esercizi-video/voce/id08.mp3",
+      "durata": 7.26
+    },
+    "id08-si": {
+      "url": "esercizi-video/voce/id08-si.mp3",
+      "durata": 2.14
+    },
+    "id08-no": {
+      "url": "esercizi-video/voce/id08-no.mp3",
+      "durata": 6.43
+    },
+    "id08-spiega": {
+      "url": "esercizi-video/voce/id08-spiega.mp3",
+      "durata": 13.45
+    },
+    "id09": {
+      "url": "esercizi-video/voce/id09.mp3",
+      "durata": 13.14
+    },
+    "id09-si": {
+      "url": "esercizi-video/voce/id09-si.mp3",
+      "durata": 3.19
+    },
+    "id09-no": {
+      "url": "esercizi-video/voce/id09-no.mp3",
+      "durata": 3.47
+    },
+    "id09-spiega": {
+      "url": "esercizi-video/voce/id09-spiega.mp3",
+      "durata": 16.43
+    },
+    "id10": {
+      "url": "esercizi-video/voce/id10.mp3",
+      "durata": 10.27
+    },
+    "id10-si": {
+      "url": "esercizi-video/voce/id10-si.mp3",
+      "durata": 2.85
+    },
+    "id10-no": {
+      "url": "esercizi-video/voce/id10-no.mp3",
+      "durata": 6.48
+    },
+    "id10-spiega": {
+      "url": "esercizi-video/voce/id10-spiega.mp3",
+      "durata": 12.25
+    },
+    "id11": {
+      "url": "esercizi-video/voce/id11.mp3",
+      "durata": 11.18
+    },
+    "id12": {
+      "url": "esercizi-video/voce/id12.mp3",
+      "durata": 10.74
+    },
+    "id12-si": {
+      "url": "esercizi-video/voce/id12-si.mp3",
+      "durata": 2.51
+    },
+    "id12-no": {
+      "url": "esercizi-video/voce/id12-no.mp3",
+      "durata": 5.07
+    },
+    "id12-spiega": {
+      "url": "esercizi-video/voce/id12-spiega.mp3",
+      "durata": 12.09
+    },
+    "id13": {
+      "url": "esercizi-video/voce/id13.mp3",
+      "durata": 12.77
+    },
+    "id14": {
+      "url": "esercizi-video/voce/id14.mp3",
+      "durata": 17.32
+    },
+    "ds01": {
+      "url": "esercizi-video/voce/ds01.mp3",
+      "durata": 13.61
+    },
+    "ds02": {
+      "url": "esercizi-video/voce/ds02.mp3",
+      "durata": 6.32
+    },
+    "ds02-si": {
+      "url": "esercizi-video/voce/ds02-si.mp3",
+      "durata": 2.66
+    },
+    "ds02-no": {
+      "url": "esercizi-video/voce/ds02-no.mp3",
+      "durata": 2.25
+    },
+    "ds02-spiega": {
+      "url": "esercizi-video/voce/ds02-spiega.mp3",
+      "durata": 11.05
+    },
+    "ds03": {
+      "url": "esercizi-video/voce/ds03.mp3",
+      "durata": 4.52
+    },
+    "ds03-si": {
+      "url": "esercizi-video/voce/ds03-si.mp3",
+      "durata": 3.03
+    },
+    "ds03-no": {
+      "url": "esercizi-video/voce/ds03-no.mp3",
+      "durata": 4.44
+    },
+    "ds03-spiega": {
+      "url": "esercizi-video/voce/ds03-spiega.mp3",
+      "durata": 10.32
+    },
+    "ds04": {
+      "url": "esercizi-video/voce/ds04.mp3",
+      "durata": 4.21
+    },
+    "ds05": {
+      "url": "esercizi-video/voce/ds05.mp3",
+      "durata": 5.2
+    },
+    "ds05-si": {
+      "url": "esercizi-video/voce/ds05-si.mp3",
+      "durata": 4.1
+    },
+    "ds05-no": {
+      "url": "esercizi-video/voce/ds05-no.mp3",
+      "durata": 4.75
+    },
+    "ds05-spiega": {
+      "url": "esercizi-video/voce/ds05-spiega.mp3",
+      "durata": 6.82
+    },
+    "ds06": {
+      "url": "esercizi-video/voce/ds06.mp3",
+      "durata": 8.1
+    },
+    "ds06-si": {
+      "url": "esercizi-video/voce/ds06-si.mp3",
+      "durata": 3.84
+    },
+    "ds06-no": {
+      "url": "esercizi-video/voce/ds06-no.mp3",
+      "durata": 8.93
+    },
+    "ds06-spiega": {
+      "url": "esercizi-video/voce/ds06-spiega.mp3",
+      "durata": 5.67
+    },
+    "ds07": {
+      "url": "esercizi-video/voce/ds07.mp3",
+      "durata": 15.33
+    },
+    "ds08": {
+      "url": "esercizi-video/voce/ds08.mp3",
+      "durata": 3.45
+    },
+    "ds08-si": {
+      "url": "esercizi-video/voce/ds08-si.mp3",
+      "durata": 4.6
+    },
+    "ds08-no": {
+      "url": "esercizi-video/voce/ds08-no.mp3",
+      "durata": 2.95
+    },
+    "ds08-spiega": {
+      "url": "esercizi-video/voce/ds08-spiega.mp3",
+      "durata": 5.67
+    },
+    "ds09": {
+      "url": "esercizi-video/voce/ds09.mp3",
+      "durata": 10.61
+    },
+    "ds10": {
+      "url": "esercizi-video/voce/ds10.mp3",
+      "durata": 7.92
+    },
+    "ds11": {
+      "url": "esercizi-video/voce/ds11.mp3",
+      "durata": 1.46
+    },
+    "ds11-si": {
+      "url": "esercizi-video/voce/ds11-si.mp3",
+      "durata": 3.13
+    },
+    "ds11-no": {
+      "url": "esercizi-video/voce/ds11-no.mp3",
+      "durata": 2.06
+    },
+    "ds11-spiega": {
+      "url": "esercizi-video/voce/ds11-spiega.mp3",
+      "durata": 5.04
+    },
+    "ds12": {
+      "url": "esercizi-video/voce/ds12.mp3",
+      "durata": 15.05
+    },
+    "gc01": {
+      "url": "esercizi-video/voce/gc01.mp3",
+      "durata": 16.98
+    },
+    "gc02": {
+      "url": "esercizi-video/voce/gc02.mp3",
+      "durata": 7.13
+    },
+    "gc02-si": {
+      "url": "esercizi-video/voce/gc02-si.mp3",
+      "durata": 1.49
+    },
+    "gc02-no": {
+      "url": "esercizi-video/voce/gc02-no.mp3",
+      "durata": 2.19
+    },
+    "gc02-spiega": {
+      "url": "esercizi-video/voce/gc02-spiega.mp3",
+      "durata": 6.56
+    },
+    "gc03": {
+      "url": "esercizi-video/voce/gc03.mp3",
+      "durata": 10.97
+    },
+    "gc03-si": {
+      "url": "esercizi-video/voce/gc03-si.mp3",
+      "durata": 2.53
+    },
+    "gc03-no": {
+      "url": "esercizi-video/voce/gc03-no.mp3",
+      "durata": 5.17
+    },
+    "gc03-spiega": {
+      "url": "esercizi-video/voce/gc03-spiega.mp3",
+      "durata": 12.09
+    },
+    "gc04": {
+      "url": "esercizi-video/voce/gc04.mp3",
+      "durata": 13.82
+    },
+    "gc05": {
+      "url": "esercizi-video/voce/gc05.mp3",
+      "durata": 6.69
+    },
+    "gc05-si": {
+      "url": "esercizi-video/voce/gc05-si.mp3",
+      "durata": 1.49
+    },
+    "gc05-no": {
+      "url": "esercizi-video/voce/gc05-no.mp3",
+      "durata": 3.79
+    },
+    "gc05-spiega": {
+      "url": "esercizi-video/voce/gc05-spiega.mp3",
+      "durata": 10.24
+    },
+    "gc06": {
+      "url": "esercizi-video/voce/gc06.mp3",
+      "durata": 3.53
+    },
+    "gc07": {
+      "url": "esercizi-video/voce/gc07.mp3",
+      "durata": 11.15
+    },
+    "gc08": {
+      "url": "esercizi-video/voce/gc08.mp3",
+      "durata": 12.09
+    },
+    "gc08-si": {
+      "url": "esercizi-video/voce/gc08-si.mp3",
+      "durata": 1.49
+    },
+    "gc08-no": {
+      "url": "esercizi-video/voce/gc08-no.mp3",
+      "durata": 2.56
+    },
+    "gc08-spiega": {
+      "url": "esercizi-video/voce/gc08-spiega.mp3",
+      "durata": 5.88
+    },
+    "gc09": {
+      "url": "esercizi-video/voce/gc09.mp3",
+      "durata": 5.09
+    },
+    "gc10": {
+      "url": "esercizi-video/voce/gc10.mp3",
+      "durata": 21.0
+    }
+  },
+  "musica": "esercizi-video/musica.mp3",
+  "musicaVolume": 0.1
 }

@@ -388,14 +388,14 @@
           "Stimare i primi come sull'orologio: 15, 30, 45"
         ],
         "consigli_docente": [
-          "«Prima cosa da fare: scrivete i numeri attorno, su due lati»",
-          "Gradi con il tondino (°), primi con l'apice (′), sempre N o S, E o O (va bene anche W)",
-          "Se il punto è sulla linea, gli 00 vanno sempre scritti: «altrimenti è battaglia navale»"
+          "Prima di tutto si scrive il valore di ogni linea, su due lati",
+          "Gradi con il simbolo °, primi con l'apice ′, sempre N o S, E o O (anche W)",
+          "Se il punto è sulla linea, i primi 00 si scrivono sempre"
         ],
         "errori_comuni": [
-          "Partire senza aver numerato i margini (49° invece di 50° nel compito corretto in aula)",
-          "«Girare il foglio» e confondere il nord con l'est",
-          "Scrivere 60 o 75 primi: «60 non esiste, è di nuovo 0»"
+          "Cercare il punto senza aver scritto i valori delle linee",
+          "Scambiare il nord con l'est",
+          "Scrivere 60 o 75 primi: 60 primi sono già il grado successivo"
         ],
         "serve_disegno": true
       },
@@ -411,7 +411,7 @@
           "Segnare il punto all'incrocio"
         ],
         "consigli_docente": [
-          "«Questo esercizio nel compito arriva in due modi»: leggere le coordinate di un punto, oppure mettere il punto date le coordinate",
+          "L'esercizio ha due forme: leggere le coordinate di un punto, oppure segnare il punto date le coordinate",
           "Prima la latitudine, poi la longitudine"
         ],
         "errori_comuni": [
@@ -433,15 +433,15 @@
           "Scrivere segno e simbolo (% o ‰)"
         ],
         "consigli_docente": [
-          "Il soggetto della domanda va sempre al numeratore",
-          "Al denominatore SEMPRE la popolazione iniziale",
-          "Tassi per 100 o per 1000 «a vostra discrezione»; gli indici restano numeri puri",
-          "Bastano due decimali; il meno per i decrementi, il più davanti agli incrementi",
-          "Portare la calcolatrice, con le pile cariche: «portatene due»"
+          "Il fenomeno richiesto va al numeratore",
+          "Al denominatore la popolazione iniziale",
+          "Tassi per 100 o per 1000; gli indici sono numeri puri",
+          "Due decimali; segno meno per i decrementi, più per gli incrementi",
+          "Serve la calcolatrice"
         ],
         "errori_comuni": [
-          "Usare il dato inutile («lo lasci stare buono lì dov'è»)",
-          "Dividere per 7 invece che per 7,5: «non hai considerato che ci sono dei mesi in mezzo»"
+          "Usare il dato che non serve",
+          "Dividere per 7 invece che per 7,5: i mesi vanno contati in dodicesimi"
         ],
         "serve_disegno": false
       },
@@ -457,12 +457,12 @@
           "Modello: sparso (e dove), accentrato (e dove), lineare (sinuoso o a T)"
         ],
         "consigli_docente": [
-          "«Al denominatore sempre l'area in chilometri quadrati, al numeratore sempre il numero di abitanti»",
-          "Dire le asimmetrie: «sparso in basso a destra, a sud-est»"
+          "Densità = abitanti ÷ area in km²",
+          "Se i simboli occupano solo una parte del quadrato, indicare quale: per esempio sparso in basso a destra, a sud-est"
         ],
         "errori_comuni": [
-          "Calcolare il perimetro: «ho fatto 2 + 2 + 2 + 2»",
-          "Scrivere «casuale»: «in geografia non esiste il caso»"
+          "Usare il perimetro (2 + 2 + 2 + 2) al posto dell'area",
+          "Scrivere casuale: non è un modello di distribuzione"
         ],
         "serve_disegno": true
       },
@@ -470,7 +470,7 @@
         "id": "es5",
         "tipo": "grafico_combinato",
         "titolo": "Istogramma maschi e femmine con il totale",
-        "consegna": "«Costruisci un istogramma per maschi e femmine e raffigura sullo stesso diagramma cartesiano anche il totale della popolazione.»",
+        "consegna": "Costruire un istogramma per maschi e femmine e rappresentare sullo stesso diagramma cartesiano il totale della popolazione.",
         "procedimento": [
           "Calcolare i totali",
           "Asse verticale tarato sul totale più alto",
@@ -479,13 +479,13 @@
           "Pallini del totale uniti da una linea, tratteggiata dove manca l'anno"
         ],
         "consigli_docente": [
-          "«Deve arrivare a 120, per stare tranquilli»: la scala si tara sul totale",
-          "«Divido quella linea non per sette ma per nove»: gli anni mancanti restano",
-          "Canne con colori diversi: «una interna bianca, l'altra colorata con la penna»"
+          "La scala si tara sul totale, il valore più alto",
+          "Gli anni senza dati restano sull'asse: nove posizioni, non sette",
+          "Canne di colore diverso per maschi e femmine, con la legenda"
         ],
         "errori_comuni": [
-          "Grafico troppo piccolo, «non ci sta il totale»",
-          "Ignorare gli anni mancanti"
+          "Asse verticale troppo basso: il totale non entra",
+          "Togliere dall'asse gli anni senza dati"
         ],
         "serve_disegno": true
       }

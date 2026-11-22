@@ -327,7 +327,7 @@
     var box = el('div');
     box.appendChild(el('h3', { class: 'esx-titolo', text: e.titolo || 'Esercizio' }));
     box.appendChild(el('p', { class: 'esx-valore', text: (e.punti_esame ? 'All\u2019esame vale ' + e.punti_esame + '. ' : '') +
-      'I numeri cambiano ogni volta, il metodo resta lo stesso.' }));
+      'Ogni esercizio ha numeri nuovi.' }));
     if (!T) { box.appendChild(inArrivo(e)); return { nodo: box, ferma: null }; }
     var contenuto = el('div');
     var conTutorial = !!T.tutorial;
@@ -364,7 +364,7 @@
     var f = el('div', { class: 'esx-foglio' });
     f.appendChild(el('h4', { text: 'Esercizio interattivo in preparazione' }));
     f.appendChild(el('p', { class: 'esx-valore', text: 'Questo esercizio si risolve su un disegno con misure precise. ' +
-      'Arriver\u00e0 con un disegno costruito apposta, sempre diverso a ogni tentativo. Intanto ecco il metodo spiegato in aula.' }));
+      'Arriver\u00e0 con un disegno costruito apposta, sempre diverso a ogni tentativo. Intanto ecco il metodo.' }));
     var d = docente(e); if (d) f.appendChild(d);
     return f;
   }
@@ -376,8 +376,8 @@
       blocchi.push(el('h5', { text: tit }));
       blocchi.push(el('ul', null, arr.map(function (t) { return el('li', { text: t }); })));
     }
-    lista('Dalle parole del docente', e.consigli_docente);
-    lista('Gli errori che vede ogni anno', e.errori_comuni);
+    lista('Regole', e.consigli_docente);
+    lista('Errori frequenti', e.errori_comuni);
     if (!blocchi.length) return null;
     return el('div', { class: 'esx-docente' }, blocchi);
   }
@@ -515,9 +515,9 @@
       }
       h.appendChild(tac);
       var presi = stato.esiti.filter(function (x) { return x && x.preso; }).length;
-      h.appendChild(el('span', { class: 'esx-nota', style: 'margin:0', text: 'Punti presi: ' + presi }));
+      h.appendChild(el('span', { class: 'esx-nota', style: 'margin:0', text: 'Giusti: ' + presi }));
       var b = el('button', { type: 'button', class: 'esx-btn sec pic', text: 'Nuova serie' });
-      b.addEventListener('click', function () { if (!stato.esiti.length || confirm('Iniziare una nuova serie da 15? I risultati di questa si perdono.')) nuova(false); });
+      var tConf = null; b.addEventListener('click', function () { if (!stato.esiti.length || b.classList.contains('conferma')) { clearTimeout(tConf); nuova(false); return; } b.classList.add('conferma'); b.textContent = 'Conferma: si perde questa serie'; tConf = setTimeout(function () { b.classList.remove('conferma'); b.textContent = 'Nuova serie'; }, 3500); });
       h.appendChild(b);
       return h;
     }
@@ -538,7 +538,7 @@
       fog.appendChild(el('div', { class: 'esx-comandi' }, [correggi]));
       var banco = T.senzaTavola ? el('div', { class: 'esx-banco solo' }, [fog]) : el('div', { class: 'esx-banco' }, [el('div', { class: 'esx-tavola' }, [q.nodo]), fog]);
       var esito = el('div', { class: 'esx-esito', 'aria-live': 'polite', style: 'display:none' });
-      area.appendChild(banco); area.appendChild(esito);
+      area.appendChild(banco); (window.ESX_ESITO_IN_FOGLIO ? fog : area).appendChild(esito);
       var fermaLettore = null;
       correggi.addEventListener('click', function () {
         var r = q.leggi();
@@ -549,7 +549,7 @@
         salva();
         var vecchia = dove.querySelector('.esx-serie'); if (vecchia) dove.replaceChild(testata(), vecchia);
         esito.style.display = ''; esito.innerHTML = '';
-        esito.appendChild(el('p', { class: 'esx-verdetto ' + (val.preso ? 'preso' : 'perso'), text: val.preso ? 'Punto preso.' : 'Punto perso.' }));
+        esito.appendChild(el('p', { class: 'esx-verdetto ' + (val.preso ? 'preso' : 'perso'), text: val.preso ? 'Giusto.' : 'Sbagliato.' }));
         val.errori.slice(0, 5).forEach(function (x) { esito.appendChild(el('p', { class: 'esx-err', text: x.t })); });
         if (val.nota) esito.appendChild(el('p', { class: 'esx-nota', text: val.nota }));
         var ultimo = stato.i + 1 >= varianti.length;
@@ -568,6 +568,7 @@
           cmd.appendChild(passo);
         }
         esito.appendChild(cmd);
+        if (window.ESX_ESITO_IN_FOGLIO) setTimeout(function () { try { esito.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); } catch (e0) {} }, 60);
         riapriPannello();
         succ.focus({ preventScroll: true });
       });
@@ -582,8 +583,8 @@
       var presi = stato.esiti.filter(function (x) { return x && x.preso; }).length;
       var box = el('div', { class: 'esx-riep' });
       box.appendChild(el('p', { class: 'num', text: presi + ' su ' + tot }));
-      box.appendChild(el('p', { class: 'esx-valore', style: 'margin:6px 0 0', text: presi === tot ? 'Tutti i punti presi: il metodo \u00e8 tuo.'
-        : 'Punti presi. Gli esercizi sbagliati si possono rifare con gli stessi numeri, cos\u00ec vedi se ora ti tornano.' }));
+      box.appendChild(el('p', { class: 'esx-valore', style: 'margin:6px 0 0', text: presi === tot ? 'Tutti giusti.'
+        : 'Esercizi giusti. Quelli sbagliati si possono rifare con gli stessi numeri.' }));
       var conta = {};
       stato.esiti.forEach(function (x) { ((x && x.err) || []).forEach(function (c) { conta[c] = (conta[c] || 0) + 1; }); });
       var voci = Object.keys(conta).sort(function (a, b) { return conta[b] - conta[a]; });
@@ -624,12 +625,12 @@
     function scriviNumero() { numeroScheda.textContent = 'Scheda n. ' + seme + '. Ristampando la stessa scheda, gli esercizi restano gli stessi.'; }
     scriviNumero();
     box.appendChild(numeroScheda);
-    var stampa = el('button', { type: 'button', class: 'esx-btn', text: 'Stampa la scheda' });
+    var stampa = el('button', { type: 'button', class: 'esx-btn', text: window.ESX_ANTEPRIMA ? 'Prepara la scheda da stampare' : 'Stampa la scheda' });
     stampa.addEventListener('click', function () { stampaScheda(voci, seme); });
     var altra = el('button', { type: 'button', class: 'esx-btn sec', text: 'Prepara un\u2019altra scheda' });
     altra.addEventListener('click', function () { seme = nuovoSeme(); scriviNumero(); });
     box.appendChild(el('div', { class: 'esx-comandi' }, [stampa, altra]));
-    box.appendChild(el('p', { class: 'esx-nota', text: 'Nella finestra di stampa puoi scegliere anche \u00abSalva come PDF\u00bb.' }));
+    box.appendChild(el('p', { class: 'esx-nota', text: window.ESX_ANTEPRIMA ? 'Prima vedi l\u2019anteprima in A4, poi la stampi o la salvi in PDF. Le soluzioni sono nelle ultime pagine.' : 'Nella finestra di stampa puoi scegliere anche \u00abSalva come PDF\u00bb.' }));
     dove.appendChild(box);
   }
 
@@ -701,6 +702,7 @@
   function elencoE(a) { return a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + ' e ' + a[a.length - 1]; }
   function minuscola(t) { t = String(t || ''); return t.charAt(0).toLowerCase() + t.slice(1); }
   function stampaScheda(voci, seme) {
+    if (window.ESX_ANTEPRIMA) { window.ESX_ANTEPRIMA(htmlScheda(voci, seme)); return; }
     var w = window.open('', '_blank');
     if (!w) { alert('Il browser ha bloccato la finestra di stampa: consenti le finestre pop-up per questo sito e riprova.'); return; }
     w.document.open(); w.document.write(htmlScheda(voci, seme)); w.document.close();
@@ -1331,21 +1333,21 @@
       function ha(a) { return a.v.punti[0]; }
       function hk(a) { return a.v.punti[1]; }
       var passi = [
-        { scena: 'aula', stampa: 'testo', momentaneo: true, titolo: 'L\u2019esercizio numero uno della prova', testo: ['All\u2019esame trovi un reticolo come questo: linee orizzontali e verticali, a un grado l\u2019una dall\u2019altra, e dei luoghi da localizzare. \u00c8 il reticolo visto in aula, con Hanoi e Hong Kong.', 'Cambieranno i numeri, non il metodo.'],
+        { scena: 'aula', stampa: 'testo', momentaneo: true, titolo: 'Il reticolo', testo: ['Un reticolo di linee orizzontali e verticali, distanti un grado l\u2019una dall\u2019altra, con dei luoghi da localizzare. Qui: Hanoi e Hong Kong.'],
           fai: function (a, an, t) { a.evidenziaLuoghi(an, t); } },
         { scena: 'aula', stampa: 'testo', momentaneo: true, titolo: 'I paralleli danno la latitudine', testo: 'Le linee orizzontali sono i paralleli. Dicono quanto un luogo \u00e8 a nord o a sud dell\u2019equatore: \u00e8 la latitudine.',
           fai: function (a, an, t) { a.linee('paralleli', an, t); } },
         { scena: 'aula', stampa: 'testo', momentaneo: true, titolo: 'I meridiani danno la longitudine', testo: 'Le linee verticali sono i meridiani. Dicono quanto un luogo \u00e8 a est o a ovest del meridiano di Greenwich: \u00e8 la longitudine.',
           fai: function (a, an, t) { a.linee('meridiani', an, t); } },
-        { scena: 'aula', stampa: true, momentaneo: true, titolo: 'Che cosa vuol dire \u00ab20\u00b0 N\u00bb', testo: ['Non vuol dire che il nord \u00e8 a sinistra. Il nord \u00e8 sempre in alto, e il foglio non si gira.', 'Vuol dire che ogni punto di quella linea sta 20 gradi a nord dell\u2019equatore. Allo stesso modo, ogni punto del meridiano \u00ab105\u00b0 E\u00bb sta 105 gradi a est di Greenwich.'],
+        { scena: 'aula', stampa: true, momentaneo: true, titolo: 'Che cosa vuol dire \u00ab20\u00b0 N\u00bb', testo: ['Non indica una direzione sul foglio: il nord \u00e8 sempre in alto.', 'Vuol dire che ogni punto di quella linea sta 20 gradi a nord dell\u2019equatore. Allo stesso modo, ogni punto del meridiano \u00ab105\u00b0 E\u00bb sta 105 gradi a est di Greenwich.'],
           regola: 'L\u2019etichetta \u00e8 il valore di tutta la linea, non una direzione del foglio.', fai: function (a, an, t) { a.etichetta('lat', an, t); a.etichetta('lon', an, t); } },
-        { scena: 'aula', stampa: true, titolo: 'Primo passo: scrivi tutti i valori', testo: ['Il trucco del docente: prima di tutto scrivi il valore di ogni linea, partendo dalle etichette.', 'Siamo a nord: salendo i numeri crescono, 21, 22, 23, 24; scendendo 19, 18. Siamo a est: verso destra crescono, 106, 107 e via di seguito.'],
+        { scena: 'aula', stampa: true, titolo: 'Primo passo: scrivi tutti i valori', testo: ['Prima di tutto si scrive il valore di ogni linea, partendo dalle etichette date.', 'Siamo a nord: salendo i numeri crescono, 21, 22, 23, 24; scendendo 19, 18. Siamo a est: verso destra crescono, 106, 107 e via di seguito.'],
           regola: 'Scrivi i valori di tutte le linee: cos\u00ec non sbagli il verso in cui crescono.', fai: function (a, an, t) { a.valori('lat', an, t); a.valori('lon', an, t); } },
-        { scena: 'aula', stampa: 'testo', titolo: 'Hanoi: latitudine', testo: ['Hanoi sta proprio sul parallelo dei 21\u00b0. Latitudine: 21\u00b000\u2032 N.', 'Gli 00 si scrivono sempre: senza, indichi un\u2019area, come a battaglia navale, e non un punto.'],
+        { scena: 'aula', stampa: 'testo', titolo: 'Hanoi: latitudine', testo: ['Hanoi sta proprio sul parallelo dei 21\u00b0. Latitudine: 21\u00b000\u2032 N.', 'I primi 00 si scrivono sempre: senza, la coordinata indica una fascia e non un punto.'],
           regola: 'Gradi e primi, sempre: 21\u00b000\u2032.', extra: function (t) { return quadrante(0, t); }, fai: function (a, an, t) { a.fascia(ha(a), 'lat', an, t); } },
-        { scena: 'aula', stampa: true, titolo: 'Hanoi: longitudine', testo: ['Hanoi sta tra i meridiani 105\u00b0 e 106\u00b0: si parte dalla linea con il valore pi\u00f9 basso, 105\u00b0.', 'Un grado sono 60 primi, come un\u2019ora sono 60 minuti. Dividiamo il riquadro in sesti, 10 primi ciascuno: Hanoi \u00e8 a cinque sesti, cio\u00e8 50\u2032. Longitudine: 105\u00b050\u2032 E.'],
+        { scena: 'aula', stampa: true, titolo: 'Hanoi: longitudine', testo: ['Hanoi sta tra i meridiani 105\u00b0 e 106\u00b0: si parte dalla linea con il valore pi\u00f9 basso, 105\u00b0.', 'Un grado sono 60 primi. Dividiamo il riquadro in sesti, 10 primi ciascuno: Hanoi \u00e8 a cinque sesti, cio\u00e8 50\u2032. Longitudine: 105\u00b050\u2032 E.'],
           extra: function (t) { return quadrante(50, t); }, fai: function (a, an, t) { a.fascia(ha(a), 'lon', an, t); a.dividi(ha(a), 'lon', 6, an, t); a.tratto(ha(a), 'lon', an, t); } },
-        { scena: 'aula', stampa: true, titolo: 'Hong Kong: latitudine', testo: ['Hong Kong sta tra i paralleli 22\u00b0 e 23\u00b0: si parte da 22\u00b0.', 'Dividiamo il riquadro in quarti, come i quarti d\u2019ora: 15, 30, 45. Hong Kong \u00e8 a un quarto sopra la linea: 22\u00b015\u2032 N.'],
+        { scena: 'aula', stampa: true, titolo: 'Hong Kong: latitudine', testo: ['Hong Kong sta tra i paralleli 22\u00b0 e 23\u00b0: si parte da 22\u00b0.', 'Dividiamo il riquadro in quarti: 15, 30, 45. Hong Kong \u00e8 a un quarto sopra la linea: 22\u00b015\u2032 N.'],
           extra: function (t) { return quadrante(15, t); }, regola: 'Met\u00e0 = 30\u2032, un quarto = 15\u2032, tre quarti = 45\u2032, un terzo = 20\u2032, due terzi = 40\u2032.',
           fai: function (a, an, t) { a.fascia(hk(a), 'lat', an, t); a.dividi(hk(a), 'lat', 4, an, t); a.tratto(hk(a), 'lat', an, t); } },
         { scena: 'aula', stampa: 'testo', titolo: 'Hong Kong: longitudine', testo: 'Tra i meridiani 114\u00b0 e 115\u00b0, poco dopo la linea del 114\u00b0: un sesto del riquadro, cio\u00e8 10\u2032. Longitudine: 114\u00b010\u2032 E.',
@@ -1356,14 +1358,14 @@
           fai: function (a, an, t) { a.valori('lat', an, t); a.valori('lon', an, t); } },
         { scena: 'sud', stampa: true, titolo: 'Buenos Aires', testo: ['Tra 34\u00b0 e 35\u00b0 S: si parte da 34\u00b0, e scendendo il luogo \u00e8 poco oltre la met\u00e0, 35\u2032.', 'Tra 58\u00b0 e 59\u00b0 O: si parte da 58\u00b0, e verso sinistra \u00e8 poco prima della met\u00e0, 25\u2032.', 'Risposta: 34\u00b035\u2032 S, 58\u00b025\u2032 O.'],
           fai: function (a, an, t) { var p = a.v.punti[0]; a.fascia(p, 'lat', an, t); a.tratto(p, 'lat', an, t); a.fascia(p, 'lon', an, t); a.tratto(p, 'lon', an, t); a.cartellino(p, an, t); } },
-        { scena: 'errore', stampa: 'testo', momentaneo: true, titolo: 'Attenzione: un\u2019etichetta pu\u00f2 essere sbagliata', testo: ['All\u2019esame il docente pu\u00f2 stampare apposta un grado sbagliato. Va scovato e corretto, oltre a trovare le coordinate.', 'Guarda le etichette dei meridiani: 108\u00b0 E, 112\u00b0 E e 150\u00b0 E. Da 108 a 112 ci sono quattro spazi tra le linee, cio\u00e8 quattro gradi: tornano. E 150?'],
+        { scena: 'errore', stampa: 'testo', momentaneo: true, titolo: 'Attenzione: un\u2019etichetta pu\u00f2 essere sbagliata', testo: ['Nella prova un\u2019etichetta pu\u00f2 essere sbagliata. Va trovata e corretta, oltre a scrivere le coordinate.', 'Guarda le etichette dei meridiani: 108\u00b0 E, 112\u00b0 E e 150\u00b0 E. Da 108 a 112 ci sono quattro spazi tra le linee, cio\u00e8 quattro gradi: tornano. E 150?'],
           fai: function (a, an, t) { a.etichetta('lon', an, t); } },
-        { scena: 'errore', stampa: true, titolo: 'Conta le linee', testo: ['L\u2019etichetta 150\u00b0 E sta tre linee a sinistra di 108\u00b0 E: 108 \u2212 3 = 105. L\u00ec doveva esserci 105\u00b0 E.', '\u00c8 proprio l\u2019errore visto in aula: le cifre 0 e 5 scambiate. Si barra e si scrive accanto il valore giusto.'],
+        { scena: 'errore', stampa: true, titolo: 'Conta le linee', testo: ['L\u2019etichetta 150\u00b0 E sta tre linee a sinistra di 108\u00b0 E: 108 \u2212 3 = 105. L\u00ec doveva esserci 105\u00b0 E.', 'Le cifre 0 e 5 sono invertite. L\u2019etichetta si barra e accanto si scrive il valore corretto.'],
           regola: 'C\u2019\u00e8 scritto 150\u00b0, doveva esserci 105\u00b0: va segnalato nella risposta.',
           fai: function (a, an, t) { a.sospetto(an, t); a.trappola(an, t); } },
         { scena: 'errore', stampa: 'testo', titolo: 'Come si riconosce', testo: ['Le etichette giuste vanno d\u2019accordo tra loro: tra due linee vicine c\u2019\u00e8 sempre un grado. Quella sbagliata no.', 'Gli errori tipici: cifre scambiate (105 \u2192 150), una cifra cambiata, dieci gradi in pi\u00f9 o in meno. Poi si va avanti come sempre, usando solo le etichette giuste.'],
           regola: 'Prima di tutto controlla che le etichette siano coerenti.', fai: function (a, an, t) { a.valori('lon', an, t); } },
-        { scena: 'aula', stampa: 'testo', titolo: 'Ricapitolando', testo: ['1. Controlla le etichette: se una non torna, scrivi che cosa c\u2019\u00e8 scritto e che cosa doveva esserci. 2. Scrivi i valori di tutte le linee. 3. Per ogni luogo prendi la linea con il valore pi\u00f9 basso. 4. Stima i primi come sull\u2019orologio. 5. Scrivi gradi, primi e direzione: N o S, E o O.', 'Ora prova tu: 15 reticoli sempre diversi, e in alcuni c\u2019\u00e8 un\u2019etichetta sbagliata.'],
+        { scena: 'aula', stampa: 'testo', titolo: 'Ricapitolando', testo: ['1. Controlla le etichette: se una non torna, scrivi che cosa c\u2019\u00e8 scritto e che cosa doveva esserci. 2. Scrivi i valori di tutte le linee. 3. Per ogni luogo prendi la linea con il valore pi\u00f9 basso. 4. Stima i primi dividendo il riquadro. 5. Scrivi gradi, primi e direzione: N o S, E o O.', 'Nell\u2019allenamento: 15 reticoli, in alcuni c\u2019\u00e8 un\u2019etichetta sbagliata.'],
           dopo: function () { return docente(e); }, fai: function (a, an, t) { a.soluzione(false, t); } }
       ];
       return { scena: scena, passi: passi };
@@ -2599,7 +2601,7 @@
     procedimento: function (v) {
       function scena() { return disegnaReticolo(v, { senzaLuoghi: true }); }
       var passi = [
-        { scena: 's', titolo: 'Prima i numeri sui margini', testo: '«Prima cosa da fare: scrivete i numeri attorno, su due lati.» Partendo dalle etichette date, si numera ogni linea. ' + (v.ns === 'N' ? 'A nord i numeri crescono salendo' : 'A sud i numeri crescono scendendo') + ', ' + (v.eo === 'E' ? 'a est verso destra.' : 'a ovest verso sinistra.'),
+        { scena: 's', titolo: 'Prima i numeri sui margini', testo: 'Partendo dalle etichette date, si scrive il valore di ogni linea, su due lati. ' + (v.ns === 'N' ? 'A nord i numeri crescono salendo' : 'A sud i numeri crescono scendendo') + ', ' + (v.eo === 'E' ? 'a est verso destra.' : 'a ovest verso sinistra.'),
           regola: 'Si numerano tutte le linee prima di cercare il punto.', fai: function (a, an, t) { a.valori('lat', an, t); a.valori('lon', an, t); } }
       ];
       v.punti.forEach(function (p) {
@@ -2621,11 +2623,11 @@
           regola: 'Se il numero sale andando in su, è nord. Se sale andando a sinistra, è ovest.', fai: function (a, an, t) { a.etichetta('lat', an, t); a.etichetta('lon', an, t); a.valori('lat', an, t); a.valori('lon', an, t); } },
         { scena: 's', stampa: true, titolo: 'A: prima la latitudine', testo: ['A è a 54°45′ N. Si prende la fascia tra 54° e 55°.', 'I primi si contano come i minuti dell’orologio: 60 è l’intero, 30 la metà, 15 un quarto, 45 tre quarti. Quindi 45′ è a tre quarti, verso il 55.'],
           regola: '45′ non è 0,45: è tre quarti di grado.', extra: function (t) { return quadrante(45, t); }, fai: function (a, an, t) { a.fascia(A, 'lat', an, t); a.dividi(A, 'lat', 4, an, t); a.tratto(A, 'lat', an, t); } },
-        { scena: 's', stampa: true, titolo: 'Poi la longitudine', testo: ['2°45′ O: tra il meridiano dei 2° e quello dei 3°, a tre quarti verso il 3.', 'Attenzione al verso: a ovest i numeri crescono verso sinistra, quindi «verso il 3» è verso sinistra.'],
+        { scena: 's', stampa: true, titolo: 'Poi la longitudine', testo: ['2°45′ O: tra il meridiano dei 2° e quello dei 3°, a tre quarti verso il 3.', 'A ovest i valori crescono verso sinistra: il meridiano dei 3° è a sinistra di quello dei 2°.'],
           fai: function (a, an, t) { a.fascia(A, 'lon', an, t); a.dividi(A, 'lon', 4, an, t); a.tratto(A, 'lon', an, t); a.mostraLuoghi(false, t); a.cartellino(A, an, t); } },
-        { scena: 's', stampa: true, titolo: 'Un punto proprio sulla linea', testo: ['Paperopoli è a 53°00′ N: sta proprio sul parallelo dei 53°. E a 5°30′ O, a metà tra 5 e 6.', 'Quando si scrivono le coordinate, gli 00 vanno sempre messi: «altrimenti è battaglia navale».'],
+        { scena: 's', stampa: true, titolo: 'Un punto proprio sulla linea', testo: ['Paperopoli è a 53°00′ N: sta proprio sul parallelo dei 53°. E a 5°30′ O, a metà tra 5 e 6.', 'Quando si scrivono le coordinate, i primi 00 si scrivono sempre.'],
           regola: 'Sulla linea: 00′, scritto sempre.', fai: function (a, an, t) { a.fascia(B, 'lon', an, t); a.tratto(B, 'lon', an, t); a.cartellino(B, an, t); } },
-        { scena: 's', stampa: 'testo', titolo: 'Gli errori del docente', testo: ['Partire senza aver numerato i margini: nel compito corretto in aula lo studente aveva scritto 49° invece di 50°.', '«Girare il foglio» e confondere il nord con l’est. Scrivere 60 o 75 primi: «60 non esiste, è di nuovo 0».', 'Si scrive il tondino per i gradi (°), l’apice per i primi (′), e sempre N o S, E o O (va bene anche W).'],
+        { scena: 's', stampa: 'testo', titolo: 'Errori frequenti', testo: ['Cercare il punto senza aver scritto i valori delle linee: si sbaglia facilmente di un grado.', 'Scambiare il nord con l’est. Scrivere 60 o 75 primi: 60 primi sono già il grado successivo.', 'Si scrive il tondino per i gradi (°), l’apice per i primi (′), e sempre N o S, E o O (va bene anche W).'],
           dopo: function () { return docente(e); } },
         { scena: 's', stampa: 'testo', titolo: 'Ricapitolando', testo: ['1. Numera tutte le linee, su due lati. 2. Guarda il verso dei numeri: nord o sud, est o ovest. 3. Prima la latitudine, poi la longitudine. 4. I primi come l’orologio: 15, 30, 45.', 'Ora prova tu: 15 reticoli sempre diversi.'],
           fai: function (a, an, t) { a.mostraLuoghi(false, t); } }
@@ -2777,7 +2779,7 @@
   function passiIndici(v) {
     var R = risposteI(v), c = v.chiede, P = [];
     if (c === 'medio') {
-      P.push({ titolo: 'La variazione', testo: 'Fine meno inizio: ' + migliaia(v.pop1) + ' − ' + migliaia(v.pop0) + ' = ' + conSegno(R.delta, migliaia(R.delta)) + ' abitanti. ' + (R.delta < 0 ? 'È un decremento: ci vuole «un bel meno».' : 'È un incremento.') });
+      P.push({ titolo: 'La variazione', testo: 'Fine meno inizio: ' + migliaia(v.pop1) + ' − ' + migliaia(v.pop0) + ' = ' + conSegno(R.delta, migliaia(R.delta)) + ' abitanti. ' + (R.delta < 0 ? 'È un decremento: va scritto il segno meno.' : 'È un incremento.') });
       P.push({ titolo: 'Il tempo, con i mesi', testo: 'Dal 1° gennaio ' + v.anno0 + ' al ' + v.data1 + ' passano ' + v.Y + ' anni e ' + v.m + (v.m === 1 ? ' mese' : ' mesi') + '. I mesi sono dodicesimi: ' + v.m + '/12 = ' + fmt(Math.round(v.m / 12 * 100) / 100) + '. In tutto ' + fmt(Math.round(R.anni * 100) / 100) + ' anni.',
         regola: 'Mai dividere solo per gli anni interi.', extra: function () { return barraMesi(v.m); } });
       P.push({ titolo: 'La media all’anno', testo: migliaia(R.delta) + ' ÷ ' + fmt(Math.round(R.anni * 100) / 100) + ' = ' + conSegno(R.media, migliaia(R.media)) + ' abitanti all’anno.',
@@ -2896,7 +2898,7 @@
         giusti.perc = conSegno(R.perc, dec2(R.perc)) + '%';
         ok.perc = percentuale(r.perc, r.simbolo, R.perc, [
           { val: R.media / v.pop1 * 100, c: 'finale', t: 'In percentuale: hai diviso per la popolazione finale. Al denominatore va SEMPRE quella iniziale, ' + migliaia(v.pop0) + '.' },
-          { val: R.delta / v.pop0 * 100, c: 'totale', t: 'In percentuale: questa è la variazione di tutto il periodo. Va divisa anche per gli anni: «dovete fare tutti e due i passaggi».' },
+          { val: R.delta / v.pop0 * 100, c: 'totale', t: 'In percentuale: questa è la variazione di tutto il periodo. Va divisa anche per gli anni.' },
           { val: R.delta / v.Y / v.pop0 * 100, c: 'mesi', t: 'In percentuale: hai diviso per gli anni interi. Con i mesi: ' + giusti.perc + '.' }
         ]);
       } else if (ch === 'nat' || ch === 'mor') {
@@ -2911,7 +2913,7 @@
         giusti.n = conSegno(R.n, migliaia(R.n));
         ok.n = vicinoA(r.n, R.n, 0.5);
         if (!ok.n) {
-          if (vicinoA(r.n, -R.n, 0.5)) err('segno', (ch === 'incnat' ? 'Nati meno morti' : 'Immigrati meno emigrati') + ', in quest’ordine: ' + giusti.n + '. ' + (R.n < 0 ? 'Ci vuole «un bel meno».' : 'È positivo.'));
+          if (vicinoA(r.n, -R.n, 0.5)) err('segno', (ch === 'incnat' ? 'Nati meno morti' : 'Immigrati meno emigrati') + ', in quest’ordine: ' + giusti.n + '. ' + (R.n < 0 ? 'Va scritto il segno meno.' : 'È positivo.'));
           else if (ch === 'incnat' && (vicinoA(Math.abs(r.n), Math.abs(v.imm - v.emi), 0.5))) err('dato', 'Hai usato immigrati ed emigrati: quello è il saldo migratorio. Qui nati − morti = ' + giusti.n + '.');
           else if (ch === 'migr' && (vicinoA(Math.abs(r.n), Math.abs(v.nati - v.morti), 0.5))) err('dato', 'Hai usato nati e morti: quello è l’incremento naturale. Qui immigrati − emigrati = ' + giusti.n + '.');
           else err('calcolo', 'Il risultato è ' + giusti.n + '.');
@@ -2941,7 +2943,7 @@
       var mancati = v.superflui.filter(function (k) { return scarti.indexOf(k) < 0; });
       ok.scarti = !scartatoUtile.length && !mancati.length;
       if (scartatoUtile.length) err('scartato', 'Hai scartato un dato che serve: ' + scartatoUtile.map(function (k) { return etichettaI(v, k).toLowerCase(); }).join(', ') + '.');
-      if (mancati.length) err('superfluo', 'Non servivano: ' + mancati.map(function (k) { return etichettaI(v, k).toLowerCase(); }).join(', ') + '. «Lo lasci stare buono lì dov’è.»');
+      if (mancati.length) err('superfluo', 'Non servivano: ' + mancati.map(function (k) { return etichettaI(v, k).toLowerCase(); }).join(', ') + '. Il dato che non serve va lasciato fuori dal calcolo.');
       var tuttiOk = Object.keys(ok).every(function (k) { return ok[k]; });
       return { preso: tuttiOk, errori: errori, ok: ok, giusti: giusti, nota: 'Due decimali bastano; i tassi vanno bene sia in % sia in ‰, gli indici come numero puro o in percentuale.' };
     },
@@ -2950,15 +2952,15 @@
       var C = CHIEDI_I[v.chiede];
       var passi = [
         { scena: 's', titolo: 'Che cosa chiede', testo: 'Si chiede ' + C.t + '. Servono: ' + C.serve.map(function (k) { return etichettaI(v, k).toLowerCase(); }).join(' e ') + '.', fai: function (a, an, t) { a.serve(an, t); } },
-        { scena: 's', titolo: 'Via il dato inutile', testo: 'Non servono: ' + v.superflui.map(function (k) { return etichettaI(v, k).toLowerCase(); }).join(', ') + '. Si barrano subito, così non finiscono nella formula.', regola: '«Lo lasci stare buono lì dov’è.»', fai: function (a, an, t) { a.barra(an, t); } }
+        { scena: 's', titolo: 'Via il dato inutile', testo: 'Non servono: ' + v.superflui.map(function (k) { return etichettaI(v, k).toLowerCase(); }).join(', ') + '. Si barrano subito, così non finiscono nella formula.', regola: 'Il dato che non serve non entra nella formula.', fai: function (a, an, t) { a.barra(an, t); } }
       ];
       passiIndici(v).forEach(function (p) { p.scena = 's'; passi.push(p); });
       return { scena: scena, passi: passi };
     },
     // Il tutorial: gli esempi di aula, numero per numero.
     tutorial: function (e) {
-      var medio = { chiede: 'medio', luogo: 'Esempio di aula', pop0: 23618420, pop1: 22086560, anno0: 2009, annoD: 2009, Y: 7, m: 6, data1: '30 giugno 2016', righe: ['pop0', 'pop1', 'nati'], nati: 198410 };
-      var anno = { luogo: 'Esempio di aula (2012)', pop0: 220350, anno0: 2012, annoD: 2012, fem: 78560, lav: 140550, nati: 2200, morti: 1500, imm: 750, emi: 1200 };
+      var medio = { chiede: 'medio', luogo: 'Esempio', pop0: 23618420, pop1: 22086560, anno0: 2009, annoD: 2009, Y: 7, m: 6, data1: '30 giugno 2016', righe: ['pop0', 'pop1', 'nati'], nati: 198410 };
+      var anno = { luogo: 'Esempio (2012)', pop0: 220350, anno0: 2012, annoD: 2012, fem: 78560, lav: 140550, nati: 2200, morti: 1500, imm: 750, emi: 1200 };
       function caso(ch, righe) { var x = JSON.parse(JSON.stringify(anno)); x.chiede = ch; x.righe = righe; return x; }
       var scene = {
         medio: medio, masc: caso('masc', ['pop0', 'fem', 'lav']), dip: caso('dip', ['pop0', 'fem', 'lav']),
@@ -2971,26 +2973,26 @@
       var passi = [
         { scena: 'medio', stampa: 'testo', momentaneo: true, titolo: 'Tassi, indici e incrementi', testo: ['Il testo dà i dati, e dentro c’è sempre un dato inutile messo apposta.', 'La regola che vale per tutti: il soggetto della domanda va al numeratore, la popolazione di riferimento al denominatore.'],
           regola: 'Soggetto sopra, popolazione sotto.' },
-        { scena: 'medio', stampa: true, titolo: 'Incremento medio annuo: i dati', testo: ['L’esempio di aula: 23.618.420 abitanti al 1° gennaio 2009, 22.086.560 al 30 giugno 2016.', 'Servono solo le due popolazioni.'], fai: function (a, an, t) { a.serve(an, t); a.barra(an, t); } },
+        { scena: 'medio', stampa: true, titolo: 'Incremento medio annuo: i dati', testo: ['Esempio: 23.618.420 abitanti al 1° gennaio 2009, 22.086.560 al 30 giugno 2016.', 'Servono solo le due popolazioni.'], fai: function (a, an, t) { a.serve(an, t); a.barra(an, t); } },
         { scena: 'medio', stampa: 'testo', titolo: pm[0].titolo, testo: pm[0].testo },
-        { scena: 'medio', stampa: true, titolo: 'Il tempo: 7,5 anni, non 7', testo: ['Dal 1° gennaio 2009 al 30 giugno 2016 sono 7 anni e 6 mesi: 7,5 anni.', 'I mesi sono dodicesimi: «se fosse novembre, 7 più 11 dodicesimi; se fosse marzo, 3/12, un quarto». Chi divide per 7 «non ha considerato che ci sono dei mesi in mezzo».'],
+        { scena: 'medio', stampa: true, titolo: 'Il tempo: 7,5 anni, non 7', testo: ['Dal 1° gennaio 2009 al 30 giugno 2016 sono 7 anni e 6 mesi: 7,5 anni.', 'I mesi si contano in dodicesimi: fino a novembre sarebbero 7 + 11/12, fino a marzo 3/12. Dividere per 7 ignora i 6 mesi in più.'],
           regola: 'Mesi = dodicesimi di anno.', extra: function () { return barraMesi(6); }, fai: function (a, an, t) { a.serve(false, t); a.barra(false, t); } },
         { scena: 'medio', stampa: 'testo', titolo: 'La media all’anno', testo: '−1.531.860 ÷ 7,5 = −204.248 abitanti all’anno.', extra: pm[2].extra },
-        { scena: 'medio', stampa: 'testo', titolo: 'In percentuale', testo: ['−204.248 ÷ 23.618.420 = −0,0086. Per 100: −0,86% all’anno (oppure −8,6‰).', 'Si può dividere prima per 7,5 o prima per la popolazione iniziale: va bene, ma «dovete fare tutti e due i passaggi».'],
+        { scena: 'medio', stampa: 'testo', titolo: 'In percentuale', testo: ['−204.248 ÷ 23.618.420 = −0,0086. Per 100: −0,86% all’anno (oppure −8,6‰).', 'L’ordine delle due divisioni, per 7,5 e per la popolazione iniziale, non conta: vanno fatte entrambe.'],
           regola: 'Al denominatore SEMPRE la popolazione iniziale.', extra: pm[3].extra },
         { scena: 'masc', stampa: true, titolo: 'Indice di maschilità', testo: ['Nel 2012: 220.350 abitanti, di cui 78.560 femmine; 140.550 in età lavorativa.', 'I lavoratori qui non servono: è il dato inutile. I maschi si ricavano: 220.350 − 78.560 = 141.790.'],
           fai: function (a, an, t) { a.serve(an, t); a.barra(an, t); } },
-        { scena: 'masc', stampa: 'testo', titolo: '1,80 maschi per ogni femmina', testo: ['I maschi, il soggetto, sopra: 141.790 ÷ 78.560 = 1,80.', '«È un rapporto e basta solo una divisione.» Resta un numero puro; in percentuale (180) va bene lo stesso.'],
+        { scena: 'masc', stampa: 'testo', titolo: '1,80 maschi per ogni femmina', testo: ['I maschi, il soggetto, sopra: 141.790 ÷ 78.560 = 1,80.', 'È un rapporto: una sola divisione, il risultato è un numero puro. In percentuale (180) è equivalente.'],
           extra: function () { return frazione('141.790', '78.560', '', '1,80'); }, fai: function (a, an, t) { a.serve(false, t); a.barra(false, t); } },
-        { scena: 'dip', stampa: true, titolo: 'Indice di dipendenza', testo: ['«Chi è fuori dall’età lavorativa dipende da qualcun altro»: chi è prima e chi è dopo. 220.350 − 140.550 = 79.800 dipendenti.', '79.800 ÷ 140.550 = 0,57. Qui le femmine sono il dato inutile.'],
+        { scena: 'dip', stampa: true, titolo: 'Indice di dipendenza', testo: ['Le persone fuori dall’età lavorativa, giovani e anziani, sono la popolazione dipendente: 220.350 − 140.550 = 79.800.', '79.800 ÷ 140.550 = 0,57. Qui le femmine sono il dato inutile.'],
           extra: function () { return frazione('79.800', '140.550', '', '0,57'); }, fai: function (a, an, t) { a.serve(an, t); a.barra(an, t); } },
-        { scena: 'mor', stampa: true, titolo: 'Tasso di mortalità', testo: ['Nel 2012 sono morte 1.500 persone. I 2.200 nati non servono.', 'Sotto va chi era vivo all’inizio dell’anno: 1.500 ÷ 220.350 × 100 = 0,68%. «Per 100 o per 1000, a vostra discrezione»: 6,8‰ va bene lo stesso.'],
+        { scena: 'mor', stampa: true, titolo: 'Tasso di mortalità', testo: ['Nel 2012 sono morte 1.500 persone. I 2.200 nati non servono.', 'Sotto va chi era vivo all’inizio dell’anno: 1.500 ÷ 220.350 × 100 = 0,68%. Il tasso si può esprimere per 100 o per 1000: 6,8‰ è equivalente.'],
           regola: 'Tasso: × 100 (%) o × 1000 (‰).', extra: function () { return frazione('1.500', '220.350', '× 100', '0,68%'); }, fai: function (a, an, t) { a.serve(an, t); a.barra(an, t); } },
         { scena: 'nat', stampa: 'testo', titolo: 'Tasso di natalità', testo: '2.200 ÷ 220.350 × 100 = 1,00%, circa l’1%. Qui il dato inutile sono i morti.',
           extra: function () { return frazione('2.200', '220.350', '× 100', '1,00%'); }, fai: function (a, an, t) { a.serve(an, t); a.barra(an, t); } },
-        { scena: 'incnat', stampa: true, titolo: 'Incremento naturale e saldo migratorio', testo: ['Nati meno morti: 2.200 − 1.500 = +700.', 'Immigrati meno emigrati: 750 − 1.200 = −450. Quando è negativo ci vuole «un bel meno»; il più davanti agli incrementi mostra che hai le idee chiare.'],
+        { scena: 'incnat', stampa: true, titolo: 'Incremento naturale e saldo migratorio', testo: ['Nati meno morti: 2.200 − 1.500 = +700.', 'Immigrati meno emigrati: 750 − 1.200 = −450. Il segno si scrive sempre: meno per i saldi negativi, più per gli incrementi.'],
           regola: 'Il segno si scrive sempre.', fai: function (a, an, t) { a.serve(an, t); } },
-        { scena: 'nat', stampa: 'testo', titolo: 'Come si scrive', testo: ['Tassi con % o ‰ («la barra con lo zero sopra e due zeri sotto»). Indici come numeri puri. Bastano due decimali, arrotondare non è obbligatorio.', 'E in aula la calcolatrice: «portatene due, porta le batterie».'] },
+        { scena: 'nat', stampa: 'testo', titolo: 'Come si scrive', testo: ['Tassi con % o ‰. Indici come numeri puri. Bastano due decimali.', 'Serve la calcolatrice.'] },
         { scena: 'nat', stampa: 'testo', titolo: 'Ricapitolando', testo: ['1. Leggi che cosa chiede. 2. Barra il dato inutile. 3. Soggetto sopra, popolazione iniziale sotto. 4. Per gli incrementi medi: i mesi in dodicesimi, poi ÷ anni e ÷ popolazione iniziale. 5. Segno e simbolo.', 'Ora prova tu: 15 esercizi, ogni volta un calcolo diverso.'],
           dopo: function () { return docente(e); } }
       ];
@@ -3194,7 +3196,7 @@
     nomiErrori: {
       legenda: 'Dimenticare il valore della legenda', conta: 'Contare male i simboli', perimetro: 'Calcolare il perimetro invece dell’area', lati: 'Sommare i lati', lato: 'Usare il lato al posto dell’area',
       area: 'Sbagliare l’area', invertita: 'Mettere l’area al numeratore', nonDiviso: 'Dimenticare di dividere per l’area', densita: 'Sbagliare la densità',
-      casuale: 'Scrivere «casuale»', modello: 'Sbagliare il modello', generico: 'Dire solo «sparso» senza dire dove', dove: 'Sbagliare la posizione', forma: 'Confondere lineare sinuoso e regolare'
+      casuale: 'Scrivere casuale', modello: 'Sbagliare il modello', generico: 'Dire solo sparso senza dire dove', dove: 'Sbagliare la posizione', forma: 'Confondere lineare sinuoso e regolare'
     },
     opzioni: function () { return { v: 1 }; },
     serie: function (seme, n) { var r = rngDa(seme), out = []; for (var i = 0; i < n; i++) out.push(varianteDensitaS(r, i)); return out; },
@@ -3222,7 +3224,7 @@
         rigaForma.style.display = m === 'lineare' ? '' : 'none';
         c.dove.centro(m === 'sparso' ? 'Ovunque' : 'Al centro');
         spiega.style.display = m === 'sparso' || m === 'accentrato' ? '' : 'none';
-        spiega.textContent = m === 'sparso' ? 'Se i simboli coprono tutto il quadrato scegli «Ovunque»; se stanno solo in una parte, scegli quale.' : 'Dove sono raccolti i simboli?';
+        spiega.textContent = m === 'sparso' ? 'Se i simboli coprono tutto il quadrato scegli Ovunque; se stanno solo in una parte, scegli quale.' : 'Dove sono raccolti i simboli?';
         riapriPannello();
       });
       return {
@@ -3254,7 +3256,7 @@
       giusti.area = A + ' km²';
       ok.area = vicinoA(r.area, A, 0.001);
       if (!ok.area) {
-        if (vicinoA(r.area, 4 * L, 0.001)) err('perimetro', '«Ho fatto 2 + 2 + 2 + 2»: ' + (4 * L) + ' è il perimetro. L’area del quadrato è lato × lato: ' + L + ' × ' + L + ' = ' + A + ' km².');
+        if (vicinoA(r.area, 4 * L, 0.001)) err('perimetro', (4 * L) + ' è il perimetro. L’area del quadrato è lato × lato: ' + L + ' × ' + L + ' = ' + A + ' km².');
         else if (vicinoA(r.area, 2 * L, 0.001) && L !== 2) err('lati', 'Hai sommato due lati. L’area è lato × lato: ' + A + ' km².');
         else if (vicinoA(r.area, L, 0.001) && L > 1) err('lato', 'Questo è il lato. L’area è lato × lato: ' + A + ' km².');
         else err('area', 'Area = lato × lato = ' + L + ' × ' + L + ' = ' + A + ' km².');
@@ -3273,12 +3275,12 @@
       ok.mod = r.mod === v.mod; ok.dove = true;
       var nota = '';
       if (!r.mod) { ok.mod = false; err('modello', 'Manca il modello: ' + nomeModello(v.mod, v.sub) + '.'); }
-      else if (r.mod === 'casuale') err('casuale', '«Non scrivete casuale, perché in geografia non esiste il caso.» Qui è ' + nomeModello(v.mod, v.sub) + '.');
+      else if (r.mod === 'casuale') err('casuale', 'Casuale non è un modello di distribuzione. Qui è ' + nomeModello(v.mod, v.sub) + '.');
       else if (!ok.mod) err('modello', 'Il modello è ' + nomeModello(v.mod, v.sub) + '.');
       else if (v.mod === 'lineare') { ok.dove = r.forma === v.sub; if (!ok.dove) err('forma', 'Lineare sì, ma ' + (v.sub === 'T' ? 'regolare: linee dritte e punti equidistanti, a T.' : 'sinuoso: la linea fa delle curve.')); }
       else {
         if (!r.dove) { ok.dove = false; err(v.mod === 'sparso' && v.sub !== 'C' ? 'generico' : 'dove', 'Manca dove: ' + nomeModello(v.mod, v.sub) + '.'); }
-        else if (v.mod === 'sparso' && v.sub !== 'C' && r.dove === 'C') { ok.dove = false; err('generico', 'Non basta «sparso»: i simboli stanno solo nella parte ' + DIR_NOMI[v.sub].replace(/^a /, '') + '. Va detto: ' + nomeModello(v.mod, v.sub) + '.'); }
+        else if (v.mod === 'sparso' && v.sub !== 'C' && r.dove === 'C') { ok.dove = false; err('generico', 'Sparso non basta: i simboli stanno solo nella parte ' + DIR_NOMI[v.sub].replace(/^a /, '') + '. Va detto: ' + nomeModello(v.mod, v.sub) + '.'); }
         else if (v.mod === 'sparso' && r.dove !== v.sub && adiacente(r.dove, v.sub)) nota = 'Sulla posizione: ' + DIR_NOMI[r.dove] + ' va bene, il più preciso è ' + DIR_NOMI[v.sub] + '. ';
         else if (r.dove !== v.sub) { ok.dove = false; err('dove', 'Posizione: ' + nomeModello(v.mod, v.sub) + '.'); }
       }
@@ -3290,7 +3292,7 @@
         { scena: 's', titolo: 'Gli abitanti', testo: 'Si contano i simboli: ' + v.N + '. La legenda dice che ognuno vale ' + fmt(v.val) + ': ' + v.N + ' × ' + fmt(v.val) + ' = ' + fmt(v.ab) + ' abitanti.', regola: 'Numeratore = simboli × legenda.', fai: function (a, an, t) { a.conta(an, t); a.legenda(an, t); } },
         { scena: 's', titolo: 'L’area', testo: 'Lato × lato = ' + v.L + ' × ' + v.L + ' = ' + v.A + ' km²' + (v.L > 1 ? ', non ' + v.L + ' + ' + v.L + ' + ' + v.L + ' + ' + v.L + ' (quello è il perimetro).' : '.'), regola: 'Denominatore = lato × lato.', fai: function (a, an, t) { a.celle(an, t); } },
         { scena: 's', titolo: 'La densità', testo: fmt(v.ab) + ' ÷ ' + v.A + ' = ' + dec2(v.d).replace(/,00$/, '') + ' ab/km².', extra: function () { return frazione(fmt(v.ab), String(v.A), '', dec2(v.d).replace(/,00$/, '') + ' ab/km²'); } },
-        { scena: 's', titolo: 'Il modello', testo: 'Come stanno i simboli? ' + nomeModello(v.mod, v.sub).charAt(0).toUpperCase() + nomeModello(v.mod, v.sub).slice(1) + '.', regola: 'Mai «casuale»: in geografia il caso non esiste.', fai: function (a, an, t) { a.modello(an, t); } }
+        { scena: 's', titolo: 'Il modello', testo: 'Come stanno i simboli? ' + nomeModello(v.mod, v.sub).charAt(0).toUpperCase() + nomeModello(v.mod, v.sub).slice(1) + '.', regola: 'Casuale non è un modello di distribuzione.', fai: function (a, an, t) { a.modello(an, t); } }
       ] };
     },
     // Il tutorial: i tre quadrati dell'aula e i modelli.
@@ -3301,24 +3303,24 @@
       function scena(nome, opz) { return disegnaDensitaS(scene[nome], opz || {}); }
       var passi = [
         { scena: 'q1', stampa: 'testo', momentaneo: true, titolo: 'Densità e distribuzione', testo: ['Un quadrato con il lato in chilometri, dei simboli e una legenda che dice quanto vale ogni simbolo.', 'Si chiede la densità e il modello di distribuzione. Compare in tutte le prove.'] },
-        { scena: 'q1', stampa: true, titolo: 'Il primo quadrato dell’aula', testo: ['Lato 1 km, 9 pallini, ogni pallino vale 1 abitante.', 'Sopra: 9 × 1 = 9 abitanti. Sotto: 1 × 1 = 1 km². Densità: 9 ÷ 1 = 9 ab/km².'],
-          regola: '«Al numeratore sempre il numero di abitanti, al denominatore sempre l’area in km².»', fai: function (a, an, t) { a.conta(an, t); a.legenda(an, t); } },
+        { scena: 'q1', stampa: true, titolo: 'Primo quadrato', testo: ['Lato 1 km, 9 pallini, ogni pallino vale 1 abitante.', 'Sopra: 9 × 1 = 9 abitanti. Sotto: 1 × 1 = 1 km². Densità: 9 ÷ 1 = 9 ab/km².'],
+          regola: 'Densità = abitanti ÷ area in km².', fai: function (a, an, t) { a.conta(an, t); a.legenda(an, t); } },
         { scena: 'q2', stampa: true, titolo: 'Lato 2: l’area è 4, non 8', testo: ['Lato 2 km, 9 pallini, ognuno vale 2: 9 × 2 = 18 abitanti.', 'Area 2 × 2 = 4 km²: quattro quadratini. Chi scrive 8 ha fatto 2 + 2 + 2 + 2, il perimetro. 18 ÷ 4 = 4,5 ab/km².'],
           extra: function () { return frazione('18', '4', '', '4,5 ab/km²'); }, fai: function (a, an, t) { a.legenda(false, t); a.celle(an, t); } },
-        { scena: 'q2', stampa: 'testo', momentaneo: true, titolo: 'L’errore di ogni anno', testo: 'Il bordo rosso è il perimetro: 8 km. Non c’entra niente con la densità. «L’area del quadrato bisogna che la sappiate fare.»', fai: function (a, an, t) { a.perimetro(an, t); } },
+        { scena: 'q2', stampa: 'testo', momentaneo: true, titolo: 'Perimetro e area', testo: 'Il bordo rosso è il perimetro: 8 km. Per la densità serve l’area.', fai: function (a, an, t) { a.perimetro(an, t); } },
         { scena: 'q3', stampa: true, titolo: 'Lato 3, legenda 3,5', testo: ['9 pallini da 3,5: 9 × 3,5 = 31,5 abitanti. Area 3 × 3 = 9 km².', '31,5 ÷ 9 = 3,5 ab/km². Il risultato si scrive sempre con l’unità.'],
           extra: function () { return frazione('31,5', '9', '', '3,5 ab/km²'); }, fai: function (a, an, t) { a.legenda(an, t); a.celle(an, t); } },
-        { scena: 'q1', stampa: true, titolo: 'Il modello: sparso', testo: ['I pallini coprono tutto il quadrato: distribuzione sparsa.', '«Non scrivete casuale, perché in geografia non esiste il caso.»'], regola: 'Mai «casuale».', fai: function (a, an, t) { a.modello(an, t); } },
-        { scena: 'se', stampa: true, titolo: 'Sparso, ma dove?', testo: ['Qui i pallini sono sparsi, ma solo in basso a destra. Non basta dire «sparso»: si dice l’asimmetria.', '«Sparso in basso a destra, a sud-est.»'], fai: function (a, an, t) { a.modello(an, t); } },
-        { scena: 'acc', stampa: true, titolo: 'Accentrato', testo: ['Tutti raccolti in un punto: accentrato (o accorpato, aggregato).', 'Anche qui si dice dove: «aggregato al centro», oppure in un angolo.'], fai: function (a, an, t) { a.modello(an, t); } },
-        { scena: 'sin', stampa: true, titolo: 'Lineare sinuoso', testo: 'I pallini seguono una linea che fa delle curve, come un fiume o una strada di valle: «una linearità sinuosa».', fai: function (a, an, t) { a.modello(an, t); } },
-        { scena: 'tt', stampa: true, titolo: 'Lineare regolare, a T', testo: 'Linee dritte e pallini equidistanti, come le case lungo due strade che si incrociano: «un lineare a T».', fai: function (a, an, t) { a.modello(an, t); } },
+        { scena: 'q1', stampa: true, titolo: 'Il modello: sparso', testo: ['I pallini coprono tutto il quadrato: distribuzione sparsa.', 'Casuale non è un modello di distribuzione.'], fai: function (a, an, t) { a.modello(an, t); } },
+        { scena: 'se', stampa: true, titolo: 'Sparso, ma dove?', testo: ['Qui i pallini sono sparsi, ma solo in basso a destra. Va indicata la posizione: sparso in basso a destra, a sud-est.'], fai: function (a, an, t) { a.modello(an, t); } },
+        { scena: 'acc', stampa: true, titolo: 'Accentrato', testo: ['Tutti raccolti in un punto: accentrato (o accorpato, aggregato).', 'Anche qui si indica la posizione: aggregato al centro, oppure in un angolo.'], fai: function (a, an, t) { a.modello(an, t); } },
+        { scena: 'sin', stampa: true, titolo: 'Lineare sinuoso', testo: 'I pallini seguono una linea curva, come un fiume o una strada di valle: lineare sinuoso.', fai: function (a, an, t) { a.modello(an, t); } },
+        { scena: 'tt', stampa: true, titolo: 'Lineare regolare, a T', testo: 'Linee dritte e pallini equidistanti, come le case lungo due strade che si incrociano: lineare a T.', fai: function (a, an, t) { a.modello(an, t); } },
         { scena: 'q3', stampa: 'testo', titolo: 'Ricapitolando', testo: ['1. Abitanti = simboli × legenda. 2. Area = lato × lato. 3. Densità = abitanti ÷ area, in ab/km². 4. Modello: sparso (e dove), accentrato (e dove), lineare (sinuoso o a T). Mai casuale.', 'Ora prova tu: 15 quadrati sempre diversi.'],
           dopo: function () { return docente(e); } }
       ];
       return { scena: scena, passi: passi };
     },
-    istruzioniStampa: '<p style="margin:0 0 8px;font-size:10pt">Per ogni quadrato calcola gli abitanti (simboli × legenda), l’area (lato × lato) e la densità in ab/km². Poi descrivi il modello: sparso (dicendo dove, se sta in una parte), accentrato (dove), lineare (sinuoso o regolare). Mai «casuale».</p>',
+    istruzioniStampa: '<p style="margin:0 0 8px;font-size:10pt">Per ogni quadrato calcola gli abitanti (simboli × legenda), l’area (lato × lato) e la densità in ab/km². Poi descrivi il modello: sparso (dicendo dove, se sta in una parte), accentrato (dove), lineare (sinuoso o regolare). Casuale non è un modello.</p>',
     stampa: function (v, n) {
       var d = disegnaDensitaS(v, { stampa: true, fs: 15, larghezza: '72mm' });
       return '<h3>' + n + '.</h3><div class="riga">' + d.nodo.outerHTML + '<div class="risp">Abitanti: ______<br>Area: ______ km²<br>Densità: ______ ab/km²<br>Modello: ______________________<br>______________________________</div></div>';
@@ -3688,9 +3690,9 @@
         if (!ok.tot[j]) { tuttiTot = false; err('somma', 'Totale del ' + v.anni[j] + ': ' + v.M[j] + ' + ' + v.F[j] + ' = ' + v.T[j] + '.'); }
       });
       ok.scala = r.scala >= v.maxT;
-      if (!ok.scala) err('scala', 'Con l’asse fino a ' + r.scala + ' «non ci sta il totale»: arriva a ' + v.maxT + '. La scala si tara sul valore più alto, cioè il totale: fino a ' + v.scalaOk + ' per stare tranquilli.');
+      if (!ok.scala) err('scala', 'Con l’asse fino a ' + r.scala + ' il totale non entra: arriva a ' + v.maxT + '. La scala si tara sul valore più alto, cioè il totale: fino a ' + v.scalaOk + ' per stare tranquilli.');
       ok.slot = r.slot === 'tutti';
-      if (!ok.slot) err('anni', 'Mancano i dati del ' + v.buchi.map(function (b) { return v.anni[b]; }).join(' e del ') + ', ma quegli anni restano sull’asse: «non faccio finta che non ci siano». ' + v.anni.length + ' posizioni, non ' + v.datiAnni.length + '.');
+      if (!ok.slot) err('anni', 'Mancano i dati del ' + v.buchi.map(function (b) { return v.anni[b]; }).join(' e del ') + ', ma quegli anni restano sull’asse. ' + v.anni.length + ' posizioni, non ' + v.datiAnni.length + '.');
       // la linea: ogni pallino unito a quello dell'anno con dato successivo; tratteggiata dove in mezzo manca un anno
       ok.gap = true;
       var D = []; v.anni.forEach(function (_a, j) { if (v.T[j] != null) D.push(j); });
@@ -3699,7 +3701,7 @@
       attesi.forEach(function (x) {
         var u3 = segs.filter(function (sg) { return sg.a === x.a && sg.b === x.b; })[0];
         if (!u3) { ok.gap = false; err('linea', 'Manca la linea tra il pallino del ' + v.anni[x.a] + ' e quello del ' + v.anni[x.b] + (x.s === 'tratteggiata' ? ': tratteggiata, perché in mezzo manca un anno.' : '.')); }
-        else if (u3.s !== x.s) { ok.gap = false; err('collega', x.s === 'tratteggiata' ? 'Tra il ' + v.anni[x.a] + ' e il ' + v.anni[x.b] + ' manca un anno: la linea va tratteggiata, «se delle annate vengono saltate bisogna darne evidenza».' : 'Tra il ' + v.anni[x.a] + ' e il ' + v.anni[x.b] + ' non manca nessun anno: la linea è continua.'); }
+        else if (u3.s !== x.s) { ok.gap = false; err('collega', x.s === 'tratteggiata' ? 'Tra il ' + v.anni[x.a] + ' e il ' + v.anni[x.b] + ' manca un anno: la linea va tratteggiata.' : 'Tra il ' + v.anni[x.a] + ' e il ' + v.anni[x.b] + ' non manca nessun anno: la linea è continua.'); }
       });
       segs.forEach(function (sg) {
         if (!attesi.some(function (x) { return x.a === sg.a && x.b === sg.b; })) { ok.gap = false; err('linea', 'La linea tra il ' + v.anni[sg.a] + ' e il ' + v.anni[sg.b] + ' non va: ogni pallino si unisce solo a quello dell’anno successivo con il dato.'); }
@@ -3737,13 +3739,13 @@
       completaCombinato(aula);
       function scena(nome, opz) { return disegnaCombinato(aula, Object.assign({ slot: nome === 'sette' ? 'dati' : 'tutti' }, opz || {})); }
       var passi = [
-        { scena: 'nove', stampa: 'testo', momentaneo: true, titolo: 'L’ultimo esercizio della prova', testo: ['«Costruisci un istogramma per maschi e femmine e raffigura sullo stesso diagramma cartesiano anche il totale della popolazione.» È l’ultimo esercizio della prova.', 'L’esempio di aula: dal 1975 al 2015, ogni cinque anni. Mancano il 1985 e il 2010.'] },
+        { scena: 'nove', stampa: 'testo', momentaneo: true, titolo: 'La consegna', testo: ['Consegna: costruire un istogramma per maschi e femmine e rappresentare sullo stesso diagramma cartesiano il totale della popolazione.', 'Esempio: dal 1975 al 2015, ogni cinque anni. Mancano il 1985 e il 2010.'] },
         { scena: 'nove', stampa: true, titolo: 'Prima i totali', testo: ['1975: 56 + 60 = 116. 1980: 90. 1990: 76. 1995: 76. 2000: 88. 2005: 106. 2015: 60 + 58 = 118.', 'Il valore più alto non è un maschio o una femmina: è il totale, 118.'], fai: function (a, an, t) { a.scala(an, t); } },
-        { scena: 'nove', stampa: 'testo', titolo: 'La scala: fino a 120', testo: ['Se tari l’asse sui maschi e le femmine (fino a 60), «non ci sta il totale».', '«Deve arrivare a 120, per stare tranquilli.» E il diagramma va fatto grande: non un francobollo.'], regola: 'La scala si tara sul totale.', fai: function (a, an, t) { a.scala(false, t); } },
+        { scena: 'nove', stampa: 'testo', titolo: 'La scala: fino a 120', testo: ['Con l’asse tarato su maschi e femmine (fino a 60) il totale non entra.', 'L’asse arriva a 120. Il diagramma va disegnato grande.'], regola: 'La scala si tara sul totale.', fai: function (a, an, t) { a.scala(false, t); } },
         { scena: 'sette', stampa: true, momentaneo: true, titolo: 'Sette posizioni? No', testo: ['Mettendo solo gli anni con i dati, l’asse salta dal 1980 al 1990 e dal 2005 al 2015 come se fossero cinque anni: il tempo è falsato.'] },
-        { scena: 'nove', stampa: true, titolo: 'Nove posizioni', testo: ['«Io non faccio finta che non ci siano. Dividerò quella linea non per sette, che sono i dati effettivi, ma per nove.»', 'Il 1985 e il 2010 hanno il loro posto, e lo spazio resta vuoto.'], regola: 'Gli anni mancanti restano sull’asse.', fai: function (a, an, t) { a.buchi(an, t); } },
-        { scena: 'nove', stampa: true, titolo: 'Le canne di maschi e femmine', testo: ['Per ogni anno due «canne verticali» affiancate, con colori diversi: «una interna bianca, l’altra colorata con la penna» va benissimo.'], fai: function (a, an, t) { a.buchi(false, t); a.canne(an, t); } },
-        { scena: 'nove', stampa: true, titolo: 'Il totale: pallini e linea', testo: ['In alto, in corrispondenza dell’anno, un pallino per il totale. I pallini si uniscono con una linea.', 'Dove l’anno manca, «per collegare i punti uso il tratteggio; per l’altro la linea continua».'],
+        { scena: 'nove', stampa: true, titolo: 'Nove posizioni', testo: ['L’asse si divide in nove posizioni, non nelle sette degli anni con i dati.', 'Il 1985 e il 2010 hanno la loro posizione, vuota.'], regola: 'Gli anni mancanti restano sull’asse.', fai: function (a, an, t) { a.buchi(an, t); } },
+        { scena: 'nove', stampa: true, titolo: 'Le canne di maschi e femmine', testo: ['Per ogni anno due canne verticali affiancate, di colore diverso, con la legenda.'], fai: function (a, an, t) { a.buchi(false, t); a.canne(an, t); } },
+        { scena: 'nove', stampa: true, titolo: 'Il totale: pallini e linea', testo: ['In alto, in corrispondenza dell’anno, un pallino per il totale. I pallini si uniscono con una linea.', 'Dove manca un anno la linea è tratteggiata, altrove continua.'],
           regola: 'Anno mancante: si tratteggia.', fai: function (a, an, t) { a.buchi(false, t); a.canne(false, t); a.totale(an, t); } },
         { scena: 'nove', stampa: 'testo', titolo: 'Ricapitolando', testo: ['1. Calcola i totali. 2. Asse verticale fino oltre il totale più alto. 3. Asse orizzontale con tutti gli anni, anche quelli senza dato. 4. Canne affiancate per maschi e femmine, con la legenda. 5. Pallini per il totale, uniti dalla linea, tratteggiata dove manca l’anno.', 'Ora prova tu: 15 tabelle sempre diverse.'],
           dopo: function () { return docente(e); }, fai: function (a, an, t) { a.soluzione(false, t); } }
@@ -3851,6 +3853,12 @@
     var cop = COPIONI.video[e.tipo], audioMappa = COPIONI.audio || {}, def = T.tutorial(e), passi = def.passi, bat = cop.battute;
     var t = Orologio(), i = 0, suona = false, finito = false, cc = true, vel = 1, ultimoP = null, ultimaNascosta = null;
     var voce = null;          // { audio } oppure { simulata: {dur, pass, ultimo} }
+    // musica di sottofondo: va avanti piano anche quando la voce si ferma per la domanda
+    var musica = null, musicaSi = true;
+    try { musicaSi = localStorage.getItem('esx_musica') !== '0'; } catch (e0) {}
+    if (COPIONI.musica && window.Audio) { musica = new Audio(COPIONI.musica); musica.loop = true; musica.preload = 'none'; musica.volume = COPIONI.musicaVolume || 0.1; }
+    function musicaSu() { if (musica && musicaSi) musica.play().catch(function () {}); }
+    function musicaGiu() { if (musica) musica.pause(); }
     var dopoVoce = null;      // che cosa fare quando la voce finisce
     var attesaRisposta = false;
     var box = el('div', { class: 'esx-video' });
@@ -3878,7 +3886,9 @@
     var info = el('span', { class: 'esx-v-info' });
     var bCC = el('button', { type: 'button', class: 'esx-v-pillola', 'aria-pressed': 'true', text: 'Sottotitoli' });
     var bVel = el('button', { type: 'button', class: 'esx-v-pillola', 'aria-pressed': 'false', text: '1×' });
-    box.appendChild(el('div', { class: 'esx-v-barra' }, [bInd, bMeno, bPlay, bPiu, bAv, pista, info, bCC, bVel]));
+    var bMus = musica ? el('button', { type: 'button', class: 'esx-v-pillola', 'aria-pressed': musicaSi ? 'true' : 'false', text: 'Musica' }) : null;
+    box.appendChild(el('div', { class: 'esx-v-barra' }, [bInd, bMeno, bPlay, bPiu, bAv, pista, info, bCC, bMus, bVel]));
+    if (bMus) bMus.addEventListener('click', function () { musicaSi = !musicaSi; bMus.setAttribute('aria-pressed', musicaSi ? 'true' : 'false'); try { localStorage.setItem('esx_musica', musicaSi ? '1' : '0'); } catch (e0) {} if (musicaSi && suona) musicaSu(); else musicaGiu(); });
     // la linea del tempo: quanto dura ogni battuta (dall'audio vero, o stimata sul testo)
     function durata(k) { var a = audioMappa[bat[k].id]; return (a && a.durata) || Math.max(2.4, bat[k].voce.length / 15); }
     var inizi = [], totale = 0;
@@ -4091,13 +4101,13 @@
       salto.addEventListener('click', function () { if (q.coord) { q._ok = { g: false, p: false, d: false }; q._coord[0].value = q.coord.gradi; q._coord[1].value = pad2(q.coord.primi); q._coord[2].value = q.coord.dir; segna(false); } else if (q.scelte) segna(false); else { q._campi.forEach(function (c) { c.ok = false; c.inp.value = String(c.cp.giusto).replace('.', ','); }); segna(false); } esito(false, true); });
     }
     function fine() {
-      finito = true; suona = false; aggiornaPlay();
+      finito = true; suona = false; aggiornaPlay(); musicaGiu();
       scrivi(chiave(e, 'tutorial'), true);
       tacche.forEach(function (x) { x.b.className = (x.b.className.indexOf('dom') >= 0 ? 'dom ' : '') + 'fatto'; x.i.style.transform = 'scaleX(1)'; });
       var f = el('div', { class: 'esx-v-fine' });
       var rivedi = el('button', { type: 'button', class: 'esx-btn sec', text: 'Rivedi il video' });
       var allena = el('button', { type: 'button', class: 'esx-btn', text: 'Allenati: 15 esercizi' });
-      rivedi.addEventListener('click', function () { suona = true; aggiornaPlay(); salta(0); });
+      rivedi.addEventListener('click', function () { suona = true; aggiornaPlay(); musicaSu(); salta(0); });
       allena.addEventListener('click', versoAllenamento);
       f.appendChild(el('div', null, [el('h4', { text: 'Fine del video' }), el('p', { text: 'Ora prova da solo, con numeri sempre diversi.' }), el('div', { class: 'esx-comandi' }, [rivedi, allena])]));
       palco.appendChild(f);
@@ -4110,13 +4120,14 @@
       segnoPausa.classList.toggle('su', !suona && !grande.parentNode && !finito && !attesaRisposta);
     }
     function avvia() {
+      musicaSu();
       if (grande.parentNode) { grande.remove(); suona = true; aggiornaPlay(); mostra(0); return; }
       if (finito) { suona = true; aggiornaPlay(); salta(0); return; }
       suona = true; aggiornaPlay();
       if (voce && voce.audio) voce.audio.play().catch(function () {});
       else if (!voce && !attesaRisposta) prossima();
     }
-    function pausa() { suona = false; aggiornaPlay(); if (voce && voce.audio) voce.audio.pause(); }
+    function pausa() { suona = false; aggiornaPlay(); musicaGiu(); if (voce && voce.audio) voce.audio.pause(); }
     grande.addEventListener('click', avvia);
     // si ferma e riparte toccando il video, come su YouTube
     tav.addEventListener('click', function () { if (grande.parentNode || finito) return; if (suona) pausa(); else avvia(); });
@@ -4125,7 +4136,7 @@
     bPlay.addEventListener('click', function () { if (suona) pausa(); else avvia(); });
     bInd.addEventListener('click', function () { if (grande.parentNode) { grande.remove(); } salta(i - 1); });
     bAv.addEventListener('click', function () { if (grande.parentNode) { grande.remove(); } salta(i + 1); });
-    bRip.addEventListener('click', function () { if (grande.parentNode) { grande.remove(); suona = true; aggiornaPlay(); } ultimoP = null; salta(i); });
+    bRip.addEventListener('click', function () { if (grande.parentNode) { grande.remove(); suona = true; aggiornaPlay(); musicaSu(); } ultimoP = null; salta(i); });
     bCC.addEventListener('click', function () { cc = !cc; bCC.setAttribute('aria-pressed', cc ? 'true' : 'false'); ccBox.classList.toggle('via', !cc); });
     bVel.addEventListener('click', function () { vel = vel === 1 ? 1.25 : vel === 1.25 ? 1.5 : 1; bVel.textContent = String(vel).replace('.', ',') + '×'; bVel.setAttribute('aria-pressed', vel !== 1 ? 'true' : 'false'); if (voce && voce.audio) voce.audio.playbackRate = vel; });
     function tasti(ev) {
@@ -4142,7 +4153,7 @@
     scena(bat[0].p, false, false);
     ccTesto.textContent = '';
     aggiornaBarra(); aggiornaPlay();
-    return function () { suona = false; fermaVoce(); t.ferma(); document.removeEventListener('keydown', tasti); };
+    return function () { suona = false; musicaGiu(); fermaVoce(); t.ferma(); document.removeEventListener('keydown', tasti); };
   }
   // per i collaudi automatici
   try { window.UMS_ESERCIZI = { POSIZIONA: POSIZIONA, INDICI: INDICI, DENSITA_S: DENSITA_S, COMBINATO: COMBINATO, risposteI: risposteI, numIt: numIt, RETICOLO: RETICOLO, DENSITA: DENSITA, BANCA: BANCA, TASSI: TASSI, GRAFICO: GRAFICO, rispostaTassi: rispostaTassi, geometria: geometria, CITTA: CITTA, htmlScheda: htmlScheda, absLat: absLat, absLon: absLon }; } catch (e) {}
