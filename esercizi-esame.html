@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Esercizi per l’esame — Una Mano Spensierata</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='14'%20fill='%23F7F4EF'/%3E%3Ctext%20x='31'%20y='43'%20text-anchor='middle'%20font-family='Georgia,serif'%20font-weight='700'%20font-size='30'%20textLength='46'%20lengthAdjust='spacingAndGlyphs'%20fill='%231C1C22'%3EUM%3Ctspan%20fill='%2322365F'%20font-style='italic'%3ES%3C/tspan%3E%3C/text%3E%3Crect%20x='25'%20y='51'%20width='14'%20height='2'%20rx='1'%20fill='%23C8A96E'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#F7F4EF">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,600;1,700;1,900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700&display=swap" rel="stylesheet">
+<script>
+  // la modalità notte del sito, prima del primo disegno
+  try { if (localStorage.getItem('ums_night_mode') === '1') document.documentElement.classList.add('notte-presto'); } catch (e) {}
+</script>
+<style>
+/* ============================================================
+   ESERCIZI PER L'ESAME — pagina autonoma
+   Il motore è js/ums-esercizi.js (lo stesso delle lezioni):
+   qui c'è solo la cornice. ?file= dice quale JSON leggere,
+   ?materia= il nome, ?es= l'esercizio da aprire.
+   ============================================================ */
+:root{
+  --topbar-h:64px;
+  --ivory:#F7F4EF; --ivory-dk:#EDE9E0; --paper:#FFFFFF;
+  --gold:#C8A96E; --gold-lt:#E8D5AA; --gold-dk:#9A7A3F;
+  --navy:#1A2F4F; --navy-lt:#2A4A72;
+  --dust:#E8E4DC; --mist:#C5C1B8;
+  --ink:#1C1C22; --body:#3D3C3A; --sub:#7A7770;
+  --terra:#B4573E; --terra-dk:#7E3524; --terra-lt:#F3DCD0;
+  --font-display:'Playfair Display', Georgia, serif;
+  --font-body:'DM Sans', system-ui, sans-serif;
+  --ease:cubic-bezier(.16,.84,.44,1);
+  --shadow-card:0 4px 20px rgba(15,17,23,.06), 0 1px 3px rgba(15,17,23,.04);
+  --shadow-lift:0 18px 46px rgba(15,17,23,.14), 0 3px 10px rgba(15,17,23,.06);
+}
+body.night-mode{
+  color-scheme:dark;
+  --ivory:#14161C; --ivory-dk:#1B1E26; --paper:#191C24;
+  --dust:#2B2E38; --mist:#5C5F6A;
+  --ink:#F2EFE8; --body:#C7C4BC; --sub:#918E86; --gold-dk:#D9BC85;
+  --terra:#9C4A35; --terra-dk:#5E281C;
+  --shadow-card:0 4px 24px rgba(0,0,0,.45), 0 1px 4px rgba(0,0,0,.3);
+  --shadow-lift:0 12px 40px rgba(0,0,0,.55), 0 2px 8px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{margin:0; background:var(--ivory); color:var(--body); font-family:var(--font-body); line-height:1.55; transition:background .3s, color .3s;}
+a{color:inherit;}
+button{font:inherit;}
+.ee-sr{position:absolute!important; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap;}
+
+/* barra in alto */
+.ee-top{position:sticky; top:0; z-index:20; height:var(--topbar-h); display:flex; align-items:center; gap:14px;
+  padding:0 clamp(16px,4vw,40px); background:color-mix(in srgb, var(--ivory) 88%, transparent);
+  -webkit-backdrop-filter:saturate(1.4) blur(10px); backdrop-filter:saturate(1.4) blur(10px); border-bottom:1px solid var(--dust);}
+.ee-home{display:inline-flex; align-items:center; gap:10px; text-decoration:none; color:var(--ink); font-weight:700; font-size:.78rem; letter-spacing:.12em; text-transform:uppercase; padding:8px 4px;}
+.ee-home svg{width:18px; height:18px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; transition:transform .25s var(--ease);}
+.ee-home:hover svg{transform:translateX(-3px);}
+.ee-marchio{font-family:var(--font-display); font-weight:700; font-size:1.05rem; letter-spacing:0; text-transform:none;}
+.ee-marchio i{color:var(--navy); font-style:italic;}
+body.night-mode .ee-marchio i{color:var(--gold);}
+.ee-spazio{flex:1;}
+.ee-notte{width:42px; height:42px; border-radius:50%; border:1px solid var(--dust); background:var(--paper); color:var(--ink); display:grid; place-items:center; cursor:pointer; transition:transform .2s, border-color .2s;}
+.ee-notte:hover{border-color:var(--gold); transform:rotate(-12deg);}
+.ee-notte svg{width:19px; height:19px; stroke:currentColor; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round;}
+
+/* testata */
+.ee-hero{position:relative; overflow:hidden; color:#FBF1EA;
+  background:radial-gradient(120% 140% at 85% 0%, rgba(255,255,255,.10), transparent 55%), linear-gradient(155deg,var(--terra) 0%,#9A4430 55%,var(--terra-dk) 100%);}
+.ee-hero-in{position:relative; z-index:1; max-width:1180px; margin:0 auto; padding:clamp(34px,6vw,64px) clamp(16px,4vw,40px) clamp(80px,9vw,104px);}
+.ee-reticolo{position:absolute; inset:0; width:100%; height:100%; opacity:.16; pointer-events:none;}
+.ee-kick{display:inline-flex; align-items:center; gap:10px; font-size:.68rem; font-weight:700; letter-spacing:.28em; text-transform:uppercase; color:#F6D6C6;}
+.ee-kick::before{content:""; width:26px; height:1.5px; background:currentColor; opacity:.8;}
+.ee-hero h1{font-family:var(--font-display); font-style:italic; font-weight:700; font-size:clamp(2.3rem,7vw,4.4rem); line-height:1.02; letter-spacing:-.01em; margin:.5rem 0 .9rem; color:#fff;}
+.ee-hero p{max-width:60ch; margin:0; font-size:clamp(.98rem,1.6vw,1.1rem); color:var(--terra-lt);}
+.ee-passi{display:flex; flex-wrap:wrap; gap:10px; margin:1.6rem 0 0; padding:0; list-style:none;}
+.ee-passi li{display:flex; align-items:center; gap:10px; padding:8px 14px 8px 8px; border-radius:999px; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.18); font-size:.88rem; font-weight:500; color:#fff;}
+.ee-passi b{display:grid; place-items:center; width:26px; height:26px; border-radius:50%; background:#fff; color:var(--terra-dk); font-family:var(--font-display); font-size:.95rem;}
+
+/* scelta dell'esercizio */
+.ee-scelta{position:relative; z-index:2; max-width:1180px; margin:clamp(-64px,-6vw,-52px) auto 0; padding:0 clamp(16px,4vw,40px);}
+.ee-carte{display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:12px; margin:0; padding:0; list-style:none;}
+.ee-carta{position:relative; display:flex; flex-direction:column; gap:10px; width:100%; height:100%; text-align:left; cursor:pointer;
+  padding:16px 16px 14px; border-radius:18px; border:1px solid var(--dust); background:var(--paper); color:var(--ink);
+  box-shadow:var(--shadow-card); transition:transform .25s var(--ease), box-shadow .25s var(--ease), border-color .25s;
+  opacity:0; animation:eeSu .6s var(--ease) both;}
+@keyframes eeSu{from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:none;}}
+.ee-carta:hover{transform:translateY(-3px); box-shadow:var(--shadow-lift);}
+.ee-carta:focus-visible{outline:2px solid var(--gold); outline-offset:3px;}
+.ee-carta[aria-current="true"]{border-color:var(--terra); box-shadow:0 0 0 1.5px var(--terra), var(--shadow-lift);}
+.ee-carta[aria-current="true"]::after{content:""; position:absolute; left:22px; right:22px; bottom:-1px; height:3px; border-radius:3px 3px 0 0; background:var(--terra);}
+.ee-carta-testa{display:flex; align-items:center; justify-content:space-between; gap:8px;}
+.ee-n{font-family:var(--font-display); font-weight:900; font-size:1.6rem; line-height:1; color:var(--dust); transition:color .2s;}
+.ee-carta[aria-current="true"] .ee-n, .ee-carta:hover .ee-n{color:var(--terra);}
+body.night-mode .ee-carta[aria-current="true"] .ee-n, body.night-mode .ee-carta:hover .ee-n{color:#E39A82;}
+.ee-icona{width:42px; height:42px; border-radius:12px; display:grid; place-items:center; background:rgba(180,87,62,.09); color:var(--terra);}
+body.night-mode .ee-icona{background:rgba(227,154,130,.12); color:#E39A82;}
+.ee-icona svg{width:26px; height:26px; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round;}
+.ee-carta-tit{font-family:var(--font-display); font-weight:700; font-size:1.04rem; line-height:1.22;}
+.ee-carta-sub{font-size:.8rem; color:var(--sub); line-height:1.4;}
+.ee-stato{margin-top:auto; display:flex; align-items:center; gap:8px; font-size:.74rem; font-weight:700; letter-spacing:.02em; color:var(--sub);}
+.ee-stato .barra{flex:1; height:5px; border-radius:3px; background:var(--dust); overflow:hidden;}
+.ee-stato .barra i{display:block; height:100%; width:0; background:var(--terra); border-radius:3px; transition:width .5s var(--ease);}
+.ee-stato.fatto{color:var(--gold-dk);}
+
+/* il banco di lavoro */
+.ee-main{max-width:1180px; margin:0 auto; padding:clamp(22px,3vw,34px) clamp(16px,4vw,40px) 70px;}
+.ee-banco{background:var(--paper); border:1px solid var(--dust); border-radius:24px; box-shadow:var(--shadow-card); padding:clamp(18px,3vw,34px);}
+#esx-root > .esx-scelta{display:none;}
+#esx-root .esx-titolo{font-size:clamp(1.5rem,3vw,2rem);}
+#acc-esercizi{scroll-margin-top:calc(var(--topbar-h) + 12px);}
+.ee-attesa{display:grid; place-items:center; min-height:240px; color:var(--sub); font-family:var(--font-display); font-style:italic; font-size:1.1rem;}
+.ee-piede{max-width:1180px; margin:0 auto; padding:0 clamp(16px,4vw,40px) 40px; font-size:.8rem; color:var(--sub); display:flex; flex-wrap:wrap; gap:6px 18px; justify-content:space-between;}
+.ee-piede a{color:var(--sub);}
+
+@media (max-width:1020px){
+  .ee-carte{display:flex; overflow-x:auto; scroll-snap-type:x mandatory; scroll-padding:0 clamp(16px,4vw,40px); gap:10px; padding:4px clamp(16px,4vw,40px) 14px; margin:0 calc(-1 * clamp(16px,4vw,40px)); scrollbar-width:none;}
+  .ee-carte::-webkit-scrollbar{display:none;}
+  .ee-carte li{flex:0 0 min(78%,300px); scroll-snap-align:start;}
+}
+@media (max-width:640px){
+  :root{--topbar-h:58px;}
+  .ee-marchio{display:none;}
+  .ee-passi li{font-size:.8rem;}
+  .ee-banco{border-radius:18px; padding:16px 14px;}
+  .ee-main{padding-left:12px; padding-right:12px;}
+}
+@media (prefers-reduced-motion:reduce){ *{animation:none!important; transition:none!important;} .ee-carta{opacity:1;} }
+</style>
+</head>
+<body>
+<script>if (document.documentElement.classList.contains('notte-presto')) document.body.classList.add('night-mode');</script>
+
+<header class="ee-top">
+  <a class="ee-home" href="index.html" aria-label="Torna a Una Mano Spensierata">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    <span class="ee-marchio">Una Mano <i>Spensierata</i></span>
+  </a>
+  <span class="ee-spazio"></span>
+  <button class="ee-notte" id="ee-notte" type="button" aria-label="Attiva modalità notte"></button>
+</header>
+
+<section class="ee-hero" aria-labelledby="ee-titolo">
+  <svg class="ee-reticolo" aria-hidden="true" preserveAspectRatio="xMidYMid slice" viewBox="0 0 1200 420">
+    <defs><pattern id="ee-g" width="60" height="60" patternUnits="userSpaceOnUse"><path d="M60 0H0V60" fill="none" stroke="#fff" stroke-width="1"/></pattern></defs>
+    <rect width="1200" height="420" fill="url(#ee-g)"/>
+    <circle cx="1010" cy="128" r="9" fill="#fff"/><circle cx="1010" cy="128" r="22" fill="none" stroke="#fff" stroke-width="1.5"/>
+    <path d="M1010 128V420M1010 128H1200" stroke="#fff" stroke-width="2" stroke-dasharray="6 6"/>
+  </svg>
+  <div class="ee-hero-in">
+    <span class="ee-kick" id="ee-kick">Prova scritta</span>
+    <h1 id="ee-titolo">Esercizi per l’esame</h1>
+    <p id="ee-sotto">Tutti gli esercizi della prova scritta, spiegati come li ha svolti il docente. Scegli un esercizio e segui i tre passi.</p>
+    <ol class="ee-passi" aria-label="Come funziona">
+      <li><b>1</b>Impara il metodo, passo passo</li>
+      <li><b>2</b>Allenati: 15 esercizi sempre diversi</li>
+      <li><b>3</b>Stampa la scheda, con le soluzioni</li>
+    </ol>
+  </div>
+</section>
+
+<nav class="ee-scelta" aria-label="Scegli l’esercizio">
+  <ul class="ee-carte" id="ee-carte"></ul>
+</nav>
+
+<main class="ee-main" id="ee-main">
+  <div class="ee-banco">
+    <div id="acc-esercizi" style="display:none">
+      <p id="esx-conteggio" class="ee-sr"></p>
+      <div id="esx-root"></div>
+    </div>
+    <div class="ee-attesa" id="ee-attesa">Preparo gli esercizi…</div>
+  </div>
+</main>
+
+<footer class="ee-piede">
+  <span>Esercizi generati dai numeri: i disegni sono sempre in scala, le soluzioni sono calcolate.</span>
+  <a href="index.html">Torna all’indice</a>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+  var q = new URLSearchParams(location.search);
+  var file = q.get('file'), materia = q.get('materia') || '';
+  var NOTTE = 'ums_night_mode';
+
+  // ---- notte ----
+  var bN = document.getElementById('ee-notte');
+  var LUNA = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>';
+  var SOLE = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>';
+  function notte(on) {
+    document.body.classList.toggle('night-mode', on);
+    bN.innerHTML = on ? SOLE : LUNA;
+    bN.setAttribute('aria-label', on ? 'Attiva modalità giorno' : 'Attiva modalità notte');
+    var m = document.querySelector('meta[name=theme-color]'); if (m) m.content = on ? '#14161C' : '#F7F4EF';
+  }
+  notte(document.body.classList.contains('night-mode'));
+  bN.addEventListener('click', function () { var on = !document.body.classList.contains('night-mode'); notte(on); try { localStorage.setItem(NOTTE, on ? '1' : '0'); } catch (e) {} });
+
+  if (materia) {
+    document.getElementById('ee-kick').textContent = 'Prova scritta · ' + materia;
+    document.title = 'Esercizi per l’esame · ' + materia + ' — Una Mano Spensierata';
+  }
+  if (!file) { document.getElementById('ee-attesa').textContent = 'Nessuna materia scelta: torna all’indice.'; return; }
+
+  // ---- le carte ----
+  var ICONE = {
+    reticolo_coordinate: '<svg viewBox="0 0 32 32"><path d="M4 9h24M4 16h24M4 23h24M9 4v24M16 4v24M23 4v24"/><circle cx="19.5" cy="12.5" r="2.6" fill="currentColor"/></svg>',
+    reticolo_posiziona: '<svg viewBox="0 0 32 32"><path d="M4 9h24M4 16h24M4 23h24M9 4v24M16 4v24M23 4v24" opacity=".55"/><path d="M16 26s-6-6.3-6-11a6 6 0 0 1 12 0c0 4.7-6 11-6 11Z" style="fill:var(--paper)"/><circle cx="16" cy="15" r="2.2"/></svg>',
+    indici_demografici: '<svg viewBox="0 0 32 32"><path d="M8 24 24 8"/><circle cx="9.5" cy="10" r="3"/><circle cx="22.5" cy="22" r="3"/></svg>',
+    densita_simboli: '<svg viewBox="0 0 32 32"><rect x="5" y="5" width="22" height="22" rx="2"/><circle cx="11" cy="11" r="1.6" fill="currentColor"/><circle cx="20" cy="12" r="1.6" fill="currentColor"/><circle cx="14" cy="18" r="1.6" fill="currentColor"/><circle cx="21" cy="21" r="1.6" fill="currentColor"/><circle cx="10" cy="22" r="1.6" fill="currentColor"/></svg>',
+    grafico_combinato: '<svg viewBox="0 0 32 32"><path d="M4 27h25M5 4v23"/><rect x="8" y="17" width="3" height="10"/><rect x="12" y="14" width="3" height="13"/><rect x="19" y="19" width="3" height="8"/><rect x="23" y="15" width="3" height="12"/><path d="M11.5 9 20 12l4.5-4" stroke-dasharray="2.5 2"/></svg>'
+  };
+  var SOTTO = {
+    reticolo_coordinate: 'C’è un punto: scrivi latitudine e longitudine',
+    reticolo_posiziona: 'Ci sono le coordinate: metti il punto',
+    indici_demografici: 'Incrementi, tassi, saldi, maschilità, dipendenza',
+    densita_simboli: 'Simboli, legenda, area e modello',
+    grafico_combinato: 'Canne di maschi e femmine, linea del totale'
+  };
+  var lista = [], carte = [], scelto = q.get('es');
+  function chiave(e, cosa) { return 'ums_esx2::' + file + '::' + (e.id || e.tipo) + '::' + cosa; }
+  function leggi(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } }
+  function stato(e) {
+    var s = leggi(chiave(e, 'serie')), presi = 0, fatti = 0;
+    if (s && Array.isArray(s.esiti)) s.esiti.forEach(function (x) { if (x) { fatti++; if (x.preso) presi++; } });
+    return { presi: presi, fatti: fatti, tut: !!leggi(chiave(e, 'tutorial')) };
+  }
+  function aggiornaStati() {
+    carte.forEach(function (c) {
+      var s = stato(c.e), box = c.stato, tot = 15;
+      if (!s.fatti && !s.tut) { box.innerHTML = '<span>Da iniziare</span>'; box.className = 'ee-stato'; return; }
+      if (!s.fatti) { box.innerHTML = '<span>Metodo visto</span><span class="barra"><i></i></span>'; box.className = 'ee-stato'; return; }
+      box.className = 'ee-stato' + (s.fatti >= tot ? ' fatto' : '');
+      box.innerHTML = '<span class="barra"><i style="width:' + Math.round(s.fatti / tot * 100) + '%"></i></span><span>' + (s.fatti >= tot ? s.presi + ' su ' + tot + ' giusti' : s.fatti + ' di ' + tot) + '</span>';
+    });
+  }
+  function seleziona(i, scorri) {
+    carte.forEach(function (c, k) { c.b.setAttribute('aria-current', k === i ? 'true' : 'false'); });
+    var interni = document.querySelectorAll('#esx-root > .esx-scelta > button');
+    if (interni[i] && interni[i].getAttribute('aria-pressed') !== 'true') interni[i].click();
+    try { q.set('es', lista[i].id); history.replaceState(null, '', location.pathname + '?' + q.toString()); } catch (e) {}
+    if (carte[i] && carte[i].li.scrollIntoView && window.innerWidth <= 1020) { var ul = carte[i].li.parentNode; ul.scrollTo({ left: carte[i].li.offsetLeft - parseFloat(getComputedStyle(ul).paddingLeft), behavior: 'smooth' }); }
+    if (scorri) document.getElementById('ee-main').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  fetch(file).then(function (r) { return r.json(); }).then(function (d) {
+    lista = ((d.esercizi && d.esercizi.trovati) || []).filter(function (e) { return ICONE[e.tipo]; });
+    var ul = document.getElementById('ee-carte');
+    lista.forEach(function (e, i) {
+      var li = document.createElement('li');
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'ee-carta'; b.style.animationDelay = (0.06 * i) + 's';
+      b.setAttribute('aria-current', 'false');
+      b.innerHTML = '<span class="ee-carta-testa"><span class="ee-n" aria-hidden="true">' + (i + 1) + '</span><span class="ee-icona" aria-hidden="true">' + ICONE[e.tipo] + '</span></span>' +
+        '<span class="ee-carta-tit"></span><span class="ee-carta-sub"></span><span class="ee-stato"></span>';
+      b.querySelector('.ee-carta-tit').textContent = e.titolo;
+      b.querySelector('.ee-carta-sub').textContent = SOTTO[e.tipo] || '';
+      b.addEventListener('click', function () { seleziona(i, true); });
+      li.appendChild(b); ul.appendChild(li);
+      carte.push({ e: e, b: b, li: li, stato: b.querySelector('.ee-stato') });
+    });
+    aggiornaStati();
+    var i0 = 0; lista.forEach(function (e, i) { if (e.id === scelto) i0 = i; });
+    // il motore monta da solo; quando c'è, si sceglie l'esercizio
+    var giri = 0, attendi = setInterval(function () {
+      giri++;
+      if (document.querySelector('#esx-root .esx-titolo') || giri > 100) {
+        clearInterval(attendi);
+        document.getElementById('ee-attesa').remove();
+        seleziona(i0, false);
+      }
+    }, 60);
+  }).catch(function () { document.getElementById('ee-attesa').textContent = 'Non riesco a caricare gli esercizi. Ricarica la pagina.'; });
+  document.getElementById('esx-root').addEventListener('click', function () { setTimeout(aggiornaStati, 250); });
+})();
+</script>
+<script src="js/ums-esercizi.js" defer></script>
+</body>
+</html>

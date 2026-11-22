@@ -1128,7 +1128,9 @@ function cvEsame(list, course, key, visits){
       <span class="cv-dot ${iso ? 'on' : ''}" aria-hidden="true"></span>
       <span class="cv-chevron" aria-hidden="true">${chevronSVG}</span>`;
     row.addEventListener('click', () => {
-      const url = course.lezioni.urlTemplate.replace('{n}', esame.lezione) + '&es=' + m.id;
+      // la pagina degli esercizi è autonoma: legge gli esercizi dalla lezione indicata
+      const json = course.lezioni.urlTemplate.replace('{n}', esame.lezione).split('file=')[1];
+      const url = 'esercizi-esame.html?file=' + json + '&materia=' + encodeURIComponent(nomePulito(course.name)) + '&es=' + m.id;
       window.open(url, '_blank', 'noopener');
       const oggi = new Date();
       const isoOggi = oggi.getFullYear() + '-' + String(oggi.getMonth()+1).padStart(2,'0') + '-' + String(oggi.getDate()).padStart(2,'0');

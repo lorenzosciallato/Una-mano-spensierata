@@ -290,7 +290,8 @@
   // apre la lezione e la sezione 09, poi ci scorre sopra
   function apriDaFuori(acc) {
     var master = document.getElementById('master-toggle-btn'), cont = document.getElementById('master-content');
-    if (master && cont && !cont.classList.contains('open')) master.click();
+    if (!master) return;   // pagina "Esercizi per l'esame": non c'è una lezione da aprire
+    if (cont && !cont.classList.contains('open')) master.click();
     setTimeout(function () {
       var h = acc.querySelector('.accordion-header');
       var pan = h && (h.closest('.ums-acc-h') || h).nextElementSibling;
@@ -602,7 +603,7 @@
     var seme = nuovoSeme();
     var box = el('div', { class: 'esx-stampa' });
     box.appendChild(el('h4', { style: 'font:700 1.15rem var(--font-display);color:var(--ink);margin:0 0 10px', text: 'Scheda da stampare' }));
-    box.appendChild(el('p', { text: 'Tutti gli esercizi d\u2019esame di questa lezione (' + elencoE(voci.map(function (x) { return x.e.titolo; })) + '). ' +
+    box.appendChild(el('p', { text: (document.getElementById('master-toggle-btn') ? 'Tutti gli esercizi d\u2019esame di questa lezione (' : 'Tutti gli esercizi per l\u2019esame (') + elencoE(voci.map(function (x) { return x.e.titolo; })) + '). ' +
       'Per ognuno: il metodo spiegato passo passo con i disegni, poi 15 esercizi nuovi con lo spazio per le risposte. Le soluzioni sono nelle ultime pagine.' }));
     var numeroScheda = el('p', { class: 'esx-nota' });
     function scriviNumero() { numeroScheda.textContent = 'Scheda n. ' + seme + '. Ristampando la stessa scheda, gli esercizi restano gli stessi.'; }
