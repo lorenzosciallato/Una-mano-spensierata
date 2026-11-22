@@ -3748,6 +3748,11 @@
       '.esx-v-grande{position:absolute;inset:0;display:grid;place-items:center;background:rgba(243,234,214,.55);cursor:pointer;border:0;width:100%;-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}',
       '.esx-v-grande span{display:flex;align-items:center;gap:14px;background:var(--navy);color:#fff;font:600 1.05rem var(--font-body);padding:16px 26px 16px 18px;border-radius:999px;box-shadow:0 14px 30px -10px rgba(26,47,79,.6);transition:transform .2s}',
       '.esx-v-grande:hover span{transform:scale(1.04)}',
+      '.esx-v-palco .esx-tavola{cursor:pointer}',
+      '.esx-v-pausa{position:absolute;left:50%;top:45%;width:84px;height:84px;margin:-42px 0 0 -42px;border-radius:50%;background:rgba(18,20,26,.62);color:#fff;display:grid;place-items:center;pointer-events:none;opacity:0;transform:scale(.85);transition:opacity .2s,transform .2s}',
+      '.esx-v-pausa.su{opacity:1;transform:none}.esx-v-pausa svg{width:38px;height:38px;fill:#fff;margin-left:4px}',
+      '.esx-v-salto{position:absolute;top:45%;margin-top:-26px;padding:10px 14px;border-radius:999px;background:rgba(18,20,26,.62);color:#fff;font:700 .95rem var(--font-body);pointer-events:none;opacity:0;transition:opacity .25s}',
+      '.esx-v-salto.su{opacity:1}',
       '.esx-v-grande svg{width:34px;height:34px}',
       '.esx-v-barra{display:flex;align-items:center;gap:10px;margin:12px 2px 0;flex-wrap:wrap}',
       '.esx-v-tasto{width:44px;height:44px;border-radius:50%;border:1px solid var(--dust);background:transparent;color:var(--ink);display:grid;place-items:center;cursor:pointer;flex:none}',
@@ -3787,7 +3792,9 @@
     pausa: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="5" width="4.2" height="14" rx="1.2"/><rect x="13.8" y="5" width="4.2" height="14" rx="1.2"/></svg>',
     indietro: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h2v14H6zM20 6.2v11.6a.8.8 0 0 1-1.2.7L9.6 12.7a.8.8 0 0 1 0-1.4l9.2-5.8a.8.8 0 0 1 1.2.7Z"/></svg>',
     avanti: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 5h2v14h-2zM4 6.2v11.6a.8.8 0 0 0 1.2.7l9.2-5.8a.8.8 0 0 0 0-1.4L5.2 5.5A.8.8 0 0 0 4 6.2Z"/></svg>',
-    ripeti: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5V2L7 6l5 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7Z"/></svg>'
+    ripeti: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5V2L7 6l5 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7Z"/></svg>',
+    meno10: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4V1L7 5l5 4V6a6.5 6.5 0 1 1-6.5 6.5H3.5A8.5 8.5 0 1 0 12 4Z"/><text x="12.3" y="15.6" text-anchor="middle" font-size="7.4" font-weight="700" font-family="DM Sans,Arial,sans-serif">10</text></svg>',
+    piu10: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4V1l5 4-5 4V6a6.5 6.5 0 1 0 6.5 6.5h2A8.5 8.5 0 1 1 12 4Z"/><text x="11.7" y="15.6" text-anchor="middle" font-size="7.4" font-weight="700" font-family="DM Sans,Arial,sans-serif">10</text></svg>'
   };
   function frasiDi(testo) {
     return (String(testo || '').match(/[^.!?…]+[.!?…]*\s*/g) || []).map(function (s) { return s.trim(); }).filter(Boolean);
@@ -3807,11 +3814,14 @@
     ccBox.appendChild(ccTesto);
     var grande = el('button', { type: 'button', class: 'esx-v-grande', 'aria-label': 'Avvia il video' });
     grande.innerHTML = '<span>' + ICO.play.replace('<svg', '<svg fill="currentColor"') + 'Guarda il video</span>';
-    var palco = el('div', { class: 'esx-v-palco' }, [tav, extra, ccBox, grande]);
+    var segnoPausa = el('div', { class: 'esx-v-pausa', 'aria-hidden': 'true' }); segnoPausa.innerHTML = ICO.play;
+    var segnoSalto = el('div', { class: 'esx-v-salto', 'aria-hidden': 'true' });
+    var palco = el('div', { class: 'esx-v-palco' }, [tav, extra, ccBox, segnoPausa, segnoSalto, grande]);
     box.appendChild(palco);
     // la barra dei comandi
     function tasto(ico, et, prim) { var b = el('button', { type: 'button', class: 'esx-v-tasto' + (prim ? ' prim' : ''), 'aria-label': et, title: et }); b.innerHTML = ico; return b; }
-    var bPlay = tasto(ICO.play, 'Riproduci', true), bInd = tasto(ICO.indietro, 'Passo precedente'), bAv = tasto(ICO.avanti, 'Passo successivo'), bRip = tasto(ICO.ripeti, 'Riascolta la frase');
+    var bPlay = tasto(ICO.play, 'Riproduci', true), bInd = tasto(ICO.indietro, 'Passo precedente'), bAv = tasto(ICO.avanti, 'Passo successivo'), bRip = tasto(ICO.ripeti, 'Riascolta la frase'),
+      bMeno = tasto(ICO.meno10, 'Indietro di 10 secondi'), bPiu = tasto(ICO.piu10, 'Avanti di 10 secondi');
     var pista = el('div', { class: 'esx-v-pista', role: 'group', 'aria-label': 'Avanzamento del video' });
     var tacche = bat.map(function (b, k) {
       var x = el('button', { type: 'button', class: b.chiedi ? 'dom' : '', 'aria-label': (b.chiedi ? 'Domanda, ' : 'Passo ') + (k + 1) });
@@ -3822,7 +3832,12 @@
     var info = el('span', { class: 'esx-v-info' });
     var bCC = el('button', { type: 'button', class: 'esx-v-pillola', 'aria-pressed': 'true', text: 'Sottotitoli' });
     var bVel = el('button', { type: 'button', class: 'esx-v-pillola', 'aria-pressed': 'false', text: '1×' });
-    box.appendChild(el('div', { class: 'esx-v-barra' }, [bInd, bPlay, bAv, bRip, pista, info, bCC, bVel]));
+    box.appendChild(el('div', { class: 'esx-v-barra' }, [bInd, bMeno, bPlay, bPiu, bAv, pista, info, bCC, bVel]));
+    // la linea del tempo: quanto dura ogni battuta (dall'audio vero, o stimata sul testo)
+    function durata(k) { var a = audioMappa[bat[k].id]; return (a && a.durata) || Math.max(2.4, bat[k].voce.length / 15); }
+    var inizi = [], totale = 0;
+    bat.forEach(function (_b, k) { inizi.push(totale); totale += durata(k); });
+    function mmss(s) { s = Math.max(0, Math.round(s)); return Math.floor(s / 60) + ':' + pad2(s % 60); }
     var domanda = el('div'); box.appendChild(domanda);
     var conVoce = bat.some(function (b) { return audioMappa[b.id]; });
     if (!conVoce) box.appendChild(el('p', { class: 'esx-nota', style: 'text-align:center;margin-top:10px', text: 'La voce sta arrivando: per ora il video scorre con i sottotitoli.' }));
@@ -3856,22 +3871,23 @@
       for (; k < frasi.length; k++) { acc += frasi[k].length; if (frac * tot <= acc) break; }
       ccTesto.textContent = frasi[Math.min(k, frasi.length - 1)] || '';
     }
-    function parla(id, testo, fine) {
+    function parla(id, testo, fine, da) {
       fermaVoce();
       var frasi = frasiDi(testo);
       sottotitolo(frasi, 0);
       dopoVoce = fine;
-      var a = audioMappa[id];
+      var a = audioMappa[id], principale = bat[i] && id === bat[i].id;
       if (a && a.url) {
         var au = new Audio(a.url); au.playbackRate = vel; au.preload = 'auto';
-        voce = { audio: au };
+        voce = { audio: au, principale: principale };
+        if (da) { var vai2 = function () { try { au.currentTime = Math.min(da, (au.duration || da + 1) - 0.15); } catch (e0) {} }; if (au.readyState >= 1) vai2(); else au.addEventListener('loadedmetadata', vai2, { once: true }); }
         au.ontimeupdate = function () { if (au.duration) sottotitolo(frasi, au.currentTime / au.duration); barraOra(au.currentTime / au.duration); };
         au.onended = function () { sottotitolo(frasi, 1); voce = null; var f = dopoVoce; dopoVoce = null; if (f) f(); };
         if (suona) au.play().catch(function () { pausa(); });
       } else {
         // senza mp3: tempo stimato sulla lunghezza del testo
         var dur = Math.max(2.4, testo.length / 15) * 1000;
-        voce = { simulata: { dur: dur, pass: 0, ultimo: Date.now(), giro: null } };
+        voce = { simulata: { dur: dur, pass: (da || 0) * 1000, ultimo: Date.now(), giro: null }, principale: principale };
         var s = voce.simulata;
         s.giro = setInterval(function () {
           if (!suona) { s.ultimo = Date.now(); return; }
@@ -3882,15 +3898,35 @@
         }, 80);
       }
     }
-    function barraOra(f) { var x = tacche[i]; if (x) x.i.style.transform = 'scaleX(' + Math.max(0, Math.min(1, f || 0)) + ')'; }
+    function barraOra(f) { var x = tacche[i]; if (x && voce && voce.principale) x.i.style.transform = 'scaleX(' + Math.max(0, Math.min(1, f || 0)) + ')'; orologio(); }
+    function posizione() {
+      var dentro = durata(i);
+      if (voce && voce.principale) dentro = voce.audio ? voce.audio.currentTime : voce.simulata.pass / 1000;
+      return inizi[i] + Math.min(dentro, durata(i));
+    }
+    function orologio() { info.textContent = mmss(posizione()) + ' / ' + mmss(totale); }
+    function salta10(dx) {
+      if (grande.parentNode) { grande.remove(); suona = true; aggiornaPlay(); }
+      var t0 = Math.max(0, Math.min(totale - 0.3, posizione() + dx)), k = 0;
+      while (k < bat.length - 1 && inizi[k + 1] <= t0) k++;
+      var off = t0 - inizi[k];
+      segnoSalto.textContent = (dx < 0 ? '\u2212' : '+') + Math.abs(dx) + ' s';
+      segnoSalto.style.left = dx < 0 ? '16px' : ''; segnoSalto.style.right = dx < 0 ? '' : '16px';
+      segnoSalto.classList.add('su'); clearTimeout(salta10.t); salta10.t = setTimeout(function () { segnoSalto.classList.remove('su'); }, 700);
+      if (k === i && voce && voce.principale) {
+        if (voce.audio) { try { voce.audio.currentTime = off; } catch (e0) {} } else voce.simulata.pass = off * 1000;
+        orologio(); return;
+      }
+      fermaVoce(); mostra(k, off);
+    }
 
     /* ---------- lo scorrere delle battute ---------- */
     function aggiornaBarra() {
       tacche.forEach(function (x, k) { x.b.className = (bat[k].chiedi ? 'dom ' : '') + (k < i ? 'fatto' : k === i ? 'ora' : ''); x.i.style.transform = 'scaleX(' + (k < i ? 1 : 0) + ')'; });
-      info.textContent = (i + 1) + ' / ' + bat.length;
+      orologio();
       bInd.disabled = i === 0; bAv.disabled = i >= bat.length - 1;
     }
-    function mostra(k) {
+    function mostra(k, da) {
       i = Math.max(0, Math.min(bat.length - 1, k));
       finito = false;
       var vecchia = palco.querySelector('.esx-v-fine'); if (vecchia) vecchia.remove();
@@ -3898,8 +3934,8 @@
       var b = bat[i];
       scena(b.p, !!b.nascondi, true);
       aggiornaBarra();
-      if (b.chiedi) parla(b.id, b.voce, function () { chiedi(b); });
-      else parla(b.id, b.voce, function () { setTimeout(function () { if (suona && !attesaRisposta) prossima(); }, 450); });
+      if (b.chiedi) parla(b.id, b.voce, function () { chiedi(b); }, da);
+      else parla(b.id, b.voce, function () { setTimeout(function () { if (suona && !attesaRisposta) prossima(); }, 450); }, da);
     }
     function prossima() { if (i >= bat.length - 1) fine(); else mostra(i + 1); }
     function salta(k) { fermaVoce(); mostra(k); }
@@ -4013,7 +4049,10 @@
     }
 
     /* ---------- comandi ---------- */
-    function aggiornaPlay() { bPlay.innerHTML = suona ? ICO.pausa : ICO.play; bPlay.setAttribute('aria-label', suona ? 'Pausa' : 'Riproduci'); bPlay.title = suona ? 'Pausa' : 'Riproduci'; }
+    function aggiornaPlay() {
+      bPlay.innerHTML = suona ? ICO.pausa : ICO.play; bPlay.setAttribute('aria-label', suona ? 'Pausa' : 'Riproduci'); bPlay.title = suona ? 'Pausa' : 'Riproduci';
+      segnoPausa.classList.toggle('su', !suona && !grande.parentNode && !finito && !attesaRisposta);
+    }
     function avvia() {
       if (grande.parentNode) { grande.remove(); suona = true; aggiornaPlay(); mostra(0); return; }
       if (finito) { suona = true; aggiornaPlay(); salta(0); return; }
@@ -4023,6 +4062,10 @@
     }
     function pausa() { suona = false; aggiornaPlay(); if (voce && voce.audio) voce.audio.pause(); }
     grande.addEventListener('click', avvia);
+    // si ferma e riparte toccando il video, come su YouTube
+    tav.addEventListener('click', function () { if (grande.parentNode || finito) return; if (suona) pausa(); else avvia(); });
+    bMeno.addEventListener('click', function () { salta10(-10); });
+    bPiu.addEventListener('click', function () { salta10(10); });
     bPlay.addEventListener('click', function () { if (suona) pausa(); else avvia(); });
     bInd.addEventListener('click', function () { if (grande.parentNode) { grande.remove(); } salta(i - 1); });
     bAv.addEventListener('click', function () { if (grande.parentNode) { grande.remove(); } salta(i + 1); });
@@ -4035,6 +4078,8 @@
       if (/INPUT|TEXTAREA|SELECT|BUTTON/.test(tag)) return;
       var r = palco.getBoundingClientRect(); if (r.bottom < 0 || r.top > window.innerHeight) return;
       if (ev.key === ' ' || ev.key === 'k') { ev.preventDefault(); if (suona) pausa(); else avvia(); }
+      else if (ev.key === 'ArrowLeft' || ev.key === 'j') { ev.preventDefault(); salta10(-10); }
+      else if (ev.key === 'ArrowRight' || ev.key === 'l') { ev.preventDefault(); salta10(10); }
     }
     document.addEventListener('keydown', tasti);
     // prima schermata: il disegno della prima battuta, fermo, con il pulsante grande
