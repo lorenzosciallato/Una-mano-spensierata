@@ -3422,7 +3422,7 @@
       anniCol.forEach(function (a, j) {
         var idx = v.anni.indexOf(a), x = val.T[idx]; if (x == null) return;
         var h = Math.min(x, max), px = xc(j), py = y(h);
-        if (prima) {
+        if (prima && !stile.senzaLinea) {
           var buco = j - prima.j > 1 || anniCol.length < v.anni.length && v.anni.indexOf(a) - v.anni.indexOf(anniCol[prima.j]) > 1;
           var tipo = buco ? (stile.gap || 'tratteggiata') : 'continua';
           if (tipo !== 'nessuna') {
@@ -3459,9 +3459,15 @@
       canne: function (anim, t) { if (fatto.canne) return; fatto.canne = 1; traccia3(disegno, { M: v.M, F: v.F, T: v.T.map(function () { return null; }) }, { valori: true }, anim, t); },
       totale: function (anim, t) { if (fatto.totale) return; fatto.totale = 1; traccia3(disegno, { M: v.M.map(function () { return null; }), F: v.F.map(function () { return null; }), T: v.T }, { valori: true, gap: 'tratteggiata' }, anim, t); },
       soluzione: function (anim, t, vuoto) { traccia3(sopra, giusti, { vuoto: !!vuoto, valori: !vuoto, gap: 'tratteggiata' }, anim, t); },
-      utente: function (val, gap, sel) {
+      utente: function (val, segmenti, sel, scelto) {
         while (disegno.firstChild) disegno.removeChild(disegno.firstChild);
-        traccia3(disegno, val, { gap: gap || 'continua' }, false, null);
+        function dove(i) { var j = anniCol.indexOf(v.anni[i]), x = val.T[i]; return j < 0 || x == null ? null : { x: xc(j), y: y(Math.min(x, max)) }; }
+        (segmenti || []).forEach(function (sg) {
+          var a = dove(sg.a), b = dove(sg.b); if (!a || !b) return;
+          disegno.appendChild(sv('line', { x1: a.x, y1: a.y, x2: b.x, y2: b.y, stroke: COL_T, 'stroke-width': 3, 'stroke-dasharray': sg.s === 'tratteggiata' ? '9 7' : null }));
+        });
+        traccia3(disegno, val, { senzaLinea: true }, false, null);
+        if (scelto != null) { var p0 = dove(scelto); if (p0) disegno.appendChild(sv('circle', { cx: p0.x, cy: p0.y, r: 14, fill: 'rgba(200,169,110,.25)', stroke: ORO, 'stroke-width': 2.4 })); }
         if (sel) {
           var j = anniCol.indexOf(v.anni[sel.i]); if (j < 0) return;
           var w = sel.s === 'T' ? colW * 0.5 : bw * 1.3, cx = sel.s === 'M' ? xs(j, 0) : sel.s === 'F' ? xs(j, 1) : xc(j);
@@ -3492,7 +3498,7 @@
   var COMBINATO = {
     nomiErrori: {
       somma: 'Sbagliare la somma del totale', scala: 'Tarare la scala su maschi e femmine invece che sul totale', anni: 'Togliere gli anni senza dato dall’asse',
-      collega: 'Unire i pallini con la linea continua (o non unirli) dove manca il dato', valore: 'Riportare un valore all’altezza sbagliata', mancante: 'Lasciare fuori un dato',
+      collega: 'Sbagliare il tratto: tratteggiato dove manca l’anno, continuo altrove', linea: 'Dimenticare o sbagliare un tratto della linea del totale', valore: 'Riportare un valore all’altezza sbagliata', mancante: 'Lasciare fuori un dato',
       scambio: 'Scambiare maschi e femmine', riempito: 'Inventare un valore per l’anno senza dato'
     },
     opzioni: function () { return { v: 1 }; },
@@ -3500,7 +3506,7 @@
     domanda: function (v) {
       var tav = el('div'), foglio = el('div'), c = {}, sel = null, bloccato = false, modo = 'M';
       var val = { M: v.anni.map(function () { return null; }), F: v.anni.map(function () { return null; }), T: v.anni.map(function () { return null; }) };
-      var d = null;
+      var segmenti = [], scelto = null, d = null;
       foglio.appendChild(el('h4', { text: 'Costruisci un istogramma per maschi e femmine di ' + v.luogo + ' e raffigura sullo stesso diagramma anche il totale.' }));
       // 1. la tabella con i totali da scrivere
       var tab = el('table', { style: 'border-collapse:collapse;font-size:.95rem;margin:2px 0 12px' });
@@ -3526,45 +3532,69 @@
       if (v.anni[0] % 2) ordineSlot.reverse();
       c.slot = segmentato(ordineSlot, 'Quanti anni sull’asse orizzontale');
       foglio.appendChild(el('div', { class: 'esx-riga' }, [c.slot]));
-      // 4. il collegamento
-      foglio.appendChild(el('p', { style: 'font-weight:600;color:var(--ink);margin:6px 0 6px', text: '4. Dove manca un anno, come unisci i pallini del totale?' }));
-      c.gap = segmentato([{ t: 'Linea continua', v: 'continua' }, { t: 'Tratteggiata', v: 'tratteggiata' }, { t: 'Non li unisco', v: 'nessuna' }], 'Come unisci i pallini attorno all’anno mancante');
-      foglio.appendChild(el('div', { class: 'esx-riga' }, [c.gap]));
-      // 5. costruisci
-      foglio.appendChild(el('p', { style: 'font-weight:600;color:var(--ink);margin:10px 0 6px', text: '5. Costruisci il diagramma' }));
-      c.modo = segmentato([{ t: 'Maschi', v: 'M' }, { t: 'Femmine', v: 'F' }, { t: 'Totale', v: 'T' }], 'Che cosa stai disegnando');
+      // 4. costruisci: canne, pallini e linea, tutto a mano
+      foglio.appendChild(el('p', { style: 'font-weight:600;color:var(--ink);margin:10px 0 6px', text: '4. Costruisci il diagramma' }));
+      c.modo = segmentato([{ t: 'Maschi', v: 'M' }, { t: 'Femmine', v: 'F' }, { t: 'Totale', v: 'T' }, { t: 'Linea', v: 'L' }], 'Che cosa stai disegnando');
       c.modo.imposta('M');
-      c.modo.addEventListener('click', function () { modo = c.modo.valore() || 'M'; sel = null; disegna(); });
-      foglio.appendChild(el('div', { class: 'esx-riga' }, [c.modo]));
+      foglio.appendChild(el('div', { class: 'esx-riga' }, [el('span', { class: 'esx-lab', text: 'Disegni' }), c.modo]));
+      c.tratto = segmentato([{ t: 'Continua', v: 'continua' }, { t: 'Tratteggiata', v: 'tratteggiata' }], 'Che linea tracci');
+      c.tratto.imposta('continua');
+      var rigaTratto = el('div', { class: 'esx-riga', style: 'display:none' }, [el('span', { class: 'esx-lab', text: 'Tratto' }), c.tratto]);
+      foglio.appendChild(rigaTratto);
+      c.modo.addEventListener('click', function () { modo = c.modo.valore() || 'M'; sel = null; scelto = null; rigaTratto.style.display = modo === 'L' ? '' : 'none'; aiuto(); disegna(); });
       var stato = el('span', { class: 'esx-nota', style: 'margin:0;min-width:9em' });
       var meno = el('button', { type: 'button', class: 'esx-btn sec pic', text: '−', 'aria-label': 'Abbassa di una linea' });
       var piu = el('button', { type: 'button', class: 'esx-btn sec pic', text: '+', 'aria-label': 'Alza di una linea' });
       var togli = el('button', { type: 'button', class: 'esx-btn sec pic', text: 'Togli' });
       foglio.appendChild(el('div', { class: 'esx-comandi', style: 'margin-top:6px' }, [stato, meno, piu, togli]));
-      foglio.appendChild(el('p', { class: 'esx-nota', text: 'Scegli che cosa disegni, poi tocca la colonna dell’anno all’altezza del valore: le canne per maschi e femmine, il pallino per il totale. Ogni linea sottile vale 2.' }));
-      function nomeSel() { if (!sel) return 'Scegli e tocca'; var x = val[sel.s][sel.i]; return v.anni[sel.i] + ' · ' + { M: 'maschi', F: 'femmine', T: 'totale' }[sel.s] + ': ' + (x == null ? 'vuoto' : x); }
+      var guida = el('p', { class: 'esx-nota' });
+      foglio.appendChild(guida);
+      function aiuto() {
+        guida.textContent = modo === 'L'
+          ? 'Tocca un pallino del totale, poi quello dell’anno vicino: li unisci con il tratto scelto. Toccando di nuovo due pallini già uniti, togli la linea.'
+          : 'Tocca la colonna dell’anno all’altezza del valore. Ogni linea sottile della griglia vale 2; con − e + ritocchi l’ultimo che hai messo.';
+      }
+      aiuto();
+      function nomeSel() {
+        if (modo === 'L') return scelto != null ? 'Pallino del ' + v.anni[scelto] + ': ora tocca quello vicino' : segmenti.length + (segmenti.length === 1 ? ' tratto disegnato' : ' tratti disegnati');
+        if (!sel) return 'Tocca una colonna'; var x = val[sel.s][sel.i]; return v.anni[sel.i] + ' · ' + { M: 'maschi', F: 'femmine', T: 'totale' }[sel.s] + ': ' + (x == null ? 'vuoto' : x);
+      }
+      function linea(i) {
+        if (val.T[i] == null) { stato.textContent = 'Lì non c’è un pallino del totale: prima mettilo.'; return; }
+        if (scelto == null) { scelto = i; disegna(); return; }
+        if (scelto === i) { scelto = null; disegna(); return; }
+        var a = Math.min(scelto, i), b = Math.max(scelto, i), k = -1;
+        segmenti.forEach(function (sg, q) { if (sg.a === a && sg.b === b) k = q; });
+        if (k >= 0) segmenti.splice(k, 1); else segmenti.push({ a: a, b: b, s: c.tratto.valore() || 'continua' });
+        scelto = null; disegna();
+      }
       function disegna() {
         var sc = c.scala.valore(), sl = c.slot.valore();
         if (!sc || !sl) {
-          tav.innerHTML = '';
-          tav.appendChild(el('div', { style: 'padding:48px 18px;text-align:center;color:' + SEPPIA + ';font-family:var(--font-display);font-size:1.1rem;line-height:1.5', text: 'Prima scegli fin dove arriva l’asse verticale (2) e quanti anni metti in orizzontale (3): il diagramma si prepara così.' }));
+          // il piano c'è già, vuoto: gli assi si numerano dopo aver scelto scala e anni
+          var vuoto = disegnaCombinato(v, { max: v.scalaOk, slot: 'tutti', senzaEtichette: true });
+          var W2 = vuoto.nodo.viewBox.baseVal.width, H2 = vuoto.nodo.viewBox.baseVal.height;
+          vuoto.nodo.appendChild(sv('text', { x: W2 / 2, y: H2 / 2 - 10, 'text-anchor': 'middle', 'font-size': stretto() ? 26 : 17, 'font-style': 'italic', fill: SEPPIA }, 'Prima scegli la scala (2) e gli anni (3):'));
+          vuoto.nodo.appendChild(sv('text', { x: W2 / 2, y: H2 / 2 + 22, 'text-anchor': 'middle', 'font-size': stretto() ? 26 : 17, 'font-style': 'italic', fill: SEPPIA }, 'poi qui costruisci il diagramma.'));
+          tav.innerHTML = ''; tav.appendChild(vuoto.nodo);
           d = null; stato.textContent = ''; riapriPannello(); return;
         }
         if (!d || d.max !== sc || d.slot !== sl) {
           d = disegnaCombinato(v, { interattivo: true, max: sc, slot: sl }); d.max = sc; d.slot = sl;
           tav.innerHTML = ''; tav.appendChild(d.nodo);
           d.nodo.style.cursor = 'crosshair';
-          d.nodo.addEventListener('click', function (ev) { var p = d.api.punto(ev.clientX, ev.clientY); if (p) metti(modo, p.i, p.val); });
+          d.nodo.addEventListener('click', function (ev) { if (bloccato) return; var p = d.api.punto(ev.clientX, ev.clientY); if (!p) return; if (modo === 'L') linea(p.i); else metti(modo, p.i, p.val); });
           d.nodo.addEventListener('keydown', tasto);
         }
-        d.api.utente(val, c.gap.valore() || 'continua', bloccato ? null : sel);
+        d.api.utente(val, segmenti, bloccato || modo === 'L' ? null : sel, bloccato ? null : scelto);
         stato.textContent = nomeSel(); riapriPannello();
       }
       function metti(s, i, x) { if (bloccato) return; sel = { s: s, i: i }; val[s][i] = x; disegna(); }
-      function ritocca(dx) { if (!sel || bloccato || !d) return; var x = val[sel.s][sel.i]; x = (x == null ? 0 : x) + dx * v.u; metti(sel.s, sel.i, Math.max(0, Math.min(d.max, x))); }
+      function ritocca(dx) { if (!sel || bloccato || !d || modo === 'L') return; var x = val[sel.s][sel.i]; x = (x == null ? 0 : x) + dx * v.u; metti(sel.s, sel.i, Math.max(0, Math.min(d.max, x))); }
       function tasto(ev) {
         if (bloccato) return;
         var k = ev.key;
+        if (modo === 'L') return;
         if (!sel) sel = { s: modo, i: 0 };
         if (k === 'ArrowUp') ritocca(1); else if (k === 'ArrowDown') ritocca(-1);
         else if (k === 'ArrowRight' || k === 'ArrowLeft') { var i2 = sel.i + (k === 'ArrowRight' ? 1 : -1); sel = { s: modo, i: (i2 + v.anni.length) % v.anni.length }; disegna(); }
@@ -3573,8 +3603,12 @@
       }
       meno.addEventListener('click', function () { ritocca(-1); });
       piu.addEventListener('click', function () { ritocca(1); });
-      togli.addEventListener('click', function () { if (sel && !bloccato) { val[sel.s][sel.i] = null; disegna(); } });
-      [c.scala, c.slot, c.gap].forEach(function (x) { x.addEventListener('click', disegna); });
+      togli.addEventListener('click', function () {
+        if (bloccato) return;
+        if (modo === 'L') { segmenti.pop(); scelto = null; disegna(); return; }
+        if (sel) { val[sel.s][sel.i] = null; segmenti = segmenti.filter(function (sg) { return val.T[sg.a] != null && val.T[sg.b] != null; }); disegna(); }
+      });
+      [c.scala, c.slot].forEach(function (x) { x.addEventListener('click', disegna); });
       disegna();
       return {
         nodo: tav, foglio: foglio,
@@ -3585,13 +3619,13 @@
           var messi = 0; ['M', 'F', 'T'].forEach(function (s) { val[s].forEach(function (x) { if (x != null) messi++; }); });
           if (!messi) { stato.textContent = 'Prima disegna il diagramma.'; return null; }
           var tot = {}; Object.keys(c.tot).forEach(function (j) { tot[j] = numIt(c.tot[j].value); });
-          return { tot: tot, scala: c.scala.valore(), slot: c.slot.valore(), gap: c.gap.valore(), val: JSON.parse(JSON.stringify(val)) };
+          return { tot: tot, scala: c.scala.valore(), slot: c.slot.valore(), segmenti: JSON.parse(JSON.stringify(segmenti)), val: JSON.parse(JSON.stringify(val)) };
         },
         segna: function (r) {
           bloccato = true;
           Object.keys(c.tot).forEach(function (j) { c.tot[j].disabled = true; var ok = r.ok.tot[j]; c.tot[j].classList.add(ok ? 'ok' : 'ko'); if (!ok) c.tot[j].value = c.tot[j].value + ' → ' + v.T[j]; });
-          [['scala', 'scala'], ['slot', 'slot'], ['gap', 'gap']].forEach(function (x) { c[x[0]].blocca(); c[x[0]].classList.add(r.ok[x[1]] ? 'ok' : 'ko'); });
-          c.modo.blocca(); [meno, piu, togli].forEach(function (b) { b.disabled = true; });
+          [['scala', 'scala'], ['slot', 'slot']].forEach(function (x) { c[x[0]].blocca(); c[x[0]].classList.add(r.ok[x[1]] ? 'ok' : 'ko'); });
+          c.modo.blocca(); c.tratto.blocca(); [meno, piu, togli].forEach(function (b) { b.disabled = true; });
           disegna();
           stato.textContent = r.preso ? 'Diagramma giusto.' : 'In tratteggio il diagramma giusto.';
         },
@@ -3609,8 +3643,19 @@
       if (!ok.scala) err('scala', 'Con l’asse fino a ' + r.scala + ' «non ci sta il totale»: arriva a ' + v.maxT + '. La scala si tara sul valore più alto, cioè il totale: fino a ' + v.scalaOk + ' per stare tranquilli.');
       ok.slot = r.slot === 'tutti';
       if (!ok.slot) err('anni', 'Mancano i dati del ' + v.buchi.map(function (b) { return v.anni[b]; }).join(' e del ') + ', ma quegli anni restano sull’asse: «non faccio finta che non ci siano». ' + v.anni.length + ' posizioni, non ' + v.datiAnni.length + '.');
-      ok.gap = r.gap === 'tratteggiata';
-      if (!ok.gap) err('collega', r.gap === 'continua' || !r.gap ? 'Dove manca l’anno i pallini si uniscono con il tratteggio: la linea continua farebbe credere che il dato ci sia.' : 'I pallini del totale vanno uniti anche attorno all’anno mancante, ma con il tratteggio: «se delle annate vengono saltate bisogna darne evidenza».');
+      // la linea: ogni pallino unito a quello dell'anno con dato successivo; tratteggiata dove in mezzo manca un anno
+      ok.gap = true;
+      var D = []; v.anni.forEach(function (_a, j) { if (v.T[j] != null) D.push(j); });
+      var segs = r.segmenti || [], attesi = [];
+      for (var k = 0; k + 1 < D.length; k++) attesi.push({ a: D[k], b: D[k + 1], s: D[k + 1] - D[k] > 1 ? 'tratteggiata' : 'continua' });
+      attesi.forEach(function (x) {
+        var u3 = segs.filter(function (sg) { return sg.a === x.a && sg.b === x.b; })[0];
+        if (!u3) { ok.gap = false; err('linea', 'Manca la linea tra il pallino del ' + v.anni[x.a] + ' e quello del ' + v.anni[x.b] + (x.s === 'tratteggiata' ? ': tratteggiata, perché in mezzo manca un anno.' : '.')); }
+        else if (u3.s !== x.s) { ok.gap = false; err('collega', x.s === 'tratteggiata' ? 'Tra il ' + v.anni[x.a] + ' e il ' + v.anni[x.b] + ' manca un anno: la linea va tratteggiata, «se delle annate vengono saltate bisogna darne evidenza».' : 'Tra il ' + v.anni[x.a] + ' e il ' + v.anni[x.b] + ' non manca nessun anno: la linea è continua.'); }
+      });
+      segs.forEach(function (sg) {
+        if (!attesi.some(function (x) { return x.a === sg.a && x.b === sg.b; })) { ok.gap = false; err('linea', 'La linea tra il ' + v.anni[sg.a] + ' e il ' + v.anni[sg.b] + ' non va: ogni pallino si unisce solo a quello dell’anno successivo con il dato.'); }
+      });
       var tuttiVal = true;
       var scambiati = v.anni.every(function (_a, j) { return v.M[j] == null || (r.val.M[j] === v.F[j] && r.val.F[j] === v.M[j]); });
       if (scambiati) { tuttiVal = false; err('scambio', 'Hai scambiato maschi e femmine: segui la legenda.'); }
@@ -3624,7 +3669,7 @@
         });
       });
       return { preso: tuttiTot && ok.scala && ok.slot && ok.gap && tuttiVal, errori: errori.slice(0, 6), ok: ok,
-        nota: 'Per il punto contano i totali, la scala, gli anni al loro posto, ogni canna e ogni pallino all’altezza giusta e il tratteggio dove manca il dato.' };
+        nota: 'Conta tutto: i totali, la scala, gli anni al loro posto, ogni canna e ogni pallino all’altezza giusta, e la linea del totale, tratteggiata dove manca l’anno.' };
     },
     procedimento: function (v) {
       function scena() { return disegnaCombinato(v, {}); }
