@@ -73,7 +73,7 @@
   function pad2(n) { return (n < 10 ? '0' : '') + n; }
   function numero(v) {
     if (v == null) return NaN;
-    var s = String(v).trim().replace(',', '.');
+    var s = String(v).replace(/[\u00b0\u00ba\u02da\u2032\u2019'`\u00b4"\u2033\s]/g, '').replace(',', '.');
     return s === '' ? NaN : Number(s);
   }
   function fmt(x) { return (Math.round(x * 100) / 100).toString().replace('.', ','); }
@@ -335,6 +335,7 @@
     var modi = [
       { k: 'impara', n: '1', t: conVideo ? 'Guarda il video' : 'Impara il metodo', s: conVideo ? 'Si ferma sugli esempi e ti fa rispondere' : 'Animazione passo passo', ok: conTutorial },
       { k: 'allena', n: conTutorial ? '2' : '1', t: 'Allenati', s: '15 esercizi sempre diversi', ok: true },
+      { k: 'errori', n: '', t: 'Errori comuni', s: 'Quelli da non fare', ok: !!window.ESX_ERRORI && erroriComuni(T, e).length > 0 },
       { k: 'stampa', n: conTutorial ? '3' : '2', t: 'Stampa la scheda', s: voci.length > 1 ? 'Tutti gli esercizi, con il metodo' : 'Il metodo e 15 esercizi', ok: true }
     ].filter(function (m) { return m.ok; });
     var bar = el('div', { class: 'esx-modi', role: 'group', 'aria-label': 'Che cosa vuoi fare' });
@@ -353,6 +354,7 @@
       contenuto.innerHTML = '';
       if (k === 'impara') ferma = conVideo ? Video(contenuto, T, e, function () { vai('allena'); }) : Tutorial(contenuto, T, e, function () { vai('allena'); });
       else if (k === 'allena') ferma = Serie(contenuto, T, e, function () { vai('stampa'); });
+      else if (k === 'errori') PannelloErrori(contenuto, T, e);
       else PannelloStampa(contenuto, voci);
       riapriPannello();
     }
@@ -380,6 +382,20 @@
     lista('Errori frequenti', e.errori_comuni);
     if (!blocchi.length) return null;
     return el('div', { class: 'esx-docente' }, blocchi);
+  }
+
+  // Gli errori comuni di un esercizio: prima quelli detti a lezione, poi quelli che l'allenamento sa riconoscere.
+  function erroriComuni(T, e) {
+    var out = (e.errori_comuni || []).slice();
+    (T && T.erroriInPiu || []).forEach(function (k) { var t = T.nomiErrori && T.nomiErrori[k]; if (t && out.indexOf(t) < 0) out.push(t); });
+    return out;
+  }
+  function PannelloErrori(dove, T, e) {
+    var box = el('div', { class: 'esx-riep esx-errori' });
+    box.appendChild(el('h4', { text: 'Errori comuni' }));
+    box.appendChild(el('p', { class: 'esx-nota', text: e.titolo || '' }));
+    box.appendChild(el('ol', null, erroriComuni(T, e).map(function (t) { return el('li', { text: t }); })));
+    dove.appendChild(box);
   }
 
   function segmentato(opzioni, etichetta) {
@@ -661,14 +677,14 @@
   function htmlScheda(voci, seme) {
     var parti = voci.map(function (x, i) {
       var opz = x.T.opzioniStampa ? x.T.opzioniStampa() : {};
-      var varianti = x.T.serie(seme + i * 7919, N_SERIE, opz, x.e);
+      var varianti = x.T.serie(seme + i * 7919, window.ESX_N_STAMPA || N_SERIE, opz, x.e);
       return { x: x, varianti: varianti, n: i + 1 };
     });
     var corpo = parti.map(function (pt) {
       var es = pt.varianti.map(function (v, k) { return '<section class="es">' + pt.x.T.stampa(v, k + 1) + '</section>'; }).join('');
-      var tut = tutorialStampato(pt.x.T, pt.x.e);
+      var tut = tutorialStampato(pt.x.T, pt.x.e), err = window.ESX_ERRORI ? erroriComuni(pt.x.T, pt.x.e) : [];
       return '<div class="parte"><h2>' + pt.n + '. ' + esc(pt.x.e.titolo || 'Esercizio') + (pt.x.e.punti_esame ? ' <small>(all\u2019esame vale ' + esc(pt.x.e.punti_esame) + ')</small>' : '') + '</h2>' +
-        (tut ? '<h3 class="sez">Come si fa</h3>' + tut : '') +
+        (tut ? '<h3 class="sez">Come si fa</h3>' + tut : '') + (err.length ? '<div class="errori"><h3 class="sez">Errori comuni</h3><ul>' + err.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul></div>' : '') +
         '<h3 class="sez nuova">Esercizi</h3>' + pt.x.T.istruzioniStampa + es + '</div>';
     }).join('');
     var sol = '<div class="sol"><h2>Soluzioni della scheda n. ' + seme + '</h2>' + parti.map(function (pt) {
@@ -688,6 +704,7 @@
       '.tut h4{font-size:11pt;margin:0 0 3px}.tut p{margin:0 0 4px;font-size:10pt}' +
       '.tut .regola{font-weight:700;background:#f1ead9;padding:4px 7px;border-radius:4px}' +
       '.tut .mini svg{width:28mm;height:auto}' +
+      '.errori{break-inside:avoid;page-break-inside:avoid;margin-top:12px}.errori ul{margin:0;padding-left:18px;font-size:10pt;columns:2;column-gap:10mm}.errori li{margin:0 0 3px;break-inside:avoid;page-break-inside:avoid}' +
       '.es{break-inside:avoid;page-break-inside:avoid;border:1px solid #bbb;border-radius:6px;padding:7px 10px;margin:0 0 7px}' +
       '.es h3{font-size:10.5pt;margin:0 0 4px}' +
       '.riga{display:flex;gap:12px;align-items:flex-start}.riga svg{display:block;flex:none}' +
@@ -717,7 +734,7 @@
      ================================================================= */
   // Città reali: coordinate di Wikipedia (verificate il 30/09/2026), arrotondate ai 5 primi (la precisione di una lettura a occhio).
   // I punti che NON sono città reali hanno nomi di città immaginarie, per non confonderli con luoghi veri.
-  var IMMAGINARIE = ['Topolinia', 'Paperopoli', 'Gotham City', 'Metropolis', 'Atlantide', 'Lilliput', 'Utopia', 'El Dorado',
+  var IMMAGINARIE = Array.isArray(window.ESX_NOMI) && window.ESX_NOMI.length > 7 ? window.ESX_NOMI : ['Topolinia', 'Paperopoli', 'Gotham City', 'Metropolis', 'Atlantide', 'Lilliput', 'Utopia', 'El Dorado',
     'Shangri-La', 'Camelot', 'Macondo', 'Springfield', 'Avalon', 'Smallville', 'Brigadoon', 'Laputa'];
   var CITTA = [
     ['Milano', 45, 30, 'N', 9, 10, 'E'],
@@ -1161,6 +1178,7 @@
   }
 
   var RETICOLO = {
+    erroriInPiu: ['scambio', 'dir', 'grado1', 'primiVuoti', 'trappola', 'trappolaInventata'],
     nomiErrori: {
       scambio: 'Scambiare latitudine e longitudine',
       dir: 'Sbagliare nord/sud o est/ovest',
@@ -2488,6 +2506,7 @@
   function testoCoord(p, v) { return coord(p.latG, p.latM, v.ns) + '  ·  ' + coord(p.lonG, p.lonM, v.eo); }
 
   var POSIZIONA = {
+    erroriInPiu: ['scambio', 'stima'],
     nomiErrori: {
       dir: 'Contare i gradi nel verso sbagliato (nord/sud o est/ovest)', decimali: 'Trattare i primi come decimali (45′ non è 0,45°)',
       grado: 'Sbagliare di un grado', scambio: 'Scambiare latitudine e longitudine', stima: 'Stimare male la frazione del riquadro', posizione: 'Mettere il punto nel posto sbagliato'
@@ -2614,7 +2633,7 @@
     },
     // Il tutorial: il punto A dell'aula, 54°45′ N e 2°45′ O, e un punto proprio su una linea.
     tutorial: function (e) {
-      var A = { nome: 'A', latG: 54, latM: 45, lonG: 2, lonM: 45 }, B = { nome: 'Paperopoli', latG: 53, latM: 0, lonG: 5, lonM: 30 };
+      var A = { nome: 'A', latG: 54, latM: 45, lonG: 2, lonM: 45 }, B = { nome: 'B', latG: 53, latM: 0, lonG: 5, lonM: 30 };
       var base = { cols: 6, rows: 4, ns: 'N', eo: 'O', a0: 52, b0: 1, punti: [A, B], citta: false, labLat: [54], labLon: [3], trappola: null };
       function scena() { return disegnaReticolo(base, { senzaLuoghi: true }); }
       var passi = [
@@ -2625,7 +2644,7 @@
           regola: '45′ non è 0,45: è tre quarti di grado.', extra: function (t) { return quadrante(45, t); }, fai: function (a, an, t) { a.fascia(A, 'lat', an, t); a.dividi(A, 'lat', 4, an, t); a.tratto(A, 'lat', an, t); } },
         { scena: 's', stampa: true, titolo: 'Poi la longitudine', testo: ['2°45′ O: tra il meridiano dei 2° e quello dei 3°, a tre quarti verso il 3.', 'A ovest i valori crescono verso sinistra: il meridiano dei 3° è a sinistra di quello dei 2°.'],
           fai: function (a, an, t) { a.fascia(A, 'lon', an, t); a.dividi(A, 'lon', 4, an, t); a.tratto(A, 'lon', an, t); a.mostraLuoghi(false, t); a.cartellino(A, an, t); } },
-        { scena: 's', stampa: true, titolo: 'Un punto proprio sulla linea', testo: ['Paperopoli è a 53°00′ N: sta proprio sul parallelo dei 53°. E a 5°30′ O, a metà tra 5 e 6.', 'Quando si scrivono le coordinate, i primi 00 si scrivono sempre.'],
+        { scena: 's', stampa: true, titolo: 'Un punto proprio sulla linea', testo: ['B è a 53°00′ N: sta proprio sul parallelo dei 53°. E a 5°30′ O, a metà tra 5 e 6.', 'Quando si scrivono le coordinate, i primi 00 si scrivono sempre.'],
           regola: 'Sulla linea: 00′, scritto sempre.', fai: function (a, an, t) { a.fascia(B, 'lon', an, t); a.tratto(B, 'lon', an, t); a.cartellino(B, an, t); } },
         { scena: 's', stampa: 'testo', titolo: 'Errori frequenti', testo: ['Cercare il punto senza aver scritto i valori delle linee: si sbaglia facilmente di un grado.', 'Scambiare il nord con l’est. Scrivere 60 o 75 primi: 60 primi sono già il grado successivo.', 'Si scrive il tondino per i gradi (°), l’apice per i primi (′), e sempre N o S, E o O (va bene anche W).'],
           dopo: function () { return docente(e); } },
@@ -2807,6 +2826,7 @@
   }
 
   var INDICI = {
+    erroriInPiu: ['finale', 'invertito', 'scambio', 'totale', 'segno', 'simbolo'],
     nomiErrori: {
       superfluo: 'Non riconoscere il dato inutile', scartato: 'Scartare un dato che serve', mesi: 'Non contare i mesi (dividere per gli anni interi)',
       decimi: 'Contare i mesi in decimi invece che in dodicesimi', nonDiviso: 'Non dividere per gli anni', finale: 'Mettere la popolazione finale al denominatore',
@@ -3193,6 +3213,7 @@
   }
 
   var DENSITA_S = {
+    erroriInPiu: ['legenda', 'invertita', 'generico', 'forma'],
     nomiErrori: {
       legenda: 'Dimenticare il valore della legenda', conta: 'Contare male i simboli', perimetro: 'Calcolare il perimetro invece dell’area', lati: 'Sommare i lati', lato: 'Usare il lato al posto dell’area',
       area: 'Sbagliare l’area', invertita: 'Mettere l’area al numeratore', nonDiviso: 'Dimenticare di dividere per l’area', densita: 'Sbagliare la densità',
@@ -3388,7 +3409,7 @@
     var W = 640, H = !stampa && stretto() ? 660 : 420, L = FS * 3.6, R = 16, T = 46, B = FS * 3.4;
     var PW = W - L - R, PH = H - T - B, n = anniCol.length, colW = PW / n, u = v.u;
     var svg = sv('svg', { viewBox: '0 0 ' + W + ' ' + H, role: 'img', width: opz.larghezza || null, tabindex: opz.interattivo ? '0' : null,
-      'aria-label': opz.interattivo ? 'Diagramma da costruire. Scegli maschi, femmine o totale e tocca la colonna dell’anno all’altezza del valore.' : 'Istogramma di maschi e femmine con la linea del totale' });
+      'aria-label': opz.interattivo ? 'Diagramma da costruire. Scegli canne, totale o linea e premi sulla colonna dell’anno all’altezza del valore: a sinistra i maschi, a destra le femmine.' : 'Istogramma di maschi e femmine con la linea del totale' });
     var griglia = sv('g'), sotto = sv('g'), assi = sv('g'), disegno = sv('g'), sopra = sv('g');
     [griglia, sotto, assi, disegno, sopra].forEach(function (x) { svg.appendChild(x); });
     var inch = stampa ? '#000' : INCH, fine = stampa ? '#ddd' : 'rgba(139,110,75,.22)', medio = stampa ? '#999' : 'rgba(139,110,75,.6)';
@@ -3476,7 +3497,7 @@
       canne: function (anim, t) { if (fatto.canne) return; fatto.canne = 1; traccia3(disegno, { M: v.M, F: v.F, T: v.T.map(function () { return null; }) }, { valori: true }, anim, t); },
       totale: function (anim, t) { if (fatto.totale) return; fatto.totale = 1; traccia3(disegno, { M: v.M.map(function () { return null; }), F: v.F.map(function () { return null; }), T: v.T }, { valori: true, gap: 'tratteggiata' }, anim, t); },
       soluzione: function (anim, t, vuoto) { traccia3(sopra, giusti, { vuoto: !!vuoto, valori: !vuoto, gap: 'tratteggiata' }, anim, t); },
-      utente: function (val, segmenti, sel, scelto) {
+      utente: function (val, segmenti, sel, scelto, sopraC) {
         while (disegno.firstChild) disegno.removeChild(disegno.firstChild);
         function dove(i) { var j = anniCol.indexOf(v.anni[i]), x = val.T[i]; return j < 0 || x == null ? null : { x: xc(j), y: y(Math.min(x, max)) }; }
         (segmenti || []).forEach(function (sg) {
@@ -3484,6 +3505,10 @@
           disegno.appendChild(sv('line', { x1: a.x, y1: a.y, x2: b.x, y2: b.y, stroke: COL_T, 'stroke-width': 3, 'stroke-dasharray': sg.s === 'tratteggiata' ? '9 7' : null }));
         });
         traccia3(disegno, val, { senzaLinea: true, valori: true }, false, null);
+        if (sopraC && !(sel && sel.s === sopraC.s && sel.i === sopraC.i)) {
+          var jh = anniCol.indexOf(v.anni[sopraC.i]);
+          if (jh >= 0) disegno.appendChild(sv('rect', { x: xs(jh, sopraC.s === 'M' ? 0 : 1) - bw * 0.65, y: T, width: bw * 1.3, height: PH, fill: sopraC.s === 'M' ? COL_M : COL_F, 'fill-opacity': .08, stroke: sopraC.s === 'M' ? COL_M : COL_F, 'stroke-opacity': .55, 'stroke-width': 1.2, 'stroke-dasharray': '4 4', rx: 4, 'pointer-events': 'none' }));
+        }
         if (scelto != null) { var p0 = dove(scelto); if (p0) disegno.appendChild(sv('circle', { cx: p0.x, cy: p0.y, r: 14, fill: 'rgba(200,169,110,.25)', stroke: ORO, 'stroke-width': 2.4 })); }
         if (sel) {
           var j = anniCol.indexOf(v.anni[sel.i]); if (j < 0) return;
@@ -3513,6 +3538,7 @@
   }
 
   var COMBINATO = {
+    erroriInPiu: ['somma', 'collega', 'riempito', 'scambio'],
     nomiErrori: {
       somma: 'Sbagliare la somma del totale', scala: 'Tarare la scala su maschi e femmine invece che sul totale', anni: 'Togliere gli anni senza dato dall’asse',
       collega: 'Sbagliare il tratto: tratteggiato dove manca l’anno, continuo altrove', linea: 'Dimenticare o sbagliare un tratto della linea del totale', valore: 'Riportare un valore all’altezza sbagliata', mancante: 'Lasciare fuori un dato',
@@ -3521,7 +3547,7 @@
     opzioni: function () { return { v: 1 }; },
     serie: function (seme, n) { var r = rngDa(seme), usate = {}, out = []; for (var i = 0; i < n; i++) out.push(varianteCombinato(r, i, usate)); return out; },
     domanda: function (v) {
-      var tav = el('div'), foglio = el('div'), c = {}, sel = null, bloccato = false, modo = 'M';
+      var tav = el('div'), foglio = el('div'), c = {}, sel = null, bloccato = false, modo = 'C', sopraCanna = null;
       var val = { M: v.anni.map(function () { return null; }), F: v.anni.map(function () { return null; }), T: v.anni.map(function () { return null; }) };
       var segmenti = [], scelto = null, d = null;
       foglio.appendChild(el('h4', { text: 'Costruisci un istogramma per maschi e femmine di ' + v.luogo + ' e raffigura sullo stesso diagramma anche il totale.' }));
@@ -3551,14 +3577,14 @@
       foglio.appendChild(el('div', { class: 'esx-riga' }, [c.slot]));
       // 4. costruisci: i comandi stanno SOPRA il diagramma, grandi, con i colori della legenda
       foglio.appendChild(el('p', { style: 'font-weight:600;color:var(--ink);margin:10px 0 6px', text: '4. Costruisci il diagramma qui a fianco' }));
-      foglio.appendChild(el('p', { class: 'esx-nota', style: 'margin:0 0 6px', text: 'Sopra il diagramma scegli che cosa disegni: canne dei maschi, canne delle femmine, pallini del totale o la linea.' }));
+      foglio.appendChild(el('p', { class: 'esx-nota', style: 'margin:0 0 6px', text: 'Sopra il diagramma scegli che cosa disegni: le canne, i pallini del totale o la linea. Per le canne conta dove premi: a sinistra dell’anno i maschi, a destra le femmine.' }));
       var strumenti = el('div', { class: 'esx-gc-strumenti', role: 'group', 'aria-label': 'Che cosa stai disegnando' });
       var bottoniModo = {};
-      [['M', 'Maschi', COL_M, 'canna'], ['F', 'Femmine', COL_F, 'canna'], ['T', 'Totale', COL_T, 'pallino'], ['L', 'Linea', COL_T, 'linea']].forEach(function (x) {
-        var ic = x[3] === 'canna' ? '<i style="display:inline-block;width:12px;height:16px;background:' + x[2] + ';border-radius:2px"></i>'
+      [['C', 'Canne', COL_M, 'canne'], ['T', 'Totale', COL_T, 'pallino'], ['L', 'Linea', COL_T, 'linea']].forEach(function (x) {
+        var ic = x[3] === 'canne' ? '<i style="display:inline-block;width:8px;height:16px;background:' + COL_M + ';border-radius:2px 2px 0 0;margin-right:-5px"></i><i style="display:inline-block;width:8px;height:11px;background:' + COL_F + ';border-radius:2px 2px 0 0"></i>'
           : x[3] === 'pallino' ? '<i style="display:inline-block;width:13px;height:13px;background:' + x[2] + ';border-radius:50%"></i>'
           : '<i style="display:inline-block;width:20px;height:0;border-top:3px solid ' + x[2] + '"></i>';
-        var b = el('button', { type: 'button', 'aria-pressed': x[0] === 'M' ? 'true' : 'false', html: ic + '<span>' + x[1] + '</span>' });
+        var b = el('button', { type: 'button', 'aria-pressed': x[0] === 'C' ? 'true' : 'false', html: ic + '<span>' + x[1] + '</span>' });
         b.addEventListener('click', function () { if (bloccato) return; scegliModo(x[0]); });
         bottoniModo[x[0]] = b; strumenti.appendChild(b);
       });
@@ -3571,7 +3597,7 @@
       c.tratto = { valore: function () { return trattoScelto; }, blocca: function () {} };
       c.modo = { valore: function () { return modo; }, imposta: function (k) { scegliModo(k); }, blocca: function () {} };
       function scegliModo(k) {
-        modo = k; sel = null; scelto = null;
+        modo = k; sel = null; scelto = null; sopraCanna = null;
         Object.keys(bottoniModo).forEach(function (q) { bottoniModo[q].setAttribute('aria-pressed', q === k ? 'true' : 'false'); });
         tratti.style.display = k === 'L' ? '' : 'none';
         aiuto(); if (d) disegna();
@@ -3588,7 +3614,7 @@
         guida.textContent = modo === 'L'
           ? 'Tocca un pallino del totale, poi quello dell’anno vicino: li unisci con il tratto scelto. Ritoccandoli, togli la linea.'
           : modo === 'T' ? 'Premi sulla colonna dell’anno e trascina il pallino su o giù fino al totale.'
-          : 'Premi sulla colonna dell’anno e trascina su o giù: la canna ' + (modo === 'M' ? 'dei maschi' : 'delle femmine') + ' cresce con te. Ogni linea sottile vale 2.';
+          : 'Premi sulla colonna dell’anno e trascina su o giù: a sinistra dell’anno cresce la canna dei maschi, a destra quella delle femmine. Ogni linea sottile vale 2.';
       }
       aiuto();
       function nomeSel() {
@@ -3623,20 +3649,27 @@
             var p = punta(ev); if (!p) return;
             ev.preventDefault();
             if (modo === 'L') { linea(p.i); return; }
-            tiro = { id: ev.pointerId, i: p.i, s: modo };
+            var qs = modo === 'C' ? p.lato : modo;       // le canne: a sinistra dell'anno i maschi, a destra le femmine
+            tiro = { id: ev.pointerId, i: p.i, s: qs }; sopraCanna = null;
             try { d.nodo.setPointerCapture(ev.pointerId); } catch (e0) {}
-            metti(modo, p.i, p.val);
+            metti(qs, p.i, p.val);
           });
           d.nodo.addEventListener('pointermove', function (ev) {
+            if (!tiro && !bloccato && modo === 'C' && ev.pointerType === 'mouse') {      // col mouse si vede prima di premere quale canna si sta per toccare
+              var ps = d.api.punto(ev.clientX, ev.clientY), nuova = ps ? { s: ps.lato, i: ps.i } : null;
+              if ((nuova && nuova.s + nuova.i) !== (sopraCanna && sopraCanna.s + sopraCanna.i)) { sopraCanna = nuova; disegna(); }
+              return;
+            }
             if (!tiro || ev.pointerId !== tiro.id || bloccato) return;
             var p = d.api.punto(ev.clientX, ev.clientY); if (!p) return;
             if (val[tiro.s][tiro.i] !== p.val) metti(tiro.s, tiro.i, p.val);
           });
           var lascia = function () { tiro = null; };
           d.nodo.addEventListener('pointerup', lascia); d.nodo.addEventListener('pointercancel', lascia);
+          d.nodo.addEventListener('pointerleave', function () { if (sopraCanna) { sopraCanna = null; disegna(); } });
           d.nodo.addEventListener('keydown', tasto);
         }
-        d.api.utente(val, segmenti, bloccato || modo === 'L' ? null : sel, bloccato ? null : scelto);
+        d.api.utente(val, segmenti, bloccato || modo === 'L' ? null : sel, bloccato ? null : scelto, bloccato || modo !== 'C' ? null : sopraCanna);
         stato.textContent = nomeSel(); riapriPannello();
       }
       function metti(s, i, x) { if (bloccato) return; sel = { s: s, i: i }; val[s][i] = x; disegna(); }
@@ -3645,9 +3678,14 @@
         if (bloccato) return;
         var k = ev.key;
         if (modo === 'L') return;
-        if (!sel) sel = { s: modo, i: 0 };
+        if (!sel) sel = { s: modo === 'C' ? 'M' : modo, i: 0 };
         if (k === 'ArrowUp') ritocca(1); else if (k === 'ArrowDown') ritocca(-1);
-        else if (k === 'ArrowRight' || k === 'ArrowLeft') { var i2 = sel.i + (k === 'ArrowRight' ? 1 : -1); sel = { s: modo, i: (i2 + v.anni.length) % v.anni.length }; disegna(); }
+        else if (k === 'ArrowRight' || k === 'ArrowLeft') {
+          var passo = k === 'ArrowRight' ? 1 : -1, na = v.anni.length;
+          if (modo === 'C') { var pos = sel.i * 2 + (sel.s === 'F' ? 1 : 0) + passo; pos = (pos + na * 2) % (na * 2); sel = { s: pos % 2 ? 'F' : 'M', i: Math.floor(pos / 2) }; }     // con le frecce: maschi, femmine, poi l'anno dopo
+          else sel = { s: modo, i: (sel.i + passo + na) % na };
+          disegna();
+        }
         else return;
         ev.preventDefault(); ev.stopPropagation();
       }
@@ -3856,7 +3894,7 @@
     // musica di sottofondo: va avanti piano anche quando la voce si ferma per la domanda
     var musica = null, musicaSi = true;
     try { musicaSi = localStorage.getItem('esx_musica') !== '0'; } catch (e0) {}
-    if (COPIONI.musica && window.Audio) { musica = new Audio(COPIONI.musica); musica.loop = true; musica.preload = 'none'; musica.volume = COPIONI.musicaVolume || 0.1; }
+    if (COPIONI.musica && window.Audio && !window.ESX_SENZA_MUSICA) { musica = new Audio(COPIONI.musica); musica.loop = true; musica.preload = 'none'; musica.volume = COPIONI.musicaVolume || 0.1; }
     function musicaSu() { if (musica && musicaSi) musica.play().catch(function () {}); }
     function musicaGiu() { if (musica) musica.pause(); }
     var dopoVoce = null;      // che cosa fare quando la voce finisce
@@ -4129,6 +4167,7 @@
     }
     function pausa() { suona = false; aggiornaPlay(); musicaGiu(); if (voce && voce.audio) voce.audio.pause(); }
     grande.addEventListener('click', avvia);
+    window.ESX_PAUSA = function () { if (suona) pausa(); };
     // si ferma e riparte toccando il video, come su YouTube
     tav.addEventListener('click', function () { if (grande.parentNode || finito) return; if (suona) pausa(); else avvia(); });
     bMeno.addEventListener('click', function () { salta10(-10); });
