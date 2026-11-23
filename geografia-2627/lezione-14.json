@@ -407,5 +407,56 @@
         "serve_disegno": true
       }
     ]
+  },
+  "mappa": {
+    "titolo": "Geotecnologie e cartografia digitale per la didattica della geografia",
+    "rami": [
+      {
+        "tema": "Geotecnologie e mediazione didattica",
+        "sotto": [
+          "Tecnologie visuali per stimolare l'apprendimento",
+          "Adattamento degli strumenti alla scuola primaria",
+          "Impiego di risorse digitali accessibili e gratuite",
+          "Sviluppo del pensiero spaziale e competenze ministeriali"
+        ]
+      },
+      {
+        "tema": "Strumenti digitali per la geografia",
+        "sotto": [
+          "Geobrowser per ricerca e consultazione di mappe",
+          "WebGIS per realizzare cartografie collaborative online",
+          "Software GIS per elaborazione dati e mappe",
+          "Dati satellitari certificati con Copernicus Browser",
+          "Rilievo sul campo georeferenziato tramite GPS"
+        ]
+      },
+      {
+        "tema": "Cartografia digitale e gestione dei dati",
+        "sotto": [
+          "Caratteristiche della carta: approssimata, ridotta e simbolica",
+          "Distinzione tra rappresentazione vettoriale e raster",
+          "Organizzazione delle informazioni territoriali a strati",
+          "Gestione delle coordinate decimali e sessagesimali"
+        ]
+      },
+      {
+        "tema": "Rappresentazione del rilievo in 3D",
+        "sotto": [
+          "Modelli digitali di elevazione per l'altitudine",
+          "Curve di livello per identificare le pendenze",
+          "Integrazione dell'asse Z rispetto al piano",
+          "Differenziazione tra scala lineare e scala altimetrica"
+        ]
+      },
+      {
+        "tema": "Progettazione del plastico didattico",
+        "sotto": [
+          "Elementi essenziali: titolo, legenda, orientamento e scala",
+          "Costruzione manuale con materiali semplici o riciclabili",
+          "Semplificazione del terreno tramite griglie e mattoncini",
+          "Simulazione dell'irraggiamento solare con una torcia"
+        ]
+      }
+    ]
   }
 }
