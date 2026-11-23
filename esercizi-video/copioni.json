@@ -1,5 +1,5 @@
 {
-  "nota": "Copioni dei video tutorial degli esercizi d'esame. 'p' = passo del tutorial animato da mostrare; 'voce' = testo letto dalla voce e mostrato nei sottotitoli. Le battute con 'chiedi' fermano il video: lo studente risponde, poi la voce legge 'si' o 'no' e infine 'spiega'. Il campo 'audio' collega ogni frase al suo mp3 in esercizi-video/voce (voce ElevenLabs); 'musica' è il sottofondo che va in loop a volume basso.",
+  "nota": "Copioni dei video tutorial degli esercizi d'esame. 'p' = passo del tutorial animato da mostrare; 'voce' = testo letto dalla voce e mostrato nei sottotitoli. Le battute con 'chiedi' fermano il video: lo studente risponde, poi la voce legge 'si' o 'no' e infine 'spiega'. Il campo 'audio' collega ogni frase al suo mp3 in esercizi-video/voce (voce ElevenLabs); 'musica' è il sottofondo che va in loop a volume basso. 'scritte' = la stessa frase come compare nei sottotitoli, con cifre e segni (stesso numero di frasi della voce). Nelle domande, 'sai' = i numeri già ricavati e 'fai' = l'operazione da fare. 'calcoli' (sulla battuta) e 'calcolo' (nella domanda, dopo la risposta) = le operazioni che restano scritte accanto al video, con titolo, operazione e risultato; 'calcoliNuovi' ripulisce la colonna.",
   "versione": 1,
   "video": {
     "reticolo_coordinate": {
@@ -43,6 +43,16 @@
               "primi": 0,
               "dir": "N",
               "tolPrimi": 0
+            },
+            "sai": [
+              "Hanoi è sul parallelo 21°",
+              "Il reticolo è a nord dell'equatore"
+            ],
+            "fai": "gradi della linea + primi + direzione (N o S)",
+            "calcolo": {
+              "t": "Hanoi, latitudine",
+              "f": "sulla linea 21°: i primi sono 00′",
+              "r": "21°00′ N"
             }
           }
         },
@@ -65,6 +75,17 @@
               "primi": 50,
               "dir": "E",
               "tolPrimi": 5
+            },
+            "sai": [
+              "Hanoi è tra 105° E e 106° E",
+              "Si parte dal numero più piccolo: 105°",
+              "1° = 60′"
+            ],
+            "fai": "105° + i primi stimati sul riquadro (un sesto = 10′)",
+            "calcolo": {
+              "t": "Hanoi, longitudine",
+              "f": "105° + 5 parti su 6 del riquadro (5 × 10′)",
+              "r": "105°50′ E"
             }
           }
         },
@@ -87,6 +108,17 @@
               "primi": 15,
               "dir": "N",
               "tolPrimi": 5
+            },
+            "sai": [
+              "Hong Kong è tra 22° N e 23° N",
+              "Si parte dal numero più piccolo: 22°",
+              "1° = 60′"
+            ],
+            "fai": "22° + i primi stimati sul riquadro (un quarto = 15′)",
+            "calcolo": {
+              "t": "Hong Kong, latitudine",
+              "f": "22° + un quarto del riquadro (15′)",
+              "r": "22°15′ N"
             }
           }
         },
@@ -98,7 +130,14 @@
         {
           "id": "rc12",
           "p": 8,
-          "voce": "Per la longitudine di Hong Kong il ragionamento è lo stesso. È poco dopo il meridiano dei centoquattordici gradi, circa a un sesto del riquadro. Quindi centoquattordici gradi e dieci primi est."
+          "voce": "Per la longitudine di Hong Kong il ragionamento è lo stesso. È poco dopo il meridiano dei centoquattordici gradi, circa a un sesto del riquadro. Quindi centoquattordici gradi e dieci primi est.",
+          "calcoli": [
+            {
+              "t": "Hong Kong, longitudine",
+              "f": "114° + un sesto del riquadro (10′)",
+              "r": "114°10′ E"
+            }
+          ]
         },
         {
           "id": "rc13",
@@ -108,7 +147,8 @@
         {
           "id": "rc14",
           "p": 10,
-          "voce": "E se il reticolo è a sud o a ovest? Il metodo non cambia, cambia solo il verso in cui crescono i numeri. A sud aumentano scendendo, a ovest aumentano andando verso sinistra. Anche per questo conviene scrivere subito il valore di tutte le linee."
+          "voce": "E se il reticolo è a sud o a ovest? Il metodo non cambia, cambia solo il verso in cui crescono i numeri. A sud aumentano scendendo, a ovest aumentano andando verso sinistra. Anche per questo conviene scrivere subito il valore di tutte le linee.",
+          "calcoliNuovi": true
         },
         {
           "id": "rc15",
@@ -124,13 +164,31 @@
               "primi": 35,
               "dir": "S",
               "tolPrimi": 5
+            },
+            "sai": [
+              "Buenos Aires è tra 34° S e 35° S",
+              "A sud i numeri crescono scendendo",
+              "Metà riquadro = 30′"
+            ],
+            "fai": "34° + i primi stimati, contando verso il basso",
+            "calcolo": {
+              "t": "Buenos Aires, latitudine",
+              "f": "34° + poco oltre metà riquadro, contando verso il basso",
+              "r": "34°35′ S"
             }
           }
         },
         {
           "id": "rc16",
           "p": 11,
-          "voce": "La longitudine di Buenos Aires è cinquantotto gradi e venticinque primi ovest. Qui i numeri crescono verso sinistra, quindi si conta in quella direzione."
+          "voce": "La longitudine di Buenos Aires è cinquantotto gradi e venticinque primi ovest. Qui i numeri crescono verso sinistra, quindi si conta in quella direzione.",
+          "calcoli": [
+            {
+              "t": "Buenos Aires, longitudine",
+              "f": "58° + 25′, contando verso sinistra",
+              "r": "58°25′ O"
+            }
+          ]
         },
         {
           "id": "rc17",
@@ -153,8 +211,19 @@
             ],
             "si": "Giusto: c'è scritto centocinquanta, ma doveva esserci centocinque.",
             "no": "L'etichetta sbagliata è centocinquanta: doveva esserci centocinque.",
-            "spiega": "Tra due linee vicine c'è sempre un grado. L'etichetta centocinquanta sta tre linee a sinistra del centootto, quindi il suo valore deve essere centootto meno tre, cioè centocinque. Qualcuno ha invertito le cifre."
-          }
+            "spiega": "Tra due linee vicine c'è sempre un grado. L'etichetta centocinquanta sta tre linee a sinistra del centootto, quindi il suo valore deve essere centootto meno tre, cioè centocinque. Qualcuno ha invertito le cifre.",
+            "sai": [
+              "Tra due linee vicine c'è sempre 1°",
+              "Le etichette giuste vanno d'accordo tra loro"
+            ],
+            "fai": "conta le linee partendo da un'etichetta e confronta",
+            "calcolo": {
+              "t": "Etichetta sbagliata: 150°",
+              "f": "108 − 3 linee",
+              "r": "105°"
+            }
+          },
+          "calcoliNuovi": true
         },
         {
           "id": "rc18",
@@ -194,7 +263,18 @@
             "giusta": 2,
             "si": "Giusto: quarantacinque primi sono tre quarti di grado.",
             "no": "Quarantacinque primi sono tre quarti di grado.",
-            "spiega": "Pensa all'orologio: un grado sono sessanta primi, come un'ora sono sessanta minuti. Trenta primi sono mezzo grado, quindici un quarto, quarantacinque tre quarti. Attenzione a non leggerlo come zero virgola quarantacinque: i primi non sono decimali."
+            "spiega": "Pensa all'orologio: un grado sono sessanta primi, come un'ora sono sessanta minuti. Trenta primi sono mezzo grado, quindici un quarto, quarantacinque tre quarti. Attenzione a non leggerlo come zero virgola quarantacinque: i primi non sono decimali.",
+            "sai": [
+              "Punto A: 54°45′ N",
+              "Sta tra la linea 54° e la linea 55°",
+              "1° = 60′"
+            ],
+            "fai": "45′ su 60′: che parte del riquadro è?",
+            "calcolo": {
+              "t": "Punto A, latitudine 54°45′ N",
+              "f": "45′ su 60′",
+              "r": "tre quarti del riquadro sopra 54°"
+            }
           }
         },
         {
@@ -214,7 +294,17 @@
             "giusta": 1,
             "si": "Giusto: a ovest i numeri crescono verso sinistra.",
             "no": "A ovest i numeri crescono verso sinistra, quindi il tre sta a sinistra del due.",
-            "spiega": "Ecco perché conviene scrivere subito i valori su tutte le linee: così il verso lo vedi direttamente sul foglio e non devi ragionarci ogni volta."
+            "spiega": "Ecco perché conviene scrivere subito i valori su tutte le linee: così il verso lo vedi direttamente sul foglio e non devi ragionarci ogni volta.",
+            "sai": [
+              "Longitudine di A: 2°45′ O",
+              "Etichetta data: 3° O",
+              "Il reticolo è a ovest di Greenwich"
+            ],
+            "calcolo": {
+              "t": "Punto A, longitudine 2°45′ O",
+              "f": "a ovest i numeri crescono verso sinistra",
+              "r": "tre quarti del riquadro a sinistra di 2°"
+            }
           }
         },
         {
@@ -235,13 +325,30 @@
             "giusta": 0,
             "si": "Giusto: zero zero primi vuol dire che sta proprio sulla linea.",
             "no": "Zero zero primi vuol dire che il punto sta proprio sulla linea dei cinquantatré gradi.",
-            "spiega": "Quando i primi sono zero, il punto non sta dentro il riquadro ma proprio sopra la linea. E quando scrivi le coordinate, quei due zeri si scrivono sempre."
-          }
+            "spiega": "Quando i primi sono zero, il punto non sta dentro il riquadro ma proprio sopra la linea. E quando scrivi le coordinate, quei due zeri si scrivono sempre.",
+            "sai": [
+              "Punto B: 53°00′ N",
+              "I primi dicono quanto ci si allontana dalla linea"
+            ],
+            "calcolo": {
+              "t": "Punto B, latitudine 53°00′ N",
+              "f": "i primi sono 00′",
+              "r": "proprio sulla linea 53°"
+            }
+          },
+          "calcoliNuovi": true
         },
         {
           "id": "rp08",
           "p": 4,
-          "voce": "Ecco il punto B: sulla linea dei cinquantatré gradi, e a metà tra i cinque e i sei gradi ovest."
+          "voce": "Ecco il punto B: sulla linea dei cinquantatré gradi, e a metà tra i cinque e i sei gradi ovest.",
+          "calcoli": [
+            {
+              "t": "Punto B, longitudine",
+              "f": "a metà tra 5° O e 6° O: 30′",
+              "r": "5°30′ O"
+            }
+          ]
         },
         {
           "id": "rp09",
@@ -277,7 +384,17 @@
             ],
             "si": "Giusto: meno un milione 531 mila 860.",
             "no": "La variazione è meno un milione 531 mila 860.",
-            "spiega": "Si fa sempre finale meno iniziale. Qui la popolazione è diminuita, quindi il risultato è negativo: è un decremento, e il segno meno va scritto."
+            "spiega": "Si fa sempre finale meno iniziale. Qui la popolazione è diminuita, quindi il risultato è negativo: è un decremento, e il segno meno va scritto.",
+            "sai": [
+              "Popolazione iniziale (1° gennaio 2009): 23.618.420",
+              "Popolazione finale (30 giugno 2016): 22.086.560"
+            ],
+            "fai": "finale − iniziale = 22.086.560 − 23.618.420 = ?",
+            "calcolo": {
+              "t": "Variazione",
+              "f": "finale − iniziale: 22.086.560 − 23.618.420",
+              "r": "−1.531.860"
+            }
           }
         },
         {
@@ -295,12 +412,28 @@
             ],
             "si": "Giusto: sette virgola cinque anni.",
             "no": "Sono sette anni e sei mesi, cioè sette virgola cinque.",
-            "spiega": "Gli anni interi sono sette, ma ci sono anche sei mesi in più. Un mese è un dodicesimo di anno, quindi sei mesi sono sei dodicesimi, cioè mezzo anno. Se dividessi solo per sette, quei sei mesi andrebbero persi."
+            "spiega": "Gli anni interi sono sette, ma ci sono anche sei mesi in più. Un mese è un dodicesimo di anno, quindi sei mesi sono sei dodicesimi, cioè mezzo anno. Se dividessi solo per sette, quei sei mesi andrebbero persi.",
+            "sai": [
+              "Inizio: 1° gennaio 2009",
+              "Fine: 30 giugno 2016",
+              "Variazione: −1.531.860"
+            ],
+            "fai": "anni interi + mesi ÷ 12 = ?",
+            "calcolo": {
+              "t": "Tempo in anni",
+              "f": "7 anni e 6 mesi: 7 + 6 ÷ 12 = 7 + 0,5",
+              "r": "7,5 anni"
+            }
           }
         },
         {
+          "id": "id03b",
+          "p": 4,
+          "voce": "Fermiamoci un momento sui mesi, perché è il punto in cui si sbaglia di più. Un anno ha dodici mesi, quindi per trasformare i mesi in anni si dividono per dodici, con la calcolatrice. Sei mesi: sei diviso dodici fa zero virgola cinque. Se la data finale fosse il trenta novembre, i mesi sarebbero undici: undici diviso dodici fa zero virgola novantadue. Poi questo numero si somma agli anni interi: sette più zero virgola cinque fa sette virgola cinque. Con novembre sarebbe sette più zero virgola novantadue, cioè sette virgola novantadue. E attenzione: sette anni e sei mesi non si scrive sette virgola sei, perché i mesi non sono decimi."
+        },
+        {
           "id": "id04",
-          "p": 3,
+          "p": 4,
           "voce": "Ora calcola la media per ogni anno: dividi la variazione per il numero di anni.",
           "chiedi": {
             "campi": [
@@ -313,12 +446,22 @@
             ],
             "si": "Giusto: meno 204 mila 248 abitanti all'anno.",
             "no": "Meno un milione 531 mila 860 diviso sette virgola cinque fa meno 204 mila 248.",
-            "spiega": "Questo numero ti dice quanti abitanti ha perso il paese, in media, ogni anno."
+            "spiega": "Questo numero ti dice quanti abitanti ha perso il paese, in media, ogni anno.",
+            "sai": [
+              "Variazione: −1.531.860",
+              "Tempo: 7,5 anni"
+            ],
+            "fai": "variazione ÷ anni = −1.531.860 ÷ 7,5 = ?",
+            "calcolo": {
+              "t": "Media annua",
+              "f": "variazione ÷ anni: −1.531.860 ÷ 7,5",
+              "r": "−204.248 abitanti all’anno"
+            }
           }
         },
         {
           "id": "id05",
-          "p": 4,
+          "p": 5,
           "voce": "Infine trasforma il risultato in percentuale: dividi la media annua per la popolazione iniziale e moltiplica per cento.",
           "chiedi": {
             "campi": [
@@ -331,17 +474,34 @@
             ],
             "si": "Giusto: meno zero virgola ottantasei per cento all'anno.",
             "no": "Il risultato è meno zero virgola ottantasei per cento all'anno.",
-            "spiega": "Al denominatore va sempre la popolazione iniziale, cioè quella da cui si parte, non quella finale. Puoi dividere prima per gli anni e poi per la popolazione, o al contrario: il risultato è lo stesso, basta fare tutti e due i passaggi."
+            "spiega": "Al denominatore va sempre la popolazione iniziale, cioè quella da cui si parte, non quella finale. Puoi dividere prima per gli anni e poi per la popolazione, o al contrario: il risultato è lo stesso, basta fare tutti e due i passaggi.",
+            "sai": [
+              "Media annua: −204.248",
+              "Popolazione iniziale: 23.618.420"
+            ],
+            "fai": "media annua ÷ popolazione iniziale × 100 = −204.248 ÷ 23.618.420 × 100 = ?",
+            "calcolo": {
+              "t": "In percentuale",
+              "f": "media ÷ popolazione iniziale × 100: −204.248 ÷ 23.618.420 × 100",
+              "r": "−0,86% all’anno"
+            }
           }
         },
         {
           "id": "id06",
-          "p": 5,
-          "voce": "Ecco il calcolo completo. Se invece di moltiplicare per cento moltiplichi per mille, ottieni meno otto virgola sei per mille, ed è giusto lo stesso."
+          "p": 6,
+          "voce": "Ecco il calcolo completo. Se invece di moltiplicare per cento moltiplichi per mille, ottieni meno otto virgola sei per mille, ed è giusto lo stesso.",
+          "calcoli": [
+            {
+              "t": "Oppure per mille",
+              "f": "−204.248 ÷ 23.618.420 × 1000",
+              "r": "−8,6‰"
+            }
+          ]
         },
         {
           "id": "id07",
-          "p": 6,
+          "p": 7,
           "voce": "Secondo esempio. Nel 2012 ci sono 220 mila 350 abitanti: 78 mila 560 sono femmine e 140 mila 550 sono in età lavorativa. Ti chiedono l'indice di maschilità. Però il numero dei maschi non c'è. Quanti sono?",
           "chiedi": {
             "campi": [
@@ -354,12 +514,24 @@
             ],
             "si": "Giusto: 141 mila 790 maschi.",
             "no": "220 mila 350 meno 78 mila 560 fa 141 mila 790.",
-            "spiega": "I maschi si ricavano togliendo le femmine dal totale. Il dato sulle persone in età lavorativa qui non serve: non dice niente su quanti sono maschi o femmine."
-          }
+            "spiega": "I maschi si ricavano togliendo le femmine dal totale. Il dato sulle persone in età lavorativa qui non serve: non dice niente su quanti sono maschi o femmine.",
+            "sai": [
+              "Abitanti: 220.350",
+              "Femmine: 78.560",
+              "In età lavorativa: 140.550"
+            ],
+            "fai": "abitanti − femmine = 220.350 − 78.560 = ?",
+            "calcolo": {
+              "t": "Maschi",
+              "f": "abitanti − femmine: 220.350 − 78.560",
+              "r": "141.790"
+            }
+          },
+          "calcoliNuovi": true
         },
         {
           "id": "id08",
-          "p": 6,
+          "p": 7,
           "voce": "Adesso calcola l'indice di maschilità. I maschi sono quello che ti chiedono, quindi vanno sopra. Le femmine vanno sotto.",
           "chiedi": {
             "campi": [
@@ -376,12 +548,22 @@
             ],
             "si": "Giusto: uno virgola ottanta.",
             "no": "141 mila 790 diviso 78 mila 560 fa uno virgola ottanta.",
-            "spiega": "Vuol dire che per ogni femmina ci sono uno virgola ottanta maschi. Un indice è un semplice rapporto, quindi basta una divisione e il risultato è un numero senza unità. Se preferisci scriverlo in percentuale, centottanta, va bene lo stesso."
+            "spiega": "Vuol dire che per ogni femmina ci sono uno virgola ottanta maschi. Un indice è un semplice rapporto, quindi basta una divisione e il risultato è un numero senza unità. Se preferisci scriverlo in percentuale, centottanta, va bene lo stesso.",
+            "sai": [
+              "Maschi: 141.790",
+              "Femmine: 78.560"
+            ],
+            "fai": "maschi ÷ femmine = 141.790 ÷ 78.560 = ?",
+            "calcolo": {
+              "t": "Indice di maschilità",
+              "f": "maschi ÷ femmine: 141.790 ÷ 78.560",
+              "r": "1,80"
+            }
           }
         },
         {
           "id": "id09",
-          "p": 8,
+          "p": 9,
           "voce": "Con gli stessi dati puoi calcolare l'indice di dipendenza. Le persone che non sono in età lavorativa, cioè i più giovani e i più anziani, dipendono da chi lavora. L'indice si ottiene dividendo i dipendenti per le persone in età lavorativa. Prova.",
           "chiedi": {
             "campi": [
@@ -398,12 +580,29 @@
             ],
             "si": "Giusto: zero virgola cinquantasette.",
             "no": "Il risultato è zero virgola cinquantasette.",
-            "spiega": "Prima trovi i dipendenti: 220 mila 350 meno 140 mila 550 fa 79 mila 800. Poi dividi 79 mila 800 per 140 mila 550 e ottieni zero virgola cinquantasette. Qui il dato che non serve è il numero delle femmine."
+            "spiega": "Prima trovi i dipendenti: 220 mila 350 meno 140 mila 550 fa 79 mila 800. Poi dividi 79 mila 800 per 140 mila 550 e ottieni zero virgola cinquantasette. Qui il dato che non serve è il numero delle femmine.",
+            "sai": [
+              "Abitanti: 220.350",
+              "In età lavorativa: 140.550"
+            ],
+            "fai": "dipendenti = 220.350 − 140.550, poi dipendenti ÷ 140.550 = ?",
+            "calcolo": [
+              {
+                "t": "Persone dipendenti",
+                "f": "abitanti − in età lavorativa: 220.350 − 140.550",
+                "r": "79.800"
+              },
+              {
+                "t": "Indice di dipendenza",
+                "f": "dipendenti ÷ in età lavorativa: 79.800 ÷ 140.550",
+                "r": "0,57"
+              }
+            ]
           }
         },
         {
           "id": "id10",
-          "p": 9,
+          "p": 10,
           "voce": "Passiamo al tasso di mortalità. Nel 2012 sono nati 2 mila 200 bambini e sono morte mille 500 persone. Calcola il tasso di mortalità in percentuale.",
           "chiedi": {
             "campi": [
@@ -420,17 +619,36 @@
             ],
             "si": "Giusto: zero virgola sessantotto per cento.",
             "no": "Mille 500 diviso 220 mila 350, per cento, fa zero virgola sessantotto per cento.",
-            "spiega": "Sopra metti i morti, sotto la popolazione che c'era a inizio anno. I nati qui non servono. Un tasso si può esprimere per cento oppure per mille: sei virgola otto per mille è la stessa cosa."
-          }
+            "spiega": "Sopra metti i morti, sotto la popolazione che c'era a inizio anno. I nati qui non servono. Un tasso si può esprimere per cento oppure per mille: sei virgola otto per mille è la stessa cosa.",
+            "sai": [
+              "Abitanti: 220.350",
+              "Nati: 2.200",
+              "Morti: 1.500"
+            ],
+            "fai": "morti ÷ abitanti × 100 = 1.500 ÷ 220.350 × 100 = ?",
+            "calcolo": {
+              "t": "Tasso di mortalità",
+              "f": "morti ÷ abitanti × 100: 1.500 ÷ 220.350 × 100",
+              "r": "0,68%"
+            }
+          },
+          "calcoliNuovi": true
         },
         {
           "id": "id11",
-          "p": 10,
-          "voce": "Il tasso di natalità si calcola allo stesso modo, con i nati al posto dei morti: 2 mila 200 diviso 220 mila 350, per cento. Viene circa l'uno per cento."
+          "p": 11,
+          "voce": "Il tasso di natalità si calcola allo stesso modo, con i nati al posto dei morti: 2 mila 200 diviso 220 mila 350, per cento. Viene circa l'uno per cento.",
+          "calcoli": [
+            {
+              "t": "Tasso di natalità",
+              "f": "nati ÷ abitanti × 100: 2.200 ÷ 220.350 × 100",
+              "r": "circa 1%"
+            }
+          ]
         },
         {
           "id": "id12",
-          "p": 11,
+          "p": 12,
           "voce": "Restano due calcoli. L'incremento naturale è nati meno morti, quindi più settecento. Il saldo migratorio è immigrati meno emigrati: settecentocinquanta meno mille 200. Quanto viene?",
           "chiedi": {
             "campi": [
@@ -443,17 +661,35 @@
             ],
             "si": "Giusto: meno quattrocentocinquanta.",
             "no": "Settecentocinquanta meno mille 200 fa meno quattrocentocinquanta.",
-            "spiega": "Sono andate via più persone di quante ne sono arrivate, quindi il saldo è negativo e il meno va scritto. Quando invece il risultato è positivo, scrivi il più davanti: così si capisce subito se è una crescita o un calo."
-          }
+            "spiega": "Sono andate via più persone di quante ne sono arrivate, quindi il saldo è negativo e il meno va scritto. Quando invece il risultato è positivo, scrivi il più davanti: così si capisce subito se è una crescita o un calo.",
+            "sai": [
+              "Incremento naturale: 2.200 − 1.500 = +700",
+              "Immigrati: 750",
+              "Emigrati: 1.200"
+            ],
+            "fai": "immigrati − emigrati = 750 − 1.200 = ?",
+            "calcolo": {
+              "t": "Saldo migratorio",
+              "f": "immigrati − emigrati: 750 − 1.200",
+              "r": "−450"
+            }
+          },
+          "calcoli": [
+            {
+              "t": "Incremento naturale",
+              "f": "nati − morti: 2.200 − 1.500",
+              "r": "+700"
+            }
+          ]
         },
         {
           "id": "id13",
-          "p": 12,
+          "p": 13,
           "voce": "Due consigli su come scrivere i risultati. I tassi vanno con il simbolo del per cento o del per mille, gli indici sono numeri senza simbolo. Bastano due cifre dopo la virgola. E porta la calcolatrice."
         },
         {
           "id": "id14",
-          "p": 13,
+          "p": 14,
           "voce": "Ricapitolando. Leggi bene cosa ti chiedono e barra il dato che non serve. Sopra metti quello che ti chiedono, sotto la popolazione iniziale. Conta i mesi in dodicesimi di anno, e scrivi sempre il segno e il simbolo. Adesso allenati: ogni esercizio ti chiede un calcolo diverso."
         }
       ]
@@ -480,7 +716,29 @@
             ],
             "si": "Giusto: nove abitanti per chilometro quadrato.",
             "no": "Nove abitanti diviso un chilometro quadrato fa nove.",
-            "spiega": "La densità ti dice quante persone vivono, in media, in ogni chilometro quadrato. Quindi dividi gli abitanti per l'area, e scrivi il risultato con l'unità: abitanti per chilometro quadrato."
+            "spiega": "La densità ti dice quante persone vivono, in media, in ogni chilometro quadrato. Quindi dividi gli abitanti per l'area, e scrivi il risultato con l'unità: abitanti per chilometro quadrato.",
+            "sai": [
+              "Lato: 1 km, quindi area 1 × 1 = 1 km²",
+              "9 pallini × 1 abitante = 9 abitanti"
+            ],
+            "fai": "abitanti ÷ area = 9 ÷ 1 = ?",
+            "calcolo": [
+              {
+                "t": "Abitanti",
+                "f": "pallini × legenda: 9 × 1",
+                "r": "9 abitanti"
+              },
+              {
+                "t": "Area",
+                "f": "lato × lato: 1 × 1",
+                "r": "1 km²"
+              },
+              {
+                "t": "Densità",
+                "f": "abitanti ÷ area: 9 ÷ 1",
+                "r": "9 ab/km²"
+              }
+            ]
           }
         },
         {
@@ -498,9 +756,19 @@
             ],
             "si": "Giusto: due per due, quattro chilometri quadrati.",
             "no": "L'area si calcola lato per lato: due per due, quattro chilometri quadrati.",
-            "spiega": "Un errore frequente è scrivere otto, cioè due più due più due più due. Ma quello è il perimetro, la lunghezza del bordo. Per la densità ti serve l'area, cioè la superficie."
+            "spiega": "Un errore frequente è scrivere otto, cioè due più due più due più due. Ma quello è il perimetro, la lunghezza del bordo. Per la densità ti serve l'area, cioè la superficie.",
+            "sai": [
+              "Lato: 2 km"
+            ],
+            "fai": "area = lato × lato = 2 × 2 = ?",
+            "calcolo": {
+              "t": "Area",
+              "f": "lato × lato: 2 × 2",
+              "r": "4 km²"
+            }
           },
-          "nascondi": true
+          "nascondi": true,
+          "calcoliNuovi": true
         },
         {
           "id": "ds04",
@@ -522,7 +790,25 @@
             ],
             "si": "Giusto: diciotto diviso quattro, quattro virgola cinque.",
             "no": "Nove per due fa diciotto abitanti. Diviso quattro chilometri quadrati, fa quattro virgola cinque.",
-            "spiega": "Sopra vanno gli abitanti, non i pallini. Per sapere quanti sono gli abitanti moltiplichi il numero dei simboli per il valore della legenda."
+            "spiega": "Sopra vanno gli abitanti, non i pallini. Per sapere quanti sono gli abitanti moltiplichi il numero dei simboli per il valore della legenda.",
+            "sai": [
+              "Area: 4 km²",
+              "Pallini: 9",
+              "Ogni pallino: 2 abitanti"
+            ],
+            "fai": "abitanti = 9 × 2, poi abitanti ÷ 4 = ?",
+            "calcolo": [
+              {
+                "t": "Abitanti",
+                "f": "pallini × legenda: 9 × 2",
+                "r": "18 abitanti"
+              },
+              {
+                "t": "Densità",
+                "f": "abitanti ÷ area: 18 ÷ 4",
+                "r": "4,5 ab/km²"
+              }
+            ]
           }
         },
         {
@@ -540,13 +826,38 @@
             ],
             "si": "Giusto: trentuno virgola cinque diviso nove, tre virgola cinque.",
             "no": "Nove per tre virgola cinque fa trentuno virgola cinque abitanti. L'area è tre per tre, nove. Trentuno virgola cinque diviso nove fa tre virgola cinque.",
-            "spiega": "Come vedi, i passaggi sono sempre gli stessi tre: calcoli gli abitanti, calcoli l'area, e dividi."
-          }
+            "spiega": "Come vedi, i passaggi sono sempre gli stessi tre: calcoli gli abitanti, calcoli l'area, e dividi.",
+            "sai": [
+              "Lato: 3 km",
+              "Pallini: 9",
+              "Ogni pallino: 3,5 abitanti"
+            ],
+            "fai": "abitanti = 9 × 3,5; area = 3 × 3; poi abitanti ÷ area = ?",
+            "calcolo": [
+              {
+                "t": "Abitanti",
+                "f": "pallini × legenda: 9 × 3,5",
+                "r": "31,5 abitanti"
+              },
+              {
+                "t": "Area",
+                "f": "lato × lato: 3 × 3",
+                "r": "9 km²"
+              },
+              {
+                "t": "Densità",
+                "f": "abitanti ÷ area: 31,5 ÷ 9",
+                "r": "3,5 ab/km²"
+              }
+            ]
+          },
+          "calcoliNuovi": true
         },
         {
           "id": "ds07",
           "p": 5,
-          "voce": "Ora la seconda parte: come sono distribuiti i simboli. In questo quadrato i pallini sono un po' dappertutto: la distribuzione si chiama sparsa. Non scrivere mai casuale: in geografia si cerca sempre una ragione per cui le persone vivono in un posto."
+          "voce": "Ora la seconda parte: come sono distribuiti i simboli. In questo quadrato i pallini sono un po' dappertutto: la distribuzione si chiama sparsa. Non scrivere mai casuale: in geografia si cerca sempre una ragione per cui le persone vivono in un posto.",
+          "calcoliNuovi": true
         },
         {
           "id": "ds08",
@@ -562,7 +873,11 @@
             "giusta": 1,
             "si": "Giusto: sparsa, ma solo in basso a destra, cioè a sud-est.",
             "no": "È sparsa, ma solo in basso a destra, cioè a sud-est.",
-            "spiega": "Quando i simboli occupano solo una parte del quadrato, dire sparsa non basta: devi dire anche dove si trovano."
+            "spiega": "Quando i simboli occupano solo una parte del quadrato, dire sparsa non basta: devi dire anche dove si trovano.",
+            "sai": [
+              "Sparsa: pallini un po' dappertutto",
+              "Mai scrivere casuale"
+            ]
           },
           "nascondi": true
         },
@@ -589,7 +904,12 @@
             "giusta": 1,
             "si": "Giusto: lineare regolare, a forma di T.",
             "no": "È lineare regolare, a forma di T.",
-            "spiega": "Le linee sono dritte e i pallini sono tutti alla stessa distanza, come le case lungo due strade che si incrociano."
+            "spiega": "Le linee sono dritte e i pallini sono tutti alla stessa distanza, come le case lungo due strade che si incrociano.",
+            "sai": [
+              "Sparsa: un po' dappertutto",
+              "Accentrata: raccolti in un punto",
+              "Lineare sinuosa: lungo una linea che fa curve"
+            ]
           },
           "nascondi": true
         },
@@ -622,7 +942,16 @@
             ],
             "si": "Giusto: centosedici.",
             "no": "Cinquantasei più sessanta fa centosedici.",
-            "spiega": "Fai lo stesso per tutti gli anni. Il totale più alto è quello del 2015: sessanta più cinquantotto, centodiciotto."
+            "spiega": "Fai lo stesso per tutti gli anni. Il totale più alto è quello del 2015: sessanta più cinquantotto, centodiciotto.",
+            "sai": [
+              "1975: 56 maschi e 60 femmine"
+            ],
+            "fai": "maschi + femmine = 56 + 60 = ?",
+            "calcolo": {
+              "t": "Totale del 1975",
+              "f": "maschi + femmine: 56 + 60",
+              "r": "116"
+            }
           }
         },
         {
@@ -638,8 +967,24 @@
             "giusta": 2,
             "si": "Giusto: fino a centoventi.",
             "no": "Se l'asse arriva a sessanta o a cento, il totale non ci sta. Deve arrivare a centoventi.",
-            "spiega": "La scala si sceglie guardando il valore più grande da disegnare, che qui è il totale. Centoventi lo contiene e lascia un po' di spazio sopra. Disegna il grafico bello grande, così si legge bene."
-          }
+            "spiega": "La scala si sceglie guardando il valore più grande da disegnare, che qui è il totale. Centoventi lo contiene e lascia un po' di spazio sopra. Disegna il grafico bello grande, così si legge bene.",
+            "sai": [
+              "Totale più alto: 118 (nel 2015)"
+            ],
+            "fai": "l'asse deve arrivare almeno a 118",
+            "calcolo": {
+              "t": "Scala dell’asse verticale",
+              "f": "deve contenere il totale più alto, 118",
+              "r": "fino a 120"
+            }
+          },
+          "calcoli": [
+            {
+              "t": "Totale più alto (2015)",
+              "f": "maschi + femmine: 60 + 58",
+              "r": "118"
+            }
+          ]
         },
         {
           "id": "gc04",
@@ -661,7 +1006,17 @@
             ],
             "si": "Giusto: nove.",
             "no": "Servono nove posizioni, anche se gli anni con i dati sono solo sette.",
-            "spiega": "Ogni anno della serie deve avere il suo posto, anche quelli senza dati. Il 1985 e il 2010 restano sull'asse, solo che sopra non disegni niente."
+            "spiega": "Ogni anno della serie deve avere il suo posto, anche quelli senza dati. Il 1985 e il 2010 restano sull'asse, solo che sopra non disegni niente.",
+            "sai": [
+              "Dati dal 1975 al 2015, ogni 5 anni",
+              "Mancano il 1985 e il 2010"
+            ],
+            "fai": "conta tutti gli anni: 1975, 1980, 1985 … 2015",
+            "calcolo": {
+              "t": "Posizioni sull’asse orizzontale",
+              "f": "7 anni con i dati + 2 senza (1985 e 2010)",
+              "r": "9"
+            }
           }
         },
         {
@@ -687,7 +1042,11 @@
             "giusta": 1,
             "si": "Giusto: tratteggiata.",
             "no": "Dove manca un anno la linea si fa tratteggiata.",
-            "spiega": "Il tratteggio serve a far capire che in quel tratto mancano dei dati. Tra due anni vicini, invece, la linea è continua."
+            "spiega": "Il tratteggio serve a far capire che in quel tratto mancano dei dati. Tra due anni vicini, invece, la linea è continua.",
+            "sai": [
+              "Tra il 1980 e il 1990 manca il 1985",
+              "Tra due anni vicini la linea è continua"
+            ]
           }
         },
         {
@@ -1294,5 +1653,104 @@
     }
   },
   "musica": "esercizi-video/musica.mp3",
-  "musicaVolume": 0.1
+  "musicaVolume": 0.1,
+  "scritte": {
+    "rc04": "Guarda l'etichetta 20° N. Non vuol dire che il nord sta da quella parte del foglio: il nord è sempre in alto. Vuol dire che tutta quella linea si trova a 20° a nord dell'equatore. L'etichetta è il valore della linea.",
+    "rc06": "Hanoi sta proprio sopra il parallelo dei 21°. Prova tu: scrivi la latitudine di Hanoi, in gradi e primi.",
+    "rc06-si": "Giusto: 21°00′ N.",
+    "rc06-no": "La risposta giusta è 21°00′ N.",
+    "rc06-spiega": "Quando un punto sta esattamente sulla linea, i primi sono zero, e si scrivono lo stesso: 00′. Se scrivessi solo 21°, potresti indicare un punto qualsiasi tra 21° e 22°.",
+    "rc07": "Passiamo alla longitudine di Hanoi. La città sta tra il meridiano dei 105° e quello dei 106°. Si parte sempre dalla linea con il numero più piccolo, quindi da 105°.",
+    "rc08": "Adesso devi capire quanto Hanoi è lontana da quella linea. Ricorda che 1° si divide in 60′, proprio come un'ora in 60 minuti. Guarda il riquadro e scrivi la longitudine, in gradi e primi.",
+    "rc08-si": "Giusto: 105°50′ E.",
+    "rc08-no": "La risposta giusta è 105°50′ E.",
+    "rc08-spiega": "Se dividi il riquadro in 6 parti uguali, ogni parte vale 10′. Hanoi è alla quinta parte, quindi 5 × 10′ = 50′. Non serve essere precisissimi, va bene una stima vicina. L'unica cosa da evitare è scrivere 60′: 60′ sono già 1° intero.",
+    "rc09": "Eccolo sul disegno: 5 parti su 6, cioè 50′.",
+    "rc10": "Ora tocca a Hong Kong. Sta tra il parallelo dei 22° e quello dei 23°. Scrivi la latitudine.",
+    "rc10-si": "Giusto: 22°15′ N.",
+    "rc10-no": "La risposta giusta è 22°15′ N.",
+    "rc10-spiega": "Qui conviene dividere il riquadro in 4 parti, come i quarti d'ora: ogni parte vale 15′. Hong Kong è a un quarto sopra la linea dei 22°, quindi 15′. A metà sarebbero 30′, a tre quarti 45′.",
+    "rc11": "Sul disegno si vede bene: un quarto del riquadro, 15′.",
+    "rc12": "Per la longitudine di Hong Kong il ragionamento è lo stesso. È poco dopo il meridiano dei 114°, circa a un sesto del riquadro. Quindi 114°10′ E.",
+    "rc15": "Proviamo con Buenos Aires. Sta tra 34° S e 35° S, un po' oltre la metà del riquadro. Scrivi la latitudine.",
+    "rc15-si": "Giusto: 34°35′ S.",
+    "rc15-no": "La risposta giusta è 34°35′ S.",
+    "rc15-spiega": "Anche a sud si parte dalla linea con il numero più piccolo, cioè 34°. Visto che i numeri crescono scendendo, conti verso il basso: poco oltre la metà vuol dire circa 35′.",
+    "rc16": "La longitudine di Buenos Aires è 58°25′ O. Qui i numeri crescono verso sinistra, quindi si conta in quella direzione.",
+    "rc17-si": "Giusto: c'è scritto 150°, ma doveva esserci 105°.",
+    "rc17-no": "L'etichetta sbagliata è 150°: doveva esserci 105°.",
+    "rc17-spiega": "Tra due linee vicine c'è sempre 1°. L'etichetta 150° sta tre linee a sinistra di 108°, quindi il suo valore deve essere 108 − 3 = 105. Qualcuno ha invertito le cifre.",
+    "rp02": "Ti danno solo due etichette: 54° N e 3° O. Come sempre, la prima cosa è scrivere il valore di tutte le linee. I paralleli crescono salendo, quindi siamo a nord. I meridiani crescono verso sinistra, quindi siamo a ovest.",
+    "rp03": "Il punto A è a 54°45′ N. Quindi sta tra la linea dei 54° e quella dei 55°. Ma in che punto del riquadro?",
+    "rp03-si": "Giusto: 45′ sono tre quarti di grado.",
+    "rp03-no": "45′ sono tre quarti di grado.",
+    "rp03-spiega": "Pensa all'orologio: 1° = 60′, come 1 ora = 60 minuti. 30′ sono mezzo grado, 15′ un quarto, 45′ tre quarti. Attenzione a non leggerlo come 0,45: i primi non sono decimali.",
+    "rp04": "Quindi il punto va nella fascia tra 54° e 55°, a tre quarti della distanza, verso 55°.",
+    "rp05": "Ora la longitudine: 2°45′ O. Il punto quindi va verso il meridiano dei 3°. Ma da che parte del foglio si trova?",
+    "rp05-no": "A ovest i numeri crescono verso sinistra, quindi 3° sta a sinistra di 2°.",
+    "rp07": "Proviamo con il punto B, a 53°00′ N. Dove si trova il punto?",
+    "rp07-si": "Giusto: 00′ vuol dire che sta proprio sulla linea.",
+    "rp07-no": "00′ vuol dire che il punto sta proprio sulla linea dei 53°.",
+    "rp08": "Ecco il punto B: sulla linea dei 53°, e a metà tra 5° O e 6° O.",
+    "rp09": "Gli errori più comuni sono tre. Cercare il punto senza aver prima scritto i valori delle linee. Confondere il nord con l'est perché si gira il foglio. E scrivere 60′ o 75′, che non esistono: oltre 59′ si passa al grado dopo.",
+    "id02": "Primo esempio. Il 1° gennaio 2009 ci sono 23.618.420 abitanti. Il 30 giugno 2016 sono 22.086.560. Ti chiedono l'incremento medio annuo. Per prima cosa calcola di quanto è cambiata la popolazione: quella finale meno quella iniziale.",
+    "id02-si": "Giusto: 22.086.560 − 23.618.420 = −1.531.860.",
+    "id02-no": "La variazione è 22.086.560 − 23.618.420 = −1.531.860.",
+    "id03": "Adesso serve sapere quanto tempo è passato, dal 1° gennaio 2009 al 30 giugno 2016. Scrivi il numero di anni, con i decimali.",
+    "id03-si": "Giusto: 7,5 anni.",
+    "id03-no": "Sono 7 anni e 6 mesi, cioè 7,5 anni.",
+    "id03-spiega": "Gli anni interi sono 7, ma ci sono anche 6 mesi in più. Un mese è 1/12 di anno, quindi 6 mesi = 6 ÷ 12 = 0,5 anni. Se dividessi solo per 7, quei 6 mesi andrebbero persi.",
+    "id03b": "Fermiamoci un momento sui mesi, perché è il punto in cui si sbaglia di più. Un anno ha 12 mesi, quindi per trasformare i mesi in anni si dividono per 12, con la calcolatrice. 6 mesi: 6 ÷ 12 = 0,5. Se la data finale fosse il 30 novembre, i mesi sarebbero 11: 11 ÷ 12 = 0,92. Poi questo numero si somma agli anni interi: 7 + 0,5 = 7,5 anni. Con novembre sarebbe 7 + 0,92 = 7,92 anni. E attenzione: 7 anni e 6 mesi non si scrive 7,6, perché i mesi non sono decimi.",
+    "id04-si": "Giusto: −204.248 abitanti all'anno.",
+    "id04-no": "−1.531.860 ÷ 7,5 = −204.248.",
+    "id05": "Infine trasforma il risultato in percentuale: dividi la media annua per la popolazione iniziale e moltiplica per 100.",
+    "id05-si": "Giusto: −0,86% all'anno.",
+    "id05-no": "−204.248 ÷ 23.618.420 × 100 = −0,86% all'anno.",
+    "id06": "Ecco il calcolo completo. Se invece di moltiplicare per 100 moltiplichi per 1000, ottieni −8,6‰, ed è giusto lo stesso.",
+    "id07": "Secondo esempio. Nel 2012 ci sono 220.350 abitanti: 78.560 sono femmine e 140.550 sono in età lavorativa. Ti chiedono l'indice di maschilità. Però il numero dei maschi non c'è. Quanti sono?",
+    "id07-si": "Giusto: 141.790 maschi.",
+    "id07-no": "220.350 − 78.560 = 141.790.",
+    "id08-si": "Giusto: 1,80.",
+    "id08-no": "141.790 ÷ 78.560 = 1,80.",
+    "id08-spiega": "Vuol dire che per ogni femmina ci sono 1,80 maschi. Un indice è un semplice rapporto, quindi basta una divisione e il risultato è un numero senza unità. Se preferisci scriverlo in percentuale, 180, va bene lo stesso.",
+    "id09-si": "Giusto: 0,57.",
+    "id09-no": "Il risultato è 79.800 ÷ 140.550 = 0,57.",
+    "id09-spiega": "Prima trovi i dipendenti: 220.350 − 140.550 = 79.800. Poi 79.800 ÷ 140.550 = 0,57. Qui il dato che non serve è il numero delle femmine.",
+    "id10": "Passiamo al tasso di mortalità. Nel 2012 sono nati 2.200 bambini e sono morte 1.500 persone. Calcola il tasso di mortalità in percentuale.",
+    "id10-si": "Giusto: 0,68%.",
+    "id10-no": "1.500 ÷ 220.350 × 100 = 0,68%.",
+    "id10-spiega": "Sopra metti i morti, sotto la popolazione che c'era a inizio anno. I nati qui non servono. Un tasso si può esprimere per cento oppure per mille: 6,8‰ è la stessa cosa.",
+    "id11": "Il tasso di natalità si calcola allo stesso modo, con i nati al posto dei morti: 2.200 ÷ 220.350 × 100. Viene circa 1%.",
+    "id12": "Restano due calcoli. L'incremento naturale è nati − morti: 2.200 − 1.500 = +700. Il saldo migratorio è immigrati − emigrati: 750 − 1.200. Quanto viene?",
+    "id12-si": "Giusto: −450.",
+    "id12-no": "750 − 1.200 = −450.",
+    "id13": "Due consigli su come scrivere i risultati. I tassi vanno con il simbolo % o ‰, gli indici sono numeri senza simbolo. Bastano due cifre dopo la virgola. E porta la calcolatrice.",
+    "id14": "Ricapitolando. Leggi bene cosa ti chiedono e barra il dato che non serve. Sopra metti quello che ti chiedono, sotto la popolazione iniziale. I mesi si dividono per 12 e si sommano agli anni, e scrivi sempre il segno e il simbolo. Adesso allenati: ogni esercizio ti chiede un calcolo diverso.",
+    "ds02": "Primo quadrato: il lato è 1 km, ci sono 9 pallini e ogni pallino vale 1 abitante. Calcola la densità.",
+    "ds02-si": "Giusto: 9 ab/km².",
+    "ds02-no": "9 abitanti ÷ 1 km² = 9 ab/km².",
+    "ds02-spiega": "La densità ti dice quante persone vivono, in media, in ogni km². Quindi dividi gli abitanti per l'area, e scrivi il risultato con l'unità: ab/km².",
+    "ds03": "Secondo quadrato: il lato è di 2 km. Prima di tutto calcola l'area.",
+    "ds03-si": "Giusto: 2 × 2 = 4 km².",
+    "ds03-no": "L'area si calcola lato per lato: 2 × 2 = 4 km².",
+    "ds03-spiega": "Un errore frequente è scrivere 8, cioè 2 + 2 + 2 + 2. Ma quello è il perimetro, la lunghezza del bordo. Per la densità ti serve l'area, cioè la superficie.",
+    "ds05": "In questo quadrato ci sono 9 pallini, ma ognuno vale 2 abitanti. Calcola la densità.",
+    "ds05-si": "Giusto: 18 ÷ 4 = 4,5 ab/km².",
+    "ds05-no": "9 × 2 = 18 abitanti. 18 ÷ 4 km² = 4,5 ab/km².",
+    "ds06": "Terzo quadrato: lato 3 km, 9 pallini, e ogni pallino vale 3,5 abitanti. Calcola la densità.",
+    "ds06-si": "Giusto: 31,5 ÷ 9 = 3,5 ab/km².",
+    "ds06-no": "9 × 3,5 = 31,5 abitanti. L'area è 3 × 3 = 9 km². 31,5 ÷ 9 = 3,5 ab/km².",
+    "ds12": "Ricapitolando. Abitanti = simboli × valore della legenda. Area = lato × lato. Densità = abitanti ÷ area. Poi descrivi la distribuzione: sparsa, accentrata o lineare, e quando serve dici anche dove. Adesso allenati.",
+    "gc01": "In questo esercizio devi costruire un istogramma con i maschi e le femmine e, sullo stesso grafico, anche il totale della popolazione. Nell'esempio i dati vanno dal 1975 al 2015, ogni 5 anni. Mancano però due anni: il 1985 e il 2010.",
+    "gc02": "Prima di disegnare, calcola i totali. Nel 1975 ci sono 56 maschi e 60 femmine. Quanto fa il totale?",
+    "gc02-si": "Giusto: 116.",
+    "gc02-no": "56 + 60 = 116.",
+    "gc02-spiega": "Fai lo stesso per tutti gli anni. Il totale più alto è quello del 2015: 60 + 58 = 118.",
+    "gc03": "Ora scegli la scala dell'asse verticale. Il valore più alto da disegnare non è quello dei maschi o delle femmine, ma il totale: 118. Fino a che numero deve arrivare l'asse?",
+    "gc03-si": "Giusto: fino a 120.",
+    "gc03-no": "Se l'asse arriva a 60 o a 100, il totale non ci sta. Deve arrivare a 120.",
+    "gc03-spiega": "La scala si sceglie guardando il valore più grande da disegnare, che qui è il totale. 120 lo contiene e lascia un po' di spazio sopra. Disegna il grafico bello grande, così si legge bene.",
+    "gc05-si": "Giusto: 9.",
+    "gc05-no": "Servono 9 posizioni, anche se gli anni con i dati sono solo 7."
+  }
 }

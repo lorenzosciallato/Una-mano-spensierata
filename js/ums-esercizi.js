@@ -503,6 +503,14 @@
     var opz = T.opzioni ? T.opzioni() : {};
     var firma = JSON.stringify(opz);
     var stato = leggi(K);
+    // Con ESX_LIBERO (pagina degli esercizi d'esame): a ogni apertura una serie nuova, con numeri nuovi; gli esercizi si sfogliano
+    // liberamente, anche senza correggerli; quelli fatti si contano a parte, per sempre, e non dipendono dalla serie in corso.
+    var LIBERO = !!window.ESX_LIBERO, KF = chiave(e, 'fatti');
+    function contati() { var c = leggi(KF); return c && typeof c.n === 'number' ? c : null; }
+    if (LIBERO) {
+      if (!contati()) { var c0 = { n: 0, ok: 0 }; if (stato && Array.isArray(stato.esiti)) stato.esiti.forEach(function (x) { if (x) { c0.n++; if (x.preso) c0.ok++; } }); scrivi(KF, c0); }
+      stato = null;
+    }
     if (!stato || !stato.seme || !Array.isArray(stato.esiti) || stato.opz !== firma) stato = { seme: nuovoSeme(), i: 0, esiti: [], opz: firma };
     var varianti;
     function prepara() {
@@ -523,11 +531,21 @@
     }
     function testata() {
       var h = el('div', { class: 'esx-serie' }), tot = varianti.length;
+      function freccia(verso) {
+        var b = el('button', { type: 'button', class: 'esx-sfoglia', 'aria-label': verso < 0 ? 'Esercizio precedente' : (stato.i + 1 >= tot ? 'Vai al riepilogo' : 'Esercizio successivo'), text: verso < 0 ? '‹' : '›' });
+        if (verso < 0 ? stato.i <= 0 : stato.i >= tot) b.disabled = true;
+        b.addEventListener('click', function () { vaiA(stato.i + verso); });
+        return b;
+      }
+      if (LIBERO) h.appendChild(freccia(-1));
       h.appendChild(el('strong', { text: stato.i < tot ? 'Esercizio ' + (stato.i + 1) + ' di ' + tot : 'Serie completata' }));
-      var tac = el('div', { class: 'esx-tacche', 'aria-hidden': 'true' });
+      if (LIBERO) h.appendChild(freccia(1));
+      var tac = el('div', { class: 'esx-tacche' + (LIBERO ? ' libere' : ''), 'aria-hidden': 'true' });
       for (var i = 0; i < tot; i++) {
         var x = stato.esiti[i];
-        tac.appendChild(el('i', { class: (x ? (x.preso ? 'preso' : 'perso') : '') + (i === stato.i ? ' ora' : '') }));
+        var tk = el('i', { class: (x ? (x.preso ? 'preso' : 'perso') : '') + (i === stato.i ? ' ora' : ''), title: LIBERO ? 'Esercizio ' + (i + 1) : null });
+        if (LIBERO) (function (n) { tk.addEventListener('click', function () { vaiA(n); }); })(i);
+        tac.appendChild(tk);
       }
       h.appendChild(tac);
       var presi = stato.esiti.filter(function (x) { return x && x.preso; }).length;
@@ -537,6 +555,7 @@
       h.appendChild(b);
       return h;
     }
+    function vaiA(n) { n = Math.max(0, Math.min(varianti.length, n)); if (n === stato.i) return; stato.i = n; salva(); disegna(); }
     function disegna() {
       if (ferma) { ferma(); ferma = null; }
       dove.innerHTML = '';
@@ -563,6 +582,7 @@
         q.segna(val); q.soluzione(false); correggi.remove();
         stato.esiti[stato.i] = { preso: val.preso, err: val.errori.map(function (x) { return x.c; }) };
         salva();
+        if (LIBERO) { var cf = contati() || { n: 0, ok: 0 }; cf.n++; if (val.preso) cf.ok = (cf.ok || 0) + 1; scrivi(KF, cf); }
         var vecchia = dove.querySelector('.esx-serie'); if (vecchia) dove.replaceChild(testata(), vecchia);
         esito.style.display = ''; esito.innerHTML = '';
         esito.appendChild(el('p', { class: 'esx-verdetto ' + (val.preso ? 'preso' : 'perso'), text: val.preso ? 'Giusto.' : 'Sbagliato.' }));
@@ -703,7 +723,7 @@
       '.tut .fig{flex:none}.tut .fig svg{display:block}.tut .txt{flex:1}.tut.solo .txt{padding-left:0}' +
       '.tut h4{font-size:11pt;margin:0 0 3px}.tut p{margin:0 0 4px;font-size:10pt}' +
       '.tut .regola{font-weight:700;background:#f1ead9;padding:4px 7px;border-radius:4px}' +
-      '.tut .mini svg{width:28mm;height:auto}' +
+      '.tut .mini svg{width:28mm;height:auto}.tut .mini svg.largo{width:64mm}' +
       '.errori{break-inside:avoid;page-break-inside:avoid;margin-top:12px}.errori ul{margin:0;padding-left:18px;font-size:10pt;columns:2;column-gap:10mm}.errori li{margin:0 0 3px;break-inside:avoid;page-break-inside:avoid}' +
       '.es{break-inside:avoid;page-break-inside:avoid;border:1px solid #bbb;border-radius:6px;padding:7px 10px;margin:0 0 7px}' +
       '.es h3{font-size:10.5pt;margin:0 0 4px}' +
@@ -2490,6 +2510,16 @@
     return s;
   }
 
+  // i mesi diventano anni: per ogni esempio la barra dei 12 mesi e la sua divisione
+  function tabellaMesi(lista) {
+    var s = sv('svg', { viewBox: '0 0 300 ' + (lista.length * 60 + 2), role: 'img', class: 'largo', style: 'max-width:300px', 'aria-label': lista.map(function (m) { return m + ' mesi diviso 12 = ' + fmt(m / 12); }).join('; ') });
+    lista.forEach(function (m, r) {
+      for (var k = 0; k < 12; k++) s.appendChild(sv('rect', { x: 6 + k * 24, y: r * 60 + 5, width: 22, height: 20, rx: 3, fill: k < m ? 'rgba(35,80,160,.55)' : '#fff', stroke: INCH, 'stroke-width': 1.2 }));
+      s.appendChild(sv('text', { x: 150, y: r * 60 + 47, 'text-anchor': 'middle', 'font-size': 17, 'font-weight': 700, fill: BLU, 'font-family': 'Georgia,serif' }, m + ' mesi:  ' + m + ' ÷ 12 = ' + fmt(m / 12)));
+    });
+    return s;
+  }
+
   /* -----------------------------------------------------------------
      A. METTI IL PUNTO SUL RETICOLO
      «Questo esercizio nel compito arriva in due modi»: si leggono le
@@ -2799,7 +2829,7 @@
     var R = risposteI(v), c = v.chiede, P = [];
     if (c === 'medio') {
       P.push({ titolo: 'La variazione', testo: 'Fine meno inizio: ' + migliaia(v.pop1) + ' − ' + migliaia(v.pop0) + ' = ' + conSegno(R.delta, migliaia(R.delta)) + ' abitanti. ' + (R.delta < 0 ? 'È un decremento: va scritto il segno meno.' : 'È un incremento.') });
-      P.push({ titolo: 'Il tempo, con i mesi', testo: 'Dal 1° gennaio ' + v.anno0 + ' al ' + v.data1 + ' passano ' + v.Y + ' anni e ' + v.m + (v.m === 1 ? ' mese' : ' mesi') + '. I mesi sono dodicesimi: ' + v.m + '/12 = ' + fmt(Math.round(v.m / 12 * 100) / 100) + '. In tutto ' + fmt(Math.round(R.anni * 100) / 100) + ' anni.',
+      P.push({ titolo: 'Il tempo, con i mesi', testo: 'Dal 1° gennaio ' + v.anno0 + ' al ' + v.data1 + ' passano ' + v.Y + ' anni e ' + v.m + (v.m === 1 ? ' mese' : ' mesi') + '. I mesi si dividono per 12: ' + v.m + ' ÷ 12 = ' + fmt(v.m / 12) + '. Poi si sommano agli anni interi: ' + v.Y + ' + ' + fmt(v.m / 12) + ' = ' + fmt(R.anni) + ' anni.',
         regola: 'Mai dividere solo per gli anni interi.', extra: function () { return barraMesi(v.m); } });
       P.push({ titolo: 'La media all’anno', testo: migliaia(R.delta) + ' ÷ ' + fmt(Math.round(R.anni * 100) / 100) + ' = ' + conSegno(R.media, migliaia(R.media)) + ' abitanti all’anno.',
         extra: function () { return frazione(migliaia(R.delta), fmt(Math.round(R.anni * 100) / 100), '', conSegno(R.media, migliaia(R.media))); } });
@@ -2995,8 +3025,13 @@
           regola: 'Soggetto sopra, popolazione sotto.' },
         { scena: 'medio', stampa: true, titolo: 'Incremento medio annuo: i dati', testo: ['Esempio: 23.618.420 abitanti al 1° gennaio 2009, 22.086.560 al 30 giugno 2016.', 'Servono solo le due popolazioni.'], fai: function (a, an, t) { a.serve(an, t); a.barra(an, t); } },
         { scena: 'medio', stampa: 'testo', titolo: pm[0].titolo, testo: pm[0].testo },
-        { scena: 'medio', stampa: true, titolo: 'Il tempo: 7,5 anni, non 7', testo: ['Dal 1° gennaio 2009 al 30 giugno 2016 sono 7 anni e 6 mesi: 7,5 anni.', 'I mesi si contano in dodicesimi: fino a novembre sarebbero 7 + 11/12, fino a marzo 3/12. Dividere per 7 ignora i 6 mesi in più.'],
-          regola: 'Mesi = dodicesimi di anno.', extra: function () { return barraMesi(6); }, fai: function (a, an, t) { a.serve(false, t); a.barra(false, t); } },
+        { scena: 'medio', stampa: true, titolo: 'Il tempo: 7 anni e 6 mesi', testo: ['Dal 1° gennaio 2009 al 1° gennaio 2016 passano 7 anni interi. Poi, fino al 30 giugno, altri 6 mesi.', 'Dividere solo per 7 lascerebbe fuori quei 6 mesi: vanno trasformati in anni.'],
+          regola: '7 anni e 6 mesi = 7,5 anni, non 7.', extra: function () { return barraMesi(6); }, fai: function (a, an, t) { a.serve(false, t); a.barra(false, t); } },
+        { scena: 'medio', stampa: 'testo', titolo: 'I mesi diventano anni: si dividono per 12', testo: ['Un anno ha 12 mesi, quindi un mese è 1/12 di anno. Per trasformare i mesi in anni si fa la divisione con la calcolatrice: mesi ÷ 12.',
+            '6 mesi (fino al 30 giugno): 6 ÷ 12 = 0,5. 11 mesi (fino al 30 novembre): 11 ÷ 12 = 0,92. 3 mesi (fino al 31 marzo): 3 ÷ 12 = 0,25.',
+            'Il risultato si somma agli anni interi: 7 + 0,5 = 7,5 anni. Con 11 mesi sarebbe 7 + 0,92 = 7,92 anni; con 3 mesi 7 + 0,25 = 7,25 anni.',
+            'Attenzione: 7 anni e 6 mesi non si scrive 7,6. I mesi non sono decimi.'],
+          regola: 'Mesi ÷ 12, poi si sommano agli anni interi.', extra: function () { return tabellaMesi([6, 11, 3]); } },
         { scena: 'medio', stampa: 'testo', titolo: 'La media all’anno', testo: '−1.531.860 ÷ 7,5 = −204.248 abitanti all’anno.', extra: pm[2].extra },
         { scena: 'medio', stampa: 'testo', titolo: 'In percentuale', testo: ['−204.248 ÷ 23.618.420 = −0,0086. Per 100: −0,86% all’anno (oppure −8,6‰).', 'L’ordine delle due divisioni, per 7,5 e per la popolazione iniziale, non conta: vanno fatte entrambe.'],
           regola: 'Al denominatore SEMPRE la popolazione iniziale.', extra: pm[3].extra },
@@ -3013,7 +3048,7 @@
         { scena: 'incnat', stampa: true, titolo: 'Incremento naturale e saldo migratorio', testo: ['Nati meno morti: 2.200 − 1.500 = +700.', 'Immigrati meno emigrati: 750 − 1.200 = −450. Il segno si scrive sempre: meno per i saldi negativi, più per gli incrementi.'],
           regola: 'Il segno si scrive sempre.', fai: function (a, an, t) { a.serve(an, t); } },
         { scena: 'nat', stampa: 'testo', titolo: 'Come si scrive', testo: ['Tassi con % o ‰. Indici come numeri puri. Bastano due decimali.', 'Serve la calcolatrice.'] },
-        { scena: 'nat', stampa: 'testo', titolo: 'Ricapitolando', testo: ['1. Leggi che cosa chiede. 2. Barra il dato inutile. 3. Soggetto sopra, popolazione iniziale sotto. 4. Per gli incrementi medi: i mesi in dodicesimi, poi ÷ anni e ÷ popolazione iniziale. 5. Segno e simbolo.', 'Ora prova tu: 15 esercizi, ogni volta un calcolo diverso.'],
+        { scena: 'nat', stampa: 'testo', titolo: 'Ricapitolando', testo: ['1. Leggi che cosa chiede. 2. Barra il dato inutile. 3. Soggetto sopra, popolazione iniziale sotto. 4. Per gli incrementi medi: mesi ÷ 12 sommati agli anni interi, poi variazione ÷ anni e ÷ popolazione iniziale. 5. Segno e simbolo.', 'Ora prova tu: 15 esercizi, ogni volta un calcolo diverso.'],
           dopo: function () { return docente(e); } }
       ];
       return { scena: scena, passi: passi };
@@ -3854,6 +3889,22 @@
       '.esx-v-pillola{font:600 .8rem var(--font-body);padding:7px 11px;border-radius:999px;border:1px solid var(--dust);background:transparent;color:var(--ink);cursor:pointer}',
       '.esx-v-pillola[aria-pressed=true]{background:var(--ink);color:var(--paper,#fff);border-color:var(--ink)}',
       '.esx-v-dock{position:absolute;left:12px;right:12px;bottom:12px;z-index:4}.esx-v-dock:empty{display:none}',
+      // i calcoli fatti fin qui: una colonna a destra che resta, un titolo per ogni operazione
+      '.esx-v-palco{--calc-w:clamp(220px,30%,330px)}',
+      '.esx-v-calcoli{position:absolute;top:12px;right:12px;bottom:12px;width:calc(var(--calc-w) - 24px);display:none;flex-direction:column;gap:8px;overflow:auto;z-index:3;pointer-events:none}',
+      '.esx-v-palco.con-calcoli .esx-v-calcoli{display:flex}',
+      '.esx-v-calc{background:rgba(255,255,255,.92);border-radius:10px;padding:7px 10px 8px;box-shadow:0 4px 12px rgba(0,0,0,.1);display:grid;grid-template-columns:auto 1fr;column-gap:8px;align-items:baseline}',
+      '.esx-v-calc.nuovo{animation:esxSu .5s ease both}',
+      '.esx-v-calc i{grid-row:1 / span 3;font:700 1.05rem/1 var(--font-display);font-style:normal;color:#B4573E}',
+      '.esx-v-calc b{font:700 .66rem/1.3 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:#7A6A55}',
+      '.esx-v-calc span{font:500 .88rem/1.35 var(--font-body);color:var(--ink);font-variant-numeric:tabular-nums}',
+      '.esx-v-calc strong{font:700 1rem/1.3 var(--font-body);color:var(--ink);font-variant-numeric:tabular-nums}',
+      '.esx-v-palco.con-calcoli .esx-tavola{padding-right:calc(var(--calc-w) + 12px)}',
+      '.esx-v-palco.con-calcoli .esx-v-dock{right:calc(var(--calc-w) + 4px)}',
+      '.esx-v-palco.con-calcoli .esx-v-cc{left:calc((100% - var(--calc-w)) / 2);width:min(calc(100% - var(--calc-w) - 32px),760px)}',
+      '.esx-v-palco.con-calcoli .esx-v-extra{right:calc(var(--calc-w) + 8px)}',
+      '.esx-v-extra:has(svg.largo){width:min(42%,290px)}',
+      '@media (max-width:640px){.esx-v-palco{--calc-w:0px}.esx-v-calcoli{top:8px;left:8px;right:auto;bottom:auto;width:auto;max-width:58%;gap:3px;overflow:visible}.esx-v-calc{display:flex;flex-wrap:wrap;gap:0 6px;padding:3px 7px;border-radius:7px}.esx-v-calc i{font-size:.8rem}.esx-v-calc b{font-size:.56rem}.esx-v-calc span{display:none}.esx-v-calc strong{font-size:.78rem}}',
       '.esx-v-dom{border-radius:16px;border:1.5px solid #B4573E;background:#fff;padding:16px 18px 14px;box-shadow:0 14px 34px -14px rgba(53,42,31,.45);',
       '.night-mode .esx-v-dom{background:var(--ivory-dk)}',
       '.esx-v-dom .esx-riga{margin-bottom:8px}.esx-v-dom .esx-comandi{margin-top:10px}',
@@ -3862,6 +3913,10 @@
       '.esx-v-dom h4{margin:0 0 4px;font:700 .72rem var(--font-body);letter-spacing:.2em;text-transform:uppercase;color:#B4573E}',
       '.night-mode .esx-v-dom h4{color:#E39A82}',
       '.esx-v-dom p.q{margin:0 0 12px;font:600 1.08rem/1.45 var(--font-display);color:var(--ink)}',
+      '.esx-v-sai,.esx-v-fai{display:flex;flex-wrap:wrap;align-items:baseline;gap:5px 8px;margin:0 0 9px}',
+      '.esx-v-sai b,.esx-v-fai b{font:700 .68rem var(--font-body);letter-spacing:.14em;text-transform:uppercase;color:#7A6A55;margin-right:2px}',
+      '.esx-v-sai span{font:600 .92rem/1.3 var(--font-body);color:var(--ink);background:rgba(42,33,27,.07);border-radius:6px;padding:3px 8px;font-variant-numeric:tabular-nums}',
+      '.esx-v-fai span{font:700 1.04rem/1.3 var(--font-body);color:var(--ink);font-variant-numeric:tabular-nums}',
       '.esx-v-esito{font:700 1.5rem/1.2 var(--font-display);margin:12px 0 2px}',
       '.esx-v-esito.si{color:' + BLU + '}.esx-v-esito.no{color:' + ROSSO + '}',
       '.night-mode .esx-v-esito.si{color:#8FB4E8}.night-mode .esx-v-esito.no{color:#EF9A9A}',
@@ -3883,7 +3938,19 @@
     piu10: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4V1l5 4-5 4V6a6.5 6.5 0 1 0 6.5 6.5h2A8.5 8.5 0 1 1 12 4Z"/><text x="11.7" y="15.6" text-anchor="middle" font-size="7.4" font-weight="700" font-family="DM Sans,Arial,sans-serif">10</text></svg>'
   };
   function frasiDi(testo) {
-    return (String(testo || '').match(/[^.!?…]+[.!?…]*\s*/g) || []).map(function (s) { return s.trim(); }).filter(Boolean);
+    var s = String(testo || ''), out = [], da = 0, FINE = '.!?…';
+    for (var k = 0; k < s.length; k++) {
+      if (FINE.indexOf(s.charAt(k)) < 0) continue;
+      while (k + 1 < s.length && FINE.indexOf(s.charAt(k + 1)) >= 0) k++;
+      if (k + 1 >= s.length || /\s/.test(s.charAt(k + 1))) { out.push(s.slice(da, k + 1).trim()); da = k + 1; }      // "1.531.860" resta intero
+    }
+    if (da < s.length) out.push(s.slice(da).trim());
+    return out.filter(Boolean);
+  }
+  // I sottotitoli: la voce legge il testo scritto in parole; sullo schermo, se c'è, va la stessa frase scritta con cifre e segni (COPIONI.scritte).
+  function frasiScritte(id, frasiVoce) {
+    var t = COPIONI && COPIONI.scritte && COPIONI.scritte[id]; if (!t) return null;
+    var f = frasiDi(t); return f.length === frasiVoce.length ? f : null;
   }
 
   function Video(dove, T, e, versoAllenamento) {
@@ -3934,6 +4001,29 @@
     function mmss(s) { s = Math.max(0, Math.round(s)); return Math.floor(s / 60) + ':' + pad2(s % 60); }
     // la domanda compare DENTRO il video, in basso: il disegno resta sopra, niente da scorrere
     var domanda = el('div', { class: 'esx-v-dock' }); palco.appendChild(domanda);
+    // I calcoli fatti fin qui restano scritti accanto al disegno, ognuno con il suo titolo: 'calcoli' sulla battuta compaiono quando
+    // se ne parla, 'chiedi.calcolo' quando si è risposto; 'calcoliNuovi' ripulisce la colonna (esempio nuovo).
+    var calcBox = el('div', { class: 'esx-v-calcoli', 'aria-live': 'polite' }), calcPrima = []; palco.appendChild(calcBox);
+    function calcoliFino(k, risposto) {
+      var out = [];
+      for (var j = 0; j <= k && j < bat.length; j++) {
+        var bj = bat[j]; if (bj.calcoliNuovi) out = [];
+        (bj.calcoli || []).forEach(function (x) { out.push(x); });
+        if (bj.chiedi && bj.chiedi.calcolo && (j < k || risposto)) [].concat(bj.chiedi.calcolo).forEach(function (x) { out.push(x); });
+      }
+      return out;
+    }
+    function mostraCalcoli(risposto) {
+      var lista = calcoliFino(i, risposto), firme = lista.map(function (x) { return x.t + '|' + x.f + '|' + x.r; });
+      var continua = calcPrima.length <= firme.length && calcPrima.every(function (x, n) { return x === firme[n]; });
+      palco.classList.toggle('con-calcoli', lista.length > 0);
+      calcBox.innerHTML = '';
+      lista.forEach(function (x, n) {
+        calcBox.appendChild(el('div', { class: 'esx-v-calc' + (continua && n >= calcPrima.length ? ' nuovo' : '') },
+          [el('i', { text: String(n + 1) }), el('b', { text: x.t }), el('span', { text: x.f || '' }), el('strong', { text: x.r ? '= ' + x.r : '' })]));
+      });
+      calcPrima = firme;
+    }
     function sistemaDock() {
       var h = domanda.firstChild ? domanda.offsetHeight : 0;
       tav.style.paddingBottom = h ? (h + 36) + 'px' : '';
@@ -3968,23 +4058,23 @@
       if (voce && voce.simulata) clearInterval(voce.simulata.giro);
       voce = null;
     }
-    function sottotitolo(frasi, frac) {
+    function sottotitolo(frasi, frac, scritte) {      // il tempo segue la frase detta; si legge quella scritta
       var tot = frasi.reduce(function (s, f) { return s + f.length; }, 0) || 1, acc = 0, k = 0;
       for (; k < frasi.length; k++) { acc += frasi[k].length; if (frac * tot <= acc) break; }
-      ccTesto.textContent = frasi[Math.min(k, frasi.length - 1)] || '';
+      ccTesto.textContent = (scritte || frasi)[Math.min(k, frasi.length - 1)] || '';
     }
     function parla(id, testo, fine, da) {
       fermaVoce();
-      var frasi = frasiDi(testo);
-      sottotitolo(frasi, 0);
+      var frasi = frasiDi(testo), scr = frasiScritte(id, frasi);
+      sottotitolo(frasi, 0, scr);
       dopoVoce = fine;
       var a = audioMappa[id], principale = bat[i] && id === bat[i].id;
       if (a && a.url) {
         var au = new Audio(a.url); au.playbackRate = vel; au.preload = 'auto';
         voce = { audio: au, principale: principale };
         if (da) { var vai2 = function () { try { au.currentTime = Math.min(da, (au.duration || da + 1) - 0.15); } catch (e0) {} }; if (au.readyState >= 1) vai2(); else au.addEventListener('loadedmetadata', vai2, { once: true }); }
-        au.ontimeupdate = function () { if (au.duration) sottotitolo(frasi, au.currentTime / au.duration); barraOra(au.currentTime / au.duration); };
-        au.onended = function () { sottotitolo(frasi, 1); voce = null; var f = dopoVoce; dopoVoce = null; if (f) f(); };
+        au.ontimeupdate = function () { if (au.duration) sottotitolo(frasi, au.currentTime / au.duration, scr); barraOra(au.currentTime / au.duration); };
+        au.onended = function () { sottotitolo(frasi, 1, scr); voce = null; var f = dopoVoce; dopoVoce = null; if (f) f(); };
         if (suona) au.play().catch(function () { pausa(); });
       } else {
         // senza mp3: tempo stimato sulla lunghezza del testo
@@ -3995,7 +4085,7 @@
           if (!suona) { s.ultimo = Date.now(); return; }
           var ora = Date.now(); s.pass += (ora - s.ultimo) * vel; s.ultimo = ora;
           var f = Math.min(1, s.pass / s.dur);
-          sottotitolo(frasi, f); barraOra(f);
+          sottotitolo(frasi, f, scr); barraOra(f);
           if (f >= 1) { clearInterval(s.giro); voce = null; var g = dopoVoce; dopoVoce = null; if (g) g(); }
         }, 80);
       }
@@ -4034,6 +4124,7 @@
       var vecchia = palco.querySelector('.esx-v-fine'); if (vecchia) vecchia.remove();
       domanda.innerHTML = ''; attesaRisposta = false; ccBox.style.visibility = '';
       var b = bat[i];
+      mostraCalcoli(false);
       scena(b.p, !!b.nascondi, true);
       aggiornaBarra();
       if (b.chiedi) parla(b.id, b.voce, function () { chiedi(b); }, da);
@@ -4046,8 +4137,11 @@
       ccBox.style.visibility = 'hidden';
       var q = b.chiedi, card = el('div', { class: 'esx-v-dom', role: 'group', 'aria-label': 'Tocca a te' });
       card.appendChild(el('h4', { text: 'Tocca a te' }));
-      var fr = frasiDi(b.voce), ultima = fr[fr.length - 1] || '';
+      var fr = frasiDi(b.voce); fr = frasiScritte(b.id, fr) || fr; var ultima = fr[fr.length - 1] || '';
       card.appendChild(el('p', { class: 'q', text: ultima.length < 70 && fr.length > 1 ? fr.slice(-2).join(' ') : ultima }));
+      // quello che si è già ricavato nei passi prima, e l'operazione da fare: senza, a video fermo non si può rispondere
+      if (q.sai && q.sai.length) card.appendChild(el('div', { class: 'esx-v-sai' }, [el('b', { text: 'Quello che sai' })].concat(q.sai.map(function (x) { return el('span', { text: x }); }))));
+      if (q.fai) card.appendChild(el('p', { class: 'esx-v-fai' }, [el('b', { text: 'Operazione' }), el('span', { text: q.fai })]));
       var leggiRisposta, segna;
       if (q.coord) {
         var C = q.coord;
@@ -4109,6 +4203,7 @@
         }
         attesaRisposta = false;
         ccBox.style.visibility = '';
+        mostraCalcoli(true);
         if (!suona) { suona = true; aggiornaPlay(); }
         parla(b.id + (giusto ? '-si' : '-no'), giusto ? q.si : q.no, function () {
           parla(b.id + '-spiega', q.spiega, function () {
